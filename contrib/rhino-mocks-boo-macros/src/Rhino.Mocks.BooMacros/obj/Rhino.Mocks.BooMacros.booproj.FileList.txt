@@ -1,0 +1,11 @@
+bin\Debug\Rhino.Mocks.BooMacros.dll
+bin\Debug\Rhino.Mocks.BooMacros.pdb
+bin\Debug\Boo.Lang.Compiler.dll
+bin\Debug\Boo.Lang.Useful.dll
+bin\Debug\Rhino.Mocks.dll
+bin\Debug\Boo.Lang.dll
+bin\Debug\Boo.Lang.Parser.dll
+bin\Debug\Rhino.Mocks.xml
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Rhino.Mocks.BooMacros.dll
+obj\Debug\Rhino.Mocks.BooMacros.pdb
