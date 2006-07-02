@@ -24,7 +24,7 @@
   <ItemGroup>
     <Reference Include="Boo.Lang.Useful" />
     <Reference Include="Rhino.Mocks">
-      <HintPath>..\Lib\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\lib\Rhino.Mocks.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
