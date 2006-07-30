@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons", "Rhino.Commons\Rhino.Commons.csproj", "{F6321543-E1EC-4999-A562-D9F060C8E3DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhono.Commons.Test", "Rhino.Commons.Test\Rhono.Commons.Test.csproj", "{EE98519D-104D-4A31-ADD8-82C5F836018C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Start|Any CPU = Start|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.Build.0 = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Start|Any CPU.ActiveCfg = Start|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Start|Any CPU.Build.0 = Start|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
