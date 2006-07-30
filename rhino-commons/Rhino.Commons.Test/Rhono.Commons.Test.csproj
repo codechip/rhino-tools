@@ -56,7 +56,6 @@
     <Compile Include="IndexersTests.cs" />
     <Compile Include="LocalDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories.cs" />
     <Compile Include="StaticReflectionTests.cs" />
     <Compile Include="ValidationTests.cs" />
     <Compile Include="WaitForConsumersEventTests.cs" />
