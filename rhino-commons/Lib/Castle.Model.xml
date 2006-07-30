@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Castle.Model</name>
+    </assembly>
+    <members>
+        <member name="T:Castle.Model.CastleComponentAttribute">
+            <summary>
+            This attribute is usefull only when you want to register all components
+            on an assembly as a batch process. 
+            By doing so, the batch register will look 
+            for this attribute to distinguish components from other classes.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.LifestyleAttribute">
+            <summary>
+            Base for Attributes that want to express lifestyle
+            chosen by the component.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.InterceptorAttribute">
+            <summary>
+            Used to declare that a component wants interceptors acting on it.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.InterceptorAttribute.#ctor(System.String)">
+            <summary>
+            Constructs the InterceptorAttribute pointing to
+            a key to a interceptor
+            </summary>
+            <param name="componentKey"></param>
+        </member>
+        <member name="M:Castle.Model.InterceptorAttribute.#ctor(System.Type)">
+            <summary>
+            Constructs the InterceptorAttribute pointing to
+            a service
+            </summary>
+            <param name="interceptorType"></param>
+        </member>
+        <member name="T:Castle.Model.SingletonAttribute">
+            <summary>
+            Indicates that the target components wants a
+            singleton lifestyle.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.TransientAttribute">
+            <summary>
+            Indicates that the target components wants a
+            transient lifestyle.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.PerThreadAttribute">
+            <summary>
+            Indicates that the target components wants a
+            per thread lifestyle.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.PooledAttribute">
+            <summary>
+            Indicates that the target components wants a
+            pooled lifestyle.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.CustomLifestyleAttribute">
+            <summary>
+            Indicates that the target components wants a
+            custom lifestyle.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Interceptor.IMethodInterceptor">
+            <summary>
+            Interface that should be implemented 
+            by any component that wishes to be referenced as interceptor.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Interceptor.IMethodInterceptor.Intercept(Castle.Model.Interceptor.IMethodInvocation,System.Object[])">
+            <summary>
+            Method invoked by the proxy in order to allow
+            the interceptor to do its work before and after
+            the actual invocation.
+            </summary>
+            <param name="invocation">The invocation holds the details of this interception</param>
+            <param name="args">The original method arguments</param>
+            <returns>The return value of this invocation</returns>
+        </member>
+        <member name="T:Castle.Model.Interceptor.IMethodInvocation">
+            <summary>
+            Supply information about the current method invocation.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Interceptor.IMethodInvocation.Proceed(System.Object[])">
+            <summary>
+            The Proceed go on with the actual invocation.
+            </summary>
+            <param name="args">The arguments of the method</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Model.Interceptor.IMethodInvocation.Proxy">
+            <summary>
+            The proxy instance.
+            </summary>
+        </member>
+        <member name="P:Castle.Model.Interceptor.IMethodInvocation.InvocationTarget">
+            <summary>
+            The target of this invocation, which usually is the
+            instance of the class being proxy. 
+            You might change the target, but be aware of the 
+            implications.
+            </summary>
+        </member>
+        <member name="P:Castle.Model.Interceptor.IMethodInvocation.Method">
+            <summary>
+            The Method being invoked.
+            </summary>
+        </member>
+        <member name="P:Castle.Model.Interceptor.IMethodInvocation.MethodInvocationTarget">
+            <summary>
+            The Method being invoked on the target.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Interceptor.IOnBehalfAware">
+            <summary>
+            Interceptors might implement this to receive the
+            ComponentModel ob behalf of the component where the
+            interceptor is acting.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.IVertex">
+            <summary>
+            Abstract representation of a vertex.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.GraphNode.#ctor(Castle.Model.GraphNode)">
+            <summary>
+            Kind of copy constructor
+            </summary>
+            <param name="copy"></param>
+        </member>
+        <member name="P:Castle.Model.GraphNode.Dependers">
+            <summary>
+            The nodes that dependes on this node
+            </summary>
+        </member>
+        <member name="P:Castle.Model.GraphNode.Dependents">
+            <summary>
+            The nodes that this node depends
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Internal.ColorsSet">
+            <summary>
+            Represents a collection of objects
+            which are guaranted to be unique 
+            and holds a color for them
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Internal.TimestampSet">
+            <summary>
+            Holds a timestamp (integer) 
+            for a given item
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Internal.LinkedList.GetNode(System.Int32)">
+            <summary>
+            Returns the node at the specified index.
+            </summary>
+            <param name="index">The lookup index.</param>
+            <returns>The node at the specified index.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            If the specified <paramref name="index"/> is greater than the
+            number of objects within the list.
+            </exception>
+        </member>
+        <member name="M:Castle.Model.Internal.LinkedList.ValidateIndex(System.Int32)">
+            <summary>
+            Validates the specified index.
+            </summary>
+            <param name="index">The lookup index.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            If the index is invalid.
+            </exception>
+        </member>
+        <member name="T:Castle.Model.IInitializable">
+            <summary>
+            Lifecycle interface. If implemented by a component,
+            the method Initialized will be invoked by the container
+            before making the component available to the external world.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.IInitializable.Initialize">
+            <summary>
+            Implementors should perform any initialization logic.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.IRecyclable">
+            <summary>
+            Only called for components that 
+            belongs to a pool when the component
+            comes back to the pool.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.IRecyclable.Recycle">
+            <summary>
+            Implementors should perform any 
+            initialization/clean up.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.IStartable">
+            <summary>
+            Interface for components that wish to be started by the container
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Configuration.AbstractConfiguration">
+            <summary>
+            This is an abstract <see cref="T:Castle.Model.Configuration.IConfiguration"/> implementation
+            that deals with methods that can be abstracted away
+            from underlying implementations.
+            </summary>
+            <remarks>
+            <para><b>AbstractConfiguration</b> makes easier to implementers 
+            to create a new version of <see cref="T:Castle.Model.Configuration.IConfiguration"/></para>
+            </remarks>
+        </member>
+        <member name="T:Castle.Model.Configuration.IConfiguration">
+            <summary>
+            Summary description for IConfiguration.
+            </summary>
+            <summary>
+            <see cref="T:Castle.Model.Configuration.IConfiguration"/> is a interface encapsulating a configuration node
+            used to retrieve configuration values.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.IConfiguration.GetValue(System.Type,System.Object)">
+            <summary>
+            Gets the value of the node and converts it 
+            into specified <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/></param>
+            <param name="defaultValue">
+            The Default value returned if the convertion fails.
+            </param>
+            <returns>The Value converted into the specified type.</returns>
+        </member>
+        <member name="P:Castle.Model.Configuration.IConfiguration.Name">
+            <summary>
+            Gets the name of the node.
+            </summary>
+            <value>
+            The Name of the node.
+            </value> 
+        </member>
+        <member name="P:Castle.Model.Configuration.IConfiguration.Value">
+            <summary>
+            Gets the value of the node.
+            </summary>
+            <value>
+            The Value of the node.
+            </value> 
+        </member>
+        <member name="P:Castle.Model.Configuration.IConfiguration.Children">
+            <summary>
+            Gets an <see cref="T:Castle.Model.Configuration.ConfigurationCollection"/> of <see cref="T:Castle.Model.Configuration.IConfiguration"/>
+            elements containing all node children.
+            </summary>
+            <value>The Collection of child nodes.</value>
+        </member>
+        <member name="P:Castle.Model.Configuration.IConfiguration.Attributes">
+            <summary>
+            Gets an <see cref="T:System.Collections.IDictionary"/> of the configuration attributes.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.AbstractConfiguration.GetValue(System.Type,System.Object)">
+            <summary>
+            Gets the value of the node and converts it
+            into specified <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/></param>
+            <param name="defaultValue">
+            The Default value returned if the convertion fails.
+            </param>
+            <returns>The Value converted into the specified type.</returns>
+        </member>
+        <member name="P:Castle.Model.Configuration.AbstractConfiguration.Name">
+            <summary>
+            Gets the name of the <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </summary>
+            <value>
+            The Name of the <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </value>
+        </member>
+        <member name="P:Castle.Model.Configuration.AbstractConfiguration.Value">
+            <summary>
+            Gets the value of <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </summary>
+            <value>
+            The Value of the <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </value>
+        </member>
+        <member name="P:Castle.Model.Configuration.AbstractConfiguration.Children">
+            <summary>
+            Gets all child nodes.
+            </summary>
+            <value>The <see cref="T:Castle.Model.Configuration.ConfigurationCollection"/> of child nodes.</value>
+        </member>
+        <member name="P:Castle.Model.Configuration.AbstractConfiguration.Attributes">
+            <summary>
+            Gets node attributes.
+            </summary>
+            <value>
+            All attributes of the node.
+            </value>
+        </member>
+        <member name="T:Castle.Model.Configuration.ConfigurationCollection">
+            <summary>
+            A collection of <see cref="T:Castle.Model.Configuration.IConfiguration"/> objects.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.#ctor">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.#ctor(Castle.Model.Configuration.ConfigurationCollection)">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.#ctor(Castle.Model.Configuration.IConfiguration[])">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.Add(Castle.Model.Configuration.IConfiguration)">
+            <summary>
+            Adds an <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Model.Configuration.IConfiguration"/> to add.</param>
+            <returns>
+            The index at which the new element was inserted.
+            </returns>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.AddRange(Castle.Model.Configuration.IConfiguration[])">
+            <summary>
+            Adds an array of <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="value">The Array of <see cref="T:Castle.Model.Configuration.IConfiguration"/> to add.</param>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.AddRange(Castle.Model.Configuration.ConfigurationCollection)">
+            <summary>
+            Adds a <see cref="T:Castle.Model.Configuration.ConfigurationCollection"/>.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Model.Configuration.ConfigurationCollection"/> to add.</param>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.CopyTo(Castle.Model.Configuration.IConfiguration[],System.Int32)">
+            <summary>
+            Copies the elements to a one-dimensional <see cref="T:System.Array"/> instance at the specified index.
+            </summary>
+            <param name="array">
+            The one-dimensional <see cref="T:System.Array"/> must have zero-based indexing.
+            </param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.Contains(Castle.Model.Configuration.IConfiguration)">
+            <summary>
+            Gets a value indicating whether the <see cref="T:Castle.Model.Configuration.IConfiguration"/> contains
+            in the collection.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Model.Configuration.IConfiguration"/> to locate.</param>
+            <returns>
+            <see langword="true"/> if the <see cref="T:Castle.Model.Configuration.IConfiguration"/> is contained in the collection; 
+            otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:Castle.Model.Configuration.ConfigurationCollection.Remove(Castle.Model.Configuration.IConfiguration)">
+            <summary>
+            Removes a specific <see cref="T:Castle.Model.Configuration.IConfiguration"/> from the 
+            collection.   
+            </summary>
+            <param name="value">The <see cref="T:Castle.Model.Configuration.IConfiguration"/> to remove from the collection.</param>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="value"/> is not found in the collection.
+            </exception>
+        </member>
+        <member name="P:Castle.Model.Configuration.ConfigurationCollection.Item(System.Int32)">
+            <summary>
+            Represents the entry at the specified index of the <see cref="T:Castle.Model.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="index">
+            The zero-based index of the entry to locate in the collection.
+            </param>
+            <value>
+            The entry at the specified index of the collection.
+            </value>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="index"/> is outside the valid range of indexes for the collection.
+            </exception>
+        </member>
+        <member name="T:Castle.Model.Configuration.MutableConfiguration">
+            <summary>
+            Summary description for MutableConfiguration.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.LifestyleType">
+            <summary>
+            Enumeration used to mark the component's lifestyle.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Undefined">
+            <summary>
+            No lifestyle specified.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Singleton">
+            <summary>
+            Singleton components are instantiated once, and shared
+            between all clients.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Thread">
+            <summary>
+            Thread components have a unique instance per thread.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Transient">
+            <summary>
+            Transient components are created on demand.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Pooled">
+            <summary>
+            Optimization of transient components that keeps
+            instance in a pool instead of always creating them.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.LifestyleType.Custom">
+            <summary>
+            Any other logic to create/release components.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.ComponentModel">
+            <summary>
+            Represents the collection of information and
+            meta information collected about a component.
+            </summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.name">
+            <summary>Name (key) of the component</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.service">
+            <summary>Service exposed</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.implementation">
+            <summary>Implementation for the service</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.extended">
+            <summary>Extended properties</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.lifestyleType">
+            <summary>Lifestyle for the component</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.customLifestyle">
+            <summary>Custom lifestyle, if any</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.customComponentActivator">
+            <summary>Custom activator, if any</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.dependencies">
+            <summary>Dependencies the kernel must resolve</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.constructors">
+            <summary>All available constructors</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.properties">
+            <summary>All potential properties that can be setted by the kernel</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.lifecycleSteps">
+            <summary>Steps of lifecycle</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.parameters">
+            <summary>External parameters</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.configuration">
+            <summary>Configuration node associated</summary>
+        </member>
+        <member name="F:Castle.Model.ComponentModel.interceptors">
+            <summary>Interceptors associated</summary>
+        </member>
+        <member name="M:Castle.Model.ComponentModel.#ctor(System.String,System.Type,System.Type)">
+            <summary>
+            Constructs a ComponentModel
+            </summary>
+        </member>
+        <member name="P:Castle.Model.ComponentModel.Name">
+            <summary>
+            Sets or returns the component key
+            </summary>
+        </member>
+        <member name="P:Castle.Model.ComponentModel.Dependencies">
+            <summary>
+            Dependencies are kept within constructors and
+            properties. Others dependencies must be 
+            registered here, so the kernel (as a matter 
+            of fact the handler) can check them
+            </summary>
+        </member>
+        <member name="T:Castle.Model.ConstructorCandidate">
+            <summary>
+            Represents a constructor of the component 
+            that the container can use to initialize it properly.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.ConstructorCandidateCollection">
+            <summary>
+            Collection of <see cref="T:Castle.Model.ConstructorCandidate"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Model.DependencyModel">
+            <summary>
+            Represents a dependency (other component or a 
+            fixed value available through external configuration).
+            </summary>
+        </member>
+        <member name="T:Castle.Model.DependencyModelCollection">
+            <summary>
+            Collection of <see cref="T:Castle.Model.DependencyModel"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.InterceptorReference">
+            <summary>
+            Represents an reference to a Interceptor component.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.InterceptorReferenceCollection">
+            <summary>
+            Collection of <see cref="T:Castle.Model.InterceptorReference"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Model.LifecycleStepCollection">
+            <summary>
+            Represents a collection of ordered lifecycle steps.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.LifecycleStepCollection.GetCommissionSteps">
+            <summary>
+            Returns all steps for the commission phase
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.LifecycleStepCollection.GetDecommissionSteps">
+            <summary>
+            Returns all steps for the decommission phase
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.LifecycleStepCollection.Add(Castle.Model.LifecycleStepType,System.Object)">
+            <summary>
+            Adds a step to the commission or decomission phases.
+            </summary>
+            <param name="type"></param>
+            <param name="stepImplementation"></param>
+        </member>
+        <member name="T:Castle.Model.ParameterModel">
+            <summary>
+            Represents a parameter. Usually the parameter
+            comes from the external world, ie, an external configuration.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.ParameterModelCollection">
+            <summary>
+            Collection of <see cref="T:Castle.Model.ParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Model.PropertySet">
+            <summary>
+            Represents a property and the respective dependency.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.PropertySetCollection">
+            <summary>
+            Collection of <see cref="T:Castle.Model.PropertySet"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.IResource">
+            <summary>
+            Represents a 'streamable' resource. Can
+            be a file, a resource in an assembly.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Resource.IResource.GetStreamReader">
+            <summary>
+            Returns a reader for the stream
+            </summary>
+            <remarks>
+            It's up to the caller to dispose the reader.
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.Resource.IResource.GetStreamReader(System.Text.Encoding)">
+            <summary>
+            Returns a reader for the stream
+            </summary>
+            <remarks>
+            It's up to the caller to dispose the reader.
+            </remarks>
+            <param name="encoding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.Resource.IResource.CreateRelative(System.String)">
+            <summary>
+            Returns an instance of <see cref="T:Castle.Model.Resource.IResource"/>
+            created according to the <c>relativePath</c>
+            using itself as the root.
+            </summary>
+            <param name="relativePath"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Model.Resource.IResource.FileBasePath">
+            <summary>
+            
+            </summary>
+            <remarks>
+            Only valid for resources that
+            can be obtained through relative paths
+            </remarks>
+        </member>
+        <member name="T:Castle.Model.Resource.AbstractStreamResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.AbstractStreamResource.StreamHideCloseDelegate">
+            <summary>
+            Do not allow closing and disposal of the 
+            underlying <see cref="P:Castle.Model.Resource.AbstractStreamResource.Stream"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.AssemblyResourceFactory">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.IResourceFactory">
+            <summary>
+            Depicts the contract for resource factories.
+            </summary>
+        </member>
+        <member name="M:Castle.Model.Resource.IResourceFactory.Accept(Castle.Model.Resource.CustomUri)">
+            <summary>
+            Used to check whether the resource factory
+            is able to deal with the given resource
+            identifier.
+            </summary>
+            <remarks>
+            Implementors should return <c>true</c>
+            only if the given identificator is supported
+            by the resource factory
+            </remarks>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.Resource.IResourceFactory.Create(Castle.Model.Resource.CustomUri)">
+            <summary>
+            Creates an <see cref="T:Castle.Model.Resource.IResource"/> instance
+            for the given resource identifier
+            </summary>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Model.Resource.IResourceFactory.Create(Castle.Model.Resource.CustomUri,System.String)">
+            <summary>
+            Creates an <see cref="T:Castle.Model.Resource.IResource"/> instance
+            for the given resource identifier
+            </summary>
+            <param name="uri"></param>
+            <param name="basePath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Model.Resource.FileResource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.FileResourceFactory">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.StaticContentResource">
+            <summary>
+            Adapts a static string content as an <see cref="T:Castle.Model.Resource.IResource"/>
+            </summary>
+        </member>
+        <member name="T:Castle.Model.Resource.UncResource">
+            <summary>
+            Enable access to files on network shares
+            </summary>
+        </member>
+    </members>
+</doc>
