@@ -5,7 +5,7 @@
     <Position X="0.5" Y="4" Width="3.25" />
     <TypeIdentifier>
       <FileName>UnitOfWork\UnitOfWork.cs</FileName>
-      <HashCode>AAIAAAIAACAAAAAAAACAQAAAAAAAAAAAAAAAAAAICEA=</HashCode>
+      <HashCode>AAIAAAIAACAAAAAAAACAQAAAAAAAAAAAAAAAAAAACEA=</HashCode>
     </TypeIdentifier>
     <Members>
       <Field Name="CurrentNHibernateSessionKey" Hidden="true" />
@@ -13,11 +13,21 @@
       <Field Name="nhibernateSessionFactory" Hidden="true" />
     </Members>
   </Class>
+  <Class Name="Rhino.Commons.Repository&lt;T&gt;">
+    <Position X="1.25" Y="6.5" Width="6.5" />
+    <TypeIdentifier>
+      <FileName>Repositories\Repository.cs</FileName>
+      <HashCode>AAAAgIAAAAAAAABAAIAQAAAAAAEAAAACAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Property Name="InternalRepository" Hidden="true" />
+    </Members>
+  </Class>
   <Interface Name="Rhino.Commons.IRepository&lt;T&gt;">
     <Position X="0.75" Y="1" Width="6.5" />
     <TypeIdentifier>
       <FileName>Repositories\IRepository.cs</FileName>
-      <HashCode>AAAAgAAAAAAAAABAAIAYAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <HashCode>AAAAgIAAAAAAAABAAIAQAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Rhino.Commons.IUnitOfWork">
