@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Collections;
 
@@ -70,6 +71,18 @@ namespace Rhino.Commons
             {
                 action(item);
             }
+        }
+        
+        public static T[] ToArray<T>(IList list)
+        {
+            T[] arr = new T[list.Count];
+            list.CopyTo(arr, 0);
+            return arr;
+        }
+
+        public static BindingList<T> ToBindingList<T>(IList list)
+        {
+            return new BindingList<T>(ToArray<T>(list));
         }
     }
 }
