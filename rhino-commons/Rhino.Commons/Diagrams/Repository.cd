@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="Rhino.Commons.UnitOfWork">
+    <Position X="0.5" Y="4" Width="3.25" />
+    <TypeIdentifier>
+      <FileName>UnitOfWork\UnitOfWork.cs</FileName>
+      <HashCode>AAIAAAIAACAAAAAAAACAQAAAAAAAAAAAAAAAAAAICEA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="CurrentNHibernateSessionKey" Hidden="true" />
+      <Field Name="CurrentUnitOfWorkKey" Hidden="true" />
+      <Field Name="nhibernateSessionFactory" Hidden="true" />
+    </Members>
+  </Class>
+  <Interface Name="Rhino.Commons.IRepository&lt;T&gt;">
+    <Position X="0.75" Y="1" Width="6.5" />
+    <TypeIdentifier>
+      <FileName>Repositories\IRepository.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAABAAIAYAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Rhino.Commons.IUnitOfWork">
+    <Position X="4" Y="4" Width="3.75" />
+    <TypeIdentifier>
+      <FileName>UnitOfWork\IUnitOfWork.cs</FileName>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>
