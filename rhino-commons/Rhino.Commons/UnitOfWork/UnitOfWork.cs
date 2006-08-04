@@ -93,5 +93,14 @@ namespace Rhino.Commons
                 return nhibernateSessionFactory;
             }
         }
+    	
+    	/// <summary>
+    	/// Called internally to clear the current UoW
+    	/// </summary>
+    	public static void ClearCurrentUnitOfWork()
+    	{
+			Local.Data[CurrentUnitOfWorkKey] = null;
+			Local.Data[CurrentNHibernateSessionKey] = null;
+    	}
     }
 }
