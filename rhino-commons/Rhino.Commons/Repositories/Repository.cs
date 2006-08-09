@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NHibernate.Expression;
 
 namespace Rhino.Commons
 {
-    public static class Repository<T> where T : class
+    public static class Repository<T> 
     {
         private static IRepository<T> InternalRepository
         {
