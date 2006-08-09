@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NHibernate;
 using NHibernate.Expression;
 
 namespace Rhino.Commons
 {
-    public class NHRepository<T> : IRepository<T> where T : class
+    public class NHRepository<T> : IRepository<T>
     {
         public T Get(object id)
         {

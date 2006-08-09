@@ -3,7 +3,7 @@ using NHibernate.Expression;
 
 namespace Rhino.Commons
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T>
     {
         /// <summary>
         /// Get the entity from the persistance store, or return null
