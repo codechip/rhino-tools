@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Text;
+using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
-
+using Settings = Rhino.Commons.Properties.Settings;
 namespace Rhino.Commons
 {
     public static class UnitOfWork
@@ -87,6 +89,9 @@ namespace Rhino.Commons
                         if (nhibernateSessionFactory != null)
                             return nhibernateSessionFactory;
                         Configuration cfg = new Configuration();
+                        //if not this, assume loading from app.config
+                        if (File.Exists(Settings.Default.HibernateConfig))
+                            cfg.Configure(new XmlTextReader(Settings.Default.HibernateConfig));
                         nhibernateSessionFactory =cfg.BuildSessionFactory();
                     }
                 }
