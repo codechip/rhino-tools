@@ -31,5 +31,14 @@ namespace Rhino.Commons.Properties {
                 return ((string)(this["WindsorConfig"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("hibernate.cfg.xml")]
+        public string HibernateConfig {
+            get {
+                return ((string)(this["HibernateConfig"]));
+            }
+        }
     }
 }

@@ -42,6 +42,16 @@ namespace Rhino.Commons
             return SelectInternal(true, collection, predicate);
         }
 
+        public static T Find<T>(ICollection<T> items, Predicate<T> pred)
+        {
+            foreach (T item in items)
+            {
+                if(pred(item))
+                    return item;
+            }
+            return default(T);
+        }
+        
         private static ICollection<T> SelectInternal<T>(bool addIfTrue, ICollection<T> collection, Predicate<T> predicate)
         {
             ICollection<T> results = new List<T>();

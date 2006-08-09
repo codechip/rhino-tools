@@ -95,6 +95,10 @@ namespace Rhino.Commons
             ICriteria crit = UnitOfWork.CurrentNHibernateSession.CreateCriteria(typeof(T));
             foreach (ICriterion criterion in criteria)
             {
+                //allow some fancy antics like returning possible return 
+                // or null to ignore the criteria
+                if(criterion == null)
+                    continue;
                 crit.Add(criterion);
             }
             return crit;
