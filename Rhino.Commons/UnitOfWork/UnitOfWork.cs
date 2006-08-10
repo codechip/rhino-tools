@@ -33,8 +33,10 @@ namespace Rhino.Commons
 			NHibernateUnitOfWorkAdapter data = (NHibernateUnitOfWorkAdapter)Local.Data[CurrentUnitOfWorkKey];
 			if(nestingOptions == UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork && 
 			   data != null)
+			{
+				data.IncremementUsages();
 				return data;
-				
+			}	
 			ISession session = NHibernateSessionFactory.OpenSession();
 			session.FlushMode = FlushMode.Commit;
 			CurrentNHibernateSession = session;

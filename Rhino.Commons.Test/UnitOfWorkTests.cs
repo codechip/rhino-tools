@@ -27,7 +27,23 @@ namespace Rhino.Commons.Test
 							UnitOfWork.CurrentNHibernateSession);
 			first.Dispose();
 			Assert.IsNull(Local.Data[UnitOfWork.CurrentNHibernateSessionKey]);
+		}
+
+		[Test]
+		public void CanUseUnitOfWorkInMultiplyStarts()
+		{
+			using(IUnitOfWork first = UnitOfWork.Start())
+			{
+				Assert.AreEqual(first, UnitOfWork.Current);
 			
+				using(UnitOfWork.Start())
+				{
+					Assert.AreEqual(first, UnitOfWork.Current);
+				}
+				Assert.AreEqual(first, UnitOfWork.Current);
+			}
+			Assert.IsNull(Local.Data[UnitOfWork.CurrentNHibernateSessionKey]);
+		
 		}
 	}
 }
