@@ -96,6 +96,7 @@
     <Compile Include="RhinoContainer\IoC.cs" />
     <Compile Include="RhinoContainer\RhinoContainer.cs" />
     <Compile Include="StaticReflection.cs" />
+    <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="WaitForConsumersEvent.cs" />
     <Compile Include="UnitOfWork\With.cs" />
