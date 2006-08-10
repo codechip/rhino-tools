@@ -10,7 +10,14 @@ namespace Rhino.Commons
     {
         private ISession session;
 
-        public ISession Session
+		private readonly NHibernateUnitOfWorkAdapter previous;
+
+		public NHibernateUnitOfWorkAdapter Previous
+    	{
+    		get { return previous; }
+    	}
+
+    	public ISession Session
         {
             get { return session; }
         }
@@ -32,13 +39,14 @@ namespace Rhino.Commons
 
         public void Dispose()
         {
-			UnitOfWork.ClearCurrentUnitOfWork();
+			UnitOfWork.DisposeUnitOfWork(this);
 			session.Dispose();
         }
 
-        public NHibernateUnitOfWorkAdapter(ISession session)
+		public NHibernateUnitOfWorkAdapter(ISession session, NHibernateUnitOfWorkAdapter previous)
         {
             this.session = session;
+        	this.previous = previous;
         }
     }
 }
