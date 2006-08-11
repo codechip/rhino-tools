@@ -898,6 +898,15 @@
             <param name="type"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.SubSystems.Conversion.ITypeConverter.CanHandleType(System.Type,Castle.Model.Configuration.IConfiguration)">
+            <summary>
+            Returns true if this instance of <c>ITypeConverter</c>
+            is able to handle the specified type with the specified 
+            configuration
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.SubSystems.Conversion.ITypeConverter.PerformConversion(System.String,System.Type)">
             <summary>
             Should perform the conversion from the

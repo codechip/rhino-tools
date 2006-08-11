@@ -649,14 +649,14 @@
             Constructs a container using the specified 
             <see cref="T:Castle.MicroKernel.IConfigurationStore"/> implementation.
             </summary>
-            <param name="store"></param>
+            <param name="store">The instance of an <see cref="T:Castle.MicroKernel.IConfigurationStore"/> implementation.</param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.Windsor.Configuration.IConfigurationInterpreter)">
             <summary>
             Constructs a container using the specified 
             <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation.
             </summary>
-            <param name="interpreter"></param>
+            <param name="interpreter">The instance of an <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation.</param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.MicroKernel.IKernel,Castle.Windsor.IComponentsInstaller)">
             <summary>
@@ -668,6 +668,20 @@
             <see cref="T:Castle.Windsor.Proxy.DefaultProxyFactory"/>
             </remarks>
             <param name="kernel"></param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.MicroKernel.IProxyFactory)">
+            <summary>
+            Constructs with a given <see cref="T:Castle.MicroKernel.IProxyFactory"/>.
+            </summary>
+            <param name="proxyFactory">A instance of an <see cref="T:Castle.MicroKernel.IProxyFactory"/>.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.Windsor.IWindsorContainer,Castle.Windsor.Configuration.IConfigurationInterpreter)">
+            <summary>
+            Constructs a container assigning a parent container 
+            before starting the dependency resolution.
+            </summary>
+            <param name="parent">The instance of an <see cref="T:Castle.Windsor.IWindsorContainer"/>.</param>
+            <param name="interpreter">The instance of an <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation.</param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.AddFacility(System.String,Castle.MicroKernel.IFacility)">
             <summary>
