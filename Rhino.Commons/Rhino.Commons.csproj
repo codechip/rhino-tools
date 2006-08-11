@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\NHRepository.cs" />
+    <Compile Include="RhinoContainer\NestedConfigurationFacility.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Repositories\Parameter.cs" />
     <Compile Include="Repositories\Repository.cs" />
