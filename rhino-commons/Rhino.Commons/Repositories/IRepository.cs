@@ -38,6 +38,22 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        ICollection<T> FindAll(Order order, params ICriterion[] criteria);
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria);
+        
+        /// <summary>
+        /// Loads all the entities that match the criteria
         /// </summary>
         /// <param name="criteria">the criteria to look for</param>
         /// <returns>All the entities that match the criteria</returns>

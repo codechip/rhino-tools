@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NHibernate;
 using NHibernate.Expression;
@@ -24,6 +25,24 @@ namespace Rhino.Commons
         public void Save(T entity)
         {
             UnitOfWork.CurrentNHibernateSession.Save(entity);
+        }
+
+        public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+        {
+            ICriteria crit = CreateCriteriaFromArray(criteria);
+            crit.AddOrder(order);
+            return Collection.ToArray<T>(crit.List());
+           
+        }
+
+        public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
+        {
+            ICriteria crit = CreateCriteriaFromArray(criteria);
+            foreach (Order order in orders)
+            {
+                crit.AddOrder(order);
+            }
+            return Collection.ToArray<T>(crit.List());
         }
 
         public ICollection<T> FindAll(params ICriterion[] criteria)
