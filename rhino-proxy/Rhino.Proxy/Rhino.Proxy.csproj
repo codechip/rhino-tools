@@ -1,0 +1,70 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{72E32640-4572-40C7-A7A4-DF0981CFD677}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.Proxy</RootNamespace>
+    <AssemblyName>Rhino.Proxy</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DOTNET2</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utils\CallableHelper.cs" />
+    <Compile Include="Utils\MethodCallHelper.cs" />
+    <Compile Include="Utils\CodeDOMHelper.cs" />
+    <Compile Include="Utils\MixinHelper.cs" />
+    <Compile Include="Utils\ReflectionHelper.cs" />
+    <Compile Include="Utils\AssertUtil.cs" />
+    <Compile Include="ClassBuilder.cs" />
+    <Compile Include="CodeDOM\CodeAsExpression.cs" />
+    <Compile Include="CodeDOM\CodeIsNull.cs" />
+    <Compile Include="Exceptions\CompilationException.cs" />
+    <Compile Include="Utils\ConstructorOnlyInterceptor.cs" />
+    <Compile Include="Types\ConstructorParameters.cs" />
+    <Compile Include="GeneratorContext.cs" />
+    <Compile Include="Types\IInterceptor.cs" />
+    <Compile Include="Types\IInvocation.cs" />
+    <Compile Include="Invocation.cs" />
+    <Compile Include="Types\MethodInvcoationDelegate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CodeDOMProxyBuilder.cs" />
+    <Compile Include="ProxyGenerator.cs" />
+    <Compile Include="ProxyObjectReference.cs" />
+    <Compile Include="StandardInterceptor.cs" />
+    <Compile Include="Utils\Set.cs" />
+    <Compile Include="Utils\ValidationUtil.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

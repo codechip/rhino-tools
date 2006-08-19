@@ -1,0 +1,201 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{283789DB-80EA-4B15-BE61-850D7F04EFCF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.Proxy.Tests</RootNamespace>
+    <AssemblyName>Rhino.Proxy.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DOTNET2</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.3.6162.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessLevelTestCase.cs" />
+    <Compile Include="CachedTypeTestCase.cs" />
+    <Compile Include="Classes\ClassMarshalByRef.cs" />
+    <Compile Include="Classes\ClassWithConstructors.cs" />
+    <Compile Include="Classes\ClassWithGuid.cs" />
+    <Compile Include="Classes\ClassWithIndexer.cs" />
+    <Compile Include="Classes\ClassWithMarkerInterface.cs" />
+    <Compile Include="Classes\ClassWithProtectedMethods.cs" />
+    <Compile Include="Classes\ClassWithRefType.cs" />
+    <Compile Include="Classes\ClassWithSByteEnum.cs" />
+    <Compile Include="Classes\DummyReader.cs" />
+    <Compile Include="Classes\DuplicateNames.cs" />
+    <Compile Include="Classes\IDataReaderProxy.cs" />
+    <Compile Include="Classes\IndexerClass.cs" />
+    <Compile Include="Classes\MySerializableClass.cs" />
+    <Compile Include="Classes\NonPublicConstructorClass.cs" />
+    <Compile Include="Classes\NonPublicMethodsClass.cs" />
+    <Compile Include="Classes\NoVirtualMethodClass.cs" />
+    <Compile Include="Classes\RefAndOutClass.cs" />
+    <Compile Include="Classes\SealedMethodsClass.cs" />
+    <Compile Include="Classes\ServiceClass.cs" />
+    <Compile Include="Classes\SimpleClass.cs" />
+    <Compile Include="Classes\SpecializedServiceClass.cs" />
+    <Compile Include="Classes\SubSimpleClass.cs" />
+    <Compile Include="ClassInterfaces\IMyInterface.cs" />
+    <Compile Include="ClassInterfaces\IMySecondInterface.cs" />
+    <Compile Include="ClassInterfaces\IServiceStatus.cs" />
+    <Compile Include="ClassInterfaces\MyInterfaceImpl.cs" />
+    <Compile Include="ClassInterfaces\MySecondInterfaceImpl.cs" />
+    <Compile Include="ClassInterfaces\ServiceStatusImpl.cs" />
+    <Compile Include="ClassWithCtorAndVirtualCall.cs" />
+    <Compile Include="DiamondProblem.cs" />
+    <Compile Include="DotNet2Tests.cs" />
+    <Compile Include="ExplicitImplementationOfISerializable.cs" />
+    <Compile Include="IDemo.cs" />
+    <Compile Include="Interceptors\HashtableInterceptor.cs" />
+    <Compile Include="Interceptors\LogInvokeInterceptor.cs" />
+    <Compile Include="Interceptors\MyInterfaceProxy.cs" />
+    <Compile Include="Interceptors\RefAndOutInterceptor.cs" />
+    <Compile Include="Interceptors\ResultModifiedInvocationHandler.cs" />
+    <Compile Include="MethodInvocationTargetTestCase.cs" />
+    <Compile Include="MethodsWithAttributesOnParameters.cs" />
+    <Compile Include="Mixins\ComplexMixin.cs" />
+    <Compile Include="Mixins\OtherMixin.cs" />
+    <Compile Include="Mixins\SimpleMixin.cs" />
+    <Compile Include="MixinTestCase.cs" />
+    <Compile Include="MultithreadTestCase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyGeneratorTestCase.cs" />
+    <Compile Include="ProxyGeneratorTests.cs" />
+    <Compile Include="ProxyingAbstractClass.cs" />
+    <Compile Include="SerializableClassTestCase.cs" />
+    <Compile Include="TestInterceptor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rhino.Proxy\Rhino.Proxy.csproj">
+      <Project>{72E32640-4572-40C7-A7A4-DF0981CFD677}</Project>
+      <Name>Rhino.Proxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassInterfaces\.svn\dir-prop-base" />
+    <None Include="ClassInterfaces\.svn\dir-props" />
+    <None Include="ClassInterfaces\.svn\dir-wcprops" />
+    <None Include="ClassInterfaces\.svn\empty-file" />
+    <None Include="ClassInterfaces\.svn\entries" />
+    <None Include="ClassInterfaces\.svn\format" />
+    <None Include="ClassInterfaces\.svn\prop-base\IMyInterface.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\prop-base\IMySecondInterface.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\prop-base\IServiceStatus.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\prop-base\MyInterfaceImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\prop-base\MySecondInterfaceImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\prop-base\ServiceStatusImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\props\IMyInterface.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\props\IMySecondInterface.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\props\IServiceStatus.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\props\MyInterfaceImpl.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\props\MySecondInterfaceImpl.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\props\ServiceStatusImpl.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\text-base\IMyInterface.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\text-base\IMySecondInterface.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\text-base\IServiceStatus.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\text-base\MyInterfaceImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\text-base\MySecondInterfaceImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\text-base\ServiceStatusImpl.cs.svn-base" />
+    <None Include="ClassInterfaces\.svn\wcprops\IMyInterface.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\wcprops\IMySecondInterface.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\wcprops\IServiceStatus.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\wcprops\MyInterfaceImpl.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\wcprops\MySecondInterfaceImpl.cs.svn-work" />
+    <None Include="ClassInterfaces\.svn\wcprops\ServiceStatusImpl.cs.svn-work" />
+    <None Include="Interceptors\.svn\dir-prop-base" />
+    <None Include="Interceptors\.svn\dir-props" />
+    <None Include="Interceptors\.svn\dir-wcprops" />
+    <None Include="Interceptors\.svn\empty-file" />
+    <None Include="Interceptors\.svn\entries" />
+    <None Include="Interceptors\.svn\format" />
+    <None Include="Interceptors\.svn\prop-base\HashtableInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\prop-base\LogInvokeInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\prop-base\MyInterfaceProxy.cs.svn-base" />
+    <None Include="Interceptors\.svn\prop-base\RefAndOutInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\prop-base\ResultModifiedInvocationHandler.cs.svn-base" />
+    <None Include="Interceptors\.svn\props\HashtableInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\props\LogInvokeInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\props\MyInterfaceProxy.cs.svn-work" />
+    <None Include="Interceptors\.svn\props\RefAndOutInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\props\ResultModifiedInvocationHandler.cs.svn-work" />
+    <None Include="Interceptors\.svn\text-base\HashtableInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\text-base\LogInvokeInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\text-base\MyInterfaceProxy.cs.svn-base" />
+    <None Include="Interceptors\.svn\text-base\RefAndOutInterceptor.cs.svn-base" />
+    <None Include="Interceptors\.svn\text-base\ResultModifiedInvocationHandler.cs.svn-base" />
+    <None Include="Interceptors\.svn\wcprops\HashtableInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\wcprops\LogInvokeInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\wcprops\MyInterfaceProxy.cs.svn-work" />
+    <None Include="Interceptors\.svn\wcprops\RefAndOutInterceptor.cs.svn-work" />
+    <None Include="Interceptors\.svn\wcprops\ResultModifiedInvocationHandler.cs.svn-work" />
+    <None Include="Mixins\.svn\dir-prop-base" />
+    <None Include="Mixins\.svn\dir-props" />
+    <None Include="Mixins\.svn\dir-wcprops" />
+    <None Include="Mixins\.svn\empty-file" />
+    <None Include="Mixins\.svn\entries" />
+    <None Include="Mixins\.svn\format" />
+    <None Include="Mixins\.svn\prop-base\ComplexMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\prop-base\OtherMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\prop-base\SimpleMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\props\ComplexMixin.cs.svn-work" />
+    <None Include="Mixins\.svn\props\OtherMixin.cs.svn-work" />
+    <None Include="Mixins\.svn\props\SimpleMixin.cs.svn-work" />
+    <None Include="Mixins\.svn\text-base\ComplexMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\text-base\OtherMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\text-base\SimpleMixin.cs.svn-base" />
+    <None Include="Mixins\.svn\wcprops\ComplexMixin.cs.svn-work" />
+    <None Include="Mixins\.svn\wcprops\OtherMixin.cs.svn-work" />
+    <None Include="Mixins\.svn\wcprops\SimpleMixin.cs.svn-work" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClassInterfaces\.svn\README.txt" />
+    <Content Include="Interceptors\.svn\README.txt" />
+    <Content Include="Mixins\.svn\README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ClassInterfaces\.svn\tmp\prop-base\" />
+    <Folder Include="ClassInterfaces\.svn\tmp\props\" />
+    <Folder Include="ClassInterfaces\.svn\tmp\text-base\" />
+    <Folder Include="ClassInterfaces\.svn\tmp\wcprops\" />
+    <Folder Include="Interceptors\.svn\tmp\prop-base\" />
+    <Folder Include="Interceptors\.svn\tmp\props\" />
+    <Folder Include="Interceptors\.svn\tmp\text-base\" />
+    <Folder Include="Interceptors\.svn\tmp\wcprops\" />
+    <Folder Include="Mixins\.svn\tmp\prop-base\" />
+    <Folder Include="Mixins\.svn\tmp\props\" />
+    <Folder Include="Mixins\.svn\tmp\text-base\" />
+    <Folder Include="Mixins\.svn\tmp\wcprops\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
