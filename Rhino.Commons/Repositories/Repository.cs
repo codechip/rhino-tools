@@ -48,6 +48,28 @@ namespace Rhino.Commons
         }
 
         /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public static ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+        {
+            return InternalRepository.FindAll(order, criteria);
+        }
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public static ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
+        {
+            return InternalRepository.FindAll(orders, criteria);
+        }
+
+        /// <summary>
         /// Register te entity for save in the database when the unit of work
         /// is completed.
         /// </summary>
