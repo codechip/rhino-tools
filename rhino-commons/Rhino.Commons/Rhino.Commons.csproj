@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rhino.Commons</RootNamespace>
     <AssemblyName>Rhino.Commons</AssemblyName>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>ayende-open-source.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>
     </SccProjectName>
@@ -86,14 +86,12 @@
     </Compile>
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\NHRepository.cs" />
-    <Compile Include="RhinoContainer\NestedConfigurationFacility.cs" />
+    <Compile Include="RhinoContainer\ObjectInstanceResolver.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Repositories\Parameter.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="UnitOfWork\NHibernateUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
-    <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
-    <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
     <Compile Include="RhinoContainer\IoC.cs" />
     <Compile Include="RhinoContainer\RhinoContainer.cs" />
     <Compile Include="StaticReflection.cs" />
