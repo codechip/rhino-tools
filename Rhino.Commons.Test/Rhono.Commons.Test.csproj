@@ -68,7 +68,6 @@
     <Compile Include="IndexersTests.cs" />
     <Compile Include="IoC\IoCFitxture.cs" />
     <Compile Include="LocalDataTests.cs" />
-    <Compile Include="NestedConfigurationFacilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoContainer\Components\Fubar.cs" />
     <Compile Include="RhinoContainer\RhinoContianerTests.cs" />
@@ -81,11 +80,6 @@
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons %28Rhino.Commons\Rhino.Commons%29</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="NestedItems.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
