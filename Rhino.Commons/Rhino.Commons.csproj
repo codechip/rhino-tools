@@ -74,10 +74,7 @@
     <Compile Include="HttpModules\UnitOfWorkModule.cs" />
     <Compile Include="Indexers.cs" />
     <Compile Include="LocalDataImpl\LocalData.cs" />
-    <Compile Include="LocalDataImpl\CurrentRequestData.cs" />
     <Compile Include="LocalDataImpl\ILocalData.cs" />
-    <Compile Include="LocalDataImpl\LocalDataSwitcher.cs" />
-    <Compile Include="LocalDataImpl\LocalThreadData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
