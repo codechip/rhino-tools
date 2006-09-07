@@ -9,11 +9,12 @@ namespace Rhino.Commons
     {
         private static IWindsorContainer container;
         private static object LocalContainerKey = new object();
+
         public static void Initialize(IWindsorContainer windsorContainer)
         {
             IoC.container = windsorContainer;
         }
-        
+
         public static T Resolve<T>()
         {
             return Container.Resolve<T>();
@@ -23,7 +24,7 @@ namespace Rhino.Commons
         {
             return Container.Resolve<T>(name);
         }
-        
+
         public static IWindsorContainer Container
         {
             get
@@ -40,7 +41,7 @@ namespace Rhino.Commons
             get { return Local.Data[LocalContainerKey] as IWindsorContainer; }
             set { Local.Data[LocalContainerKey] = value; }
         }
-        
+
         /// <summary>
         /// This allows you to override the global container locally
         /// Useful for scenarios where you are replacing the global container
@@ -55,6 +56,14 @@ namespace Rhino.Commons
             {
                 LocalContainer = null;
             });
+        }
+
+        public static void Reset(IWindsorContainer containerToReset)
+        {
+            if (ReferenceEquals(container, containerToReset))
+            {
+                container = null;
+            }
         }
     }
 }

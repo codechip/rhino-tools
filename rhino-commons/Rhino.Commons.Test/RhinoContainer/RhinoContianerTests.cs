@@ -13,7 +13,7 @@ namespace Rhino.Commons.Test
             RhinoContainer container = new RhinoContainer();
             container.AddComponent("Foo", typeof (Fubar));
             object bar = new object();
-            container.RegisterDependencyItem(container.Kernel.GetHandler("Foo"), "foo", bar);
+        //    container.RegisterDependencyItem(container.Kernel.GetHandler("Foo"), "foo", bar);
             Fubar resolve = container.Resolve<Fubar>();
             Assert.AreSame(bar, resolve.Foo);
         }

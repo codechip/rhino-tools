@@ -86,7 +86,9 @@
     </Compile>
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\NHRepository.cs" />
-    <Compile Include="RhinoContainer\ObjectInstanceResolver.cs" />
+    <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
+    <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
+    <Compile Include="RhinoContainer\NestedConfigurationFacility.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Repositories\Parameter.cs" />
     <Compile Include="Repositories\Repository.cs" />
@@ -109,6 +111,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using NHibernate;
@@ -15,7 +16,17 @@ namespace Rhino.Commons
 		public const string CurrentUnitOfWorkKey = "CurrentUnitOfWork.Key";
 
 		private static ISessionFactory nhibernateSessionFactory;
-
+        private static IUnitOfWork globalNonThreadSafeUnitOfwork;
+	    
+	    /// <summary>
+	    /// Mostly intended to support mocking of the unit of work.
+	    /// NOT thread safe!
+	    /// </summary>
+	    public static void RegisterGlobalUnitOfWork(IUnitOfWork global)
+	    {
+            globalNonThreadSafeUnitOfwork = global;
+	    }
+	    
 		public static IUnitOfWork Start()
 		{
 			return Start(UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
@@ -30,22 +41,34 @@ namespace Rhino.Commons
 		/// </returns>
 		public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
 		{
+            if (globalNonThreadSafeUnitOfwork != null)
+                return globalNonThreadSafeUnitOfwork;
 			NHibernateUnitOfWorkAdapter data = (NHibernateUnitOfWorkAdapter)Local.Data[CurrentUnitOfWorkKey];
 			if(nestingOptions == UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork && 
 			   data != null)
 			{
 				data.IncremementUsages();
 				return data;
-			}	
-			ISession session = NHibernateSessionFactory.OpenSession();
-			session.FlushMode = FlushMode.Commit;
+			}
+		    ISession session = CreateSession();
+		    session.FlushMode = FlushMode.Commit;
 			CurrentNHibernateSession = session;
 			data = new NHibernateUnitOfWorkAdapter(session, data);
 			Local.Data[CurrentUnitOfWorkKey] = data;
 			return data;
 		}
 
-		/// <summary>
+	    private static ISession CreateSession()
+	    {
+	        if(IoC.Container.Kernel.HasComponent(typeof(IInterceptor)))
+	        {
+	            IInterceptor interceptor = IoC.Resolve<IInterceptor>();
+                return NHibernateSessionFactory.OpenSession(interceptor);
+	        }
+	        return NHibernateSessionFactory.OpenSession();
+	    }
+
+	    /// <summary>
 		/// The current unit of work.
 		/// </summary>
 		public static IUnitOfWork Current
@@ -99,8 +122,15 @@ namespace Rhino.Commons
 							return nhibernateSessionFactory;
 						Configuration cfg = new Configuration();
 						//if not this, assume loading from app.config
-						if (File.Exists(Settings.Default.HibernateConfig))
-							cfg.Configure(new XmlTextReader(Settings.Default.HibernateConfig));
+					    string hibernateConfig = Settings.Default.HibernateConfig;
+					    //if not rooted, assume path from base directory
+					    if(Path.IsPathRooted(hibernateConfig)==false)
+					    {
+                            hibernateConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                                           hibernateConfig);
+					    }
+					    if (File.Exists(hibernateConfig))
+                            cfg.Configure(new XmlTextReader(hibernateConfig));
 						nhibernateSessionFactory = cfg.BuildSessionFactory();
 					}
 				}
