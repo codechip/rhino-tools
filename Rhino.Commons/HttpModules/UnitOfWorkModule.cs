@@ -12,7 +12,7 @@ namespace Rhino.Commons.HttpModules
         public void Init(HttpApplication context)
         {
             windsorContainer = new RhinoContainer(Settings.Default.WindsorConfig);
-            IoC.Initialize(this.windsorContainer);
+            IoC.Initialize(windsorContainer);
             context.BeginRequest += new EventHandler(context_BeginRequest);
             context.EndRequest += new EventHandler(context_EndRequest);
         }
@@ -29,6 +29,7 @@ namespace Rhino.Commons.HttpModules
 
         public void Dispose()
         {
+            IoC.Reset(windsorContainer);            
             windsorContainer.Dispose();
         }
     }
