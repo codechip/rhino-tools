@@ -91,6 +91,8 @@ namespace Rhino.Commons
 
         public static void Reset(IWindsorContainer containerToReset)
         {
+			if(containerToReset==null)
+				return;
             lock (container2Application)
             {
                 if (container2Application.ContainsKey(containerToReset))
