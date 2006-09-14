@@ -23,6 +23,7 @@ namespace Rhino.Commons
 		private PropSetter<SqlConnection> connectionSetter;
 		private PropSetter<SqlTransaction> transactionSetter;
 		private PropGetter<SqlConnection> connectionGetter;
+		private PropGetter<SqlCommand> commandGetter;
 		private AppendCommand doAppend;
 		private ExecuteNonQueryCommand doExecuteNonQuery;
 		private DisposeCommand doDispose;
@@ -47,6 +48,8 @@ namespace Rhino.Commons
 			connectionGetter = (PropGetter<SqlConnection>)
 							  Delegate.CreateDelegate(typeof(PropGetter<SqlConnection>),
 													  instance, "get_Connection");
+			commandGetter =
+				(PropGetter<SqlCommand>)Delegate.CreateDelegate(typeof(PropGetter<SqlCommand>), instance, "get_BatchCommand");
 			doAppend = (AppendCommand)Delegate.CreateDelegate(typeof(AppendCommand), instance, "Append");
 			doExecuteNonQuery = (ExecuteNonQueryCommand)
 							   Delegate.CreateDelegate(typeof(ExecuteNonQueryCommand),
@@ -61,10 +64,36 @@ namespace Rhino.Commons
 		/// <param name="command"></param>
 		public void Append(SqlCommand command)
 		{
+			AssertHasParameters(command);
 			doAppend(command);
 			countOfCommands++;
 		}
 
+		/// <summary>
+		/// This is required because SqlClient.SqlCommandSet will throw if 
+		/// the command has no parameters.
+		/// </summary>
+		/// <param name="command"></param>
+		private static void AssertHasParameters(SqlCommand command)
+		{
+			if(command.Parameters.Count==0)
+			{
+				throw new ArgumentException("A command in SqlCommandSet must have parameters. You can't pass hardcoded sql strings.");
+			}
+		}
+
+
+		/// <summary>
+		/// Return the batch command to be executed
+		/// </summary>
+		public SqlCommand BatchCommand
+		{
+			get
+			{
+				return commandGetter();
+			}
+		}
+		
 		/// <summary>
 		/// The number of commands batched in this instance
 		/// </summary>
@@ -81,6 +110,9 @@ namespace Rhino.Commons
 		/// </returns>
 		public int ExecuteNonQuery()
 		{
+			if (Connection == null)
+				throw new ArgumentNullException(
+					"Connection was not set! You must set the connection property before calling ExecuteNonQuery()");
 			return doExecuteNonQuery();
 		}
 
