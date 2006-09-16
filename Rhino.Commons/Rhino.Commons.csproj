@@ -76,8 +76,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binsor\BinsorCompilerStep.cs" />
     <Compile Include="Binsor\Component.cs" />
     <Compile Include="Binsor\BooReader.cs" />
+    <Compile Include="Binsor\IConfigurationRunner.cs" />
+    <Compile Include="Binsor\TransformComponentReferences.cs" />
     <Compile Include="BulkDeleter.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DateRange.cs" />

@@ -3,12 +3,17 @@ import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
 
 # generic type registration
-Component("defualt_repository", IRepository, NHRepository)
-# sepcialized generic type registration (a bit ugly, I'll admit
-Component("customer_repository", 
-	typeof(IRepository).MakeGenericType(Fubar), 
-	typeof(FakeRepository).MakeGenericType(Fubar))
-	
+Component(defualt_repository, IRepository, NHRepository)
+# sepcialized generic type registration (a bit ugly, I'll admit)
+customer_repository = Component("customer_repository", 
+	typeof(IRepository).MakeGenericType(Fubar),  typeof(FakeRepository).MakeGenericType(Fubar))
+customer_repository.inner = @defualt_repository
 
 email = Component("email_sender", ISender, EmailSender)
 email.Host = "example.dot.org"
+
+# making sure that loops work
+
+for i in range(4):
+	o = Component("foo_${i}", Fubar)
+	o.foo = i
