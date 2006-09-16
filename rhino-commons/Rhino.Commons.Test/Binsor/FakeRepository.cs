@@ -4,7 +4,21 @@ using NHibernate.Expression;
 
 namespace Rhino.Commons.Test.Binsor
 {
-	public class FakeRepository<T> : IRepository<T>{
+	public class FakeRepository<T> : IRepository<T>
+	{
+
+		IRepository<T> inner;
+
+		public IRepository<T> Inner
+		{
+			get { return inner; }
+		}
+
+		public FakeRepository(IRepository<T> inner)
+		{
+			this.inner = inner;
+		}
+
 		/// <summary>
 		/// Find a single entity based on a criteria.
 		/// Thorws is there is more than one result.

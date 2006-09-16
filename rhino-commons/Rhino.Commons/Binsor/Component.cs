@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Boo.Lang;
 using Castle.MicroKernel;
 using Castle.Windsor;
@@ -9,6 +10,7 @@ namespace Rhino.Commons.Binsor
 	public class Component : IQuackFu
 	{
 		private readonly IDictionary _parameters = new Hashtable();
+		private readonly Dictionary<string, string> _references = new Dictionary<string, string>();
 		string _name;
 		private readonly Type _service;
 		private readonly Type _impl;
@@ -37,13 +39,21 @@ namespace Rhino.Commons.Binsor
 			_parameters = parameters;
 		}
 
+		public string Name
+		{
+			get { return _name; }
+		}
+
 		public void Register()
 		{
-			IoC.Container.Kernel.AddComponent(_name,_service,_impl);
-			if (_parameters.Count == 0)
-				return;
-			IHandler handler = IoC.Container.Kernel.GetHandler(_name);
-			IoC.Container.Kernel.RegisterLiveDependencies(handler, _parameters);
+			IKernel kernel = IoC.Container.Kernel;
+			kernel.AddComponent(_name,_service,_impl);
+			IHandler handler = kernel.GetHandler(_name);
+			kernel.RegisterLiveDependencies(handler, _parameters);
+			foreach (KeyValuePair<string,string> pair in _references)
+			{
+				handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
+			}
 		}
 
 		public object QuackGet(string name)
@@ -53,12 +63,33 @@ namespace Rhino.Commons.Binsor
 
 		public object QuackSet(string name, object value)
 		{
+			if (value is ComponentReference)
+			{
+				string referenceName = ((ComponentReference)value).Name;
+				_references.Add(name, referenceName);
+				return null;
+			}
 			return _parameters[name] = value;
 		}
 
 		public object QuackInvoke(string name, params object[] args)
 		{
 			throw new NotSupportedException("You can't invoke a method on a component");
+		}
+	}
+	
+	public class ComponentReference
+	{
+		string name;
+
+		public string Name
+		{
+			get { return name; }
+		}
+
+		public ComponentReference(string name)
+		{
+			this.name = name;
 		}
 	}
 }
