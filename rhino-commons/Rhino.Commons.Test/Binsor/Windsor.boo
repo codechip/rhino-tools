@@ -6,7 +6,7 @@ import Rhino.Commons.Test.Binsor
 Component(defualt_repository, IRepository, NHRepository)
 # sepcialized generic type registration (a bit ugly, I'll admit)
 customer_repository = Component("customer_repository", 
-	typeof(IRepository).MakeGenericType(Fubar),  typeof(FakeRepository).MakeGenericType(Fubar))
+	IRepository of Fubar,  FakeRepository of Fubar)
 customer_repository.inner = @defualt_repository
 
 email = Component("email_sender", ISender, EmailSender)
