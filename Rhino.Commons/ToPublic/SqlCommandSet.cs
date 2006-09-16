@@ -113,6 +113,8 @@ namespace Rhino.Commons
 			if (Connection == null)
 				throw new ArgumentNullException(
 					"Connection was not set! You must set the connection property before calling ExecuteNonQuery()");
+			if(CountOfCommands==0)
+				return 0;
 			return doExecuteNonQuery();
 		}
 
