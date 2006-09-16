@@ -528,34 +528,39 @@
         </member>
         <member name="T:Castle.DynamicProxy.IInvocation">
             <summary>
-            
+            Proceed with, manipulate or find more information about the call that 
+            is being intercepted
             </summary>
         </member>
         <member name="M:Castle.DynamicProxy.IInvocation.Proceed(System.Object[])">
             <summary>
-            
+            Proceed with the call that was intercepted.
             </summary>
-            <param name="args"></param>
-            <returns></returns>
+            <param name="args">The arguments that will be passed onto the method.</param>
+            <returns>The argument returned from the method.</returns>
         </member>
         <member name="P:Castle.DynamicProxy.IInvocation.Proxy">
             <summary>
-            
+            Get the dynamic proxy that intercepted this call.
             </summary>
         </member>
         <member name="P:Castle.DynamicProxy.IInvocation.InvocationTarget">
             <summary>
-            
+            Get or set target that will be invoked when Process() is called.  		
             </summary>
+            <remarks>
+            Changing InvocationTarget only effects this call.  Any call made after
+            this will invoke the original target of the proxy.
+            </remarks>
         </member>
         <member name="P:Castle.DynamicProxy.IInvocation.Method">
             <summary>
-            
+            Get the method that is being invoked.
             </summary>
         </member>
         <member name="P:Castle.DynamicProxy.IInvocation.MethodInvocationTarget">
             <summary>
-            
+            Get the method on the target object that is being invoked.
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.Invocation.SameClassInvocation">

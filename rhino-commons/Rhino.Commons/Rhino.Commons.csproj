@@ -38,6 +38,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Boo.Lang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Compiler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Boo.Lang.Compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.MicroKernel.dll</HintPath>
@@ -64,9 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbortableThreadPool\AbortableThreadPool.cs" />
-    <Compile Include="AbortableThreadPool\WorkItem.cs" />
-    <Compile Include="AbortableThreadPool\WorkItemStatus.cs" />
+    <Compile Include="Binsor\Component.cs" />
+    <Compile Include="Binsor\BooReader.cs" />
     <Compile Include="BulkDeleter.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DateRange.cs" />
@@ -93,7 +104,11 @@
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
     <Compile Include="RhinoContainer\NestedConfigurationFacility.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
+    <Compile Include="Threading\AbortableThreadPool\AbortableThreadPool.cs" />
+    <Compile Include="Threading\AbortableThreadPool\WorkItem.cs" />
+    <Compile Include="Threading\AbortableThreadPool\WorkItemStatus.cs" />
     <Compile Include="Threading\ThreadSafeQueue.cs" />
+    <Compile Include="Threading\WaitForConsumersEvent.cs" />
     <Compile Include="ToPublic\SqlCommandSet.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Repositories\Parameter.cs" />
@@ -105,7 +120,6 @@
     <Compile Include="StaticReflection.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="Validation.cs" />
-    <Compile Include="WaitForConsumersEvent.cs" />
     <Compile Include="UnitOfWork\With.cs" />
   </ItemGroup>
   <ItemGroup>
