@@ -1,4 +1,6 @@
+using System;
 using Castle.Windsor;
+using NHibernate.Expression;
 using NUnit.Framework;
 
 namespace Rhino.Commons.Test.IoCTests
@@ -25,6 +27,8 @@ namespace Rhino.Commons.Test.IoCTests
             }
             Assert.AreSame(container, IoC.Container);
         }
+    	
+    	class Post{}
     }
 }
     

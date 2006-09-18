@@ -5,7 +5,7 @@
     <Position X="0.5" Y="4" Width="3.25" />
     <TypeIdentifier>
       <FileName>UnitOfWork\UnitOfWork.cs</FileName>
-      <HashCode>AAIAAAIAACAAAAAAAACAQAAAAAAAAAAAAAAAAAAACEA=</HashCode>
+      <HashCode>AAIIAAIAACAAQBAAAACAQAAAAAAAAAAAAAAAAAAACMA=</HashCode>
     </TypeIdentifier>
     <Members>
       <Field Name="CurrentNHibernateSessionKey" Hidden="true" />
@@ -14,17 +14,34 @@
     </Members>
   </Class>
   <Class Name="Rhino.Commons.Repository&lt;T&gt;">
-    <Position X="1.25" Y="6.5" Width="6.5" />
+    <Position X="0.5" Y="8.5" Width="6.5" />
     <TypeIdentifier>
       <FileName>Repositories\Repository.cs</FileName>
-      <HashCode>AAAAgIAAAAAAAABAAIAQAAAAAAEAAAACAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAgIAAAAAAAABAAIAUAAAAAAEAAAACAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
     <Members>
       <Property Name="InternalRepository" Hidden="true" />
     </Members>
   </Class>
+  <Class Name="Rhino.Commons.With">
+    <Position X="5.25" Y="5.75" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>With\With.Transaction.cs</FileName>
+      <HashCode>ABCAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="Transaction" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="Rhino.Commons.With.Caching" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>With\With.Cache.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+  </Class>
   <Interface Name="Rhino.Commons.IRepository&lt;T&gt;">
-    <Position X="0.75" Y="1" Width="6.5" />
+    <Position X="1" Y="0.5" Width="7.75" />
     <TypeIdentifier>
       <FileName>Repositories\IRepository.cs</FileName>
       <HashCode>AAAAgIAAAAAAAABAAIAQAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>

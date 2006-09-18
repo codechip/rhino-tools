@@ -120,6 +120,12 @@ namespace Rhino.Commons
                     continue;
                 crit.Add(criterion);
             }
+        	if(With.Caching.ShouldForceCacheRefresh == false &&
+        	   With.Caching.Enabled)
+        	{
+				crit.SetCacheable(true);
+				crit.SetCacheRegion(With.Caching.CurrentCacheRegion);
+        	}
             return crit;
         }
 
@@ -130,6 +136,15 @@ namespace Rhino.Commons
             {
                 query.SetParameter(parameter.Name, parameter.Value);
             }
+			if (With.Caching.ShouldForceCacheRefresh == false && With.Caching.Enabled)
+			{
+				query.SetCacheable(true);
+				query.SetCacheRegion(With.Caching.CurrentCacheRegion);
+			}
+        	else if(With.Caching.ShouldForceCacheRefresh)
+        	{
+				query.SetForceCacheRefresh(true);
+        	}
             return query;
         }
     }
