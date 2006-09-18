@@ -1,11 +1,13 @@
+using System;
+using System.ComponentModel;
 using System.Data;
 using NHibernate;
 
 namespace Rhino.Commons
 {
-    public static class With
+	public static partial class With
     {
-        public static void Transaction(IsolationLevel level, Proc transactional)
+    public static void Transaction(IsolationLevel level, Proc transactional)
         {
             ITransaction tx = UnitOfWork.Current.BeginTransaction(level);
             try

@@ -123,7 +123,7 @@
     <Compile Include="StaticReflection.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="Validation.cs" />
-    <Compile Include="UnitOfWork\With.cs" />
+    <Compile Include="With\With.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -134,6 +134,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="With\With.Cache.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

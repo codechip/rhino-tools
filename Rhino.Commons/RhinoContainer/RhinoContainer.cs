@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Castle.Windsor;
 using Castle.Windsor.Configuration;
 using Castle.Windsor.Configuration.Interpreters;
+using Rhino.Commons.Binsor;
 
 namespace Rhino.Commons
 {
@@ -17,21 +19,29 @@ namespace Rhino.Commons
         }
 
         public RhinoContainer(string fileName)
-            : this(new XmlInterpreter(fileName))
         {
-        }
+			if (Path.GetExtension(fileName).Equals("boo", StringComparison.InvariantCultureIgnoreCase))
+				BooReader.Read(this, fileName);
+			else
+				InitalizeFromConfigurationSource(new XmlInterpreter(fileName));
+    	}
 
-        public RhinoContainer(IConfigurationInterpreter interpreter)
+    	public RhinoContainer(IConfigurationInterpreter interpreter)
             : base()
         {
-            DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
-            conversionManager.Add(new ConfigurationObjectConverter());
-
-            interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
-            RunInstaller();
+    		InitalizeFromConfigurationSource(interpreter);
         }
 
-        public override T Resolve<T>(string key)
+    	private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter)
+    	{
+    		DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
+    		conversionManager.Add(new ConfigurationObjectConverter());
+
+    		interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
+    		RunInstaller();
+    	}
+
+    	public override T Resolve<T>(string key)
         {
             AssertNotDisposed();
             return base.Resolve<T>(key);
