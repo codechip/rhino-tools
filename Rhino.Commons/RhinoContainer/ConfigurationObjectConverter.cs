@@ -2,7 +2,7 @@ namespace Rhino.Commons
 {
 	using System;
 	using System.Text;
-	using Castle.Model.Configuration;
+	using Castle.Core.Configuration;
 	using System.Reflection;
 
     using Castle.MicroKernel.SubSystems.Conversion;

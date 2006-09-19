@@ -1,8 +1,8 @@
 using System;
 using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Conversion;
-using Castle.Model;
-using Castle.Model.Configuration;
+using Castle.Core;
+using Castle.Core.Configuration;
 
 namespace Rhino.Commons
 {
