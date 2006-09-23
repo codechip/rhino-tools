@@ -105,7 +105,6 @@
     <Compile Include="Repositories\NHRepository.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
-    <Compile Include="RhinoContainer\NestedConfigurationFacility.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Threading\AbortableThreadPool\AbortableThreadPool.cs" />
     <Compile Include="Threading\AbortableThreadPool\WorkItem.cs" />

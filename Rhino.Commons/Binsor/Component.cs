@@ -49,7 +49,7 @@ namespace Rhino.Commons.Binsor
 			IKernel kernel = IoC.Container.Kernel;
 			kernel.AddComponent(_name,_service,_impl);
 			IHandler handler = kernel.GetHandler(_name);
-			kernel.RegisterLiveDependencies(handler, _parameters);
+			kernel.RegisterCustomDependencies(_name, _parameters);
 			foreach (KeyValuePair<string,string> pair in _references)
 			{
 				handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
@@ -84,7 +84,7 @@ namespace Rhino.Commons.Binsor
 
 		public string Name
 		{
-			get { return name; }
+			get { return this.name; }
 		}
 
 		public ComponentReference(string name)
