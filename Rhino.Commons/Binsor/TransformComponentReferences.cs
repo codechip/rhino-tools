@@ -22,7 +22,7 @@ namespace Rhino.Commons.Binsor
 			if(node.Name.StartsWith("@"))
 			{
 				string refComponentName = node.Name.Substring(1);
-				StringLiteralExpression literal = CodeBuilder.CreateStringLiteral("${" + refComponentName + "}");
+				StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(refComponentName);
 				ExternalConstructor constructor = new ExternalConstructor(TypeSystemServices, _componentReferenceConstructor);
 				MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, literal);
 				node.ParentNode.Replace(node, invocation);

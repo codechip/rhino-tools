@@ -14,9 +14,9 @@ namespace Rhino.Commons.Binsor
 		string _name;
 		private readonly Type _service;
 		private readonly Type _impl;
-		
+
 		public Component(string name, Type service)
-			:this(name,service,service)
+			: this(name, service, service)
 		{
 		}
 
@@ -28,13 +28,14 @@ namespace Rhino.Commons.Binsor
 			BooReader.Components.Add(this);
 		}
 
-		public Component(string name, Type service, IDictionary parameters) : this(name, service)
+		public Component(string name, Type service, IDictionary parameters)
+			: this(name, service)
 		{
 			_parameters = parameters;
 		}
-		
+
 		public Component(string name, Type service, Type impl, IDictionary parameters)
-		 :this(name, service,impl)
+			: this(name, service, impl)
 		{
 			_parameters = parameters;
 		}
@@ -47,10 +48,10 @@ namespace Rhino.Commons.Binsor
 		public void Register()
 		{
 			IKernel kernel = IoC.Container.Kernel;
-			kernel.AddComponent(_name,_service,_impl);
+			kernel.AddComponent(_name, _service, _impl);
 			IHandler handler = kernel.GetHandler(_name);
 			kernel.RegisterCustomDependencies(_name, _parameters);
-			foreach (KeyValuePair<string,string> pair in _references)
+			foreach (KeyValuePair<string, string> pair in _references)
 			{
 				handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
 			}
@@ -77,7 +78,7 @@ namespace Rhino.Commons.Binsor
 			throw new NotSupportedException("You can't invoke a method on a component");
 		}
 	}
-	
+
 	public class ComponentReference
 	{
 		string name;
@@ -89,7 +90,7 @@ namespace Rhino.Commons.Binsor
 
 		public ComponentReference(string name)
 		{
-			this.name = name;
+			this.name = "${" + name + "}";
 		}
 	}
 }
