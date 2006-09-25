@@ -41,7 +41,7 @@ namespace Rhino.Commons
 			{
 				get
 				{
-					return (string)Local.Data[cachingKey];
+					return (string)Local.Data[cachingRegionKey];
 				}
 			}
 
