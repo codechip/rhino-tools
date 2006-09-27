@@ -6,11 +6,12 @@ import Rhino.Commons.Test.Binsor
 Component(defualt_repository, IRepository, NHRepository)
 # sepcialized generic type registration (a bit ugly, I'll admit)
 customer_repository = Component("customer_repository", 
-	IRepository of Fubar,  FakeRepository of Fubar)
-customer_repository.inner = @defualt_repository
+	IRepository of Fubar,  FakeRepository of Fubar,
+	inner: @defualt_repository)
 
-email = Component("email_sender", ISender, EmailSender)
-email.Host = "example.dot.org"
+
+email = Component("email_sender", ISender, EmailSender,
+	Host: "example.dot.org")
 
 # making sure that loops work
 
