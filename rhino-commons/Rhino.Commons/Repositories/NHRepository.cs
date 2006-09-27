@@ -130,7 +130,8 @@ namespace Rhino.Commons
                With.Caching.Enabled)
             {
                 crit.SetCacheable(true);
-                crit.SetCacheRegion(With.Caching.CurrentCacheRegion);
+            	if (With.Caching.CurrentCacheRegion!=null)
+					crit.SetCacheRegion(With.Caching.CurrentCacheRegion);
             }
         }
 
@@ -150,7 +151,8 @@ namespace Rhino.Commons
             if (With.Caching.ShouldForceCacheRefresh == false && With.Caching.Enabled)
             {
                 query.SetCacheable(true);
-                query.SetCacheRegion(With.Caching.CurrentCacheRegion);
+              	if (With.Caching.CurrentCacheRegion!=null)
+					query.SetCacheRegion(With.Caching.CurrentCacheRegion);
             }
             else if(With.Caching.ShouldForceCacheRefresh)
             {
