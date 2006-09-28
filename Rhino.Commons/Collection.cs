@@ -94,5 +94,20 @@ namespace Rhino.Commons
         {
             return new BindingList<T>(ToArray<T>(list));
         }
+
+		public static IDictionary<T, ICollection<K>> GroupBy<K, T>(ICollection<K> collection, Converter<K, T> converter)
+		{
+			Dictionary<T, ICollection<K>> dic = new Dictionary<T, ICollection<K>>();
+			foreach (K k in collection)
+			{
+				T key = converter(k);
+				if (dic.ContainsKey(key) == false)
+				{
+					dic[key] = new List<K>();
+				}
+				dic[key].Add(k);
+			}
+			return dic;
+		}
     }
 }
