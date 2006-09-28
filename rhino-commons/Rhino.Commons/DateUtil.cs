@@ -11,5 +11,15 @@ namespace Rhino.Commons
             return new DateTime(datePart.Year, datePart.Month, datePart.Day, 
                 timePart.Hour,  timePart.Minute, timePart.Second, timePart.Millisecond);
         }
+
+		public static DateTime StartMonth(DateTime date)
+		{
+			return new DateTime(date.Year, date.Month, 1);
+		}
+
+		public static DateTime EndMonth(DateTime date)
+		{
+			return StartMonth(date).AddMonths(1).AddDays(-1);
+		}
     }
 }
