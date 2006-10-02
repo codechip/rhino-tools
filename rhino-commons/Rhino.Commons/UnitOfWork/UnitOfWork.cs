@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
-using Settings = Rhino.Commons.Properties.Settings;
+using Settings=Rhino.Commons.Properties.Settings;
+
 namespace Rhino.Commons
 {
 	public static class UnitOfWork
