@@ -140,7 +140,10 @@ namespace Rhino.Commons
             IQuery query = UnitOfWork.CurrentNHibernateSession.GetNamedQuery(namedQuery);
             foreach (Parameter parameter in parameters)
             {
-                query.SetParameter(parameter.Name, parameter.Value);
+				if (parameter.Type == null)
+					query.SetParameter(parameter.Name, parameter.Value);
+				else
+					query.SetParameter(parameter.Name, parameter.Value, parameter.Type);
             }
             AddCaching(query);
             return query;
