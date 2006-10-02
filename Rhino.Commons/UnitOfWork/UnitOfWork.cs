@@ -134,6 +134,25 @@ namespace Rhino.Commons
 				return nhibernateSessionFactory;
 			}
 		}
+		
+		/// <summary>
+		/// Replace the default implementation of the Session Factory (read from configuration)
+		/// with a user supplied one.
+		/// NOTE: This should be done at application start. 
+		/// No attempt is made to make this thread safe!
+		/// </summary>
+		/// <param name="factory">
+		/// </param>
+		public static void RegisterSessionFactor(ISessionFactory factory)
+		{
+			Validation.NotNull(factory,"factory");
+			ISessionFactory old = nhibernateSessionFactory;
+			nhibernateSessionFactory = factory;
+			if(old!=null)
+			{
+				old.Close();
+			}
+		}
 
 		/// <summary>
 		/// Called internally to clear the current UoW and move to the previous one.
