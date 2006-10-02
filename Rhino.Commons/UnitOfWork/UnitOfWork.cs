@@ -143,7 +143,7 @@ namespace Rhino.Commons
 		/// </summary>
 		/// <param name="factory">
 		/// </param>
-		public static void RegisterSessionFactor(ISessionFactory factory)
+		public static void RegisterSessionFactory(ISessionFactory factory)
 		{
 			Validation.NotNull(factory,"factory");
 			ISessionFactory old = nhibernateSessionFactory;
