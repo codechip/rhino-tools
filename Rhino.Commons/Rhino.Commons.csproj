@@ -140,6 +140,7 @@
     <Compile Include="NHibernate\Infelector.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="With\With.Cache.cs" />
+    <Compile Include="With\With.PerformanceCounter.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
