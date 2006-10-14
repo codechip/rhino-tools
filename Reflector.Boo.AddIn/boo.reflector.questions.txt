@@ -1,0 +1,27 @@
+# support fully qualified names ?
+# pointers - show in comments and using C#'s syntax
+# optional / required parameters - check how they are shown.
+# ref & out params - comments
+# Special types (int, list, etc)- NOT implemented right now.
+# support for Boo's literals
+# check bytes array explicit initialization
+# boo doesn't support the \v escape character - will appear in the source anyway
+# generic arguements parameters using typeof()
+# generic constraints
+# generic default ctor
+# C's for statements
+# do - while loops
+# array initialization for mutli dimentional
+# operators support "~"
+# conditional expression - iif
+# Null Coalescing operator
+# function pointers
+# address de-referencing
+# sizeof
+
+
+* Reflector.Boo
+* Design By Contract
+* Deteministic Destruction
+* ISmartDisposable
+* lint pipline
