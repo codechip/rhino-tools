@@ -72,6 +72,30 @@ namespace NHibernate.Generics
 			get { return null; }
 		}
 
+		///<summary>
+		///
+		///            When implemented by a class, gets the <see cref="T:System.Reflection.MethodInfo" /> for the 
+		///<c>set</c>
+		///            accessor of the property.
+		///            
+		///</summary>
+		///
+		///<remarks>
+		///
+		///            This is an optional operation - if the <see cref="T:NHibernate.Property.ISetter" /> is not 
+		///            for a property 
+		///<c>set</c> then 
+		///<c>null</c> is an acceptable value to return.
+		///            It is used by the proxies to determine which setter to intercept for the
+		///            identifier property.
+		///            
+		///</remarks>
+		///
+		public MethodInfo Method
+		{
+			get { return null; }
+		}
+
 		/// <summary>
 		/// Gets the <see cref="PropertyInfo"/> for the Property.
 		/// </summary>

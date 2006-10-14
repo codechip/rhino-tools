@@ -38,15 +38,11 @@ namespace NHibernate.Query.Generator
 				{
 					GenerateFromActiveRecordAssembly();
 				}
-				//write named expressions so user can just include the whole directory.
-				Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.Expressions.NamedExpression."+extention);
-				File.WriteAllText(Path.Combine(outputDir, "NamedExpression."+extention), new StreamReader(namedExp).ReadToEnd());
-				Console.WriteLine("Created file: {0}\\NamedExpression.{1}", outputDir,extention);
+				OutputQueryBuilder();
 			}
 			catch (ReflectionTypeLoadException e)
 			{
-				Console.WriteLine(@"A type load error occured!
-This usually happens if NHibernate Query Generator is unable to load all the required assemblies.");
+				Console.WriteLine("A type load error occured!\r\nThis usually happens if NHibernate Query Generator is unable to load all the required assemblies.");
 				Dictionary<string, bool> reported = new Dictionary<string, bool>();
 				foreach (Exception loaderException in e.LoaderExceptions)
 				{
@@ -62,6 +58,14 @@ This usually happens if NHibernate Query Generator is unable to load all the req
 				Console.WriteLine("An error occured:");
 				Console.Write(e);
 			}
+		}
+
+		private static void OutputQueryBuilder()
+		{
+//write query builders so user can just include the whole directory.
+			Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder."+extention);
+			File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + extention), new StreamReader(namedExp).ReadToEnd());
+			Console.WriteLine("Created file: {0}\\NamedExpression.{1}", outputDir,extention);
 		}
 
 		private static void GenerateFromActiveRecordAssembly()

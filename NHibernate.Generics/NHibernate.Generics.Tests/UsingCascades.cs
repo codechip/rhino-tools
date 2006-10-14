@@ -30,15 +30,6 @@ namespace NHibernate.Generics.Tests
             session.Dispose();
         }
 
-        class File { public string Name, Content; public int Size; public DateTime? Modified; }
-
-        [Test]
-        public void SearchForFiles()
-        {
-            ICriteria query = session.CreateCriteria(typeof(File));
-            
-        }
-        
         [Test]
         public void UseCascades()
         {

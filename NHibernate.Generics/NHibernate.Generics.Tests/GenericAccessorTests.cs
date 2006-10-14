@@ -49,7 +49,7 @@ namespace NHibernate.Generics.Tests
         
         public class ClassWithNullEntitySet
         {
-            EntitySet<Blog> _blogs;
+            EntitySet<Blog> _blogs = new EntitySet<Blog>();
 
             public EntitySet<Blog> Blogs
             {

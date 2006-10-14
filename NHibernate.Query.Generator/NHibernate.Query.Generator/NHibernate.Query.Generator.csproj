@@ -60,10 +60,10 @@
     <Compile Include="CustomTool\IVsGeneratorProgress.cs" />
     <Compile Include="CustomTool\IVsSingleFileGenerator.cs" />
     <Compile Include="CustomTool\ServiceProvider.cs" />
-    <Compile Include="Expressions\QueryBuilder.cs" />
     <Compile Include="NHibernateQueryGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryBuilders\QueryBuilder.cs" />
     <Compile Include="QueryGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,8 +73,10 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Expressions\QueryBuilder.vb" />
     <EmbeddedResource Include="Expressions\QueryBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="QueryBuilders\QueryBuilder.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
