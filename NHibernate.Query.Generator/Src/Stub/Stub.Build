@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="Ayende.NHibernateQueryAnalyzer" default="build" basedir=".">
+	<target name="build">    
+		<csc 
+			target="winexe" 
+			output="${build.dir}\Ayende.NHibernateQueryAnalyzer.exe" 
+			debug="${build.debug}"
+			win32icon="${docs.dir}\nqa-logo.ico">
+			<sources>        
+				<include name="**/*.cs"/>
+				<include name="${build.dir}/CommonAssemblyInfo.cs"/>
+			</sources>
+			<references>
+				<include name="${build.dir}/log4net.dll"/>
+				<include name="${build.dir}/SLSExceptionReporter.dll"/>
+				<include name="${build.dir}/NHibernate.dll"/>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.UserInterface.dll"/>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.Core.dll"/>
+				<include name="${build.dir}/WeifenLuo.WinFormsUI.Docking.dll"/>
+				<include name="${build.dir}/SLSExceptionReporter.dll"/>
+				<!-- this will only ever reference if we are doing ncover build -->
+				<include name="${build.dir}/NCover.dll"/>
+			</references>
+		</csc>  
+		<copy file="App.Config" tofile="${build.dir}/Ayende.NHibernateQueryAnalyzer.exe.config"/>
+	</target>  
+	<target name="clean">    
+		<delete dir="${build.dir}" failonerror="false"/>
+	</target>    
+</project>

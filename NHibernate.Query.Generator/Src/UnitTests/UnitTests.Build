@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<project name="Ayende.NHibernateQueryAnalyzer.UnitTests" default="build" basedir=".">
+
+	<target name="copy-test-libraries">
+		<copy todir="${build.dir}" flatten="true" overwrite="true" failonerror="false">
+			<fileset basedir="${tools.dir}">
+				<include name="NUnit\NUnit.Framework.dll" />
+				<include name="Rhino.Mocks\Rhino.Mocks.dll" />
+				<include name="TestData\Hbm.Xml.dll" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy-test-project">
+		<mkdir dir="${build.dir}\TestProject"/>
+		<copy todir="${build.dir}\TestProject" overwrite="true" failonerror="false" flatten="true">
+			<fileset basedir="${tools.dir}">
+				<include name="TestData\*TestProject*.*" />
+				<include name="TestData\Nullables.dll" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build" depends="copy-test-libraries, copy-test-project">    
+		<csc target="library" output="${build.dir}\Ayende.NHibernateQueryAnalyzer.UnitTests.dll" debug="${build.debug}">
+			<sources>        
+				<include name="**/*.cs"/>
+				<include name="${build.dir}/CommonAssemblyInfo.cs"/>
+			</sources>
+			<resources prefix="Ayende.NHibernateQueryAnalyzer.UnitTests">
+				<include name="Mapping.xml"/>
+			</resources>
+			<references>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.Utilities.dll"/>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.ProjectLoader.dll"/>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.Core.dll"/>
+				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.UserInterface.dll"/>
+				<include name="${build.dir}/log4net.dll"/>
+				<include name="${build.dir}/Rhino.Mocks.dll" />
+				<include name="${build.dir}/NHibernate.dll"/>
+				<include name="${build.dir}/Iesi.Collections.dll"/>
+				<include name="${build.dir}/NUnit.Framework.dll" />
+				<include name="${build.dir}/WeifenLuo.WinFormsUI.Docking.dll" />
+				<include name="${build.dir}/SQLite.Net.dll" />
+				<!-- this will only ever reference if we are doing ncover build -->
+				<include name="${build.dir}/NCover.dll"/>
+			</references>
+		</csc>  
+		<copy file="App.Config" tofile="${build.dir}/Ayende.NHibernateQueryAnalyzer.UnitTests.dll.config"/>
+		<copy file="${tools.dir}\TestData\Ayende.NHibernateQueryAnalyzer.TestProject.dll.config" tofile="${build.dir}\TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.dll.config"/>
+		<!--<xmlpoke file="${build.dir}\TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.dll.config"
+			 value="Data Source=${build.dir}\TestProject\TestProject.db;New=False;UTF8Encoding=True;Version=2"
+			 xpath=""
+			/>-->
+	</target>  
+	
+	<target name="clean">    
+		<delete dir="${build.dir}" failonerror="false"/>
+	</target>    
+
+</project>

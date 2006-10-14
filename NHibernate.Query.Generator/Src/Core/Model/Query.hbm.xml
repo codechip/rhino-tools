@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Ayende.NHibernateQueryAnalyzer.Model.Query, Ayende.NHibernateQueryAnalyzer.Core" 
+		table="Queries">
+		<id name="Id" column="id" type="Int32" unsaved-value="0" access="nosetter.camelcase">
+			<generator class="identity" />
+		</id>
+		<property name="Name" column="name" type="String" length="255" />
+		<property name="Text" column="text" type="String" />
+		<many-to-one 
+			not-null="true"
+			name="OwnerProject" 
+			column="project_id"
+			class="Ayende.NHibernateQueryAnalyzer.Model.Project, Ayende.NHibernateQueryAnalyzer.Core" />
+	</class>
+</hibernate-mapping>
