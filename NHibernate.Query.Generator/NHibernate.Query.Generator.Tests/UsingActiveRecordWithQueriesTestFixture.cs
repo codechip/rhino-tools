@@ -3,6 +3,7 @@ using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
 using NHibernate.Cfg;
+using NHibernate.Expression;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
@@ -103,7 +104,8 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			Post post = Post.FindOne();
 			Comment[] commentFromDb =
-				Comment.FindAll(Where.Comment.Content == "Active Record Rocks!" && Where.Comment.Post == post);
+				Comment.FindAll(Where.Comment.Content == "Active Record Rocks!" || Where.Comment.Content.Like("NHibernate", MatchMode.Anywhere)
+				                && Where.Comment.Post == post);
 			Assert.AreEqual(1, commentFromDb.Length);
 		}
 
@@ -190,8 +192,8 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			sessionScope.Dispose();
 		}
-
-
+	
+		
 		/*using (new SessionScope())
 		{
 				

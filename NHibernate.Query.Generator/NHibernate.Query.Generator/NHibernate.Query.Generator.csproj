@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NHibernate.Query.Generator</RootNamespace>
-    <AssemblyName>NHibernate.Query.Generator</AssemblyName>
+    <AssemblyName>NHQG</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.cs" />
-	  <EmbeddedResource Include="QueryBuilders\QueryBuilder.vb" />
+    <EmbeddedResource Include="QueryBuilders\QueryBuilder.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

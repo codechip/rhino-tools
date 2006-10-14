@@ -5,6 +5,137 @@ Imports System.Collections.Generic
 Imports System.ComponentModel
 
 Namespace Query
+	Public Class OrderByClause
+		' Methods
+		Public Sub New(ByVal name As String)
+			Me.ascending = True
+			Me.name = name
+		End Sub
+
+		Public Shared Widening Operator CType(ByVal order As OrderByClause) As Order
+			Return New Order(order.name, order.ascending)
+		End Operator
+
+
+		' Properties
+		Public ReadOnly Property Asc() As OrderByClause
+			Get
+				Me.ascending = True
+				Return Me
+			End Get
+		End Property
+
+		Public ReadOnly Property Desc() As OrderByClause
+			Get
+				Me.ascending = False
+				Return Me
+			End Get
+		End Property
+
+
+		' Fields
+		Private ascending As Boolean
+		Private name As String
+	End Class
+
+	Public Class PropertyQueryBuilder(Of T)
+		Inherits QueryBuilder(Of T)
+
+		' Methods
+		Public Sub New(ByVal name As String, ByVal assoicationPath As String)
+			MyBase.New(name, assoicationPath)
+		End Sub
+
+		Public Function Between(ByVal lo As Object, ByVal hi As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New BetweenExpression(MyBase.name, lo, hi)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function EqProperty(ByVal otherPropertyName As String) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New EqPropertyExpression(MyBase.name, otherPropertyName)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function Ge(ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New GeExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function Gt(ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New GtExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function InsensitiveLike(ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New InsensitiveLikeExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function InsensitiveLike(ByVal value As String, ByVal matchMode As MatchMode) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New InsensitiveLikeExpression(MyBase.name, value, matchMode)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function Le(ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LeExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function LeProperty(ByVal otherPropertyName As String) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LePropertyExpression(MyBase.name, otherPropertyName)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function [Like](ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LikeExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function [Like](ByVal value As String, ByVal matchMode As MatchMode) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LikeExpression(MyBase.name, value, matchMode)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function Lt(ByVal value As Object) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LtExpression(MyBase.name, value)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Function LtProperty(ByVal otherPropertyName As String) As QueryBuilder(Of T)
+			Dim criterion1 As AbstractCriterion = New LtPropertyExpression(MyBase.name, otherPropertyName)
+			MyBase.AddCriterion(criterion1)
+			Return Me
+		End Function
+
+		Public Shared Operator >(ByVal expr As PropertyQueryBuilder(Of T), ByVal other As Object) As QueryBuilder(Of T)
+			Return expr.Gt(other)
+		End Operator
+
+		Public Shared Operator >=(ByVal expr As PropertyQueryBuilder(Of T), ByVal other As Object) As QueryBuilder(Of T)
+			Return expr.Ge(other)
+		End Operator
+
+		Public Shared Operator <(ByVal expr As PropertyQueryBuilder(Of T), ByVal other As Object) As QueryBuilder(Of T)
+			Return expr.Lt(other)
+		End Operator
+
+		Public Shared Operator <=(ByVal expr As PropertyQueryBuilder(Of T), ByVal other As Object) As QueryBuilder(Of T)
+			Return expr.Le(other)
+		End Operator
+
+	End Class
+
 	Public Class QueryBuilder(Of T)
 		' Methods
 		Public Sub New(ByVal name As String, ByVal assoicationPath As String)
@@ -203,7 +334,6 @@ Namespace Query
 				Me.AddCriterion(criterion1)
 				Return Me
 			End Get
-
 		End Property
 
 
@@ -214,6 +344,7 @@ Namespace Query
 		Private criterions As ICollection(Of ICriterion)
 		Protected name As String
 	End Class
+
 End Namespace
 
 

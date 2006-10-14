@@ -12,7 +12,7 @@ namespace NHibernate.Query.Generator
 {
 	class Program
 	{
-		private static string extention;
+		private static string targetExtention;
 		private static string outputDir;
 		private static CodeDomProvider provider = null;
 
@@ -52,15 +52,15 @@ namespace NHibernate.Query.Generator
 
 		private static void OutputFile(string file)
 		{
-			string extension = Path.GetExtension(file);
-			string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + extension);
+			string fileExt = Path.GetExtension(file);
+			string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) +"."+ targetExtention);
 			// hbm file
-			if (extension.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
+			if (fileExt.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
 			{
 				GenerateSingleFile(File.OpenText(file), outputFile);
 			}
-			else if (extention.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
-			         extension.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase))// Active Record...
+			else if (targetExtention.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
+			         fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase))// Active Record...
 			{
 				GenerateFromActiveRecordAssembly(file);
 			}
@@ -69,9 +69,9 @@ namespace NHibernate.Query.Generator
 		private static void OutputQueryBuilder()
 		{
 //write query builders so user can just include the whole directory.
-			Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder."+extention);
-			File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + extention), new StreamReader(namedExp).ReadToEnd());
-			Console.WriteLine("Successfuly created file: {0}\\NamedExpression.{1}", outputDir, extention);
+			Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder."+targetExtention);
+			File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + targetExtention), new StreamReader(namedExp).ReadToEnd());
+			Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
 		}
 
 		private static void GenerateFromActiveRecordAssembly(string file)
@@ -100,7 +100,7 @@ namespace NHibernate.Query.Generator
 				SemanticVerifierVisitor semanticVisitor = new SemanticVerifierVisitor(activeRecordModelBuilder.Models);
 				semanticVisitor.VisitNode(model);
 				xmlVisitor.CreateXml(model);
-				string genFile = Path.Combine(outputDir, model.Type.Name + "." + extention);
+				string genFile = Path.Combine(outputDir, model.Type.Name + "." + targetExtention);
 				GenerateSingleFile(new StringReader(xmlVisitor.Xml), genFile);
 			}
 		}
@@ -140,14 +140,14 @@ namespace NHibernate.Query.Generator
 				Console.WriteLine("      NHibernate.Query.Generator <cs or vb> asssembly.dll <output-dir>");
 				Environment.Exit(1);
 			}
-			extention = args[0];
+			targetExtention = args[0];
 			outputDir = args[2];
 			return args[1];
 		}
 
 		private static void SetupCodeProvider()
 		{
-			switch (extention.ToLower())
+			switch (targetExtention.ToLower())
 			{
 				case "vb":
 					provider = new VBCodeProvider();
@@ -156,7 +156,7 @@ namespace NHibernate.Query.Generator
 					provider = new CSharpCodeProvider();
 					break;
 				default:
-					Console.WriteLine("Unknown language element, expected 'cs' or 'vb', but got {0}", extention);
+					Console.WriteLine("Unknown language element, expected 'cs' or 'vb', but got {0}", targetExtention);
 					Environment.Exit(1);
 					break;
 			}

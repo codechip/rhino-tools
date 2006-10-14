@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs  C:\subversion\mine\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\*tests*.dll .</StartArguments>
+    <StartArguments>vb C:\subversion\mine\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\*.hbm.xml .</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>
