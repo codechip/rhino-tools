@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping
+	 xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='urn:nhibernate-mapping-2.0'>
+	<class
+		 name='TestProject.TestProject, Ayende.NHibernateQueryAnalyzer.TestProject'
+		 table='TestFile'>
+		<id
+			 name='Id'
+			 column='_id'
+			 type='Int32'>
+			<generator
+				 class='assigned' />
+		</id>
+		<property
+			 name='Data'
+			 type='string' />
+		<bag
+			 name='Files'
+			 table='Files'
+			 lazy='true'>
+			<key
+				 column='testId' />
+			<one-to-many
+				 class='TestProject.Files, Ayende.NHibernateQueryAnalyzer.TestProject' />
+		</bag>
+	</class>
+	<class
+		 name='TestProject.Files, Ayende.NHibernateQueryAnalyzer.TestProject'>
+		<id
+			 name='Id'>
+			<generator
+				 class='assigned' />
+		</id>
+		<property
+			 name='Filename'
+			 type='string' />
+		<many-to-one
+			 name='Test'
+			 class='TestProject.TestProject, Ayende.NHibernateQueryAnalyzer.TestProject'
+			 column='testId' />
+	</class>
+</hibernate-mapping>
