@@ -32,17 +32,60 @@ namespace Query {
                     base(name, assoicationPath, backTrackAssoicationOnEquality) {
             }
             
-            public virtual Query.PropertyQueryBuilder<T1> Department {
+            public virtual Query_Address<T1> Address {
                 get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Department", temp);
+                    return new Query_Address<T1>("Address", null);
                 }
             }
             
-            public virtual Query.PropertyQueryBuilder<T1> Level {
+            public virtual Query_Key<T1> Key {
                 get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Level", temp);
+                    return new Query_Key<T1>("Key", assoicationPath);
+                }
+            }
+            
+            public class Query_Address<T2> : Query.QueryBuilder<T2>
+             {
+                
+                public Query_Address(string name, string assoicationPath) : 
+                        base(name, assoicationPath) {
+                }
+                
+                public Query_Address(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
+                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                }
+                
+                public virtual Query.PropertyQueryBuilder<T1> Street {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<T1>("Address.Street", temp);
+                    }
+                }
+            }
+            
+            public class Query_Key<T3> : Query.QueryBuilder<T3>
+             {
+                
+                public Query_Key(string name, string assoicationPath) : 
+                        base(name, assoicationPath) {
+                }
+                
+                public Query_Key(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
+                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                }
+                
+                public virtual Query.PropertyQueryBuilder<T1> Department {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<T1>("Key.Department", temp);
+                    }
+                }
+                
+                public virtual Query.PropertyQueryBuilder<T1> Level {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<T1>("Key.Level", temp);
+                    }
                 }
             }
         }
@@ -51,17 +94,60 @@ namespace Query {
             
             private string assoicationPath = "this";
             
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Department {
+            public virtual Query_Address<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Address {
                 get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Department", temp);
+                    return new Query_Address<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Address", null);
                 }
             }
             
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Level {
+            public virtual Query_Key<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Key {
                 get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Level", temp);
+                    return new Query_Key<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key", assoicationPath);
+                }
+            }
+            
+            public class Query_Address<T4> : Query.QueryBuilder<T4>
+             {
+                
+                public Query_Address(string name, string assoicationPath) : 
+                        base(name, assoicationPath) {
+                }
+                
+                public Query_Address(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
+                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                }
+                
+                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Street {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Address.Street", temp);
+                    }
+                }
+            }
+            
+            public class Query_Key<T5> : Query.QueryBuilder<T5>
+             {
+                
+                public Query_Key(string name, string assoicationPath) : 
+                        base(name, assoicationPath) {
+                }
+                
+                public Query_Key(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
+                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                }
+                
+                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Department {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key.Department", temp);
+                    }
+                }
+                
+                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Level {
+                    get {
+                        string temp = assoicationPath;
+                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key.Level", temp);
+                    }
                 }
             }
         }
@@ -71,17 +157,26 @@ namespace Query {
         
         public partial class WeirdClass {
             
+            public partial class Address {
+                
+                public static Query.OrderByClause Street {
+                    get {
+                        return new Query.OrderByClause("Address.Street");
+                    }
+                }
+            }
+            
             public partial class Key {
                 
                 public static Query.OrderByClause Department {
                     get {
-                        return new Query.OrderByClause("Department");
+                        return new Query.OrderByClause("Key.Department");
                     }
                 }
                 
                 public static Query.OrderByClause Level {
                     get {
-                        return new Query.OrderByClause("Level");
+                        return new Query.OrderByClause("Key.Level");
                     }
                 }
             }

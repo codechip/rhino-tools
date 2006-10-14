@@ -22,26 +22,62 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CanUseOrderringOnCompositeProperties()
 		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+			weird.Address.Street = "NHibernate == Fun";
+			weird.Create();
 
+			WeirdClass weird2 = new WeirdClass();
+			weird2.Key.Department = "XYZ";
+			weird2.Key.Level = 5;
+			weird2.Address.Street = "Active Record == Easy Fun";
+			weird2.Create();
+
+			WeirdClass[] findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street);
+			Assert.AreEqual(weird2.Address.Street, findAll[0].Address.Street);
+			Assert.AreEqual(weird.Address.Street, findAll[1].Address.Street);
+
+			findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street.Desc);
+			Assert.AreEqual(weird.Address.Street, findAll[0].Address.Street);
+			Assert.AreEqual(weird2.Address.Street, findAll[1].Address.Street);
 		}
 
-		/*[Test]
+		[Test]
+		public void CanQueryByCompositeIdNestedType()
+		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+
+			weird.Create();
+
+			WeirdClass item = WeirdClass.FindOne(Where.WeirdClass.Key.Department == "Foo");
+
+			Assert.IsNotNull(item);
+		}
+
+		[Test]
 		public void CanUseOrderringOnComponentProperties()
 		{
 			WeirdClass weird = new WeirdClass();
 			weird.Key.Department = "Foo";
 			weird.Key.Level = 3;
 
-			weird.Save();
+			weird.Create();
 
 			WeirdClass weird2 = new WeirdClass();
 			weird2.Key.Department = "Bar";
 			weird2.Key.Level = 5;
 
-			weird2.Save();
+			weird2.Create();
+			
 
-			WeirdClass.FindAll(OrderBy.WeirdClass.Department);
-		}*/
+			WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
+			Assert.AreEqual("Bar", weirds[0].Key.Department);
+			Assert.AreEqual("Foo", weirds[1].Key.Department);
+		}
+
 
 		[Test]
 		public void CanUseOrderringOnSimpleProperties()
@@ -56,7 +92,7 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual("zzz", users[0].Name);
 			Assert.AreEqual("Ayende", users[1].Name);
 
-			users = User.FindAll(OrderBy.User.Name);//desfault ascending
+			users = User.FindAll(OrderBy.User.Name); //desfault ascending
 			Assert.AreEqual(2, users.Length);
 			Assert.AreEqual("Ayende", users[0].Name);
 			Assert.AreEqual("zzz", users[1].Name);
@@ -87,10 +123,8 @@ namespace NHibernate.Query.Generator.Tests
 			User ayende = User.FindOne(Where.User.Name == "Ayende");
 
 			Post[] findAll =
-				Post.FindAll(
-					Where.Post.Blog.Author == ayende &&
-					Where.Post.Blog.Name == "Ayende @ Blog" &&
-					Where.Post.Title == "I love Active Record");
+				Post.FindAll(Where.Post.Blog.Author == ayende && Where.Post.Blog.Name == "Ayende @ Blog" &&
+				             Where.Post.Title == "I love Active Record");
 
 			Assert.AreEqual(1, findAll.Length);
 		}
@@ -102,15 +136,20 @@ namespace NHibernate.Query.Generator.Tests
 
 			Hashtable properties = new Hashtable();
 
-			//properties.Add("hibernate.show_sql", "true");
+			properties.Add("hibernate.show_sql", "true");
 
 			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
 			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
 
-			source.Add(typeof(ActiveRecordBase), properties);
-			ActiveRecordStarter.Initialize(source, typeof(WeirdClass), typeof(Post), typeof(Blog), typeof(User), typeof(Comment));
+			source.Add(typeof (ActiveRecordBase), properties);
+			ActiveRecordStarter.Initialize(source,
+			                               typeof (WeirdClass),
+			                               typeof (Post),
+			                               typeof (Blog),
+			                               typeof (User),
+			                               typeof (Comment));
 		}
 
 		[SetUp]
@@ -118,8 +157,8 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			sessionScope = new SessionScope();
 			ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
-			Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase));
-			ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
+			Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof (ActiveRecordBase));
+			ISession session = sessionFactoryHolder.CreateSession(typeof (ActiveRecordBase));
 			SchemaExport export = new SchemaExport(configuration);
 			export.Execute(false, true, false, false, session.Connection, null);
 

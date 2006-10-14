@@ -8,13 +8,33 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 	[ActiveRecord]
 	public class WeirdClass : ActiveRecordBase<WeirdClass>
 	{
-		WeirdKey key;
-
+		WeirdKey key = new WeirdKey();
+		Address address = new Address();
+		
 		[CompositeKey]
 		public WeirdKey Key
 		{
 			get { return key; }
 			set { key = value; }
+		}
+
+		[Nested]
+		public Address Address
+		{
+			get { return address; }
+			set { address = value; }
+		}
+	}
+	
+	public class Address
+	{
+		string street;
+
+		[Property]
+		public string Street
+		{
+			get { return street; }
+			set { street = value; }
 		}
 	}
 
