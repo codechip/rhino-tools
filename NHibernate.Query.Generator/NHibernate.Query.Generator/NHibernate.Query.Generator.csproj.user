@@ -1,0 +1,10 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartProgram>
+    </StartProgram>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
+    <StartArguments>vb C:\Code\nqa\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\NHibernate.Query.Generator.Tests.dll .</StartArguments>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+</Project>
