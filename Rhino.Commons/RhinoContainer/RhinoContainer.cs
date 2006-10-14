@@ -20,7 +20,7 @@ namespace Rhino.Commons
 
         public RhinoContainer(string fileName)
         {
-			if (Path.GetExtension(fileName).Equals("boo", StringComparison.InvariantCultureIgnoreCase))
+			if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
 				BooReader.Read(this, fileName);
 			else
 				InitalizeFromConfigurationSource(new XmlInterpreter(fileName));
