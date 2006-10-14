@@ -134,6 +134,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
     <Compile Include="NHibernate\Infelector.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="With\With.Cache.cs" />
