@@ -104,9 +104,12 @@ namespace CustomToolGenerator {
         /// <returns></returns>
         protected virtual ICodeGenerator GetCodeWriter() {
             CodeDomProvider codeDom = CodeProvider;
-            if (codeDom != null) {
-                return codeDom.CreateGenerator();
-            }
+            if (codeDom != null)
+			{
+#pragma warning disable 0618
+				return codeDom.CreateGenerator();
+#pragma warning restore 0618
+			}
 
             return null;
         }

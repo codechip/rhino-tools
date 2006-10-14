@@ -359,4 +359,38 @@ Use HQL for this functionality...",
 			return expr.Le(other);
 		}
 	}
+	
+	public class OrderByClause
+	{
+		bool ascending = true;
+		string name;
+
+		public OrderByClause(string name)
+		{
+			this.name = name;
+		}
+
+		public OrderByClause Asc
+		{
+			get
+			{
+				ascending = true;
+				return this;
+			}
+		}
+
+		public OrderByClause Desc
+		{
+			get
+			{
+				ascending = false;
+				return this;
+			}
+		}
+
+		public static implicit operator Order(OrderByClause order)
+		{
+			return new Order(order.name, order.ascending);	
+		}
+	}
 }

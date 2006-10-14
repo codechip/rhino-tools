@@ -20,6 +20,49 @@ namespace NHibernate.Query.Generator.Tests
 		private SessionScope sessionScope;
 
 		[Test]
+		public void CanUseOrderringOnCompositeProperties()
+		{
+
+		}
+
+		/*[Test]
+		public void CanUseOrderringOnComponentProperties()
+		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+
+			weird.Save();
+
+			WeirdClass weird2 = new WeirdClass();
+			weird2.Key.Department = "Bar";
+			weird2.Key.Level = 5;
+
+			weird2.Save();
+
+			WeirdClass.FindAll(OrderBy.WeirdClass.Department);
+		}*/
+
+		[Test]
+		public void CanUseOrderringOnSimpleProperties()
+		{
+			User user = new User();
+			user.Name = "zzz";
+			user.Email = "f@f.com";
+			user.Save();
+
+			User[] users = User.FindAll(OrderBy.User.Name.Desc);
+			Assert.AreEqual(2, users.Length);
+			Assert.AreEqual("zzz", users[0].Name);
+			Assert.AreEqual("Ayende", users[1].Name);
+
+			users = User.FindAll(OrderBy.User.Name);//desfault ascending
+			Assert.AreEqual(2, users.Length);
+			Assert.AreEqual("Ayende", users[0].Name);
+			Assert.AreEqual("zzz", users[1].Name);
+		}
+
+		[Test]
 		public void HaveObjectOrientedQueryingSyntax()
 		{
 			Post post = Post.FindOne();
@@ -45,7 +88,7 @@ namespace NHibernate.Query.Generator.Tests
 
 			Post[] findAll =
 				Post.FindAll(
-					Where.Post.Blog.Author == ayende && 
+					Where.Post.Blog.Author == ayende &&
 					Where.Post.Blog.Name == "Ayende @ Blog" &&
 					Where.Post.Title == "I love Active Record");
 
@@ -66,8 +109,8 @@ namespace NHibernate.Query.Generator.Tests
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
 
-			source.Add(typeof (ActiveRecordBase), properties);
-			ActiveRecordStarter.Initialize(source, typeof (Post), typeof (Blog), typeof (User), typeof (Comment));
+			source.Add(typeof(ActiveRecordBase), properties);
+			ActiveRecordStarter.Initialize(source, typeof(WeirdClass), typeof(Post), typeof(Blog), typeof(User), typeof(Comment));
 		}
 
 		[SetUp]
@@ -78,7 +121,7 @@ namespace NHibernate.Query.Generator.Tests
 			Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase));
 			ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
 			SchemaExport export = new SchemaExport(configuration);
-			export.Execute(false,true,false,false, session.Connection, null);
+			export.Execute(false, true, false, false, session.Connection, null);
 
 			User ayende = new User();
 			ayende.Name = "Ayende";

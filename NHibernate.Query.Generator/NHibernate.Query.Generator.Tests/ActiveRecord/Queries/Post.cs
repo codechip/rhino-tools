@@ -98,4 +98,22 @@ namespace Query {
             }
         }
     }
+    
+    public partial class OrderBy {
+        
+        public partial class Post {
+            
+            public static Query.OrderByClause Title {
+                get {
+                    return new Query.OrderByClause("Title");
+                }
+            }
+            
+            public static Query.OrderByClause Contnet {
+                get {
+                    return new Query.OrderByClause("Contnet");
+                }
+            }
+        }
+    }
 }

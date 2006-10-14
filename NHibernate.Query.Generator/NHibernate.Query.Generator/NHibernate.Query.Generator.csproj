@@ -73,10 +73,8 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Expressions\QueryBuilder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="QueryBuilders\QueryBuilder.vb" />
+    <EmbeddedResource Include="QueryBuilders\QueryBuilder.cs" />
+	  <EmbeddedResource Include="QueryBuilders\QueryBuilder.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

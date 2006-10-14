@@ -84,4 +84,16 @@ namespace Query {
             }
         }
     }
+    
+    public partial class OrderBy {
+        
+        public partial class Blog {
+            
+            public static Query.OrderByClause Name {
+                get {
+                    return new Query.OrderByClause("Name");
+                }
+            }
+        }
+    }
 }

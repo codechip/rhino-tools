@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Castle.Core;
+using Castle.MicroKernel;
 using Castle.Windsor;
 using NUnit.Framework;
 using Rhino.Commons.Binsor;
@@ -64,6 +66,14 @@ namespace Rhino.Commons.Test.Binsor
 			Fubar foo3 = (Fubar)_container.Resolve("foo_3");
 			Assert.IsNotNull(foo3);
 			Assert.AreEqual(3, foo3.Foo);
+		}
+
+		[Test]
+		public void CanSpecifyLifeStyle()
+		{
+			IHandler handler = _container.Kernel.GetHandler("defualt_repository");
+			Assert.AreEqual(LifestyleType.Transient, handler.ComponentModel.LifestyleType); 
+			
 		}
 	}
 }

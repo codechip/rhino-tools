@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using Query;
 
 namespace NHibernate.Query.Generator
 {
@@ -45,18 +46,99 @@ namespace NHibernate.Query.Generator
 
 			CreateClasses(whereTypeDeclaration);
 
+			CreateOrderBy(queryNameSpace, hbm);
+
 			CreateQueries(queryNameSpace, hbm);
 
 			_provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());
 		}
+
+		private void CreateOrderBy(CodeNamespace queryNameSpace, XmlDocument hbm)
+		{
+			string[] classesXpath = {
+			                        	"/nh:hibernate-mapping//nh:class", 
+										"/nh:hibernate-mapping//nh:joined-subclass",
+			                        	"/nh:hibernate-mapping//nh:subclass"
+			                        };
+			CodeTypeDeclaration orderByDeclaration = new CodeTypeDeclaration("OrderBy");
+			orderByDeclaration.IsPartial = true;
+			queryNameSpace.Types.Add(orderByDeclaration);
+
+			foreach (string classPath in classesXpath)
+			{
+				foreach (XmlNode node in hbm.SelectNodes(classPath, nsMgr))
+				{
+					CodeTypeDeclaration orderByForClass = GenerateOrderByForClass(node);
+					AddComponentsOrderBy(node, orderByForClass);
+
+					if(orderByForClass.Members.Count!=0)
+					{
+						orderByDeclaration.Members.Add(orderByForClass);
+					}
+				}
+			}
+		}
+
+		private void AddComponentsOrderBy(XmlNode node, CodeTypeDeclaration orderByForClass)
+		{
+			string[] compnentsPath = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+			foreach (string componentPath in compnentsPath)
+			{
+				foreach (XmlNode componentNode in node.SelectNodes(componentPath, nsMgr))
+				{
+					CodeTypeDeclaration orderByForComponent = GenerateOrderByForClass(componentNode);
+					//this is to handle the case of a component with a name, for instance, in a composite id 
+					if(componentNode.Attributes["name"]==null)
+					{
+						orderByForClass.Members.AddRange(orderByForComponent.Members);
+					}
+					else if(orderByForComponent.Members.Count!=0)
+					{
+						orderByForClass.Members.Add(orderByForComponent);
+					}
+				}
+			}
+		}
+
+		private CodeTypeDeclaration GenerateOrderByForClass(XmlNode node)
+		{
+			string[] orderableProperties = { 
+				"nh:property", 
+				"nh:key-property",
+			                               };
+			//here we allow for a node without name
+			string typeNameForDisplay;
+			if (node.Attributes["name"] != null)
+				typeNameForDisplay = GetTypeNameForDisplay(node);
+			else
+				typeNameForDisplay = "dummy";
+			CodeTypeDeclaration orderableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+			orderableClassDeclaration.IsPartial = true;
+			foreach (string orderableProperty in orderableProperties)
+			{
+				foreach (XmlNode propertyNode in node.SelectNodes(orderableProperty, nsMgr))
+				{
+					CodeMemberProperty prop = new CodeMemberProperty();
+					prop.Name = GetName(propertyNode);
+					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+					prop.Type = new CodeTypeReference(typeof(OrderByClause).FullName);
+					CodeObjectCreateExpression create =
+						new CodeObjectCreateExpression(typeof(OrderByClause), new CodePrimitiveExpression(prop.Name));
+					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
+					orderableClassDeclaration.Members.Add(prop);
+				}
+			}
+			return orderableClassDeclaration;
+		}
+
 
 		private void ValidateAndLoadXmlDocument()
 		{
 			XmlReaderSettings settings = new XmlReaderSettings();
 			settings.ValidationType = ValidationType.Schema;
 			settings.Schemas.Add(
-				XmlSchema.Read(typeof(NHibernateUtil).Assembly.GetManifestResourceStream("NHibernate.nhibernate-mapping-2.0.xsd"),
-							   null));
+				XmlSchema.Read(typeof (NHibernateUtil).Assembly.GetManifestResourceStream("NHibernate.nhibernate-mapping-2.0.xsd"),
+				               null));
 			hbm.Load(XmlReader.Create(_reader, settings));
 			nsMgr = new XmlNamespaceManager(hbm.NameTable);
 			nsMgr.AddNamespace("nh", "urn:nhibernate-mapping-2.0");
@@ -84,10 +166,10 @@ namespace NHibernate.Query.Generator
 		private void CreateClasses(CodeTypeDeclaration whereTypeDeclaration)
 		{
 			GenerateClasses(whereTypeDeclaration,
-							hbm,
-							"/nh:hibernate-mapping//nh:class",
-							"/nh:hibernate-mapping//nh:joined-subclass",
-							"/nh:hibernate-mapping//nh:subclass");
+			                hbm,
+			                "/nh:hibernate-mapping//nh:class",
+			                "/nh:hibernate-mapping//nh:joined-subclass",
+			                "/nh:hibernate-mapping//nh:subclass");
 		}
 
 		/// <summary>
@@ -105,9 +187,9 @@ namespace NHibernate.Query.Generator
 					// This creates the query class Query_Blog<T2>
 					CodeTypeDeclaration innerClass = CreateQueryClassInParentClass(parent, typeNameForDisplay);
 					CreateChildProperties(classNode,
-										  innerClass,
-										  AssoicationBehavior.AddAssoicationFromName,
-										  innerClass.TypeParameters[0].Name);
+					                      innerClass,
+					                      AssoicationBehavior.AddAssoicationFromName,
+					                      innerClass.TypeParameters[0].Name);
 
 					//This creates the root query class, Where.Blog
 					CodeTypeDeclaration rootClass = CreateRootClassAndPropertyInParentClass(parent, typeNameForDisplay);
@@ -124,30 +206,30 @@ namespace NHibernate.Query.Generator
 		{
 			// generate full object query for simple properties
 			GenerateProperties(null,
-							   genericName,
-							   AssoicationBehavior.DoNotAdd,
-							   "Query.PropertyQueryBuilder",
-							   classNode,
-							   innerClass,
-							   "nh:property",
-							   "nh:composite-id/nh:key-property");
+			                   genericName,
+			                   AssoicationBehavior.DoNotAdd,
+			                   "Query.PropertyQueryBuilder",
+			                   classNode,
+			                   innerClass,
+			                   "nh:property",
+			                   "nh:composite-id/nh:key-property");
 			// generate simple equality for id
 			GenerateProperties(null,
-							   genericName,
-							   AssoicationBehavior.DoNotAdd,
-							   "Query.QueryBuilder",
-							   classNode,
-							   innerClass,
-							   "nh:id");
+			                   genericName,
+			                   AssoicationBehavior.DoNotAdd,
+			                   "Query.QueryBuilder",
+			                   classNode,
+			                   innerClass,
+			                   "nh:id");
 			// generate reference to related query obj
 			GenerateProperties(null,
-							   genericName,
-							   assoicationBehavior,
-							   UseTheQueryClass,
-							   classNode,
-							   innerClass,
-							   "nh:many-to-one",
-							   "nh:composite-id/nh:key-many-to-one");
+			                   genericName,
+			                   assoicationBehavior,
+			                   UseTheQueryClass,
+			                   classNode,
+			                   innerClass,
+			                   "nh:many-to-one",
+			                   "nh:composite-id/nh:key-many-to-one");
 			// generate reference to component
 			GenerateComponents(genericName, innerClass, classNode, "nh:component", "nh:dynamic-component");
 		}
@@ -166,21 +248,21 @@ namespace NHibernate.Query.Generator
 
 					//create full object query object
 					GenerateProperties(name,
-									   genericParameterName,
-									   AssoicationBehavior.DoNotAdd,
-									   "Query.PropertyQueryBuilder",
-									   classNode,
-									   innerClass,
-									   "nh:property",
-									   "nh:id");
+					                   genericParameterName,
+					                   AssoicationBehavior.DoNotAdd,
+					                   "Query.PropertyQueryBuilder",
+					                   classNode,
+					                   innerClass,
+					                   "nh:property",
+					                   "nh:id");
 					// create reference query obj
 					GenerateProperties(name,
-									   genericParameterName,
-									   AssoicationBehavior.AddAssoicationFromName,
-									   UseTheQueryClass,
-									   classNode,
-									   innerClass,
-									   "nh:many-to-one");
+					                   genericParameterName,
+					                   AssoicationBehavior.AddAssoicationFromName,
+					                   UseTheQueryClass,
+					                   classNode,
+					                   innerClass,
+					                   "nh:many-to-one");
 				}
 			}
 		}
@@ -217,7 +299,7 @@ namespace NHibernate.Query.Generator
 
 			CodeMemberField assoicationPath = new CodeMemberField();
 			assoicationPath.Name = "assoicationPath";
-			assoicationPath.Type = new CodeTypeReference(typeof(string).FullName);
+			assoicationPath.Type = new CodeTypeReference(typeof (string).FullName);
 			assoicationPath.InitExpression = new CodePrimitiveExpression("this");
 			innerClass.Members.Add(assoicationPath);
 
@@ -259,8 +341,8 @@ namespace NHibernate.Query.Generator
 			// Query_Blog(string name, string associationPath) : QueryBuilder<T1>(name, assoicationPath);
 			CodeConstructor ctor = new CodeConstructor();
 			ctor.Attributes = MemberAttributes.Public;
-			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
-			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "assoicationPath"));
+			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof (string), "name"));
+			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof (string), "assoicationPath"));
 			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
 			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("assoicationPath"));
 			innerClass.Members.Add(ctor);
@@ -269,9 +351,9 @@ namespace NHibernate.Query.Generator
 			// ctor for backtracking
 			CodeConstructor ctor2 = new CodeConstructor();
 			ctor2.Attributes = MemberAttributes.Public;
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "assoicationPath"));
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(bool), "backTrackAssoicationOnEquality"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof (string), "name"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof (string), "assoicationPath"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof (bool), "backTrackAssoicationOnEquality"));
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("assoicationPath"));
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("backTrackAssoicationOnEquality"));
@@ -304,7 +386,7 @@ namespace NHibernate.Query.Generator
 			CodeMemberProperty prop = new CodeMemberProperty();
 			prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
 			prop.Name = name;
-			prop.Type = new CodeTypeReference(typeof(string));
+			prop.Type = new CodeTypeReference(typeof (string));
 			prop.HasGet = true;
 			prop.HasSet = false;
 			prop.GetStatements.Add(new CodeMethodReturnStatement(new CodePrimitiveExpression(name)));
@@ -334,12 +416,12 @@ namespace NHibernate.Query.Generator
 					if (clazzAttribute != null)
 						type = clazzAttribute.Value;
 					GenerateProperty(prefix,
-									 genericTypeName,
-									 innerClass,
-									 GetName(propertyNode),
-									 propertyType,
-									 type,
-									 assoicationBehavior);
+					                 genericTypeName,
+					                 innerClass,
+					                 GetName(propertyNode),
+					                 propertyType,
+					                 type,
+					                 assoicationBehavior);
 				}
 			}
 		}
@@ -376,7 +458,7 @@ namespace NHibernate.Query.Generator
 			CodeObjectCreateExpression newExpr = new CodeObjectCreateExpression(prop.Type);
 
 			CodeVariableDeclarationStatement var =
-				new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("assoicationPath"));
+				new CodeVariableDeclarationStatement(typeof (string), "temp", new CodeVariableReferenceExpression("assoicationPath"));
 			prop.GetStatements.Add(var);
 			switch (assoicationBehavior)
 			{
@@ -401,14 +483,13 @@ namespace NHibernate.Query.Generator
 		/// <summary>
 		/// Adds the assoication path from the given expression. Including conditional handling if needed
 		/// </summary>
-		private static void AddAssoicationPathFromExpression(
-			CodeMemberProperty prop, CodeExpression addedExpression)
+		private static void AddAssoicationPathFromExpression(CodeMemberProperty prop, CodeExpression addedExpression)
 		{
 			CodeBinaryOperatorExpression assoicationExpression =
 				new CodeBinaryOperatorExpression(
 					new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression("temp"),
-													 CodeBinaryOperatorType.Add,
-													 new CodePrimitiveExpression(".")),
+					                                 CodeBinaryOperatorType.Add,
+					                                 new CodePrimitiveExpression(".")),
 					CodeBinaryOperatorType.Add,
 					addedExpression);
 			CodeAssignStatement assignStatement =
@@ -450,7 +531,7 @@ namespace NHibernate.Query.Generator
 		/// </summary>
 		private static string GetName(XmlNode node)
 		{
-			if (node.Attributes["name"] == null)//this may happen if the <id> node doesn't have a name
+			if (node.Attributes["name"] == null) //this may happen if the <id> node doesn't have a name
 			{
 				throw new InvalidOperationException("Can't find attribute 'name' on element " + node.Name);
 			}

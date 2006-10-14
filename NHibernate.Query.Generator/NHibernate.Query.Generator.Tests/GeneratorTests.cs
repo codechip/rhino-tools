@@ -73,22 +73,50 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(customerProperty, "Where type should have property CompositeCustomer");
 		}
 
+		/// <summary>
+		/// Hard to explain it by the name of the test, but in general, I want to test
+		/// that it has OrderBy.CompositeCustomer.CustomerId, and not 
+		/// OrderBy.CompositeCustomer.Key.CustomerId
+		/// </summary>
+		[Test]
+		public void CompositeCustomerOrderringHavePropertyWithoutKey()
+		{
+			Assembly asm = GetAssemblyFromCode();
+
+			System.Type compositeCustomerOrderring = asm.GetType("Query.OrderBy+CompositeCustomer");
+			PropertyInfo property = compositeCustomerOrderring.GetProperty("CustomerId");
+			Assert.IsNotNull(property);
+			Assert.AreEqual(typeof(OrderByClause), property.PropertyType);
+		}
+
+		[Test]
+		public void ComponentsGetOrderByAsWell()
+		{
+			Assembly asm = GetAssemblyFromCode();
+
+			System.Type homeType = asm.GetType("Query.OrderBy+Customer+Home");
+			PropertyInfo property = homeType.GetProperty("Phone");
+			Assert.IsNotNull(property);
+			Assert.AreEqual(typeof(OrderByClause), property.PropertyType);
+	
+		}
+
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForEachOfthePersistentPropertiesInTheMapping()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:property", "Customer", typeof(PropertyQueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:property", "Customer", typeof(PropertyQueryBuilder<>));
 		}
 
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForPrimaryKey()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
 		}
 
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForEachOftheCompositeKeyPropertiesInTheMapping()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-property",
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-property",
 									  "CompositeCustomer",
 									  typeof(PropertyQueryBuilder<>));
 		}
@@ -97,13 +125,13 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void NestedTypeSupportsManyToOne()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:many-to-one", "Customer", "Query.Where+Query_Address`1");
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:many-to-one", "Customer", "Query.Where+Query_Address`1");
 		}
 
 		[Test]
 		public void NestedTypeSupportsManyToOneCompositeId()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-many-to-one",
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-many-to-one",
 									  "CompositeCustomer",
 									  "Query.Where+Query_BadCustomer`1");
 		}
@@ -111,7 +139,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void NestedTypeSupportIDProperty()
 		{
-			AssertHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
 		}
 
 
@@ -238,7 +266,6 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual("Query.Where+Query_Address`1", address.GetType().GetGenericTypeDefinition().FullName);
 		}
 
-
 		#region Util Methods
 
 		private Assembly GetAssemblyFromCode()
@@ -251,23 +278,34 @@ namespace NHibernate.Query.Generator.Tests
 			return results.CompiledAssembly;
 		}
 
-		private void AssertHasPropertyForXPath(string xpathQuery, string property, System.Type expectedPropetyType)
+		private void AssertWhereHasPropertyForXPath(string xpathQuery, string property, System.Type expectedPropetyType)
 		{
 			Assembly asm = GetAssemblyFromCode();
-			AssertHasPropertyForXPath(asm, xpathQuery, property, expectedPropetyType);
+			AssertWhereHasPropertyForXPath(asm, xpathQuery, property, expectedPropetyType);
 		}
 
-		private void AssertHasPropertyForXPath(string xpathQuery, string property, string expectedPropetyType)
+		private void AssertWhereHasPropertyForXPath(string xpathQuery, string property, string expectedPropetyType)
 		{
 			Assembly asm = GetAssemblyFromCode();
-			AssertHasPropertyForXPath(asm, xpathQuery, property, asm.GetType(expectedPropetyType));
+			AssertWhereHasPropertyForXPath(asm, xpathQuery, property, asm.GetType(expectedPropetyType));
 		}
 
-		private void AssertHasPropertyForXPath(
+		private void AssertOrderByHasPropertyForXPath(string xpathQuery, string className, System.Type type)
+		{
+			Assembly asm = GetAssemblyFromCode();
+			System.Type orderByType = asm.GetType("Query.OrderBy+"+className);
+			AssertHasPropertyForXPath(type, className, orderByType, xpathQuery);
+		}
+		private void AssertWhereHasPropertyForXPath(
 			Assembly asm, string xpathQuery, string property, System.Type expectedPropetyType)
 		{
 			System.Type whereType = asm.GetType("Query.Where");
-			PropertyInfo prop = whereType.GetProperty(property);
+			AssertHasPropertyForXPath(expectedPropetyType, property, whereType, xpathQuery);
+		}
+
+		private static void AssertHasPropertyForXPath(System.Type expectedPropetyType, string property, System.Type parentType, string xpathQuery)
+		{
+			PropertyInfo prop = parentType.GetProperty(property);
 			object customer = prop.GetValue(null, null);
 
 			Assert.IsNotNull(customer);

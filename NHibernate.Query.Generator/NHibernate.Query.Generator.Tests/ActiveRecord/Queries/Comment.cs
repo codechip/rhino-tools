@@ -98,4 +98,22 @@ namespace Query {
             }
         }
     }
+    
+    public partial class OrderBy {
+        
+        public partial class Comment {
+            
+            public static Query.OrderByClause Author {
+                get {
+                    return new Query.OrderByClause("Author");
+                }
+            }
+            
+            public static Query.OrderByClause Content {
+                get {
+                    return new Query.OrderByClause("Content");
+                }
+            }
+        }
+    }
 }

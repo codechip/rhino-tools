@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveRecord\Queries\WeirdClass.cs" />
+    <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
     <Compile Include="ActiveRecord\Blog.cs" />
     <Compile Include="ActiveRecord\Comment.cs" />

@@ -80,4 +80,22 @@ namespace Query {
             }
         }
     }
+    
+    public partial class OrderBy {
+        
+        public partial class User {
+            
+            public static Query.OrderByClause Name {
+                get {
+                    return new Query.OrderByClause("Name");
+                }
+            }
+            
+            public static Query.OrderByClause Email {
+                get {
+                    return new Query.OrderByClause("Email");
+                }
+            }
+        }
+    }
 }

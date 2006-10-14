@@ -1,17 +1,12 @@
 using System;
 using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework.Config;
 using Castle.ActiveRecord.Framework.Internal;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
-using NHibernate.Expression;
-using Query;
 
 namespace NHibernate.Query.Generator
 {
@@ -19,24 +14,19 @@ namespace NHibernate.Query.Generator
 	{
 		private static string extention;
 		private static string outputDir;
-		private static string inputFile;
 		private static CodeDomProvider provider = null;
-		private static string outputFile;
 
 		static void Main(string[] args)
 		{
-			GetCommandLineArguments(args);
+			string inputFilePattern = GetCommandLineArguments(args);
 			try
 			{
 				SetupCodeProvider();
-				// single hbm file
-				if (Path.GetExtension(inputFile).EndsWith("xml"))
+				string directoryName = Path.GetDirectoryName(inputFilePattern);
+				string fileName = Path.GetFileName(inputFilePattern);
+				foreach (string file in Directory.GetFiles(directoryName, fileName))
 				{
-					GenerateSingleFile(File.OpenText(Program.inputFile), outputFile);
-				}
-				else // Active Record...
-				{
-					GenerateFromActiveRecordAssembly();
+					OutputFile(file);
 				}
 				OutputQueryBuilder();
 			}
@@ -60,17 +50,33 @@ namespace NHibernate.Query.Generator
 			}
 		}
 
+		private static void OutputFile(string file)
+		{
+			string extension = Path.GetExtension(file);
+			string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + extension);
+			// hbm file
+			if (extension.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
+			{
+				GenerateSingleFile(File.OpenText(file), outputFile);
+			}
+			else if (extention.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
+			         extension.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase))// Active Record...
+			{
+				GenerateFromActiveRecordAssembly(file);
+			}
+		}
+
 		private static void OutputQueryBuilder()
 		{
 //write query builders so user can just include the whole directory.
 			Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder."+extention);
 			File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + extention), new StreamReader(namedExp).ReadToEnd());
-			Console.WriteLine("Created file: {0}\\NamedExpression.{1}", outputDir,extention);
+			Console.WriteLine("Successfuly created file: {0}\\NamedExpression.{1}", outputDir, extention);
 		}
 
-		private static void GenerateFromActiveRecordAssembly()
+		private static void GenerateFromActiveRecordAssembly(string file)
 		{
-			string fullPath = Path.GetFullPath(inputFile);
+			string fullPath = Path.GetFullPath(file);
 			RegisterAssemblyResolver(fullPath);
 
 			Assembly asm = Assembly.LoadFile(fullPath);
@@ -125,19 +131,18 @@ namespace NHibernate.Query.Generator
 			Console.WriteLine("Successfuly created file {0}", destinationFile);
 		}
 
-		private static void GetCommandLineArguments(string[] args)
+		private static string GetCommandLineArguments(string[] args)
 		{
 			if (args.Length != 3)
 			{
 				Console.WriteLine("Usage:");
-				Console.WriteLine("      NHibernate.Query.Generator <cs or vb> <input-file.hbm.xml> <output-dir>");
+				Console.WriteLine("      NHibernate.Query.Generator <cs or vb> <*.hbm.xml> <output-dir>");
 				Console.WriteLine("      NHibernate.Query.Generator <cs or vb> asssembly.dll <output-dir>");
 				Environment.Exit(1);
 			}
 			extention = args[0];
-			inputFile = args[1];
 			outputDir = args[2];
-			outputFile = Path.Combine(Program.outputDir, Path.GetFileNameWithoutExtension(Program.inputFile) + "." + Program.extention);
+			return args[1];
 		}
 
 		private static void SetupCodeProvider()
@@ -145,13 +150,13 @@ namespace NHibernate.Query.Generator
 			switch (extention.ToLower())
 			{
 				case "vb":
-					Program.provider = new VBCodeProvider();
+					provider = new VBCodeProvider();
 					break;
 				case "cs":
-					Program.provider = new CSharpCodeProvider();
+					provider = new CSharpCodeProvider();
 					break;
 				default:
-					Console.WriteLine("Unknown language element, expected 'cs' or 'vb', but got {0}", Program.extention);
+					Console.WriteLine("Unknown language element, expected 'cs' or 'vb', but got {0}", extention);
 					Environment.Exit(1);
 					break;
 			}
