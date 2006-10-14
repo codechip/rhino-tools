@@ -193,7 +193,7 @@ namespace Rhino.Commons.NHibernate
 		}
 
 
-		protected object _pattern;
-		protected string _replace;
+		private object _pattern;
+		private string _replace;
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web;
 using Castle.Windsor;
@@ -27,7 +28,13 @@ namespace Rhino.Commons.HttpModules
         {
             if(IoC.IsInitialized)
                 return;
-            windsorContainer = new RhinoContainer(Settings.Default.WindsorConfig);
+        	string windsorConfig = Settings.Default.WindsorConfig;
+        	if(!Path.IsPathRooted(windsorConfig))
+        	{
+        		//In ASP.Net apps, the current directory and the base path are NOT the same.
+				windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
+        	}
+        	windsorContainer = new RhinoContainer(windsorConfig);
             IoC.Initialize(windsorContainer);
         }
 
