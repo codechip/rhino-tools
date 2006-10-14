@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping default-lazy='false'
+	assembly='Rhino.Commons.Test'
+	namespace='Rhino.Commons.Test.NHibernate'
+	xmlns='urn:nhibernate-mapping-2.0'>
+	<class name='SMS'>
+		<id name='Id'
+			column='id'>
+			<generator class='native'/>
+		</id>
+		<property name='Message'/>
+	</class>
+</hibernate-mapping>
