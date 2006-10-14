@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<project name="Lithium" default="build" basedir=".">
+	<property name="assembly.name" value="Lithium"/>
+	<property name="build.debug" value="false"/>
+	<property name="build.dir" value="..\Bin"/>
+	<target name="build">
+		<csc target="library" output="${build.dir}\${assembly.name}.dll" debug="${build.debug}">
+			<sources>        
+				<include name="**/*.cs"/>      
+			</sources>
+			<resources prefix="Netron.Lithium" dynamicprefix="true">	
+				<include name="**/*.resx"/>
+				<include name="LithiumControl.bmp"/>
+				<include name="Images/*.png"/>
+			</resources>
+			<references>
+				<include name="System.Windows.Forms.dll"/>
+			</references>
+		</csc>  
+	</target> 
+</project>
