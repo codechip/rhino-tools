@@ -10,7 +10,7 @@
     <RootNamespace>NHibernate.Query.Generator</RootNamespace>
     <AssemblyName>NHibernate.Query.Generator</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\Src\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Castle.ActiveRecord, Version=0.0.1.3, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\ActiveRecord\Castle.ActiveRecord.dll</HintPath>
+      <HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
     </Reference>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
@@ -42,9 +42,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\Program Files\Microsoft Visual Studio 8\Common7\IDE\Microsoft.VisualStudio.Designer.Interfaces.DLL</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -60,21 +60,21 @@
     <Compile Include="CustomTool\IVsGeneratorProgress.cs" />
     <Compile Include="CustomTool\IVsSingleFileGenerator.cs" />
     <Compile Include="CustomTool\ServiceProvider.cs" />
-    <Compile Include="Expressions\NamedExpression.cs" />
+    <Compile Include="Expressions\QueryBuilder.cs" />
     <Compile Include="NHibernateQueryGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Src\ayende-open-source.snk">
+    <None Include="..\..\ayende-open-source.snk">
       <Link>ayende-open-source.snk</Link>
     </None>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Expressions\NamedExpression.vb" />
-    <EmbeddedResource Include="Expressions\NamedExpression.cs" />
+    <EmbeddedResource Include="Expressions\QueryBuilder.vb" />
+    <EmbeddedResource Include="Expressions\QueryBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
