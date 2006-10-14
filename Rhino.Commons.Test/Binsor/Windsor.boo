@@ -3,8 +3,8 @@ import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
 
 # generic type registration
-Component(defualt_repository, IRepository, NHRepository)
-# sepcialized generic type registration (a bit ugly, I'll admit)
+Component(defualt_repository, IRepository, NHRepository, LifestyleType.Transient)
+
 customer_repository = Component("customer_repository", 
 	IRepository of Fubar,  FakeRepository of Fubar,
 	inner: @defualt_repository)

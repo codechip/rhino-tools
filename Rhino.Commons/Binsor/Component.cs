@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Boo.Lang;
+using Castle.Core;
 using Castle.MicroKernel;
-using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
@@ -11,13 +11,18 @@ namespace Rhino.Commons.Binsor
 	{
 		private readonly IDictionary _parameters = new Hashtable();
 		private readonly Dictionary<string, string> _references = new Dictionary<string, string>();
-		string _name;
+		private readonly string _name;
+		private readonly LifestyleType lifestyle = LifestyleType.Singleton;
 		private readonly Type _service;
 		private readonly Type _impl;
 
-		public Component(string name, Type service)
-			: this(name, service, service)
+		public Component(string name, Type service) : this(name, service, service)
 		{
+		}
+
+		public Component(string name, Type service, Type impl, LifestyleType lifestyleType) : this(name, service, impl)
+		{
+			this.lifestyle = lifestyleType;
 		}
 
 		public Component(string name, Type service, Type impl)
@@ -28,14 +33,18 @@ namespace Rhino.Commons.Binsor
 			BooReader.Components.Add(this);
 		}
 
-		public Component(string name, Type service, IDictionary parameters)
-			: this(name, service)
+		public Component(string name, Type service, IDictionary parameters) : this(name, service)
 		{
 			_parameters = parameters;
 		}
 
-		public Component(string name, Type service, Type impl, IDictionary parameters)
-			: this(name, service, impl)
+		public Component(string name, Type service, Type impl, IDictionary parameters, LifestyleType lifestyleType)
+			: this(name, service, impl, parameters)
+		{
+			this.lifestyle = lifestyleType;
+		}
+
+		public Component(string name, Type service, Type impl, IDictionary parameters) : this(name, service, impl)
 		{
 			_parameters = parameters;
 		}
@@ -50,6 +59,7 @@ namespace Rhino.Commons.Binsor
 			IKernel kernel = IoC.Container.Kernel;
 			kernel.AddComponent(_name, _service, _impl);
 			IHandler handler = kernel.GetHandler(_name);
+			handler.ComponentModel.LifestyleType = lifestyle;
 			kernel.RegisterCustomDependencies(_name, _parameters);
 			foreach (KeyValuePair<string, string> pair in _references)
 			{
@@ -66,7 +76,7 @@ namespace Rhino.Commons.Binsor
 		{
 			if (value is ComponentReference)
 			{
-				string referenceName = ((ComponentReference)value).Name;
+				string referenceName = ((ComponentReference) value).Name;
 				_references.Add(name, referenceName);
 				return null;
 			}

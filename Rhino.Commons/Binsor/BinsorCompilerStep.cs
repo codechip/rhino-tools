@@ -11,6 +11,7 @@ namespace Rhino.Commons.Binsor
 			{
 				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
 				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
+				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
 				ClassDefinition definition = new ClassDefinition();
 				definition.Name = module.FullName;
 				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
