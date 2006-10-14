@@ -571,15 +571,16 @@ namespace NHibernate.Query.Generator
 			return hbmCodeNameSpace + "." + typeName;
 		}
 
-		private static string GetTypeNameForDisplay(XmlNode classNode)
+		private string GetTypeNameForDisplay(XmlNode classNode)
 		{
 			string typeName = GetName(classNode);
 			return GetTypeNameForDisplay(typeName);
 		}
 
-		private static string GetTypeNameForDisplay(string typeName)
+		private string GetTypeNameForDisplay(string typeName)
 		{
 			int firstIndexOfComma = typeName.IndexOf(',');
+		
 			if (firstIndexOfComma < 0 && typeName.IndexOf('.') < 0)
 			{
 				return typeName;

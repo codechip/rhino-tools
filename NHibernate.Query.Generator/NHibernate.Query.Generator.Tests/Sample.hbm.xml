@@ -4,7 +4,7 @@
 				   xmlns:xsd='http://www.w3.org/2001/XMLSchema'
 				   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
 				   xmlns='urn:nhibernate-mapping-2.0'>
-	<class name='My.Simple.Model.Customer, My.Simple.Model'
+	<class name='Customer'
 		   table='Customers'
 		   lazy='true'>
 
@@ -24,7 +24,7 @@
 
 		<property name='Name'/>
 		<many-to-one name='Address'
-					 class='My.Simple.Model.Address, My.Simple.Model'/>
+					 class='Address'/>
 		<joined-subclass name='My.Simple.Model.BadCustomer, My.Simple.Model'>
 			<key column='f'></key>
 			<property name='Foo'/>
