@@ -22,6 +22,16 @@ namespace NHibernate.Query.Generator.Tests
 		private SessionScope sessionScope;
 
 		[Test]
+		public void CanExtendWhere()
+		{
+			User findOne = User.FindOne(Where.User.IsInGroup("Administrators"));
+			Assert.IsNotNull(findOne);
+
+			findOne = User.FindOne(Where.User.IsInGroup("Users"));
+			Assert.IsNull(findOne);
+		}
+		
+		[Test]
 		public void CanUseOrderringOnCompositeProperties()
 		{
 			WeirdClass weird = new WeirdClass();

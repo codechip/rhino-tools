@@ -21,7 +21,7 @@ namespace Query {
             }
         }
         
-        public class Query_Post<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Post<T1> : Query.QueryBuilder<T1>
          {
             
             public Query_Post(string name, string assoicationPath) : 
@@ -63,38 +63,10 @@ namespace Query {
             }
         }
         
-        public class Root_Query_Post {
+        public partial class Root_Query_Post : Query_Post<NHibernate.Query.Generator.Tests.ActiveRecord.Post> {
             
-            private string assoicationPath = "this";
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post> Title {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post>("Title", temp);
-                }
-            }
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post> Contnet {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post>("Contnet", temp);
-                }
-            }
-            
-            public virtual Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post> Id {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Post>("Id", temp);
-                }
-            }
-            
-            public virtual Query_Blog<NHibernate.Query.Generator.Tests.ActiveRecord.Post> Blog {
-                get {
-                    string temp = assoicationPath;
-                    temp = ((temp + ".") 
-                                + "Blog");
-                    return new Query_Blog<NHibernate.Query.Generator.Tests.ActiveRecord.Post>("Blog", temp, true);
-                }
+            public Root_Query_Post() : 
+                    base("this", null) {
             }
         }
     }

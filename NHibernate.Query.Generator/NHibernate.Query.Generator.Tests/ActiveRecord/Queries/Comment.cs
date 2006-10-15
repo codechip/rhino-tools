@@ -21,7 +21,7 @@ namespace Query {
             }
         }
         
-        public class Query_Comment<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Comment<T1> : Query.QueryBuilder<T1>
          {
             
             public Query_Comment(string name, string assoicationPath) : 
@@ -63,38 +63,10 @@ namespace Query {
             }
         }
         
-        public class Root_Query_Comment {
+        public partial class Root_Query_Comment : Query_Comment<NHibernate.Query.Generator.Tests.ActiveRecord.Comment> {
             
-            private string assoicationPath = "this";
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment> Author {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment>("Author", temp);
-                }
-            }
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment> Content {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment>("Content", temp);
-                }
-            }
-            
-            public virtual Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment> Id {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Comment>("Id", temp);
-                }
-            }
-            
-            public virtual Query_Post<NHibernate.Query.Generator.Tests.ActiveRecord.Comment> Post {
-                get {
-                    string temp = assoicationPath;
-                    temp = ((temp + ".") 
-                                + "Post");
-                    return new Query_Post<NHibernate.Query.Generator.Tests.ActiveRecord.Comment>("Post", temp, true);
-                }
+            public Root_Query_Comment() : 
+                    base("this", null) {
             }
         }
     }

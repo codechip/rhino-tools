@@ -21,7 +21,7 @@ namespace Query {
             }
         }
         
-        public class Query_User<T1> : Query.QueryBuilder<T1>
+        public partial class Query_User<T1> : Query.QueryBuilder<T1>
          {
             
             public Query_User(string name, string assoicationPath) : 
@@ -54,29 +54,10 @@ namespace Query {
             }
         }
         
-        public class Root_Query_User {
+        public partial class Root_Query_User : Query_User<NHibernate.Query.Generator.Tests.ActiveRecord.User> {
             
-            private string assoicationPath = "this";
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User> Name {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User>("Name", temp);
-                }
-            }
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User> Email {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User>("Email", temp);
-                }
-            }
-            
-            public virtual Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User> Id {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User>("Id", temp);
-                }
+            public Root_Query_User() : 
+                    base("this", null) {
             }
         }
     }

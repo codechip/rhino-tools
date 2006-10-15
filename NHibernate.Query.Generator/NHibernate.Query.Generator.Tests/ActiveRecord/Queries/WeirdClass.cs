@@ -21,7 +21,7 @@ namespace Query {
             }
         }
         
-        public class Query_WeirdClass<T1> : Query.QueryBuilder<T1>
+        public partial class Query_WeirdClass<T1> : Query.QueryBuilder<T1>
          {
             
             public Query_WeirdClass(string name, string assoicationPath) : 
@@ -44,7 +44,7 @@ namespace Query {
                 }
             }
             
-            public class Query_Address<T2> : Query.QueryBuilder<T2>
+            public partial class Query_Address<T2> : Query.QueryBuilder<T2>
              {
                 
                 public Query_Address(string name, string assoicationPath) : 
@@ -63,7 +63,7 @@ namespace Query {
                 }
             }
             
-            public class Query_Key<T3> : Query.QueryBuilder<T3>
+            public partial class Query_Key<T3> : Query.QueryBuilder<T3>
              {
                 
                 public Query_Key(string name, string assoicationPath) : 
@@ -90,65 +90,10 @@ namespace Query {
             }
         }
         
-        public class Root_Query_WeirdClass {
+        public partial class Root_Query_WeirdClass : Query_WeirdClass<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> {
             
-            private string assoicationPath = "this";
-            
-            public virtual Query_Address<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Address {
-                get {
-                    return new Query_Address<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Address", null);
-                }
-            }
-            
-            public virtual Query_Key<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Key {
-                get {
-                    return new Query_Key<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key", assoicationPath);
-                }
-            }
-            
-            public class Query_Address<T4> : Query.QueryBuilder<T4>
-             {
-                
-                public Query_Address(string name, string assoicationPath) : 
-                        base(name, assoicationPath) {
-                }
-                
-                public Query_Address(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
-                }
-                
-                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Street {
-                    get {
-                        string temp = assoicationPath;
-                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Address.Street", temp);
-                    }
-                }
-            }
-            
-            public class Query_Key<T5> : Query.QueryBuilder<T5>
-             {
-                
-                public Query_Key(string name, string assoicationPath) : 
-                        base(name, assoicationPath) {
-                }
-                
-                public Query_Key(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
-                }
-                
-                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Department {
-                    get {
-                        string temp = assoicationPath;
-                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key.Department", temp);
-                    }
-                }
-                
-                public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> Level {
-                    get {
-                        string temp = assoicationPath;
-                        return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass>("Key.Level", temp);
-                    }
-                }
+            public Root_Query_WeirdClass() : 
+                    base("this", null) {
             }
         }
     }

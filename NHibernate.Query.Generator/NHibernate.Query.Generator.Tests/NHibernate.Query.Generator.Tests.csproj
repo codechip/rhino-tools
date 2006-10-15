@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="ActiveRecord\Queries\WeirdClass.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
+    <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
     <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />

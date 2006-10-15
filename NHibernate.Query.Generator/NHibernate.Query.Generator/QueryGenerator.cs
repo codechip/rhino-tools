@@ -86,6 +86,7 @@ namespace NHibernate.Query.Generator
 				foreach (XmlNode componentNode in node.SelectNodes(componentPath, nsMgr))
 				{
 					CodeTypeDeclaration orderByForComponent = GenerateOrderByForClass(componentNode, true);
+					orderByForComponent.IsPartial = true;
 					//this is to handle the case of a component with a name, for instance, in a composite id 
 					if (componentNode.Attributes["name"] == null)
 					{
@@ -192,8 +193,7 @@ namespace NHibernate.Query.Generator
 					                      innerClass.TypeParameters[0].Name);
 
 					//This creates the root query class, Where.Blog
-					CodeTypeDeclaration rootClass = CreateRootClassAndPropertyInParentClass(parent, typeNameForDisplay);
-					CreateChildProperties(classNode, rootClass, AssoicationBehavior.AddAssoicationHardCoded, genericTypeName);
+					CreateRootClassAndPropertyInParentClass(parent, typeNameForDisplay, genericTypeName);
 				}
 			}
 		}
@@ -223,6 +223,7 @@ namespace NHibernate.Query.Generator
 			                   "nh:id");
 			// generate reference to related query obj
 			GenerateProperties(null, genericName, assoicationBehavior, UseTheQueryClass, classNode, innerClass, "nh:many-to-one");
+		
 			// generate reference to component
 			GenerateComponents(genericName, innerClass, classNode, "nh:component", "nh:dynamic-component");
 
@@ -350,16 +351,13 @@ namespace NHibernate.Query.Generator
 		/// The idea of having both root class and a query class is to avoid the possiblity of:
 		/// Where.Post.Gt()
 		/// </summary>
-		private CodeTypeDeclaration CreateRootClassAndPropertyInParentClass(CodeTypeDeclaration parent, string display)
+		private CodeTypeDeclaration CreateRootClassAndPropertyInParentClass(CodeTypeDeclaration parent, string display, string entityType)
 		{
 			// Root_Query_Blog
 			CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Root_Query_" + display);
-
-			CodeMemberField assoicationPath = new CodeMemberField();
-			assoicationPath.Name = "assoicationPath";
-			assoicationPath.Type = new CodeTypeReference(typeof (string).FullName);
-			assoicationPath.InitExpression = new CodePrimitiveExpression("this");
-			innerClass.Members.Add(assoicationPath);
+			innerClass.BaseTypes.Add(
+				new CodeTypeReference("Query_" + display, new CodeTypeReference(entityType)));
+			innerClass.IsPartial = true;
 
 			// class Where { Root_Query_Blog  _query_Blog = new Root_Query_Blog(); }
 			CodeMemberField field = new CodeMemberField();
@@ -378,6 +376,14 @@ namespace NHibernate.Query.Generator
 			parent.Members.Add(innerClass);
 			parent.Members.Add(field);
 			parent.Members.Add(prop);
+			
+			//ctor
+			CodeConstructor ctor = new CodeConstructor();
+			ctor.Attributes = MemberAttributes.Public;
+			
+			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression("this"));
+			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression(null));
+			innerClass.Members.Add(ctor);
 			return innerClass;
 		}
 
@@ -391,6 +397,7 @@ namespace NHibernate.Query.Generator
 		{
 			// Query_Blog<T1> : Query.QueryBuilder<T1>
 			CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Query_" + display);
+			innerClass.IsPartial = true;
 			string genericParameterName = GetGenericParameterName();
 			innerClass.TypeParameters.Add(genericParameterName);
 			innerClass.BaseTypes.Add(new CodeTypeReference("Query.QueryBuilder", new CodeTypeReference(genericParameterName)));

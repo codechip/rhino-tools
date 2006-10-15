@@ -32,7 +32,7 @@ namespace Query
 			this.assoicationPath = assoicationPath ?? "this";
 		}
 
-		protected void AddCriterion(AbstractCriterion criterion)
+		public void AddCriterion(ICriterion criterion)
 		{
 			criterions.Add(criterion);
 		}

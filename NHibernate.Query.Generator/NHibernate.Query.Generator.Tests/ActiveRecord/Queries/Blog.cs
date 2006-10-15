@@ -21,7 +21,7 @@ namespace Query {
             }
         }
         
-        public class Query_Blog<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Blog<T1> : Query.QueryBuilder<T1>
          {
             
             public Query_Blog(string name, string assoicationPath) : 
@@ -56,31 +56,10 @@ namespace Query {
             }
         }
         
-        public class Root_Query_Blog {
+        public partial class Root_Query_Blog : Query_Blog<NHibernate.Query.Generator.Tests.ActiveRecord.Blog> {
             
-            private string assoicationPath = "this";
-            
-            public virtual Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Blog> Name {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.PropertyQueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Blog>("Name", temp);
-                }
-            }
-            
-            public virtual Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Blog> Id {
-                get {
-                    string temp = assoicationPath;
-                    return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Blog>("Id", temp);
-                }
-            }
-            
-            public virtual Query_User<NHibernate.Query.Generator.Tests.ActiveRecord.Blog> Author {
-                get {
-                    string temp = assoicationPath;
-                    temp = ((temp + ".") 
-                                + "Author");
-                    return new Query_User<NHibernate.Query.Generator.Tests.ActiveRecord.Blog>("Author", temp, true);
-                }
+            public Root_Query_Blog() : 
+                    base("this", null) {
             }
         }
     }
