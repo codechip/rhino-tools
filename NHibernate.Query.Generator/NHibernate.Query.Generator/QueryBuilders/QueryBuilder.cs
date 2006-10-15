@@ -88,27 +88,19 @@ namespace Query
 
 		public QueryBuilder<T> In(params object[] values)
 		{
-			AbstractCriterion inExpression = new InExpression(name, values);
-			QueryBuilder<T> self = this;
-			if (backTrackAssoicationsOnEquality)
-			{
-				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
-				children.Add(self);
-			}
-			self.AddCriterion(inExpression);
+			In((ICollection) values);
 			return this;
 		}
 
 		public QueryBuilder<T> In<K>(ICollection<K> values)
 		{
-			AbstractCriterion inExpression = new InExpression(name, ToArray(values)); 
-			QueryBuilder<T> self = this;
-			if (backTrackAssoicationsOnEquality)
-			{
-				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
-				children.Add(self);
-			}
-			self.AddCriterion(inExpression);
+			In((ICollection) values);
+			return this;
+		}
+		
+		public QueryBuilder<T> In<K>(IEnumerable<K> values)
+		{
+			In((ICollection) new List<K>(values));
 			return this;
 		}
 
