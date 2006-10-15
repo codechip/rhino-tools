@@ -57,6 +57,8 @@
   <ItemGroup>
     <Compile Include="ActiveRecord\Queries\WeirdClass.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
+    <Compile Include="FieldProblems.cs" />
+    <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
     <Compile Include="ActiveRecord\Blog.cs" />
     <Compile Include="ActiveRecord\Comment.cs" />
@@ -80,6 +82,9 @@
       <Project>{042B9A3D-18DB-4ED7-89F2-EDF68C4E40EA}</Project>
       <Name>NHibernate.Query.Generator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WithTopLevelAssemblySpecification.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

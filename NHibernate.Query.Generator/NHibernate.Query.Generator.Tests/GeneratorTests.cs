@@ -20,14 +20,8 @@ namespace NHibernate.Query.Generator.Tests
 		[SetUp]
 		public void TestInitialize()
 		{
-			StringBuilder sb = new StringBuilder();
-
-			TextReader reader = new StreamReader(GetSampleStream());
-			TextWriter writer = new StringWriter(sb);
-			QueryGenerator generator = new QueryGenerator(reader, new CSharpCodeProvider());
-			generator.Generate(writer);
-
-			code = sb.ToString();
+			Stream sampleStream = GetSampleStream();
+			code = TestUtil.GenerateCode(sampleStream);
 		}
 
 		[Test]
@@ -41,14 +35,14 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			AssertCodeCompiles();
 
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			Assert.IsNotNull(asm);
 		}
 
 		[Test]
 		public void GeneratedAssemblyHasWhereTypeWithNestedCustomerType()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
 			System.Type whereType = asm.GetType("Query.Where");
 			Assert.IsNotNull(whereType, "Should have gotten an assembly with a where type");
@@ -62,7 +56,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GeneratedAssemblyHasWhereTypeUnqualifiedNameCompositeCustomer()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
 			System.Type whereType = asm.GetType("Query.Where");
 			Assert.IsNotNull(whereType, "Should have gotten an assembly with a where type");
@@ -81,7 +75,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CompositeCustomerOrderringHavePropertyWithoutKey()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
 			System.Type compositeCustomerOrderring = asm.GetType("Query.OrderBy+CompositeCustomer");
 			PropertyInfo property = compositeCustomerOrderring.GetProperty("CustomerId");
@@ -92,7 +86,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void ComponentsGetOrderByAsWell()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
 			System.Type homeType = asm.GetType("Query.OrderBy+Customer+Home");
 			PropertyInfo property = homeType.GetProperty("Phone");
@@ -153,7 +147,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GetNonNullObjectFromProperty()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			System.Type whereType = asm.GetType("Query.Where");
 			object customer = whereType.GetProperty("Customer").GetValue(null, null);
 			PropertyInfo property = customer.GetType().GetProperty("Name");
@@ -165,7 +159,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void PropertyReturnsNamedExpressionWithNameSetToPropertyName()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			object customer = asm.GetType("Query.Where").GetProperty("Customer").GetValue(null, null);
 			System.Type customerType = customer.GetType();
 			PropertyInfo property = customerType.GetProperty("Name");
@@ -178,7 +172,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CreatesStronglyTypedPropertiesForQueries()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			System.Type queries = asm.GetType("Query.Queries");
 			Assert.IsNotNull(queries, "failed to find Matches type");
 			PropertyInfo property = queries.GetProperty("MyQuery");
@@ -196,7 +190,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GenerateCodeForSubClasses()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			PropertyInfo customerProp = asm.GetType("Query.Where").GetProperty("ValuedCustomer");
 			object customer = customerProp.GetValue(null, null);
 			System.Type customerType = customer.GetType();
@@ -210,7 +204,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GenerateCodeForJoinedSubClassInClass()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			object customer =
 				asm.GetType("Query.Where").GetProperty("BadCustomer").
 					GetValue(null, null);
@@ -225,7 +219,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GenerateCodeForSubClass()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			PropertyInfo custType = asm.GetType("Query.Where").GetProperty("ValuedCustomer2");
 			object customer = custType.GetValue(null, null);
 			System.Type valuedCustType = customer.GetType();
@@ -239,7 +233,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GenerateCodeForJoinedSubClass()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			object custoer = asm.GetType("Query.Where").GetProperty("BadCustomer2").GetValue(null, null);
 			System.Type customerType = custoer.GetType();
 			Assert.IsNotNull(customerType);
@@ -253,7 +247,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void GeneratePropertiesForComponents()
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			System.Type whereType = asm.GetType("Query.Where");
 			PropertyInfo prop = whereType.GetProperty("Customer");
 			object customer = prop.GetValue(null, null);
@@ -268,31 +262,21 @@ namespace NHibernate.Query.Generator.Tests
 
 		#region Util Methods
 
-		private Assembly GetAssemblyFromCode()
-		{
-			CompilerResults results = CompileCode();
-			if (results.Errors.HasErrors)
-			{
-				throw new InvalidOperationException("Compilation errors");
-			}
-			return results.CompiledAssembly;
-		}
-
 		private void AssertWhereHasPropertyForXPath(string xpathQuery, string property, System.Type expectedPropetyType)
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			AssertWhereHasPropertyForXPath(asm, xpathQuery, property, expectedPropetyType);
 		}
 
 		private void AssertWhereHasPropertyForXPath(string xpathQuery, string property, string expectedPropetyType)
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			AssertWhereHasPropertyForXPath(asm, xpathQuery, property, asm.GetType(expectedPropetyType));
 		}
 
 		private void AssertOrderByHasPropertyForXPath(string xpathQuery, string className, System.Type type)
 		{
-			Assembly asm = GetAssemblyFromCode();
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			System.Type orderByType = asm.GetType("Query.OrderBy+"+className);
 			AssertHasPropertyForXPath(type, className, orderByType, xpathQuery);
 		}
@@ -340,7 +324,7 @@ namespace NHibernate.Query.Generator.Tests
 
 		private void AssertCodeCompiles()
 		{
-			CompilerResults results = CompileCode();
+			CompilerResults results = TestUtil.CompileCode(code);
 			if (results.Errors.Count != 0)
 			{
 				StringBuilder sb = new StringBuilder();
@@ -350,21 +334,6 @@ namespace NHibernate.Query.Generator.Tests
 				}
 				throw new AssertionException(sb.ToString());
 			}
-		}
-
-		private CompilerResults CompileCode()
-		{
-			CodeDomProvider provider = new CSharpCodeProvider();
-			CompilerParameters cp = new CompilerParameters();
-			cp.GenerateInMemory = true;
-			cp.OutputAssembly = "Generated.Context";
-			cp.ReferencedAssemblies.Add(typeof(ISession).Assembly.Location);
-			cp.ReferencedAssemblies.Add(typeof(QueryBuilder<>).Assembly.Location);
-
-			//need this for the model assemblies
-			cp.ReferencedAssemblies.Add(GetType().Assembly.Location);
-
-			return provider.CompileAssemblyFromSource(cp, code);
 		}
 
 		private static Stream GetSampleStream()

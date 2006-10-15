@@ -28,3 +28,15 @@ namespace My.Simple.Model
 	{
 	}
 }
+
+namespace Field.Testing
+{
+	namespace Trucking
+	{
+		public class Broker{}
+	}
+	namespace Commons
+	{
+		public class Name{}
+	}
+}

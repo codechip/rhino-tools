@@ -579,13 +579,18 @@ namespace NHibernate.Query.Generator
 
 		private string GetTypeNameForDisplay(string typeName)
 		{
+			if(string.IsNullOrEmpty(typeName))
+			{
+				throw new ArgumentNullException("typeName", "Typename is empty! you must pass non empty string");
+			}
 			int firstIndexOfComma = typeName.IndexOf(',');
-		
+			if (firstIndexOfComma == -1)
+				firstIndexOfComma = typeName.Length;
 			if (firstIndexOfComma < 0 && typeName.IndexOf('.') < 0)
 			{
 				return typeName;
 			}
-			int lastIndexOfPeriod = typeName.LastIndexOf('.', firstIndexOfComma) + 1;
+			int lastIndexOfPeriod = typeName.LastIndexOf('.', firstIndexOfComma-1) + 1;
 			if (lastIndexOfPeriod == -1)
 				lastIndexOfPeriod = 0;
 			return typeName.Substring(lastIndexOfPeriod, firstIndexOfComma - lastIndexOfPeriod);
