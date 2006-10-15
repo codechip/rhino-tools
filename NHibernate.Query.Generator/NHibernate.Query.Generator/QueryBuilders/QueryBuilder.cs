@@ -75,23 +75,40 @@ namespace Query
 
 		public QueryBuilder<T> In(ICollection values)
 		{
-			AbstractCriterion inExpression = new InExpression(name, ToArray(values));
-			AddCriterion(inExpression);
+			AbstractCriterion inExpression = new InExpression(name, ToArray(values)); 
+			QueryBuilder<T> self = this;
+			if (backTrackAssoicationsOnEquality)
+			{
+				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				children.Add(self);
+			}
+			self.AddCriterion(inExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> In(params object[] values)
 		{
 			AbstractCriterion inExpression = new InExpression(name, values);
-			AddCriterion(inExpression);
+			QueryBuilder<T> self = this;
+			if (backTrackAssoicationsOnEquality)
+			{
+				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				children.Add(self);
+			}
+			self.AddCriterion(inExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> In<K>(ICollection<K> values)
 		{
-			object[] arr = ToArray(values);
-			AbstractCriterion inExpression = new InExpression(name, arr);
-			AddCriterion(inExpression);
+			AbstractCriterion inExpression = new InExpression(name, ToArray(values)); 
+			QueryBuilder<T> self = this;
+			if (backTrackAssoicationsOnEquality)
+			{
+				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				children.Add(self);
+			}
+			self.AddCriterion(inExpression);
 			return this;
 		}
 
@@ -100,7 +117,13 @@ namespace Query
 			get
 			{
 				AbstractCriterion notNullExpression = new NotNullExpression(name);
-				AddCriterion(notNullExpression);
+				QueryBuilder<T> self = this;
+				if (backTrackAssoicationsOnEquality)
+				{
+					self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+					children.Add(self);
+				}
+				self.AddCriterion(notNullExpression);
 				return this;
 			}
 		}
@@ -110,7 +133,13 @@ namespace Query
 			get
 			{
 				AbstractCriterion nullExpression = new NullExpression(name);
-				AddCriterion(nullExpression);
+				QueryBuilder<T> self = this;
+				if (backTrackAssoicationsOnEquality)
+				{
+					self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+					children.Add(self);
+				}
+				self.AddCriterion(nullExpression);
 				return this;
 			}
 		}

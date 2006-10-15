@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
@@ -131,6 +132,37 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual(1, findAll.Length);
 		}
 
+
+		[Test]
+		public void CanQueryUsingAllInOverloads()
+		{
+			Post post = Post.FindOne(Where.Post.Title == "I love Active Record");
+
+			Comment[] c = Comment.FindAll(Where.Comment.Post.In(post));
+			Assert.AreEqual(1, c.Length);
+
+			ArrayList arrayList = new ArrayList();
+			arrayList.Add(post);
+			c = Comment.FindAll(Where.Comment.Post.In(arrayList));
+			Assert.AreEqual(1, c.Length);
+
+			List<Post> list = new List<Post>();
+			list.Add(post);
+			c = Comment.FindAll(Where.Comment.Post.In((ICollection<Post>)list));
+			Assert.AreEqual(1, c.Length);
+		}
+
+		[Test]
+		public void CanQueryUsingIsNullOrIsNotNull()
+		{
+			Comment[] c = Comment.FindAll(Where.Comment.Post.IsNull);
+			Assert.AreEqual(0, c.Length);
+
+			c = Comment.FindAll(Where.Comment.Post.IsNotNull);
+			Assert.AreEqual(1, c.Length);
+			
+		}
+
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{
@@ -193,12 +225,7 @@ namespace NHibernate.Query.Generator.Tests
 			sessionScope.Dispose();
 		}
 	
-		
-		/*using (new SessionScope())
-		{
-				
-			Console.WriteLine("Final!");
-				
+		/*	
 			/*
 			 * Doesn't compiles! Type safety in queries.
 			 * 

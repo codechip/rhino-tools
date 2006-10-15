@@ -43,8 +43,7 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(orderByType.GetProperty("Prefix"), "Should have a  Prefix");
 			Assert.IsNotNull(orderByType.GetProperty("Suffix"), "Should have a Suffix");
 			Assert.IsNotNull(orderByType.GetProperty("DisplayName"), "Should have a DisplayName");
-			
-			
 		}
+
 	}
 }
