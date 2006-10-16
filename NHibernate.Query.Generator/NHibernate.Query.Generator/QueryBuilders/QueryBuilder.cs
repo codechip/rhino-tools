@@ -230,7 +230,7 @@ Use HQL for this functionality...",
 			return base.GetHashCode();
 		}
 
-		protected static QueryBuilder<T> QueryBuilderFrom(AbstractCriterion criterion,
+		protected static QueryBuilder<T> FromCriterion(AbstractCriterion criterion,
 			string name, string assoicationPath)
 		{
 			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name,assoicationPath);

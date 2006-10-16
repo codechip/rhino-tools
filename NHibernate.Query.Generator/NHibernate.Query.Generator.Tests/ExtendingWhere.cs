@@ -12,8 +12,8 @@ namespace Query
 			public virtual QueryBuilder<User> IsInGroup(string groupName)
 			{
 				AbstractCriterion criterion = Expression.Sql("? in (select 'Administrators')", 
-				                                             groupName, NHibernateUtil.String);
-				return QueryBuilderFrom(criterion, "this", null);
+															 groupName, NHibernateUtil.String);
+				return FromCriterion(criterion, "this", null);
 			}
 		}
 	}
