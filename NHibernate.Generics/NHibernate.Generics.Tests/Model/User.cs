@@ -16,13 +16,13 @@ namespace NHibernate.Generics.Tests
             get { return _blogs; }
         }
 
-        public int UserId
+		public virtual int UserId
         {
             get { return _userId; }
             set { _userId = value; }
         }
 
-        public string UserName
+		public virtual string UserName
         {
             get { return _userName; }
             set { _userName = value; }

@@ -10,19 +10,19 @@ namespace NHibernate.Generics.Tests
         int post_id;
         EntityList<Comment> _comments;
 
-        public IList<Comment> Comments
+        public virtual IList<Comment> Comments
         {
             get { return _comments; }
         }
 
-        public int PostId
+		public virtual int PostId
         {
             get { return post_id; }
             set { post_id = value; }
         }
         string post_title;
 
-        public string PostTitle
+		public virtual string PostTitle
         {
             get { return post_title; }
             set { post_title = value; }
@@ -30,7 +30,7 @@ namespace NHibernate.Generics.Tests
 
         EntityRef<Blog> _blog;
 
-        public Blog Blog
+		public virtual Blog Blog
         {
             get { return _blog.Value; }
             set { _blog.Value = value; }

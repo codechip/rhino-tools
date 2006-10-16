@@ -26,7 +26,7 @@ namespace NHibernate.Generics.Tests
 			set { blog_name = value; }
 		}
 
-        public IDictionary<string, string> Attributes
+        public virtual IDictionary<string, string> Attributes
         {
             get { return _attributes; }
         }

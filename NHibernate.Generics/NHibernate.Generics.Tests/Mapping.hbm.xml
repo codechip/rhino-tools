@@ -1,135 +1,141 @@
 <?xml version='1.0' encoding='utf-8'?>
-<hibernate-mapping
-	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-	 xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns='urn:nhibernate-mapping-2.0'>
+<hibernate-mapping default-lazy="true"
+				   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+				   xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+				   xmlns='urn:nhibernate-mapping-2.0'>
 	<class
-		 name='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
-		 lazy='true'
-		 table='Blogs'>
+		name='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
+		lazy='true'
+		table='Blogs'>
 		<id
-			 name='BlogID'
-			 column='blog_id'
-			 unsaved-value='0'>
+			name='BlogID'
+			column='blog_id'
+			unsaved-value='0'>
 			<generator
-				 class='native' />
+				class='native' />
 		</id>
 		<property
-			 name='BlogName'
-			 column='blog_name' />
+			name='BlogName'
+			column='blog_name' />
 		<set
-			 name='Posts'
-			 access='NHibernate.Generics.GenericAccessor+CamelCase, NHibernate.Generics'
-			 lazy='true'
-			 cascade='all-delete-orphan'
-			 inverse='true'>
+			name='Posts'
+			generic='false'
+			access='NHibernate.Generics.GenericAccessor+CamelCase, NHibernate.Generics'
+			lazy='true'
+			cascade='all-delete-orphan'
+			inverse='true'>
 			<key
-				 column='post_blogid' />
+				column='post_blogid' />
 			<one-to-many
-				 class='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests' />
+				class='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests' />
 		</set>
 		<set
-			 name='Users'
-			 access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			 table='UsersBlogs'
-			 lazy='true'
-			 cascade='save-update'
-			 inverse='true'>
+			name='Users'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			table='UsersBlogs'
+			generic='false'
+			lazy='true'
+			cascade='save-update'
+			inverse='true'>
 			<key
-				 column='blog_id' />
+				column='blog_id' />
 			<many-to-many
-				 class='NHibernate.Generics.Tests.User, NHibernate.Generics.Tests'
-				 column='user_id' />
+				class='NHibernate.Generics.Tests.User, NHibernate.Generics.Tests'
+				column='user_id' />
 		</set>
 		<map
-			  access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			  name='Attributes'>
+			generic='false'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			name='Attributes'>
 			<key
-				 column='Id'
-				 foreign-key='ItemId' />
+				column='Id'
+				foreign-key='ItemId' />
 			<index
-				 type='System.String'
-				 column='`Name`' />
+				type='System.String'
+				column='`Name`' />
 			<element
-				 column='`Value`'
-				 type='System.String' />
+				column='`Value`'
+				type='System.String' />
 		</map>
 	</class>
 	<class
-		 name='NHibernate.Generics.Tests.User, NHibernate.Generics.Tests'
-		 lazy='true'
-		 table='Users'>
+		name='NHibernate.Generics.Tests.User, NHibernate.Generics.Tests'
+		lazy='true'
+		table='Users'>
 		<id
-			 name='UserId'
-			 column='user_id'>
+			name='UserId'
+			column='user_id'>
 			<generator
-				 class='native' />
+				class='native' />
 		</id>
 		<property
-			 name='UserName'
-			 type='string'
-			 column='user_name' />
+			name='UserName'
+			type='string'
+			column='user_name' />
 		<set
-			 name='Blogs'
-			 access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			 table='UsersBlogs'
-			 lazy='true'
-			 cascade='save-update'>
+			name='Blogs'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			generic='false'
+			table='UsersBlogs'
+			lazy='true'
+			cascade='save-update'>
 			<key
-				 column='user_id' />
+				column='user_id' />
 			<many-to-many
-				 class='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
-				 column='blog_id' />
+				class='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
+				column='blog_id' />
 		</set>
 	</class>
 	<class
-		 name='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests'
-		 table='Posts'>
+		name='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests'
+		table='Posts'>
 		<id
-			 name='PostId'
-			 column='post_id'
-			 unsaved-value='0'>
+			name='PostId'
+			column='post_id'
+			unsaved-value='0'>
 			<generator
-				 class='native' />
+				class='native' />
 		</id>
 		<many-to-one
-			 name='Blog'
-			 access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			 class='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
-			 column='post_blogid' />
+			name='Blog'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			class='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
+			column='post_blogid' />
 		<bag
-			 name='Comments'
-			 access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			 table='Comments'
-			 lazy='true'
-			 cascade='all-delete-orphan'
-			 inverse='true'>
+			name='Comments'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			generic='false'
+			table='Comments'
+			lazy='true'
+			cascade='all-delete-orphan'
+			inverse='true'>
 			<key
-				 column='comment_postid' />
+				column='comment_postid' />
 			<one-to-many
-				 class='NHibernate.Generics.Tests.Comment, NHibernate.Generics.Tests' />
+				class='NHibernate.Generics.Tests.Comment, NHibernate.Generics.Tests' />
 		</bag>
 	</class>
 	<class
-		 name='NHibernate.Generics.Tests.Comment, NHibernate.Generics.Tests'
-		 table='Comments'>
+		name='NHibernate.Generics.Tests.Comment, NHibernate.Generics.Tests'
+		table='Comments'>
 		<id
-			 name='CommentId'
-			 column='comment_id'
-			 unsaved-value='0'>
+			name='CommentId'
+			column='comment_id'
+			unsaved-value='0'>
 			<generator
-				 class='native' />
+				class='native' />
 		</id>
 		<property
-			 name='Text'
-			 type='string'
-			 column='comment_text' />
+			name='Text'
+			type='string'
+			column='comment_text' />
 		<property
-			 name='IndexInPost'
-			 column='comment_post_index' />
+			name='IndexInPost'
+			column='comment_post_index' />
 		<many-to-one
-			 name='Post'
-			 access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
-			 class='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests'
-			 column='comment_postid' />
+			name='Post'
+			access='NHibernate.Generics.GenericAccessor, NHibernate.Generics'
+			class='NHibernate.Generics.Tests.Post, NHibernate.Generics.Tests'
+			column='comment_postid' />
 	</class>
 </hibernate-mapping>

@@ -6,7 +6,7 @@ namespace NHibernate.Generics.Tests
 {
     public class Comment
     {
-        private Comment()
+        protected Comment()
         {
             _post = new EntityRef<Post>(
                 delegate(Post p) { p.Comments.Add(this); },
@@ -24,25 +24,25 @@ namespace NHibernate.Generics.Tests
         string _text;
         EntityRef<Post> _post;
 
-        public int IndexInPost
+		public virtual int IndexInPost
         {
             get { return _indexInPost; }
             set { _indexInPost = value; }
         }
-        
-        public Post Post
+
+		public virtual Post Post
         {
             get { return _post.Value; }
             set { _post.Value = value; }
         }
 
-        public int CommentId
+		public virtual int CommentId
         {
             get { return _id; }
             set { _id = value; }
         }
 
-        public string Text
+		public virtual string Text
         {
             get { return _text; }
             set { _text = value; }
