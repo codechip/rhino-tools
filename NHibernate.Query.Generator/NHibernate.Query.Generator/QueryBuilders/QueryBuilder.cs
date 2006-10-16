@@ -32,7 +32,7 @@ namespace Query
 			this.assoicationPath = assoicationPath ?? "this";
 		}
 
-		public void AddCriterion(ICriterion criterion)
+		protected void AddCriterion(ICriterion criterion)
 		{
 			criterions.Add(criterion);
 		}
@@ -228,6 +228,14 @@ Use HQL for this functionality...",
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
+		}
+
+		protected static QueryBuilder<T> QueryBuilderFrom(AbstractCriterion criterion,
+			string name, string assoicationPath)
+		{
+			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name,assoicationPath);
+			queryBuilder.AddCriterion(criterion);
+			return queryBuilder;
 		}
 
 

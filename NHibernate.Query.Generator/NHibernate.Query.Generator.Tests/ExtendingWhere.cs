@@ -7,15 +7,13 @@ namespace Query
 {
 	public partial class Where
 	{
-		public partial class Query_User<T1>
+		public partial class Root_Query_User
 		{
 			public virtual QueryBuilder<User> IsInGroup(string groupName)
 			{
-				QueryBuilder<User> queryBuilder = new QueryBuilder<User>("this", null);
-				AbstractCriterion sql = Expression.Sql(new SqlString("? in (select 'Administrators')"), 
-				                                       groupName, NHibernateUtil.String);
-				queryBuilder.AddCriterion(sql);
-				return queryBuilder;
+				AbstractCriterion criterion = Expression.Sql("? in (select 'Administrators')", 
+				                                             groupName, NHibernateUtil.String);
+				return QueryBuilderFrom(criterion, "this", null);
 			}
 		}
 	}
