@@ -255,7 +255,7 @@ namespace NHibernate.Query.Generator
 						if (typeAttribute == null)
 						{
 							throw new InvalidOperationException(
-								string.Format("On class {0} the composite id property {1} doesn't specify a type",
+								string.Format("On class {0} the composite id property {1} doesn't specify a type. NQG must know what the type of the property is in order to generate the query code.",
 								              GetName(classNode),
 								              GetName(idNode)));
 						}

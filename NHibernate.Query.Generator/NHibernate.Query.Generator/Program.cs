@@ -23,6 +23,8 @@ namespace NHibernate.Query.Generator
 			{
 				SetupCodeProvider();
 				string directoryName = Path.GetDirectoryName(inputFilePattern);
+				if (string.IsNullOrEmpty(directoryName))
+					directoryName = ".";
 				string fileName = Path.GetFileName(inputFilePattern);
 				foreach (string file in Directory.GetFiles(directoryName, fileName))
 				{
