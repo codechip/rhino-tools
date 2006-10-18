@@ -31,7 +31,7 @@ namespace Rhino.Commons
         {
             ICriteria crit = CreateCriteriaFromArray(criteria);
             crit.AddOrder(order);
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
            
         }
 
@@ -42,13 +42,13 @@ namespace Rhino.Commons
             {
                 crit.AddOrder(order);
             }
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
         }
 
         public ICollection<T> FindAll(params ICriterion[] criteria)
         {
             ICriteria crit = CreateCriteriaFromArray(criteria);
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
         }
 
         public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
@@ -56,7 +56,7 @@ namespace Rhino.Commons
             ICriteria crit = CreateCriteriaFromArray(criteria);
             crit.SetFirstResult(firstResult)
                 .SetMaxResults(numberOfResults);
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
         }
 
         public ICollection<T> FindAll(
@@ -66,7 +66,7 @@ namespace Rhino.Commons
             crit.SetFirstResult(firstResult)
                 .SetMaxResults(numberOfResults);
             crit.AddOrder(selectionOrder);
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
         }
 
         public ICollection<T> FindAll(
@@ -79,13 +79,13 @@ namespace Rhino.Commons
             {
                 crit.AddOrder(order);
             }
-            return Collection.ToArray<T>(crit.List());
+            return crit.List<T>();
         }
 
         public ICollection<T> FindAll(string namedQuery, params Parameter[] parameters)
         {
             IQuery query = CreateQuery(namedQuery, parameters);
-            return Collection.ToArray<T>(query.List());
+            return query.List<T>();
         }
 
         public ICollection<T> FindAll(
@@ -94,7 +94,7 @@ namespace Rhino.Commons
             IQuery query = CreateQuery(namedQuery, parameters);
             query.SetFirstResult(firstResult)
                 .SetMaxResults(numberOfResults);
-            return Collection.ToArray<T>(query.List());
+            return query.List<T>();
         }
 
         public T FindOne(params ICriterion[] criteria)
@@ -112,7 +112,7 @@ namespace Rhino.Commons
     	public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
     	{
     		ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
-    		return Collection.ToArray<T>(executableCriteria.List());
+    		return executableCriteria.List<T>();
     	}
 
     	public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
@@ -120,7 +120,7 @@ namespace Rhino.Commons
 			ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
 			executableCriteria.SetFirstResult(firstResult);
 			executableCriteria.SetMaxResults(maxResults);
-			return Collection.ToArray<T>(executableCriteria.List());
+			return executableCriteria.List<T>();
     	}
 
     	public T FindOne(DetachedCriteria criteria)
