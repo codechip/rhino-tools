@@ -44,6 +44,29 @@ namespace Rhino.Commons
         /// <returns>All the entities that match the criteria</returns>
         ICollection<T> FindAll(Order order, params ICriterion[] criteria);
 
+		/// <summary>
+		/// Loads all the entities that match the criteria
+		/// by order
+		/// </summary>
+		/// <param name="criteria">the criteria to look for</param>
+		/// <param name="orders"> the order to load the entities</param>
+		/// <returns>All the entities that match the criteria</returns>
+		ICollection<T> FindAll(DetachedCriteria criteria, params Order []orders);
+
+		/// <summary>
+		/// Loads all the entities that match the criteria
+		/// by order
+		/// </summary>
+		/// <param name="criteria">the criteria to look for</param>
+		/// <param name="orders"> the order to load the entities</param>
+		/// <param name="firstResult">the first result to load</param>
+		/// <param name="maxResults">the number of result to load</param>
+		/// <returns>All the entities that match the criteria</returns>
+		ICollection<T> FindAll(DetachedCriteria criteria, 
+		                       int firstResult, int maxResults,
+		                       params Order[] orders);
+    	
+    	
         /// <summary>
         /// Loads all the entities that match the criteria
         /// by order
@@ -51,7 +74,7 @@ namespace Rhino.Commons
         /// <param name="criteria">the criteria to look for</param>
         /// <returns>All the entities that match the criteria</returns>
         ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria);
-        
+    	
         /// <summary>
         /// Loads all the entities that match the criteria
         /// </summary>
@@ -120,6 +143,14 @@ namespace Rhino.Commons
         /// <returns>The entity or null</returns>
         T FindOne(params ICriterion[] criteria);
 
+		/// <summary>
+		/// Find a single entity based on a criteria.
+		/// Thorws is there is more than one result.
+		/// </summary>
+		/// <param name="criteria">The criteria to look for</param>
+		/// <returns>The entity or null</returns>
+		T FindOne(DetachedCriteria criteria);
+    	
         /// <summary>
         /// Find a single entity based on a named query.
         /// Thorws is there is more than one result.
@@ -128,5 +159,14 @@ namespace Rhino.Commons
         /// <param name="namedQuery">the query to executre</param>
         /// <returns>The entity or null</returns>
         T FindOne(string namedQuery, params Parameter[] parameters);
+
+
+		/// <summary>
+		/// Find the entity based on a criteria.
+		/// </summary>
+		/// <param name="criteria">The criteria to look for</param>
+		/// <param name="orders">Optional orderring</param>
+		/// <returns>The entity or null</returns>
+		T FindFirst(DetachedCriteria criteria, params Order[] orders);
     }
 }

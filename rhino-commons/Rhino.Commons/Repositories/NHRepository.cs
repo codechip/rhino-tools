@@ -109,7 +109,35 @@ namespace Rhino.Commons
             return (T)query.UniqueResult();
         }
 
-        private static ICriteria CreateCriteriaFromArray(ICriterion[] criteria)
+    	public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
+    	{
+    		ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
+    		return Collection.ToArray<T>(executableCriteria.List());
+    	}
+
+    	public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
+    	{
+			ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
+			executableCriteria.SetFirstResult(firstResult);
+			executableCriteria.SetMaxResults(maxResults);
+			return Collection.ToArray<T>(executableCriteria.List());
+    	}
+
+    	public T FindOne(DetachedCriteria criteria)
+    	{
+			ICriteria executableCriteria = GetExecutableCriteria(criteria,null);
+			return (T)executableCriteria.UniqueResult();
+    	}
+
+    	public T FindFirst(DetachedCriteria criteria, params Order[] orders)
+    	{
+			ICriteria executableCriteria = GetExecutableCriteria(criteria, null);
+			executableCriteria.SetFirstResult(0);
+			executableCriteria.SetMaxResults(1);
+			return (T)executableCriteria.UniqueResult();
+		}
+
+    	private static ICriteria CreateCriteriaFromArray(ICriterion[] criteria)
         {
             ICriteria crit = UnitOfWork.CurrentNHibernateSession.CreateCriteria(typeof(T));
             foreach (ICriterion criterion in criteria)
@@ -124,6 +152,21 @@ namespace Rhino.Commons
             return crit;
         }
 
+		private static ICriteria GetExecutableCriteria(DetachedCriteria criteria, Order[] orders)
+		{
+			ICriteria executableCriteria = criteria.GetExecutableCriteria(UnitOfWork.CurrentNHibernateSession);
+			
+			AddCaching(executableCriteria);
+			if(orders!=null)
+			{
+				foreach (Order order in orders)
+				{
+					executableCriteria.AddOrder(order);
+				}	
+			}
+			return executableCriteria;
+		}
+    	
         private static void AddCaching(ICriteria crit)
         {
             if(With.Caching.ShouldForceCacheRefresh == false &&
