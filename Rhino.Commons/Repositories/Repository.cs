@@ -175,10 +175,59 @@ namespace Rhino.Commons
         {
             return InternalRepository.FindOne(namedQuery, parameters);
         }
-        
-        /// <summary>
+
+    	/// <summary>
+    	/// Loads all the entities that match the criteria
+    	/// by order
+    	/// </summary>
+    	/// <param name="criteria">the criteria to look for</param>
+    	/// <param name="orders"> the order to load the entities</param>
+    	/// <returns>All the entities that match the criteria</returns>
+    	public static ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
+    	{
+    		return InternalRepository.FindAll(criteria, orders);
+    	}
+
+    	/// <summary>
+    	/// Loads all the entities that match the criteria
+    	/// by order
+    	/// </summary>
+    	/// <param name="criteria">the criteria to look for</param>
+    	/// <param name="orders"> the order to load the entities</param>
+    	/// <param name="firstResult">the first result to load</param>
+    	/// <param name="maxResults">the number of result to load</param>
+    	/// <returns>All the entities that match the criteria</returns>
+    	public static ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
+    	{
+    		return InternalRepository.FindAll(criteria, firstResult, maxResults, orders);
+    	}
+
+    	/// <summary>
+    	/// Find a single entity based on a criteria.
+    	/// Thorws is there is more than one result.
+    	/// </summary>
+    	/// <param name="criteria">The criteria to look for</param>
+    	/// <returns>The entity or null</returns>
+    	public static T FindOne(DetachedCriteria criteria)
+    	{
+    		return InternalRepository.FindOne(criteria);
+    	}
+
+    	/// <summary>
+    	/// Find the entity based on a criteria.
+    	/// </summary>
+    	/// <param name="criteria">The criteria to look for</param>
+    	/// <param name="orders">Optional orderring</param>
+    	/// <returns>The entity or null</returns>
+    	public static T FindFirst(DetachedCriteria criteria, params Order[] orders)
+    	{
+    		return InternalRepository.FindFirst(criteria, orders);
+    	}
+
+    	/// <summary>
         /// Execute the specified stored procedure with the given parameters
         /// and return the result.
+        /// Note: only scalar values are supported using this approach.
         /// </summary>
         /// <param name="sp_name">The name of the stored procedure</param>
         /// <param name="parameters">parameters for the stored procedure</param>

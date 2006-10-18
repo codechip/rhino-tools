@@ -6,7 +6,6 @@ namespace Rhino.Commons.Test.Binsor
 {
 	public class FakeRepository<T> : IRepository<T>
 	{
-
 		IRepository<T> inner;
 
 		public IRepository<T> Inner
@@ -19,87 +18,54 @@ namespace Rhino.Commons.Test.Binsor
 			this.inner = inner;
 		}
 
-		/// <summary>
-		/// Find a single entity based on a criteria.
-		/// Thorws is there is more than one result.
-		/// </summary>
-		/// <param name="criteria">The criteria to look for</param>
-		/// <returns>The entity or null</returns>
 		public T FindOne(params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria, with paging 
-		/// and orderring by a multiply fields.
-		/// </summary>
-		/// <param name="firstResult">The first result to load</param>
-		/// <param name="numberOfResults">Total number of results to load</param>
-		/// <param name="criteria">the cirteria to look for</param>
-		/// <returns>number of Results of entities that match the criteria</returns>
-		/// <param name="selectionOrder">The fields the repository should order by</param>
-		public ICollection<T> FindAll(
+		public T FindOne(DetachedCriteria criteria)
+		{
+			throw new NotImplementedException();
+		}
+
+			public ICollection<T> FindAll(
 			int firstResult, int numberOfResults, Order[] selectionOrder, params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria, with paging 
-		/// and orderring by a single field.
-		/// <param name="firstResult">The first result to load</param>
-		/// <param name="numberOfResults">Total number of results to load</param>
-		/// <param name="criteria">the cirteria to look for</param>
-		/// <returns>number of Results of entities that match the criteria</returns>
-		/// <param name="selectionOrder">The field the repository should order by</param>
-		/// <returns>number of Results of entities that match the criteria</returns>
-		public ICollection<T> FindAll(
+			public ICollection<T> FindAll(
 			int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria, and allow paging.
-		/// </summary>
-		/// <param name="firstResult">The first result to load</param>
-		/// <param name="numberOfResults">Total number of results to load</param>
-		/// <param name="criteria">the cirteria to look for</param>
-		/// <returns>number of Results of entities that match the criteria</returns>
-		public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
+			public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria
-		/// </summary>
-		/// <param name="criteria">the criteria to look for</param>
-		/// <returns>All the entities that match the criteria</returns>
-		public ICollection<T> FindAll(params ICriterion[] criteria)
+			public ICollection<T> FindAll(params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria
-		/// by order
-		/// </summary>
-		/// <param name="criteria">the criteria to look for</param>
-		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
 		{
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria
-		/// by order
-		/// </summary>
-		/// <param name="criteria">the criteria to look for</param>
-		/// <returns>All the entities that match the criteria</returns>
-		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+			public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
 		{
 			throw new NotImplementedException();
 		}
@@ -179,6 +145,11 @@ namespace Rhino.Commons.Test.Binsor
 		/// <param name="namedQuery">the query to executre</param>
 		/// <returns>The entity or null</returns>
 		public T FindOne(string namedQuery, params Parameter[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
+		public T FindFirst(DetachedCriteria criteria, params Order[] orders)
 		{
 			throw new NotImplementedException();
 		}
