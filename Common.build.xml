@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\MSBuild.Community.Tasks.Targets"/>
+	<PropertyGroup Condition="!Exists('$(Configuration)')">
+		<Configuration>Debug</Configuration>
+		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
+	</PropertyGroup>
+
+	<Target Name="BuildAll"
+			DependsOnTargets="Clean;Compile;UnitTest;Zip;Publish;" />
+
+	<Target Name="Clean">
+		<MSBuild Projects="$(SolutionFile)"
+				 Properties="Configuration=$(Configuration)"
+				 Targets="Clean" />
+	</Target>
+
+	<Target Name="Compile">
+		<MSBuild Projects="$(SolutionFile)"
+				 Properties="Configuration=$(Configuration)" />
+	</Target>
+
+	<Target Name="Zip">
+		<Delete Files="@(ExistingZipFiles)"/>
+		<Time Format="yyyy-MM-dd-HH-mm-ss">
+			<Output TaskParameter="FormattedTime"
+					PropertyName="buildDate" />
+		</Time>
+		<SvnVersion LocalPath=".">
+			<Output TaskParameter="Revision"
+					PropertyName="Revision" />
+		</SvnVersion>
+		<CreateProperty value="$(ProjectName)-#$(Revision)-$(Configuration)-$(buildDate).zip">
+			<Output TaskParameter="Value"
+					PropertyName="ZipFileName" />
+		</CreateProperty>
+		<Zip Files="@(ZipFiles)" Flatten="$(FlattenZipFile)" ZipLevel="9"
+			 ZipFileName="$(ZipFileName)" />
+	</Target>
+	
+	<Target Name="UnitTest">
+		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"   />
+	</Target>
+</Project>

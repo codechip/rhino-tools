@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project 
+		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+
+	<PropertyGroup>
+		<ProjectName>NHibernate.Query.Generator</ProjectName>
+		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
+		<FlattenZipFile>True</FlattenZipFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<TestAssembly Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator.Tests\bin\$(Configuration)\NHibernate.Query.Generator.Tests.dll"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\NHQG.exe"/>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\NHQG.exe.config;"/>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\*.dll;"/>
+			
+	</ItemGroup>
+
+	<Target Name="Publish"
+			Condition="Exists( '$(PublishDir)' )">
+		<Move SourceFiles="$(ZipFileName)"
+			  DestinationFolder="$(PublishDir)" />
+	</Target>
+</Project>
