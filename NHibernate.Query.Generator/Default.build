@@ -15,16 +15,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\NHQG.exe"/>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\NHQG.exe.config;"/>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\*.dll;"/>
-			
+		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator.Setup\bin\$(Configuration)\NHQG.msi"/>
 	</ItemGroup>
 
 	<Target Name="Publish"
 			Condition="Exists( '$(PublishDir)' )">
-		<Copy SourceFiles="@(ZipFiles)"
-			DestinationFolder="$(PublishDir)\$(ShortName)"/>
 		<Move SourceFiles="$(ZipFileName)"
 			  DestinationFolder="$(PublishDir)" />
 	</Target>

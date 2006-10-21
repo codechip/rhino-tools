@@ -77,9 +77,6 @@
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.cs" />
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.vb" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="nqg-logo-flat.ico" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
