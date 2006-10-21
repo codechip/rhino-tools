@@ -17,7 +17,6 @@
 		<Media Id="1"
 			   Cabinet="Product.cab"
 			   EmbedCab="yes" />
-		<?define BuildPath ="C:\Code\RhinoTools\NHibernate.Query.Generator\NHibernate.Query.Generator\bin\Debug\" ?>
 		<Directory Id="TARGETDIR"
 				   Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
