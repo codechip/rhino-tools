@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator.Tests", "NHibernate.Query.Generator.Tests\NHibernate.Query.Generator.Tests.csproj", "{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}"
 EndProject
-Project("{A49CE20D-CE64-4A08-9F24-92A6443D6699}") = "NHibernate.Query.Generator.Setup2", "NHibernate.Query.Generator.Setup2\NHibernate.Query.Generator.Setup2.wixproj", "{48366D29-7F6F-4BF2-9B76-469512178FFF}"
+Project("{A49CE20D-CE64-4A08-9F24-92A6443D6699}") = "NHibernate.Query.Generator.Setup", "NHibernate.Query.Generator.Setup\NHibernate.Query.Generator.Setup.wixproj", "{48366D29-7F6F-4BF2-9B76-469512178FFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
