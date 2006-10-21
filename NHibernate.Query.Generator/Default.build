@@ -5,6 +5,7 @@
 
 	<PropertyGroup>
 		<ProjectName>NHibernate.Query.Generator</ProjectName>
+		<ShortName>NHQG</ShortName>
 		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>
 	</PropertyGroup>
@@ -22,6 +23,8 @@
 
 	<Target Name="Publish"
 			Condition="Exists( '$(PublishDir)' )">
+		<Copy SourceFiles="@(ZipFiles)"
+			DestinationFolder="$(PublishDir)\$(ShortName)"/>
 		<Move SourceFiles="$(ZipFileName)"
 			  DestinationFolder="$(PublishDir)" />
 	</Target>

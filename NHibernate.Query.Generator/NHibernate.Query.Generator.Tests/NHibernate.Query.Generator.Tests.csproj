@@ -59,6 +59,11 @@
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
+    <Compile Include="Sample.hbm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Sample.hbm.xml</DependentUpon>
+    </Compile>
     <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
     <Compile Include="ActiveRecord\Blog.cs" />
@@ -76,6 +81,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Sample.hbm.xml">
       <Generator>NHibernateQueryGenerator</Generator>
+      <LastGenOutput>Sample.hbm.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
