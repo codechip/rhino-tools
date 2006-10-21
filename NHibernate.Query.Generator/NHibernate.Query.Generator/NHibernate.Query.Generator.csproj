@@ -11,6 +11,7 @@
     <AssemblyName>NHQG</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>..\..\Art\nqg-logo-flat.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -75,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.cs" />
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="nqg-logo-flat.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

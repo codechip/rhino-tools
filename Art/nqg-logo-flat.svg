@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   x="0"
+   y="0"
+   width="437.5"
+   height="437.5"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.44"
+   sodipodi:docname="nqg-logo-flat.svg"
+   sodipodi:docbase="C:\Code\RhinoTools\Art"
+   inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat-16.png"
+   inkscape:export-xdpi="3.481117"
+   inkscape:export-ydpi="3.481117">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="270.84253"
+     inkscape:cy="250.08105"
+     inkscape:window-width="1024"
+     inkscape:window-height="712"
+     inkscape:window-x="1419"
+     inkscape:window-y="78"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient3746">
+      <stop
+         style="stop-color:#c6ad26;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop3748" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3750" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3728">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop3730" />
+      <stop
+         style="stop-color:#f13aa8;stop-opacity:0.00000000;"
+         offset="1.0000000"
+         id="stop3732" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3714">
+      <stop
+         style="stop-color:#fffa77;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop3716" />
+      <stop
+         style="stop-color:#7de567;stop-opacity:1;"
+         offset="1"
+         id="stop3718" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3706">
+      <stop
+         style="stop-color:#d7ff77;stop-opacity:1;"
+         offset="0"
+         id="stop3708" />
+      <stop
+         style="stop-color:#e5cb67;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop3710" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2924">
+      <stop
+         style="stop-color:#876b00;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop2926" />
+      <stop
+         style="stop-color:#ff7a8f;stop-opacity:1;"
+         offset="1"
+         id="stop2928" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2900">
+      <stop
+         style="stop-color:#ab110e;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop2902" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.00000000;"
+         offset="1.0000000"
+         id="stop2904" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient580">
+      <stop
+         style="stop-color:#ddcd97;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop581" />
+      <stop
+         style="stop-color:#7f95ff;stop-opacity:1;"
+         offset="1"
+         id="stop582" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient53">
+      <stop
+         style="stop-color:#ffe977;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop54" />
+      <stop
+         style="stop-color:#7de567;stop-opacity:1;"
+         offset="1"
+         id="stop55" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient48">
+      <stop
+         style="stop-color:#877100;stop-opacity:1.0000000;"
+         offset="0.00000000"
+         id="stop49" />
+      <stop
+         style="stop-color:#ff7a8f;stop-opacity:1;"
+         offset="1"
+         id="stop50" />
+    </linearGradient>
+    <linearGradient
+       x1="0.80000001"
+       y1="0.445315"
+       x2="0.52307701"
+       y2="0.609375"
+       id="linearGradient51"
+       xlink:href="#linearGradient53" />
+    <linearGradient
+       x1="0.13846301"
+       y1="0.38281101"
+       x2="0.430769"
+       y2="0.53906298"
+       id="linearGradient52"
+       xlink:href="#linearGradient53" />
+    <linearGradient
+       x1="0.101911"
+       y1="0.46540901"
+       x2="0.94267499"
+       y2="0.45282999"
+       id="linearGradient32"
+       xlink:href="#linearGradient48" />
+    <linearGradient
+       x1="-6.84581591e-9"
+       y1="-4.18149391e-8"
+       x2="1"
+       y2="1"
+       id="linearGradient33"
+       xlink:href="#linearGradient48" />
+    <radialGradient
+       cx="0.57480317"
+       cy="0.68750000"
+       r="0.59126163"
+       fx="0.57480317"
+       fy="0.68750000"
+       id="radialGradient579"
+       xlink:href="#linearGradient580" />
+    <radialGradient
+       cx="0.090910137"
+       cy="0.20312500"
+       r="0.51106399"
+       fx="0.090910137"
+       fy="0.20312500"
+       id="radialGradient607"
+       xlink:href="#linearGradient580" />
+    <radialGradient
+       cx="-0.064102568"
+       cy="0.64843750"
+       r="0.28889301"
+       fx="-0.064102568"
+       fy="0.64843750"
+       id="radialGradient608"
+       xlink:href="#linearGradient53" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3714"
+       id="linearGradient3712"
+       gradientTransform="scale(0.774427,1.291277)"
+       x1="0.54630959"
+       y1="0.56266969"
+       x2="1.1588384"
+       y2="0.48401687"
+       gradientUnits="objectBoundingBox" />
+  </defs>
+  <path
+     d="M 202.37257,417.92288 C 229.92328,402.61981 346.8364,341.17676 392.33819,312.51346 C 396.55599,268.94386 429.30676,109.68313 423.35286,111.27745 C 396.11827,118.75718 238.92363,188.3151 215.94168,200.71568 C 213.76523,231.13676 208.71386,370.64507 202.37257,417.92288 z "
+     style="font-size:12px;fill:#efa;fill-opacity:0.91891892;fill-rule:evenodd;stroke:black;stroke-width:15.63450623;stroke-linejoin:bevel"
+     id="path601"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png"
+     inkscape:export-xdpi="27.85"
+     inkscape:export-ydpi="27.85" />
+  <path
+     d="M 212.06481,202.31279 C 219.05425,205.1922 207.5897,229.90533 208.18793,205.50703 C 196.66645,196.01434 64.569565,116.75601 30.988358,107.96981 C 20.699195,135.12262 30.01633,269.69949 27.914496,310.91634 C 53.1223,315.7076 194.28648,416.23942 207.85539,417.92288 C 207.85539,374.26843 213.35703,202.84524 212.06481,202.31279 z "
+     style="font-size:12px;fill:#f4eed7;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:15.63450623;stroke-linejoin:bevel"
+     id="path602"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png"
+     inkscape:export-xdpi="27.85"
+     inkscape:export-ydpi="27.85" />
+  <path
+     inkscape:export-ydpi="27.85"
+     inkscape:export-xdpi="27.85"
+     d="M 245.01807,20.242168 C 230.10955,18.590018 64.735903,89.325703 31.791327,106.21214 C 58.625797,127.34965 188.28633,187.26611 215.94168,200.71578 C 220.36237,202.27673 391.65425,119.45069 421.41448,111.27745 C 404.20875,94.19615 264.76857,28.5636 245.01807,20.242168 z "
+     style="font-size:12px;opacity:1;fill:#cfa;fill-opacity:1;fill-rule:evenodd;stroke:#080000;stroke-width:15.63152027;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.98918918"
+     id="path603"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png" />
+  <metadata
+     id="metadata27">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Gtk logo</dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>computer</rdf:li>
+            <rdf:li />
+            <rdf:li>icons</rdf:li>
+            <rdf:li>hash</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Jose Hevia</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent
+             rdf:about="">
+            <dc:title>Jose Hevia</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent
+             rdf:about="">
+            <dc:title>Jose Hevia</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="Public Domain">
+          <dc:date />
+        </cc:license>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="Public Domain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <text
+     xml:space="preserve"
+     style="font-size:149.84095764px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:red;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="119.21478"
+     y="187.23695"
+     id="text2936"
+     sodipodi:linespacing="100%"
+     transform="matrix(1.318592,3.260149e-2,-1.632707e-2,0.757981,0,0)"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png"
+     inkscape:export-xdpi="27.85"
+     inkscape:export-ydpi="27.85"><tspan
+       sodipodi:role="line"
+       id="tspan2938"
+       x="119.21478"
+       y="187.23695">N</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:135.81486511px;font-style:normal;font-weight:normal;fill:#23a317;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="60.170338"
+     y="298.00684"
+     id="text2940"
+     transform="scale(0.983038,1.017255)"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png"
+     inkscape:export-xdpi="27.85"
+     inkscape:export-ydpi="27.85"><tspan
+       sodipodi:role="line"
+       id="tspan2942"
+       x="60.170338"
+       y="298.00684">Q</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:135.59712219px;font-style:normal;font-weight:normal;fill:blue;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="265.93539"
+     y="454.12418"
+     id="text2944"
+     transform="matrix(1.040747,-0.431151,-5.293287e-2,0.982777,0,0)"
+     inkscape:export-filename="C:\Code\RhinoTools\Art\nqg-logo-flat.png"
+     inkscape:export-xdpi="27.85"
+     inkscape:export-ydpi="27.85"><tspan
+       sodipodi:role="line"
+       x="265.93539"
+       y="454.12418"
+       id="tspan2638">G</tspan></text>
+</svg>

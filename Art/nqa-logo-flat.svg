@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
-   xmlns:xml="http://www.w3.org/XML/1998/namespace"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://web.resource.org/cc/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
    x="0"
@@ -17,12 +16,12 @@
    height="437.5"
    id="svg1"
    sodipodi:version="0.32"
-   inkscape:version="0.40+cvs"
-   sodipodi:docname="nqa-logo.svg"
-   sodipodi:docbase="C:\DOCUME~1\Ayende\Desktop"
-   inkscape:export-filename="C:\Documents and Settings\Ayende\Desktop\nqa-logo.png"
-   inkscape:export-xdpi="90.000000"
-   inkscape:export-ydpi="90.000000">
+   inkscape:version="0.44"
+   sodipodi:docname="nqa-logo-flat.svg"
+   sodipodi:docbase="C:\Code\RhinoTools\Art"
+   inkscape:export-filename="C:\Code\RhinoTools\Art\nqa-logo-flat.png"
+   inkscape:export-xdpi="29.120001"
+   inkscape:export-ydpi="29.120001">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -218,84 +217,55 @@
      id="path603" />
   <metadata
      id="metadata27">
-    <rdf:RDF
-       id="RDF29">
+    <rdf:RDF>
       <cc:Work
-         rdf:about=""
-         id="Work31">
-        <dc:title
-           id="title33">Gtk logo</dc:title>
-        <dc:description
-           id="description35" />
-        <dc:subject
-           id="subject37">
-          <rdf:Bag
-             id="Bag39">
-            <rdf:li
-               id="li41">computer</rdf:li>
-            <rdf:li
-               id="li43" />
-            <rdf:li
-               id="li45">icons</rdf:li>
-            <rdf:li
-               id="li47">hash</rdf:li>
+         rdf:about="">
+        <dc:title>Gtk logo</dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>computer</rdf:li>
+            <rdf:li />
+            <rdf:li>icons</rdf:li>
+            <rdf:li>hash</rdf:li>
           </rdf:Bag>
         </dc:subject>
-        <dc:publisher
-           id="publisher49">
+        <dc:publisher>
           <cc:Agent
-             rdf:about="http://www.openclipart.org"
-             id="Agent51">
-            <dc:title
-               id="title53">Jose Hevia</dc:title>
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Jose Hevia</dc:title>
           </cc:Agent>
         </dc:publisher>
-        <dc:creator
-           id="creator55">
+        <dc:creator>
           <cc:Agent
-             rdf:about=""
-             id="Agent57">
-            <dc:title
-               id="title59">Jose Hevia</dc:title>
+             rdf:about="">
+            <dc:title>Jose Hevia</dc:title>
           </cc:Agent>
         </dc:creator>
-        <dc:rights
-           id="rights61">
+        <dc:rights>
           <cc:Agent
-             rdf:about=""
-             id="Agent63">
-            <dc:title
-               id="title65">Jose Hevia</dc:title>
+             rdf:about="">
+            <dc:title>Jose Hevia</dc:title>
           </cc:Agent>
         </dc:rights>
-        <dc:date
-           id="date67" />
-        <dc:format
-           id="format69">image/svg+xml</dc:format>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
         <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage"
-           id="type71" />
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <cc:license
-           rdf:resource="Public Domain"
-           id="license73">
-          <dc:date
-             id="date75" />
+           rdf:resource="Public Domain">
+          <dc:date />
         </cc:license>
-        <dc:language
-           id="language77">en</dc:language>
+        <dc:language>en</dc:language>
       </cc:Work>
       <cc:License
-         rdf:about="Public Domain"
-         id="License79">
+         rdf:about="Public Domain">
         <cc:permits
-           rdf:resource="http://web.resource.org/cc/Reproduction"
-           id="permits81" />
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
         <cc:permits
-           rdf:resource="http://web.resource.org/cc/Distribution"
-           id="permits83" />
+           rdf:resource="http://web.resource.org/cc/Distribution" />
         <cc:permits
-           rdf:resource="http://web.resource.org/cc/DerivativeWorks"
-           id="permits85" />
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
       </cc:License>
     </rdf:RDF>
   </metadata>
@@ -310,7 +280,7 @@
        sodipodi:role="line"
        id="tspan2938"
        x="126.69142"
-       y="185.01590">N</tspan></text>
+       y="185.0159">N</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:132.82590;font-style:normal;font-weight:normal;fill:#23a317;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
@@ -321,7 +291,7 @@
        sodipodi:role="line"
        id="tspan2942"
        x="72.362465"
-       y="293.18750">Q</tspan></text>
+       y="293.1875">Q</tspan></text>
   <text
      xml:space="preserve"
      style="font-size:132.61290;font-style:normal;font-weight:normal;fill:#0000ff;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"
