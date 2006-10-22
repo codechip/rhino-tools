@@ -35,11 +35,12 @@
 					PropertyName="ZipFileName" />
 		</CreateProperty>
 		<Zip Files="@(ZipFiles)" Flatten="$(FlattenZipFile)" ZipLevel="9"
+		    WorkingDirectory="$(MSBuildProjectDirectory)"
 			 ZipFileName="$(ZipFileName)" />
 	</Target>
 	
 	<Target Name="UnitTest">
-		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"   />
+		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
 	</Target>
 	
 	<Target Name="Upload" >
