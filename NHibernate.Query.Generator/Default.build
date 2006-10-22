@@ -5,7 +5,7 @@
 
 	<PropertyGroup>
 		<ProjectName>NHibernate.Query.Generator</ProjectName>
-		<ShortName>NHQG</ShortName>
+		<ShortName>NQG</ShortName>
 		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>
 	</PropertyGroup>
@@ -17,10 +17,4 @@
 	<ItemGroup>
 		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator.Setup\bin\$(Configuration)\NHQG.msi"/>
 	</ItemGroup>
-
-	<Target Name="Publish"
-			Condition="Exists( '$(PublishDir)' )">
-		<Move SourceFiles="$(ZipFileName)"
-			  DestinationFolder="$(PublishDir)" />
-	</Target>
 </Project>

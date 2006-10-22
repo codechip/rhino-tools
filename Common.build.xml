@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<Target Name="BuildAll"
-			DependsOnTargets="Clean;Compile;UnitTest;Zip;Publish;" />
+			DependsOnTargets="Clean;Compile;UnitTest;Zip;Upload;" />
 
 	<Target Name="Clean">
 		<MSBuild Projects="$(SolutionFile)"
@@ -30,7 +30,7 @@
 			<Output TaskParameter="Revision"
 					PropertyName="Revision" />
 		</SvnVersion>
-		<CreateProperty value="$(ProjectName)-#$(Revision)-$(Configuration)-$(buildDate).zip">
+		<CreateProperty value="$(ProjectName)-@$(Revision)-$(Configuration)-$(buildDate).zip">
 			<Output TaskParameter="Value"
 					PropertyName="ZipFileName" />
 		</CreateProperty>
@@ -40,5 +40,19 @@
 	
 	<Target Name="UnitTest">
 		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"   />
+	</Target>
+	
+	<Target Name="Upload" >
+		<Time Format="dd MMM yyyy HH:mm">
+			<Output TaskParameter="FormattedTime"
+					PropertyName="humanDate" />
+		</Time>
+		 <FtpUpload 
+                LocalFile="$(ZipFileName)" 
+                Username ="$(FtpUsername)"
+                Password="$(FtpPassword)"
+                RemoteUri="ftp://ftp.ayende.com/wwwroot/Builds/$(ShortName)/Nightlies/$(ZipFileName)" />
+          <Exec 
+			Command='$(MSBuildProjectDirectory)\..\SharedLibs\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" 87 "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
 	</Target>
 </Project>
