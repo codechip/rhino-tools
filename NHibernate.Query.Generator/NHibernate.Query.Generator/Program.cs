@@ -61,7 +61,7 @@ namespace NHibernate.Query.Generator
 			{
 				GenerateSingleFile(File.OpenText(file), outputFile);
 			}
-			else if (targetExtention.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
+			else if (fileExt.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
 			         fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase))// Active Record...
 			{
 				GenerateFromActiveRecordAssembly(file);
