@@ -75,4 +75,28 @@ namespace Query {
             }
         }
     }
+    
+    public partial class ProjectBy {
+        
+        public partial class Blog {
+            
+            public static Query.PropertyProjectionBuilder Name {
+                get {
+                    return new Query.PropertyProjectionBuilder("Name");
+                }
+            }
+        }
+    }
+    
+    public partial class GroupBy {
+        
+        public partial class Blog {
+            
+            public static NHibernate.Expression.IProjection Name {
+                get {
+                    return NHibernate.Expression.Projections.GroupProperty("Name");
+                }
+            }
+        }
+    }
 }

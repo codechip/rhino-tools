@@ -188,17 +188,23 @@ namespace NHibernate.Query.Generator.Tests
 		}
 
 		[Test]
-		public void GenerateCodeForSubClasses()
+		public void GenerateCodeForSubClassesOutsideClassNode()
 		{
 			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 			PropertyInfo customerProp = asm.GetType("Query.Where").GetProperty("ValuedCustomer");
 			object customer = customerProp.GetValue(null, null);
-			System.Type customerType = customer.GetType();
-			Assert.IsNotNull(customerType);
-			PropertyInfo property = customerType.GetProperty("Bar");
+			System.Type valuedCustType = customer.GetType();
+			Assert.IsNotNull(valuedCustType);
+			PropertyInfo property = valuedCustType.GetProperty("Bar");
 			Assert.IsNotNull(property);
 			object value = property.GetValue(customer, null);
 			Assert.IsNotNull(value);
+
+			PropertyInfo propertyName = valuedCustType.GetProperty("Name");
+			Assert.IsNotNull(propertyName, "should be able to get property from parent");
+			value = propertyName.GetValue(customer, null);
+			Assert.IsNotNull(value);
+			
 		}
 
 		[Test]
@@ -214,6 +220,13 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(property);
 			object value = property.GetValue(customer, null);
 			Assert.IsNotNull(value);
+
+
+			PropertyInfo propertyName = customerType.GetProperty("Name");
+			Assert.IsNotNull(propertyName, "should be able to get property from parent");
+			value = propertyName.GetValue(customer, null);
+			Assert.IsNotNull(value);
+	
 		}
 
 		[Test]

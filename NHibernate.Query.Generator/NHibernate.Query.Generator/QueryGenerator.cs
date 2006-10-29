@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using NHibernate.Expression;
 using Query;
 
 namespace NHibernate.Query.Generator
@@ -13,8 +14,18 @@ namespace NHibernate.Query.Generator
 	/// </summary>
 	public class QueryGenerator
 	{
+		string[] classesXpath = {
+			                        	"/nh:hibernate-mapping//nh:class", "/nh:hibernate-mapping//nh:joined-subclass",
+			                        	"/nh:hibernate-mapping//nh:subclass"
+			                        };
+		string[] compnentsPath = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+		
 		private const string UseTheQueryClass = "UseTheQueryClass";
-
+		private string[] numericTypeNames = new string[] { "int", "integer", "smallint", "bigint", "tinyint", "decimal"
+		                                                   , "float", "double", "short", "long", "big_decimal", "Int32"
+		                                                   , "Int64", "Int16", "Single", "Decimal", "Double"
+		                                                   , "System.Int32", "System.Int64", "System.Int16"
+		                                                   , "System.Single", "System.Decimal", "System.Double" };
 		private readonly TextReader _reader;
 		private CodeDomProvider _provider;
 		private XmlDocument hbm = new XmlDocument();
@@ -30,6 +41,7 @@ namespace NHibernate.Query.Generator
 		{
 			_reader = reader;
 			_provider = provider;
+			Array.Sort(numericTypeNames);
 		}
 
 		public void Generate(TextWriter writer)
@@ -41,7 +53,7 @@ namespace NHibernate.Query.Generator
 			CodeTypeDeclaration whereTypeDeclaration = new CodeTypeDeclaration("Where");
 			queryNameSpace.Types.Add(whereTypeDeclaration);
 			whereTypeDeclaration.IsPartial = true;
-
+			
 			ValidateAndLoadXmlDocument();
 
 			CreateClasses(whereTypeDeclaration);
@@ -50,24 +62,101 @@ namespace NHibernate.Query.Generator
 
 			CreateQueries(queryNameSpace, hbm);
 
+			CreateProjectBy(queryNameSpace, hbm);
+
+			CreateGroupBy(queryNameSpace, hbm);
+
 			_provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());
 		}
 
-		private void CreateOrderBy(CodeNamespace queryNameSpace, XmlDocument hbm)
+		private void CreateGroupBy(CodeNamespace queryNameSpace, XmlDocument document)
 		{
-			string[] classesXpath = {
-			                        	"/nh:hibernate-mapping//nh:class", "/nh:hibernate-mapping//nh:joined-subclass",
-			                        	"/nh:hibernate-mapping//nh:subclass"
-			                        };
+		
+			CodeTypeDeclaration groupByDeclaration = new CodeTypeDeclaration("GroupBy");
+			groupByDeclaration.IsPartial = true;
+			queryNameSpace.Types.Add(groupByDeclaration);
+			
+			foreach(string classPath in classesXpath)
+			{
+				foreach(XmlNode node in document.SelectNodes(classPath, nsMgr))
+				{
+					CodeTypeDeclaration groupByForClass = GenerateGroupByForClass(node, false);
+					AddBaseTypeIfNeeded(node, groupByForClass);
+					AddComponentsGroupBy(node, groupByForClass);
+
+					if (groupByForClass.Members.Count != 0)
+						groupByDeclaration.Members.Add(groupByForClass);
+				}
+			}
+		}
+
+		private void AddComponentsGroupBy(XmlNode node, CodeTypeDeclaration groupByForClass)
+		{
+			foreach (string componentPath in compnentsPath)
+			{
+				foreach (XmlNode componentNode in node.SelectNodes(componentPath, nsMgr))
+				{
+					CodeTypeDeclaration groupByForComponent = GenerateGroupByForClass(componentNode, true);
+					groupByForComponent.IsPartial = true;
+					//this is to handle the case of a component with a name, for instance, in a composite id 
+					if (componentNode.Attributes["name"] == null)
+					{
+						groupByForClass.Members.AddRange(groupByForComponent.Members);
+					}
+					else if (groupByForComponent.Members.Count != 0)
+					{
+						groupByForClass.Members.Add(groupByForComponent);
+					}
+				}
+			}
+		}
+
+		private CodeTypeDeclaration GenerateGroupByForClass(XmlNode node, bool addPrefix)
+		{
+			string[] groupableProperties = { "nh:property", "nh:key-property", };
+			//here we allow for a node without name
+			string typeNameForDisplay;
+			if (node.Attributes["name"] != null)
+				typeNameForDisplay = GetTypeNameForDisplay(node);
+			else
+				typeNameForDisplay = "dummy";
+			CodeTypeDeclaration groupableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+			groupableClassDeclaration.IsPartial = true;
+			foreach (string groupableProperty in groupableProperties)
+			{
+				foreach (XmlNode propertyNode in node.SelectNodes(groupableProperty, nsMgr))
+				{
+					CodeMemberProperty prop = new CodeMemberProperty();
+					prop.Name = GetName(propertyNode);
+					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+					prop.Type = new CodeTypeReference(typeof(IProjection).FullName);
+					string associationPath = prop.Name;
+					if (addPrefix)
+						associationPath = typeNameForDisplay + "." + prop.Name;
+					
+					CodeExpression invokeExpression = new CodeMethodInvokeExpression(
+						new CodeTypeReferenceExpression("NHibernate.Expression.Projections"),
+						"GroupProperty", new CodePrimitiveExpression(associationPath));
+
+					prop.GetStatements.Add(new CodeMethodReturnStatement(invokeExpression));
+					groupableClassDeclaration.Members.Add(prop);
+				}
+			}
+			return groupableClassDeclaration;
+		}
+		
+		private void CreateOrderBy(CodeNamespace queryNameSpace, XmlDocument document)
+		{
 			CodeTypeDeclaration orderByDeclaration = new CodeTypeDeclaration("OrderBy");
 			orderByDeclaration.IsPartial = true;
 			queryNameSpace.Types.Add(orderByDeclaration);
 
 			foreach (string classPath in classesXpath)
 			{
-				foreach (XmlNode node in hbm.SelectNodes(classPath, nsMgr))
+				foreach (XmlNode node in document.SelectNodes(classPath, nsMgr))
 				{
 					CodeTypeDeclaration orderByForClass = GenerateOrderByForClass(node, false);
+					AddBaseTypeIfNeeded(node, orderByForClass);
 					AddComponentsOrderBy(node, orderByForClass);
 
 					if (orderByForClass.Members.Count != 0)
@@ -78,9 +167,17 @@ namespace NHibernate.Query.Generator
 			}
 		}
 
+		private void AddBaseTypeIfNeeded(XmlNode node, CodeTypeDeclaration genClass)
+		{
+			string baseTypeForDiplay = GetBaseTypeForDiplay(node);
+			if(baseTypeForDiplay!=null)
+			{
+				genClass.BaseTypes.Add(new CodeTypeReference(baseTypeForDiplay));
+			}
+		}
+
 		private void AddComponentsOrderBy(XmlNode node, CodeTypeDeclaration orderByForClass)
 		{
-			string[] compnentsPath = {"nh:component", "nh:dynamic-component", "nh:composite-id"};
 			foreach (string componentPath in compnentsPath)
 			{
 				foreach (XmlNode componentNode in node.SelectNodes(componentPath, nsMgr))
@@ -120,11 +217,10 @@ namespace NHibernate.Query.Generator
 					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
 					prop.Type = new CodeTypeReference(typeof (OrderByClause).FullName);
 					string associationPath = prop.Name;
-					if(addPrefix)
+					if (addPrefix)
 						associationPath = typeNameForDisplay + "." + prop.Name;
 					CodeObjectCreateExpression create =
-						new CodeObjectCreateExpression(typeof (OrderByClause),
-													   new CodePrimitiveExpression(associationPath));
+						new CodeObjectCreateExpression(typeof (OrderByClause), new CodePrimitiveExpression(associationPath));
 					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
 					orderableClassDeclaration.Members.Add(prop);
 				}
@@ -160,6 +256,94 @@ namespace NHibernate.Query.Generator
 			}
 		}
 
+		private void CreateProjectBy(CodeNamespace queryNameSpace, XmlDocument document)
+		{
+			CodeTypeDeclaration projectByDeclaration = new CodeTypeDeclaration("ProjectBy");
+			projectByDeclaration.IsPartial = true;
+			queryNameSpace.Types.Add(projectByDeclaration);
+
+			foreach (string classPath in classesXpath)
+			{
+				foreach (XmlNode node in document.SelectNodes(classPath, nsMgr))
+				{
+					CodeTypeDeclaration projectByForClass = GenerateProjectByForClass(node, false);
+					AddBaseTypeIfNeeded(node, projectByForClass);
+					AddComponentsProjectBy(node, projectByForClass);
+
+					if (projectByForClass.Members.Count != 0)
+					{
+						projectByDeclaration.Members.Add(projectByForClass);
+					}
+				}
+			}
+		}
+
+		private void AddComponentsProjectBy(XmlNode node, CodeTypeDeclaration projectByForClass)
+		{
+			foreach (string componentPath in compnentsPath)
+			{
+				foreach (XmlNode componentNode in node.SelectNodes(componentPath, nsMgr))
+				{
+					CodeTypeDeclaration projectByForComponent = GenerateProjectByForClass(componentNode, true);
+					projectByForComponent.IsPartial = true;
+					//this is to handle the case of a component with a name, for instance, in a composite id 
+					if (componentNode.Attributes["name"] == null)
+					{
+						projectByForClass.Members.AddRange(projectByForComponent.Members);
+					}
+					else if (projectByForComponent.Members.Count != 0)
+					{
+						projectByForClass.Members.Add(projectByForComponent);
+					}
+				}
+			}
+		}
+		
+		private CodeTypeDeclaration GenerateProjectByForClass(XmlNode node, bool addPrefix)
+		{
+			string[] projectByProperties = { "nh:property", "nh:key-property", };
+			//here we allow for a node without name
+			string typeNameForDisplay;
+			if (node.Attributes["name"] != null)
+				typeNameForDisplay = GetTypeNameForDisplay(node);
+			else
+				typeNameForDisplay = "dummy";
+			CodeTypeDeclaration projectByForClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+			projectByForClassDeclaration.IsPartial = true;
+			foreach (string projectableProperty in projectByProperties)
+			{
+				
+				foreach (XmlNode propertyNode in node.SelectNodes(projectableProperty, nsMgr))
+				{
+					bool isNumeric = false;
+					if (propertyNode.Attributes["type"] != null)
+					{
+						string nodeTypeName = propertyNode.Attributes["type"].Value;
+						isNumeric = (Array.BinarySearch(numericTypeNames, nodeTypeName) >= 0);
+					}
+					System.Type propBuilderType;
+					if (isNumeric)
+						propBuilderType = typeof(NumericPropertyProjectionBuilder);
+					else
+						propBuilderType = typeof(PropertyProjectionBuilder);
+					
+					CodeMemberProperty prop = new CodeMemberProperty();
+					prop.Name = GetName(propertyNode);
+					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+					prop.Type = new CodeTypeReference(propBuilderType.FullName);
+					string associationPath = prop.Name;
+					if (addPrefix)
+						associationPath = typeNameForDisplay + "." + prop.Name;
+					CodeObjectCreateExpression create =
+						new CodeObjectCreateExpression(propBuilderType,
+														 new CodePrimitiveExpression(associationPath));
+					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
+					projectByForClassDeclaration.Members.Add(prop);
+				}
+			}
+			return projectByForClassDeclaration;	
+		}
+		
 		/// <summary>
 		/// This method is here because I want to be able to easily control what GenerateClasses
 		/// will process. In the past, GenerateClasses was also recursive.
@@ -167,16 +351,13 @@ namespace NHibernate.Query.Generator
 		private void CreateClasses(CodeTypeDeclaration whereTypeDeclaration)
 		{
 			GenerateClasses(whereTypeDeclaration,
-			                hbm,
-			                "/nh:hibernate-mapping//nh:class",
-			                "/nh:hibernate-mapping//nh:joined-subclass",
-			                "/nh:hibernate-mapping//nh:subclass");
+			                hbm);
 		}
 
 		/// <summary>
 		/// Generates the classes, for each class, a root class and a query class are generated
 		/// </summary>
-		private void GenerateClasses(CodeTypeDeclaration parent, XmlNode node, params string[] classesXpath)
+		private void GenerateClasses(CodeTypeDeclaration parent, XmlNode node)
 		{
 			foreach (string xpathForClass in classesXpath)
 			{
@@ -184,9 +365,10 @@ namespace NHibernate.Query.Generator
 				{
 					string genericTypeName = GetTypeNameForCode(GetName(classNode));
 					string typeNameForDisplay = GetTypeNameForDisplay(classNode);
+					string typeExtendsForDisplay = GetBaseTypeForDiplay(classNode);
 
 					// This creates the query class Query_Blog<T2>
-					CodeTypeDeclaration innerClass = CreateQueryClassInParentClass(parent, typeNameForDisplay);
+					CodeTypeDeclaration innerClass = CreateQueryClassInParentClass(parent, typeNameForDisplay, typeExtendsForDisplay);
 					CreateChildProperties(classNode,
 					                      innerClass,
 					                      AssoicationBehavior.AddAssoicationFromName,
@@ -223,7 +405,7 @@ namespace NHibernate.Query.Generator
 			                   "nh:id");
 			// generate reference to related query obj
 			GenerateProperties(null, genericName, assoicationBehavior, UseTheQueryClass, classNode, innerClass, "nh:many-to-one");
-		
+
 			// generate reference to component
 			GenerateComponents(genericName, innerClass, classNode, "nh:component", "nh:dynamic-component");
 
@@ -255,12 +437,13 @@ namespace NHibernate.Query.Generator
 						if (typeAttribute == null)
 						{
 							throw new InvalidOperationException(
-								string.Format("On class {0} the composite id property {1} doesn't specify a type. NQG must know what the type of the property is in order to generate the query code.",
-								              GetName(classNode),
-								              GetName(idNode)));
+								string.Format(
+									"On class {0} the composite id property {1} doesn't specify a type. NQG must know what the type of the property is in order to generate the query code.",
+									GetName(classNode),
+									GetName(idNode)));
 						}
 						string typeNameForDisplay = GetTypeNameForDisplay(idNode);
-						idClass = CreateQueryClassInParentClass(innerClass, typeNameForDisplay);
+						idClass = CreateQueryClassInParentClass(innerClass, typeNameForDisplay, null);
 						CreatePropertyInParentClass(genericTypeName,
 						                            idClass,
 						                            GetName(idNode),
@@ -290,14 +473,15 @@ namespace NHibernate.Query.Generator
 		}
 
 		private void GenerateComponents(
-			string genericParameterName, CodeTypeDeclaration parent, XmlNode node, params string[] classesXpath)
+			string genericParameterName, CodeTypeDeclaration parent, XmlNode node, params string[] componentPath)
 		{
-			foreach (string xpathForClass in classesXpath)
+			foreach (string xpathForClass in componentPath)
 			{
 				foreach (XmlNode classNode in node.SelectNodes(xpathForClass, nsMgr))
 				{
 					string name = GetName(classNode);
-					CodeTypeDeclaration innerClass = CreateQueryClassInParentClass(parent, name);
+					CodeTypeDeclaration innerClass = CreateQueryClassInParentClass(parent, name, null);
+
 
 					CreatePropertyInParentClass(genericParameterName, innerClass, name, parent, new CodePrimitiveExpression(null));
 
@@ -351,12 +535,12 @@ namespace NHibernate.Query.Generator
 		/// The idea of having both root class and a query class is to avoid the possiblity of:
 		/// Where.Post.Gt()
 		/// </summary>
-		private CodeTypeDeclaration CreateRootClassAndPropertyInParentClass(CodeTypeDeclaration parent, string display, string entityType)
+		private CodeTypeDeclaration CreateRootClassAndPropertyInParentClass(
+			CodeTypeDeclaration parent, string display, string entityType)
 		{
 			// Root_Query_Blog
 			CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Root_Query_" + display);
-			innerClass.BaseTypes.Add(
-				new CodeTypeReference("Query_" + display, new CodeTypeReference(entityType)));
+			innerClass.BaseTypes.Add(new CodeTypeReference("Query_" + display, new CodeTypeReference(entityType)));
 			innerClass.IsPartial = true;
 
 			// class Where { Root_Query_Blog  _query_Blog = new Root_Query_Blog(); }
@@ -376,11 +560,11 @@ namespace NHibernate.Query.Generator
 			parent.Members.Add(innerClass);
 			parent.Members.Add(field);
 			parent.Members.Add(prop);
-			
+
 			//ctor
 			CodeConstructor ctor = new CodeConstructor();
 			ctor.Attributes = MemberAttributes.Public;
-			
+
 			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression("this"));
 			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression(null));
 			innerClass.Members.Add(ctor);
@@ -393,14 +577,21 @@ namespace NHibernate.Query.Generator
 		/// It is also keeping track of what is going on and is capable of tracking joins on the fly.
 		/// This is done by combining the generated code and QueryBuilder
 		/// </summary>
-		private CodeTypeDeclaration CreateQueryClassInParentClass(CodeTypeDeclaration parent, string display)
+		private CodeTypeDeclaration CreateQueryClassInParentClass(CodeTypeDeclaration parent, string display, string extends)
 		{
 			// Query_Blog<T1> : Query.QueryBuilder<T1>
 			CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Query_" + display);
 			innerClass.IsPartial = true;
 			string genericParameterName = GetGenericParameterName();
 			innerClass.TypeParameters.Add(genericParameterName);
-			innerClass.BaseTypes.Add(new CodeTypeReference("Query.QueryBuilder", new CodeTypeReference(genericParameterName)));
+
+			string classname;
+			if (extends == null)
+				classname = "Query.QueryBuilder";
+			else
+				classname = "Query_" + extends;
+
+			innerClass.BaseTypes.Add(new CodeTypeReference(classname, new CodeTypeReference(genericParameterName)));
 
 
 			// Query_Blog(string name, string associationPath) : QueryBuilder<T1>(name, assoicationPath);
@@ -586,7 +777,7 @@ namespace NHibernate.Query.Generator
 
 		private string GetTypeNameForDisplay(string typeName)
 		{
-			if(string.IsNullOrEmpty(typeName))
+			if (string.IsNullOrEmpty(typeName))
 			{
 				throw new ArgumentNullException("typeName", "Typename is empty! you must pass non empty string");
 			}
@@ -597,7 +788,7 @@ namespace NHibernate.Query.Generator
 			{
 				return typeName;
 			}
-			int lastIndexOfPeriod = typeName.LastIndexOf('.', firstIndexOfComma-1) + 1;
+			int lastIndexOfPeriod = typeName.LastIndexOf('.', firstIndexOfComma - 1) + 1;
 			if (lastIndexOfPeriod == -1)
 				lastIndexOfPeriod = 0;
 			return typeName.Substring(lastIndexOfPeriod, firstIndexOfComma - lastIndexOfPeriod);
@@ -613,6 +804,27 @@ namespace NHibernate.Query.Generator
 				throw new InvalidOperationException("Can't find attribute 'name' on element " + node.Name);
 			}
 			return node.Attributes["name"].Value;
+		}
+
+		private string GetBaseTypeForDiplay(XmlNode classNode)
+		{
+			string typeName = GetFullNameOfBaseClass(classNode);
+			if (string.IsNullOrEmpty(typeName)) return null;
+			return GetTypeNameForDisplay(typeName);
+		}
+
+		private static string GetFullNameOfBaseClass(XmlNode node)
+		{
+			string[] classes = {"class", "subclass", "joined-subclass"};
+			if (node.Attributes["extends"] == null) ///does it extends anything explicitly?
+			{
+				if(Array.IndexOf(classes, node.ParentNode.Name)!=-1)
+				{
+					return GetName(node.ParentNode);
+				}
+				return null;
+			}
+			return node.Attributes["extends"].Value;
 		}
 	}
 }

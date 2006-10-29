@@ -127,4 +127,64 @@ namespace Query {
             }
         }
     }
+    
+    public partial class ProjectBy {
+        
+        public partial class WeirdClass {
+            
+            public partial class Address {
+                
+                public static Query.PropertyProjectionBuilder Street {
+                    get {
+                        return new Query.PropertyProjectionBuilder("Address.Street");
+                    }
+                }
+            }
+            
+            public partial class Key {
+                
+                public static Query.PropertyProjectionBuilder Department {
+                    get {
+                        return new Query.PropertyProjectionBuilder("Key.Department");
+                    }
+                }
+                
+                public static Query.NumericPropertyProjectionBuilder Level {
+                    get {
+                        return new Query.NumericPropertyProjectionBuilder("Key.Level");
+                    }
+                }
+            }
+        }
+    }
+    
+    public partial class GroupBy {
+        
+        public partial class WeirdClass {
+            
+            public partial class Address {
+                
+                public static NHibernate.Expression.IProjection Street {
+                    get {
+                        return NHibernate.Expression.Projections.GroupProperty("Address.Street");
+                    }
+                }
+            }
+            
+            public partial class Key {
+                
+                public static NHibernate.Expression.IProjection Department {
+                    get {
+                        return NHibernate.Expression.Projections.GroupProperty("Key.Department");
+                    }
+                }
+                
+                public static NHibernate.Expression.IProjection Level {
+                    get {
+                        return NHibernate.Expression.Projections.GroupProperty("Key.Level");
+                    }
+                }
+            }
+        }
+    }
 }

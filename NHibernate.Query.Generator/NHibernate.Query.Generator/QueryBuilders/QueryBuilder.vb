@@ -345,6 +345,103 @@ Namespace Query
 		Protected name As String
 	End Class
 
+
+	Class ProjectBy
+		Public Shared ReadOnly Property RowCount() As IProjection
+			Get
+				Return Projections.RowCount()
+			End Get
+		End Property
+
+		Public Shared ReadOnly Property Id() As IProjection
+			Get
+				Return Projections.Id()
+			End Get
+		End Property
+
+		Public Shared Function Distinct(ByVal projection As IProjection) As IProjection
+			Return Projections.Distinct(projection)
+		End Function
+
+
+		Public Shared Function SqlProjection(ByVal sql As String, ByVal aliases() As String, ByVal types() As IType) As IProjection
+			Return Projections.SqlProjection(sql, aliases, types)
+		End Function
+
+
+		Public Shared Function SqlGroupByProjection(ByVal sql As String, ByVal groupBy As String, ByVal aliases() As String, ByVal types() As IType) As IProjection
+			Return Projections.SqlGroupProjection(sql, groupBy, aliases, types)
+		End Function
+	End Class
+ _
+
+
+	Public Class PropertyProjectionBuilder
+		Protected name As String
+
+
+		Public Sub New(ByVal name As String)
+			Me.name = name
+		End Sub
+
+
+		Public ReadOnly Property Count() As IProjection
+			Get
+				Return Projections.Count(name)
+			End Get
+		End Property
+
+		Public ReadOnly Property DistinctCount() As IProjection
+			Get
+				Return Projections.CountDistinct(name)
+			End Get
+		End Property
+
+		Public ReadOnly Property Max() As IProjection
+			Get
+				Return Projections.Max(name)
+			End Get
+		End Property
+
+		Public ReadOnly Property Min() As IProjection
+			Get
+				Return Projections.Min(name)
+			End Get
+		End Property
+
+		Public Shared Widening Operator CType(ByVal projection As PropertyProjectionBuilder) As PropertyProjection
+			Return Projections.Property(projection.name)
+		End Operator
+
+	End Class
+ _
+
+
+	Public Class NumericPropertyProjectionBuilder
+		Inherits PropertyProjectionBuilder
+
+		Public Sub New(ByVal name As String)
+			MyBase.New(name)
+		End Sub
+
+		Public ReadOnly Property Avg() As IProjection
+			Get
+				Return Projections.Avg(name)
+			End Get
+		End Property
+
+		Public ReadOnly Property Sum() As IProjection
+			Get
+				Return Projections.Sum(name)
+			End Get
+		End Property
+
+		Public Shared Widening Operator CType(ByVal projection As NumericPropertyProjectionBuilder) As PropertyProjection
+			Return Projections.Property(projection.name)
+		End Operator
+	End Class
+
 End Namespace
+
 
 

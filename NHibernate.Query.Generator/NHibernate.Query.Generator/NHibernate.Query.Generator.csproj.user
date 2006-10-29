@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs a.hbm.xml gen</StartArguments>
+    <StartArguments>cs C:\Code\RhinoTools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\Sample.hbm.xml C:\Code\RhinoTools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>

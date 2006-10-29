@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NHibernate.Expression;
+using NHibernate.Type;
 
 namespace Query
 {
@@ -420,6 +421,91 @@ Use HQL for this functionality...",
 		public static implicit operator Order(OrderByClause order)
 		{
 			return new Order(order.name, order.ascending);	
+		}
+	}
+
+	public partial class ProjectBy
+	{
+		public static IProjection RowCount
+		{
+			get { return Projections.RowCount(); }
+		}
+
+		public static IProjection Id
+		{
+			get { return Projections.Id(); }
+		}
+
+		public static IProjection Distinct(IProjection projection)
+		{
+			return Projections.Distinct(projection);
+		}
+
+		public static IProjection SqlProjection(string sql, string[] aliases, IType[] types)
+		{
+			return Projections.SqlProjection(sql, aliases, types);
+		}
+
+		public static IProjection SqlGroupByProjection(string sql, string groupBy, string[] aliases, IType[] types)
+		{
+			return Projections.SqlGroupProjection(sql, groupBy, aliases, types);
+		}
+	}
+
+
+	public class PropertyProjectionBuilder
+	{
+		protected string name;
+
+		public PropertyProjectionBuilder(string name)
+		{
+			this.name = name;
+		}
+
+		public IProjection Count
+		{
+			get { return Projections.Count(name); }
+		}
+
+		public IProjection DistinctCount
+		{
+			get { return Projections.CountDistinct(name); }
+		}
+
+		public IProjection Max
+		{
+			get { return Projections.Max(name); }
+		}
+
+		public IProjection Min
+		{
+			get { return Projections.Min(name); }
+		}
+
+		public static implicit operator PropertyProjection(PropertyProjectionBuilder projection)
+		{
+			return Projections.Property(projection.name);
+		}
+
+	}
+
+	public class NumericPropertyProjectionBuilder : PropertyProjectionBuilder
+	{
+		public NumericPropertyProjectionBuilder(string name) : base(name) { }
+
+		public IProjection Avg
+		{
+			get { return Projections.Avg(name); }
+		}
+
+		public IProjection Sum
+		{
+			get { return Projections.Sum(name); }
+		}
+
+		public static implicit operator PropertyProjection(NumericPropertyProjectionBuilder projection)
+		{
+			return Projections.Property(projection.name);
 		}
 	}
 }

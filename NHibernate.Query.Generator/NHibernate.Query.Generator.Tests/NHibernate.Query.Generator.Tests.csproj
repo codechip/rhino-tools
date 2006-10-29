@@ -46,7 +46,7 @@
       <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.3.6162.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-    <SpecificVersion>False</SpecificVersion>
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -62,6 +62,11 @@
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
+    <Compile Include="Sample.hbm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Sample.hbm.xml</DependentUpon>
+    </Compile>
     <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
     <Compile Include="ActiveRecord\Blog.cs" />

@@ -88,4 +88,40 @@ namespace Query {
             }
         }
     }
+    
+    public partial class ProjectBy {
+        
+        public partial class Comment {
+            
+            public static Query.PropertyProjectionBuilder Author {
+                get {
+                    return new Query.PropertyProjectionBuilder("Author");
+                }
+            }
+            
+            public static Query.PropertyProjectionBuilder Content {
+                get {
+                    return new Query.PropertyProjectionBuilder("Content");
+                }
+            }
+        }
+    }
+    
+    public partial class GroupBy {
+        
+        public partial class Comment {
+            
+            public static NHibernate.Expression.IProjection Author {
+                get {
+                    return NHibernate.Expression.Projections.GroupProperty("Author");
+                }
+            }
+            
+            public static NHibernate.Expression.IProjection Content {
+                get {
+                    return NHibernate.Expression.Projections.GroupProperty("Content");
+                }
+            }
+        }
+    }
 }
