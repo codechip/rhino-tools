@@ -3,7 +3,7 @@
 	<Product UpgradeCode="AD57411B-D689-4AB6-98DA-18EB520D2654"
 			 Name="NHibernate Query Generator"
 			 Id="29D08C8C-13C5-4E18-B946-784E0F37B66D"
-			 Version="1.6.0"
+			 Version="1.7.0"
 			 Manufacturer="Rhino"
 			 Language="1033">
 		<Package Id="37D46D48-11AB-4167-BA7E-04604D1A08F2"
