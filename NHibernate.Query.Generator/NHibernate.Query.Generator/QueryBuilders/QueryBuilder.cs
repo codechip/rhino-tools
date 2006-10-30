@@ -46,7 +46,7 @@ namespace Query
 			else
 				eq = Expression.Eq(name, value);
 			QueryBuilder<T> self = this;
-			if(backTrackAssoicationsOnEquality)
+			if (backTrackAssoicationsOnEquality)
 			{
 				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
 				children.Add(self);
@@ -61,7 +61,7 @@ namespace Query
 			AbstractCriterion eq;
 			if (value == null)
 				eq = Expression.IsNotNull(name);
-			else 
+			else
 				eq = Expression.Not(Expression.Eq(name, value));
 			QueryBuilder<T> self = this;
 			if (backTrackAssoicationsOnEquality)
@@ -76,7 +76,7 @@ namespace Query
 
 		public QueryBuilder<T> In(ICollection values)
 		{
-			AbstractCriterion inExpression = new InExpression(name, ToArray(values)); 
+			AbstractCriterion inExpression = new InExpression(name, ToArray(values));
 			QueryBuilder<T> self = this;
 			if (backTrackAssoicationsOnEquality)
 			{
@@ -89,19 +89,19 @@ namespace Query
 
 		public QueryBuilder<T> In(params object[] values)
 		{
-			In((ICollection) values);
+			In((ICollection)values);
 			return this;
 		}
 
 		public QueryBuilder<T> In<K>(ICollection<K> values)
 		{
-			In((ICollection) values);
+			In((ICollection)values);
 			return this;
 		}
-		
+
 		public QueryBuilder<T> In<K>(IEnumerable<K> values)
 		{
-			In((ICollection) new List<K>(values));
+			In((ICollection)new List<K>(values));
 			return this;
 		}
 
@@ -234,7 +234,7 @@ Use HQL for this functionality...",
 		protected static QueryBuilder<T> FromCriterion(AbstractCriterion criterion,
 			string name, string assoicationPath)
 		{
-			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name,assoicationPath);
+			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name, assoicationPath);
 			queryBuilder.AddCriterion(criterion);
 			return queryBuilder;
 		}
@@ -253,7 +253,7 @@ Use HQL for this functionality...",
 			if (lastIndexOfPeriod == -1)//this mean we are on "this", no need to do anything
 				return assoicationPath;
 			return assoicationPath.Substring(0, lastIndexOfPeriod);
-			
+
 		}
 
 		protected static object[] ToArray<K>(ICollection<K> values)
@@ -389,7 +389,7 @@ Use HQL for this functionality...",
 			return expr.Le(other);
 		}
 	}
-	
+
 	public class OrderByClause
 	{
 		bool ascending = true;
@@ -420,7 +420,7 @@ Use HQL for this functionality...",
 
 		public static implicit operator Order(OrderByClause order)
 		{
-			return new Order(order.name, order.ascending);	
+			return new Order(order.name, order.ascending);
 		}
 	}
 
@@ -456,6 +456,7 @@ Use HQL for this functionality...",
 	public class PropertyProjectionBuilder
 	{
 		protected string name;
+		ProjectionList list;
 
 		public PropertyProjectionBuilder(string name)
 		{
@@ -484,36 +485,35 @@ Use HQL for this functionality...",
 
 
 		#region Operator Overloading Magic
-		
-		public static implicit operator PropertyProjection(PropertyProjectionBuilder projection)
+
+		public static implicit operator ProjectionList(PropertyProjectionBuilder projection)
 		{
-			return Projections.Property(projection.name);
+			if (projection.list != null)
+				return projection.list;
+			return Projections.ProjectionList()
+				.Add(Projections.Property(projection.name));
 		}
 
-		public static IProjection[] operator &(PropertyProjectionBuilder lhs, PropertyProjectionBuilder rhs)
+		public static PropertyProjectionBuilder operator &(PropertyProjectionBuilder lhs, PropertyProjectionBuilder rhs)
 		{
-			PropertyProjection[] projections = new PropertyProjection[2];
-			projections[0] = lhs;
-			projections[1] = rhs;
-			return projections;
+			if (lhs.list != null)
+			{
+				if (rhs.list == null)
+				{
+					lhs.list.Add(Projections.Property(rhs.name));
+				}
+				else
+				{
+					lhs.list.Add(rhs.list);
+				}
+				return lhs;
+			}
+			lhs.list = Projections.ProjectionList()
+				.Add(Projections.Property(lhs.name))
+				.Add(Projections.Property(rhs.name));
+			return lhs;
 		}
 
-
-		public static IProjection[] operator &(IProjection[] lhs, PropertyProjectionBuilder rhs)
-		{
-			List<IProjection> projections = new List<IProjection>();
-			projections.AddRange(lhs);
-			projections.Add((PropertyProjection)rhs);
-			return projections.ToArray();
-		}
-
-		public static IProjection[] operator &(PropertyProjectionBuilder lhs, IProjection[] rhs)
-		{
-			List<IProjection> projections = new List<IProjection>();
-			projections.Add((PropertyProjection)lhs);
-			projections.AddRange(rhs);
-			return projections.ToArray();
-		}
 
 		public static bool operator true(PropertyProjectionBuilder exp)
 		{

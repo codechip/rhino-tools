@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
+using Castle.ActiveRecord.Queries;
 using NHibernate.Cfg;
 using NHibernate.Expression;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
@@ -21,6 +22,40 @@ namespace NHibernate.Query.Generator.Tests
 	{
 		private SessionScope sessionScope;
 
+		[Test]
+		public void CanProjectProperties()
+		{
+			ProjectionQuery<User> query = new ProjectionQuery<User>(
+				Where.User.Name == "Ayende",
+				ProjectBy.User.Name && ProjectBy.User.Email);
+			object[] execute = query.Execute()[0];
+			Assert.AreEqual("Ayende",execute[0] );
+			Assert.AreEqual("Ayende at ayende dot com", execute[1]);
+		}
+
+		[Test]
+		public void CanProjectStronglyTyped()
+		{
+			ProjectionQuery<User, UserDetails> query = new ProjectionQuery<User, UserDetails>(
+				Where.User.Name == "Ayende",
+				ProjectBy.User.Name && ProjectBy.User.Email);
+			UserDetails execute = query.Execute()[0];
+			Assert.AreEqual("Ayende", execute.Name);
+			Assert.AreEqual("Ayende at ayende dot com", execute.Email);
+	
+		}
+
+		class UserDetails
+		{
+			public string Name;
+			public string Email;
+
+			public UserDetails(string name, string email)
+			{
+				Name = name;
+				Email = email;
+			}
+		}
 		[Test]
 		public void CanExtendWhere()
 		{
