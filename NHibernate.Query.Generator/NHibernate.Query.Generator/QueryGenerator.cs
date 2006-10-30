@@ -5,7 +5,6 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using NHibernate.Expression;
-using Query;
 
 namespace NHibernate.Query.Generator
 {
@@ -217,12 +216,12 @@ namespace NHibernate.Query.Generator
 					CodeMemberProperty prop = new CodeMemberProperty();
 					prop.Name = GetName(propertyNode);
 					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
-					prop.Type = new CodeTypeReference(typeof (OrderByClause).FullName);
+					prop.Type = new CodeTypeReference("Query.OrderByClause");
 					string associationPath = prop.Name;
 					if (addPrefix)
 						associationPath = typeNameForDisplay + "." + prop.Name;
 					CodeObjectCreateExpression create =
-						new CodeObjectCreateExpression(typeof (OrderByClause), new CodePrimitiveExpression(associationPath));
+						new CodeObjectCreateExpression("Query.OrderByClause", new CodePrimitiveExpression(associationPath));
 					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
 					orderableClassDeclaration.Members.Add(prop);
 				}
@@ -270,6 +269,7 @@ namespace NHibernate.Query.Generator
 				{
 					CodeTypeDeclaration projectByForClass = GenerateProjectByForClass(node, false);
 					AddBaseTypeIfNeeded(node, projectByForClass);
+					
 					AddComponentsProjectBy(node, projectByForClass);
 
 					if (projectByForClass.Members.Count != 0)
@@ -321,16 +321,16 @@ namespace NHibernate.Query.Generator
 						string nodeTypeName = propertyNode.Attributes["type"].Value;
 						isNumeric = (Array.BinarySearch(numericTypeNames, nodeTypeName) >= 0);
 					}
-					System.Type propBuilderType;
+					string propBuilderType;
 					if (isNumeric)
-						propBuilderType = typeof(NumericPropertyProjectionBuilder);
+						propBuilderType = "Query.NumericPropertyProjectionBuilder";
 					else
-						propBuilderType = typeof(PropertyProjectionBuilder);
+						propBuilderType = "Query.PropertyProjectionBuilder";
 					
 					CodeMemberProperty prop = new CodeMemberProperty();
 					prop.Name = GetName(propertyNode);
 					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
-					prop.Type = new CodeTypeReference(propBuilderType.FullName);
+					prop.Type = new CodeTypeReference(propBuilderType);
 					string associationPath = prop.Name;
 					if (addPrefix)
 						associationPath = typeNameForDisplay + "." + prop.Name;

@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveRecord\Queries\QueryBuilder.cs" />
     <Compile Include="ActiveRecord\Queries\WeirdClass.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />

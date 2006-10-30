@@ -482,10 +482,50 @@ Use HQL for this functionality...",
 			get { return Projections.Min(name); }
 		}
 
+
+		#region Operator Overloading Magic
+		
 		public static implicit operator PropertyProjection(PropertyProjectionBuilder projection)
 		{
 			return Projections.Property(projection.name);
 		}
+
+		public static IProjection[] operator &(PropertyProjectionBuilder lhs, PropertyProjectionBuilder rhs)
+		{
+			PropertyProjection[] projections = new PropertyProjection[2];
+			projections[0] = lhs;
+			projections[1] = rhs;
+			return projections;
+		}
+
+
+		public static IProjection[] operator &(IProjection[] lhs, PropertyProjectionBuilder rhs)
+		{
+			List<IProjection> projections = new List<IProjection>();
+			projections.AddRange(lhs);
+			projections.Add((PropertyProjection)rhs);
+			return projections.ToArray();
+		}
+
+		public static IProjection[] operator &(PropertyProjectionBuilder lhs, IProjection[] rhs)
+		{
+			List<IProjection> projections = new List<IProjection>();
+			projections.Add((PropertyProjection)lhs);
+			projections.AddRange(rhs);
+			return projections.ToArray();
+		}
+
+		public static bool operator true(PropertyProjectionBuilder exp)
+		{
+			return false;
+		}
+
+		public static bool operator false(PropertyProjectionBuilder exp)
+		{
+			return false;
+		}
+
+		#endregion
 
 	}
 
