@@ -19,6 +19,9 @@ namespace NHibernate.Query.Generator
 			                        	"/nh:hibernate-mapping//nh:subclass"
 			                        };
 		string[] compnentsPath = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+
+		string[] projectByProperties = { "nh:property", "nh:key-property", };
+		string[] groupableProperties = { "nh:property", "nh:key-property", };
 		
 		private const string UseTheQueryClass = "UseTheQueryClass";
 		private string[] numericTypeNames = new string[] { "int", "integer", "smallint", "bigint", "tinyint", "decimal"
@@ -113,7 +116,6 @@ namespace NHibernate.Query.Generator
 
 		private CodeTypeDeclaration GenerateGroupByForClass(XmlNode node, bool addPrefix)
 		{
-			string[] groupableProperties = { "nh:property", "nh:key-property", };
 			//here we allow for a node without name
 			string typeNameForDisplay;
 			if (node.Attributes["name"] != null)
@@ -301,7 +303,6 @@ namespace NHibernate.Query.Generator
 		
 		private CodeTypeDeclaration GenerateProjectByForClass(XmlNode node, bool addPrefix)
 		{
-			string[] projectByProperties = { "nh:property", "nh:key-property", };
 			//here we allow for a node without name
 			string typeNameForDisplay;
 			if (node.Attributes["name"] != null)
@@ -312,7 +313,6 @@ namespace NHibernate.Query.Generator
 			projectByForClassDeclaration.IsPartial = true;
 			foreach (string projectableProperty in projectByProperties)
 			{
-				
 				foreach (XmlNode propertyNode in node.SelectNodes(projectableProperty, nsMgr))
 				{
 					bool isNumeric = false;
