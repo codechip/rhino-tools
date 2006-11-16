@@ -235,11 +235,11 @@ namespace NHibernate.Query.Generator
 			XmlReaderSettings settings = new XmlReaderSettings();
 			settings.ValidationType = ValidationType.Schema;
 			settings.Schemas.Add(
-				XmlSchema.Read(typeof (NHibernateUtil).Assembly.GetManifestResourceStream("NHibernate.nhibernate-mapping-2.0.xsd"),
+				XmlSchema.Read(typeof (NHibernateUtil).Assembly.GetManifestResourceStream("NHibernate.nhibernate-mapping.xsd"),
 				               null));
 			hbm.Load(XmlReader.Create(_reader, settings));
 			nsMgr = new XmlNamespaceManager(hbm.NameTable);
-			nsMgr.AddNamespace("nh", "urn:nhibernate-mapping-2.0");
+			nsMgr.AddNamespace("nh", "urn:nhibernate-mapping-2.2");
 
 			XmlNode codeNameSpace = hbm.SelectSingleNode("/nh:hibernate-mapping/@namespace", nsMgr);
 			if (codeNameSpace != null)

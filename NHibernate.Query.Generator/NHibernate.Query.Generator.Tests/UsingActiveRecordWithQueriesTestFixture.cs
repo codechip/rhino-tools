@@ -269,15 +269,5 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			sessionScope.Dispose();
 		}
-	
-		/*	
-			/*
-			 * Doesn't compiles! Type safety in queries.
-			 * 
-			 * Post.FindAll(
-					Where.Post.Blog.Author == ayende && Where.Blog.Name == "Ayende"
-					);
-			//				ISession session = ActiveRecordMediator.GetSessionFactoryHolder().CreateSession(typeof(Post));
-		}*/
 	}
 }

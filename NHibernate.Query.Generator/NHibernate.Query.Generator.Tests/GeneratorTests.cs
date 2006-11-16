@@ -319,7 +319,7 @@ namespace NHibernate.Query.Generator.Tests
 			xdoc.Load(GetSampleStream());
 
 			XmlNamespaceManager nsMgr = new XmlNamespaceManager(xdoc.NameTable);
-			nsMgr.AddNamespace("nh", "urn:nhibernate-mapping-2.0");
+			nsMgr.AddNamespace("nh", "urn:nhibernate-mapping-2.2");
 
 			XmlNodeList selectNodes = xdoc.SelectNodes(xpathQuery, nsMgr);
 			Assert.AreNotEqual(0, selectNodes.Count, "Mapping should have at least one property");

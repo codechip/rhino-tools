@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs D:\Oss\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\Sample.hbm.xml D:\OSS\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\</StartArguments>
+    <StartArguments>cs D:\Oss\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\Bin\Debug\*test*.dll D:\OSS\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\ActiveRecord\Queries</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>
