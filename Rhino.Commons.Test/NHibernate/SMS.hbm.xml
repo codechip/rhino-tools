@@ -2,7 +2,7 @@
 <hibernate-mapping default-lazy='false'
 	assembly='Rhino.Commons.Test'
 	namespace='Rhino.Commons.Test.NHibernate'
-	xmlns='urn:nhibernate-mapping-2.0'>
+	xmlns='urn:nhibernate-mapping-2.2'>
 	<class name='SMS'>
 		<id name='Id'
 			column='id'>
