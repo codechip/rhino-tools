@@ -42,6 +42,7 @@ namespace Rhino.Commons.Logging
 		public RollingSqliteAppender()
 		{
 			ConnectionType = typeof (SQLiteConnection).AssemblyQualifiedName;
+			ReconnectOnError = true;
 			CommandText = @"INSERT INTO Logs (Date, Thread, Level, Logger, Message, Exception) 
 						VALUES (@Date, @Thread, @Level, @Logger, @Message, @Exception)";
 			
@@ -154,11 +155,11 @@ namespace Rhino.Commons.Logging
 		protected override void SendBuffer(LoggingEvent[] events)
 		{
 			numberOfRows += events.Length;
-			AdjustFileBeforeAppend();
 			base.SendBuffer(events);
+			AdjustFileAfterAppend();
 		}
 
-		private void AdjustFileBeforeAppend()
+		private void AdjustFileAfterAppend()
 		{
 			if (numberOfRows < MaxNumberOfRows)
 				return;
@@ -195,7 +196,7 @@ namespace Rhino.Commons.Logging
 			}
 			else // no backups specified, just delete and start from scratch
 			{
-				File.Delete(baseFileName);
+				DeleteFile(baseFileName);
 			}
 		}
 
@@ -204,7 +205,7 @@ namespace Rhino.Commons.Logging
 			if (File.Exists(fromFile))
 			{
 				// Delete the toFile if it exists
-				File.Delete(toFile);
+				DeleteFile(toFile);
 
 				// We may not have permission to move the file, or the file may be locked
 				try
@@ -221,6 +222,21 @@ namespace Rhino.Commons.Logging
 			{
 				LogLog.Warn("RollingFileAppender: Cannot RollFile [" + fromFile + "] -> [" + toFile + "]. Source does not exist");
 			}
+		}
+
+		protected void DeleteFile(string file)
+		{
+				// We may not have permission to delete the file, or the file may be locked
+				try
+				{
+					LogLog.Debug("RollingFileAppender: Deleting [" + file + "]");
+					File.Delete(file);
+				}
+				catch (Exception moveEx)
+				{
+					ErrorHandler.Error("Exception while rolling file [" + file + "]", moveEx, ErrorCode.GenericFailure);
+				}
+		
 		}
 
 		public string CurrentFilePath
