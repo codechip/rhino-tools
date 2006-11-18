@@ -84,8 +84,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 			// 
 			this.filesList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.filesList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-																						this.fileName,
-																						this.filePath});
+            this.fileName,
+            this.filePath});
 			this.filesList.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.filesList.FullRowSelect = true;
 			this.filesList.GridLines = true;
@@ -93,8 +93,9 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 			this.filesList.Location = new System.Drawing.Point(0, 0);
 			this.filesList.MultiSelect = false;
 			this.filesList.Name = "filesList";
-			this.filesList.Size = new System.Drawing.Size(624, 326);
+			this.filesList.Size = new System.Drawing.Size(624, 278);
 			this.filesList.TabIndex = 0;
+			this.filesList.UseCompatibleStateImageBehavior = false;
 			this.filesList.View = System.Windows.Forms.View.Details;
 			this.filesList.SelectedIndexChanged += new System.EventHandler(this.filesList_SelectedIndexChanged);
 			// 
@@ -176,8 +177,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(624, 326);
-			this.Controls.Add(this.bottomPanel);
 			this.Controls.Add(this.filesList);
+			this.Controls.Add(this.bottomPanel);
 			this.Name = "ProjectView";
 			this.Text = "Configuration";
 			this.Title = "Configuration";
@@ -233,7 +234,6 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 				}
 				HasChanges = true;
 				BindProjectFileList();
-				addFilesDlg.Reset();
 			}
 		}
 

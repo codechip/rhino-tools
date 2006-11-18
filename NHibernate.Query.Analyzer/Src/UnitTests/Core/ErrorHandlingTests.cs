@@ -24,6 +24,12 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.Core
 			prj = new Project("My Test Project");
 		}
 
+		[TearDown]
+		public void TestCleanup()
+		{
+			prj.Dispose();
+		}
+		
 		[Test]
 		public void DoesntThrowOnAddFileThatDoesNotExist()
 		{

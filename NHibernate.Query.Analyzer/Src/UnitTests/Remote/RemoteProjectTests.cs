@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
+using NHibernate.Driver;
 using NUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
@@ -14,7 +15,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
 		private string hqlQuery = "from TestProject t order by t.Id";
         private string expectedSql = "select testprojec0_._id as id, testprojec0_.Data as Data from TestFile testprojec0_ order by  testprojec0_._id";
 		private string asmFilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.dll");
-		private string conStr = string.Format("Data Source={0};New=False;UTF8Encoding=True;Version=2", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\TestProject.db"));
+		private string conStr = string.Format("Data Source={0};New=False;UTF8Encoding=True;Version=3", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\TestProject.db"));
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
@@ -24,11 +25,19 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
 			current = new RemoteProject();
 			current.Cfg.SetProperty("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			current.Cfg.SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			current.Cfg.SetProperty("hibernate.connection.driver_class", "NHibernate.Driver.SQLiteDriver");
+			current.Cfg.SetProperty("hibernate.connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
 			current.Cfg.SetProperty("hibernate.connection.connection_string", conStr);
 			current.BuildInternalProject(asms, mappings, new string[0], new ArrayList());
 		}
 	    
+		
+		[TestFixtureTearDown]
+		public void TestFixtureTestCleanup()
+		{
+			current.Dispose();
+		}
+
+		
 		[Test]
 		public void HqlToSql()
 		{

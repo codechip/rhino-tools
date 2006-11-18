@@ -44,13 +44,10 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests
 											  "Ayende.NHibernateQueryAnalyzer.UnitTests.dll",
 											  "Ayende.NHibernateQueryAnalyzer.Utilities.dll",
 											  "Castle.DynamicProxy.dll",
-											  "HashCodeProvider.dll",
 											  "Iesi.Collections.dll",
 											  "log4net.dll",
 											  "NHibernate.dll",
-											  "sqlite.dll",
-											  "SQLite.NET.dll",
-											  "SQLite3.dll",
+											  "System.Data.Sqlite.dll",
 											  "WeifenLuo.WinFormsUI.Docking.dll"
 										  };
 

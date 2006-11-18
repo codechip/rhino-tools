@@ -67,19 +67,9 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Commands
 
 		private void BuildingProjectFailed(Exception ex)
 		{
-			Exception prev = ex, e = ex.InnerException;
-			StringBuilder exceptionString = new StringBuilder();
-			exceptionString.Append(ex.Message).Append("\r\n");
-			while(e!=null)
-			{
-				if(e.Message != prev.Message)
-					exceptionString.Append(e.Message).Append("\r\n");
-				prev = e;
-				e = e.InnerException;
-			}
 			repository.SaveProject(prj);//to save the isBuildSuccessfully flag.
 			view.EndWait(ex.Message);
-			view.ShowError(exceptionString.ToString());
+			view.ShowError(ex.ToString());
 			view.DisplayProjectState(true, false);
 		}
 

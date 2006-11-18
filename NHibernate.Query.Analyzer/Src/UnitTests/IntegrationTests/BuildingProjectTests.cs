@@ -136,6 +136,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 			Assert.IsFalse(resetable.IsProjectBuilt, "Project was not reset properly");
 			Assert.IsTrue(testUnload.ProjectAppDomainWasUnloaded, "Project's AppDomain was not unloaded");
 			Assert.IsNull(resetable.AppDomain, "AppDomain was no released.");
+			
+			resetable.Dispose();
 		}
 
 		[Test]

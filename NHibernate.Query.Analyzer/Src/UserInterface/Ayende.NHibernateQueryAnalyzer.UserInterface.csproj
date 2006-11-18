@@ -74,33 +74,29 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GuiTools">
-      <Name>GuiTools</Name>
-      <HintPath>..\..\Vendor\Lib\CollapsibleSplitter\GuiTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Iesi.Collections">
-      <Name>Iesi.Collections</Name>
-      <HintPath>..\..\Vendor\Lib\NHibernate-0.7\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Lithium">
-      <Name>Lithium</Name>
-      <HintPath>..\..\Vendor\Lib\Lithium\Lithium.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\..\Vendor\Lib\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="GuiTools, Version=1.0.2039.20536, Culture=neutral, PublicKeyToken=0b3305902db7183f">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\UserInterface\CollapsibleSplitter\GuiTools.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables.NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Lithium, Version=3.3.5.19636, Culture=neutral, PublicKeyToken=0b3305902db7183f">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\UserInterface\Lithium\Lithium.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Nullables, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -117,9 +113,9 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <Name>WeifenLuo.WinFormsUI.Docking</Name>
-      <HintPath>..\..\Vendor\Lib\DockPanel\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=0.99.0.3, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\UserInterface\DockPanel\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\Core\Ayende.NHibernateQueryAnalyzer.Core.csproj">
       <Name>Ayende.NHibernateQueryAnalyzer.Core</Name>
@@ -220,7 +216,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="QueryForm.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="SchemaEditing\cfg.cs">
       <SubType>Code</SubType>
@@ -235,7 +230,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SchemaEditorView.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ThreadedCommandExecutioner.cs">
       <SubType>Code</SubType>

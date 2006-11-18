@@ -74,25 +74,25 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <Name>Iesi.Collections</Name>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\..\Vendor\Lib\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables.NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Nullables, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
+    </Reference>
+    <Reference Include="Nullables.NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

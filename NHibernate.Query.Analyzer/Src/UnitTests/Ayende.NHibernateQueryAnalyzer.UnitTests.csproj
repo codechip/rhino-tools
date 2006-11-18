@@ -75,25 +75,21 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <Name>Iesi.Collections</Name>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\..\Vendor\Lib\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables.NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Nullables, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core">
       <Name>nunit.core</Name>
@@ -107,25 +103,21 @@
       <Name>Rhino.Mocks</Name>
       <HintPath>..\..\Tools\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
     </Reference>
-    <Reference Include="SQLite.NET">
-      <Name>SQLite.NET</Name>
-      <HintPath>..\..\Vendor\Lib\SQLite.NET\SQLite.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\SqLite.Net\System.Data.SQLite.DLL</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <Name>WeifenLuo.WinFormsUI.Docking</Name>
-      <HintPath>..\..\Vendor\Lib\DockPanel\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\Core\Ayende.NHibernateQueryAnalyzer.Core.csproj">
       <Name>Ayende.NHibernateQueryAnalyzer.Core</Name>
@@ -255,7 +247,6 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>md "$(TargetDir)TestProject"
-xcopy "$(SolutionDir)..\Vendor\Lib\SQLite.NET\sqlite?.dll" "$(TargetDir)" /Y/C
 copy /Y "$(SolutionDir)..\Tools\TestData\*.*" "$(TargetDir)TestProject\*.*"
 copy /Y "$(ProjectDir)..\..\Vendor\Lib\NHibernate\Null*" "$(TargetDir)TestProject\"
 copy /Y "$(SolutionDir)..\Tools\TestData\*.*" "$(TargetDir)TestProject\"</PostBuildEvent>
