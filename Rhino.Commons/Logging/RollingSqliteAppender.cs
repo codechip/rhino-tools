@@ -43,9 +43,10 @@ namespace Rhino.Commons.Logging
 		{
 			ConnectionType = typeof (SQLiteConnection).AssemblyQualifiedName;
 			ReconnectOnError = true;
-			CommandText = @"INSERT INTO Logs (Date, Thread, Level, Logger, Message, Exception) 
+			CommandText =
+				@"INSERT INTO Logs (Date, Thread, Level, Logger, Message, Exception) 
 						VALUES (@Date, @Thread, @Level, @Logger, @Message, @Exception)";
-			
+
 			AdoNetAppenderParameter date = new AdoNetAppenderParameter();
 			date.DbType = DbType.DateTime;
 			date.ParameterName = "Date";
@@ -58,7 +59,7 @@ namespace Rhino.Commons.Logging
 			thread.Size = 255;
 			thread.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%thread"));
 			AddParameter(thread);
-			
+
 			AdoNetAppenderParameter level = new AdoNetAppenderParameter();
 			level.DbType = DbType.String;
 			level.ParameterName = "Level";
@@ -69,14 +70,14 @@ namespace Rhino.Commons.Logging
 			AdoNetAppenderParameter logger = new AdoNetAppenderParameter();
 			logger.DbType = DbType.String;
 			logger.ParameterName = "Logger";
-			logger.Size = 512; 
+			logger.Size = 512;
 			logger.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%logger"));
 			AddParameter(logger);
 
 			AdoNetAppenderParameter message = new AdoNetAppenderParameter();
 			message.DbType = DbType.String;
 			message.ParameterName = "Message";
-			message.Size = 2000; 
+			message.Size = 2000;
 			message.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"));
 			AddParameter(message);
 
@@ -87,7 +88,7 @@ namespace Rhino.Commons.Logging
 			exception.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%exception"));
 			AddParameter(exception);
 		}
-		
+
 		/// <summary>
 		/// The creation script for the database.
 		/// Create the table needed for logging.
@@ -215,7 +216,9 @@ namespace Rhino.Commons.Logging
 				}
 				catch (Exception moveEx)
 				{
-					ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]", moveEx, ErrorCode.GenericFailure);
+					ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]",
+					                   moveEx,
+					                   ErrorCode.GenericFailure);
 				}
 			}
 			else
@@ -226,17 +229,16 @@ namespace Rhino.Commons.Logging
 
 		protected void DeleteFile(string file)
 		{
-				// We may not have permission to delete the file, or the file may be locked
-				try
-				{
-					LogLog.Debug("RollingFileAppender: Deleting [" + file + "]");
-					File.Delete(file);
-				}
-				catch (Exception moveEx)
-				{
-					ErrorHandler.Error("Exception while rolling file [" + file + "]", moveEx, ErrorCode.GenericFailure);
-				}
-		
+			// We may not have permission to delete the file, or the file may be locked
+			try
+			{
+				LogLog.Debug("RollingFileAppender: Deleting [" + file + "]");
+				File.Delete(file);
+			}
+			catch (Exception moveEx)
+			{
+				ErrorHandler.Error("Exception while rolling file [" + file + "]", moveEx, ErrorCode.GenericFailure);
+			}
 		}
 
 		public string CurrentFilePath
@@ -265,19 +267,18 @@ namespace Rhino.Commons.Logging
 			using (IDbCommand cmd = Connection.CreateCommand())
 			{
 				cmd.CommandText = string.Format(selectCount, TableName);
-				numberOfRows = (long)cmd.ExecuteScalar();
+				numberOfRows = (long) cmd.ExecuteScalar();
 			}
 		}
 
 		public override void ActivateOptions()
 		{
 			bool shouldCreateFile = !File.Exists(CurrentFilePath);
-			ConnectionString = string.Format(connectionStringFormat, CurrentFilePath,
-											 shouldCreateFile);
+			ConnectionString = string.Format(connectionStringFormat, CurrentFilePath, shouldCreateFile);
 			base.ActivateOptions();
-			if(!shouldCreateFile)
+			if (!shouldCreateFile)
 				return;
-			using(IDbCommand cmd = Connection.CreateCommand())
+			using (IDbCommand cmd = Connection.CreateCommand())
 			{
 				cmd.CommandText = CreateScript;
 				cmd.ExecuteNonQuery();

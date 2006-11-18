@@ -2,6 +2,8 @@ using System;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
+using log4net;
+using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
 using Rhino.Commons.Logging;
@@ -113,6 +115,18 @@ namespace Rhino.Commons.Test.Logging
 			Assert.AreEqual(513, eventsCount, "rolledback file shoule have 513 events");
 			eventsCount = GetEventsCount(appender.ConnectionString.Replace(databaseFile, rolledBackFile3));
 			Assert.AreEqual(513, eventsCount, "rolledback file shoule have 513 events");
+		}
+
+		[Test]
+		public void CanIntegrateToLog4NetConfig()
+		{
+			log4net.Config.XmlConfigurator.Configure();
+			ILog logger = LogManager.GetLogger("test");
+			IAppender[] appenders = logger.Logger.Repository.GetAppenders();
+			Assert.AreEqual(1, appenders.Length);
+			Assert.AreEqual(typeof(RollingSqliteAppender), appenders[0].GetType());
+			IDisposable disposable = appenders[0] as IDisposable;
+			disposable.Dispose();
 		}
 
 		private long GetEventsCount(string connectionString)
