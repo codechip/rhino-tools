@@ -404,7 +404,7 @@ namespace NHibernate.Query.Generator
 			                   innerClass,
 			                   "nh:id");
 			// generate reference to related query obj
-			GenerateProperties(null, genericName, assoicationBehavior, UseTheQueryClass, classNode, innerClass, "nh:many-to-one");
+			GenerateProperties( null, genericName, assoicationBehavior, UseTheQueryClass, classNode, innerClass, "nh:many-to-one", "nh:one-to-one" );
 
 			// generate reference to component
 			GenerateComponents(genericName, innerClass, classNode, "nh:component", "nh:dynamic-component");
@@ -501,7 +501,8 @@ namespace NHibernate.Query.Generator
 					                   UseTheQueryClass,
 					                   classNode,
 					                   innerClass,
-					                   "nh:many-to-one");
+					                   "nh:many-to-one",
+					                   "nh:one-to-one");
 				}
 			}
 		}
