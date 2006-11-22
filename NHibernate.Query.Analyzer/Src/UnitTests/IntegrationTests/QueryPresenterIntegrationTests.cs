@@ -27,8 +27,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 
 		#region Sql & Hql statements
 
-        public const string parametrizedOneSql = "select testprojec0_._id as id, testprojec0_.Data as Data from TestFile testprojec0_ where (testprojec0_._id=@p0)";
-		public const string nonParametrizedSql="select testprojec0_._id as id, testprojec0_.Data as Data from TestFile testprojec0_ where (testprojec0_._id=1)";
+		public const string parametrizedOneSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=@p0)";
+		public const string nonParametrizedSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=1)";
 		public const string parametrizedOne = "from TestProject tp where tp.Id = :id";
 		public const string nonParametrized = "from TestProject tp where tp.Id = 1";
 
@@ -89,7 +89,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 		[Test]
 		public void TranslateHql_BadQueryCallAddException()
 		{
-			SetupResult.On(queryView).Call(queryView.HqlQueryText).Return(this.badHqlQuery);
+			SetupResult.On(queryView).Call(queryView.HqlQueryText).Return(badHqlQuery);
 			SetupResult.On(queryView).Call(queryView.Parameters).Return(new Hashtable());
 			queryView.AddException(null);
 			LastCall.On(queryView).
@@ -206,8 +206,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 			DataTable table = ds.Tables["TestFile"];
 			Assert.IsNotNull(table);
 			Assert.AreEqual(1,table.Rows.Count);
-			Assert.IsNotNull(table.Columns["id"]);
-			Assert.AreEqual(1,table.Rows[0]["id"]);
+			Assert.IsNotNull(table.Columns[0]);
+			Assert.AreEqual(1,table.Rows[0][0]);
 			return true;
 		}
 

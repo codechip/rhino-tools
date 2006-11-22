@@ -97,21 +97,25 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\..\Vendor\Lib\log4net\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables.NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Vendor\Lib\NHibernate\Nullables.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Nullables, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
+    </Reference>
+    <Reference Include="SLSExceptionReporter, Version=1.1.2039.20608, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\UserInterface\SLSExceptionReporter\SLSExceptionReporter.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -143,6 +147,7 @@
     <Compile Include="Validation.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="XsdToSchemaUICode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

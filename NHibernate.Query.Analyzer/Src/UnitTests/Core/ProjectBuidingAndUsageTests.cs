@@ -102,23 +102,16 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
         {
             current.BuildProject();
             IList hrg = current.RunHql("from Files f where f.Size is null order by f.Id");
-            Assert.AreEqual(2, hrg.Count);
+            Assert.AreEqual(6, hrg.Count);
             RemoteObject ro = hrg[0] as RemoteObject;
             Assert.AreEqual("1", ro["Id"]);
             Assert.AreEqual("one.txt", ro["Filename"]);
-            Assert.AreEqual("null", ro["Size"]);
+            Assert.AreEqual(null, ro["Size"]);
             
             ro = hrg[1] as RemoteObject;
-            Assert.AreEqual("3", ro["Id"]);
-            Assert.AreEqual("three.txt", ro["Filename"]);
-            Assert.AreEqual("null", ro["Size"]);
-
-            hrg = current.RunHql("from Files f where f.Size is not null order by f.Id");
-            Assert.AreNotEqual(0,hrg.Count);
-            foreach (RemoteObject remoteObject in hrg)
-            {
-                Assert.AreNotEqual("null",remoteObject["Size"]);
-            }
+            Assert.AreEqual("2", ro["Id"]);
+            Assert.AreEqual("two.txt", ro["Filename"]);
+            Assert.AreEqual(null, ro["Size"]);
         }
 	}
 }

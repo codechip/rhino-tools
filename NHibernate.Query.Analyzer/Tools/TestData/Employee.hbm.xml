@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping
+	 xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='urn:nhibernate-mapping-2.0'>
+	<class
+		table='Employees'
+		 name='TestProject.Employee, Ayende.NHibernateQueryAnalyzer.TestProject'>
+		<id name ='Id'>
+			<generator
+				 class='native' />
+		</id>
+		<property
+			 name='Name' />
+		<property
+			 type='Nullables.NHibernate.NullableDateTimeType, Nullables.NHibernate'
+			 name='Created' />
+	</class>
+</hibernate-mapping>

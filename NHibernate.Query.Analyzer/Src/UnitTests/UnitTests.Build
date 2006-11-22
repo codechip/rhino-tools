@@ -41,7 +41,7 @@
 				<include name="${build.dir}/Iesi.Collections.dll"/>
 				<include name="${build.dir}/NUnit.Framework.dll" />
 				<include name="${build.dir}/WeifenLuo.WinFormsUI.Docking.dll" />
-				<include name="${build.dir}/SQLite.Net.dll" />
+				<include name="${build.dir}/System.Data.SQLite.dll" />
 				<!-- this will only ever reference if we are doing ncover build -->
 				<include name="${build.dir}/NCover.dll"/>
 			</references>

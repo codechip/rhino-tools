@@ -1,11 +1,10 @@
 <?xml version="1.0" ?>
 <project name="Ayende.NHibernateQueryAnalyzer" default="deploy">
-	<property name="version" value="1.1.5" />
+	<property name="version" value="1.1.9" />
 	<property name="build.dir" value="${nant.project.basedir}/../Build/${framework::get-target-framework()}" />
 	<property name="src.dir" value="${nant.project.basedir}" />
-	<property name="docs.dir" value="${nant.project.basedir}\..\Docs" />
-	<property name="vendor.lib.dir" value="${nant.project.basedir}../../Vendor/Lib/" />
-	<property name="vendor.src.dir" value="${nant.project.basedir}../../Vendor/Src/" />
+	<property name="docs.dir" value="${nant.project.basedir}\..\..\Art" />
+	<property name="vendor.lib.dir" value="${nant.project.basedir}../../../SharedLibs/" />
 	<property name="tools.dir" value="${nant.project.basedir}/../Tools" />
 	<property name="NHibernate.Dir" value="${vendor.lib.dir}\NHibernate"/>
 	<property name="build.debug" value="false" />
@@ -15,14 +14,15 @@
 	</target>
 	
 	<target name="libraries">
+		<echo> ${vendor.lib.dir}</echo>
 		<copy todir="${build.dir}" flatten="true" overwrite="true" failonerror="false">
 			<fileset basedir="${vendor.lib.dir}">
-				<include name="Lithium/Lithium.dll" />
-				<include name="CollapsibleSplitter/GuiTools.dll" />
+				<include name="UserInterface/Lithium/Lithium.dll" />
+				<include name="UserInterface/CollapsibleSplitter/GuiTools.dll" />
 				<include name="${NHibernate.Dir}/*.*" />
 				<include name="SQLite.NET/*.dll" />
-				<include name="DockPanel/WeifenLuo.WinFormsUI.Docking.dll" />
-				<include name="SLSExceptionReporter/SLSExceptionReporter.dll"/>
+				<include name="UserInterface/DockPanel/WeifenLuo.WinFormsUI.Docking.dll" />
+				<include name="UserInterface/SLSExceptionReporter/SLSExceptionReporter.dll"/>
 			</fileset>
 		</copy>
 	</target>
@@ -41,7 +41,7 @@
 				<attribute type="CLSCompliantAttribute" value="false" />
 				<attribute type="AssemblyDelaySignAttribute" value="false" />
 				<attribute type="AssemblyTitleAttribute" value="NHiberante Query Analyzer" />
-				<attribute type="AssemblyKeyFileAttribute" value="${src.dir}\ayende-open-source.snk" />
+				<attribute type="AssemblyKeyFileAttribute" value="${src.dir}\..\..\ayende-open-source.snk" />
 				<attribute type="AssemblyVersionAttribute" value="${version}.*" />
 				<attribute type="AssemblyDescriptionAttribute" value="Query Analyzer for NHibernate O/R Mapper" />
 				<attribute type="AssemblyCopyrightAttribute" value="Copyright (c) 2005, Ayende Rahien." />
@@ -74,7 +74,7 @@
 	</target>
 	
 	<target name="test" depends="build-tests">
-		<exec program="${tools.dir}\NUnit\NUnit-Console.exe">
+		<exec program="${tools.dir}\NUnit\NUnit-Console.exe" failonerror="false">
 			<arg value="${build.dir}\Ayende.NHibernateQueryAnalyzer.UnitTests.dll"/>
 			<arg value="/xml=${build.dir}/Results/Test.Report.xml"/>
 		</exec>

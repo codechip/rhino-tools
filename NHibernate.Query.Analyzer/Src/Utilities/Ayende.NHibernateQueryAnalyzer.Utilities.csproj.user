@@ -21,8 +21,7 @@
     <RemoteDebugMachine>
     </RemoteDebugMachine>
     <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>c:\code\NHibernate\nhibernate\src\NHibernate\nhibernate-mapping.xsd hbm.xml.cs</StartArguments>
     <StartPage>
     </StartPage>
     <StartProgram>

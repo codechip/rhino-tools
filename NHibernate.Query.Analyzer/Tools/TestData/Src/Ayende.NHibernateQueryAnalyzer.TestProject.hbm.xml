@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <hibernate-mapping
-	 xmlns:xsd='http://www.w3.org/2001/XMLSchema'
-	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='urn:nhibernate-mapping-2.0'>
+	 xmlns:xsd='http://www.w3.org/2001/XMLSchema' default-lazy='false'
+	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='urn:nhibernate-mapping-2.2'>
 	<class
 		 name='TestProject.TestProject, Ayende.NHibernateQueryAnalyzer.TestProject'
 		 table='TestFile'>
@@ -35,6 +35,7 @@
 		<property
 			 name='Filename'
 			 type='string' />
+		<property name='Size'/>
 		<many-to-one
 			 name='Test'
 			 class='TestProject.TestProject, Ayende.NHibernateQueryAnalyzer.TestProject'

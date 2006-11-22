@@ -3,8 +3,8 @@ namespace NHibernate.Mapping.Cfg {
     
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute("hibernate-configuration", Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute("hibernate-configuration", Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class hibernateconfiguration {
         
         /// <remarks/>
@@ -14,8 +14,8 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute("session-factory", Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute("session-factory", Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class sessionfactory {
         
         /// <remarks/>
@@ -37,8 +37,8 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class property {
         
         /// <remarks/>
@@ -52,8 +52,8 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute("jcs-collection-cache", Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute("jcs-collection-cache", Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class jcscollectioncache {
         
         /// <remarks/>
@@ -72,7 +72,7 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
     public enum jcscollectioncacheUsage {
         
         /// <remarks/>
@@ -89,8 +89,8 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute("jcs-class-cache", Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute("jcs-class-cache", Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class jcsclasscache {
         
         /// <remarks/>
@@ -109,7 +109,7 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
     public enum jcsclasscacheUsage {
         
         /// <remarks/>
@@ -126,8 +126,8 @@ namespace NHibernate.Mapping.Cfg {
     }
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.0")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="urn:nhibernate-configuration-2.0", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:nhibernate-configuration-2.2")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="urn:nhibernate-configuration-2.2", IsNullable=false)]
     public class mapping {
         
         /// <remarks/>

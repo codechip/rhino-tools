@@ -59,8 +59,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 			DataSet ds = current.RunHqlAsRawSql(hqlQuery);
 			Assert.IsNotNull(ds.Tables[tableName], "Table was not found");
 			Assert.AreEqual(2003, ds.Tables[tableName].Rows.Count, "Row count on table is wrong");
-			Assert.AreEqual(2, ds.Tables[tableName].Rows[1]["id"], "wrong value on id column");
-			Assert.AreEqual("More Testing", ds.Tables[tableName].Rows[1]["data"], "wrong value on data column");
+			Assert.AreEqual(2, ds.Tables[tableName].Rows[1][0], "wrong value on id column");
+			Assert.AreEqual("More Testing", ds.Tables[tableName].Rows[1][1], "wrong value on data column");
 		}
 
 		[Test]
@@ -84,8 +84,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 			DataSet ds = current.RunHqlAsRawSql(parametrizedQuery, param);
 			Assert.IsNotNull(ds.Tables[tableName], "Table was not found");
 			Assert.AreEqual(1, ds.Tables[tableName].Rows.Count, "Row count on table is wrong");
-			Assert.AreEqual(2, ds.Tables[tableName].Rows[0]["id"], "wrong value on id column");
-			Assert.AreEqual("More Testing", ds.Tables[tableName].Rows[0]["data"], "wrong value on data column");
+			Assert.AreEqual(2, ds.Tables[tableName].Rows[0][0], "wrong value on id column");
+			Assert.AreEqual("More Testing", ds.Tables[tableName].Rows[0][1], "wrong value on data column");
 
 		}
 
@@ -136,6 +136,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 			Assert.IsFalse(resetable.IsProjectBuilt, "Project was not reset properly");
 			Assert.IsTrue(testUnload.ProjectAppDomainWasUnloaded, "Project's AppDomain was not unloaded");
 			Assert.IsNull(resetable.AppDomain, "AppDomain was no released.");
+			
+			resetable.Dispose();
 		}
 
 		[Test]

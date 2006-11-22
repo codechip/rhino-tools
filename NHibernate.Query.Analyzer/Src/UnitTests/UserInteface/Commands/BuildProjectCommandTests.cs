@@ -47,7 +47,6 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.UserInteface.Commands
 		public void BuildProjectReportExceptionOnBuild()
 		{	
 			string errorMessage = "Couldn't read mapping file";
-			string expectedErrorMessage = errorMessage + "\r\n";
 			ExecuteInUI eiui = new ExecuteInUI();
 			view.ExecuteInUIThread(null);
 			LastCall.On(view).
@@ -57,7 +56,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.UserInteface.Commands
 			prj.BuildProject();
 			LastCall.On(prj).
 				Throw(new NHibernate.MappingException(errorMessage));
-			view.ShowError(expectedErrorMessage);
+			view.ShowError(null);
+			LastCall.Constraints(Text.Contains(errorMessage));
 			view.EndWait(errorMessage);
 			view.DisplayProjectState(true,false);
 			mocks.ReplayAll();

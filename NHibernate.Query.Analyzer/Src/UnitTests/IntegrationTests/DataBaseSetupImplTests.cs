@@ -1,9 +1,9 @@
 using System;
 using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using Ayende.NHibernateQueryAnalyzer.Model;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
-using Finisar.SQLite;
 using NUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Core

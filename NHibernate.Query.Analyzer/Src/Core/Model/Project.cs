@@ -106,7 +106,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Model
         /// Creates a new <see cref="Project"/> instance.
         /// This is only called from the public virtual ctor or from NHibernate
         /// </summary>
-        private Project()
+        public Project()
             : this(new Context())
         {
             if (logger.IsDebugEnabled)
@@ -502,7 +502,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Model
 
         #endregion
 
-        public void AddBasePaths(string path)
+        public virtual void AddBasePaths(string path)
         {
             if (basePaths.Contains(path) == false)
             {

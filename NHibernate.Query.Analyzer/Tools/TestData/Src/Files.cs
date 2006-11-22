@@ -9,6 +9,13 @@ namespace TestProject
 	{
 		string filename;
 		int id;
+		int? size;
+
+		public int? Size
+		{
+			get { return size; }
+			set { size = value; }
+		}
 
 		public TestProject Test
 		{

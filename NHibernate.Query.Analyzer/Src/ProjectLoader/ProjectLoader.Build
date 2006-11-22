@@ -11,6 +11,7 @@
 				<include name="${build.dir}/NHibernate.dll"/>
 				<include name="${build.dir}/Iesi.Collections.dll"/>
 				<include name="${build.dir}/Nullables.dll"/>
+				<include name="${build.dir}/System.Data.Sqlite.dll"/>
 				<include name="${build.dir}/Nullables.NHibernate.dll"/>
 				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.Utilities.dll"/>
 				<!-- this will only ever reference if we are doing ncover build -->

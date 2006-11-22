@@ -17,7 +17,7 @@
 				<include name="${build.dir}/log4net.dll"/>
 				<include name="${build.dir}/NHibernate.dll"/>
 				<include name="${build.dir}/Iesi.Collections.dll"/>
-				<include name="${build.dir}/SQLite.NET.dll"/>
+				<include name="${build.dir}/System.Data.Sqlite.dll"/>
 				<!-- this will only ever reference if we are doing ncover build -->
 				<include name="${build.dir}/NCover.dll"/>
 			</references>

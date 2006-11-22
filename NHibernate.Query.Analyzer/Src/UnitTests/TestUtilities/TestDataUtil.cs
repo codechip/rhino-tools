@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using Ayende.NHibernateQueryAnalyzer.Model;
 using NHibernate.Cfg;
+using NHibernate.Driver;
 
 #endregion
 
@@ -21,7 +22,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 			Configuration cfg = new Configuration();
 			cfg.SetProperty("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			cfg.SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			cfg.SetProperty("hibernate.connection.driver_class", "NHibernate.Driver.SQLiteDriver");
+			cfg.SetProperty("hibernate.connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
 			cfg.SetProperty("hibernate.connection.connection_string", constr);
 			cfg.AddAssembly(typeof (IProjectsRepository).Assembly);
 			return new ProjectsRepository(cfg);

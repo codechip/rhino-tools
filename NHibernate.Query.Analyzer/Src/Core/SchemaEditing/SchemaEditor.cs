@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
-using Ayende.NHibernateQueryAnalyzer.Core.SchemaEditing;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 
 namespace Ayende.NHibernateQueryAnalyzer.SchemaEditing
@@ -223,7 +222,11 @@ namespace Ayende.NHibernateQueryAnalyzer.SchemaEditing
 
 		public void Write(TextWriter destinationDocument)
 		{
-			XmlWriterWithEachAttributeInNewLine writer = new XmlWriterWithEachAttributeInNewLine(destinationDocument);
+			XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+			xmlWriterSettings.Indent = true;
+			xmlWriterSettings.IndentChars = "\t";
+			xmlWriterSettings.NewLineOnAttributes = true;
+			XmlWriter writer = XmlWriter.Create(destinationDocument, xmlWriterSettings);
 			serializer.Serialize(writer, root);
 		}
 

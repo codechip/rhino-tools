@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Finisar.SQLite;
 using log4net;
 using NHibernate;
 using NHibernate.Cfg;

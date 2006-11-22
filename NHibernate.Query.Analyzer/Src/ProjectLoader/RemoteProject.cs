@@ -9,6 +9,7 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Engine;
 using NHibernate.Hql;
+using NHibernate.Hql.Classic;
 using NHibernate.Type;
 
 namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
@@ -27,8 +28,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		private IList assemblies;
 		private IList basePaths;
         private static readonly MethodInfo prepareQueryCommand = typeof(QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo populateSqlString = typeof(QueryTranslator).GetMethod("PopulateSqlString", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo getQuery = Type.GetType("NHibernate.Impl.SessionFactoryImpl,NHibernate").GetMethod("GetQuery");
+		private static readonly MethodInfo getQuery = Type.GetType("NHibernate.Impl.SessionFactoryImpl,NHibernate").GetMethod("GetQuery");
 
 	    #endregion
 
@@ -117,13 +117,10 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
         {
             ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor)factory;
             PropertyInfo sqlString = typeof(QueryTranslator).GetProperty("SqlString", BindingFlags.NonPublic | BindingFlags.Instance);
-            QueryTranslator[] queryTranslators = (QueryTranslator[])getQuery.Invoke(factoryImplementor, new object[] { hqlQuery, false });
+            IQueryTranslator[] queryTranslators = (IQueryTranslator[])getQuery.Invoke(factoryImplementor, new object[] { hqlQuery, false, null });
             IList commands = new ArrayList();
-            foreach (QueryTranslator translator in queryTranslators)
-            {
-                populateSqlString.Invoke(translator, new object[] { qp });
-                IDbCommand cmd = (IDbCommand)prepareQueryCommand.Invoke(translator,
-                    new object[] { sqlString.GetValue(translator, null), qp, false, session });
+            foreach (IQueryTranslator translator in queryTranslators) {
+                IDbCommand cmd = (IDbCommand)prepareQueryCommand.Invoke(translator, new object[] { qp, false, session });
                 commands.Add(cmd);
             }
             return commands;
