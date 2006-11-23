@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <project name="Ayende.NHibernateQueryAnalyzer" default="deploy">
-	<property name="version" value="1.1.9" />
+	<property name="version" value="1.2" />
 	<property name="build.dir" value="${nant.project.basedir}/../Build/${framework::get-target-framework()}" />
 	<property name="src.dir" value="${nant.project.basedir}" />
 	<property name="docs.dir" value="${nant.project.basedir}\..\..\Art" />
@@ -21,6 +21,7 @@
 				<include name="UserInterface/CollapsibleSplitter/GuiTools.dll" />
 				<include name="${NHibernate.Dir}/*.*" />
 				<include name="SQLite.NET/*.dll" />
+				<include name="Castle/Castle.ActiveRecord.dll"/>
 				<include name="UserInterface/DockPanel/WeifenLuo.WinFormsUI.Docking.dll" />
 				<include name="UserInterface/SLSExceptionReporter/SLSExceptionReporter.dll"/>
 			</fileset>

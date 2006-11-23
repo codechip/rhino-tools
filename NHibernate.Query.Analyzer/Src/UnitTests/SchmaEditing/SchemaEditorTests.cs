@@ -330,7 +330,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 					names += s + " - ";
 				}
 			}
-			Assert.AreEqual(22,count,"Didn't get the right count of fields");
+			Assert.AreEqual(28,count,"Didn't get the right count of fields");
 		}
 
 		[Test]

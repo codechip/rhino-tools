@@ -1,9 +1,14 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Xml.XPath;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
+using Castle.ActiveRecord;
+using Castle.ActiveRecord.Framework.Config;
+using Castle.ActiveRecord.Framework.Internal;
 using log4net;
 using NHibernate;
 using NHibernate.Cfg;
@@ -29,8 +34,9 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		private IList basePaths;
         private static readonly MethodInfo prepareQueryCommand = typeof(QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
 		private static readonly MethodInfo getQuery = Type.GetType("NHibernate.Impl.SessionFactoryImpl,NHibernate").GetMethod("GetQuery");
+		private bool usingActiveRecord;
 
-	    #endregion
+		#endregion
 
 		#region Properties
 
@@ -72,18 +78,31 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public string[] HqlToSql(string hqlQuery, IDictionary parameters)
 		{
-			using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
+			SessionScope scope=null;
+			if (usingActiveRecord)
 			{
-				IList list = HqlToSqlList(hqlQuery,
-				                          CreateQueryParameters(parameters), session);
-				ArrayList cmds = new ArrayList();
-				foreach (string sqlString in list)
+				scope = new SessionScope();
+			}
+			try
+			{
+				using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
 				{
-					cmds.Add(sqlString);
-					if (logger.IsDebugEnabled)
-						logger.Debug("Resulting SQL: " + sqlString);
+					IList list = HqlToSqlList(hqlQuery,
+					                          CreateQueryParameters(parameters), session);
+					ArrayList cmds = new ArrayList();
+					foreach (string sqlString in list)
+					{
+						cmds.Add(sqlString);
+						if (logger.IsDebugEnabled)
+							logger.Debug("Resulting SQL: " + sqlString);
+					}
+					return (string[]) cmds.ToArray(typeof (string));
 				}
-				return (string[]) cmds.ToArray(typeof (string));
+			}
+			finally
+			{
+				if(scope!=null)
+					scope .Dispose();
 			}
 		}
 
@@ -116,7 +135,6 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
         private IList HqlToCommandList(string hqlQuery, QueryParameters qp, ISessionImplementor session)
         {
             ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor)factory;
-            PropertyInfo sqlString = typeof(QueryTranslator).GetProperty("SqlString", BindingFlags.NonPublic | BindingFlags.Instance);
             IQueryTranslator[] queryTranslators = (IQueryTranslator[])getQuery.Invoke(factoryImplementor, new object[] { hqlQuery, false, null });
             IList commands = new ArrayList();
             foreach (IQueryTranslator translator in queryTranslators) {
@@ -143,9 +161,9 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 			this.basePaths = basePaths;
 			this.assemblies = assemblies;
-            basePaths.Add(AppDomain.CurrentDomain.BaseDirectory);		    
-			LoadAssemblies(assemblies);
+            basePaths.Add(AppDomain.CurrentDomain.BaseDirectory);
 			LoadConfigurations(configurations);
+			LoadAssemblies(assemblies);
 			LoadMappings(mappings);
 			factory = cfg.BuildSessionFactory();
 			settings = SettingsFactory.BuildSettings(cfg.Properties);
@@ -161,7 +179,55 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
                 if (!basePaths.Contains(assemblyFileName))
                     basePaths.Add(Path.GetDirectoryName(assemblyFileName));
 				cfg.AddAssembly(assembly);
+				foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+				{
+					//doing it like this because want to keep it version safe
+					if(referencedAssembly.FullName.Contains("ActiveRecord"))
+					{
+						AddActiveRecordAssembly(assembly);
+						break;	
+					}
+				}
 			}
+		}
+
+		private void AddActiveRecordAssembly(Assembly assembly)
+		{
+			ActiveRecordModelBuilder activeRecordModelBuilder = new ActiveRecordModelBuilder();
+			List<ActiveRecordModel> models = new List<ActiveRecordModel>();
+			foreach (Type type in assembly.GetTypes())
+			{
+				bool arType = false;
+				foreach (Attribute attribute in type.GetCustomAttributes(true))
+				{
+					if(attribute.GetType().Name == "ActiveRecordAttribute")
+					{
+						arType = true;
+						break;
+					}
+				}
+				if(!arType)
+					continue;
+				usingActiveRecord = true;
+				ActiveRecordModel model = activeRecordModelBuilder.Create(type);
+				if (model == null)
+					continue;
+				models.Add(model);
+				GraphConnectorVisitor graphConnectorVisitor = new GraphConnectorVisitor(activeRecordModelBuilder.Models);
+				graphConnectorVisitor.VisitModel(model);
+			}
+
+			foreach (ActiveRecordModel model in models)
+			{
+				XmlGenerationVisitor xmlVisitor = new XmlGenerationVisitor();
+				SemanticVerifierVisitor semanticVisitor = new SemanticVerifierVisitor(activeRecordModelBuilder.Models);
+				semanticVisitor.VisitNode(model);
+				xmlVisitor.CreateXml(model);
+				cfg.AddXml(xmlVisitor.Xml, model.Type.FullName);
+			}
+			
+			ActiveRecordStarter.ResetInitializationFlag();
+			ActiveRecordStarter.Initialize(assembly, ActiveRecordSectionHandler.Instance);
 		}
 
 		private void LoadMappings(IList mappings)
@@ -181,6 +247,24 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				if (logger.IsDebugEnabled)
 					logger.Debug("Loading configurations: " + configuration);
 				cfg.Configure(configuration);
+			}
+			Hashtable props = new Hashtable();
+			string app_config = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+			LoadFromActiveRecordConfig(app_config, "/configuration/activerecord/config/add", props);
+			if (props.Count > 0)
+			{
+				cfg.Properties = props;
+			}
+		}
+
+		private static void LoadFromActiveRecordConfig(string configuration, string path, Hashtable props)
+		{
+			XPathDocument xdoc = new XPathDocument(configuration);
+			foreach (XPathNavigator node in xdoc.CreateNavigator().Select(path))
+			{
+				string key = node.GetAttribute("key","");
+				string val = node.GetAttribute("value", "");	
+				props[key] = val;
 			}
 		}
 
@@ -248,6 +332,11 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public HqlResultGraph RunHql(string hql, params TypedParameter[] parameters)
 		{
+			SessionScope scope = null;
+			if(usingActiveRecord)
+			{
+				scope = new SessionScope();
+			}
 			try
 			{
 				ISession session = factory.OpenSession();
@@ -266,6 +355,11 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				else
 					//Otherwise we lose all the exception info.
 					throw new Exception(ex.Message);
+			}
+			finally
+			{
+				if(scope!=null)
+					scope.Dispose();
 			}
 		}
 
@@ -305,6 +399,11 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public DataSet RunHqlAsRawSql(string hqlQuery, params TypedParameter[] parameters)
 		{
+			SessionScope scope = null;
+			if (usingActiveRecord)
+			{
+				scope = new SessionScope();
+			} 
 			try
 			{
 				using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
@@ -335,6 +434,13 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				else
 					//Otherwise we lose all the exception info.
 					throw new Exception(ex.ToString());
+			}
+			finally
+			{
+				if(scope!=null)
+				{
+					scope.Dispose();
+				}
 			}
 		}
 

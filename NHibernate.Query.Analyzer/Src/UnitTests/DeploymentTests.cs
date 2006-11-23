@@ -55,8 +55,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests
 
 			foreach (string file in requiredAssemblies)
 			{
-				Console.WriteLine("Verifing existance of: " + file);
-				FileAssert.Exists(Path.Combine(basePath,file));
+				FileAssert.Exists(Path.Combine(basePath, file), file + " does not exists");
 			}
 		}
 	}

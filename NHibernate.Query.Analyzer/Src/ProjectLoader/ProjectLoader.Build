@@ -11,6 +11,7 @@
 				<include name="${build.dir}/NHibernate.dll"/>
 				<include name="${build.dir}/Iesi.Collections.dll"/>
 				<include name="${build.dir}/Nullables.dll"/>
+				<include name="${build.dir}/Castle.ActiveRecord.dll"/>
 				<include name="${build.dir}/System.Data.Sqlite.dll"/>
 				<include name="${build.dir}/Nullables.NHibernate.dll"/>
 				<include name="${build.dir}/Ayende.NHibernateQueryAnalyzer.Utilities.dll"/>
