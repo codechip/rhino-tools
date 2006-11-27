@@ -127,6 +127,7 @@ namespace TracUI
 		{
 			ITracXmlRpc trac = XmlRpcProxyGen.Create<ITracXmlRpc>();
 			trac.Url = Settings.Default.ServerAddress;
+			trac.Credentials = CredentialCache.DefaultNetworkCredentials;
 			return trac;
 		}
 

@@ -51,11 +51,6 @@ namespace TracUI
 				fs.Write(buffer, 0, readBytes);
 			} while (readBytes != 0);
 			fs.Dispose();
-			new Thread(delegate()
-			{
-				Thread.Sleep(60*1000);
-				fs.Flush();
-			}).Start();
 			PlaySound(file, 0, 1);
 		}
 
