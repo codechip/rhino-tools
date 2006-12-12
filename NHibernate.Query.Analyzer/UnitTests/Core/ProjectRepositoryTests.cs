@@ -14,8 +14,8 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 
 		private IProjectsRepository repository;
 
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
+		[SetUp]
+		public void SetUp()
 		{
 			repository = TestDataUtil.CreateFileRepository();
 			current = new Project(projectName);

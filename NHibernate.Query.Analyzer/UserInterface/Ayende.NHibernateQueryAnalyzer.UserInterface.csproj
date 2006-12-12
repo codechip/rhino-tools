@@ -3,14 +3,14 @@
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F5B8D50F-D04D-4842-822C-E51FC2A31DCC}</ProjectGuid>
+    <ProjectGuid>{353066C8-443B-4E76-AE36-41015889BFAF}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Ayende.NHibernateQueryAnalyzer.UnitTests</AssemblyName>
+    <AssemblyName>Ayende.NHibernateQueryAnalyzer.UserInterface</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -18,7 +18,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>Ayende.NHibernateQueryAnalyzer.UnitTests</RootNamespace>
+    <RootNamespace>Ayende.NHibernateQueryAnalyzer.UserInterface</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -49,7 +49,6 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -75,33 +74,29 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GuiTools, Version=1.0.2039.20536, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\UserInterface\CollapsibleSplitter\GuiTools.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Lithium, Version=3.3.5.19636, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\UserInterface\Lithium\Lithium.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
+      <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=1.0.3.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Nullables, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.core">
-      <Name>nunit.core</Name>
-      <HintPath>..\..\Tools\NUnit\nunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\..\Tools\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <Name>Rhino.Mocks</Name>
-      <HintPath>..\..\Tools\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -109,15 +104,18 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\SqLite.Net\System.Data.SQLite.DLL</HintPath>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=0.99.0.3, Culture=neutral, PublicKeyToken=0b3305902db7183f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\UserInterface\DockPanel\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\Core\Ayende.NHibernateQueryAnalyzer.Core.csproj">
       <Name>Ayende.NHibernateQueryAnalyzer.Core</Name>
@@ -129,11 +127,6 @@
       <Project>{CCF2B115-63F5-404A-BBC0-19DFBB0A34AA}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\UserInterface\Ayende.NHibernateQueryAnalyzer.UserInterface.csproj">
-      <Name>Ayende.NHibernateQueryAnalyzer.UserInterface</Name>
-      <Project>{353066C8-443B-4E76-AE36-41015889BFAF}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
     <ProjectReference Include="..\Utilities\Ayende.NHibernateQueryAnalyzer.Utilities.csproj">
       <Name>Ayende.NHibernateQueryAnalyzer.Utilities</Name>
       <Project>{E2C146D1-87B7-48D2-9EB8-58AE26A2E970}</Project>
@@ -141,112 +134,149 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="Asserts\AssertBase.cs">
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Commands\BuildProjectCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Asserts\FileAssert.cs">
+    <Compile Include="Commands\ExecuteQueryCommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Asserts\ListAssert.cs">
+    <Compile Include="Controls\AddParameter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ContextMenuTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\EditAttribute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Input.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\OpenProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\OpenQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\RemoteObjectDisplayGraphControl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Asserts\StringAssert.cs">
+    <Compile Include="Controls\UnsavedFilesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Wait.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interfaces\ICommand.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\ErrorHandlingTests.cs">
+    <Compile Include="Interfaces\IMainPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\ProjectBuidingAndUsageTests.cs">
+    <Compile Include="Interfaces\IMainView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\ProjectRepositoryTests.cs">
+    <Compile Include="Interfaces\IPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DeploymentTests.cs">
+    <Compile Include="Interfaces\IProjectPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\BuildingProjectTests.cs">
+    <Compile Include="Interfaces\IProjectView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\DataBaseSetupImplTests.cs">
+    <Compile Include="Interfaces\IQueryPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegrationTests\QueryPresenterIntegrationTests.cs">
+    <Compile Include="Interfaces\IQueryView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Remote\HqlResultGraphTests.cs">
+    <Compile Include="Interfaces\IView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Remote\RemoteObjectTests.cs">
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NQADocument.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presenters\MainPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Remote\RemoteProjectTests.cs">
+    <Compile Include="Presenters\ProjectPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchmaEditing\AttributeFieldReferenceTests.cs">
+    <Compile Include="Presenters\QueryPresenter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchmaEditing\NodeFieldReferenceCollection.cs">
+    <Compile Include="ProjectView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SchemaEditing\cfg.cs" />
+    <Compile Include="SchemaEditing\Hbm.Mapping.cs" />
+    <Compile Include="SchemaEditing\WinFormsSchemaEditorNode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchmaEditing\NodeFieldReferenceTests.cs">
+    <Compile Include="SchemaEditing\WinFormsSchemaEditorNodeFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchmaEditing\SchemaEditorNodeTestFactory.cs">
+    <Compile Include="SchemaEditorView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThreadedCommandExecutioner.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SchmaEditing\SchemaEditorTestNode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SchmaEditing\SchemaEditorTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TestUtilities\ExecuteInUI.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TestUtilities\TestDataUtil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\Commands\BuildProjectCommandTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\Commands\ExecuteQueryCommandTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\MainPresenterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\ProjectPresenterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\QueryPresenterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UserInteface\QueryPresenter_HandlingParametersTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilties\ReflectionUtilTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilties\TextTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilties\ThreadSafeQueueTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utilties\ValidationTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Mapping.xml" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\AddParameter.resx">
+      <DependentUpon>AddParameter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EditAttribute.resx">
+      <DependentUpon>EditAttribute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Input.resx">
+      <DependentUpon>Input.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\OpenProjectForm.resx">
+      <DependentUpon>OpenProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\OpenQueryForm.resx">
+      <DependentUpon>OpenQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\UnsavedFilesForm.resx">
+      <DependentUpon>UnsavedFilesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Wait.resx">
+      <DependentUpon>Wait.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NQADocument.resx">
+      <DependentUpon>NQADocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProjectView.resx">
+      <DependentUpon>ProjectView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QueryForm.resx">
+      <DependentUpon>QueryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SchemaEditorView.resx">
+      <DependentUpon>SchemaEditorView.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>md "$(TargetDir)TestProject"
-copy /Y "$(SolutionDir)..\Tools\TestData\*.*" "$(TargetDir)TestProject\*.*"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

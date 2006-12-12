@@ -15,7 +15,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 
 		public static IProjectsRepository CreateFileRepository()
 		{
-			string constr = "Data Source={0};New=False;UTF8Encoding=True;Version=3";
+			string constr = "Data Source={0};New=True;UTF8Encoding=True;Version=3";
 			string tmpFile = Path.GetTempFileName();
 			constr = string.Format(constr, tmpFile);
 			File.Delete(tmpFile); //GetTempFileName create a zero size file

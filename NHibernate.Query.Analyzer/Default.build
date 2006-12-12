@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project 
+		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+
+	<PropertyGroup>
+		<ProjectName>Ayende.NHibernate.Query.Analyzer</ProjectName>
+		<ShortName>NQA</ShortName>
+		<SolutionFile>Ayende.NHibernateQueryAnalyzer.sln</SolutionFile>
+		<FlattenZipFile>True</FlattenZipFile>
+		<SectionId>-1</SectionId>
+		<Version>1.2.1</Version>
+		<AssemblyInfo>Stub\AssemblyInfo.cs</AssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<TestAssembly Include="$(MSBuildProjectDirectory)\UnitTests\bin\$(Configuration)\Ayende.NHibernateQueryAnalyzer.UnitTests.dll"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.dll"/>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.exe"/>
+	</ItemGroup>
+</Project>

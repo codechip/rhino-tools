@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ayende.NHibernateQueryAnaly
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ayende.NHibernateQueryAnalyzer", "Stub\Ayende.NHibernateQueryAnalyzer.csproj", "{F258FE97-676B-4450-A3E1-3E169B1E58CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ayende.NHibernateQueryAnalyzer.TestProject", "..\Tools\TestData\Src\Ayende.NHibernateQueryAnalyzer.TestProject.csproj", "{1EF135FE-55D5-42F4-AC37-818BF35A7667}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ayende.NHibernateQueryAnalyzer.TestProject", "Tools\TestData\Src\Ayende.NHibernateQueryAnalyzer.TestProject.csproj", "{1EF135FE-55D5-42F4-AC37-818BF35A7667}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Text.RegularExpressions;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate.Driver;
@@ -34,15 +35,6 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
 		public void TestFixtureTestCleanup()
 		{
 			current.Dispose();
-		}
-
-
-		[Test]
-		public void HqlToSql()
-		{
-			string[] sql = current.HqlToSql(hqlQuery, new Hashtable());
-			string expected = "select testprojec0_._id as column1_3_, testprojec0_.Data as Data3_ from TestFile testprojec0_ order by  testprojec0_._id";
-			Assert.AreEqual(expected, sql[0], "HQL to SQL translation failed!");
 		}
 
 		[Test]
