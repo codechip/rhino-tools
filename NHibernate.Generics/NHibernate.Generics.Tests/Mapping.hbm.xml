@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<hibernate-mapping default-lazy="true"
+<hibernate-mapping default-lazy="false"
 				   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
 				   xmlns:xsd='http://www.w3.org/2001/XMLSchema'
-				   xmlns='urn:nhibernate-mapping-2.0'>
+				   xmlns='urn:nhibernate-mapping-2.2'>
 	<class
 		name='NHibernate.Generics.Tests.Blog, NHibernate.Generics.Tests'
 		lazy='true'

@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Rhino")]
 [assembly: AssemblyCopyright("Oren Eini (c) 2006")]
 [assembly: AssemblyDescription("NHibernate.Generics")]
-[assembly: AssemblyInformationalVersion("1.1.0.384")]
+[assembly: AssemblyInformationalVersion("Revision: 384")]
 [assembly: AssemblyTitle("NHibernate.Generics")]
-[assembly: AssemblyVersion("1.1.0.384")]
+[assembly: AssemblyVersion(".384")]
 
 

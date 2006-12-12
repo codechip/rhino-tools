@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 using System.Reflection;
 using System.Collections;
@@ -32,7 +33,9 @@ namespace NHibernate.Generics.Tests
             NHibernate.Cfg.Configuration cfg = new NHibernate.Cfg.Configuration();
             cfg.Properties = props;
             cfg.AddAssembly(Assembly.GetExecutingAssembly());
-            return cfg.BuildSessionFactory();
+            ISessionFactory factory = cfg.BuildSessionFactory();
+            new SchemaExport(cfg).Create(true,true);
+            return factory;
         }
 
 		[SetUp]
