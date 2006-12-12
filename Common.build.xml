@@ -14,15 +14,35 @@
 				 Properties="Configuration=$(Configuration)"
 				 Targets="Clean" />
 	</Target>
-
-	<Target Name="Compile">
+	<Target Name="GenerateAssemblyInfo">
+		<SvnVersion LocalPath=".">
+			<Output TaskParameter="Revision"
+					PropertyName="Revision" />
+		</SvnVersion>
+		<AssemblyInfo AssemblyCompany ="Rhino"
+			AssemblyCopyright="Oren Eini (c) 2006"
+			AssemblyDescription="$(ProjectName)"
+			AssemblyInformationalVersion="$(Version).$(Revision)"
+			 AssemblyTitle ="$(ProjectName)"
+			 CodeLanguage="CS"
+			 AssemblyVersion ="$(Version).$(Revision)"
+			 OutputFile="$(AssemblyInfo)"
+			 />
+	</Target>
+	
+	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
+		
 		<MSBuild Projects="$(SolutionFile)"
 				 Properties="Configuration=$(Configuration)" />
 	</Target>
 
+	<ItemGroup>
+		<ExistingZipFiles Include="$(MSBuildProjectDirectory)\$(ProjectName)*.zip"/>
+	</ItemGroup>
+
 	<Target Name="Zip">
 		<Delete Files="@(ExistingZipFiles)"/>
-		<Time Format="yyyy-MM-dd-HH-mm-ss">
+		<Time Format="yyyy-MMM-dd-HH-mm">
 			<Output TaskParameter="FormattedTime"
 					PropertyName="buildDate" />
 		</Time>
@@ -43,7 +63,7 @@
 		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
 	</Target>
 	
-	<Target Name="Upload" >
+	<Target Name="Upload" Condition="$(FtpUsername) != ''">
 		<Time Format="dd MMM yyyy HH:mm">
 			<Output TaskParameter="FormattedTime"
 					PropertyName="humanDate" />
@@ -54,6 +74,6 @@
                 Password="$(FtpPassword)"
                 RemoteUri="ftp://ftp.ayende.com/wwwroot/Builds/$(ShortName)/Nightlies/$(ZipFileName)" />
           <Exec 
-			Command='$(MSBuildProjectDirectory)\..\SharedLibs\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" 87 "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
+			Command='$(MSBuildProjectDirectory)\..\SharedLibs\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" $(SectionId) "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
 	</Target>
 </Project>
