@@ -8,6 +8,9 @@
 		<ShortName>NQG</ShortName>
 		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>
+		<SectionId>87</SectionId>
+		<Version>1.7.1</Version>
+		<AssemblyInfo>NHibernate.Query.Generator\Properties\AssemblyInfo.cs</AssemblyInfo>
 	</PropertyGroup>
 
 	<ItemGroup>
