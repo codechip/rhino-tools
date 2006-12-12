@@ -10,7 +10,8 @@
     <RootNamespace>Rhino.Commons</RootNamespace>
     <AssemblyName>Rhino.Commons</AssemblyName>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -131,7 +132,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ayende-open-source.snk" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
     <None Include="Properties\Settings.settings">

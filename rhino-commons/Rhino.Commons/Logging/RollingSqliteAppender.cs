@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
@@ -36,7 +37,7 @@ namespace Rhino.Commons.Logging
 );";
 
 		long numberOfRows = 0;
-		private int curRollBackups;
+		private int curRollBackups = 0;
 		private string currentFilePath;
 
 		public RollingSqliteAppender()
@@ -165,9 +166,8 @@ namespace Rhino.Commons.Logging
 			if (numberOfRows < MaxNumberOfRows)
 				return;
 
-			Connection.Close(); //close the file, so we can move it.
-
-			RollOverRenameFiles(CurrentFilePath);
+            Connection.Dispose();//close the file, so we can move it.
+            RollOverRenameFiles(CurrentFilePath);
 
 			ActivateOptions();
 		}
@@ -180,7 +180,7 @@ namespace Rhino.Commons.Logging
 				// Delete the oldest file, to keep Windows happy.
 				if (curRollBackups == MaxNumberOfBackups)
 				{
-					File.Delete(baseFileName + '.' + MaxNumberOfBackups);
+                    DeleteFile(baseFileName + '.' + MaxNumberOfBackups);
 					curRollBackups--;
 				}
 
@@ -207,19 +207,26 @@ namespace Rhino.Commons.Logging
 			{
 				// Delete the toFile if it exists
 				DeleteFile(toFile);
-
-				// We may not have permission to move the file, or the file may be locked
-				try
-				{
-					LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
-					File.Move(fromFile, toFile);
-				}
-				catch (Exception moveEx)
-				{
-					ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]",
-					                   moveEx,
-					                   ErrorCode.GenericFailure);
-				}
+                int retries = 3;
+                while (retries != 0)
+                {
+                    // We may not have permission to move the file, or the file may be locked
+                    try
+                    {
+                        LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
+                        File.Move(fromFile, toFile);
+                        retries = 0;
+                    }
+                    catch (Exception moveEx)
+                    {
+                        ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]",
+                                           moveEx,
+                                           ErrorCode.GenericFailure);
+                        Thread.Sleep(100);// Need to let sqlite time to release the file handle, 
+                                          // so we can roll it back
+                        retries--;
+                    }
+                }
 			}
 			else
 			{
