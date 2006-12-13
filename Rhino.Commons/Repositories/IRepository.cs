@@ -168,5 +168,16 @@ namespace Rhino.Commons
 		/// <param name="orders">Optional orderring</param>
 		/// <returns>The entity or null</returns>
 		T FindFirst(DetachedCriteria criteria, params Order[] orders);
+
+
+		/// <summary>
+		/// Execute the specified stored procedure with the given parameters
+		/// and return the result.
+		/// Note: only scalar values are supported using this approach.
+		/// </summary>
+		/// <param name="sp_name">The name of the stored procedure</param>
+		/// <param name="parameters">parameters for the stored procedure</param>
+		/// <returns>return value</returns>
+    	object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters);
     }
 }

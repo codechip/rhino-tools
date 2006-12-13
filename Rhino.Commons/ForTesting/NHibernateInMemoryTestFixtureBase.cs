@@ -43,7 +43,7 @@ namespace Rhino.Commons.ForTesting
 			{
 				if (!IoC.IsInitialized)
 					IoC.Initialize(new RhinoContainer(rhinoContainerConfig));
-				UnitOfWork.RegisterSessionFactory(sessionFactory);
+				NHibernateUnitOfWorkFactory.RegisterSessionFactory(sessionFactory);
 			}
 		}
 
@@ -129,7 +129,7 @@ namespace Rhino.Commons.ForTesting
 		public void CreateUnitOfWork()
 		{
 			UnitOfWork.Start();
-			SetupDB(UnitOfWork.CurrentNHibernateSession);
+			SetupDB(NHibernateUnitOfWorkFactory.CurrentNHibernateSession);
 		}
 
 		/// <summary>

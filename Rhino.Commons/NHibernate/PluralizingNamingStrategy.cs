@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Castle.ActiveRecord.Framework.Internal;
 using NHibernate.Cfg;
 
-namespace Rhino.Commons.NHibernate
+namespace Rhino.Commons.NHibernateUtil
 {
 	public class PluralizingNamingStrategy : INamingStrategy
 	{
@@ -12,7 +13,7 @@ namespace Rhino.Commons.NHibernate
 		public string ClassToTableName(string fullClassName)
 		{
 			string className = GetClassName(fullClassName);
-			string toPlural = Inflector.Instnace.ToPlural(className);
+			string toPlural = Inflector.Pluralize(className);
 			return toPlural;
 		}
 
@@ -35,7 +36,7 @@ namespace Rhino.Commons.NHibernate
 		
 		public string PropertyToTableName(string className, string propertyName)
 		{
-			string first = Inflector.Instnace.ToPlural(GetClassName(className));
+			string first = Inflector.Pluralize(GetClassName(className));
 			string second = propertyName;
 			string association_table = string.Format("{0}_{1}", first, second);
 

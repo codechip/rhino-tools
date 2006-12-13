@@ -153,5 +153,10 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			throw new NotImplementedException();
 		}
+
+		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
