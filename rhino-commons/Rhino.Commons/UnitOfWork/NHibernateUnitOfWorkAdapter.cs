@@ -6,14 +6,14 @@ using NHibernate;
 
 namespace Rhino.Commons
 {
-	public class NHibernateUnitOfWorkAdapter : IUnitOfWork
+	public class NHibernateUnitOfWorkAdapter : IUnitOfWorkImplementor
 	{
 		private ISession session;
 
-		private readonly NHibernateUnitOfWorkAdapter previous;
+		private readonly IUnitOfWorkImplementor previous;
 		private int usageCount = 1;
 
-		public NHibernateUnitOfWorkAdapter Previous
+		public IUnitOfWorkImplementor Previous
 		{
 			get { return previous; }
 		}
@@ -30,12 +30,12 @@ namespace Rhino.Commons
 
 		public ITransaction BeginTransaction()
 		{
-			return session.BeginTransaction();
+			return new NHibernateTransactionAdapter(session.BeginTransaction());
 		}
 
 		public ITransaction BeginTransaction(IsolationLevel isolationLevel)
 		{
-			return session.BeginTransaction(isolationLevel);
+			return new NHibernateTransactionAdapter(session.BeginTransaction(isolationLevel));
 		}
 
 		public void Dispose()
@@ -47,7 +47,7 @@ namespace Rhino.Commons
 			session.Dispose();
 		}
 
-		public NHibernateUnitOfWorkAdapter(ISession session, NHibernateUnitOfWorkAdapter previous)
+		public NHibernateUnitOfWorkAdapter(ISession session, IUnitOfWorkImplementor previous)
 		{
 			this.session = session;
 			this.previous = previous;

@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Boo\Boo.Lang.Parser.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.ActiveRecord, Version=0.0.1.3, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
@@ -140,8 +144,16 @@
     </None>
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
     <Compile Include="Logging\RollingSqliteAppender.cs" />
-    <Compile Include="NHibernate\Infelector.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
+    <Compile Include="Repositories\ARRepository.cs" />
+    <Compile Include="Repositories\RepositoryHelper.cs" />
+    <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
+    <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\ITransaction.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
+    <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
+    <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
     <Compile Include="With\With.Cache.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />

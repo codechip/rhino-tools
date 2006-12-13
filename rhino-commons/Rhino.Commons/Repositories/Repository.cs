@@ -232,21 +232,9 @@ namespace Rhino.Commons
         /// <param name="sp_name">The name of the stored procedure</param>
         /// <param name="parameters">parameters for the stored procedure</param>
         /// <returns>return value</returns>
-        public static T ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
+		public static object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
         {
-            using(IDbCommand command = UnitOfWork.CurrentNHibernateSession.Connection.CreateCommand())
-            {
-                command.CommandText = sp_name;
-                command.CommandType = CommandType.StoredProcedure;
-                foreach (Parameter parameter in parameters)
-                {
-                    IDbDataParameter sp_arg = command.CreateParameter();
-                    sp_arg.ParameterName = parameter.Name;
-                    sp_arg.Value = parameter.Value;
-                    command.Parameters.Add(sp_arg);
-                }
-                return (T) command.ExecuteScalar();
-            }
+    		return InternalRepository.ExecuteStoredProcedure(sp_name, parameters);
         }
     }
 }

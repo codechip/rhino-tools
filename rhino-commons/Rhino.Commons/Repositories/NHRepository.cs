@@ -1,209 +1,163 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using NHibernate;
 using NHibernate.Expression;
+using Rhino.Commons;
 
 namespace Rhino.Commons
 {
-    public class NHRepository<T> : IRepository<T>
-    {
-        public T Get(object id)
-        {
-            return (T) UnitOfWork.CurrentNHibernateSession.Get(typeof (T), id);
-        }
+	public class NHRepository<T> : IRepository<T>
+	{
+		protected virtual ISession Session
+		{
+			get { return NHibernateUnitOfWorkFactory.CurrentNHibernateSession; }
+		}
 
-        public T Load(object id)
-        {
-            return (T)UnitOfWork.CurrentNHibernateSession.Load(typeof(T), id);
-        }
+		public T Get(object id)
+		{
+			return (T) Session.Get(typeof (T), id);
+		}
 
-        public void Delete(T entity)
-        {
-            UnitOfWork.CurrentNHibernateSession.Delete(entity);
-        }
+		public T Load(object id)
+		{
+			return (T) Session.Load(typeof (T), id);
+		}
 
-        public void Save(T entity)
-        {
-            UnitOfWork.CurrentNHibernateSession.Save(entity);
-        }
+		public void Delete(T entity)
+		{
+			Session.Delete(entity);
+		}
 
-        public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            crit.AddOrder(order);
-            return crit.List<T>();
-           
-        }
+		public void Save(T entity)
+		{
+			Session.Save(entity);
+		}
 
-        public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            foreach (Order order in orders)
-            {
-                crit.AddOrder(order);
-            }
-            return crit.List<T>();
-        }
+		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			crit.AddOrder(order);
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            return crit.List<T>();
-        }
+		public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			foreach (Order order in orders)
+			{
+				crit.AddOrder(order);
+			}
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            crit.SetFirstResult(firstResult)
-                .SetMaxResults(numberOfResults);
-            return crit.List<T>();
-        }
+		public ICollection<T> FindAll(params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(
-            int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            crit.SetFirstResult(firstResult)
-                .SetMaxResults(numberOfResults);
-            crit.AddOrder(selectionOrder);
-            return crit.List<T>();
-        }
+		public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			crit.SetFirstResult(firstResult)
+				.SetMaxResults(numberOfResults);
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(
-            int firstResult, int numberOfResults, Order[] selectionOrder, params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            crit.SetFirstResult(firstResult)
-                .SetMaxResults(numberOfResults);
-            foreach (Order order in selectionOrder)
-            {
-                crit.AddOrder(order);
-            }
-            return crit.List<T>();
-        }
+		public ICollection<T> FindAll(
+			int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			crit.SetFirstResult(firstResult)
+				.SetMaxResults(numberOfResults);
+			crit.AddOrder(selectionOrder);
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(string namedQuery, params Parameter[] parameters)
-        {
-            IQuery query = CreateQuery(namedQuery, parameters);
-            return query.List<T>();
-        }
+		public ICollection<T> FindAll(
+			int firstResult, int numberOfResults, Order[] selectionOrder, params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			crit.SetFirstResult(firstResult)
+				.SetMaxResults(numberOfResults);
+			foreach (Order order in selectionOrder)
+			{
+				crit.AddOrder(order);
+			}
+			return crit.List<T>();
+		}
 
-        public ICollection<T> FindAll(
-            int firstResult, int numberOfResults, string namedQuery, params Parameter[] parameters)
-        {
-            IQuery query = CreateQuery(namedQuery, parameters);
-            query.SetFirstResult(firstResult)
-                .SetMaxResults(numberOfResults);
-            return query.List<T>();
-        }
+		public ICollection<T> FindAll(string namedQuery, params Parameter[] parameters)
+		{
+			IQuery query = RepositoryHelper<T>.CreateQuery(Session, namedQuery, parameters);
+			return query.List<T>();
+		}
 
-        public T FindOne(params ICriterion[] criteria)
-        {
-            ICriteria crit = CreateCriteriaFromArray(criteria);
-            return (T) crit.UniqueResult();
-        }
+		public ICollection<T> FindAll(
+			int firstResult, int numberOfResults, string namedQuery, params Parameter[] parameters)
+		{
+			IQuery query = RepositoryHelper<T>.CreateQuery(Session, namedQuery, parameters);
+			query.SetFirstResult(firstResult)
+				.SetMaxResults(numberOfResults);
+			return query.List<T>();
+		}
 
-        public T FindOne(string namedQuery, params Parameter[] parameters)
-        {
-            IQuery query = CreateQuery(namedQuery, parameters);
-            return (T)query.UniqueResult();
-        }
+		public T FindOne(params ICriterion[] criteria)
+		{
+			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
+			return (T) crit.UniqueResult();
+		}
 
-    	public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
-    	{
-    		ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
-    		return executableCriteria.List<T>();
-    	}
+		public T FindOne(string namedQuery, params Parameter[] parameters)
+		{
+			IQuery query = RepositoryHelper<T>.CreateQuery(Session, namedQuery, parameters);
+			return (T) query.UniqueResult();
+		}
 
-    	public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
-    	{
-			ICriteria executableCriteria = GetExecutableCriteria(criteria, orders);
+		public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
+		{
+			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, orders);
+			return executableCriteria.List<T>();
+		}
+
+		public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
+		{
+			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, orders);
 			executableCriteria.SetFirstResult(firstResult);
 			executableCriteria.SetMaxResults(maxResults);
 			return executableCriteria.List<T>();
-    	}
+		}
 
-    	public T FindOne(DetachedCriteria criteria)
-    	{
-			ICriteria executableCriteria = GetExecutableCriteria(criteria,null);
-			return (T)executableCriteria.UniqueResult();
-    	}
+		public T FindOne(DetachedCriteria criteria)
+		{
+			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
+			return (T) executableCriteria.UniqueResult();
+		}
 
-    	public T FindFirst(DetachedCriteria criteria, params Order[] orders)
-    	{
-			ICriteria executableCriteria = GetExecutableCriteria(criteria, null);
+		public T FindFirst(DetachedCriteria criteria, params Order[] orders)
+		{
+			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
 			executableCriteria.SetFirstResult(0);
 			executableCriteria.SetMaxResults(1);
-			return (T)executableCriteria.UniqueResult();
+			return (T) executableCriteria.UniqueResult();
 		}
 
-    	private static ICriteria CreateCriteriaFromArray(ICriterion[] criteria)
-        {
-            ICriteria crit = UnitOfWork.CurrentNHibernateSession.CreateCriteria(typeof(T));
-            foreach (ICriterion criterion in criteria)
-            {
-                //allow some fancy antics like returning possible return 
-                // or null to ignore the criteria
-                if(criterion == null)
-                    continue;
-                crit.Add(criterion);
-            }
-            AddCaching(crit);
-            return crit;
-        }
-
-		private static ICriteria GetExecutableCriteria(DetachedCriteria criteria, Order[] orders)
+		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			ICriteria executableCriteria = criteria.GetExecutableCriteria(UnitOfWork.CurrentNHibernateSession);
-			
-			AddCaching(executableCriteria);
-			if(orders!=null)
+			using (IDbCommand command = Session.Connection.CreateCommand())
 			{
-				foreach (Order order in orders)
+				command.CommandText = sp_name;
+				command.CommandType = CommandType.StoredProcedure;
+				foreach (Parameter parameter in parameters)
 				{
-					executableCriteria.AddOrder(order);
-				}	
+					IDbDataParameter sp_arg = command.CreateParameter();
+					sp_arg.ParameterName = parameter.Name;
+					sp_arg.Value = parameter.Value;
+					command.Parameters.Add(sp_arg);
+				}
+				return (T) command.ExecuteScalar();
 			}
-			return executableCriteria;
 		}
-    	
-        private static void AddCaching(ICriteria crit)
-        {
-            if(With.Caching.ShouldForceCacheRefresh == false &&
-               With.Caching.Enabled)
-            {
-                crit.SetCacheable(true);
-            	if (With.Caching.CurrentCacheRegion!=null)
-					crit.SetCacheRegion(With.Caching.CurrentCacheRegion);
-            }
-        }
-
-        private static IQuery CreateQuery(string namedQuery, Parameter[] parameters)
-        {
-            IQuery query = UnitOfWork.CurrentNHibernateSession.GetNamedQuery(namedQuery);
-            foreach (Parameter parameter in parameters)
-            {
-				if (parameter.Type == null)
-					query.SetParameter(parameter.Name, parameter.Value);
-				else
-					query.SetParameter(parameter.Name, parameter.Value, parameter.Type);
-            }
-            AddCaching(query);
-            return query;
-        }
-
-        private static void AddCaching(IQuery query)
-        {
-            if (With.Caching.ShouldForceCacheRefresh == false && With.Caching.Enabled)
-            {
-                query.SetCacheable(true);
-              	if (With.Caching.CurrentCacheRegion!=null)
-					query.SetCacheRegion(With.Caching.CurrentCacheRegion);
-            }
-            else if(With.Caching.ShouldForceCacheRefresh)
-            {
-                query.SetForceCacheRefresh(true);
-            }
-        }
-    }
+	}
 }

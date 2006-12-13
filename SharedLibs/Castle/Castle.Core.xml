@@ -251,19 +251,6 @@
             If the index is invalid.
             </exception>
         </member>
-        <member name="T:Castle.Core.IServiceEnabledComponent">
-            <summary>
-            Defines that the implementation wants a 
-            <see cref="T:System.IServiceProvider"/> in order to 
-            access other components. The creator must be aware
-            that the component might (or might not) implement 
-            the interface.
-            </summary>
-            <remarks>
-            Used by Castle Project components to, for example, 
-            gather logging factories
-            </remarks>
-        </member>
         <member name="T:Castle.Core.IInitializable">
             <summary>
             Lifecycle interface. If implemented by a component,
@@ -368,39 +355,18 @@
             plus the 'log' extension.
             </summary>
         </member>
-        <member name="T:Castle.Core.Logging.LoggerLevel">
+        <member name="T:Castle.Core.Logging.ConsoleLogger">
             <summary>
-            Supporting Logger levels.
+            The Logger sending everything to the standard output streams.
+            This is mainly for the cases when you have a utility that
+            does not have a logger to supply.
             </summary>
         </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Off">
+        <member name="T:Castle.Core.Logging.LevelFilteredLogger">
             <summary>
-            Logging will be off
-            </summary>
-        </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Fatal">
-            <summary>
-            Fatal logging level
-            </summary>
-        </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Error">
-            <summary>
-            Error logging level
-            </summary>
-        </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Warn">
-            <summary>
-            Warn logging level
-            </summary>
-        </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Info">
-            <summary>
-            Info logging level
-            </summary>
-        </member>
-        <member name="F:Castle.Core.Logging.LoggerLevel.Debug">
-            <summary>
-            Debug logging level
+            The Level Filtered Logger class.  This is a base clase which
+            provides a LogLevel attribute and reroutes all functions into
+            one Log method.
             </summary>
         </member>
         <member name="T:Castle.Core.Logging.ILogger">
@@ -737,20 +703,6 @@
             Determines if messages of priority "fatalError" will be logged.
             </summary>
             <value>True if "fatalError" messages will be logged.</value>
-        </member>
-        <member name="T:Castle.Core.Logging.ConsoleLogger">
-            <summary>
-            The Logger sending everything to the standard output streams.
-            This is mainly for the cases when you have a utility that
-            does not have a logger to supply.
-            </summary>
-        </member>
-        <member name="T:Castle.Core.Logging.LevelFilteredLogger">
-            <summary>
-            The Level Filtered Logger class.  This is a base clase which
-            provides a LogLevel attribute and reroutes all functions into
-            one Log method.
-            </summary>
         </member>
         <member name="M:Castle.Core.Logging.LevelFilteredLogger.#ctor">
             <summary>
@@ -1624,6 +1576,231 @@
             <param name="newName">Ignored</param>
             <returns>This ILogger instance.</returns> 
         </member>
+        <member name="T:Castle.Core.Logging.LoggerLevel">
+            <summary>
+            Supporting Logger levels.
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Off">
+            <summary>
+            Logging will be off
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Fatal">
+            <summary>
+            Fatal logging level
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Error">
+            <summary>
+            Error logging level
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Warn">
+            <summary>
+            Warn logging level
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Info">
+            <summary>
+            Info logging level
+            </summary>
+        </member>
+        <member name="F:Castle.Core.Logging.LoggerLevel.Debug">
+            <summary>
+            Debug logging level
+            </summary>
+        </member>
+        <member name="T:Castle.Core.Configuration.AbstractConfiguration">
+            <summary>
+            This is an abstract <see cref="T:Castle.Core.Configuration.IConfiguration"/> implementation
+            that deals with methods that can be abstracted away
+            from underlying implementations.
+            </summary>
+            <remarks>
+            <para><b>AbstractConfiguration</b> makes easier to implementers 
+            to create a new version of <see cref="T:Castle.Core.Configuration.IConfiguration"/></para>
+            </remarks>
+        </member>
+        <member name="T:Castle.Core.Configuration.IConfiguration">
+            <summary>
+            Summary description for IConfiguration.
+            </summary>
+            <summary>
+            <see cref="T:Castle.Core.Configuration.IConfiguration"/> is a interface encapsulating a configuration node
+            used to retrieve configuration values.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.IConfiguration.GetValue(System.Type,System.Object)">
+            <summary>
+            Gets the value of the node and converts it 
+            into specified <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/></param>
+            <param name="defaultValue">
+            The Default value returned if the convertion fails.
+            </param>
+            <returns>The Value converted into the specified type.</returns>
+        </member>
+        <member name="P:Castle.Core.Configuration.IConfiguration.Name">
+            <summary>
+            Gets the name of the node.
+            </summary>
+            <value>
+            The Name of the node.
+            </value> 
+        </member>
+        <member name="P:Castle.Core.Configuration.IConfiguration.Value">
+            <summary>
+            Gets the value of the node.
+            </summary>
+            <value>
+            The Value of the node.
+            </value> 
+        </member>
+        <member name="P:Castle.Core.Configuration.IConfiguration.Children">
+            <summary>
+            Gets an <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> of <see cref="T:Castle.Core.Configuration.IConfiguration"/>
+            elements containing all node children.
+            </summary>
+            <value>The Collection of child nodes.</value>
+        </member>
+        <member name="P:Castle.Core.Configuration.IConfiguration.Attributes">
+            <summary>
+            Gets an <see cref="T:System.Collections.IDictionary"/> of the configuration attributes.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.AbstractConfiguration.GetValue(System.Type,System.Object)">
+            <summary>
+            Gets the value of the node and converts it
+            into specified <see cref="T:System.Type"/>.
+            </summary>
+            <param name="type">The <see cref="T:System.Type"/></param>
+            <param name="defaultValue">
+            The Default value returned if the convertion fails.
+            </param>
+            <returns>The Value converted into the specified type.</returns>
+        </member>
+        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Name">
+            <summary>
+            Gets the name of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </summary>
+            <value>
+            The Name of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </value>
+        </member>
+        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Value">
+            <summary>
+            Gets the value of <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </summary>
+            <value>
+            The Value of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </value>
+        </member>
+        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Children">
+            <summary>
+            Gets all child nodes.
+            </summary>
+            <value>The <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> of child nodes.</value>
+        </member>
+        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Attributes">
+            <summary>
+            Gets node attributes.
+            </summary>
+            <value>
+            All attributes of the node.
+            </value>
+        </member>
+        <member name="T:Castle.Core.Configuration.ConfigurationCollection">
+            <summary>
+            A collection of <see cref="T:Castle.Core.Configuration.IConfiguration"/> objects.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.ConfigurationCollection)">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.IConfiguration[])">
+            <summary>
+            Creates a new instance of <c>ConfigurationCollection</c>.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Add(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Adds an <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
+            <returns>
+            The index at which the new element was inserted.
+            </returns>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.IConfiguration[])">
+            <summary>
+            Adds an array of <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="value">The Array of <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.ConfigurationCollection)">
+            <summary>
+            Adds a <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/>.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> to add.</param>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.CopyTo(Castle.Core.Configuration.IConfiguration[],System.Int32)">
+            <summary>
+            Copies the elements to a one-dimensional <see cref="T:System.Array"/> instance at the specified index.
+            </summary>
+            <param name="array">
+            The one-dimensional <see cref="T:System.Array"/> must have zero-based indexing.
+            </param>
+            <param name="index">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Contains(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Gets a value indicating whether the <see cref="T:Castle.Core.Configuration.IConfiguration"/> contains
+            in the collection.
+            </summary>
+            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to locate.</param>
+            <returns>
+            <see langword="true"/> if the <see cref="T:Castle.Core.Configuration.IConfiguration"/> is contained in the collection; 
+            otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Remove(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Removes a specific <see cref="T:Castle.Core.Configuration.IConfiguration"/> from the 
+            collection.   
+            </summary>
+            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to remove from the collection.</param>
+            <exception cref="T:System.ArgumentException">
+            <paramref name="value"/> is not found in the collection.
+            </exception>
+        </member>
+        <member name="P:Castle.Core.Configuration.ConfigurationCollection.Item(System.Int32)">
+            <summary>
+            Represents the entry at the specified index of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
+            </summary>
+            <param name="index">
+            The zero-based index of the entry to locate in the collection.
+            </param>
+            <value>
+            The entry at the specified index of the collection.
+            </value>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="index"/> is outside the valid range of indexes for the collection.
+            </exception>
+        </member>
+        <member name="T:Castle.Core.Configuration.MutableConfiguration">
+            <summary>
+            Summary description for MutableConfiguration.
+            </summary>
+        </member>
         <member name="T:Castle.Core.LifestyleType">
             <summary>
             Enumeration used to mark the component's lifestyle.
@@ -1822,196 +1999,6 @@
             properties. Others dependencies must be 
             registered here, so the kernel (as a matter 
             of fact the handler) can check them
-            </summary>
-        </member>
-        <member name="T:Castle.Core.Configuration.AbstractConfiguration">
-            <summary>
-            This is an abstract <see cref="T:Castle.Core.Configuration.IConfiguration"/> implementation
-            that deals with methods that can be abstracted away
-            from underlying implementations.
-            </summary>
-            <remarks>
-            <para><b>AbstractConfiguration</b> makes easier to implementers 
-            to create a new version of <see cref="T:Castle.Core.Configuration.IConfiguration"/></para>
-            </remarks>
-        </member>
-        <member name="T:Castle.Core.Configuration.IConfiguration">
-            <summary>
-            Summary description for IConfiguration.
-            </summary>
-            <summary>
-            <see cref="T:Castle.Core.Configuration.IConfiguration"/> is a interface encapsulating a configuration node
-            used to retrieve configuration values.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.IConfiguration.GetValue(System.Type,System.Object)">
-            <summary>
-            Gets the value of the node and converts it 
-            into specified <see cref="T:System.Type"/>.
-            </summary>
-            <param name="type">The <see cref="T:System.Type"/></param>
-            <param name="defaultValue">
-            The Default value returned if the convertion fails.
-            </param>
-            <returns>The Value converted into the specified type.</returns>
-        </member>
-        <member name="P:Castle.Core.Configuration.IConfiguration.Name">
-            <summary>
-            Gets the name of the node.
-            </summary>
-            <value>
-            The Name of the node.
-            </value> 
-        </member>
-        <member name="P:Castle.Core.Configuration.IConfiguration.Value">
-            <summary>
-            Gets the value of the node.
-            </summary>
-            <value>
-            The Value of the node.
-            </value> 
-        </member>
-        <member name="P:Castle.Core.Configuration.IConfiguration.Children">
-            <summary>
-            Gets an <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> of <see cref="T:Castle.Core.Configuration.IConfiguration"/>
-            elements containing all node children.
-            </summary>
-            <value>The Collection of child nodes.</value>
-        </member>
-        <member name="P:Castle.Core.Configuration.IConfiguration.Attributes">
-            <summary>
-            Gets an <see cref="T:System.Collections.IDictionary"/> of the configuration attributes.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.AbstractConfiguration.GetValue(System.Type,System.Object)">
-            <summary>
-            Gets the value of the node and converts it
-            into specified <see cref="T:System.Type"/>.
-            </summary>
-            <param name="type">The <see cref="T:System.Type"/></param>
-            <param name="defaultValue">
-            The Default value returned if the convertion fails.
-            </param>
-            <returns>The Value converted into the specified type.</returns>
-        </member>
-        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Name">
-            <summary>
-            Gets the name of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <value>
-            The Name of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </value>
-        </member>
-        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Value">
-            <summary>
-            Gets the value of <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <value>
-            The Value of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </value>
-        </member>
-        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Children">
-            <summary>
-            Gets all child nodes.
-            </summary>
-            <value>The <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> of child nodes.</value>
-        </member>
-        <member name="P:Castle.Core.Configuration.AbstractConfiguration.Attributes">
-            <summary>
-            Gets node attributes.
-            </summary>
-            <value>
-            All attributes of the node.
-            </value>
-        </member>
-        <member name="T:Castle.Core.Configuration.ConfigurationCollection">
-            <summary>
-            A collection of <see cref="T:Castle.Core.Configuration.IConfiguration"/> objects.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor">
-            <summary>
-            Creates a new instance of <c>ConfigurationCollection</c>.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.ConfigurationCollection)">
-            <summary>
-            Creates a new instance of <c>ConfigurationCollection</c>.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.#ctor(Castle.Core.Configuration.IConfiguration[])">
-            <summary>
-            Creates a new instance of <c>ConfigurationCollection</c>.
-            </summary>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Add(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Adds an <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
-            <returns>
-            The index at which the new element was inserted.
-            </returns>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.IConfiguration[])">
-            <summary>
-            Adds an array of <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <param name="value">The Array of <see cref="T:Castle.Core.Configuration.IConfiguration"/> to add.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.AddRange(Castle.Core.Configuration.ConfigurationCollection)">
-            <summary>
-            Adds a <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/>.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.ConfigurationCollection"/> to add.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.CopyTo(Castle.Core.Configuration.IConfiguration[],System.Int32)">
-            <summary>
-            Copies the elements to a one-dimensional <see cref="T:System.Array"/> instance at the specified index.
-            </summary>
-            <param name="array">
-            The one-dimensional <see cref="T:System.Array"/> must have zero-based indexing.
-            </param>
-            <param name="index">The zero-based index in array at which copying begins.</param>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Contains(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Gets a value indicating whether the <see cref="T:Castle.Core.Configuration.IConfiguration"/> contains
-            in the collection.
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to locate.</param>
-            <returns>
-            <see langword="true"/> if the <see cref="T:Castle.Core.Configuration.IConfiguration"/> is contained in the collection; 
-            otherwise, <see langword="false"/>.
-            </returns>
-        </member>
-        <member name="M:Castle.Core.Configuration.ConfigurationCollection.Remove(Castle.Core.Configuration.IConfiguration)">
-            <summary>
-            Removes a specific <see cref="T:Castle.Core.Configuration.IConfiguration"/> from the 
-            collection.   
-            </summary>
-            <param name="value">The <see cref="T:Castle.Core.Configuration.IConfiguration"/> to remove from the collection.</param>
-            <exception cref="T:System.ArgumentException">
-            <paramref name="value"/> is not found in the collection.
-            </exception>
-        </member>
-        <member name="P:Castle.Core.Configuration.ConfigurationCollection.Item(System.Int32)">
-            <summary>
-            Represents the entry at the specified index of the <see cref="T:Castle.Core.Configuration.IConfiguration"/>.
-            </summary>
-            <param name="index">
-            The zero-based index of the entry to locate in the collection.
-            </param>
-            <value>
-            The entry at the specified index of the collection.
-            </value>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-            <paramref name="index"/> is outside the valid range of indexes for the collection.
-            </exception>
-        </member>
-        <member name="T:Castle.Core.Configuration.MutableConfiguration">
-            <summary>
-            Summary description for MutableConfiguration.
             </summary>
         </member>
         <member name="T:Castle.Core.ConstructorCandidate">
@@ -2774,6 +2761,19 @@
             <summary>
             Enable access to files on network shares
             </summary>
+        </member>
+        <member name="T:Castle.Core.IServiceEnabledComponent">
+            <summary>
+            Defines that the implementation wants a 
+            <see cref="T:System.IServiceProvider"/> in order to 
+            access other components. The creator must be aware
+            that the component might (or might not) implement 
+            the interface.
+            </summary>
+            <remarks>
+            Used by Castle Project components to, for example, 
+            gather logging factories
+            </remarks>
         </member>
     </members>
 </doc>
