@@ -17,6 +17,7 @@ namespace Rhino.Commons
 		{
 			ISession session = CreateSession();
 			session.FlushMode = FlushMode.Commit;
+			Local.Data[CurrentNHibernateSessionKey] = session;
 			return new NHibernateUnitOfWorkAdapter(session, previous);
 		}
 

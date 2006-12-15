@@ -7,4 +7,18 @@
     <StartArguments>cs D:\Oss\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\Bin\Debug\*test*.dll D:\OSS\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\ActiveRecord\Queries</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
+  <PropertyGroup>
+    <PublishUrlHistory>http://localhost/NHQG/</PublishUrlHistory>
+    <InstallUrlHistory>
+    </InstallUrlHistory>
+    <SupportUrlHistory>
+    </SupportUrlHistory>
+    <UpdateUrlHistory>
+    </UpdateUrlHistory>
+    <BootstrapperUrlHistory>
+    </BootstrapperUrlHistory>
+    <ApplicationRevision>0</ApplicationRevision>
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>true</VerifyUploadedFiles>
+  </PropertyGroup>
 </Project>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project 
+		DefaultTargets="Init"
 		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 
@@ -9,9 +10,27 @@
 		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>
 		<SectionId>87</SectionId>
-		<Version>1.7.1</Version>
+		<Version>1.8</Version>
 		<AssemblyInfo>NHibernate.Query.Generator\Properties\AssemblyInfo.cs</AssemblyInfo>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<SetupProject Include="NHibernate.Query.Generator.Setup\Product.wxs"/>
+	</ItemGroup>
+	
+	<Target Name="Init">
+		<SvnVersion LocalPath=".">
+			<Output TaskParameter="Revision"
+					PropertyName="Revision" />
+		</SvnVersion>
+		<Copy SourceFiles="@(SetupProject)"
+				  DestinationFiles="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')"/>
+		<FileUpdate Regex="REAL_VERSION" 
+					Files="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')" 
+					ReplacementText="$(Version).$(Revision).0" />
+		<MsBuild  Projects="$(MSBuildProjectFile)"
+				  Targets="BuildAll"/>
+	</Target>
 
 	<ItemGroup>
 		<TestAssembly Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator.Tests\bin\$(Configuration)\NHibernate.Query.Generator.Tests.dll"/>

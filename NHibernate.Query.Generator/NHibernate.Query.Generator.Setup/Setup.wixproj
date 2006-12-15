@@ -29,7 +29,7 @@
     <IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Product.wxs" />
+    <Compile Include="Product.g.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixLibrary Include="$(ToolPath)\wixui.wixlib" />

@@ -175,28 +175,28 @@
 								  DiskId="1" />
 							<Registry Id="_2FFEC51D4A55451EA3C02A13F9F5E81F"
 									  Root="HKLM"
-									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\1.6.0.0"
+									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\REAL_VERSION"
 									  Name="Class"
 									  Type="string"
 									  Value="NHibernate.Query.Generator.NHibernateQueryGenerator" />
 							<Registry Id="_928679DFCA434D16822885E25E423E54"
 									  Root="HKLM"
-									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\1.6.0.0"
+									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\REAL_VERSION"
 									  Name="CodeBase"
 									  Type="string"
 									  Value="[#_A6D52CE80673878F06D0D60292AAFF5F]" />
 							<Registry Id="_9E82A21798C1459A9982ED83680CA5FA"
 									  Root="HKLM"
-									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\1.6.0.0"
+									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\REAL_VERSION"
 									  Name="RuntimeVersion"
 									  Type="string"
 									  Value="v2.0.50727" />
 							<Registry Id="_DEA90E2EE8CB436FA418ECB4E697E1C7"
 									  Root="HKLM"
-									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\1.6.0.0"
+									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32\REAL_VERSION"
 									  Name="Assembly"
 									  Type="string"
-									  Value="NHQG, Version=1.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f" />
+									  Value="NHQG, Version=REAL_VERSION, Culture=neutral, PublicKeyToken=0b3305902db7183f" />
 							<Registry Id="_F7D486702C434288ABA81C65FD187575"
 									  Root="HKLM"
 									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32"
@@ -231,7 +231,7 @@
 									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\InprocServer32"
 									  Name="Assembly"
 									  Type="string"
-									  Value="NHQG, Version=1.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f" />
+									  Value="NHQG, Version=REAL_VERSION, Culture=neutral, PublicKeyToken=0b3305902db7183f" />
 							<Registry Id="_645EDE3F267C4FDB938FA4D7420B388D"
 									  Root="HKLM"
 									  Key="SOFTWARE\Classes\CLSID\{DE8A7135-96F6-47BA-9DC9-D7D837B4CDE3}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}"
