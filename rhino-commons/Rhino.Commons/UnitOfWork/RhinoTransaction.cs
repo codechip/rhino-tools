@@ -2,7 +2,7 @@ using System;
 
 namespace Rhino.Commons
 {
-	public interface ITransaction : IDisposable
+	public interface RhinoTransaction : IDisposable
 	{
 		void Commit();
 		void Rollback();

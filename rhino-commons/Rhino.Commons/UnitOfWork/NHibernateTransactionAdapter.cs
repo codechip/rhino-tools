@@ -1,6 +1,6 @@
 namespace Rhino.Commons
 {
-	public class NHibernateTransactionAdapter : ITransaction
+	public class NHibernateTransactionAdapter : RhinoTransaction
 	{
 		private readonly NHibernate.ITransaction transaction;
 

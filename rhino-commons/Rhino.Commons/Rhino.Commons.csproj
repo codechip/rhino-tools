@@ -147,9 +147,10 @@
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
+    <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork\ITransaction.cs" />
+    <Compile Include="UnitOfWork\RhinoTransaction.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
     <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />

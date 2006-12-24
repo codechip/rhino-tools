@@ -9,11 +9,20 @@ namespace Rhino.Commons
 		private readonly ISessionScope scope;
 		private IUnitOfWorkImplementor previous;
 		private int usageCount = 1;
+		private ActiveRecordTransactionAdapter transactionAdapter;
 
 		public ActiveRecordUnitOfWorkAdapter(ISessionScope scope, IUnitOfWorkImplementor previous)
 		{
 			this.scope = scope;
 			this.previous = previous;
+		}
+
+		public bool IsInActiveTransaction
+		{
+			get
+			{
+				return transactionAdapter != null && transactionAdapter.IsActive;
+			}
 		}
 
 		public void IncremementUsages()
@@ -31,15 +40,16 @@ namespace Rhino.Commons
 			scope.Flush();
 		}
 
-		public ITransaction BeginTransaction()
+		public RhinoTransaction BeginTransaction()
 		{
-			TransactionScope transactionScope = new TransactionScope(TransactionMode.New);
-			return new ActiveRecordTransactionAdapter(transactionScope);
+			return BeginTransaction(IsolationLevel.ReadCommitted);
 		}
 
-		public ITransaction BeginTransaction(IsolationLevel isolationLevel)
+		public RhinoTransaction BeginTransaction(IsolationLevel isolationLevel)
 		{
-			throw new NotImplementedException();
+			TransactionScope transactionScope = new TransactionScope(TransactionMode.New, isolationLevel);
+			transactionAdapter = new ActiveRecordTransactionAdapter(transactionScope);
+			return transactionAdapter;
 		}
 
 		///<summary>
@@ -48,7 +58,11 @@ namespace Rhino.Commons
 		///<filterpriority>2</filterpriority>
 		public void Dispose()
 		{
-			throw new NotImplementedException();
+			usageCount -= 1;
+			if(usageCount==0)
+			{
+				scope.Dispose();
+			}
 		}
 	}
 }

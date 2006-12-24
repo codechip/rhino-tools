@@ -40,29 +40,4 @@ namespace Rhino.Commons
 			}
 		}
 	}
-
-	internal class ActiveRecordTransactionAdapter : ITransaction
-	{
-		private readonly TransactionScope transactionScope;
-
-		public ActiveRecordTransactionAdapter(TransactionScope transactionScope)
-		{
-			this.transactionScope = transactionScope;
-		}
-
-		public void Commit()
-		{
-			transactionScope.VoteCommit();
-		}
-
-		public void Rollback()
-		{
-			transactionScope.VoteRollBack();
-		}
-
-		public void Dispose()
-		{
-			transactionScope.Dispose();
-		}
-	}
 }
