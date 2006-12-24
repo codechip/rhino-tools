@@ -18,6 +18,14 @@ namespace Rhino.Commons
 			get { return previous; }
 		}
 
+		public bool IsInActiveTransaction
+		{
+			get
+			{
+				return session.Transaction.IsActive;
+			}
+		}
+		
 		public ISession Session
 		{
 			get { return session; }
@@ -28,12 +36,12 @@ namespace Rhino.Commons
 			session.Flush();
 		}
 
-		public ITransaction BeginTransaction()
+		public RhinoTransaction BeginTransaction()
 		{
 			return new NHibernateTransactionAdapter(session.BeginTransaction());
 		}
 
-		public ITransaction BeginTransaction(IsolationLevel isolationLevel)
+		public RhinoTransaction BeginTransaction(IsolationLevel isolationLevel)
 		{
 			return new NHibernateTransactionAdapter(session.BeginTransaction(isolationLevel));
 		}
