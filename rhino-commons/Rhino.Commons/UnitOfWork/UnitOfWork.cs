@@ -1,9 +1,4 @@
 using System;
-using System.IO;
-using System.Xml;
-using NHibernate;
-using NHibernate.Cfg;
-using Settings=Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {

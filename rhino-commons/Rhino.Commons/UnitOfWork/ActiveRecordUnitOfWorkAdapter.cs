@@ -4,7 +4,7 @@ using Castle.ActiveRecord;
 
 namespace Rhino.Commons
 {
-	internal class ActiveRecordUnitOfWorkAdapter : IUnitOfWorkImplementor
+	public class ActiveRecordUnitOfWorkAdapter : IUnitOfWorkImplementor
 	{
 		private readonly ISessionScope scope;
 		private IUnitOfWorkImplementor previous;

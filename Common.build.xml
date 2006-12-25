@@ -4,11 +4,16 @@
 	<PropertyGroup Condition="!Exists('$(Configuration)')">
 		<Configuration>Debug</Configuration>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
+		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
 	</PropertyGroup>
 
 	<Target Name="BuildAll"
-			DependsOnTargets="Clean;Compile;UnitTest;Zip;Upload;" />
+			DependsOnTargets="Clean;BeforeCompile;Compile;AfterCompile;UnitTest;BeforeZip;Zip;Upload;" />
 
+	<Target Name="BeforeCompile"/>
+	<Target Name="AfterCompile"/>
+	<Target Name="BeforeZip"/>
+	
 	<Target Name="Clean">
 		<MSBuild Projects="$(SolutionFile)"
 				 Properties="Configuration=$(Configuration)"
