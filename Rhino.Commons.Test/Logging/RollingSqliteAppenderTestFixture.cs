@@ -1,6 +1,5 @@
 using System;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
 using log4net;
 using log4net.Appender;
@@ -15,13 +14,15 @@ namespace Rhino.Commons.Test.Logging
 	{
 		private RollingSqliteAppender appender;
 		private LoggingEvent loggingEvent;
-		string databaseFile = Process.GetCurrentProcess().ProcessName + ".log4net";
+		string databaseFile;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			File.Delete(databaseFile);
 			appender = new RollingSqliteAppender();
+			databaseFile = string.Format("{0}.log4net", Guid.NewGuid());
+			appender.FileNameFormat = databaseFile;
+			File.Delete(databaseFile);
 			appender.ActivateOptions();
 			LoggingEventData loggingEventData = new LoggingEventData();
 			loggingEventData.Level = Level.Error;

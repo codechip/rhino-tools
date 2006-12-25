@@ -46,7 +46,7 @@ namespace Rhino.Commons.HttpModules
             UnitOfWork.Start();
         }
 
-        void context_EndRequest(object sender, EventArgs e)
+    	private void context_EndRequest(object sender, EventArgs e)
         {
             logger.Debug("Disposing Unit Of Work For Request");
             UnitOfWork.Current.Dispose();

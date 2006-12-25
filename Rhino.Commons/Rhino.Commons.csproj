@@ -116,9 +116,6 @@
     <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
-    <Compile Include="Threading\AbortableThreadPool\AbortableThreadPool.cs" />
-    <Compile Include="Threading\AbortableThreadPool\WorkItem.cs" />
-    <Compile Include="Threading\AbortableThreadPool\WorkItemStatus.cs" />
     <Compile Include="Threading\ThreadSafeQueue.cs" />
     <Compile Include="Threading\WaitForConsumersEvent.cs" />
     <Compile Include="ToPublic\SqlCommandSet.cs" />
@@ -147,7 +144,10 @@
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
+    <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
     <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
+    <Compile Include="Threading\ThreadPool\WorkItem.cs" />
+    <Compile Include="Threading\ThreadPool\WorkItemStatus.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\RhinoTransaction.cs" />
@@ -159,6 +159,8 @@
     <Compile Include="With\With.PerformanceCounter.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
+  	
+	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
