@@ -100,7 +100,7 @@
     <Compile Include="ElementNotFoundException.cs" />
     <Compile Include="GenericEventArgs.cs" />
     <Compile Include="HttpModules\PagePerformanceModule.cs" />
-    <Compile Include="HttpModules\UnitOfWorkModule.cs" />
+    <Compile Include="HttpModules\UnitOfWorkApplication.cs" />
     <Compile Include="Indexers.cs" />
     <Compile Include="LocalDataImpl\LocalData.cs" />
     <Compile Include="LocalDataImpl\ILocalData.cs" />
@@ -159,8 +159,6 @@
     <Compile Include="With\With.PerformanceCounter.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
-  	
-	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

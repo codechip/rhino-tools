@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Rhino")]
 [assembly: AssemblyCopyright("Oren Eini (c) 2006")]
 [assembly: AssemblyDescription("NHibernate.Query.Generator")]
-[assembly: AssemblyInformationalVersion("1.8.403")]
+[assembly: AssemblyInformationalVersion("1.8.410")]
 [assembly: AssemblyTitle("NHibernate.Query.Generator")]
-[assembly: AssemblyVersion("1.8.403")]
+[assembly: AssemblyVersion("1.8.410")]
 
 

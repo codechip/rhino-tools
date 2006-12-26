@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs D:\Oss\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\Bin\Debug\*test*.dll D:\OSS\Rhino-Tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\ActiveRecord\Queries</StartArguments>
+    <StartArguments>cs D:\Work\Exesto\Exesto.Model\bin\Debug\Exesto.Model.dll .</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>

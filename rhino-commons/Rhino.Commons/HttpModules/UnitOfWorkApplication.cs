@@ -8,19 +8,23 @@ using Rhino.Commons.Properties;
 
 namespace Rhino.Commons.HttpModules
 {
-    public class UnitOfWorkModule : IHttpModule
+    public class UnitOfWorkApplication : HttpApplication, IContainerAccessor
     {
-        static ILog logger = LogManager.GetLogger(typeof (UnitOfWorkModule));
+        static ILog logger = LogManager.GetLogger(typeof (UnitOfWorkApplication));
         private IWindsorContainer windsorContainer;
-        HttpApplication application;
 
-        public void Init(HttpApplication context)
+    	public IWindsorContainer Container
+    	{
+			get { return windsorContainer; }
+    	}
+
+    	public override void Init()
         {
-            application = context;
-            logger.Info("Starting Unit Of Work Module");
+			base.Init();
+            logger.Info("Starting Unit Of Work Application");
             InitializeContainer();
-            context.BeginRequest += new EventHandler(context_BeginRequest);
-            context.EndRequest += new EventHandler(context_EndRequest);
+            BeginRequest += new EventHandler(context_BeginRequest);
+            EndRequest += new EventHandler(context_EndRequest);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -52,11 +56,11 @@ namespace Rhino.Commons.HttpModules
             UnitOfWork.Current.Dispose();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            application.BeginRequest -= new EventHandler(context_BeginRequest);
-            application.EndRequest -= new EventHandler(context_EndRequest);
-            logger.Info("Disposing Unit Of Work Module");
+            BeginRequest -= new EventHandler(context_BeginRequest);
+            EndRequest -= new EventHandler(context_EndRequest);
+            logger.Info("Disposing Unit Of Work Application");
             IoC.Reset(windsorContainer);            
             windsorContainer.Dispose();
         }
