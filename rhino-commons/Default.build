@@ -20,4 +20,26 @@
 	<ItemGroup>
 		<ZipFiles Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll"/>
 	</ItemGroup>
+
+	<ItemGroup>
+	<MergeAssemblies Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll" 
+			Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.Core.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\NHibernate.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\log4net.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\System.Data.Sqlite.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Iesi.Collections.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;
+			$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProxy.dll;"
+		/>
+	</ItemGroup>
+	 <Target Name="merge" >
+                <ILMerge InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies)" 
+                    ExcludeFile="$(excludeFile)"
+                    OutputFile="Rhino.Commons.dll" 
+                    LogFile="$(logFile)"
+                    DebugInfo="true" 
+                    XmlDocumentation="true" 
+                    KeyFile="$(MSBuildProjectDirectory)\..\ayende-open-source.snk" 
+                    DelaySign="true" />
+             </Target>
 </Project>
