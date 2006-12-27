@@ -16,8 +16,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Rhino")]
 [assembly: AssemblyCopyright("Oren Eini (c) 2006")]
 [assembly: AssemblyDescription("Rhino.Commons")]
-[assembly: AssemblyInformationalVersion("1.4.409")]
+[assembly: AssemblyInformationalVersion("1.4.411")]
 [assembly: AssemblyTitle("Rhino.Commons")]
-[assembly: AssemblyVersion("1.4.409")]
+[assembly: AssemblyVersion("1.4.411")]
 
 

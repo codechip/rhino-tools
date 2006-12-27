@@ -16,17 +16,14 @@ namespace Rhino.Commons
 		private static LinkedList<WorkItem> _callbacks = new LinkedList<WorkItem>();
 
 		/// <summary>
-		/// Guranteed to be called before a work item starts executing, gets the context of the work
-		/// item that is running.
+		/// Guranteed to be called before a work item starts executing
 		/// </summary>
-		public static Proc<object> WorkStarted = delegate { };
+		public static Proc<WorkItem> WorkStarted = delegate { };
 
 		/// <summary>
 		/// Guranteed to be called after a work item has finished executing (but not if the thread was forcefully aborted).
-		/// The first parameter is the item context, the second is the exception raised, if any.
-		/// Note that the exception is _not_ handled, and may kill the process if not handled appropriately!
 		/// </summary>
-		public static Proc<object, Exception> WorkFinished = delegate { };
+        public static Proc<WorkItem> WorkFinished = delegate { };
 
 		/// <summary>
 		/// Any modification to this variable should be done under the _callbacks lock!
@@ -83,15 +80,13 @@ namespace Rhino.Commons
 		private static void ExecuteWorkItem(object state)
 		{
 			WorkItem item = (WorkItem) state;
-			Exception exception = null;
-			WorkStarted(item.Context);
+			WorkStarted(item);
 			try
 			{
 				item.Callback(item.State);
 			}
 			catch (Exception e)
 			{
-				exception = e;
 				logger.Fatal(string.Format("An exception was raised when executing work item [{0}.{1}]. It will probably kill the application", 
 					item.Callback.Method.DeclaringType, 
 					item.Callback.Method), exception);
@@ -99,7 +94,7 @@ namespace Rhino.Commons
 			}
 			finally
 			{
-				WorkFinished(item.Context, exception);
+				WorkFinished(item);
 			}
 		}
 
