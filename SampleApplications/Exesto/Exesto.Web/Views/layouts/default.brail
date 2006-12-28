@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.1 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xml:lang="en"
+	  lang="en">
+	<head>
+		<title>Exesto</title>
+		<link rel="stylesheet"
+			  type="text/css"
+			  href="/style.css"
+			  media="screen, print" />
+	</head>
+	<body>
+
+		<div class="left">
+
+			<div class="header">
+				<h2>
+					<span>
+						Logged on as: ${context.CurrentUser.Identity.Name}
+					</span>
+				</h2>
+				<h1>Exesto: Sample App</h1>
+			</div>
+
+			<div class="content">
+				${ChildOutput}
+			</div>
+
+			<div class="nav">
+
+				<div class="logo">
+					<span></span>
+				</div>
+
+				<!--
+			 <ul>
+					<li>
+						<a href="index.html">consequat molestie</a>
+					</li>
+					<li>
+						<a href="index.html">sem justo</a>
+					</li>
+					<li>
+						<a href="index.html">semper</a>
+					</li>
+					<li>
+						<a href="index.html">sociis natoque</a>
+					</li>
+					<li>
+						<a href="index.html">convallis</a>
+					</li>
+				</ul>
+					 -->
+
+			</div>
+
+			<div class="right">
+
+				<div class="round">
+					<div class="roundtl">
+						<span></span>
+					</div>
+					<div class="roundtr">
+						<span></span>
+					</div>
+					<div class="clearer">
+						<span></span>
+					</div>
+				</div>
+
+				<div class="subnav">
+
+					<h1>Main</h1>
+					<ul>
+						<li>
+							<a href="/home/index.rails">Home</a>
+						</li>
+						<li>
+							<a href="/faq/index.rails">FAQ</a>
+						</li>
+						<li>
+							<a href="/home/about.rails">About US</a>
+						</li>
+					</ul>
+
+					<h1>Crud Operations (scaffolding)</h1>
+					<ul>
+						<li>
+							<a href="/subject/list.rails">Subject</a>
+						</li>
+						<li>
+							<a href="/question/list.rails">Question</a>
+						</li>
+					</ul>
+
+					<h1>Construction Operations</h1>
+					<ul>
+						<li>
+							<a href="/construct/database.rails">Construct Database</a>
+						</li>
+					</ul>
+				</div>
+
+
+				<div class="round">
+					<div class="roundbl">
+						<span></span>
+					</div>
+					<div class="roundbr">
+						<span></span>
+					</div>
+					<span class="clearer"></span>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="footer">&copy; 2006 <a href="http://www.ayende.com/">Ayende Rahien</a>. Valid <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> &amp; <a href="http://validator.w3.org/check?uri=referer">XHTML</a>. Initial template design by <a href="http://arcsin.se">Arcsin</a>  <br />
+			Courtesy <a href="http://www.openwebdesign.org">Open Web Design</a>.
+		</div>
+
+	</body>
+
+</html>

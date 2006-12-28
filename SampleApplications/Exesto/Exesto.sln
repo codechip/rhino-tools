@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exesto.Web", "Exesto.Web\Exesto.Web.csproj", "{19A4A17C-A8FA-4AD6-A7C1-8AA54949E5F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exesto.Model", "Exesto.Model\Exesto.Model.csproj", "{BB3470AC-7185-4B6A-9DD8-32880F43E23B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Components", "Rhino.Components\Rhino.Components.csproj", "{5007570D-05F9-4B84-9797-164B55375095}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19A4A17C-A8FA-4AD6-A7C1-8AA54949E5F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A4A17C-A8FA-4AD6-A7C1-8AA54949E5F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A4A17C-A8FA-4AD6-A7C1-8AA54949E5F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A4A17C-A8FA-4AD6-A7C1-8AA54949E5F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3470AC-7185-4B6A-9DD8-32880F43E23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3470AC-7185-4B6A-9DD8-32880F43E23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3470AC-7185-4B6A-9DD8-32880F43E23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3470AC-7185-4B6A-9DD8-32880F43E23B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5007570D-05F9-4B84-9797-164B55375095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5007570D-05F9-4B84-9797-164B55375095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5007570D-05F9-4B84-9797-164B55375095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5007570D-05F9-4B84-9797-164B55375095}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

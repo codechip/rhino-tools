@@ -1,0 +1,23 @@
+<h2>New Question:</h2>
+${HtmlHelper.Form('create.rails')}
+${HtmlHelper.FieldSet(' Why? What? When? ')}
+	<p>
+		${HtmlHelper.LabelFor('Question.Title','Title')} 
+		${HtmlHelper.InputText('Question.Title','',50,50)}
+	</p>
+	<p>
+		${HtmlHelper.LabelFor('Question.Content','Content')} 
+		${HtmlHelper.TextArea('Question.Content',75,5,'')} 
+	</p>
+	<p>
+		${HtmlHelper.LabelFor('Question.Subject.Id','Subject')} 
+		${HtmlHelper.Select('Question.Subject.Id')}
+			${HtmlHelper.CreateOption('Empty',0)}
+			${HtmlHelper.CreateOptions(subjects, 'Name','Id' )}
+		${HtmlHelper.EndSelect()}
+	</p>
+<p>
+	${HtmlHelper.SubmitButton('Send Question', {'id': 'submit'} )}
+</p>
+${HtmlHelper.EndFieldSet()}
+${HtmlHelper.EndForm()}

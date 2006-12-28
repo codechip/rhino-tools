@@ -1,0 +1,5 @@
+<h1>Welcome to Exesto</h1>
+<div class="descr">${System.DateTime.Today.ToLongDateString()}</div>
+<p>
+				   This is a blurb that should say something about how great this site is...
+</p>
