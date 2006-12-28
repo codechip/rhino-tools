@@ -67,12 +67,12 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public object QuackGet(string name)
+		public object QuackGet(string name, object[] parameters)
 		{
 			return _parameters[name];
 		}
 
-		public object QuackSet(string name, object value)
+		public object QuackSet(string name, object[] parameters, object value)
 		{
 			if (value is ComponentReference)
 			{
