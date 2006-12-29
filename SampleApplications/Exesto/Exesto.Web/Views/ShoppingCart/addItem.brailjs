@@ -1,0 +1,8 @@
+page.InsertHtml('bottom', 'products',"<li>${produdct}</li>")
+if freeShipping:
+	page.Show('freeShipping')
+	
+	if not alreadyHadfreeShipping:	
+		page.VisualEffect('Highlight','freeShipping')
+	end
+end

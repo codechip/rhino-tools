@@ -1,0 +1,4 @@
+page.ReplaceHtml('products','')
+if alreadyHadfreeShipping:
+		page.VisualEffect('Squish','freeShipping')
+end

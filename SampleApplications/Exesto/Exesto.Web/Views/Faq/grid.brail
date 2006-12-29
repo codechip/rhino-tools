@@ -1,4 +1,4 @@
-	<?brail 
+<?brail 
 component GridComponent, {'source':subjects}:
 	section header:
 ?>

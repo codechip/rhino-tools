@@ -75,6 +75,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ShoppingCartController.cs" />
     <Content Include="Global.asax" />
     <Content Include="Media\bg.gif" />
     <Content Include="Media\bgbottom.gif" />
@@ -123,6 +124,9 @@
     <None Include="Views\Home\about.brail" />
     <None Include="Views\Home\index.brail" />
     <None Include="Views\layouts\default.brail" />
+    <None Include="Views\ShoppingCart\addItem.brailjs" />
+    <None Include="Views\ShoppingCart\ClearAllItems.brailjs" />
+    <None Include="Views\ShoppingCart\index.brail" />
     <None Include="Windsor.boo" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

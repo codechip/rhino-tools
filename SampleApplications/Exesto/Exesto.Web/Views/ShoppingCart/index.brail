@@ -1,0 +1,21 @@
+<?brail import Boo.Lang.Builtins ?>
+<h2>Demo shopping cart:</h2>
+<ul>
+	<?brail for i in range(products.Length):?>
+		<li>
+			 ${ajax.LinkToRemote(products[i],'addItem.rails?id='+i,{})}
+		</li>
+	<?brail end ?>
+</ul>
+<div id="freeShipping" style="display: none;">
+	<b>You are elegible for free shipping!</b>
+</div>
+<h2>Purchased Products:</h2>
+<p>
+	${ajax.LinkToRemote('Clear','clearAllItems.rails',{})}
+</p>
+<ul id="products">
+	<?brail for product in cart: ?>
+		<li>${product}</li>
+	<?brail end ?>
+</ul>

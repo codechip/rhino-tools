@@ -89,7 +89,7 @@ namespace Rhino.Commons
 			{
 				logger.Fatal(string.Format("An exception was raised when executing work item [{0}.{1}]. It will probably kill the application", 
 					item.Callback.Method.DeclaringType, 
-					item.Callback.Method), exception);
+					item.Callback.Method), e);
 				throw;
 			}
 			finally

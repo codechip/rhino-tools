@@ -86,6 +86,9 @@
 						<li>
 							<a href="/home/about.rails">About US</a>
 						</li>
+						<li>
+							<a href="/shoppingCart/index.rails">Shopping Cart</a>
+						</li>
 					</ul>
 
 					<h3>Crud Operations (scaffolding)</h3>
