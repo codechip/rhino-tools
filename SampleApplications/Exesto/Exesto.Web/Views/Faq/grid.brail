@@ -1,4 +1,3 @@
-<div id='paginatedGrid'>
 	<?brail 
 component GridComponent, {'source':subjects}:
 	section header:
@@ -34,4 +33,3 @@ component GridComponent, {'source':subjects}:
 	end
 end
  ?>
-</div>

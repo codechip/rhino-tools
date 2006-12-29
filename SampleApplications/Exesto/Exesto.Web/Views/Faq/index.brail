@@ -12,4 +12,6 @@
 	}
 </script>
 <h2>Subjects for questions:</h2>
-<?brail OutputSubView('grid') ?>
+<div id='paginatedGrid'>
+	<?brail OutputSubView('grid') ?>
+</div>
