@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
@@ -10,13 +11,16 @@ namespace Exesto.Web.Controllers
 	[Layout("default")]
 	public class FaqController : SmartDispatcherController
 	{
-		public void Index()
+public void Index(bool isAjax)
+{
+	PropertyBag["subjects"] = PaginationHelper.CreateCachedPagination(
+		this, Action, 15,delegate
 		{
-				
-		
-			PropertyBag["subjects"] = PaginationHelper.CreatePagination(this, 
-				Repository<Subject>.FindAll(),2);
-		}
+			return new List<Subject>(Repository<Subject>.FindAll()).ToArray();
+		});
+	if(isAjax)
+		RenderView("index.brailjs");
+}
 
 		public void ShowQuestions(int id)
 		{
@@ -25,7 +29,7 @@ namespace Exesto.Web.Controllers
 				Where.Question.Subject == subject);
 			PropertyBag["subject"] = subject;
 			PropertyBag["questions"] = PaginationHelper.CreatePagination(this,
-			                                                             questions, 2);
+			                                                             questions, 15);
 		}
 	}
 }

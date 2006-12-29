@@ -14,8 +14,7 @@
 
 using System;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
+using System.IO;
 using System.Text;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
@@ -29,7 +28,8 @@ namespace Rhino.Components
                 "header", "footer",
                 "pagination", "empty",
                 "item", "alternateItem",
-                "tablestart", "tableend"
+                "tablestart", "tableend",
+				"link"
             };
 
 		public override bool SupportsSection(string name)
@@ -39,31 +39,36 @@ namespace Rhino.Components
 
 		public override void Render()
 		{
-			IPaginatedPage source = (IPaginatedPage)ComponentParams["source"];
+			IEnumerable source = ComponentParams["source"] as IEnumerable;
+			if (source == null)
+			{
+				throw new ViewComponentException(
+					"The grid requires a view component parameter named 'source' which should contain 'IEnumerable' instance");
+			}
 
 			ShowStartTable();
 			ShowHeader(source);
 
-			if (source != null && source.TotalItems > 0)
-			{
-				ShowRows(source);
-			}
-			else
-			{
-				ShowEmpty();
-			}
+			ShowRows(source);
 
 			ShowFooter();
 			ShowEndTable();
-			ShowPagination(source);
+
+			IPaginatedPage page = source as IPaginatedPage;
+			if (page != null)
+			{
+				ShowPagination(page);
+			}
 		}
 
-		protected virtual void ShowRows(IPaginatedPage source)
+		protected virtual void ShowRows(IEnumerable source)
 		{
 			bool hasAlternate = Context.HasSection("alternateItem");
 			bool isAlternate = false;
+			bool hasItems = false;
 			foreach (object item in source)
 			{
+				hasItems = true;
 				PropertyBag["item"] = item;
 
 				if (hasAlternate && isAlternate)
@@ -73,6 +78,8 @@ namespace Rhino.Components
 
 				isAlternate = !isAlternate;
 			}
+			if (!hasItems)
+				ShowEmpty();
 		}
 
 		private void ShowEmpty()
@@ -83,11 +90,11 @@ namespace Rhino.Components
 			}
 			else
 			{
-				RenderText("Grid has not data");
+				RenderText("Grid has no data");
 			}
 		}
 
-		private void ShowPagination(IPaginatedPage source)
+		private void ShowPagination(IPaginatedPage page)
 		{
 			if (Context.HasSection("pagination"))
 			{
@@ -95,37 +102,51 @@ namespace Rhino.Components
 				return;
 			}
 			PaginationHelper paginationHelper = (PaginationHelper)Context.ContextVars["PaginationHelper"];
-			StringBuilder output = new StringBuilder();
-			output.AppendFormat(@"<div class='pagination'><table><tr><td>
-Showing {0} - {1} of {2}
-</td><td align='right'>",
-				source.FirstItem, source.LastItem, source.TotalItems);
-			if (source.HasFirst)
-				output.Append(paginationHelper.CreatePageLink(1, "first", null, QueryStringAsDictionary()));
+			StringWriter output = new StringWriter();
+			output.Write(@"<div id='pagination'><span id='paginationLeft'>
+Showing {0} - {1} of {2} 
+</span><span id='paginationRight'>",
+				page.FirstItem, page.LastItem, page.TotalItems);
+			if (page.HasFirst)
+				CreateLink(output, paginationHelper, 1, "first");
 			else
-				output.Append("first");
+				output.Write("first");
 
-			output.Append(" | ");
-			if (source.HasPrevious)
-				output.Append(paginationHelper.CreatePageLink(source.PreviousIndex, "prev", null, QueryStringAsDictionary()));
+			output.Write(" | ");
+			if (page.HasPrevious)
+				CreateLink(output, paginationHelper, page.PreviousIndex, "prev");
 			else
-				output.Append("prev");
+				output.Write("prev");
 
-			output.Append(" | ");
-			if (source.HasNext)
-				output.Append(paginationHelper.CreatePageLink(source.NextIndex, "next", null, QueryStringAsDictionary()));
+			output.Write(" | ");
+			if (page.HasNext)
+				CreateLink(output, paginationHelper, page.NextIndex, "next");
 			else
-				output.Append("next");
+				output.Write("next");
 
-			output.Append(" | ");
-			if (source.HasLast)
-				output.Append(paginationHelper.CreatePageLink(source.LastIndex, "last", null, QueryStringAsDictionary()));
+			output.Write(" | ");
+			if (page.HasLast)
+				CreateLink(output, paginationHelper, page.LastIndex, "last");
 			else
-				output.Append("last");
+				output.Write("last");
 
-			output.Append(@"</td></tr></table></div>");
+			output.Write(@"</span></div>");
 
 			RenderText(output.ToString());
+		}
+
+		private void CreateLink(TextWriter output, PaginationHelper paginationHelper, int pageIndex, string title)
+		{
+			if(Context.HasSection("link"))
+			{
+				PropertyBag["pageIndex"] = pageIndex;
+				PropertyBag["title"] = title;
+				Context.RenderSection("link", output);
+			}
+			else
+			{
+				output.Write(paginationHelper.CreatePageLink(pageIndex, title, null, QueryStringAsDictionary()));
+			}
 		}
 
 		private IDictionary QueryStringAsDictionary()
@@ -133,7 +154,7 @@ Showing {0} - {1} of {2}
 			Hashtable table = new Hashtable();
 			foreach (string key in Request.QueryString)
 			{
-				if(key==null)
+				if (key == null)
 					continue;
 				table[key] = Request.QueryString[key];
 			}
@@ -172,7 +193,7 @@ Showing {0} - {1} of {2}
 			}
 		}
 
-		protected virtual void ShowHeader(IPaginatedPage source)
+		protected virtual void ShowHeader(IEnumerable source)
 		{
 			if (Context.HasSection("header") == false)
 			{

@@ -1,30 +1,15 @@
+<script type='text/javascript'>
+	function error(e)
+	{
+		alert(e);
+	}
+	function paging(index)
+    {
+		var url = '/faq/index.rails';
+	    var pars = 'page=' + index +'&isAjax=true';		
+	    new Ajax.Request(url,{method: 'get', evalScripts: true, parameters: pars, onException: error});        
+    
+	}
+</script>
 <h2>Subjects for questions:</h2>
-<?brail 
-component GridComponent, {"source":subjects}:
-	section header:
-?>
-<th id="header">Id</th>
-<th id="header">Name</th>
-<th id="header">Browse</th>
-<?brail
-	end
-	section item:
-?>
-	<tr id="item">
-		<td>${item.Id}</td>
-		<td>${item.Name}</td>
-		<td>${ HtmlHelper.LinkTo('Browse','faq','showQuestions', item.Id) }</td>
-	</tr>
-<?brail
-	end
-	section alternateItem:
-?>
-<tr id="alternateItem">
-	<td>item.Id</td>
-	<td>item.Name</td>
-	<td>${ HtmlHelper.LinkTo('Browse','faq','subjects', item.Id) }</td>
-</tr>
-<?brail
-	end
-end
- ?>
+<?brail OutputSubView('grid') ?>

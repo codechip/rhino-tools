@@ -45,10 +45,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.MonoRail.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.MonoRail.Views.Brail, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Castle.MonoRail.Views.Brail.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Services.Logging.Log4netIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
@@ -104,6 +100,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Castle\MonoRail\Castle.MonoRail.Views.Brail\Castle.MonoRail.Views.Brail-vs2005.csproj">
+      <Project>{CC39D6D0-2467-4DD5-A53E-92D580B60038}</Project>
+      <Name>Castle.MonoRail.Views.Brail-vs2005</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Exesto.Model\Exesto.Model.csproj">
       <Project>{BB3470AC-7185-4B6A-9DD8-32880F43E23B}</Project>
       <Name>Exesto.Model</Name>
@@ -114,6 +114,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Construct\dummyData.brail" />
+    <None Include="Views\Faq\grid.brail" />
+    <None Include="Views\Faq\index.brailjs" />
     <None Include="Views\Question\new.brail" />
     <None Include="Views\Faq\index.brail" />
     <None Include="Views\Faq\showQuestions.brail" />

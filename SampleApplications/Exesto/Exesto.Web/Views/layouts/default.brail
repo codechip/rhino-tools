@@ -11,6 +11,8 @@
 			  type="text/css"
 			  href="/style.css"
 			  media="screen, print" />
+		${Ajax.InstallScripts()}
+		${Scriptaculous.InstallScripts()}
 	</head>
 	<body>
 
@@ -73,7 +75,7 @@
 
 				<div class="subnav">
 
-					<h1>Main</h1>
+					<h3>Main</h3>
 					<ul>
 						<li>
 							<a href="/home/index.rails">Home</a>
@@ -86,7 +88,7 @@
 						</li>
 					</ul>
 
-					<h1>Crud Operations (scaffolding)</h1>
+					<h3>Crud Operations (scaffolding)</h3>
 					<ul>
 						<li>
 							<a href="/subject/list.rails">Subject</a>
@@ -96,10 +98,13 @@
 						</li>
 					</ul>
 
-					<h1>Construction Operations</h1>
+					<h3>Construction Operations</h3>
 					<ul>
 						<li>
 							<a href="/construct/database.rails">Construct Database</a>
+						</li>
+						<li>
+							<a href="/construct/dummyData.rails">Construct Dummy Data</a>
 						</li>
 					</ul>
 				</div>

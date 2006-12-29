@@ -10,7 +10,7 @@ a {
 body {
 	background: #FFF url(/media/bg.gif) repeat-x;
 	color: #444;
-	font: normal 62.5% "Lucida Sans Unicode",Verdana,sans-serif;
+	font: normal "Lucida Sans Unicode",Verdana,sans-serif;
 	padding-top: 40px;
 }
 p,code,ul {
@@ -21,7 +21,7 @@ li {
 	list-style: none;
 }
 h1 {
-	font-size: 1.4em;
+	font-size: 2em;
 }
 code {
 	background: url(/media/bgcode.gif);
@@ -44,8 +44,13 @@ blockquote {
 	margin-bottom: 12px;
 	padding: 12px;
 }
-h1,h2,h3,h4 {
-	font: normal 1.2em "Trebuchet MS",sans-serif;
+h2 {
+	font: normal 1em "Trebuchet MS",sans-serif;
+	color: #F06;
+}
+
+h3 {
+	font: normal .8em "Trebuchet MS",sans-serif;
 	color: #F06;
 }
 /* misc */
@@ -62,7 +67,7 @@ h1,h2,h3,h4 {
 }
 .header h1 {
 	color: #222;
-	font: normal 4em sans-serif;
+	font: normal 3em sans-serif;
 	margin-top: 40px;
 	text-align: center;
 }
@@ -220,7 +225,6 @@ h1,h2,h3,h4 {
 
 #grid #header
 {
-	font: bold 1.5em Verdana,sans-serif;
 	border: dashed 1px #ccc;	
 }
 
@@ -262,4 +266,16 @@ fieldset textarea
 {
 	float: right;
 	margin: 0 1em 0 0;
+}
+#pagination
+{
+}
+#paginationLeft
+{
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#paginationRight
+{
+	padding-left: 15px;
 }

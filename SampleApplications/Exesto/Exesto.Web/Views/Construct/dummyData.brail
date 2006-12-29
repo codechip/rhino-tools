@@ -1,0 +1,16 @@
+<h2>Created:</h2>
+<p>
+	Duration: ${duration}
+</p>
+<ul>
+	<?brail for subject in subjects: ?>
+	<li>
+		   ${subject.Name}
+			<ul>
+				<?brail for question in subject.Questions: ?>   
+					<li>${question.Title}</li>
+				<?brail end ?>
+			</ul>
+	</li>
+	<?brail end ?>
+</ul>

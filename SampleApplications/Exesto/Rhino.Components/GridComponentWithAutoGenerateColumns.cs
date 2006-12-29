@@ -8,7 +8,7 @@ namespace Rhino.Components
 	{
 		private PropertyInfo[] properties;
 
-		protected override void ShowRows(IPaginatedPage source)
+		protected override void ShowRows(IEnumerable source)
 		{
 			if (properties == null)//there are no rows, if this is the case
 				return;
@@ -31,24 +31,21 @@ namespace Rhino.Components
 			}
 		}
 
-		protected override void ShowHeader(IPaginatedPage source)
+		protected override void ShowHeader(IEnumerable source)
 		{
-			if (source != null && source.TotalItems > 0)
+			IEnumerator enumerator = source.GetEnumerator();
+			bool hasItem = enumerator.MoveNext();
+			if(hasItem==false)
 			{
-				IEnumerator enumerator = source.GetEnumerator();
-				enumerator.MoveNext();
-				object first = enumerator.Current;
-				properties = first.GetType().GetProperties();
-				foreach (PropertyInfo property in this.properties)
-				{
-					RenderText("<th id='header'>");
-					RenderText(property.Name);
-					RenderText("</th>");
-				}
+				return;
 			}
-			else
+			object first = enumerator.Current;
+			properties = first.GetType().GetProperties();
+			foreach (PropertyInfo property in this.properties)
 			{
-				RenderText("<th>empty grid</th>");
+				RenderText("<th id='header'>");
+				RenderText(property.Name);
+				RenderText("</th>");
 			}
 		}
 	}
