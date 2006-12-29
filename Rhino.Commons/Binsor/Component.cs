@@ -9,6 +9,7 @@ namespace Rhino.Commons.Binsor
 {
 	public class Component : IQuackFu
 	{
+		private readonly IDictionary _attributes = new Hashtable();
 		private readonly IDictionary _parameters = new Hashtable();
 		private readonly Dictionary<string, string> _references = new Dictionary<string, string>();
 		private readonly string _name;
@@ -69,6 +70,10 @@ namespace Rhino.Commons.Binsor
 
 		public object QuackGet(string name, object[] parameters)
 		{
+			if(parameters!=null && parameters.Length>0)
+			{
+				return _attributes[parameters[0]];
+			}
 			return _parameters[name];
 		}
 
@@ -78,6 +83,11 @@ namespace Rhino.Commons.Binsor
 			{
 				string referenceName = ((ComponentReference) value).Name;
 				_references.Add(name, referenceName);
+				return null;
+			}
+			if(parameters!=null && parameters.Length>0)
+			{
+				_attributes[parameters[0]] = value;
 				return null;
 			}
 			return _parameters[name] = value;
