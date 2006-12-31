@@ -3,12 +3,13 @@
 	<Import Project="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\MSBuild.Community.Tasks.Targets"/>
 	<PropertyGroup Condition="!Exists('$(Configuration)')">
 		<Configuration>Debug</Configuration>
+		<OutputDir>$(MSBuildProjectDirectory)</OutputDir>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
 		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
 	</PropertyGroup>
 
 	<Target Name="BuildAll"
-			DependsOnTargets="Clean;BeforeCompile;Compile;AfterCompile;UnitTest;BeforeZip;Zip;Upload;" />
+			DependsOnTargets="Clean;BeforeCompile;Compile;BeforeTest;UnitTest;BeforeZip;Zip;Upload;" />
 
 	<Target Name="BeforeCompile"/>
 	<Target Name="AfterCompile"/>
@@ -55,7 +56,7 @@
 			<Output TaskParameter="Revision"
 					PropertyName="Revision" />
 		</SvnVersion>
-		<CreateProperty value="$(ProjectName)-@$(Revision)-$(Configuration)-$(buildDate).zip">
+		<CreateProperty value="$(OutputDir)\$(ProjectName)-@$(Revision)-$(Configuration)-$(buildDate).zip">
 			<Output TaskParameter="Value"
 					PropertyName="ZipFileName" />
 		</CreateProperty>

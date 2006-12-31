@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTarget="Build"
+		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="Build">
+		<MsBuild Projects="NHibernate.Generics\Default.build;
+		NHibernate.Query.Analyzer\default.build;
+		NHibernate.Query.Generator\default.build;
+		rhino-commons\default.build;
+		"/>
+		<!--
+		Rhino mocks is broken because of the move to DP2
+		rhino-mocks\default.build; -->
+	</Target>
+</Project>
