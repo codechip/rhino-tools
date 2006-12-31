@@ -1,0 +1,21 @@
+﻿<Application x:Class="Browser.App" 
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 StartupUri="BlogViewer.xaml"
+			 xmlns:ayende="clr-namespace:Browser">
+	<Application.Resources>
+		<Style x:Name="BigText" TargetType="TextBlock" x:Key="BigText">
+			<Setter Property="FontFamily"
+					Value="Trebuchet MS"/>
+			<Setter Property ="FontWeight"
+					Value="Bold"/>
+			<Setter Property="FontSize"
+					Value="18"/>
+			<Setter Property="Padding"
+					Value="5"/>
+			<Setter Property="Foreground"
+					Value="#993300"/>
+		</Style>
+		<ayende:StringConverter x:Key="formatConverter" />
+	</Application.Resources>
+</Application>

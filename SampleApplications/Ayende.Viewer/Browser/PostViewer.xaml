@@ -1,0 +1,78 @@
+﻿<Page x:Class="Browser.PostViewer"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  Title="PostViewer"
+	  xmlns:ayende="clr-namespace:Browser">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<DockPanel Name="Header">
+			<Canvas DockPanel.Dock="Right"
+					Width="300"
+					Margin="15"
+					Height="92">
+				<Image Source="logo.jpg"
+					   HorizontalAlignment="Right" />
+			</Canvas>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition   />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock VerticalAlignment="Center"
+						   Grid.Row="0"
+						   Grid.Column="0"
+						   Style="{StaticResource BigText}">
+					Post:
+					<TextBlock Text="{Binding Path=Title}"/>
+				</TextBlock>
+				<TextBlock VerticalAlignment="Center"
+						   Grid.Row="1"
+						   Style="{StaticResource BigText}">
+						Date:
+					<TextBlock Text="{Binding Path=Modified, Converter={StaticResource formatConverter},  ConverterParameter='{}{0:dd-MM-yyyy HH:mm}' }"/>
+				</TextBlock>
+				<StackPanel Grid.Row="2"
+							Name="Categories"
+							Orientation="Horizontal">
+					<TextBlock Style="{StaticResource BigText}">Categories:</TextBlock>
+				</StackPanel>
+
+			</Grid>
+		</DockPanel>
+		<Frame Content="Frame"
+			   Grid.Row="1"
+			   Name="postFrame"/>
+		<Grid Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBlock Name="Prev"
+					   Text=" &lt;&lt; Previous "
+					   Grid.Column="0"
+					   MouseDown="Prev_MouseDown"
+					   Style="{StaticResource BigText}" />
+			<TextBlock Text=" Next &gt;&gt; "
+					   Name="Next"
+					   Grid.Column="2"
+					   MouseDown="Next_MouseDown"
+					   Style="{StaticResource BigText}" />
+		</Grid>
+	</Grid>
+</Page>
