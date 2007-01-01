@@ -16,18 +16,19 @@ namespace Browser
 	/// </summary>
 	public partial class PostViewer : Page
 	{
-		private readonly ICollectionView collectionView;
 		private readonly IList<Post> posts;
 		private readonly int position;
-		private readonly Post post;
 
 		public PostViewer(IList<Post> posts, int position, Post post)
 		{
+			Title = "Post: " + post.Title;
 			this.posts = posts;
 			this.position = position;
-			this.post = post;
 			InitializeComponent();
 			DataContext = post;
+
+			Categories.DataContext = post.Categories;
+
 			//TODO: ?? apperantely there is no good way to load the data into a Frame except via Uri
 			string template = @"
 <html>
@@ -40,27 +41,7 @@ namespace Browser
 
 			postFrame.Source = new Uri(string.Format("file:///{0}/{1}.html", Environment.CurrentDirectory, post.PostId));
 
-			//TODO: can't figure out how to do horizontal layout for the categories, doing it in code:
-			IAddChild c = Categories;//Categories is a Stack Panel with Horizontal Orientation
-			foreach (Category category in post.Categories)
-			{
-				TextBlock block = new TextBlock();
-				block.Cursor = Cursors.Hand;
-				Category checkTheSpecWhyThisIsNeeded = category;
-				block.MouseDown += delegate
-				{
-					NavigationService.Navigate(new CategoryViewer(checkTheSpecWhyThisIsNeeded));
-				};
-				block.Text = category.Name;
-				block.Style = (Style)FindResource("BigText");
-				c.AddChild(block);
-				TextBlock seperator = new TextBlock();
-				seperator.Text = "//";
-				seperator.Style = (Style)FindResource("BigText");
-				seperator.Foreground = Brushes.Brown;
-				c.AddChild(seperator);
-			}
-
+			Categories.ItemsSource = post.Categories;
 			//TODO: Maybe able to do this with triggers?
 			// yucky code, but I don't know how to get away with it
 			if (position == 0)
@@ -86,6 +67,12 @@ namespace Browser
 			if (position + 1 == posts.Count)
 				return;
 			NavigationService.Navigate(new PostViewer(posts, position + 1, posts[position + 1]));
+		}
+
+		public void Category_Browse(object sender, EventArgs e)
+		{
+			TextBlock block = (TextBlock) sender;
+			NavigationService.Navigate(new CategoryViewer(Category.Find(block.Tag)));
 		}
 	}
 }

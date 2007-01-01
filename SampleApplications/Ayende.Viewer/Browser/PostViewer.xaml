@@ -44,9 +44,28 @@
 					<TextBlock Text="{Binding Path=Modified, Converter={StaticResource formatConverter},  ConverterParameter='{}{0:dd-MM-yyyy HH:mm}' }"/>
 				</TextBlock>
 				<StackPanel Grid.Row="2"
-							Name="Categories"
 							Orientation="Horizontal">
 					<TextBlock Style="{StaticResource BigText}">Categories:</TextBlock>
+					<ItemsControl Name="Categories"
+								  ItemsSource="{Binding}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Horizontal"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<WrapPanel>
+									<TextBlock Text="{Binding Path=Name}" Tag="{Binding Path=CategoryId}" 
+											   MouseDown="Category_Browse" 
+											   Style="{StaticResource BigText}"/>
+									<TextBlock Text="//"
+											   Foreground="Brown"
+											   Style="{StaticResource BigText}"/>
+								</WrapPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
 				</StackPanel>
 
 			</Grid>
