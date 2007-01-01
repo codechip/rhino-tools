@@ -21,7 +21,7 @@ namespace Browser
 
 		public PostViewer(IList<Post> posts, int position, Post post)
 		{
-			Title = "Post: " + post.Title;
+			Title = WindowTitle = "Post: " + post.Title;
 			this.posts = posts;
 			this.position = position;
 			InitializeComponent();
@@ -42,30 +42,24 @@ namespace Browser
 			postFrame.Source = new Uri(string.Format("file:///{0}/{1}.html", Environment.CurrentDirectory, post.PostId));
 
 			Categories.ItemsSource = post.Categories;
-			//TODO: Maybe able to do this with triggers?
-			// yucky code, but I don't know how to get away with it
 			if (position == 0)
 			{
 				Prev.Opacity = 0.25d;
+				Prev.IsEnabled = false;
 			}
 			if (position + 1 == posts.Count)
 			{
 				Next.Opacity = 0.25d;
+				Next .IsEnabled = false;
 			}
 		}
 
-		public void Prev_MouseDown(object sender, EventArgs e)
+		public void Prev_Click(object sender, EventArgs e)
 		{
-			//TODO: couldn't find a way to disable MouseDown, so checking it here
-			if (position == 0)
-				return;
 			NavigationService.Navigate(new PostViewer(posts, position - 1, posts[position - 1]));
 		}
-		public void Next_MouseDown(object sender, EventArgs e)
+		public void Next_Click(object sender, EventArgs e)
 		{
-			//TODO: couldn't find a way to disable MouseDown, so checking it here
-			if (position + 1 == posts.Count)
-				return;
 			NavigationService.Navigate(new PostViewer(posts, position + 1, posts[position + 1]));
 		}
 

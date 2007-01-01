@@ -1,8 +1,8 @@
 ﻿<Page x:Class="Browser.BlogViewer"
 	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  Title="Ayende Viewer: Home"
-    >
+	  WindowTitle="Ayende Viewer: Home"
+	  Title="Ayende Viewer: Home">
 	<Grid Margin="10">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />

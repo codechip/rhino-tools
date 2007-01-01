@@ -1,7 +1,6 @@
 ﻿<Page x:Class="Browser.PostViewer"
 	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  Title="PostViewer"
 	  xmlns:ayende="clr-namespace:Browser">
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -56,8 +55,9 @@
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<WrapPanel>
-									<TextBlock Text="{Binding Path=Name}" Tag="{Binding Path=CategoryId}" 
-											   MouseDown="Category_Browse" 
+									<TextBlock Text="{Binding Path=Name}"
+											   Tag="{Binding Path=CategoryId}"
+											   MouseDown="Category_Browse"
 											   Style="{StaticResource BigText}"/>
 									<TextBlock Text="//"
 											   Foreground="Brown"
@@ -82,16 +82,17 @@
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
-			<TextBlock Name="Prev"
-					   Text=" &lt;&lt; Previous "
-					   Grid.Column="0"
-					   MouseDown="Prev_MouseDown"
-					   Style="{StaticResource BigText}" />
-			<TextBlock Text=" Next &gt;&gt; "
-					   Name="Next"
-					   Grid.Column="2"
-					   MouseDown="Next_MouseDown"
-					   Style="{StaticResource BigText}" />
+			<Button  Name="Prev"
+					 Grid.Column="0"
+					 Click="Prev_Click">
+				&lt;&lt; _Previous
+			</Button>
+			<Button
+				Name="Next"
+				Grid.Column="2"
+				Click="Next_Click" >
+				_Next &gt;&gt;
+			</Button>
 		</Grid>
 	</Grid>
 </Page>

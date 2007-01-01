@@ -19,7 +19,7 @@ namespace Browser
 
 		public CategoryViewer(Category category)
 		{
-			Title = "Category: " + category.Name;
+			Title = WindowTitle = "Category: " + category.Name;
 			this.category = category;
 			InitializeComponent();
 			Header.DataContext = category;
