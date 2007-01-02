@@ -102,7 +102,7 @@ namespace NHibernate.Query.Generator
 				SemanticVerifierVisitor semanticVisitor = new SemanticVerifierVisitor(activeRecordModelBuilder.Models);
 				semanticVisitor.VisitNode(model);
 				xmlVisitor.CreateXml(model);
-				string genFile = Path.Combine(outputDir, model.Type.Name + "." + targetExtention);
+				string genFile = Path.Combine(outputDir, "Where." + model.Type.Name + "." + targetExtention);
 				GenerateSingleFile(new StringReader(xmlVisitor.Xml), genFile);
 			}
 		}
