@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.IO;
 using System.Xml;
 using NHibernate;
@@ -13,22 +14,26 @@ namespace Rhino.Commons
 		public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 		private static ISessionFactory sessionFactory;
 
-		public IUnitOfWorkImplementor Create(IUnitOfWorkImplementor previous)
+		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection,IUnitOfWorkImplementor previous)
 		{
-			ISession session = CreateSession();
+			ISession session = CreateSession(maybeUserProvidedConnection);
 			session.FlushMode = FlushMode.Commit;
 			Local.Data[CurrentNHibernateSessionKey] = session;
 			return new NHibernateUnitOfWorkAdapter(session, previous);
 		}
 
-		private static ISession CreateSession()
+		private static ISession CreateSession(IDbConnection maybeUserProvidedConnection)
 		{
 			if (IoC.Container.Kernel.HasComponent(typeof (IInterceptor)))
 			{
 				IInterceptor interceptor = IoC.Resolve<IInterceptor>();
-				return NHibernateSessionFactory.OpenSession(interceptor);
+				if(maybeUserProvidedConnection==null)
+					return NHibernateSessionFactory.OpenSession(interceptor);
+				return NHibernateSessionFactory.OpenSession(maybeUserProvidedConnection, interceptor);
 			}
-			return NHibernateSessionFactory.OpenSession();
+			if (maybeUserProvidedConnection == null)
+				return NHibernateSessionFactory.OpenSession();
+			return NHibernateSessionFactory.OpenSession(maybeUserProvidedConnection);
 		}
 
 		/// <summary>

@@ -61,12 +61,22 @@ namespace Rhino.Commons.Repositories
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				crit.AddOrder(order);
 				return crit.List<T>();
 			}
+			finally
+			{
+				ReleaseSession(session);
+			}
+		}
+
+		private void ReleaseSession(ISession session)
+		{
+			ActiveRecordMediator.GetSessionFactoryHolder().ReleaseSession(session);
 		}
 
 		private ISession OpenSession()
@@ -83,10 +93,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, orders);
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -101,12 +116,17 @@ namespace Rhino.Commons.Repositories
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, orders);
 				crit.SetFirstResult(firstResult)
 					.SetMaxResults(maxResults);
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -118,7 +138,8 @@ namespace Rhino.Commons.Repositories
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				foreach (Order order in orders)
@@ -126,6 +147,10 @@ namespace Rhino.Commons.Repositories
 					crit.AddOrder(order);
 				}
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -136,10 +161,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -152,12 +182,17 @@ namespace Rhino.Commons.Repositories
 		/// <returns>number of Results of entities that match the criteria</returns>
 		public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				crit.SetFirstResult(firstResult)
 					.SetMaxResults(numberOfResults);
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -172,13 +207,18 @@ namespace Rhino.Commons.Repositories
 		/// <returns>number of Results of entities that match the criteria</returns>
 		public ICollection<T> FindAll(int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				crit.SetFirstResult(firstResult)
 					.SetMaxResults(numberOfResults)
 					.AddOrder(selectionOrder);
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -193,7 +233,8 @@ namespace Rhino.Commons.Repositories
 		/// <param name="selectionOrder">The fields the repository should order by</param>
 		public ICollection<T> FindAll(int firstResult, int numberOfResults, Order[] selectionOrder, params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				crit.SetFirstResult(firstResult)
@@ -203,6 +244,10 @@ namespace Rhino.Commons.Repositories
 					crit.AddOrder(order);
 				}
 				return crit.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -214,10 +259,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>The results of the query</returns>
 		public ICollection<T> FindAll(string namedQuery, params Parameter[] parameters)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				IQuery query = RepositoryHelper<T>.CreateQuery(session, namedQuery, parameters);
 				return query.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -231,12 +281,17 @@ namespace Rhino.Commons.Repositories
 		/// <returns>Paged results of the query</returns>
 		public ICollection<T> FindAll(int firstResult, int numberOfResults, string namedQuery, params Parameter[] parameters)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				IQuery query = RepositoryHelper<T>.CreateQuery(session, namedQuery, parameters);
 				query.SetFirstResult(firstResult)
 					.SetMaxResults(numberOfResults);
 				return query.List<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -248,10 +303,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>The entity or null</returns>
 		public T FindOne(params ICriterion[] criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(session, criteria);
 				return crit.UniqueResult<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -263,10 +323,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>The entity or null</returns>
 		public T FindOne(DetachedCriteria criteria)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, null);
 				return crit.UniqueResult<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -279,10 +344,15 @@ namespace Rhino.Commons.Repositories
 		/// <returns>The entity or null</returns>
 		public T FindOne(string namedQuery, params Parameter[] parameters)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				IQuery query = RepositoryHelper<T>.CreateQuery(session, namedQuery, parameters);
 				return query.UniqueResult<T>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 
@@ -294,19 +364,26 @@ namespace Rhino.Commons.Repositories
 		/// <returns>The entity or null</returns>
 		public T FindFirst(DetachedCriteria criteria, params Order[] orders)
 		{
-			using (ISession session = OpenSession())
+			ISession session = OpenSession();
+			try
 			{
 				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, null);
 				crit.SetMaxResults(1);
 				return crit.UniqueResult<T>();
 			}
+			finally
+			{
+				ReleaseSession(session);
+			}
 		}
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			using (ISession session = OpenSession())
+			ISessionFactory sessionFactory = ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof (T));
+			IDbConnection connection = sessionFactory.ConnectionProvider.GetConnection();
+			try
 			{
-				using (IDbCommand command = session.Connection.CreateCommand())
+				using (IDbCommand command = connection.CreateCommand())
 				{
 					command.CommandText = sp_name;
 					command.CommandType = CommandType.StoredProcedure;
@@ -319,6 +396,10 @@ namespace Rhino.Commons.Repositories
 					}
 					return (T) command.ExecuteScalar();
 				}
+			}
+			finally
+			{
+				sessionFactory.ConnectionProvider.CloseConnection(connection);
 			}
 		}
 	}

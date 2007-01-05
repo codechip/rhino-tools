@@ -27,7 +27,7 @@ namespace Rhino.Commons.Test.NHibernate
 		[TearDown]
 		public void TestCleanup()
 		{
-			session.Dispose();
+			DisposeSession(session);
 		}
 
 		[Test]

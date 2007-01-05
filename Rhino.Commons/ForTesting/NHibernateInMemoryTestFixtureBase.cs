@@ -115,7 +115,7 @@ namespace Rhino.Commons.ForTesting
 		///			Assert.AreNotEqual(Guid.Empty, f.Id);
 		/// 
 		///			using(UnitOfWork.Start())
-		///			res = IoC.Resolve<IRepository<Foo>>.Load(f.Id);
+		///				res = IoC.Resolve<IRepository<Foo>>.Load(f.Id);
 		/// 
 		///			Assert.IsNotNull(res);
 		///			Assert.AreEqual("Bar", res.Name);
@@ -138,9 +138,19 @@ namespace Rhino.Commons.ForTesting
 		/// <returns>The open NHibernate session.</returns>
 		public ISession CreateSession()
 		{
-			ISession openSession = sessionFactory.OpenSession();
+			//need to get our own connection, because NH will try to close it
+			//as soon as possible, and we will lose the changes.
+			IDbConnection dbConnection = sessionFactory.ConnectionProvider.GetConnection();
+			ISession openSession = sessionFactory.OpenSession(dbConnection);
 			SetupDB(openSession);
 			return openSession;
+		}
+
+		public void DisposeSession(ISession sessionToClose)
+		{
+			IDbConnection con = sessionToClose.Connection;
+			sessionToClose.Dispose();
+			con.Dispose();
 		}
 	}
 }
