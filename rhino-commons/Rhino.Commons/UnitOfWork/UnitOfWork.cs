@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 
 namespace Rhino.Commons
 {
@@ -19,7 +20,12 @@ namespace Rhino.Commons
 	    
 		public static IUnitOfWork Start()
 		{
-			return Start(UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
+			return Start(null, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
+		}
+
+		public static IUnitOfWork Start(IDbConnection connection)
+		{
+			return Start(connection, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
 		}
 		
 		/// <summary>
@@ -29,7 +35,7 @@ namespace Rhino.Commons
 		/// <returns>
 		/// An IUnitOfwork object that can be used to work with the current UoW.
 		/// </returns>
-		public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
+		public static IUnitOfWork Start(IDbConnection connection, UnitOfWorkNestingOptions nestingOptions)
 		{
             if (globalNonThreadSafeUnitOfwork != null)
                 return globalNonThreadSafeUnitOfwork;
@@ -40,7 +46,7 @@ namespace Rhino.Commons
 				existing.IncremementUsages();
 				return existing;
 			}
-			IUnitOfWorkImplementor unitOfWorkImplementor = IoC.Resolve<IUnitOfWorkFactory>().Create(existing);
+			IUnitOfWorkImplementor unitOfWorkImplementor = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
 			Local.Data[CurrentUnitOfWorkKey] = unitOfWorkImplementor;
 			return existing;
 		}

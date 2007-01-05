@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -42,7 +41,7 @@ namespace Rhino.Commons.Logging
 
 		public RollingSqliteAppender()
 		{
-			ConnectionType = typeof (SQLiteConnection).AssemblyQualifiedName;
+			ConnectionType = " System.Data.SQLite.SQLiteConnection,  System.Data.SQLite";
 			ReconnectOnError = true;
 			CommandText =
 				@"INSERT INTO Logs (Date, Thread, Level, Logger, Message, Exception) 

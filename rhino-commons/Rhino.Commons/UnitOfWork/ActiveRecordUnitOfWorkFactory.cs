@@ -3,6 +3,7 @@ using System.Data;
 using System.Reflection;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework.Config;
+using Castle.ActiveRecord.Framework.Scopes;
 using NHibernate;
 
 namespace Rhino.Commons
@@ -18,10 +19,14 @@ namespace Rhino.Commons
 			this.assemblies = assemblies;
 		}
 
-		public IUnitOfWorkImplementor Create(IUnitOfWorkImplementor previous)
+		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
 		{
 			InitializeIfNeccecary();
-			SessionScope scope = new SessionScope(FlushAction.Never);
+			ISessionScope scope;
+			if (maybeUserProvidedConnection == null)
+				scope = new SessionScope(FlushAction.Never);
+			else
+				scope = new DifferentDatabaseScope(maybeUserProvidedConnection);
 			return new ActiveRecordUnitOfWorkAdapter(scope, previous);
 		}
 

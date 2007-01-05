@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using NHibernate;
+using NHibernate.Connection;
 using NHibernate.Expression;
 using Rhino.Commons;
 
@@ -145,18 +146,27 @@ namespace Rhino.Commons
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			using (IDbCommand command = Session.Connection.CreateCommand())
+			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.NHibernateSessionFactory.ConnectionProvider;
+			IDbConnection connection = connectionProvider.GetConnection();
+			try
 			{
-				command.CommandText = sp_name;
-				command.CommandType = CommandType.StoredProcedure;
-				foreach (Parameter parameter in parameters)
+				using (IDbCommand command = connection.CreateCommand())
 				{
-					IDbDataParameter sp_arg = command.CreateParameter();
-					sp_arg.ParameterName = parameter.Name;
-					sp_arg.Value = parameter.Value;
-					command.Parameters.Add(sp_arg);
+					command.CommandText = sp_name;
+					command.CommandType = CommandType.StoredProcedure;
+					foreach (Parameter parameter in parameters)
+					{
+						IDbDataParameter sp_arg = command.CreateParameter();
+						sp_arg.ParameterName = parameter.Name;
+						sp_arg.Value = parameter.Value;
+						command.Parameters.Add(sp_arg);
+					}
+					return command.ExecuteScalar();
 				}
-				return (T) command.ExecuteScalar();
+			}
+			finally
+			{
+				connectionProvider.CloseConnection(connection);
 			}
 		}
 	}

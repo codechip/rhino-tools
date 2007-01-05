@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\MSBuild.Community.Tasks.Targets"/>
 	<PropertyGroup Condition="!Exists('$(Configuration)')">
+		<SharedLibsDir>$(MSBuildProjectDirectory)\..\SharedLibs</SharedLibsDir>
 		<Configuration>Debug</Configuration>
 		<OutputDir>$(MSBuildProjectDirectory)</OutputDir>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
@@ -12,7 +12,7 @@
 			DependsOnTargets="Clean;BeforeCompile;Compile;BeforeTest;UnitTest;BeforeZip;Zip;Upload;" />
 
 	<Target Name="BeforeCompile"/>
-	<Target Name="AfterCompile"/>
+	<Target Name="BeforeTest"/>
 	<Target Name="BeforeZip"/>
 	
 	<Target Name="Clean">
@@ -32,7 +32,7 @@
 			 AssemblyTitle ="$(ProjectName)"
 			 CodeLanguage="CS"
 			 AssemblyVersion ="$(Version).$(Revision)"
-			 OutputFile="$(AssemblyInfo)"
+			 OutputFile="%(AssemblyInfo.File)"
 			 />
 	</Target>
 	
@@ -66,7 +66,7 @@
 	</Target>
 	
 	<Target Name="UnitTest">
-		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(MSBuildProjectDirectory)\..\SharedLibs\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
+		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(SharedLibsDir)\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
 	</Target>
 	
 	<Target Name="Upload" Condition="$(FtpUsername) != ''">
@@ -80,6 +80,7 @@
                 Password="$(FtpPassword)"
                 RemoteUri="ftp://ftp.ayende.com/wwwroot/Builds/$(ShortName)/Nightlies/$(ZipFileName)" />
           <Exec 
-			Command='$(MSBuildProjectDirectory)\..\SharedLibs\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" $(SectionId) "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
+			Command='$(SharedLibsDir)\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" $(SectionId) "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
 	</Target>
+	<Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets"/>
 </Project>

@@ -62,41 +62,41 @@
 		<SolidColorBrush x:Key="LightColorBrush"
 						 Color="#DDD" />
 		<ayende:StringConverter x:Key="formatConverter" />
-		<Style TargetType="{x:Type Button}" >
-			<Setter Property="Cursor"
-					Value="Hand"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate>
-						<Border
-							   Margin="2" 
-							x:Name="Border"
-							CornerRadius="5"
-							BorderThickness="2"
-							Background="{StaticResource NormalBrush}"
-							BorderBrush="{StaticResource NormalBorderBrush}">
-							<TextBlock Style="{StaticResource BigText}"
-									   Name="TextField"
-									   FontSize="14"
-									   HorizontalAlignment="Center"
-									   VerticalAlignment="Center"
-									   Text="{TemplateBinding Property=Button.Content}">
-								<ContentPresenter RecognizesAccessKey="True"/>
+<Style TargetType="{x:Type Button}" >
+	<Setter Property="Cursor"
+			Value="Hand"/>
+	<Setter Property="Template">
+		<Setter.Value>
+			<ControlTemplate>
+				<Border
+					   Margin="2" 
+					x:Name="Border"
+					CornerRadius="5"
+					BorderThickness="2"
+					Background="{StaticResource NormalBrush}"
+					BorderBrush="{StaticResource NormalBorderBrush}">
+					<TextBlock Style="{StaticResource BigText}"
+							   Name="TextField"
+							   FontSize="14"
+							   HorizontalAlignment="Center"
+							   VerticalAlignment="Center"
+							   Text="{TemplateBinding Property=Button.Content}">
+						<ContentPresenter RecognizesAccessKey="True"/>
 
-							</TextBlock>
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger
-								Property="Button.IsPressed"
-								Value="True">
-								<Setter TargetName="Border"
-										Property="Background"
-										Value="{StaticResource PressedBrush}" />
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
+					</TextBlock>
+				</Border>
+				<ControlTemplate.Triggers>
+					<Trigger
+						Property="Button.IsPressed"
+						Value="True">
+						<Setter TargetName="Border"
+								Property="Background"
+								Value="{StaticResource PressedBrush}" />
+					</Trigger>
+				</ControlTemplate.Triggers>
+			</ControlTemplate>
+		</Setter.Value>
+	</Setter>
+</Style>
 	</Application.Resources>
 </Application>

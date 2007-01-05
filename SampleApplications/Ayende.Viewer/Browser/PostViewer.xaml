@@ -87,12 +87,12 @@
 					 Click="Prev_Click">
 				&lt;&lt; _Previous
 			</Button>
-			<Button
-				Name="Next"
-				Grid.Column="2"
-				Click="Next_Click" >
-				_Next &gt;&gt;
-			</Button>
+<Button
+	Name="Next"
+	Grid.Column="2"
+	Click="Next_Click" >
+	_Next &gt;&gt;
+</Button>
 		</Grid>
 	</Grid>
 </Page>

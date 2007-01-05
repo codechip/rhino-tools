@@ -1,166 +1,165 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Commons</RootNamespace>
-    <AssemblyName>Rhino.Commons</AssemblyName>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Boo.Lang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Compiler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.Compiler.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.ActiveRecord, Version=0.0.1.3, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\SqLite.Net\System.Data.SQLite.DLL</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Binsor\BinsorCompilerStep.cs" />
-    <Compile Include="Binsor\Component.cs" />
-    <Compile Include="Binsor\BooReader.cs" />
-    <Compile Include="Binsor\IConfigurationRunner.cs" />
-    <Compile Include="Binsor\TransformComponentReferences.cs" />
-    <Compile Include="BulkDeleter.cs" />
-    <Compile Include="Collection.cs" />
-    <Compile Include="DateRange.cs" />
-    <Compile Include="DateUtil.cs" />
-    <Compile Include="DelegateDefinations.cs" />
-    <Compile Include="DisposableAction.cs" />
-    <Compile Include="ElementNotFoundException.cs" />
-    <Compile Include="GenericEventArgs.cs" />
-    <Compile Include="HttpModules\PagePerformanceModule.cs" />
-    <Compile Include="HttpModules\UnitOfWorkApplication.cs" />
-    <Compile Include="Indexers.cs" />
-    <Compile Include="LocalDataImpl\LocalData.cs" />
-    <Compile Include="LocalDataImpl\ILocalData.cs" />
-    <Compile Include="Logging\WebLoggingHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\NHRepository.cs" />
-    <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
-    <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
-    <Compile Include="ThereBeDragonsAttribute.cs" />
-    <Compile Include="Threading\ThreadSafeQueue.cs" />
-    <Compile Include="Threading\WaitForConsumersEvent.cs" />
-    <Compile Include="ToPublic\SqlCommandSet.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
-    <Compile Include="Repositories\Parameter.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="UnitOfWork\NHibernateUnitOfWorkAdapter.cs" />
-    <Compile Include="UnitOfWork\UnitOfWork.cs" />
-    <Compile Include="RhinoContainer\IoC.cs" />
-    <Compile Include="RhinoContainer\RhinoContainer.cs" />
-    <Compile Include="StaticReflection.cs" />
-    <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
-    <Compile Include="Validation.cs" />
-    <Compile Include="With\With.Transaction.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Diagrams\IoC.cd" />
-    <None Include="Diagrams\Repository.cd" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
-    <Compile Include="Logging\RollingSqliteAppender.cs" />
-    <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
-    <Compile Include="Repositories\ARRepository.cs" />
-    <Compile Include="Repositories\RepositoryHelper.cs" />
-    <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
-    <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
-    <Compile Include="Threading\ThreadPool\WorkItem.cs" />
-    <Compile Include="Threading\ThreadPool\WorkItemStatus.cs" />
-    <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
-    <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork\RhinoTransaction.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
-    <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
-    <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
-    <Compile Include="With\With.Cache.cs" />
-    <Compile Include="With\With.PerformanceCounter.cs" />
-    <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+﻿<Project DefaultTargets="Build"
+		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<SharedLibsDir>$(MSBuildProjectDirectory)\..\..\SharedLibs</SharedLibsDir>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProductVersion>8.0.50727</ProductVersion>
+		<SchemaVersion>2.0</SchemaVersion>
+		<ProjectGuid>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</ProjectGuid>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>Rhino.Commons</RootNamespace>
+		<AssemblyName>Rhino.Commons</AssemblyName>
+		<SignAssembly>false</SignAssembly>
+		<AssemblyOriginatorKeyFile>
+		</AssemblyOriginatorKeyFile>
+		<SccProjectName>
+		</SccProjectName>
+		<SccLocalPath>
+		</SccLocalPath>
+		<SccAuxPath>
+		</SccAuxPath>
+		<SccProvider>
+		</SccProvider>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug\</OutputPath>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release\</OutputPath>
+		<DefineConstants>TRACE</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="Boo.Lang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Boo\Boo.Lang.dll</HintPath>
+		</Reference>
+		<Reference Include="Boo.Lang.Compiler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Boo\Boo.Lang.Compiler.dll</HintPath>
+		</Reference>
+		<Reference Include="Boo.Lang.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Boo\Boo.Lang.Parser.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.ActiveRecord, Version=0.0.1.3, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
+		</Reference>
+		<Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\Castle\Castle.Windsor.dll</HintPath>
+		</Reference>
+		<Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
+		</Reference>
+		<Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Web" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="Binsor\BinsorCompilerStep.cs" />
+		<Compile Include="Binsor\Component.cs" />
+		<Compile Include="Binsor\BooReader.cs" />
+		<Compile Include="Binsor\IConfigurationRunner.cs" />
+		<Compile Include="Binsor\TransformComponentReferences.cs" />
+		<Compile Include="BulkDeleter.cs" />
+		<Compile Include="Collection.cs" />
+		<Compile Include="DateRange.cs" />
+		<Compile Include="DateUtil.cs" />
+		<Compile Include="DelegateDefinations.cs" />
+		<Compile Include="DisposableAction.cs" />
+		<Compile Include="ElementNotFoundException.cs" />
+		<Compile Include="GenericEventArgs.cs" />
+		<Compile Include="HttpModules\PagePerformanceModule.cs" />
+		<Compile Include="HttpModules\UnitOfWorkApplication.cs" />
+		<Compile Include="Indexers.cs" />
+		<Compile Include="LocalDataImpl\LocalData.cs" />
+		<Compile Include="LocalDataImpl\ILocalData.cs" />
+		<Compile Include="Logging\WebLoggingHelper.cs" />
+		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="Properties\Settings.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DesignTimeSharedInput>True</DesignTimeSharedInput>
+			<DependentUpon>Settings.settings</DependentUpon>
+		</Compile>
+		<Compile Include="Repositories\IRepository.cs" />
+		<Compile Include="Repositories\NHRepository.cs" />
+		<Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
+		<Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
+		<Compile Include="ThereBeDragonsAttribute.cs" />
+		<Compile Include="Threading\ThreadSafeQueue.cs" />
+		<Compile Include="Threading\WaitForConsumersEvent.cs" />
+		<Compile Include="ToPublic\SqlCommandSet.cs" />
+		<Compile Include="UnitOfWork\IUnitOfWork.cs" />
+		<Compile Include="Repositories\Parameter.cs" />
+		<Compile Include="Repositories\Repository.cs" />
+		<Compile Include="UnitOfWork\NHibernateUnitOfWorkAdapter.cs" />
+		<Compile Include="UnitOfWork\UnitOfWork.cs" />
+		<Compile Include="RhinoContainer\IoC.cs" />
+		<Compile Include="RhinoContainer\RhinoContainer.cs" />
+		<Compile Include="StaticReflection.cs" />
+		<Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
+		<Compile Include="Validation.cs" />
+		<Compile Include="With\With.Transaction.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="app.config" />
+		<None Include="Diagrams\IoC.cd" />
+		<None Include="Diagrams\Repository.cd" />
+		<None Include="Properties\Settings.settings">
+			<Generator>SettingsSingleFileGenerator</Generator>
+			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+		</None>
+		<Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
+		<Compile Include="Logging\RollingSqliteAppender.cs" />
+		<Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
+		<Compile Include="Repositories\ARRepository.cs" />
+		<Compile Include="Repositories\RepositoryHelper.cs" />
+		<Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
+		<Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
+		<Compile Include="Threading\ThreadPool\WorkItem.cs" />
+		<Compile Include="Threading\ThreadPool\WorkItemStatus.cs" />
+		<Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
+		<Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
+		<Compile Include="UnitOfWork\RhinoTransaction.cs" />
+		<Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
+		<Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
+		<Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
+		<Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
+		<Compile Include="With\With.Cache.cs" />
+		<Compile Include="With\With.PerformanceCounter.cs" />
+		<EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
+	</ItemGroup>
+	<Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+	<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
