@@ -6,7 +6,7 @@ using NHibernate.Type;
 
 namespace Query
 {
-	public class QueryBuilder<T>
+	public partial class QueryBuilder<T>
 	{
 		protected string name;
 		/// <summary>
@@ -278,7 +278,7 @@ Use HQL for this functionality...",
 		}
 	}
 
-	public class PropertyQueryBuilder<T> : QueryBuilder<T>
+	public partial class PropertyQueryBuilder<T> : QueryBuilder<T>
 	{
 		public PropertyQueryBuilder(string name, string assoicationPath)
 			: base(name, assoicationPath)
@@ -390,7 +390,7 @@ Use HQL for this functionality...",
 		}
 	}
 
-	public class OrderByClause
+	public partial class OrderByClause
 	{
 		bool ascending = true;
 		string name;
@@ -453,7 +453,7 @@ Use HQL for this functionality...",
 	}
 
 
-	public class PropertyProjectionBuilder
+	public partial class PropertyProjectionBuilder
 	{
 		protected string name;
 		ProjectionList list;
@@ -529,7 +529,7 @@ Use HQL for this functionality...",
 
 	}
 
-	public class NumericPropertyProjectionBuilder : PropertyProjectionBuilder
+	public partial class NumericPropertyProjectionBuilder : PropertyProjectionBuilder
 	{
 		public NumericPropertyProjectionBuilder(string name) : base(name) { }
 

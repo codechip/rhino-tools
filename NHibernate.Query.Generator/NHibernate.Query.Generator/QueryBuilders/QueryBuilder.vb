@@ -5,7 +5,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel
 
 Namespace Query
-	Public Class OrderByClause
+	Partial Public Class OrderByClause
 		' Methods
 		Public Sub New(ByVal name As String)
 			Me.ascending = True
@@ -38,7 +38,7 @@ Namespace Query
 		Private name As String
 	End Class
 
-	Public Class PropertyQueryBuilder(Of T)
+	Partial Public Class PropertyQueryBuilder(Of T)
 		Inherits QueryBuilder(Of T)
 
 		' Methods
@@ -136,7 +136,7 @@ Namespace Query
 
 	End Class
 
-	Public Class QueryBuilder(Of T)
+	Partial Public Class QueryBuilder(Of T)
 		' Methods
 		Public Sub New(ByVal name As String, ByVal assoicationPath As String)
 			Me.children = New List(Of QueryBuilder(Of T))
@@ -345,8 +345,7 @@ Namespace Query
 		Protected name As String
 	End Class
 
-
-	Class ProjectBy
+	Partial Public Class ProjectBy
 		Public Shared ReadOnly Property RowCount() As IProjection
 			Get
 				Return Projections.RowCount()
@@ -374,9 +373,7 @@ Namespace Query
 		End Function
 	End Class
  _
-
-
-	Public Class PropertyProjectionBuilder
+	Partial Public Class PropertyProjectionBuilder
 		Protected name As String
 
 
@@ -416,8 +413,7 @@ Namespace Query
 	End Class
  _
 
-
-	Public Class NumericPropertyProjectionBuilder
+	Partial Public Class NumericPropertyProjectionBuilder
 		Inherits PropertyProjectionBuilder
 
 		Public Sub New(ByVal name As String)
