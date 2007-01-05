@@ -34,7 +34,9 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 		<Output TaskParameter="Include" ItemName = "MergeAssemblies" /> 
 	</CreateItem>
 		
-	<ILMerge InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies)"
+	<ILMerge
+				ToolPath="$(SharedLibsDir)\Tools\"
+				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies)"
 				 ExcludeFile="$(excludeFile)"
 				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\Rhino.Commons.dll"
 				 LogFile="$(logFile)"
