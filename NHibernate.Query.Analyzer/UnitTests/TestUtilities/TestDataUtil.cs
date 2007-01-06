@@ -24,6 +24,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 			cfg.SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
 			cfg.SetProperty("hibernate.connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
 			cfg.SetProperty("hibernate.connection.connection_string", constr);
+			cfg.SetProperty("hibernate.connection.release_mode", "on_close");
 			cfg.AddAssembly(typeof (IProjectsRepository).Assembly);
 			return new ProjectsRepository(cfg);
 		}

@@ -928,11 +928,17 @@
             in the assembly.
             </summary>
         </member>
+        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.CreateWithAllResourcesIn(System.Reflection.Assembly)">
+            <summary>
+            Creates a new instance of AssemblyHbmOrderer with all embedded resources
+            ending in <c>.hbm.xml</c> added.
+            </summary>
+        </member>
         <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.#ctor(System.Reflection.Assembly)">
             <summary>
             Creates a new instance of <see cref="T:NHibernate.Cfg.AssemblyHbmOrderer"/>
             </summary>
-            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/> to order the <c>hbm.xml</c> files in.</param>
+            <param name="assembly">The <see cref="T:System.Reflection.Assembly"/> to get resources from.</param>
         </member>
         <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.GetHbmFiles">
             <summary>

@@ -10,9 +10,15 @@
 		<FlattenZipFile>True</FlattenZipFile>
 		<SectionId>-1</SectionId>
 		<Version>1.1.0</Version>
-		<AssemblyInfo>NHibernate.Generics\Properties\AssemblyInfo.cs</AssemblyInfo>
 	</PropertyGroup>
-
+	<ItemGroup>
+			<AssemblyInfo Include="Item">
+				<File>NHibernate.Generics\Properties\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>NHibernate.Generics.Tests\Properties\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+	</ItemGroup>
 	<ItemGroup>
 		<TestAssembly Include="$(MSBuildProjectDirectory)\NHibernate.Generics.Tests\bin\$(Configuration)\NHibernate.Generics.Tests.dll"/>
 	</ItemGroup>

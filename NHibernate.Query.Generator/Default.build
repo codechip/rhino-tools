@@ -11,9 +11,16 @@
 		<FlattenZipFile>True</FlattenZipFile>
 		<SectionId>87</SectionId>
 		<Version>1.8</Version>
-		<AssemblyInfo>NHibernate.Query.Generator\Properties\AssemblyInfo.cs</AssemblyInfo>
 	</PropertyGroup>
-
+	<ItemGroup>
+			<AssemblyInfo Include="Item">
+				<File>NHibernate.Query.Generator\Properties\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>NHibernate.Query.Generator.Tests\Properties\AssemblyInfo.cs</File>
+			</AssemblyInfo>	
+	</ItemGroup>
+	
 	<ItemGroup>
 		<SetupProject Include="NHibernate.Query.Generator.Setup\Product.wxs"/>
 	</ItemGroup>

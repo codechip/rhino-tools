@@ -10,9 +10,30 @@
 		<FlattenZipFile>True</FlattenZipFile>
 		<SectionId>-1</SectionId>
 		<Version>1.2.1</Version>
-		<AssemblyInfo>Stub\AssemblyInfo.cs</AssemblyInfo>
 	</PropertyGroup>
-
+	<ItemGroup>
+			<AssemblyInfo Include="Item">
+				<File>Stub\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>Core\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>ProjectLoader\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>UnitTests\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>UserInterface\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>Utilities\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+			<AssemblyInfo Include="Item">
+				<File>Tools\TestData\Src\AssemblyInfo.cs</File>
+			</AssemblyInfo>
+	</ItemGroup>
 	<ItemGroup>
 		<TestAssembly Include="$(MSBuildProjectDirectory)\UnitTests\bin\$(Configuration)\Ayende.NHibernateQueryAnalyzer.UnitTests.dll"/>
 	</ItemGroup>

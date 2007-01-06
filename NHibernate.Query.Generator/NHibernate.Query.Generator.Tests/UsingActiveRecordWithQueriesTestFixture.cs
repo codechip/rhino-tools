@@ -221,6 +221,7 @@ namespace NHibernate.Query.Generator.Tests
 			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+			properties.Add("hibernate.connection.release_mode", "on_close");
 
 			source.Add(typeof (ActiveRecordBase), properties);
 			ActiveRecordStarter.Initialize(source,
