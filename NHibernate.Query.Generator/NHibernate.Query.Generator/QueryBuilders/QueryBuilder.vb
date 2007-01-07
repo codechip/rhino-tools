@@ -42,8 +42,8 @@ Namespace Query
 		Inherits QueryBuilder(Of T)
 
 		' Methods
-		Public Sub New(ByVal name As String, ByVal assoicationPath As String)
-			MyBase.New(name, assoicationPath)
+		Public Sub New(ByVal name As String, ByVal associationPath As String)
+			MyBase.New(name, associationPath)
 		End Sub
 
 		Public Function Between(ByVal lo As Object, ByVal hi As Object) As QueryBuilder(Of T)
@@ -138,32 +138,32 @@ Namespace Query
 
 	Partial Public Class QueryBuilder(Of T)
 		' Methods
-		Public Sub New(ByVal name As String, ByVal assoicationPath As String)
+		Public Sub New(ByVal name As String, ByVal associationPath As String)
 			Me.children = New List(Of QueryBuilder(Of T))
 			Me.criterions = New List(Of ICriterion)
 			Me.name = name
-			Me.assoicationPath = IIf(assoicationPath <> Nothing, assoicationPath, "this")
+			Me.associationPath = IIf(associationPath <> Nothing, associationPath, "this")
 		End Sub
 
-		Public Sub New(ByVal name As String, ByVal assoicationPath As String, ByVal backTrackAssoicationsOnEquality As Boolean)
+		Public Sub New(ByVal name As String, ByVal associationPath As String, ByVal backTrackAssociationsOnEquality As Boolean)
 			Me.children = New List(Of QueryBuilder(Of T))
 			Me.criterions = New List(Of ICriterion)
 			Me.name = name
-			Me.assoicationPath = assoicationPath
-			Me.backTrackAssoicationsOnEquality = backTrackAssoicationsOnEquality
+			Me.associationPath = associationPath
+			Me.backTrackAssociationsOnEquality = backTrackAssociationsOnEquality
 		End Sub
 
-		Private Sub AddByAssoicationPath(ByVal criterionsByAssociation As IDictionary(Of String, ICollection(Of ICriterion)))
-			If Not criterionsByAssociation.ContainsKey(Me.assoicationPath) Then
-				criterionsByAssociation.Add(Me.assoicationPath, DirectCast(New List(Of ICriterion), ICollection(Of ICriterion)))
+		Private Sub AddByAssociationPath(ByVal criterionsByAssociation As IDictionary(Of String, ICollection(Of ICriterion)))
+			If Not criterionsByAssociation.ContainsKey(Me.associationPath) Then
+				criterionsByAssociation.Add(Me.associationPath, DirectCast(New List(Of ICriterion), ICollection(Of ICriterion)))
 			End If
 			Dim criterion1 As ICriterion
 			For Each criterion1 In Me.criterions
-				criterionsByAssociation.Item(Me.assoicationPath).Add(criterion1)
+				criterionsByAssociation.Item(Me.associationPath).Add(criterion1)
 			Next
 			Dim builder1 As QueryBuilder(Of T)
 			For Each builder1 In Me.children
-				builder1.AddByAssoicationPath(criterionsByAssociation)
+				builder1.AddByAssociationPath(criterionsByAssociation)
 			Next
 		End Sub
 
@@ -171,12 +171,12 @@ Namespace Query
 			Me.criterions.Add(criterion)
 		End Sub
 
-		Protected Shared Function BackTrackAssoicationPath(ByVal assoicationPath As String) As String
-			Dim num1 As Integer = assoicationPath.LastIndexOf("."c)
+		Protected Shared Function BackTrackAssociationPath(ByVal associationPath As String) As String
+			Dim num1 As Integer = associationPath.LastIndexOf("."c)
 			If (num1 = -1) Then
-				Return assoicationPath
+				Return associationPath
 			End If
-			Return assoicationPath.Substring(0, num1)
+			Return associationPath.Substring(0, num1)
 		End Function
 
 		Public Function Eq(ByVal value As Object) As QueryBuilder(Of T)
@@ -187,8 +187,8 @@ Namespace Query
 				criterion1 = Expression.Eq(Me.name, value)
 			End If
 			Dim builder1 As QueryBuilder(Of T) = Me
-			If Me.backTrackAssoicationsOnEquality Then
-				builder1 = New QueryBuilder(Of T)(Me.name, QueryBuilder(Of T).BackTrackAssoicationPath(Me.assoicationPath))
+			If Me.backTrackAssociationsOnEquality Then
+				builder1 = New QueryBuilder(Of T)(Me.name, QueryBuilder(Of T).BackTrackAssociationPath(Me.associationPath))
 				Me.children.Add(DirectCast(builder1, QueryBuilder(Of T)))
 			End If
 			builder1.AddCriterion(criterion1)
@@ -232,8 +232,8 @@ Namespace Query
 				criterion1 = Expression.Not(Expression.Eq(Me.name, value))
 			End If
 			Dim builder1 As QueryBuilder(Of T) = Me
-			If Me.backTrackAssoicationsOnEquality Then
-				builder1 = New QueryBuilder(Of T)(Me.name, QueryBuilder(Of T).BackTrackAssoicationPath(Me.assoicationPath))
+			If Me.backTrackAssociationsOnEquality Then
+				builder1 = New QueryBuilder(Of T)(Me.name, QueryBuilder(Of T).BackTrackAssociationPath(Me.associationPath))
 				Me.children.Add(DirectCast(builder1, QueryBuilder(Of T)))
 			End If
 			builder1.AddCriterion(criterion1)
@@ -250,8 +250,8 @@ Namespace Query
 		Public Shared Operator Or(ByVal lhs As QueryBuilder(Of T), ByVal rhs As QueryBuilder(Of T)) As QueryBuilder(Of T)
 			Dim criterion1 As ICriterion
 			Dim enumerator1 As IEnumerator(Of ICriterion)
-			If (Not lhs.assoicationPath Is rhs.assoicationPath) Then
-				Throw New InvalidOperationException(String.Format("OR attempted between {0} and {1}." & ChrW(13) & ChrW(10) & "You can't OR between two Query parts that belong to different assoications." & ChrW(13) & ChrW(10) & "Use HQL for this functionality...", lhs.assoicationPath, rhs.assoicationPath))
+			If (Not lhs.associationPath Is rhs.associationPath) Then
+				Throw New InvalidOperationException(String.Format("OR attempted between {0} and {1}." & ChrW(13) & ChrW(10) & "You can't OR between two Query parts that belong to different associations." & ChrW(13) & ChrW(10) & "Use HQL for this functionality...", lhs.associationPath, rhs.associationPath))
 			End If
 			Dim builder1 As New QueryBuilder(Of T)(lhs.name, Nothing)
 			Dim conjunction1 As Conjunction = Expression.Conjunction
@@ -283,7 +283,7 @@ Namespace Query
 		Public Shared Widening Operator CType(ByVal expr As QueryBuilder(Of T)) As DetachedCriteria
 			Dim criteria1 As DetachedCriteria = DetachedCriteria.For(Of T)()
 			Dim dictionary1 As New Dictionary(Of String, ICollection(Of ICriterion))
-			expr.AddByAssoicationPath(dictionary1)
+			expr.AddByAssociationPath(dictionary1)
 			Dim pair1 As KeyValuePair(Of String, ICollection(Of ICriterion))
 			For Each pair1 In dictionary1
 				Dim criteria2 As DetachedCriteria = criteria1
@@ -338,8 +338,8 @@ Namespace Query
 
 
 		' Fields
-		Protected assoicationPath As String
-		Private backTrackAssoicationsOnEquality As Boolean
+		Protected associationPath As String
+		Private backTrackAssociationsOnEquality As Boolean
 		Private children As ICollection(Of QueryBuilder(Of T))
 		Private criterions As ICollection(Of ICriterion)
 		Protected name As String
@@ -438,6 +438,7 @@ Namespace Query
 	End Class
 
 End Namespace
+
 
 
 

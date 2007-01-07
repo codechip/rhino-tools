@@ -72,31 +72,31 @@ namespace Query {
         public partial class Query_Customer<T1> : Query.QueryBuilder<T1>
          {
             
-            public Query_Customer(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_Customer(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_Customer(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_Customer(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T1> Name {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T1>("Name", temp);
                 }
             }
             
             public virtual Query.QueryBuilder<T1> Id {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.QueryBuilder<T1>("Id", temp);
                 }
             }
             
             public virtual Query_Address<T1> Address {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Address");
                     return new Query_Address<T1>("Address", temp, true);
@@ -112,24 +112,24 @@ namespace Query {
             public partial class Query_Home<T2> : Query.QueryBuilder<T2>
              {
                 
-                public Query_Home(string name, string assoicationPath) : 
-                        base(name, assoicationPath) {
+                public Query_Home(string name, string associationPath) : 
+                        base(name, associationPath) {
                 }
                 
-                public Query_Home(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                public Query_Home(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                        base(name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
                 public virtual Query.PropertyQueryBuilder<T1> Phone {
                     get {
-                        string temp = assoicationPath;
+                        string temp = associationPath;
                         return new Query.PropertyQueryBuilder<T1>("Home.Phone", temp);
                     }
                 }
                 
                 public virtual Query_Address<T1> Address {
                     get {
-                        string temp = assoicationPath;
+                        string temp = associationPath;
                         temp = ((temp + ".") 
                                     + "Address");
                         return new Query_Address<T1>("Home.Address", temp, true);
@@ -148,17 +148,17 @@ namespace Query {
         public partial class Query_Address<T3> : Query.QueryBuilder<T3>
          {
             
-            public Query_Address(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_Address(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_Address(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_Address(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.QueryBuilder<T3> Pk {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.QueryBuilder<T3>("Pk", temp);
                 }
             }
@@ -174,31 +174,31 @@ namespace Query {
         public partial class Query_CompositeCustomer<T4> : Query.QueryBuilder<T4>
          {
             
-            public Query_CompositeCustomer(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_CompositeCustomer(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_CompositeCustomer(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_CompositeCustomer(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T4> Name {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T4>("Name", temp);
                 }
             }
             
             public virtual Query.PropertyQueryBuilder<T4> CustomerId {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T4>("CustomerId", temp);
                 }
             }
             
             public virtual Query_BadCustomer<T4> Foo {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Foo");
                     return new Query_BadCustomer<T4>("Foo", temp, true);
@@ -216,17 +216,17 @@ namespace Query {
         public partial class Query_BadCustomer<T5> : Query_Customer<T5>
          {
             
-            public Query_BadCustomer(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_BadCustomer(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_BadCustomer(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_BadCustomer(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T5> Foo {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T5>("Foo", temp);
                 }
             }
@@ -242,17 +242,17 @@ namespace Query {
         public partial class Query_BadCustomer2<T6> : Query.QueryBuilder<T6>
          {
             
-            public Query_BadCustomer2(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_BadCustomer2(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_BadCustomer2(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_BadCustomer2(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T6> Foo {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T6>("Foo", temp);
                 }
             }
@@ -268,17 +268,17 @@ namespace Query {
         public partial class Query_ValuedCustomer<T7> : Query_Customer<T7>
          {
             
-            public Query_ValuedCustomer(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_ValuedCustomer(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_ValuedCustomer(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_ValuedCustomer(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T7> Bar {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T7>("Bar", temp);
                 }
             }
@@ -294,17 +294,17 @@ namespace Query {
         public partial class Query_ValuedCustomer2<T8> : Query.QueryBuilder<T8>
          {
             
-            public Query_ValuedCustomer2(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_ValuedCustomer2(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_ValuedCustomer2(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_ValuedCustomer2(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T8> Bar {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T8>("Bar", temp);
                 }
             }

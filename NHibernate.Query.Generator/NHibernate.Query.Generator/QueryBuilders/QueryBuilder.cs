@@ -15,22 +15,22 @@ namespace Query
 		/// And it will turn to Expression.Eq("Post", post)  on the root rather than on a sub
 		/// criteria
 		/// </summary>
-		protected string assoicationPath;
-		private bool backTrackAssoicationsOnEquality;
+		protected string associationPath;
+		private bool backTrackAssociationsOnEquality;
 		private ICollection<QueryBuilder<T>> children = new List<QueryBuilder<T>>();
 		private ICollection<ICriterion> criterions = new List<ICriterion>();
 
-		public QueryBuilder(string name, string assoicationPath, bool backTrackAssoicationsOnEquality)
+		public QueryBuilder(string name, string associationPath, bool backTrackAssociationsOnEquality)
 		{
 			this.name = name;
-			this.assoicationPath = assoicationPath;
-			this.backTrackAssoicationsOnEquality = backTrackAssoicationsOnEquality;
+			this.associationPath = associationPath;
+			this.backTrackAssociationsOnEquality = backTrackAssociationsOnEquality;
 		}
 
-		public QueryBuilder(string name, string assoicationPath)
+		public QueryBuilder(string name, string associationPath)
 		{
 			this.name = name;
-			this.assoicationPath = assoicationPath ?? "this";
+			this.associationPath = associationPath ?? "this";
 		}
 
 		protected void AddCriterion(ICriterion criterion)
@@ -46,9 +46,9 @@ namespace Query
 			else
 				eq = Expression.Eq(name, value);
 			QueryBuilder<T> self = this;
-			if (backTrackAssoicationsOnEquality)
+			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(eq);
@@ -64,9 +64,9 @@ namespace Query
 			else
 				eq = Expression.Not(Expression.Eq(name, value));
 			QueryBuilder<T> self = this;
-			if (backTrackAssoicationsOnEquality)
+			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(eq);
@@ -78,9 +78,9 @@ namespace Query
 		{
 			AbstractCriterion inExpression = new InExpression(name, ToArray(values));
 			QueryBuilder<T> self = this;
-			if (backTrackAssoicationsOnEquality)
+			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(inExpression);
@@ -111,9 +111,9 @@ namespace Query
 			{
 				AbstractCriterion notNullExpression = new NotNullExpression(name);
 				QueryBuilder<T> self = this;
-				if (backTrackAssoicationsOnEquality)
+				if (backTrackAssociationsOnEquality)
 				{
-					self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+					self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
 					children.Add(self);
 				}
 				self.AddCriterion(notNullExpression);
@@ -127,9 +127,9 @@ namespace Query
 			{
 				AbstractCriterion nullExpression = new NullExpression(name);
 				QueryBuilder<T> self = this;
-				if (backTrackAssoicationsOnEquality)
+				if (backTrackAssociationsOnEquality)
 				{
-					self = new QueryBuilder<T>(name, BackTrackAssoicationPath(assoicationPath));
+					self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
 					children.Add(self);
 				}
 				self.AddCriterion(nullExpression);
@@ -159,15 +159,15 @@ namespace Query
 
 		public static QueryBuilder<T> operator |(QueryBuilder<T> lhs, QueryBuilder<T> rhs)
 		{
-			if (lhs.assoicationPath != rhs.assoicationPath)
+			if (lhs.associationPath != rhs.associationPath)
 			{
 				throw new InvalidOperationException(
 					string.Format(
 						@"OR attempted between {0} and {1}.
-You can't OR between two Query parts that belong to different assoications.
+You can't OR between two Query parts that belong to different associations.
 Use HQL for this functionality...",
-						lhs.assoicationPath,
-						rhs.assoicationPath));
+						lhs.associationPath,
+						rhs.associationPath));
 			}
 
 			QueryBuilder<T> combined = new QueryBuilder<T>(lhs.name, null);
@@ -199,7 +199,7 @@ Use HQL for this functionality...",
 		{
 			DetachedCriteria detachedCriteria = DetachedCriteria.For<T>();
 			Dictionary<string, ICollection<ICriterion>> criterionsByAssociation = new Dictionary<string, ICollection<ICriterion>>();
-			expr.AddByAssoicationPath(criterionsByAssociation);
+			expr.AddByAssociationPath(criterionsByAssociation);
 
 			foreach (KeyValuePair<string, ICollection<ICriterion>> pair in criterionsByAssociation)
 			{
@@ -232,9 +232,9 @@ Use HQL for this functionality...",
 		}
 
 		protected static QueryBuilder<T> FromCriterion(AbstractCriterion criterion,
-			string name, string assoicationPath)
+			string name, string associationPath)
 		{
-			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name, assoicationPath);
+			QueryBuilder<T> queryBuilder = new QueryBuilder<T>(name, associationPath);
 			queryBuilder.AddCriterion(criterion);
 			return queryBuilder;
 		}
@@ -247,12 +247,12 @@ Use HQL for this functionality...",
 			return arr;
 		}
 
-		protected static string BackTrackAssoicationPath(string assoicationPath)
+		protected static string BackTrackAssociationPath(string associationPath)
 		{
-			int lastIndexOfPeriod = assoicationPath.LastIndexOf('.');
+			int lastIndexOfPeriod = associationPath.LastIndexOf('.');
 			if (lastIndexOfPeriod == -1)//this mean we are on "this", no need to do anything
-				return assoicationPath;
-			return assoicationPath.Substring(0, lastIndexOfPeriod);
+				return associationPath;
+			return associationPath.Substring(0, lastIndexOfPeriod);
 
 		}
 
@@ -263,25 +263,25 @@ Use HQL for this functionality...",
 			return ToArray((ICollection)arr);//need this to convert to the object[] instead of K[]
 		}
 
-		private void AddByAssoicationPath(IDictionary<string, ICollection<ICriterion>> criterionsByAssociation)
+		private void AddByAssociationPath(IDictionary<string, ICollection<ICriterion>> criterionsByAssociation)
 		{
-			if (criterionsByAssociation.ContainsKey(assoicationPath) == false)
-				criterionsByAssociation.Add(assoicationPath, new List<ICriterion>());
+			if (criterionsByAssociation.ContainsKey(associationPath) == false)
+				criterionsByAssociation.Add(associationPath, new List<ICriterion>());
 			foreach (ICriterion criterion in criterions)
 			{
-				criterionsByAssociation[assoicationPath].Add(criterion);
+				criterionsByAssociation[associationPath].Add(criterion);
 			}
 			foreach (QueryBuilder<T> child in children)
 			{
-				child.AddByAssoicationPath(criterionsByAssociation);
+				child.AddByAssociationPath(criterionsByAssociation);
 			}
 		}
 	}
 
 	public partial class PropertyQueryBuilder<T> : QueryBuilder<T>
 	{
-		public PropertyQueryBuilder(string name, string assoicationPath)
-			: base(name, assoicationPath)
+		public PropertyQueryBuilder(string name, string associationPath)
+			: base(name, associationPath)
 		{
 		}
 

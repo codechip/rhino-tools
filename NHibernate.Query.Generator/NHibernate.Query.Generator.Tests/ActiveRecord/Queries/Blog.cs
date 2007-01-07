@@ -24,31 +24,31 @@ namespace Query {
         public partial class Query_Blog<T1> : Query.QueryBuilder<T1>
          {
             
-            public Query_Blog(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_Blog(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_Blog(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_Blog(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T1> Name {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T1>("Name", temp);
                 }
             }
             
             public virtual Query.QueryBuilder<T1> Id {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.QueryBuilder<T1>("Id", temp);
                 }
             }
             
             public virtual Query_User<T1> Author {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Author");
                     return new Query_User<T1>("Author", temp, true);

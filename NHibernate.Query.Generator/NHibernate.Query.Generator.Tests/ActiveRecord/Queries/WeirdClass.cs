@@ -24,12 +24,12 @@ namespace Query {
         public partial class Query_WeirdClass<T1> : Query.QueryBuilder<T1>
          {
             
-            public Query_WeirdClass(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_WeirdClass(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_WeirdClass(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_WeirdClass(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query_Address<T1> Address {
@@ -40,24 +40,24 @@ namespace Query {
             
             public virtual Query_Key<T1> Key {
                 get {
-                    return new Query_Key<T1>("Key", assoicationPath);
+                    return new Query_Key<T1>("Key", associationPath);
                 }
             }
             
             public partial class Query_Address<T2> : Query.QueryBuilder<T2>
              {
                 
-                public Query_Address(string name, string assoicationPath) : 
-                        base(name, assoicationPath) {
+                public Query_Address(string name, string associationPath) : 
+                        base(name, associationPath) {
                 }
                 
-                public Query_Address(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                public Query_Address(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                        base(name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
                 public virtual Query.PropertyQueryBuilder<T1> Street {
                     get {
-                        string temp = assoicationPath;
+                        string temp = associationPath;
                         return new Query.PropertyQueryBuilder<T1>("Address.Street", temp);
                     }
                 }
@@ -66,24 +66,24 @@ namespace Query {
             public partial class Query_Key<T3> : Query.QueryBuilder<T3>
              {
                 
-                public Query_Key(string name, string assoicationPath) : 
-                        base(name, assoicationPath) {
+                public Query_Key(string name, string associationPath) : 
+                        base(name, associationPath) {
                 }
                 
-                public Query_Key(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                        base(name, assoicationPath, backTrackAssoicationOnEquality) {
+                public Query_Key(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                        base(name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
                 public virtual Query.PropertyQueryBuilder<T1> Department {
                     get {
-                        string temp = assoicationPath;
+                        string temp = associationPath;
                         return new Query.PropertyQueryBuilder<T1>("Key.Department", temp);
                     }
                 }
                 
                 public virtual Query.PropertyQueryBuilder<T1> Level {
                     get {
-                        string temp = assoicationPath;
+                        string temp = associationPath;
                         return new Query.PropertyQueryBuilder<T1>("Key.Level", temp);
                     }
                 }

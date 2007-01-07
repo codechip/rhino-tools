@@ -24,38 +24,38 @@ namespace Query {
         public partial class Query_Comment<T1> : Query.QueryBuilder<T1>
          {
             
-            public Query_Comment(string name, string assoicationPath) : 
-                    base(name, assoicationPath) {
+            public Query_Comment(string name, string associationPath) : 
+                    base(name, associationPath) {
             }
             
-            public Query_Comment(string name, string assoicationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, assoicationPath, backTrackAssoicationOnEquality) {
+            public Query_Comment(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             public virtual Query.PropertyQueryBuilder<T1> Author {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T1>("Author", temp);
                 }
             }
             
             public virtual Query.PropertyQueryBuilder<T1> Content {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.PropertyQueryBuilder<T1>("Content", temp);
                 }
             }
             
             public virtual Query.QueryBuilder<T1> Id {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     return new Query.QueryBuilder<T1>("Id", temp);
                 }
             }
             
             public virtual Query_Post<T1> Post {
                 get {
-                    string temp = assoicationPath;
+                    string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Post");
                     return new Query_Post<T1>("Post", temp, true);
