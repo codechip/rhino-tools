@@ -23,7 +23,19 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 			PropertyInfo prop = GetProperty(obj, property);
 			if (!PropertyHasValue(obj, prop))
 				return "No value";
-			return prop.GetValue(obj, null);
+			return GetPropertyValueInternal(prop, obj);
+		}
+
+		private static object GetPropertyValueInternal(PropertyInfo prop, object obj)
+		{
+			try
+			{
+				return prop.GetValue(obj, null);
+			}
+			catch (Exception e)
+			{
+				return "Error getting value!";
+			}
 		}
 
 		/// <summary>
@@ -213,7 +225,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 			PropertyInfo prop = GetProperty(obj, "Name");
 			object val = null;
 			if (PropertyHasValue(obj, prop))
-				val = prop.GetValue(obj, null);
+				val = GetPropertyValueInternal(prop,obj);
 			else
 			{
 				FieldInfo field = GetField(obj, "Name");
@@ -265,9 +277,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 			if (property.CanRead && property.GetIndexParameters().Length == 0)
 			{
 				if (ReflectionUtil.IsSimpleType(property.PropertyType))
-					return property.GetValue(obj, null);
+					return GetPropertyValueInternal(property,obj);
 				else
-					return property.GetValue(obj,null);
+					return GetPropertyValueInternal(property,obj);
 			}
 			return "{indexed or write only property}";
 		}
@@ -305,7 +317,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 					}
 					else
 					{
-						ht[property.Name] = property.GetValue(obj, null);
+						ht[property.Name] = GetPropertyValueInternal(property,obj);
 					}
 				}
 			}
@@ -316,7 +328,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 		{
             if (NHibernateUtil.IsInitialized(obj) == false)
                 NHibernateUtil.Initialize(obj);
-			object value = property.GetValue(obj,null);
+			object value = GetPropertyValueInternal(property,obj);
 			INullableType nullable = value as INullableType;
 			if (value==null || (nullable!=null && nullable.HasValue==false))
 			{
@@ -324,7 +336,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 			}
 			else
 			{
-				return property.GetValue(obj,null);
+				return GetPropertyValueInternal(property,obj);
 			}
 		}
 

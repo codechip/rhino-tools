@@ -72,22 +72,21 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public void CopyTo(Array array, int index)
 		{
-			throw new NotImplementedException();
 		}
 
 		public int Count
 		{
-			get { throw new NotImplementedException(); }
+			get { return Dictionary.Count; }
 		}
 
 		public object SyncRoot
 		{
-			get { throw new NotImplementedException(); }
+			get { return Dictionary.SyncRoot; }
 		}
 
 		public bool IsSynchronized
 		{
-			get { throw new NotImplementedException(); }
+			get { return Dictionary.IsSynchronized; }
 		}
 	}
 
