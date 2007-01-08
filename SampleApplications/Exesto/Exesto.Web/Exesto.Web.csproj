@@ -33,6 +33,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.ActiveRecord.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.AutomaticTransactionManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Castle.Facilities.AutomaticTransactionManagement.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MonoRail.ActiveRecordScaffold, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.MonoRail.ActiveRecordScaffold.dll</HintPath>
@@ -48,6 +52,10 @@
     <Reference Include="Castle.Services.Logging.Log4netIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Transaction, Version=0.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Castle.Services.Transaction.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,6 +107,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\JustService.cs" />
+    <Compile Include="TransactionScopeResourceAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Castle\MonoRail\Castle.MonoRail.Views.Brail\Castle.MonoRail.Views.Brail-vs2005.csproj">
