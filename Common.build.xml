@@ -21,7 +21,7 @@
 				 Targets="Clean" />
 	</Target>
 	<Target Name="GenerateAssemblyInfo">
-		<SvnVersion LocalPath=".">
+		<SvnVersion LocalPath="." ToolPath="$(SharedLibsDir)\Tools\Subversion">
 			<Output TaskParameter="Revision"
 					PropertyName="Revision" />
 		</SvnVersion>
