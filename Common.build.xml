@@ -52,7 +52,7 @@
 			<Output TaskParameter="FormattedTime"
 					PropertyName="buildDate" />
 		</Time>
-		<SvnVersion LocalPath=".">
+		<SvnVersion LocalPath="." ToolPath="$(SharedLibsDir)\Tools\Subversion">
 			<Output TaskParameter="Revision"
 					PropertyName="Revision" />
 		</SvnVersion>
