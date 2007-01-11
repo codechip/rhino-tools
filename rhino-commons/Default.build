@@ -43,7 +43,7 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 				 DebugInfo="true"
 				 XmlDocumentation="true"
 				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
-				 DelaySign="true" />
+				  />
 		<Delete Files="@(MergeAssemblies)" />
 		<CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons\bin\Rhino.Commons.dll"
 			Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;">
