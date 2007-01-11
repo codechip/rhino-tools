@@ -7,8 +7,7 @@ using NHibernate.Expression;
 
 namespace Rhino.Commons.Repositories
 {
-	public class ARRepository<T> : IRepository<T>
-		where T : class
+	public class ARRepository<T> : IRepository<T> where T : class
 	{
 		/// <summary>
 		/// Get the entity from the persistance store, or return null
@@ -16,7 +15,7 @@ namespace Rhino.Commons.Repositories
 		/// </summary>
 		/// <param name="id">The entity's id</param>
 		/// <returns>Either the entity that matches the id, or a null</returns>
-		public T Get(object id)
+		public virtual T Get(object id)
 		{
 			return ActiveRecordMediator<T>.FindByPrimaryKey(id, false);
 		}
@@ -28,7 +27,7 @@ namespace Rhino.Commons.Repositories
 		/// </summary>
 		/// <param name="id">The entity's id</param>
 		/// <returns>The entity that matches the id</returns>
-		public T Load(object id)
+		public virtual T Load(object id)
 		{
 			return ActiveRecordMediator<T>.FindByPrimaryKey(id, true);
 		}
@@ -38,7 +37,7 @@ namespace Rhino.Commons.Repositories
 		/// is completed. 
 		/// </summary>
 		/// <param name="entity">The entity to delete</param>
-		public void Delete(T entity)
+		public virtual void Delete(T entity)
 		{
 			ActiveRecordMediator<T>.Delete(entity);
 		}
@@ -48,7 +47,7 @@ namespace Rhino.Commons.Repositories
 		/// is completed.
 		/// </summary>
 		/// <param name="entity">the entity to save</param>
-		public void Save(T entity)
+		public virtual void Save(T entity)
 		{
 			ActiveRecordMediator<T>.Save(entity);
 		}
@@ -400,6 +399,46 @@ namespace Rhino.Commons.Repositories
 			finally
 			{
 				sessionFactory.ConnectionProvider.CloseConnection(connection);
+			}
+		}
+
+		/// <summary>
+		/// Check if there is any records in the db for <typeparamref name="T"/>
+		/// </summary>
+		/// <param name="id">the object id</param>
+		/// <returns><c>true</c> if there's at least one row</returns>
+		public bool Exists(object id)
+		{
+			return ActiveRecordMediator<T>.Exists(id);
+		}
+
+		/// <summary>
+		/// Check if any instance matches the criteria.
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		public bool Exists(params ICriterion[] criterias)
+		{
+			return ActiveRecordMediator<T>.Exists(criterias);
+		}
+
+		/// <summary>
+		/// Check if any instance matches the criteria.
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		public bool Exists(DetachedCriteria criteria)
+		{
+			ISession session = OpenSession();
+			try
+			{
+				criteria.SetProjection(Projections.RowCount());
+				ICriteria crit = RepositoryHelper<T>
+					.GetExecutableCriteria(session, criteria, null);
+
+				return 0 != crit.UniqueResult<long>();
+			}
+			finally
+			{
+				ReleaseSession(session);
 			}
 		}
 	}
