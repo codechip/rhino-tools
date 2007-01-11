@@ -179,5 +179,24 @@ namespace Rhino.Commons
 		/// <param name="parameters">parameters for the stored procedure</param>
 		/// <returns>return value</returns>
     	object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters);
+
+		/// <summary>
+		/// Check if there is any records in the db for <typeparamref name="T"/>
+		/// </summary>
+		/// <param name="id">the object id</param>
+		/// <returns><c>true</c> if there's at least one row</returns>
+		bool Exists(object id);
+
+		/// <summary>
+		/// Check if any instance matches the criteria.
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		bool Exists(params ICriterion[] criterias);
+
+		/// <summary>
+		/// Check if any instance matches the criteria.
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		bool Exists(DetachedCriteria criteria);
     }
 }
