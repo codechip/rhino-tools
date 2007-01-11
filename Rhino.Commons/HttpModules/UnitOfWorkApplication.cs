@@ -22,7 +22,7 @@ namespace Rhino.Commons.HttpModules
     	public virtual void UnitOfWorkApplication_BeginRequest(object sender, EventArgs e)
 		{
 			if (IoC.IsInitialized == false)
-				InitializeContainer();
+				InitializeContainer(this);
     		UnitOfWork.Start();
 		}
 
@@ -40,22 +40,15 @@ namespace Rhino.Commons.HttpModules
 
 		public virtual void Application_Start(object sender, EventArgs e)
 		{
-			InitializeContainer();
+			InitializeContainer(this);
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-    	private static void InitializeContainer()
+    	private static void InitializeContainer(UnitOfWorkApplication self)
     	{
 			if(IoC.IsInitialized)
 				return;
-    		string windsorConfig = Settings.Default.WindsorConfig;
-    		if (!Path.IsPathRooted(windsorConfig))
-    		{
-    			//In ASP.Net apps, the current directory and the base path are NOT the same.
-    			windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
-    		}
-    		windsorContainer = new RhinoContainer(windsorConfig);
-    		IoC.Initialize(windsorContainer);
+			self.CreateContainer();
     	}
 
 
@@ -94,5 +87,17 @@ namespace Rhino.Commons.HttpModules
             BeginRequest -= new EventHandler(context_BeginRequest);
             EndRequest -= new EventHandler(context_EndRequest);
         }
+
+    	protected virtual void CreateContainer()
+    	{
+			string windsorConfig = Settings.Default.WindsorConfig;
+			if (!Path.IsPathRooted(windsorConfig))
+			{
+				//In ASP.Net apps, the current directory and the base path are NOT the same.
+				windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
+			}
+			windsorContainer = new RhinoContainer(windsorConfig);
+			IoC.Initialize(windsorContainer);
+    	}
     }
 }
