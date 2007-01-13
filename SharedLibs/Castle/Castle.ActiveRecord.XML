@@ -502,6 +502,12 @@
             </summary>
             <value><c>true</c> if should update; otherwise, <c>false</c>.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.AnyAttribute.NotNull">
+            <summary>
+            Gets or sets a value indicating whether this property cannot be null.
+            </summary>
+            <value><c>true</c> if this property cannot be null; otherwise, <c>false</c>.</value>
+        </member>
         <member name="T:Castle.ActiveRecord.Any">
             <summary>
             Avoids the AnyAttribute.MetaValue syntax
@@ -520,6 +526,12 @@
             <param name="value">The value.</param>
             <param name="clazz">The clazz.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Any.MetaValueAttribute.System#IComparable#CompareTo(System.Object)">
+            <summary>
+            This is here so the XmlGenerationVisitor will always
+            output the meta-values in consistent order, to aid the tests.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.Any.MetaValueAttribute.Value">
             <summary>
             Gets or sets the value for this class
@@ -531,6 +543,28 @@
             Gets or sets the class that match this value
             </summary>
             <value>The class.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.NotFoundBehaviour">
+            <summary>
+            Define how broken relations should be handled.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.NotFoundBehaviour.Default">
+            <summary>
+            Throw an exception when the relation is broken.
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.NotFoundBehaviour.Exception">
+            <summary>
+            Throw an exception when the relation is broken.
+            </summary>
+            <remarks>this is the default behaviour</remarks>
+        </member>
+        <member name="F:Castle.ActiveRecord.NotFoundBehaviour.Ignore">
+            <summary>
+            Ignore the broken relation and update
+            the FK to null on the next save.
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.BelongsToAttribute">
             <summary>
@@ -609,6 +643,12 @@
             <summary>
             Indicates whether this association is unique.
             </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.BelongsToAttribute.NotFoundBehaviour">
+            <summary>
+            Gets or sets the way broken relations are handled.
+            </summary>
+            <value>The behaviour.</value>
         </member>
         <member name="T:Castle.ActiveRecord.CollectionIDType">
             <summary>
@@ -1109,11 +1149,22 @@
             Use for simple types.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.RelationAttribute.NotFoundBehaviour">
+            <summary>
+            Gets or sets the way broken relations are handled.
+            </summary>
+            <value>The behaviour.</value>
+        </member>
         <member name="M:Castle.ActiveRecord.HasAndBelongsToManyAttribute.#ctor(System.Type)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.HasAndBelongsToManyAttribute"/> class.
             </summary>
             <param name="mapType">Type of the map.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.HasAndBelongsToManyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.HasAndBelongsToManyAttribute"/> class.
+            </summary>
         </member>
         <member name="M:Castle.ActiveRecord.HasAndBelongsToManyAttribute.#ctor(System.Type,Castle.ActiveRecord.RelationType)">
             <summary>
@@ -2055,14 +2106,14 @@
         </member>
         <member name="F:Castle.ActiveRecord.PropertyAccess.NosetterCamelcaseUnderscore">
             <summary>
-            Use the property' getter to get the value, and use the field with the same name and in camle case
+            Use the property' getter to get the value, and use the field with the same name and in camel case
             with initial "_" in order to set it.
             </summary>
             <example>
             <code>
             string _userName;//this will be use to set the value
             
-            [Property(Access=PropertyAccess.NosetterPascalcaseMUndersc)]
+            [Property(Access=PropertyAccess.NosetterCamelcaseUnderscore)]
             public string UserName { get {... } set { ... } } // this will be used just to get the value
             </code>
             </example>
@@ -2084,13 +2135,27 @@
         <member name="F:Castle.ActiveRecord.PropertyAccess.NosetterLowercaseUnderscore">
             <summary>
             Use the property' getter to get the value, and use the field with the same name and in lower case
+            with initial "_" in order to set it.
+            </summary>
+            <example>
+            <code>
+            string _username;//this will be use to set the value
+            
+            [Property(Access=PropertyAccess.NosetterLowercaseUnderscore)]
+            public string UserName { get {... } set { ... } } // this will be used just to get the value
+            </code>
+            </example>
+        </member>
+        <member name="F:Castle.ActiveRecord.PropertyAccess.NosetterLowercase">
+            <summary>
+            Use the property' getter to get the value, and use the field with the same name and in lower case
             in order to set it.
             </summary>
             <example>
             <code>
             string username;//this will be use to set the value
             
-            [Property(Access=PropertyAccess.NosetterPascalcaseMUndersc)]
+            [Property(Access=PropertyAccess.NosetterLowercase)]
             public string UserName { get {... } set { ... } } // this will be used just to get the value
             </code>
             </example>
@@ -2467,7 +2532,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.Register(System.Type,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
             <summary>
-            Used internally register an assoication between a type and its model
+            Used internally register an association between a type and its model
             </summary>
             <param name="arType"></param>
             <param name="model"></param>
@@ -2938,6 +3003,12 @@
             Gets the configuration.
             </summary>
             <value>The configuration.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.HasManyToAnyModel.MetaValues">
+            <summary>
+            Gets or sets the meta values.
+            </summary>
+            <value>The meta values.</value>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.HasManyToAnyModel.Config">
             <summary>
@@ -3641,6 +3712,12 @@
             </summary>
             <param name="model">The model.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.VisitAny(Castle.ActiveRecord.Framework.Internal.AnyModel)">
+            <summary>
+            Visits any.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.VisitHasMany(Castle.ActiveRecord.Framework.Internal.HasManyModel)">
             <summary>
             Visits the has many.
@@ -3681,6 +3758,20 @@
             Infer the column name and applies and column prefixes specified
             </remarks>
             <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.GetIndexTypeFromDictionary(System.Type)">
+            <summary>
+            Gets the index type of a mapped dictionary.
+            </summary>
+            <param name="propertyType">Type of the property.</param>
+            <returns>The index type of a map element</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.GetMapTypeFromDictionary(System.Type)">
+            <summary>
+            Gets the index type of a mapped dictionary.
+            </summary>
+            <param name="propertyType">Type of the property.</param>
+            <returns>The index type of a map element</returns>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor">
             <summary>
@@ -4102,7 +4193,7 @@
             Note: Only use if you expect most of your values to already exist in the second level cache!
             </summary>
         </member>
-        <member name="P:Castle.ActiveRecord.IActiveRecordQuery.Target">
+        <member name="P:Castle.ActiveRecord.IActiveRecordQuery.RootType">
             <summary>
             Gets the target type of this query
             </summary>
@@ -4116,7 +4207,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ActiveRecordBaseQuery"/> class.
             </summary>
-            <param name="type">The type.</param>
+            <param name="rootType">The type.</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBaseQuery.Castle#ActiveRecord#IActiveRecordQuery#Execute(NHibernate.ISession)">
             <summary>
@@ -4199,7 +4290,7 @@
             <param name="distinct">If true, only distinct results will be inserted in the array</param>
             <returns>The strongly-typed array</returns>
         </member>
-        <member name="P:Castle.ActiveRecord.ActiveRecordBaseQuery.Target">
+        <member name="P:Castle.ActiveRecord.ActiveRecordBaseQuery.RootType">
             <summary>
             Gets the target type of this query
             </summary>
@@ -4302,19 +4393,6 @@
             See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.Count">
-            <summary>
-            Tries to obtain the record count for the current query.
-            </summary>
-            <returns>The record count for the current query, or <c>-1</c> if failed.</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.PrepareQueryForCount(System.String)">
-            <summary>
-            Generate the HQL statement from the query parameters
-            </summary>
-            <param name="countQuery">The count query.</param>
-            <returns></returns>
-        </member>
         <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.CreateQuery(NHibernate.ISession)">
             <summary>
             Creates the <see cref="T:NHibernate.IQuery"/> instance.
@@ -4331,7 +4409,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.CountQuery"/> class.
             </summary>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <param name="filter">The filter.</param>
             <param name="parameters">The parameters.</param>
         </member>
@@ -4339,11 +4417,18 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.CountQuery"/> class.
             </summary>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.CountQuery.#ctor(System.Type,NHibernate.Expression.ICriterion[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.CountQuery"/> class.
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="criterias">Criteria applied to the query</param>
         </member>
         <member name="M:Castle.ActiveRecord.Queries.CountQuery.InternalExecute(NHibernate.ISession)">
             <summary>
-            Simply creates the query and then call its <see cref="M:NHibernate.IQuery.List"/> method.
+            Executes the query.
             </summary>
             <param name="session">The <c>NHibernate</c>'s <see cref="T:NHibernate.ISession"/></param>
             <returns></returns>
@@ -4444,6 +4529,14 @@
             Note: Do not call SetProjection() on the detached criteria, since that is overwritten.
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.SetRange(System.Int32,System.Int32)">
+            <summary>
+            Sets the query range.
+            </summary>
+            <param name="first">The first row to return.</param>
+            <param name="max">The max number of rows to return.</param>
+            <returns>The instance</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.Castle#ActiveRecord#IActiveRecordQuery#Execute(NHibernate.ISession)">
             <summary>
             Executes the specified query and return the results
@@ -4463,7 +4556,7 @@
             </summary>
             <returns>the result of the query</returns>
         </member>
-        <member name="P:Castle.ActiveRecord.Queries.ProjectionQuery`2.Target">
+        <member name="P:Castle.ActiveRecord.Queries.ProjectionQuery`2.RootType">
             <summary>
             Gets the target type of this query
             </summary>
@@ -4585,7 +4678,7 @@
             </summary>
             <returns>the result of the query</returns>
         </member>
-        <member name="P:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.Target">
+        <member name="P:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.RootType">
             <summary>
             Gets the target type of this query
             </summary>
@@ -5395,6 +5488,25 @@
             Always create an isolated transaction context.
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.OnDispose">
+            <summary>
+            Governs the <see cref="T:Castle.ActiveRecord.TransactionScope"/> behavior 
+            on dispose if neither <see cref="M:Castle.ActiveRecord.TransactionScope.VoteCommit"/>
+            nor <see cref="M:Castle.ActiveRecord.TransactionScope.VoteRollBack"/> was called
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.OnDispose.Commit">
+            <summary>
+            Should commit the transaction, unless <see cref="M:Castle.ActiveRecord.TransactionScope.VoteRollBack"/>
+            was called before the disposing the scope (this is the default behavior)
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.OnDispose.Rollback">
+            <summary>
+            Should rollback the transaction, unless <see cref="M:Castle.ActiveRecord.TransactionScope.VoteCommit"/>
+            was called before the disposing the scope
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.TransactionScope">
             <summary>
             Implementation of <see cref="T:Castle.ActiveRecord.ISessionScope"/> to 
@@ -5406,18 +5518,32 @@
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.TransactionScope"/> class.
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.TransactionScope.#ctor(Castle.ActiveRecord.OnDispose)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.TransactionScope"/> class.
+            </summary>
+            <param name="onDisposeBehavior">The on dispose behavior.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.TransactionScope.#ctor(Castle.ActiveRecord.TransactionMode)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.TransactionScope"/> class.
             </summary>
             <param name="mode">Whatever to create a new transaction or inherits an existing one</param>
         </member>
-        <member name="M:Castle.ActiveRecord.TransactionScope.#ctor(Castle.ActiveRecord.TransactionMode,System.Data.IsolationLevel)">
+        <member name="M:Castle.ActiveRecord.TransactionScope.#ctor(Castle.ActiveRecord.TransactionMode,Castle.ActiveRecord.OnDispose)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.TransactionScope"/> class.
+            </summary>
+            <param name="mode">Whatever to create a new transaction or inherits an existing one</param>
+            <param name="onDisposeBehavior">The on dispose behavior.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.TransactionScope.#ctor(Castle.ActiveRecord.TransactionMode,System.Data.IsolationLevel,Castle.ActiveRecord.OnDispose)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.TransactionScope"/> class.
             </summary>
             <param name="mode">Whatever to create a new transaction or inherits an existing one</param>
             <param name="isolationLevel">The transaction isolation level.</param>
+            <param name="onDisposeBehavior">The on dispose behavior.</param>
         </member>
         <member name="M:Castle.ActiveRecord.TransactionScope.VoteRollBack">
             <summary>
@@ -5974,24 +6100,19 @@
             The global holder for the session factories.
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.#ctor">
-            <summary>
-            Constructs an ActiveRecordBase subclass.
-            </summary>
-        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Register(System.Type,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
             <summary>
             Internally used
             </summary>
-            <param name="arType"></param>
-            <param name="model"></param>
+            <param name="arType">The type.</param>
+            <param name="model">The model.</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.GetModel(System.Type)">
             <summary>
             Internally used
             </summary>
-            <param name="arType"></param>
-            <returns></returns>
+            <param name="arType">The type.</param>
+            <returns>An <see cref="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Create(System.Object)">
             <summary>
@@ -5999,11 +6120,37 @@
             </summary>
             <param name="instance">The ActiveRecord instance to be created on the database</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.CreateAndFlush(System.Object)">
+            <summary>
+            Creates (Saves) a new instance to the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be created on the database</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalCreate(System.Object,System.Boolean)">
+            <summary>
+            Creates (Saves) a new instance to the database.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be created on the database</param>
+            <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Delete(System.Object)">
             <summary>
             Deletes the instance from the database.
             </summary>
             <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.DeleteAndFlush(System.Object)">
+            <summary>
+            Deletes the instance from the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalDelete(System.Object,System.Boolean)">
+            <summary>
+            Deletes the instance from the database.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+            <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Replicate(System.Object,NHibernate.ReplicationMode)">
             <summary>
@@ -6056,6 +6203,21 @@
             </summary>
             <param name="instance">The ActiveRecord instance to be updated on the database</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.UpdateAndFlush(System.Object)">
+            <summary>
+            Persists the modification on the instance
+            state to the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be updated on the database</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalUpdate(System.Object,System.Boolean)">
+            <summary>
+            Persists the modification on the instance
+            state to the database.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be updated on the database</param>
+            <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Save(System.Object)">
             <summary>
             Saves the instance to the database. If the primary key is unitialized
@@ -6066,6 +6228,29 @@
             </para>
             </summary>
             <param name="instance">The ActiveRecord instance to be saved</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveAndFlush(System.Object)">
+            <summary>
+            Saves the instance to the database and flushes the session. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Create"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Update"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The ActiveRecord instance to be saved</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalSave(System.Object,System.Boolean)">
+            <summary>
+            Saves the instance to the database. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Create"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Update"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The ActiveRecord instance to be saved</param>
+            <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Execute(System.Type,Castle.ActiveRecord.NHibernateDelegate,System.Object)">
             <summary>
@@ -6083,16 +6268,16 @@
             Note: only use if you expect most of the values to exist on the second level cache.
             </summary>
             <param name="query">The query.</param>
-            <returns></returns>
+            <returns>An <see cref="T:System.Collections.IEnumerable"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.ExecuteQuery(Castle.ActiveRecord.IActiveRecordQuery)">
             <summary>
             Executes the query.
             </summary>
             <param name="query">The query.</param>
-            <returns></returns>
+            <returns>The query result.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.CountAll(System.Type)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6106,15 +6291,15 @@
               
               public static int CountAllUsers()
               {
-                return CountAll(typeof(User));
+                return Count(typeof(User));
               }
             }
             </code>
             </example>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.CountAll(System.Type,System.String,System.Object[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,System.String,System.Object[])">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6128,28 +6313,37 @@
               
               public static int CountAllUsersLocked()
               {
-                return CountAll(typeof(User), "IsLocked = ?", true);
+                return Count(typeof(User), "IsLocked = ?", true);
               }
             }
             </code>
             </example>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
             <param name="args">Positional parameters for the filter string</param>
+            <returns>The count result</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,NHibernate.Expression.ICriterion[])">
+            <summary>
+            Returns the number of records of the specified 
+            type in the database
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="criteria">The criteria expression</param>
             <returns>The count result</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type)">
             <summary>
             Check if there is any records in the db for the target type
             </summary>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <returns><c>true</c> if there's at least one row</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,System.String,System.Object[])">
             <summary>
             Check if there is any records in the db for the target type
             </summary>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
             <param name="args">Positional parameters for the filter string</param>
             <returns><c>true</c> if there's at least one row</returns>
@@ -6158,46 +6352,52 @@
             <summary>
             Check if the <paramref name="id"/> exists in the database.
             </summary>
-            <param name="targetType">Type of the target.</param>
+            <param name="targetType">The target type.</param>
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.Expression.ICriterion[])">
             <summary>
-            Check if any instance matches the criteria.
+            Check if any instance matching the criteria exists in the database.
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="criteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
             <summary>
             Returns all instances found for the specified type according to the criteria
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedCriteria">The criteria.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type)">
             <summary>
             Returns all instances found for the specified type.
             </summary>
-            <param name="targetType"></param>
-            <returns></returns>
+            <param name="targetType">The target type.</param>
+            <returns>The <see cref="T:System.Array"/> of results</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
-            using sort orders and criterias.
+            using sort orders and criteria.
             </summary>
-            <param name="targetType"></param>
-            <param name="orders"></param>
-            <param name="criterias"></param>
-            <returns></returns>
+            <param name="targetType">The The target type.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
-            using criterias.
+            using criteria.
             </summary>
-            <param name="targetType"></param>
-            <param name="criterias"></param>
-            <returns></returns>
+            <param name="targetType">The target type.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAllByProperty(System.Type,System.String,System.Object)">
             <summary>
@@ -6206,7 +6406,7 @@
             <param name="targetType">The target type</param>
             <param name="property">A property name (not a column name)</param>
             <param name="value">The value to be equals to</param>
-            <returns></returns>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAllByProperty(System.Type,System.String,System.String,System.Object)">
             <summary>
@@ -6216,7 +6416,7 @@
             <param name="orderByColumn">The column name to be ordered ASC</param>
             <param name="property">A property name (not a column name)</param>
             <param name="value">The value to be equals to</param>
-            <returns></returns>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindByPrimaryKey(System.Type,System.Object)">
             <summary>
@@ -6224,7 +6424,7 @@
             </summary>
             <param name="targetType">The AR subclass type</param>
             <param name="id">ID value</param>
-            <returns></returns>
+            <returns>The object instance.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindByPrimaryKey(System.Type,System.Object,System.Boolean)">
             <summary>
@@ -6234,7 +6434,7 @@
             <param name="id">ID value</param>
             <param name="throwOnNotFound"><c>true</c> if you want to catch an exception 
             if the object is not found</param>
-            <returns></returns>
+            <returns>The object instance.</returns>
             <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to 
             <c>true</c> and the row is not found</exception>
         </member>
@@ -6244,7 +6444,7 @@
             </summary>
             <param name="targetType">The target type</param>
             <param name="orders">The sort order - used to determine which record is the first one</param>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expression.ICriterion[])">
@@ -6252,7 +6452,7 @@
             Searches and returns the first row.
             </summary>
             <param name="targetType">The target type</param>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expression.ICriterion[])">
@@ -6261,7 +6461,7 @@
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
             <param name="targetType">The target type</param>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expression.DetachedCriteria)">
@@ -6277,21 +6477,43 @@
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="targetType">The target type.</param>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Execute(Castle.ActiveRecord.NHibernateDelegate)">
             <summary>
@@ -6307,22 +6529,85 @@
             May Create or Update the instance depending 
             on whether it has a valid ID.
             </summary>
+            <remarks>
+            If within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be on hold until NHibernate (or you) decides to flush
+            the session.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveAndFlush">
+            <summary>
+            Saves the instance information to the database.
+            May Create or Update the instance depending 
+            on whether it has a valid ID.
+            </summary>
+            <remarks>
+            Even within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be flushed immediately. This might have side effects such as
+            flushing (persisting) others operations that were on hold.
+            </remarks>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Create">
             <summary>
             Creates (Saves) a new instance to the database.
             </summary>
+            <remarks>
+            If within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be on hold until NHibernate (or you) decides to flush
+            the session.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.CreateAndFlush">
+            <summary>
+            Creates (Saves) a new instance to the database.
+            </summary>
+            <remarks>
+            Even within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be flushed immediately. This might have side effects such as
+            flushing (persisting) others operations that were on hold.
+            </remarks>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Update">
             <summary>
             Persists the modification on the instance
             state to the database.
             </summary>
+            <remarks>
+            If within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be on hold until NHibernate (or you) decides to flush
+            the session.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.UpdateAndFlush">
+            <summary>
+            Persists the modification on the instance
+            state to the database.
+            </summary>
+            <remarks>
+            Even within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be flushed immediately. This might have side effects such as
+            flushing (persisting) others operations that were on hold.
+            </remarks>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Delete">
             <summary>
             Deletes the instance from the database.
             </summary>
+            <remarks>
+            If within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be on hold until NHibernate (or you) decides to flush
+            the session.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.DeleteAndFlush">
+            <summary>
+            Deletes the instance from the database.
+            </summary>
+            <remarks>
+            Even within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be flushed immediately. This might have side effects such as
+            flushing (persisting) others operations that were on hold.
+            </remarks>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Refresh">
             <summary>
@@ -6334,17 +6619,12 @@
             Return the type of the object with its PK value.
             Useful for logging/debugging
             </summary>
-            <returns></returns>
+            <returns>A string representation of this object.</returns>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordBase`1">
             <summary>
             Base class for all ActiveRecord Generic classes. 
             Implements all the functionality to simplify the code on the subclasses.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.#ctor">
-            <summary>
-            Constructs an ActiveRecordBase subclass.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Create(`0)">
@@ -6422,9 +6702,9 @@
             Executes the query and return a strongly typed result
             </summary>
             <param name="query">The query.</param>
-            <returns></returns>
+            <returns>The query result.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.CountAll">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count">
             <summary>
             Returns the number of records of <typeparamref name="T"/> in the database
             </summary>
@@ -6437,14 +6717,14 @@
               
               public static int CountAllUsers()
               {
-                return CountAll(); // Equivalent to: CountAll(typeof(User));
+                return Count(); // Equivalent to: Count(typeof(User));
               }
             }
             </code>
             </example>
             <returns>The count query result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.CountAll(System.String,System.Object[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count(System.String,System.Object[])">
             <summary>
             Returns the number of records of <typeparamref name="T"/> in the database
             </summary>
@@ -6457,7 +6737,7 @@
               
               public static int CountAllUsersLocked()
               {
-                return CountAll("IsLocked = ?", true); // Equivalent to: CountAll(typeof(User), "IsLocked = ?", true);
+                return Count("IsLocked = ?", true); // Equivalent to: Count(typeof(User), "IsLocked = ?", true);
               }
             }
             </code>
@@ -6490,8 +6770,9 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.Expression.ICriterion[])">
             <summary>
-            Check if any instance matches the criteria.
+            Check if any instance matching the criteria exists in the database.
             </summary>
+            <param name="criteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
@@ -6506,30 +6787,33 @@
             <summary>
             Returns all instances found for <typeparamref name="T"/>
             </summary>
-            <returns></returns>
+            <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.Order,NHibernate.Expression.ICriterion[])">
             <summary>
-            Returns all instances found for <typeparamref name="T"/>
-            using the specified sort order and criterias.
+            Returns all instances found for the specified type 
+            using sort orders and criteria.
             </summary>
+            <param name="order">An <see cref="T:NHibernate.Expression.Order"/> object.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
             <summary>
             Returns all instances found for <typeparamref name="T"/>
-            using sort orders and criterias.
+            using sort orders and criteria.
             </summary>
             <param name="orders"></param>
-            <param name="criterias"></param>
-            <returns></returns>
+            <param name="criteria"></param>
+            <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.ICriterion[])">
             <summary>
             Returns all instances found for <typeparamref name="T"/>
-            using criterias.
+            using criteria.
             </summary>
-            <param name="criterias"></param>
-            <returns></returns>
+            <param name="criteria"></param>
+            <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAllByProperty(System.String,System.Object)">
             <summary>
@@ -6537,7 +6821,7 @@
             </summary>
             <param name="property">A property name (not a column name)</param>
             <param name="value">The value to be equals to</param>
-            <returns></returns>
+            <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAllByProperty(System.String,System.String,System.Object)">
             <summary>
@@ -6546,7 +6830,7 @@
             <param name="orderByColumn">The column name to be ordered ASC</param>
             <param name="property">A property name (not a column name)</param>
             <param name="value">The value to be equals to</param>
-            <returns></returns>
+            <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Find(System.Object)">
             <summary>
@@ -6562,14 +6846,14 @@
             If the row is not found this method will not throw an exception.
             </summary>
             <param name="id">ID value</param>
-            <returns></returns>
+            <returns>A <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindByPrimaryKey(System.Object)">
             <summary>
             Finds an object instance by an unique ID for <typeparamref name="T"/>
             </summary>
             <param name="id">ID value</param>
-            <returns></returns>
+            <returns>A <typeparamref name="T"/></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindByPrimaryKey(System.Object,System.Boolean)">
             <summary>
@@ -6578,7 +6862,7 @@
             <param name="id">ID value</param>
             <param name="throwOnNotFound"><c>true</c> if you want to catch an exception 
             if the object is not found</param>
-            <returns></returns>
+            <returns>A <typeparamref name="T"/></returns>
             <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to 
             <c>true</c> and the row is not found</exception>
         </member>
@@ -6587,7 +6871,7 @@
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
             <param name="order">The sort order - used to determine which record is the first one</param>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
@@ -6595,14 +6879,14 @@
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
             <param name="orders">The sort order - used to determine which record is the first one</param>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.ICriterion[])">
             <summary>
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expression.ICriterion[])">
@@ -6610,7 +6894,7 @@
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
             </summary>
-            <param name="criterias">The criteria expression</param>
+            <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expression.DetachedCriteria)">
@@ -6625,16 +6909,30 @@
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
+            <param name="firstResult">The number of the first row to retrieve.</param>
+            <param name="maxResults">The maximum number of results retrieved.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The sliced query results.</returns>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.ActiveRecordException">
             <summary>
@@ -6867,7 +7165,7 @@
             <param name="q">The query</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.CountAll(System.Type)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6879,9 +7177,9 @@
             {
               ...
               
-              public static int CountAllUsers()
+              public static int CountUsers()
               {
-                return CountAll(typeof(User));
+                return Count(typeof(User));
               }
             }
             </code>
@@ -6889,7 +7187,7 @@
             <param name="targetType">Type of the target.</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.CountAll(System.Type,System.String,System.Object[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,System.String,System.Object[])">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6901,9 +7199,9 @@
             {
               ...
               
-              public static int CountAllUsersLocked()
+              public static int CountUsersLocked()
               {
-                return CountAll(typeof(User), "IsLocked = ?", true);
+                return Count(typeof(User), "IsLocked = ?", true);
               }
             }
             </code>
@@ -7130,14 +7428,14 @@
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.CountAll">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count">
             <summary>
             Returns the number of records of the specified 
             type in the database
             </summary>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.CountAll(System.String,System.Object[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(System.String,System.Object[])">
             <summary>
             Returns the number of records of the specified 
             type in the database
