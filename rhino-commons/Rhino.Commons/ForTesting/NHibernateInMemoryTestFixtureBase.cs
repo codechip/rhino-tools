@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Data;
 using System.Reflection;
+using Castle.ActiveRecord;
+using Castle.ActiveRecord.Framework;
+using Castle.ActiveRecord.Framework.Config;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
@@ -30,6 +34,7 @@ namespace Rhino.Commons.ForTesting
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
 			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
 			properties.Add("hibernate.show_sql", "true");
+			properties.Add("hibernate.connection.release_mode", "on_close");
 
 			configuration = new Configuration();
 			configuration.Properties = properties;
