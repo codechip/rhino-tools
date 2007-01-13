@@ -47,7 +47,7 @@ namespace Rhino.Commons
 
 		public RhinoTransaction BeginTransaction(IsolationLevel isolationLevel)
 		{
-			TransactionScope transactionScope = new TransactionScope(TransactionMode.New, isolationLevel);
+			TransactionScope transactionScope = new TransactionScope(TransactionMode.New, isolationLevel, OnDispose.Rollback);
 			transactionAdapter = new ActiveRecordTransactionAdapter(transactionScope);
 			return transactionAdapter;
 		}
