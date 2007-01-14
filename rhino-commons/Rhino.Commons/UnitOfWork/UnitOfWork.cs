@@ -48,7 +48,7 @@ namespace Rhino.Commons
 			}
 			IUnitOfWorkImplementor unitOfWorkImplementor = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
 			Local.Data[CurrentUnitOfWorkKey] = unitOfWorkImplementor;
-			return existing;
+			return unitOfWorkImplementor;
 		}
 
 	    /// <summary>

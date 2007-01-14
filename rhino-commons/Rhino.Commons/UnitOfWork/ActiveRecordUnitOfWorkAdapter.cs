@@ -59,10 +59,10 @@ namespace Rhino.Commons
 		public void Dispose()
 		{
 			usageCount -= 1;
-			if(usageCount==0)
-			{
-				scope.Dispose();
-			}
+			if (usageCount != 0)
+				return;
+			UnitOfWork.DisposeUnitOfWork(this);
+			scope.Dispose();
 		}
 	}
 }
