@@ -5,7 +5,7 @@ using Castle.ActiveRecord;
 using NHibernate;
 using NHibernate.Expression;
 
-namespace Rhino.Commons.Repositories
+namespace Rhino.Commons
 {
 	public class ARRepository<T> : IRepository<T> where T : class
 	{
