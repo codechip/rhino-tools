@@ -35,6 +35,11 @@ namespace Rhino.Commons
 			get { return previous; }
 		}
 
+		public ISessionScope Scope
+		{
+			get { return scope; }
+		}
+
 		public void Flush()
 		{
 			scope.Flush();

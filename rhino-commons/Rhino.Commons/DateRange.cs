@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Castle.ActiveRecord;
 
 namespace Rhino.Commons
 {
@@ -12,11 +13,13 @@ namespace Rhino.Commons
 		private DateTime start;
 		private DateTime end;
 
+		[Property(NotNull = true, Access = PropertyAccess.FieldCamelcase)]
 		public DateTime Start
 		{
 			get { return start; }
 		}
 
+		[Property(NotNull = true, Access = PropertyAccess.FieldCamelcase)]
 		public DateTime End
 		{
 			get { return end; }
@@ -145,8 +148,12 @@ namespace Rhino.Commons
 			}
 		}
 
-		//Equals method is provides by ValueType, which does bitwise check, which
-		//is what we need.
+		public override bool Equals(object obj)
+		{
+			//Equals method is provides by ValueType, which does bitwise check, which
+			//is what we need.
+			return base.Equals(obj);
+		}
 
 		public override int GetHashCode()
 		{
