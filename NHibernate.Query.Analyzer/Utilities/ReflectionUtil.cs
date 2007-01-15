@@ -292,6 +292,11 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 		public static IDictionary GetPropertiesDictionary(object obj)
 		{
 			Hashtable ht = new Hashtable();
+			if(obj==null)
+			{
+				ht.Add("Value", "null");
+				return ht;
+			}
 			if(obj is ValueType || obj is string)
 			{
 				ht.Add("ToString()",obj.ToString());

@@ -9,7 +9,7 @@
 		<SolutionFile>Ayende.NHibernateQueryAnalyzer.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>
 		<SectionId>-1</SectionId>
-		<Version>1.2.1</Version>
+		<Version>1.2.3</Version>
 	</PropertyGroup>
 	<ItemGroup>
 			<AssemblyInfo Include="Item">

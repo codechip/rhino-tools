@@ -20,30 +20,33 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		protected RemoteObject(object obj)
 		{
 			this.obj = obj;
-			type = obj.GetType();
+			if (obj == null)//select c.Value from Customer c -- where c.Value is null\
+				type = typeof(object);
+			else
+				type = obj.GetType();
 			name = ReflectionUtil.GetName(obj);
-            if(InitializeIfObjectIsType(obj)==false)
-            {
-                readableProperties = ReflectionUtil.GetPropertiesDictionary(obj);
-            }
-            keys = new string[readableProperties.Count];
-            readableProperties.Keys.CopyTo(keys, 0);
-            isSimpleType = ReflectionUtil.IsSimpleType(type);
+			if (InitializeIfObjectIsType(obj) == false)
+			{
+				readableProperties = ReflectionUtil.GetPropertiesDictionary(obj);
+			}
+			keys = new string[readableProperties.Count];
+			readableProperties.Keys.CopyTo(keys, 0);
+			isSimpleType = ReflectionUtil.IsSimpleType(type);
 		}
 
-        private bool InitializeIfObjectIsType(object obj)
-        {
-            Type t = obj as Type;
-            if (t != null)
-            {
-                readableProperties = new Hashtable();
-                readableProperties.Add("Name", t.Name);
-                readableProperties.Add("FullName", t.FullName);
-                return true;
-            }
-            return false;
+		private bool InitializeIfObjectIsType(object obj)
+		{
+			Type t = obj as Type;
+			if (t != null)
+			{
+				readableProperties = new Hashtable();
+				readableProperties.Add("Name", t.Name);
+				readableProperties.Add("FullName", t.FullName);
+				return true;
+			}
+			return false;
 
-        }
+		}
 
 		public override object InitializeLifetimeService()
 		{
@@ -67,7 +70,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public string[] Properties
 		{
-			get {return keys;}
+			get { return keys; }
 		}
 
 		public object this[string name]
@@ -75,9 +78,9 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			get
 			{
 				object obj = readableProperties[name];
-				if(obj==null)
+				if (obj == null)
 					return null;
-				if(ReflectionUtil.IsSimpleObject(obj))
+				if (ReflectionUtil.IsSimpleObject(obj))
 					return obj.ToString();
 				else
 					return RemoteObject.Create(obj);
@@ -107,7 +110,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public static RemoteObject Create(object obj)
 		{
-			if(obj is IList)
+			if (obj is IList)
 				return new RemoteList((IList)obj);
 			else if (obj is IDictionary)
 				return new RemoteDictionary((IDictionary)obj);
