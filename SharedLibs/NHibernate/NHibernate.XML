@@ -21957,6 +21957,11 @@
             This method could return <c>false</c> even after successful invocation of <c>Commit()</c>
             </remarks>
         </member>
+        <member name="E:NHibernate.ITransaction.AfterTransactionCompletion">
+            <summary>
+            Called when the transaction is committed or rolledback.
+            </summary>
+        </member>
         <member name="M:NHibernate.Transaction.AdoTransaction.#ctor(NHibernate.Engine.ISessionImplementor)">
             <summary>
             Initializes a new instance of the <see cref="T:NHibernate.Transaction.AdoTransaction"/> class.
@@ -27634,7 +27639,7 @@
         </member>
         <member name="M:NHibernate.Util.StringHelper.Split(System.String,System.String)">
             <summary>
-            Just a façade for calling string.Split()
+            Just a faחade for calling string.Split()
             We don't use our StringTokenizer because string.Split() is
             more efficient (but it only works when we don't want to retrieve the delimiters)
             </summary>

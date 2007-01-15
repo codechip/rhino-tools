@@ -136,9 +136,11 @@
         </member>
         <member name="T:Castle.MicroKernel.DependencyTrackingScope.DependencyModelExtended">
             <summary>
-            Extends <see cref="T:Castle.Core.DependencyModel"/> adding <see cref="T:System.Reflection.MemberInfo"/>
-            information. This is only useful to provide detailed information 
-            on exceptions.
+            Extends <see cref="T:Castle.Core.DependencyModel"/> adding <see cref="T:System.Reflection.MemberInfo"/> and <see cref="T:Castle.Core.ComponentModel"/>
+            information. Th MemberInfo is only useful to provide detailed information 
+            on exceptions. 
+            The ComponentModel is required so we can get resolve an object that takes as a parameter itself, but
+            with difference model. (See IoC 51 for the details)
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Exceptions.CircularDependecyException">
@@ -539,6 +541,13 @@
             so there's no point collecting constructor dependencies
             </summary>
             <param name="model"></param>
+        </member>
+        <member name="M:Castle.Facilities.Remoting.RemotingRegistry.GetModel(System.Type)">
+            <summary>
+            Used in case of generics:
+            </summary>
+            <param name="serviceType"></param>
+            <returns></returns>
         </member>
         <member name="M:Castle.Facilities.Startable.StartableFacility.CheckWaitingList">
             <summary>
@@ -2599,6 +2608,14 @@
             <param name="key"></param>
             <param name="serviceType"></param>
             <param name="instance"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.RemoveComponent(System.String)">
+            <summary>
+            Returns true if the specified component was
+            found and could be removed (i.e. no other component depends on it)
+            </summary>
+            <param name="key">The component's key</param>
+            <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.Type,System.Collections.IDictionary)">
             <summary>
