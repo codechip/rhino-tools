@@ -73,7 +73,6 @@ namespace Query
 			return this;
 		}
 
-
 		public QueryBuilder<T> In(ICollection values)
 		{
 			AbstractCriterion inExpression = new InExpression(name, ToArray(values));
@@ -157,6 +156,22 @@ namespace Query
 			return combined;
 		}
 
+		public static QueryBuilder<T> operator !(QueryBuilder<T> other)
+		{
+			QueryBuilder<T> not = new QueryBuilder<T>(other.name, null);
+			if(other.children.Count!=0)
+			{
+				throw new InvalidOperationException("Cannot use ! operator on complex queries");
+			}
+			Conjunction conjunction = new Conjunction();
+			foreach(ICriterion crit in other.criterions)
+			{
+				conjunction.Add(crit);
+			}
+			not.AddCriterion(Expression.Not(conjunction));
+			return not;
+		}
+
 		public static QueryBuilder<T> operator |(QueryBuilder<T> lhs, QueryBuilder<T> rhs)
 		{
 			if (lhs.associationPath != rhs.associationPath)
@@ -197,9 +212,14 @@ Use HQL for this functionality...",
 
 		public static implicit operator DetachedCriteria(QueryBuilder<T> expr)
 		{
-			DetachedCriteria detachedCriteria = DetachedCriteria.For<T>();
+			return expr.ToDetachedCriteria(null);
+		}
+
+		public DetachedCriteria ToDetachedCriteria(string alias)
+		{
+			DetachedCriteria detachedCriteria = DetachedCriteria.For(typeof(T), alias);
 			Dictionary<string, ICollection<ICriterion>> criterionsByAssociation = new Dictionary<string, ICollection<ICriterion>>();
-			expr.AddByAssociationPath(criterionsByAssociation);
+			AddByAssociationPath(criterionsByAssociation);
 
 			foreach (KeyValuePair<string, ICollection<ICriterion>> pair in criterionsByAssociation)
 			{
@@ -213,7 +233,6 @@ Use HQL for this functionality...",
 			}
 			return detachedCriteria;
 		}
-
 		#endregion
 
 		[System.ComponentModel.Browsable(false)]

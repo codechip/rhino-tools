@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs D:\Work\Exesto\Exesto.Model\bin\Debug\Exesto.Model.dll .</StartArguments>
+    <StartArguments>cs "D:\Work\BillingSystem\BillingSystem\bin\Debug\BillingSystem.exe" "D:\Work\BillingSystem\BillingSystem\Queries"</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>

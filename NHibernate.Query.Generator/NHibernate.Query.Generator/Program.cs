@@ -1,22 +1,21 @@
 using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework.Internal;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
 
 namespace NHibernate.Query.Generator
 {
-	class Program
+	internal class Program
 	{
 		private static string targetExtention;
 		private static string outputDir;
 		private static CodeDomProvider provider = null;
 
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			string inputFilePattern = GetCommandLineArguments(args);
 			try
@@ -34,7 +33,8 @@ namespace NHibernate.Query.Generator
 			}
 			catch (ReflectionTypeLoadException e)
 			{
-				Console.WriteLine("A type load error occured!\r\nThis usually happens if NHibernate Query Generator is unable to load all the required assemblies.");
+				Console.WriteLine(
+					"A type load error occured!\r\nThis usually happens if NHibernate Query Generator is unable to load all the required assemblies.");
 				Dictionary<string, bool> reported = new Dictionary<string, bool>();
 				foreach (Exception loaderException in e.LoaderExceptions)
 				{
@@ -55,14 +55,14 @@ namespace NHibernate.Query.Generator
 		private static void OutputFile(string file)
 		{
 			string fileExt = Path.GetExtension(file);
-			string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) +"."+ targetExtention);
+			string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + "." + targetExtention);
 			// hbm file
 			if (fileExt.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
 			{
 				GenerateSingleFile(File.OpenText(file), outputFile);
 			}
 			else if (fileExt.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
-			         fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase))// Active Record...
+			         fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase)) // Active Record...
 			{
 				GenerateFromActiveRecordAssembly(file);
 			}
@@ -70,8 +70,10 @@ namespace NHibernate.Query.Generator
 
 		private static void OutputQueryBuilder()
 		{
-//write query builders so user can just include the whole directory.
-			Stream namedExp = typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder."+targetExtention);
+			//write query builders so user can just include the whole directory.
+			Stream namedExp =
+				typeof (Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder." +
+				                                                    targetExtention);
 			File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + targetExtention), new StreamReader(namedExp).ReadToEnd());
 			Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
 		}
@@ -82,29 +84,87 @@ namespace NHibernate.Query.Generator
 			RegisterAssemblyResolver(fullPath);
 
 			Assembly asm = Assembly.LoadFile(fullPath);
-			ActiveRecordModelBuilder activeRecordModelBuilder = new ActiveRecordModelBuilder();
-			List<ActiveRecordModel> models = new List<ActiveRecordModel>();
+			Assembly activeRecordAssembly = GetActiveRecordAsembly(asm);
+			if (activeRecordAssembly == null)
+			{
+				throw new InvalidOperationException(string.Format("Could not find Active Record assembly referenced from {0}", asm));
+			}
+			object activeRecordModelBuilder =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder"));
+			ArrayList models = new ArrayList();
 			foreach (System.Type type in asm.GetTypes())
 			{
-				if (type.IsDefined(typeof(ActiveRecordAttribute), true) == false)
+				if (IsActiveRecordType(type) == false)
 					continue;
-				ActiveRecordModel model = activeRecordModelBuilder.Create(type);
+				object model = Invoke(activeRecordModelBuilder, "Create", type);
 				if (model == null)
 					continue;
 				models.Add(model);
-				GraphConnectorVisitor graphConnectorVisitor = new GraphConnectorVisitor(activeRecordModelBuilder.Models);
-				graphConnectorVisitor.VisitModel(model);
+				object graphConnectorVisitor =
+					Activator.CreateInstance(
+						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
+						new object[] {Get(activeRecordModelBuilder, "Models")});
+				Invoke(graphConnectorVisitor, "VisitModel", model);
 			}
 
-			foreach (ActiveRecordModel model in models)
+			foreach (object model in models)
 			{
-				XmlGenerationVisitor xmlVisitor = new XmlGenerationVisitor();
-				SemanticVerifierVisitor semanticVisitor = new SemanticVerifierVisitor(activeRecordModelBuilder.Models);
-				semanticVisitor.VisitNode(model);
-				xmlVisitor.CreateXml(model);
-				string genFile = Path.Combine(outputDir, "Where." + model.Type.Name + "." + targetExtention);
-				GenerateSingleFile(new StringReader(xmlVisitor.Xml), genFile);
+				object xmlVisitor =
+					Activator.CreateInstance(
+						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
+
+				object semanticVisitor =
+					Activator.CreateInstance(
+						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
+						new object[] {Get(activeRecordModelBuilder, "Models")});
+
+				Invoke(semanticVisitor, "VisitModel", model);
+				Invoke(xmlVisitor, "CreateXml", model);
+				System.Type type = (System.Type) Get(model, "Type");
+				string genFile = Path.Combine(outputDir, "Where." + type.Name + "." + targetExtention);
+				GenerateSingleFile(new StringReader((string) Get(xmlVisitor, "Xml")), genFile);
 			}
+		}
+
+		private static bool IsActiveRecordType(System.Type type)
+		{
+			foreach (object customAttribute in type.GetCustomAttributes(true))
+			{
+				if (customAttribute.GetType().Name == "ActiveRecordAttribute")
+					return true;
+			}
+			return false;
+		}
+
+		public static object Invoke(object obj, string name, params object[] args)
+		{
+			return obj.GetType().GetMethod(name).Invoke(obj, args);
+		}
+
+
+		public static object Get(object obj, string name)
+		{
+			return obj.GetType().GetProperty(name).GetValue(obj, null);
+		}
+
+
+		/// <summary>
+		/// This is needed to make sure that we work with different versions of Active Record
+		/// </summary>
+		private static Assembly GetActiveRecordAsembly(Assembly assembly)
+		{
+			System.Type type = assembly.GetType("Castle.ActiveRecord.ActiveRecordBase", false);
+			if (type != null)
+				return type.Assembly;
+			foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies())
+			{
+				Assembly refAsm = Assembly.Load(assemblyName);
+				Assembly result = GetActiveRecordAsembly(refAsm);
+				if (result != null)
+					return result;
+			}
+			return null;
 		}
 
 		private static void RegisterAssemblyResolver(string fullPath)
