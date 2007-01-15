@@ -61,9 +61,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.AutomaticTransactionManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.AutomaticTransactionManagement.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Transaction, Version=0.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Services.Transaction.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -136,6 +144,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Facilities\RhinoTransactionFacility.cs" />
+    <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
     <Compile Include="ForTesting\ActiveRecordInMemoryTestFixtureBase.cs" />
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
     <Compile Include="Logging\RollingSqliteAppender.cs" />

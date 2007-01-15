@@ -68,16 +68,16 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public object QuackGet(string name, object[] parameters)
+		public object QuackGet(string name, object[] property_parameters)
 		{
-			if(parameters!=null && parameters.Length>0)
+			if(property_parameters!=null && property_parameters.Length>0)
 			{
-				return _attributes[parameters[0]];
+				return _attributes[property_parameters[0]];
 			}
 			return _parameters[name];
 		}
 
-		public object QuackSet(string name, object[] parameters, object value)
+		public object QuackSet(string name, object[] property_parameters, object value)
 		{
 			if (value is ComponentReference)
 			{
@@ -85,9 +85,9 @@ namespace Rhino.Commons.Binsor
 				_references.Add(name, referenceName);
 				return null;
 			}
-			if(parameters!=null && parameters.Length>0)
+			if(property_parameters!=null && property_parameters.Length>0)
 			{
-				_attributes[parameters[0]] = value;
+				_attributes[property_parameters[0]] = value;
 				return null;
 			}
 			return _parameters[name] = value;
