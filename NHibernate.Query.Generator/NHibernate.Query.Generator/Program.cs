@@ -148,12 +148,15 @@ namespace NHibernate.Query.Generator
 			return obj.GetType().GetProperty(name).GetValue(obj, null);
 		}
 
-
+		static List<Assembly>  visited =new List<Assembly>();
 		/// <summary>
 		/// This is needed to make sure that we work with different versions of Active Record
 		/// </summary>
 		private static Assembly GetActiveRecordAsembly(Assembly assembly)
 		{
+			if (visited.Contains(assembly))
+				return null;
+			visited.Add(assembly);
 			System.Type type = assembly.GetType("Castle.ActiveRecord.ActiveRecordBase", false);
 			if (type != null)
 				return type.Assembly;
