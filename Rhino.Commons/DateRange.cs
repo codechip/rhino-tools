@@ -13,13 +13,13 @@ namespace Rhino.Commons
 		private DateTime start;
 		private DateTime end;
 
-		[Property(NotNull = true, Access = PropertyAccess.FieldCamelcase)]
+		[Property(Column = "StartDate", NotNull = true, Access = PropertyAccess.FieldCamelcase)]
 		public DateTime Start
 		{
 			get { return start; }
 		}
 
-		[Property(NotNull = true, Access = PropertyAccess.FieldCamelcase)]
+		[Property(Column = "EndDate", NotNull = true, Access = PropertyAccess.FieldCamelcase)]
 		public DateTime End
 		{
 			get { return end; }
@@ -165,10 +165,10 @@ namespace Rhino.Commons
 			return start.ToString() + " - " + end.ToString();
 		}
 
-        public string ToString(string format)
-        {
-            return start.ToString(format) + " - " + end.ToString(format);
-        }
+		public string ToString(string format)
+		{
+			return start.ToString(format) + " - " + end.ToString(format);
+		}
 
 		public static DateRange Intersection(DateRange x, DateRange y)
 		{

@@ -17,6 +17,15 @@ namespace Rhino.Commons.ForTesting
 		private static bool init = false;
 		private IDbConnection dbConnection;
 
+		private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized  : InPlaceConfigurationSource
+		{
+			public InPlaceConfigurationSource_AlwaysLazy_AndPluralized()
+			{
+				SetIsLazyByDefault(true);
+				SetPluralizeTableNames(true);
+			}
+		}
+
 		/// <summary>
 		/// Initialize Active Record, and initialize the container.
 		/// If <paramref name="rhinoContainerConfig"/> is <see langword="null" /> or <see cref="string.Empty">string.Empty</see>
@@ -25,22 +34,15 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="RhinoContainer">RhinoContainer</see> 
 		/// or <see langword="null" />.</param>
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
-		public static void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
+		public void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
 			if (init)
 				return;
 			init = true;
-			Hashtable properties = new Hashtable();
-			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
-			properties.Add("hibernate.show_sql", "true");
-			properties.Add("hibernate.connection.release_mode", "on_close");
 
-			InPlaceConfigurationSource cfg = new InPlaceConfigurationSource();
-			cfg.Add(typeof(ActiveRecordBase), properties);
-
+			InPlaceConfigurationSource cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
+			cfg.Add(typeof(ActiveRecordBase), CreateProperties());
+			
 			//here we either configure the IUnitOfWorkFactory appropriately (which calls ActiveRecordStarter)
 			//or we configure ActiveRecordStarter ourselves
 
@@ -61,11 +63,23 @@ namespace Rhino.Commons.ForTesting
 			}
 		}
 
+		protected virtual Hashtable CreateProperties()
+		{
+			Hashtable properties = new Hashtable();
+			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
+			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
+			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
+			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+			properties.Add("hibernate.show_sql", "true");
+			properties.Add("hibernate.connection.release_mode", "on_close");
+			return properties;
+		}
+
 		/// <summary>
 		/// Initialize NHibernate and builds a session factory
 		/// Note, this is a costly call so it will be executed only one.
 		/// </summary>
-		public static void OneTimeInitalize(params Assembly[] assemblies)
+		public void OneTimeInitalize(params Assembly[] assemblies)
 		{
 			OneTimeInitalize(null, assemblies);
 		}
