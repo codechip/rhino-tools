@@ -37,8 +37,6 @@
             and set the return type and the parameters
             accordingly
             </summary>
-            <param name="baseMethod"></param>
-            <param name="parentEmitter"></param>
         </member>
         <member name="M:Castle.DynamicProxy.Generators.Emitters.OpCodeUtil.EmitLoadOpCodeForConstantValue(System.Reflection.Emit.ILGenerator,System.Object)">
             <summary>
@@ -159,6 +157,14 @@
             </summary>
             <param name="method"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.Generators.CacheKey.#ctor(System.Type,System.Type[],Castle.DynamicProxy.ProxyGenerationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.Generators.CacheKey"/> class.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="interfaces">The interfaces.</param>
+            <param name="options">The options.</param>
         </member>
         <member name="T:Castle.DynamicProxy.Generators.ClassProxyGenerator">
             <summary>

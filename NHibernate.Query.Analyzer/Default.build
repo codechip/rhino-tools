@@ -40,6 +40,7 @@
 
 	<ItemGroup>
 		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.dll"/>
+		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.config"/>
 		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.exe"/>
 	</ItemGroup>
 </Project>
