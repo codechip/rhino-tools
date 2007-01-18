@@ -155,7 +155,7 @@ namespace Query
 			combined.children.Add(rhs);
 			return combined;
 		}
-
+		
 		public static QueryBuilder<T> operator !(QueryBuilder<T> other)
 		{
 			QueryBuilder<T> not = new QueryBuilder<T>(other.name, null);
@@ -171,7 +171,7 @@ namespace Query
 			not.AddCriterion(Expression.Not(conjunction));
 			return not;
 		}
-
+		
 		public static QueryBuilder<T> operator |(QueryBuilder<T> lhs, QueryBuilder<T> rhs)
 		{
 			if (lhs.associationPath != rhs.associationPath)
@@ -209,7 +209,7 @@ Use HQL for this functionality...",
 		{
 			return false;
 		}
-
+		
 		public static implicit operator DetachedCriteria(QueryBuilder<T> expr)
 		{
 			return expr.ToDetachedCriteria(null);
@@ -217,9 +217,14 @@ Use HQL for this functionality...",
 
 		public DetachedCriteria ToDetachedCriteria(string alias)
 		{
-			DetachedCriteria detachedCriteria = DetachedCriteria.For(typeof(T), alias);
+			DetachedCriteria detachedCriteria;
+			if (String.IsNullOrEmpty(alias))
+				detachedCriteria = DetachedCriteria.For(typeof( T ));
+			else
+				detachedCriteria = DetachedCriteria.For( typeof( T ), alias );
+			
 			Dictionary<string, ICollection<ICriterion>> criterionsByAssociation = new Dictionary<string, ICollection<ICriterion>>();
-			AddByAssociationPath(criterionsByAssociation);
+			AddByAssociationPath( criterionsByAssociation );
 
 			foreach (KeyValuePair<string, ICollection<ICriterion>> pair in criterionsByAssociation)
 			{

@@ -19,7 +19,7 @@ namespace Rhino.Commons
 			get { return start; }
 		}
 
-		[Property(Name = "EndDate", NotNull = true, Access = PropertyAccess.FieldCamelcase)]
+		[Property(Column = "EndDate", NotNull = true, Access = PropertyAccess.FieldCamelcase)]
 		public DateTime End
 		{
 			get { return end; }
