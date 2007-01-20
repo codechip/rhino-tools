@@ -73,9 +73,9 @@ namespace Query
 			return this;
 		}
 
-		public QueryBuilder<T> In(ICollection values)
+		public QueryBuilder<T> In<K>(params K[] values)
 		{
-			AbstractCriterion inExpression = new InExpression(name, ToArray(values));
+			AbstractCriterion inExpression = Expression.In(name, values);
 			QueryBuilder<T> self = this;
 			if (backTrackAssociationsOnEquality)
 			{
@@ -94,13 +94,13 @@ namespace Query
 
 		public QueryBuilder<T> In<K>(ICollection<K> values)
 		{
-			In((ICollection)values);
+			In(new List<K>(values).ToArray());
 			return this;
 		}
 
 		public QueryBuilder<T> In<K>(IEnumerable<K> values)
 		{
-			In((ICollection)new List<K>(values));
+			In(new List<K>(values).ToArray());
 			return this;
 		}
 
@@ -264,13 +264,6 @@ Use HQL for this functionality...",
 		}
 
 
-		protected static object[] ToArray(ICollection values)
-		{
-			object[] arr = new object[values.Count];
-			values.CopyTo(arr, 0);
-			return arr;
-		}
-
 		protected static string BackTrackAssociationPath(string associationPath)
 		{
 			int lastIndexOfPeriod = associationPath.LastIndexOf('.');
@@ -278,13 +271,6 @@ Use HQL for this functionality...",
 				return associationPath;
 			return associationPath.Substring(0, lastIndexOfPeriod);
 
-		}
-
-		protected static object[] ToArray<K>(ICollection<K> values)
-		{
-			K[] arr = new K[values.Count];
-			values.CopyTo(arr, 0);
-			return ToArray((ICollection)arr);//need this to convert to the object[] instead of K[]
 		}
 
 		private void AddByAssociationPath(IDictionary<string, ICollection<ICriterion>> criterionsByAssociation)
