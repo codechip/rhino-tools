@@ -215,6 +215,11 @@ Use HQL for this functionality...",
 			return expr.ToDetachedCriteria(null);
 		}
 
+		public DetachedCriteria ToDetachedCriteria()
+		{
+			return ToDetachedCriteria(null);
+		}
+
 		public DetachedCriteria ToDetachedCriteria(string alias)
 		{
 			DetachedCriteria detachedCriteria;
