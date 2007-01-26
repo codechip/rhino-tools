@@ -101,29 +101,45 @@ namespace NHibernate.Query.Generator
 				if (model == null)
 					continue;
 				models.Add(model);
-				object graphConnectorVisitor =
-					Activator.CreateInstance(
-						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
-						new object[] {Get(activeRecordModelBuilder, "Models")});
-				Invoke(graphConnectorVisitor, "VisitModel", model);
+//				object graphConnectorVisitor =
+//					Activator.CreateInstance(
+//						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
+//						new object[] {Get(activeRecordModelBuilder, "Models")});
+//				Invoke(graphConnectorVisitor, "VisitModel", model);
 			}
+
+			object graphConnectorVisitor =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
+					new object[] { Get(activeRecordModelBuilder, "Models") });
+
+			Invoke(graphConnectorVisitor, "VisitNodes", models);
+
+			object semanticVisitor =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
+					new object[] { Get(activeRecordModelBuilder, "Models") });
+
+			Invoke(semanticVisitor, "VisitNodes", models);
 
 			foreach (object model in models)
 			{
-				object xmlVisitor =
-					Activator.CreateInstance(
-						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
+				bool isNestedType = (bool)Get(model, "IsNestedType");
+				bool isDiscriminatorSubClass = (bool)Get(model, "IsDiscriminatorSubClass");
+				bool isJoinedSubClass = (bool)Get(model, "IsJoinedSubClass");
+				
+				if (!isNestedType && !isDiscriminatorSubClass && !isJoinedSubClass)
+				{
+					object xmlVisitor =
+						Activator.CreateInstance(
+							activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
 
-				object semanticVisitor =
-					Activator.CreateInstance(
-						activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
-						new object[] {Get(activeRecordModelBuilder, "Models")});
+					Invoke(xmlVisitor, "CreateXml", model);
 
-				Invoke(semanticVisitor, "VisitModel", model);
-				Invoke(xmlVisitor, "CreateXml", model);
-				System.Type type = (System.Type) Get(model, "Type");
-				string genFile = Path.Combine(outputDir, "Where." + type.Name + "." + targetExtention);
-				GenerateSingleFile(new StringReader((string) Get(xmlVisitor, "Xml")), genFile);
+					System.Type type = (System.Type) Get(model, "Type");
+					string genFile = Path.Combine(outputDir, "Where." + type.Name + "." + targetExtention);
+					GenerateSingleFile(new StringReader((string) Get(xmlVisitor, "Xml")), genFile);
+				}
 			}
 		}
 

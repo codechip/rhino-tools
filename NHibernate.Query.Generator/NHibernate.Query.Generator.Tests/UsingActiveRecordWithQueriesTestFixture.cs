@@ -208,6 +208,18 @@ namespace NHibernate.Query.Generator.Tests
 			
 		}
 
+		[Test]
+		public void CanQueryOnSubclasses()
+		{
+			Cat[] cats = Cat.FindAll();
+			Assert.AreEqual(2, cats.Length);
+
+			cats = DomesticCat.FindAll(Where.DomesticCat);
+			Assert.AreEqual(1, cats.Length);
+
+			Assert.IsTrue(cats[0] is DomesticCat);
+		}
+
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{
@@ -229,7 +241,9 @@ namespace NHibernate.Query.Generator.Tests
 			                               typeof (Post),
 			                               typeof (Blog),
 			                               typeof (User),
-			                               typeof (Comment));
+			                               typeof (Comment),
+										   typeof (Cat),
+										   typeof (DomesticCat));
 		}
 
 		[SetUp]
@@ -263,6 +277,13 @@ namespace NHibernate.Query.Generator.Tests
 			comment.Content = "Active Record Rocks!";
 			comment.Post = post;
 			comment.Save();
+
+			Cat cat = new Cat();
+			cat.Save();
+
+			DomesticCat domesticCat = new DomesticCat();
+			domesticCat.Name = "Domestic Cat";
+			domesticCat.Save();
 		}
 
 		[TearDown]
