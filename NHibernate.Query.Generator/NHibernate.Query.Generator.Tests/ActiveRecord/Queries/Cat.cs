@@ -29,7 +29,6 @@ namespace Query {
             }
         }
         
-        [CoverageExclude()]
         public partial class Query_Cat<T1> : Query.QueryBuilder<T1>
          {
             
@@ -49,15 +48,12 @@ namespace Query {
             }
         }
         
-        [CoverageExclude()]
         public partial class Root_Query_Cat : Query_Cat<NHibernate.Query.Generator.Tests.ActiveRecord.Cat> {
             
             public Root_Query_Cat() : 
                     base("this", null) {
             }
         }
-        
-        [CoverageExclude()]
         public partial class Query_DomesticCat<T2> : Query_Cat<T2>
          {
             
@@ -69,8 +65,6 @@ namespace Query {
                     base(name, associationPath, backTrackAssociationOnEquality) {
             }
         }
-        
-        [CoverageExclude()]
         public partial class Root_Query_DomesticCat : Query_DomesticCat<NHibernate.Query.Generator.Tests.ActiveRecord.DomesticCat> {
             
             public Root_Query_DomesticCat() : 
