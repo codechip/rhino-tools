@@ -86,9 +86,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+    <Reference Include="System.Data.SqlServerCe, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Sqlite\System.Data.SQLite.DLL</HintPath>
+      <HintPath>..\..\SharedLibs\SqlCE\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -118,8 +119,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
-    <Compile Include="Logging\RollingSqliteAppenderTestFixture.cs" />
-    <Compile Include="NHibernate\InMemoryTests.cs" />
+    <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
+    <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

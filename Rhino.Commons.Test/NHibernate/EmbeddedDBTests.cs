@@ -8,7 +8,7 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.NHibernate
 {
 	[TestFixture]
-	public class InMemoryTests : NHibernateInMemoryTestFixtureBase
+	public class EmbeddedDBTests : NHibernateEmbeddedDBTestFixtureBase
 	{
 		private ISession session;
 

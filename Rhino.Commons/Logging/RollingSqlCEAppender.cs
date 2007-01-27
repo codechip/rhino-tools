@@ -1,12 +1,13 @@
 using System;
+using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Util;
+using Rhino.Commons.Helpers;
 
 namespace Rhino.Commons.Logging
 {
@@ -14,11 +15,11 @@ namespace Rhino.Commons.Logging
 	/// Default parameters are set for:
 	/// @Date, @Thread, @Level, @Logger, @Message, @Exception
 	/// </summary>
-	public class RollingSqliteAppender : AdoNetAppender, IDisposable
+	public class RollingSqlCEAppender : AdoNetAppender, IDisposable
 	{
 		private long maxNumberOfBackups = 3;
 		private string directory = Environment.CurrentDirectory;
-		private string connectionStringFormat = "Data Source={0};Version=3;New={1}";
+		private string connectionStringFormat = "Data Source={0};";
 		private string fileNameFormat = "{0}.log4net";
 		private string tableName = "Logs";
 		private const string selectCount = "SELECT COUNT(*) FROM {0}";
@@ -26,22 +27,23 @@ namespace Rhino.Commons.Logging
 
 		private string createScript =
 			@"CREATE TABLE Logs (
-	LogId		INTEGER PRIMARY KEY,
+	LogId		INT PRIMARY KEY IDENTITY(1,1),
 	Date		DATETIME NOT NULL,
-	Thread		VARCHAR(255) NOT NULL,
-	Level		VARCHAR(50) NOT NULL,
-	Logger		VARCHAR(512) NOT NULL,
-	Message		TEXT NOT NULL,
-	Exception	TEXT NULL	
+	Thread		NVARCHAR(255) NOT NULL,
+	Level		NVARCHAR(50) NOT NULL,
+	Logger		NVARCHAR(512) NOT NULL,
+	Message		NTEXT NOT NULL,
+	Exception	NTEXT NULL	
 );";
 
-		long numberOfRows = 0;
+		int numberOfRows = 0;
 		private int curRollBackups = 0;
 		private string currentFilePath;
 
-		public RollingSqliteAppender()
+		public RollingSqlCEAppender()
 		{
-			ConnectionType = " System.Data.SQLite.SQLiteConnection,  System.Data.SQLite";
+			m_usePreparedCommand = false;
+			ConnectionType = "System.Data.SqlServerCe.SqlCeConnection, System.Data.SqlServerCe";
 			ReconnectOnError = true;
 			CommandText =
 				@"INSERT INTO Logs (Date, Thread, Level, Logger, Message, Exception) 
@@ -49,41 +51,41 @@ namespace Rhino.Commons.Logging
 
 			AdoNetAppenderParameter date = new AdoNetAppenderParameter();
 			date.DbType = DbType.DateTime;
-			date.ParameterName = "Date";
+			date.ParameterName = "@Date";
 			date.Layout = new RawTimeStampLayout();
 			AddParameter(date);
 
 			AdoNetAppenderParameter thread = new AdoNetAppenderParameter();
 			thread.DbType = DbType.String;
-			thread.ParameterName = "Thread";
+			thread.ParameterName = "@Thread";
 			thread.Size = 255;
 			thread.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%thread"));
 			AddParameter(thread);
 
 			AdoNetAppenderParameter level = new AdoNetAppenderParameter();
 			level.DbType = DbType.String;
-			level.ParameterName = "Level";
+			level.ParameterName = "@Level";
 			level.Size = 50;
 			level.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%level"));
 			AddParameter(level);
 
 			AdoNetAppenderParameter logger = new AdoNetAppenderParameter();
 			logger.DbType = DbType.String;
-			logger.ParameterName = "Logger";
+			logger.ParameterName = "@Logger";
 			logger.Size = 512;
 			logger.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%logger"));
 			AddParameter(logger);
 
 			AdoNetAppenderParameter message = new AdoNetAppenderParameter();
 			message.DbType = DbType.String;
-			message.ParameterName = "Message";
+			message.ParameterName = "@Message";
 			message.Size = 2000;
 			message.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"));
 			AddParameter(message);
 
 			AdoNetAppenderParameter exception = new AdoNetAppenderParameter();
 			exception.DbType = DbType.String;
-			exception.ParameterName = "Exception";
+			exception.ParameterName = "@Exception";
 			exception.Size = 4000;
 			exception.Layout = new Layout2RawLayoutAdapter(new PatternLayout("%exception"));
 			AddParameter(exception);
@@ -165,8 +167,8 @@ namespace Rhino.Commons.Logging
 			if (numberOfRows < MaxNumberOfRows)
 				return;
 
-            Connection.Dispose();//close the file, so we can move it.
-            RollOverRenameFiles(CurrentFilePath);
+			Connection.Dispose();//close the file, so we can move it.
+			RollOverRenameFiles(CurrentFilePath);
 
 			ActivateOptions();
 		}
@@ -179,7 +181,7 @@ namespace Rhino.Commons.Logging
 				// Delete the oldest file, to keep Windows happy.
 				if (curRollBackups == MaxNumberOfBackups)
 				{
-                    DeleteFile(baseFileName + '.' + MaxNumberOfBackups);
+					DeleteFile(baseFileName + '.' + MaxNumberOfBackups);
 					curRollBackups--;
 				}
 
@@ -206,26 +208,24 @@ namespace Rhino.Commons.Logging
 			{
 				// Delete the toFile if it exists
 				DeleteFile(toFile);
-                int retries = 3;
-                while (retries != 0)
-                {
-                    // We may not have permission to move the file, or the file may be locked
-                    try
-                    {
-                        LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
-                        File.Move(fromFile, toFile);
-                        retries = 0;
-                    }
-                    catch (Exception moveEx)
-                    {
-                        ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]",
-                                           moveEx,
-                                           ErrorCode.GenericFailure);
-                        Thread.Sleep(100);// Need to let sqlite time to release the file handle, 
-                                          // so we can roll it back
-                        retries--;
-                    }
-                }
+				int retries = 3;
+				while (retries != 0)
+				{
+					// We may not have permission to move the file, or the file may be locked
+					try
+					{
+						LogLog.Debug("RollingFileAppender: Moving [" + fromFile + "] -> [" + toFile + "]");
+						File.Move(fromFile, toFile);
+						retries = 0;
+					}
+					catch (Exception moveEx)
+					{
+						ErrorHandler.Error("Exception while rolling file [" + fromFile + "] -> [" + toFile + "]",
+										   moveEx,
+										   ErrorCode.GenericFailure);
+						retries--;
+					}
+				}
 			}
 			else
 			{
@@ -266,34 +266,47 @@ namespace Rhino.Commons.Logging
 			if (Connection == null || Connection.State != ConnectionState.Open)
 			{
 				LogLog.Debug(
-					"RollingSqliteAppender: could not check number of rows in database (usually because of an error in creating / talking to it), assuming 0 rows exists.");
+					"RollingSqlCEAppender: could not check number of rows in database (usually because of an error in creating / talking to it), assuming 0 rows exists.");
 				numberOfRows = 0;
 				return;
 			}
 			using (IDbCommand cmd = Connection.CreateCommand())
 			{
 				cmd.CommandText = string.Format(selectCount, TableName);
-				numberOfRows = (long) cmd.ExecuteScalar();
+				numberOfRows = (int)cmd.ExecuteScalar();
 			}
 		}
 
 		public override void ActivateOptions()
 		{
 			bool shouldCreateFile = !File.Exists(CurrentFilePath);
-			ConnectionString = string.Format(connectionStringFormat, CurrentFilePath, shouldCreateFile);
-			base.ActivateOptions();
-			if (!shouldCreateFile)
-				return;
-			using (IDbCommand cmd = Connection.CreateCommand())
+			ConnectionString = string.Format(connectionStringFormat, CurrentFilePath);
+			if (shouldCreateFile)
 			{
-				cmd.CommandText = CreateScript;
-				cmd.ExecuteNonQuery();
+				SqlCEDbHelper.CreateDatabaseFile(currentFilePath);
+				using (IDbConnection connection = (IDbConnection)Activator.CreateInstance(this.ResolveConnectionType()))
+				{
+					connection.ConnectionString = ConnectionString;
+					connection.Open();
+					using (IDbCommand cmd = connection.CreateCommand())
+					{
+						cmd.CommandText = CreateScript;
+						cmd.ExecuteNonQuery();
+					}
+				}
+				base.ActivateOptions();
+				CheckNumberOfRows();
 			}
-			CheckNumberOfRows();
+			else
+			{
+				base.ActivateOptions();
+			}
+
 		}
 
 		public void Dispose()
 		{
+			Close();
 			if (Connection != null)
 				Connection.Dispose();
 		}

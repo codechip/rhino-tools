@@ -18,6 +18,11 @@ namespace Rhino.Commons
             globalNonThreadSafeUnitOfwork = global;
 	    }
 	    
+		public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
+		{
+			return Start(null, nestingOptions);
+		}
+
 		public static IUnitOfWork Start()
 		{
 			return Start(null, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);

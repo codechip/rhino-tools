@@ -9,13 +9,15 @@ using Castle.MicroKernel;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
+using Rhino.Commons.Helpers;
 
 namespace Rhino.Commons.ForTesting
 {
-	public class ActiveRecordInMemoryTestFixtureBase
+	public class ActiveRecordEmbeddedDBTestFixtureBase
 	{
+		public static string DatabaseFilename = "TempDB.sdf";
+
 		private static bool init = false;
-		private IDbConnection dbConnection;
 
 		private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized  : InPlaceConfigurationSource
 		{
@@ -56,6 +58,7 @@ namespace Rhino.Commons.ForTesting
 					.AddCustomDependencyValue("configurationSource", cfg);
 				unitOfWorkFactoryHandler
 					.AddCustomDependencyValue("assemblies", assemblies);
+				IoC.Resolve<IUnitOfWorkFactory>().Init();
 			}
 			else
 			{
@@ -66,10 +69,11 @@ namespace Rhino.Commons.ForTesting
 		protected virtual Hashtable CreateProperties()
 		{
 			Hashtable properties = new Hashtable();
-			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
+			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SqlServerCeDriver");
+			properties.Add("hibernate.dialect", "NHibernate.Dialect.MsSqlCeDialect");
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+			string connectionString = string.Format("Data Source={0};", DatabaseFilename);
+			properties.Add("hibernate.connection.connection_string", connectionString);
 			properties.Add("hibernate.show_sql", "true");
 			properties.Add("hibernate.connection.release_mode", "on_close");
 			return properties;
@@ -89,21 +93,9 @@ namespace Rhino.Commons.ForTesting
 		/// </summary>
 		public void SetupDB()
 		{
-			ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
-			if(sessionFactoryHolder.ThreadScopeInfo.HasInitializedScope==false)
-			{
-				throw new InvalidOperationException("Must be inside a scope for InMemory tests to work");
-			}
-			Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase));
-			ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
-			try
-			{
-				new SchemaExport(configuration).Execute(false, true, false, true, session.Connection, null);
-			}
-			finally
-			{
-				sessionFactoryHolder.ReleaseSession(session);
-			}
+			
+			SqlCEDbHelper.CreateDatabaseFile(DatabaseFilename);
+			ActiveRecordStarter.CreateSchema();
 		}
 
 		/// <summary>
@@ -116,7 +108,7 @@ namespace Rhino.Commons.ForTesting
 		/// using Rhino.Commons.ForTesting;
 		/// 
 		/// [TestFixture]
-		/// public class FooTest : NHibernateInMemoryTest
+		/// public class FooTest : ActiveRecordEmbeddedDBTestFixtureBase
 		/// {
 		///		[TestFixtureSetup]
 		///		public void TestFixtureSetup()
@@ -168,27 +160,13 @@ namespace Rhino.Commons.ForTesting
 		/// <seealso cref="UnitOfWork" />
 		public void CreateUnitOfWork()
 		{
-			UnitOfWork.Start();
-			ISession session = ActiveRecordMediator.GetSessionFactoryHolder().CreateSession(typeof(ActiveRecordBase));
-			dbConnection = session.Connection;
 			SetupDB();
-		}
-
-		public IUnitOfWork CreateNestedUnitOfWork()
-		{
-			if (dbConnection==null)
-			{
-				throw new InvalidOperationException(
-					"Did you forgot to call CreateUnitOfWork()? ActiveRecordInMemoryTextFixtureBase did not create any previous unit of work.");
-			}
-			return UnitOfWork.Start(dbConnection, UnitOfWorkNestingOptions.CreateNewOrNestUnitOfWork);
+			UnitOfWork.Start();
 		}
 
 		public void DisposeUnitOfWork()
 		{
 			UnitOfWork.Current.Dispose();
-			dbConnection.Dispose();
-			dbConnection = null;
 		}
 	}
 }

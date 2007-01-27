@@ -13,6 +13,11 @@ namespace Rhino.Commons
 		static object lockObj = new object();
 		public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 		private static ISessionFactory sessionFactory;
+		
+		public void Init()
+		{
+			//we lazy initialize here
+		}
 
 		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection,IUnitOfWorkImplementor previous)
 		{
