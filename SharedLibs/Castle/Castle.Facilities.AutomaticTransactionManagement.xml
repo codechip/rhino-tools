@@ -111,6 +111,12 @@
             <param name="invocation">The invocation.</param>
             <returns></returns>
         </member>
+        <member name="P:Castle.Facilities.AutomaticTransactionManagement.TransactionInterceptor.Logger">
+            <summary>
+            Gets or sets the logger.
+            </summary>
+            <value>The logger.</value>
+        </member>
         <member name="T:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfoStore">
             <summary>
             Pendent

@@ -146,9 +146,10 @@
     </None>
     <Compile Include="Facilities\RhinoTransactionFacility.cs" />
     <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
-    <Compile Include="ForTesting\ActiveRecordInMemoryTestFixtureBase.cs" />
-    <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
-    <Compile Include="Logging\RollingSqliteAppender.cs" />
+    <Compile Include="ForTesting\ActiveRecordEmbeddedDBTestFixtureBase.cs" />
+    <Compile Include="ForTesting\NHibernateEmbeddedDBTestFixtureBase.cs" />
+    <Compile Include="Helpers\SqlCEDbHelper.cs" />
+    <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />

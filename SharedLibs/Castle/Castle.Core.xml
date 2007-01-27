@@ -291,6 +291,12 @@
             Stops this instance.
             </summary>
         </member>
+        <member name="T:Castle.Core.Logging.IExtendedLoggerFactory">
+            <summary>
+            Provides a factory that can produce either <see cref="T:Castle.Core.Logging.ILogger"/> or
+            <see cref="T:Castle.Core.Logging.IExtendedLogger"/> classes.
+            </summary>
+        </member>
         <member name="T:Castle.Core.Logging.ILoggerFactory">
             <summary>
             Manages the instantiation of <see cref="T:Castle.Core.Logging.ILogger"/>s.
@@ -315,6 +321,73 @@
             <summary>
             Creates a new logger.
             </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.IExtendedLoggerFactory.Create(System.Type)">
+            <summary>
+            Creates a new extended logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.IExtendedLoggerFactory.Create(System.String)">
+            <summary>
+            Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.IExtendedLoggerFactory.Create(System.Type,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new extended logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.IExtendedLoggerFactory.Create(System.String,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Create(System.Type)">
+            <summary>
+            Creates a new extended logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Create(System.String)">
+            <summary>
+            Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Create(System.Type,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new extended logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Create(System.String,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new extended logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Castle#Core#Logging#ILoggerFactory#Create(System.Type)">
+            <summary>
+            Creates a new logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Castle#Core#Logging#ILoggerFactory#Create(System.String)">
+            <summary>
+            Creates a new logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Castle#Core#Logging#ILoggerFactory#Create(System.Type,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new logger, getting the logger name from the specified type.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.Castle#Core#Logging#ILoggerFactory#Create(System.String,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Creates a new logger.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.Logging.Factories.AbstractExtendedLoggerFactory.GetConfigFile(System.String)">
+            <summary>
+            Gets the configuration file.
+            </summary>
+            <param name="filename">i.e. log4net.config</param>
+            <returns></returns>
         </member>
         <member name="M:Castle.Core.Logging.AbstractLoggerFactory.GetConfigFile(System.String)">
             <summary>
@@ -1575,6 +1648,54 @@
             </summary>
             <param name="newName">Ignored</param>
             <returns>This ILogger instance.</returns> 
+        </member>
+        <member name="T:Castle.Core.Logging.IContextProperties">
+            <summary>
+            Interface for Context Properties implementations
+            </summary>
+            <remarks>
+            <para>
+            This interface defines a basic property get set accessor.
+            </para>
+            <para>
+            Based on the ContextPropertiesBase of log4net, by Nicko Cadell.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Castle.Core.Logging.IContextProperties.Item(System.String)">
+            <summary>
+            Gets or sets the value of a property
+            </summary>
+            <value>
+            The value for the property with the specified key
+            </value>
+            <remarks>
+            <para>
+            Gets or sets the value of a property
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Castle.Core.Logging.IExtendedLogger">
+            <summary>
+            Provides an interface that supports <see cref="T:Castle.Core.Logging.ILogger"/> and
+            allows the storage and retrieval of Contexts. These are supported in
+            both log4net and NLog.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.GlobalProperties">
+            <summary>
+            Exposes the Global Context of the extended logger. 
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadProperties">
+            <summary>
+            Exposes the Thread Context of the extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadStacks">
+            <summary>
+            Exposes the Thread Stack of the extended logger.
+            </summary>
         </member>
         <member name="T:Castle.Core.Logging.LoggerLevel">
             <summary>

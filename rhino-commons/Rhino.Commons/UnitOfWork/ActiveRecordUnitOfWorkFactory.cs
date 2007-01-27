@@ -39,6 +39,11 @@ namespace Rhino.Commons
 			return new ActiveRecordUnitOfWorkAdapter(scope, previous);
 		}
 
+		public void Init()
+		{
+			InitializeIfNeccecary();
+		}
+
 		private void InitializeIfNeccecary()
 		{
 			if(!initialized)
@@ -54,5 +59,6 @@ namespace Rhino.Commons
 				}
 			}
 		}
+
 	}
 }

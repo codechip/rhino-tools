@@ -5,6 +5,11 @@ namespace Rhino.Commons
 	public interface IUnitOfWorkFactory
 	{
 		/// <summary>
+		/// Initialize the factory, note that this may be called more than once
+		/// </summary>
+		void Init();
+
+		/// <summary>
 		/// Create a new unit of work implementation.
 		/// </summary>
 		/// <param name="maybeUserProvidedConnection">Possible connection that the user supplied</param>

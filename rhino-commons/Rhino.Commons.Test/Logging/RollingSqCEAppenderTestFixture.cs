@@ -1,5 +1,5 @@
 using System;
-using System.Data.SQLite;
+using System.Data.SqlServerCe;
 using System.IO;
 using log4net;
 using log4net.Appender;
@@ -10,23 +10,24 @@ using Rhino.Commons.Logging;
 namespace Rhino.Commons.Test.Logging
 {
 	[TestFixture]
-	public class RollingSqliteAppenderTestFixture
+	public class RollingSqCEAppenderTestFixture
 	{
-		private RollingSqliteAppender appender;
+		private RollingSqlCEAppender appender;
 		private LoggingEvent loggingEvent;
 		string databaseFile;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			appender = new RollingSqliteAppender();
-			databaseFile = string.Format("{0}.log4net", Guid.NewGuid());
+			appender = new RollingSqlCEAppender();
+			databaseFile = "test.log4net";
 			appender.FileNameFormat = databaseFile;
 			File.Delete(databaseFile);
 			appender.ActivateOptions();
 			LoggingEventData loggingEventData = new LoggingEventData();
 			loggingEventData.Level = Level.Error;
 			loggingEventData.Message = "foo";
+			loggingEventData.TimeStamp = DateTime.Now;
 			loggingEvent = new LoggingEvent(loggingEventData);
 		}
 
@@ -55,9 +56,9 @@ namespace Rhino.Commons.Test.Logging
 		{
 			appender.BufferSize = 0;
 			appender.DoAppend(loggingEvent);
-			long count = GetEventsCount(appender.ConnectionString);
+			int count = GetEventsCount(appender.ConnectionString);
 
-			Assert.AreEqual(1L, count);
+			Assert.AreEqual(1, count);
 		}
 
 		[Test]
@@ -125,20 +126,20 @@ namespace Rhino.Commons.Test.Logging
 			ILog logger = LogManager.GetLogger("test");
 			IAppender[] appenders = logger.Logger.Repository.GetAppenders();
 			Assert.AreEqual(1, appenders.Length);
-			Assert.AreEqual(typeof(RollingSqliteAppender), appenders[0].GetType());
+			Assert.AreEqual(typeof(RollingSqlCEAppender), appenders[0].GetType());
 			IDisposable disposable = appenders[0] as IDisposable;
 			disposable.Dispose();
 		}
 
-		private long GetEventsCount(string connectionString)
+		private int GetEventsCount(string connectionString)
 		{
-			using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+			using (SqlCeConnection connection = new SqlCeConnection(connectionString))
 			{
 				connection.Open();
-				using (SQLiteCommand command = connection.CreateCommand())
+				using (SqlCeCommand command = connection.CreateCommand())
 				{
 					command.CommandText = "SELECT COUNT(*) FROM Logs";
-					return (long) command.ExecuteScalar();
+					return (int)command.ExecuteScalar();
 				}
 			}
 		}

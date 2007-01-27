@@ -126,6 +126,20 @@
             <param name="version"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.BuildInvocationNestedType(Castle.DynamicProxy.Generators.Emitters.ClassEmitter,System.Type,System.Type,System.Reflection.MethodInfo,System.Reflection.MethodInfo,Castle.DynamicProxy.Generators.ConstructorVersion,System.Boolean)">
+            <summary>
+            If callbackMethod is null the InvokeOnTarget implementation
+            is just the code to throw an exception
+            </summary>
+            <param name="emitter"></param>
+            <param name="targetType"></param>
+            <param name="targetForInvocation"></param>
+            <param name="methodInfo"></param>
+            <param name="callbackMethod"></param>
+            <param name="version"></param>
+            <param name="allowChangeTarget">If true the invocation will implement the IChangeProxyTarget interface</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.CreateIInvocationConstructor(System.Type,Castle.DynamicProxy.Generators.Emitters.NestedClassEmitter,Castle.DynamicProxy.Generators.Emitters.SimpleAST.FieldReference,Castle.DynamicProxy.Generators.ConstructorVersion)">
             <summary>
             Generates the constructor for the nested class that extends
@@ -266,6 +280,18 @@
             </summary>
             <param name="theInterface"></param>
             <param name="interfaces"></param>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.IProxyBuilder.CreateInterfaceProxyTypeWithTargetInterface(System.Type,Castle.DynamicProxy.ProxyGenerationOptions)">
+            <summary>
+            Implementors should return a proxy for the specified
+            interface that delegate all executions to the
+            specified interceptor(s) and uses an instance of the interface
+            as their targets, rather than a class. All IInvocation's
+            should then implement IChangeProxyTarget.
+            </summary>
+            <param name="theInterface"></param>
             <param name="options"></param>
             <returns></returns>
         </member>

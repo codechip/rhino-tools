@@ -8,11 +8,14 @@ using Castle.ActiveRecord.Framework.Config;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
+using Rhino.Commons.Helpers;
 
 namespace Rhino.Commons.ForTesting
 {
-	public class NHibernateInMemoryTestFixtureBase
+	public class NHibernateEmbeddedDBTestFixtureBase
 	{
+		public static string DatabaseFilename = "TempDB.sdf";
+
 		protected static ISessionFactory sessionFactory;
 		protected static Configuration configuration;
 
@@ -29,10 +32,11 @@ namespace Rhino.Commons.ForTesting
 			if (sessionFactory != null)
 				return;
 			Hashtable properties = new Hashtable();
-			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
+			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SqlServerCeDriver");
+			properties.Add("hibernate.dialect", "NHibernate.Dialect.MsSqlCeDialect");
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+			string connectionString = string.Format("Data Source={0};", DatabaseFilename);
+			properties.Add("hibernate.connection.connection_string", connectionString);
 			properties.Add("hibernate.show_sql", "true");
 			properties.Add("hibernate.connection.release_mode", "on_close");
 
@@ -64,11 +68,10 @@ namespace Rhino.Commons.ForTesting
 		/// <summary>
 		/// Creates the in memory db schema using the session.
 		/// </summary>
-		/// <param name="session">An open NHibernate session.</param>
-		public void SetupDB(ISession session)
+		public void SetupDB()
 		{
-			IDbConnection connection = session.Connection;
-			new SchemaExport(configuration).Execute(false, true, false, true, connection, null);
+			SqlCEDbHelper.CreateDatabaseFile(DatabaseFilename);
+			new SchemaExport(configuration).Execute(false, true,false,true);
 		}
 
 		/// <summary>
@@ -81,7 +84,7 @@ namespace Rhino.Commons.ForTesting
 		/// using Rhino.Commons.ForTesting;
 		/// 
 		/// [TestFixture]
-		/// public class FooTest : NHibernateInMemoryTest
+		/// public class FooTest : NHibernateEmbeddedDBTestFixtureBase
 		/// {
 		///		[TestFixtureSetup]
 		///		public void TestFixtureSetup()
@@ -133,29 +136,24 @@ namespace Rhino.Commons.ForTesting
 		/// <seealso cref="UnitOfWork" />
 		public void CreateUnitOfWork()
 		{
+			SetupDB();
 			UnitOfWork.Start();
-			SetupDB(NHibernateUnitOfWorkFactory.CurrentNHibernateSession);
 		}
 
 		/// <summary>
-		/// Opens an NHibernate session and creates the in memory db schema.
+		/// Opens an NHibernate session and creates the db schema.
 		/// </summary>
 		/// <returns>The open NHibernate session.</returns>
 		public ISession CreateSession()
 		{
-			//need to get our own connection, because NH will try to close it
-			//as soon as possible, and we will lose the changes.
-			IDbConnection dbConnection = sessionFactory.ConnectionProvider.GetConnection();
-			ISession openSession = sessionFactory.OpenSession(dbConnection);
-			SetupDB(openSession);
-			return openSession;
+			SetupDB();
+
+			return sessionFactory.OpenSession();
 		}
 
 		public void DisposeSession(ISession sessionToClose)
 		{
-			IDbConnection con = sessionToClose.Connection;
 			sessionToClose.Dispose();
-			con.Dispose();
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace Rhino.Commons
 			}
 		}
 
-		private void OnNewTransaction(ITransaction transaction, TransactionMode transactionMode, IsolationMode isolationMode)
+		private void OnNewTransaction(ITransaction transaction, TransactionMode transactionMode, IsolationMode isolationMode, bool distributedTransaction)
 		{
 			transaction.Enlist(new RhinoTransactionResourceAdapter(transactionMode));
 		}
