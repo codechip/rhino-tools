@@ -106,5 +106,11 @@ namespace Rhino.Commons
                 GlobalContainer = null;
             }
         }
+
+		public static void Reset()
+		{
+			IWindsorContainer windsorContainer = LocalContainer ?? GlobalContainer;
+			Reset(windsorContainer);
+		}
     }
 }

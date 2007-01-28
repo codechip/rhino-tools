@@ -15,7 +15,7 @@ namespace Rhino.Commons.Test.NHibernate
 		[TestFixtureSetUp]
 		public void OneTimeTestInitialize()
 		{
-			OneTimeInitalize(typeof(SMS).Assembly);
+			FixtureInitialize(typeof(SMS).Assembly);
 		}
 
 		[SetUp]

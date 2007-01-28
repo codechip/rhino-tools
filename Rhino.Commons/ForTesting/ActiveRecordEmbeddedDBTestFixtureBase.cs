@@ -17,7 +17,6 @@ namespace Rhino.Commons.ForTesting
 	{
 		public static string DatabaseFilename = "TempDB.sdf";
 
-		private static bool init = false;
 
 		private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized  : InPlaceConfigurationSource
 		{
@@ -36,11 +35,11 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="RhinoContainer">RhinoContainer</see> 
 		/// or <see langword="null" />.</param>
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
-		public void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
+		public void FixtureInitialize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
-			if (init)
-				return;
-			init = true;
+			IoC.Reset();
+			ActiveRecordStarter.ResetInitializationFlag();
+
 
 			InPlaceConfigurationSource cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
 			cfg.Add(typeof(ActiveRecordBase), CreateProperties());
@@ -83,9 +82,9 @@ namespace Rhino.Commons.ForTesting
 		/// Initialize NHibernate and builds a session factory
 		/// Note, this is a costly call so it will be executed only one.
 		/// </summary>
-		public void OneTimeInitalize(params Assembly[] assemblies)
+		public void FixtureInitialize(params Assembly[] assemblies)
 		{
-			OneTimeInitalize(null, assemblies);
+			FixtureInitialize(null, assemblies);
 		}
 
 		/// <summary>
