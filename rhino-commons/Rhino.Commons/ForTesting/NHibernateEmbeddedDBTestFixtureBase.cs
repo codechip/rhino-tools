@@ -27,7 +27,7 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="RhinoContainer">RhinoContainer</see> 
 		/// or <see langword="null" />.</param>
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
-		public static void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
+		public static void FixtureInitialize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
 			if (sessionFactory != null)
 				return;
@@ -60,9 +60,9 @@ namespace Rhino.Commons.ForTesting
 		/// Initialize NHibernate and builds a session factory
 		/// Note, this is a costly call so it will be executed only one.
 		/// </summary>
-		public static void OneTimeInitalize(params Assembly[] assemblies)
+		public static void FixtureInitialize(params Assembly[] assemblies)
 		{
-			OneTimeInitalize(null, assemblies);
+			FixtureInitialize(null, assemblies);
 		}
 
 		/// <summary>
