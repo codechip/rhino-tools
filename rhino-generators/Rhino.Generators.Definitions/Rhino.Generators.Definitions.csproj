@@ -35,8 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PerfCounterAttribute.cs" />
-    <Compile Include="PerfCounterCategoryAttribute.cs" />
+    <Compile Include="PerformanceCounterAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

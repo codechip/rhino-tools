@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\OSS\rhino-tools\rhino-generators\Rhino.Generators.Tests\bin\Debug\Rhino.Generators.Tests.dll" total="1" failures="0" not-run="0" date="2007-02-01" time="11:40:08">
+  <environment nunit-version="2.3.6162.0" clr-version="2.0.50727.42" os-version="Microsoft Windows NT 5.2.3790 Service Pack 1" platform="Win32NT" cwd="D:\OSS\rhino-tools\rhino-generators" machine-name="LAP-ORENE" user="orene" user-domain="MATRIX" />
+  <culture-info current-culture="he-IL" current-uiculture="en-US" />
+  <test-suite name="D:\OSS\rhino-tools\rhino-generators\Rhino.Generators.Tests\bin\Debug\Rhino.Generators.Tests.dll" success="True" time="1.482" asserts="0">
+    <results>
+      <test-suite name="D:\OSS\rhino-tools\rhino-generators\Rhino.Generators.Tests\bin\Debug\Rhino.Generators.Tests.dll" success="True" time="1.472" asserts="0">
+        <results>
+          <test-suite name="Rhino" success="True" time="1.472" asserts="0">
+            <results>
+              <test-suite name="Rhino.Generators" success="True" time="1.472" asserts="0">
+                <results>
+                  <test-suite name="Rhino.Generators.Tests" success="True" time="1.472" asserts="0">
+                    <results>
+                      <test-suite name="Rhino.Generators.Tests.PerformanceGeneratorFixture" success="True" time="1.442" asserts="1">
+                        <results>
+                          <test-case name="Rhino.Generators.Tests.PerformanceGeneratorFixture.CanGenerateDerivedClass" executed="True" success="True" time="1.412" asserts="0" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

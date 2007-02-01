@@ -1,8 +1,162 @@
 <Configuration>
-  <CompletionStatisticsManager />
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:System.Collections.Specialized.StringCollection">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@">
+      <Item value="Name" priority="1" />
+      <Item value="TrueStatements" priority="0" />
+      <Item value="ReferencedAssemblies" priority="0" />
+      <Item value="Expression" priority="0" />
+      <Item value="Statements" priority="2" />
+      <Item value="ToString" priority="0" />
+      <Item value="Length" priority="1" />
+      <Item value="Modifiers" priority="0" />
+      <Item value="Members" priority="0" />
+      <Item value="Attributes" priority="1" />
+      <Item value="Append" priority="0" />
+      <Item value="ReturnType" priority="0" />
+      <Item value="Generate" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Text.Encoding.UTF8">
+      <Item value="GetBytes" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeStatementCollection">
+      <Item value="Add" priority="7" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IO.StreamWriter">
+      <Item value="Write" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.CodeDom">
+      <Item value="CodeNamespace" priority="0" />
+      <Item value="CodeTypeDeclaration" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeMemberMethod">
+      <Item value="Statements" priority="3" />
+      <Item value="StartDirectives" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.AttributeNode">
+      <Item value="Name" priority="0" />
+      <Item value="Arguments" priority="8" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System">
+      <Item value="CodeDom" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeTypeMemberCollection">
+      <Item value="Add" priority="3" />
+      <Item value="Count" priority="0" />
+      <Item value="Capacity" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.IdentifierExpression">
+      <Item value="Identifier" priority="4" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeMemberField">
+      <Item value="InitExpression" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reflection.Assembly">
+      <Item value="Location" priority="0" />
+      <Item value="Load" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IO.StringWriter">
+      <Item value="GetStringBuilder" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Generators.ASTHelper">
+      <Item value="GetName" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeTypeReferenceCollection">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.StringPrimitive">
+      <Item value="Value" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.Lexer">
+      <Item value="Lex" priority="0" />
+      <Item value="StringLiterals" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.PropertyNode">
+      <Item value="Attributes" priority="1" />
+      <Item value="Names" priority="3" />
+      <Item value="Value" priority="0" />
+      <Item value="Modifiers" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeCompileUnit">
+      <Item value="Namespaces" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Generators.PerfromanceCountersGenerator">
+      <Item value="Generate" priority="1" />
+      <Item value="GetCode" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeTypeDeclarationCollection">
+      <Item value="Add" priority="0" />
+      <Item value="Count" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IO">
+      <Item value="Stream" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IO.File">
+      <Item value="WriteAllText" priority="1" />
+      <Item value="Open" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeNamespaceCollection">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeNamespace">
+      <Item value="Types" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.NamespaceNode">
+      <Item value="Classes" priority="0" />
+      <Item value="Name" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="Format" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.CompilationUnitNode">
+      <Item value="Namespaces" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.Collections.NodeCollection&lt;DDW.AttributeArgumentNode&gt;">
+      <Item value="Count" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.Parser">
+      <Item value="Parse" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.ClassNode">
+      <Item value="Name" priority="3" />
+      <Item value="Properties" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeMemberProperty">
+      <Item value="Attributes" priority="0" />
+      <Item value="GetStatements" priority="1" />
+      <Item value="Name" priority="0" />
+      <Item value="HasSet" priority="0" />
+      <Item value="Type" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.CodeDom.CodeTypeDeclaration">
+      <Item value="BaseTypes" priority="0" />
+      <Item value="Members" priority="5" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:DDW.ConstantExpression">
+      <Item value="Value" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Generators.Definitions.PerfCounterAttribute">
+      <Item value="Category" priority="0" />
+      <Item value="Name" priority="2" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
-      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/f:Class1.cs" caret="0" scrollPosition="0|0" />
+      <File id="E5B673CE-DBB4-4195-9629-BD880B90007B/f:PerfCounterAttribute.cs" caret="709" scrollPosition="0|24" />
+      <File id="E5B673CE-DBB4-4195-9629-BD880B90007B/f:PerfCounterCategoryAttribute.cs" caret="140" scrollPosition="0|0" />
+      <File id="3054DAFD-6E6B-4546-99BC-086FFD6063F9/f:TestUtil.cs" caret="566" scrollPosition="0|13" />
+      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/d:CustomTool/f:BaseCodeGeneratorWithSite.cs" caret="249" scrollPosition="0|0" />
+      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/f:PerfCounterGen.cs" caret="242" scrollPosition="0|0" />
+      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/d:UnknownPath/f:Product.wxs" caret="418" scrollPosition="0|0" />
+      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/f:Program.cs" caret="454" scrollPosition="0|0" />
+      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/f:AttributeUtil.cs" caret="542" scrollPosition="0|0" />
+      <File id="3054DAFD-6E6B-4546-99BC-086FFD6063F9/f:Performance.cs" caret="370" scrollPosition="0|0" />
+      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:Lexer.cs" caret="551" scrollPosition="0|16" />
+      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:Parser.cs" caret="2084" scrollPosition="0|71" />
+      <File id="3054DAFD-6E6B-4546-99BC-086FFD6063F9/f:PerformanceGeneratorTestFixture.cs" caret="429" scrollPosition="12|1" />
+      <File id="C72974AF-6878-4CA8-A8E8-A5DB70172A0F/f:PerfromanceCountersGenerator.cs" caret="4608" scrollPosition="0|108" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

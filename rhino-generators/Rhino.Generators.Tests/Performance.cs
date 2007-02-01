@@ -6,10 +6,10 @@ using Rhino.Generators.Definitions;
 
 namespace Rhino.Generators.Tests
 {
-	[PerfCounterCategory("Extranet")]
+	[PerformanceCounterCategory("TestFoo")]
 	public abstract class Performance
 	{
-		[PerfCounter(PerformanceCounterType.NumberOfItems64)]
+		[PerformanceCounter(PerformanceCounterType.NumberOfItems64)]
 		public abstract PerformanceCounter TotalItems { get; }
 	}
 }

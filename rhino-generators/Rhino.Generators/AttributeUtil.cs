@@ -1,22 +1,26 @@
-using DDW;
+using ICSharpCode.NRefactory.Ast;
 
 namespace Rhino.Generators
 {
 	public static class AttributeUtil
 	{
-		public static bool HasAttribute(BaseNode node, string attName)
+
+		public static bool HasAttribute(AttributedNode node, string attributeName)
 		{
-			return GetAttribute(node, attName) != null;
+			return GetAttribute(node, attributeName)!=null;
 		}
 
-		public static AttributeNode GetAttribute(BaseNode node, string attName)
+		public static Attribute GetAttribute(AttributedNode node, string attributeName)
 		{
-			foreach (AttributeNode attributeNode in node.Attributes)
+			foreach (AttributeSection attributeSection in node.Attributes)
 			{
-				string nodeAttName = ASTHelper.GetName(attributeNode.Name);
-				if (nodeAttName == attName ||
-				    nodeAttName == attName + "Attribute")
-					return attributeNode;
+				foreach (Attribute attribute in attributeSection.Attributes)
+				{
+					if(attribute.Name == attributeName || attribute.Name == attributeName+"Attribute")
+					{
+						return attribute;
+					}
+				}
 			}
 			return null;
 		}

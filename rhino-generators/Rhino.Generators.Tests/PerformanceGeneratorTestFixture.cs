@@ -15,7 +15,7 @@ namespace Rhino.Generators.Tests
 		public void CanGenerateDerivedClass()
 		{
 			PerfromanceCountersGenerator generator = new PerfromanceCountersGenerator(new CSharpCodeProvider());
-			string code = generator.Generate(File.OpenRead(@"D:\OSS\rhino-tools\rhino-generators\Rhino.Generators.Tests\Performance.cs"));
+			string code = generator.Generate(File.OpenText(@"D:\OSS\rhino-tools\rhino-generators\Rhino.Generators.Tests\Performance.cs"));
 			Assembly assembly = TestUtil.GetAssemblyFromCode(code);
 			Assert.IsNotNull(assembly);
 		}

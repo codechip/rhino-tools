@@ -1,12 +1,12 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using DDW;
+using ICSharpCode.NRefactory;
+using ICSharpCode.NRefactory.Ast;
 using Rhino.Generators.Definitions;
+using Attribute = ICSharpCode.NRefactory.Ast.Attribute;
 
 namespace Rhino.Generators
 {
@@ -20,21 +20,26 @@ namespace Rhino.Generators
 			this.provider = provider;
 		}
 
-		public string Generate(Stream source)
+		public string Generate(TextReader input)
 		{
 			StringWriter writer = new StringWriter();
 			CodeCompileUnit unit = new CodeCompileUnit();
 
-			BufferedStream bs = new BufferedStream(source);
-			Lexer lexer = new Lexer(bs);
-			Parser parser = new Parser();
-			CompilationUnitNode parsedCompilationUnit = parser.Parse(lexer.Lex(), lexer.StringLiterals);
-			foreach (NamespaceNode namespaceNode in parsedCompilationUnit.Namespaces)
+			IParser parser = ParserFactory.CreateParser(SupportedLanguage.CSharp, input);
+			parser.Parse();
+			foreach (INode maybeNamespaceNode in parser.CompilationUnit.Children)
 			{
-				CodeNamespace ns = new CodeNamespace(ASTHelper.GetName(namespaceNode.Name));
-				foreach (ClassNode classNode in namespaceNode.Classes)
+				if (!(maybeNamespaceNode is NamespaceDeclaration))
+					continue;
+				NamespaceDeclaration namespaceDeclaration = (NamespaceDeclaration)maybeNamespaceNode;
+				CodeNamespace ns = new CodeNamespace(namespaceDeclaration.Name);
+				foreach (INode maybeClassNode in namespaceDeclaration.Children)
 				{
-					CodeTypeDeclaration codeTypeDeclaration = ParseClass(classNode);
+					if (!(maybeClassNode is TypeDeclaration))
+						continue;
+
+					TypeDeclaration type = (TypeDeclaration)maybeClassNode;
+					CodeTypeDeclaration codeTypeDeclaration = ParseClass(type);
 					if (codeTypeDeclaration != null)
 						ns.Types.Add(codeTypeDeclaration);
 				}
@@ -47,28 +52,34 @@ namespace Rhino.Generators
 			return writer.GetStringBuilder().ToString();
 		}
 
-		private CodeTypeDeclaration ParseClass(ClassNode classNode)
+		private CodeTypeDeclaration ParseClass(TypeDeclaration typeDeclaration)
 		{
-			string category = GetCategory(classNode);
-			CodeTypeDeclaration derived = new CodeTypeDeclaration(ASTHelper.GetName(classNode.Name) + "Derived");
-			CodeTypeDeclaration setup = GenerateSetupClass(derived, category);
-			derived.BaseTypes.Add(new CodeTypeReference(ASTHelper.GetName(classNode.Name)));
-			foreach (PropertyNode propertyNode in classNode.Properties)
+			string category = GetCategory(typeDeclaration);
+			CodeTypeDeclaration derived = new CodeTypeDeclaration(typeDeclaration.Name + "Derived");
+			CodeTypeDeclaration setup = BeginSetup(category, derived);
+			derived.BaseTypes.Add(new CodeTypeReference(typeDeclaration.Name));
+			foreach (INode maybeProperty in typeDeclaration.Children)
 			{
-				if (AttributeUtil.HasAttribute(propertyNode, "PerfCounter"))
+				if (!(maybeProperty is PropertyDeclaration))
+					continue;
+
+				PropertyDeclaration propertyDeclaration = (PropertyDeclaration)maybeProperty;
+
+				if (AttributeUtil.HasAttribute(propertyDeclaration, "PerformanceCounter"))
 				{
-					AssertPropertyIsAbstractAndPublic(classNode, propertyNode);
-					string fieldName = "_" + ASTHelper.GetName(propertyNode.Names[0]);
+					AssertPropertyIsAbstractAndPublic(typeDeclaration, propertyDeclaration);
+					string fieldName = "_" + propertyDeclaration.Name;
 
 					CodeMemberProperty prop = new CodeMemberProperty();
-					prop.Name = ASTHelper.GetName(propertyNode.Names[0]);
+					prop.Name = propertyDeclaration.Name;
 					prop.Type = new CodeTypeReference(typeof(PerformanceCounter));
 					prop.Attributes = MemberAttributes.Override | MemberAttributes.Public;
 					prop.HasSet = false;
 					prop.GetStatements.Add(
-						new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName))
+						new CodeMethodReturnStatement(
+						new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName))
 						);
-					PerfCounterAttribute attribute = GetAttribute(propertyNode, classNode);
+					PerformanceCounterAttribute attribute = GetAttribute(propertyDeclaration, typeDeclaration);
 					AddToSetup(setup, attribute);
 					CodeMemberField field = new CodeMemberField(typeof(PerformanceCounter), fieldName);
 					field.InitExpression =
@@ -81,15 +92,30 @@ namespace Rhino.Generators
 					derived.Members.Add(prop);
 				}
 			}
-			FinalizeSetup(setup,category);
+			FinalizeSetup(setup, category);
 			if (derived.Members.Count > 1)
 				return derived;
 			return null;
 		}
 
-		private void FinalizeSetup(CodeTypeDeclaration setup,string category)
+		private static CodeTypeDeclaration BeginSetup(string category, CodeTypeDeclaration derived)
 		{
-			CodeMemberMethod create = (CodeMemberMethod) setup.Members[0];
+			CodeTypeDeclaration setup = GenerateSetupClass(derived, category);
+			CodeMemberField setupField = new CodeMemberField(new CodeTypeReference(setup.Name), "_setup");
+			setupField.InitExpression = new CodeObjectCreateExpression(new CodeTypeReference(setup.Name));
+			derived.Members.Add(setupField);
+			CodeMemberProperty setupProp = new CodeMemberProperty();
+			setupProp.Name = "Setup";
+			setupProp.Attributes = MemberAttributes.Public;
+			setupProp.HasSet = false;
+			setupProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),"_setup")));
+			derived.Members.Add(setupProp);
+			return setup;
+		}
+
+		private void FinalizeSetup(CodeTypeDeclaration setup, string category)
+		{
+			CodeMemberMethod create = (CodeMemberMethod)setup.Members[0];
 			/*    
 				PerformanceCounterCategory.Create(Resources.PerformanceCounters_Category,
                 Resources.PerformanceCounters_CetegoryHelp,
@@ -97,41 +123,38 @@ namespace Rhino.Generators
                 counters);
 			 */
 			CodeMethodInvokeExpression createCategory = new CodeMethodInvokeExpression(
-				new CodeTypeReferenceExpression(typeof(PerformanceCounterCategory)),"Create",
+				new CodeTypeReferenceExpression(typeof(PerformanceCounterCategory)), "Create",
 				new CodePrimitiveExpression(category),
 				new CodePrimitiveExpression(""),
 				new CodeFieldReferenceExpression(
-					new CodeTypeReferenceExpression(typeof(PerformanceCounterCategoryType)),"SingleInstance"
+					new CodeTypeReferenceExpression(typeof(PerformanceCounterCategoryType)), "SingleInstance"
 				),
 				new CodeVariableReferenceExpression("counters")
 				);
 			create.Statements.Add(createCategory);
 		}
 
-		private string GetCategory(ClassNode classNode)
+		private string GetCategory(TypeDeclaration typeDeclaration)
 		{
-			AttributeNode attributeNode = AttributeUtil.GetAttribute(classNode, "PerfCounterCategory");
-			if (attributeNode == null)
+			Attribute attribute = AttributeUtil.GetAttribute(typeDeclaration, "PerformanceCounterCategory");
+			if (attribute != null)
 			{
-				return ASTHelper.GetName(classNode.Name);
+				if (attribute.PositionalArguments.Count == 0)
+					throw new InvalidOperationException("Should have at least one parameter here");
+				PrimitiveExpression expression = (PrimitiveExpression)attribute.PositionalArguments[0];
+				return (string)expression.Value;
 			}
-			else
-			{
-				if (!(attributeNode.Arguments[0].Expression is IdentifierExpression))
-					throw new InvalidOperationException("PerfCounterCategory expression must be IdentifierExpression");
-				IdentifierExpression identifierExpression = (IdentifierExpression)attributeNode.Arguments[0].Expression;
-				return ASTHelper.GetName(identifierExpression);
-			}
+			return typeDeclaration.Name;
 		}
 
 		private static CodeTypeDeclaration GenerateSetupClass(CodeTypeDeclaration derived, string category)
 		{
-			CodeTypeDeclaration setup = new CodeTypeDeclaration("Setup");
+			CodeTypeDeclaration setup = new CodeTypeDeclaration("HandleSetup");
 			derived.Members.Add(setup);
 			CodeMemberMethod create = new CodeMemberMethod();
 			setup.Members.Add(create);
 			create.Name = "Run";
-			create.Attributes = MemberAttributes.Public | MemberAttributes.Static;
+			create.Attributes = MemberAttributes.Public;
 			/*
 			 if (PerformanceCounterCategory.Exists(Resources.PerformanceCounters_Category))
                 PerformanceCounterCategory.Delete(Resources.PerformanceCounters_Category);
@@ -153,7 +176,7 @@ namespace Rhino.Generators
 			return setup;
 		}
 
-		private void AddToSetup(CodeTypeDeclaration setup, PerfCounterAttribute attribute)
+		private void AddToSetup(CodeTypeDeclaration setup, PerformanceCounterAttribute attribute)
 		{
 			/*
 			CounterCreationData totalLogsCreator = new CounterCreationData();
@@ -178,50 +201,42 @@ namespace Rhino.Generators
 			create.Statements.Add(add);
 		}
 
-		private PerfCounterAttribute GetAttribute(PropertyNode propertyNode, ClassNode parent)
+		private PerformanceCounterAttribute GetAttribute(PropertyDeclaration propertyNode, TypeDeclaration parent)
 		{
-			AttributeNode attributeNode = AttributeUtil.GetAttribute(propertyNode, "PerfCounter");
+			Attribute attributeNode = AttributeUtil.GetAttribute(propertyNode, "PerformanceCounter");
 			string name;
 			PerformanceCounterType counterType;
 
-			AttributeArgumentNode counterTypeArg = attributeNode.Arguments[attributeNode.Arguments.Count - 1];
-			AssertIsIdentifier(counterTypeArg, parent, propertyNode);
-			IdentifierExpression counterTypeIdentifier = (IdentifierExpression)counterTypeArg.Expression;
-
+			FieldReferenceExpression expression = (FieldReferenceExpression)attributeNode.PositionalArguments[0];
+			
 			counterType = (PerformanceCounterType)Enum.Parse(typeof(PerformanceCounterType),
-															  counterTypeIdentifier.Identifier[1]);
-			if (attributeNode.Arguments.Count == 2)
+															  expression.FieldName);
+			if (attributeNode.NamedArguments.Count>0)
 			{
-				ExpressionNode nameArg = attributeNode.Arguments[2].Expression;
-				AssertIsIdentifier(attributeNode.Arguments[2], parent, propertyNode);
-				IdentifierExpression nameIdentifier = (IdentifierExpression)nameArg;
-				name = nameIdentifier.Identifier[0];
+				PrimitiveExpression nameExpr = (PrimitiveExpression)attributeNode.NamedArguments[0].Expression;
+				name = (string)nameExpr.Value;
 			}
 			else
 			{
-				name = ASTHelper.GetName(propertyNode.Names[0]);
+				name = propertyNode.Name;
 			}
 
-			return new PerfCounterAttribute(name, counterType);
+			PerformanceCounterAttribute performanceCounterAttribute = new PerformanceCounterAttribute(counterType);
+			performanceCounterAttribute.Name = name;
+			return performanceCounterAttribute;
 		}
 
-		private static void AssertIsIdentifier(AttributeArgumentNode argument, ClassNode parent, PropertyNode propertyNode)
+		private static void AssertPropertyIsAbstractAndPublic(TypeDeclaration classNode, PropertyDeclaration propertyNode)
 		{
-			if (!(argument.Expression is IdentifierExpression))
-				throw new InvalidOperationException("Can't handle non identifier expression on PerfCounter attribute on " + GetFullName(propertyNode, parent));
-		}
-
-		private static void AssertPropertyIsAbstractAndPublic(ClassNode classNode, PropertyNode propertyNode)
-		{
-			if ((propertyNode.Modifiers & Modifier.Abstract) == 0)
+			if ((propertyNode.Modifier & Modifiers.Abstract) == 0)
 				throw new InvalidOperationException(string.Format("{0} must be abstract.", GetFullName(propertyNode, classNode)));
-			if ((propertyNode.Modifiers & Modifier.Public) == 0)
+			if ((propertyNode.Modifier & Modifiers.Public) == 0)
 				throw new InvalidOperationException(string.Format("{0} must be public.", GetFullName(propertyNode, classNode)));
 		}
 
-		private static string GetFullName(PropertyNode node, ClassNode parent)
+		private static string GetFullName(PropertyDeclaration node, TypeDeclaration parent)
 		{
-			return string.Format("Property {0} from {1}", ASTHelper.GetName(node.Names[0]), ASTHelper.GetName(parent.Name));
+			return string.Format("Property {0} from {1}", node.Name, parent.Name);
 		}
 	}
 }
