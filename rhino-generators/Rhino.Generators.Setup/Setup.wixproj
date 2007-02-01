@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>2.0</ProductVersion>
+    <ProjectGuid>{2C43DF6C-1BC3-4a21-BC8E-62AA35C56E7E}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>Rhino.Generator</OutputName>
+    <OutputType>Package</OutputType>
+    <WixToolPath>$(MSBuildProjectDirectory)..\..\..\SharedLibs\Tools\WiX\</WixToolPath>
+    <ToolPath>$(MSBuildProjectDirectory)..\..\..\SharedLibs\Tools\WiX\</ToolPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <IntermediateOutputPath>obj\Debug\</IntermediateOutputPath>
+    <DefineConstants>Debug;BuildPath=$(MSBuildProjectDirectory)\..\Rhino.Generator\bin\$(Configuration)\</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.g.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixLibrary Include="$(ToolPath)\wixui.wixlib" />
+  </ItemGroup>
+  <PropertyGroup>
+    <LocalizedStringFile>wixui_en-us.wxl</LocalizedStringFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildProjectDirectory)..\..\..\SharedLibs\Tools\WiX\Wix.targets" />
+</Project>

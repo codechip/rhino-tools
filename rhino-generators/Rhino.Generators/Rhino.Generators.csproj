@@ -1,0 +1,96 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C72974AF-6878-4CA8-A8E8-A5DB70172A0F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.Generators</RootNamespace>
+    <AssemblyName>Rhino.Generators</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Designer.Interfaces, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\Microsoft.VisualStudio.Designer.Interfaces.DLL</HintPath>
+    </Reference>
+    <Reference Include="CSharp.Parser, Version=1.0.2588.16100, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\CSharp\CSharp.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VSLangProj80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ASTHelper.cs" />
+    <Compile Include="AttributeUtil.cs" />
+    <Compile Include="CustomTool\BaseCodeGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\BaseCodeGeneratorWithSite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\IObjectWithSite.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\IOleServiceProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\IVsGeneratorProgress.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\IVsSingleFileGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CustomTool\ServiceProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PerfCounterGen.cs" />
+    <Compile Include="PerfromanceCountersGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rhino.Generators.Definitions\Rhino.Generators.Definitions.csproj">
+      <Project>{E5B673CE-DBB4-4195-9629-BD880B90007B}</Project>
+      <Name>Rhino.Generators.Definitions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ayende-open-source.snk">
+      <Link>ayende-open-source.snk</Link>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
