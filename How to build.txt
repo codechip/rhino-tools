@@ -1,0 +1,16 @@
+Building in visual studio
+==================
+
+The AssemblyInfo.cs is missing from the repository. The reason for that is that the build is generating updated AssemblyInfo.cs files for all projects,
+with the correct version and revision notes.
+
+You need to run:
+ > msbuild buildall.build 
+ 
+from the command line before you can build in visual studio.
+
+
+
+
+
+
