@@ -3,6 +3,7 @@
 	<PropertyGroup Condition="!Exists('$(Configuration)')">
 		<SharedLibsDir>$(MSBuildProjectDirectory)\..\SharedLibs</SharedLibsDir>
 		<Configuration>Debug</Configuration>
+		<EnableTest>True</EnableTest>
 		<OutputDir>$(MSBuildProjectDirectory)</OutputDir>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
 		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
@@ -65,7 +66,7 @@
 			 ZipFileName="$(ZipFileName)" />
 	</Target>
 	
-	<Target Name="UnitTest">
+	<Target Name="UnitTest" Condition="$(EnableTest)">
 		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(SharedLibsDir)\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
 	</Target>
 	

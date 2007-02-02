@@ -106,6 +106,7 @@ namespace Rhino.Generators
 			derived.Members.Add(setupField);
 			CodeMemberProperty setupProp = new CodeMemberProperty();
 			setupProp.Name = "Setup";
+			setupProp.Type = new CodeTypeReference(setup.Name);
 			setupProp.Attributes = MemberAttributes.Public;
 			setupProp.HasSet = false;
 			setupProp.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),"_setup")));
