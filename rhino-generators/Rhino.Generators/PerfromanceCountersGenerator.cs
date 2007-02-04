@@ -52,7 +52,7 @@ namespace Rhino.Generators
 			return writer.GetStringBuilder().ToString();
 		}
 
-		private CodeTypeDeclaration ParseClass(TypeDeclaration typeDeclaration)
+		private static CodeTypeDeclaration ParseClass(TypeDeclaration typeDeclaration)
 		{
 			string category = GetCategory(typeDeclaration);
 			CodeTypeDeclaration derived = new CodeTypeDeclaration(typeDeclaration.Name + "Derived");
@@ -79,7 +79,7 @@ namespace Rhino.Generators
 						new CodeMethodReturnStatement(
 						new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName))
 						);
-					PerformanceCounterAttribute attribute = GetAttribute(propertyDeclaration, typeDeclaration);
+					PerformanceCounterAttribute attribute = GetAttribute(propertyDeclaration);
 					AddToSetup(setup, attribute);
 					CodeMemberField field = new CodeMemberField(typeof(PerformanceCounter), fieldName);
 					field.InitExpression =
@@ -114,7 +114,7 @@ namespace Rhino.Generators
 			return setup;
 		}
 
-		private void FinalizeSetup(CodeTypeDeclaration setup, string category)
+		private static void FinalizeSetup(CodeTypeDeclaration setup, string category)
 		{
 			CodeMemberMethod create = (CodeMemberMethod)setup.Members[0];
 			/*    
@@ -135,7 +135,7 @@ namespace Rhino.Generators
 			create.Statements.Add(createCategory);
 		}
 
-		private string GetCategory(TypeDeclaration typeDeclaration)
+		private static string GetCategory(TypeDeclaration typeDeclaration)
 		{
 			Attribute attribute = AttributeUtil.GetAttribute(typeDeclaration, "PerformanceCounterCategory");
 			if (attribute != null)
@@ -177,7 +177,7 @@ namespace Rhino.Generators
 			return setup;
 		}
 
-		private void AddToSetup(CodeTypeDeclaration setup, PerformanceCounterAttribute attribute)
+		private static void AddToSetup(CodeTypeDeclaration setup, PerformanceCounterAttribute attribute)
 		{
 			/*
 			CounterCreationData totalLogsCreator = new CounterCreationData();
@@ -202,7 +202,7 @@ namespace Rhino.Generators
 			create.Statements.Add(add);
 		}
 
-		private PerformanceCounterAttribute GetAttribute(PropertyDeclaration propertyNode, TypeDeclaration parent)
+		private static PerformanceCounterAttribute GetAttribute(PropertyDeclaration propertyNode)
 		{
 			Attribute attributeNode = AttributeUtil.GetAttribute(propertyNode, "PerformanceCounter");
 			string name;
