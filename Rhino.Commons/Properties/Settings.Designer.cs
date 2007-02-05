@@ -40,5 +40,14 @@ namespace Rhino.Commons.Properties {
                 return ((string)(this["HibernateConfig"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int MaxNumberOfQueriesPerRequest {
+            get {
+                return ((int)(this["MaxNumberOfQueriesPerRequest"]));
+            }
+        }
     }
 }
