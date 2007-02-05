@@ -155,7 +155,9 @@
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
+    <Compile Include="Tasks\ActiveRecord_CreateDatabase.cs" />
     <Compile Include="Tasks\Boo.cs" />
+    <Compile Include="Tasks\Concat.cs" />
     <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
     <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
     <Compile Include="Threading\ThreadPool\WorkItem.cs" />
@@ -169,6 +171,8 @@
     <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
     <Compile Include="With\With.Cache.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
+    <Compile Include="XmlRead.cs" />
+    <Compile Include="XmlUpdate.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />

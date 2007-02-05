@@ -32,6 +32,7 @@
 			AssemblyInformationalVersion="$(Version).$(Revision)"
 			 AssemblyTitle ="$(ProjectName)"
 			 CodeLanguage="CS"
+			 CLSCompliant ="true"
 			 AssemblyVersion ="$(Version).$(Revision)"
 			 OutputFile="%(AssemblyInfo.File)"
 			 />

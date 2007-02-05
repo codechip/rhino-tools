@@ -1212,7 +1212,7 @@
             {
             	...
             	
-            	[HasMany(typeof(Post), RelationType.Bag, Key="Posts", Table="Posts", Column="blogid")]
+            	[HasMany(typeof(Post), RelationType.Bag, ColumnKey="Posts", Table="Posts")]
             	public IList Posts
             	{
             		get { return _posts; }
@@ -6180,6 +6180,16 @@
             <param name="types"></param>
             <returns>An array of dirty property indicies or <c>null</c> to choose default behavior</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordHooksBase.OnFlushDirty(System.Object,System.Collections.IDictionary,System.Collections.IDictionary,NHibernate.Type.IType[])">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="previousState"></param>
+            <param name="currentState"></param>
+            <param name="types"></param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordHooksBase.OnSave">
             <summary>
             Lifecycle method invoked during Save of the entity
@@ -7333,6 +7343,15 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expression.ICriterion[])">
+            <summary>
+            Returns the number of records of the specified 
+            type in the database
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>The count result</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type)">
             <summary>
             Check if there is any records in the db for the target type
@@ -7367,26 +7386,56 @@
             <summary>
             Saves the instance to the database
             </summary>
-            <param name="instance"></param>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SaveAndFlush(System.Object)">
+            <summary>
+            Saves the instance to the database and flushes the session. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordMediator.Create(System.Object)"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordMediator.Update(System.Object)"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The ActiveRecord instance to be saved</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Create(System.Object)">
             <summary>
             Creates (Saves) a new instance to the database.
             </summary>
-            <param name="instance"></param>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.CreateAndFlush(System.Object)">
+            <summary>
+            Creates (Saves) a new instance to the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be created on the database</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Update(System.Object)">
             <summary>
             Persists the modification on the instance
             state to the database.
             </summary>
-            <param name="instance"></param>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.UpdateAndFlush(System.Object)">
+            <summary>
+            Persists the modification on the instance
+            state to the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be updated on the database</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Delete(System.Object)">
             <summary>
             Deletes the instance from the database.
             </summary>
-            <param name="instance"></param>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.DeleteAndFlush(System.Object)">
+            <summary>
+            Deletes the instance from the database and flushes the session.
+            </summary>
+            <param name="instance">The ActiveRecord instance to be deleted</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Refresh(System.Object)">
             <summary>
@@ -7557,6 +7606,14 @@
             </summary>
             <returns>The count result</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expression.ICriterion[])">
+            <summary>
+            Returns the number of records of the specified 
+            type in the database that match the given critera
+            </summary>
+            <param name="criteria">The criteria expression</param>
+            <returns>The count result</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(System.String,System.Object[])">
             <summary>
             Returns the number of records of the specified 
@@ -7585,6 +7642,11 @@
             Delegate for use in <see cref="E:Castle.ActiveRecord.ActiveRecordStarter.SessionFactoryHolderCreated"/>
             </summary>
             <param name="holder"></param>
+        </member>
+        <member name="T:Castle.ActiveRecord.ModelsCreatedDelegate">
+            <summary>
+            Delegate for use in <see cref="E:Castle.ActiveRecord.ActiveRecordStarter.ModelsCreated"/>
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordStarter">
             <summary>
@@ -7684,6 +7746,17 @@
             <summary>
             So others frameworks can intercept the 
             creation and act on the holder instance
+            </summary>
+        </member>
+        <member name="E:Castle.ActiveRecord.ActiveRecordStarter.ModelsCreated">
+            <summary>
+            Allows other frameworks to modify the ActiveRecordModel
+            before the generation of the NHibernate XML configuration.
+            As an example, this may be used to rewrite table names to
+            conform to an application-specific standard.  Since the
+            configuration source is passed in, it is possible to
+            determine the underlying database type and make changes
+            if necessary.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordValidationBase">
