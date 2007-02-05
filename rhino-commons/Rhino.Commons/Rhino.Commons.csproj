@@ -146,11 +146,15 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Exceptions\HackExpiredException.cs" />
+    <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
+    <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="Facilities\RhinoTransactionFacility.cs" />
     <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
     <Compile Include="ForTesting\ActiveRecordEmbeddedDBTestFixtureBase.cs" />
     <Compile Include="ForTesting\NHibernateEmbeddedDBTestFixtureBase.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
+    <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
