@@ -24,7 +24,7 @@ namespace Rhino.Commons
 			ISession session = CreateSession(maybeUserProvidedConnection);
 			session.FlushMode = FlushMode.Commit;
 			Local.Data[CurrentNHibernateSessionKey] = session;
-			return new NHibernateUnitOfWorkAdapter(session, previous);
+			return new NHibernateUnitOfWorkAdapter(this, session, (NHibernateUnitOfWorkAdapter)previous);
 		}
 
 		private static ISession CreateSession(IDbConnection maybeUserProvidedConnection)
@@ -112,6 +112,15 @@ namespace Rhino.Commons
 				return session;
 			}
 			set { Local.Data[CurrentNHibernateSessionKey] = value; }
+		}
+
+		public void DisposeUnitOfWork(NHibernateUnitOfWorkAdapter adapter)
+		{
+			ISession session = null;
+			if(adapter.Previous!=null)
+				session = adapter.Previous.Session;
+			CurrentNHibernateSession = session;
+			UnitOfWork.DisposeUnitOfWork(adapter);
 		}
 	}
 }

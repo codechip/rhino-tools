@@ -1,3 +1,4 @@
+using System.Data;
 using NHibernate;
 using NHibernate.Expression;
 
@@ -72,6 +73,17 @@ namespace Rhino.Commons
 			}
 			AddCaching(crit);
 			return crit;
+		}
+
+		public static void CreateDbDataParameters(IDbCommand command, Parameter[] parameters)
+		{
+			foreach (Parameter parameter in parameters)
+			{
+				IDbDataParameter sp_arg = command.CreateParameter();
+				sp_arg.ParameterName = parameter.Name;
+				sp_arg.Value = parameter.Value;
+				command.Parameters.Add(sp_arg);
+			}
 		}
 	}
 }

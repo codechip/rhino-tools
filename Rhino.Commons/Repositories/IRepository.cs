@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using NHibernate.Expression;
 
 namespace Rhino.Commons
@@ -181,6 +183,18 @@ namespace Rhino.Commons
     	object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters);
 
 		/// <summary>
+		/// Execute the specified stored procedure with the given parameters and then converts
+		/// the results using the supplied delegate.
+		/// </summary>
+		/// <typeparam name="T2">The collection type to return.</typeparam>
+		/// <param name="converter">The delegate which converts the raw results.</param>
+		/// <param name="sp_name">The name of the stored procedure.</param>
+		/// <param name="parameters">Parameters for the stored procedure.</param>
+		/// <returns></returns>
+    	ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
+    	                                           params Parameter[] parameters);
+
+		/// <summary>
 		/// Check if there is any records in the db for <typeparamref name="T"/>
 		/// </summary>
 		/// <param name="id">the object id</param>
@@ -198,5 +212,12 @@ namespace Rhino.Commons
 		/// </summary>
 		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
 		bool Exists(DetachedCriteria criteria);
+
+		/// <summary>
+		/// Counts the number of instances matching the criteria.
+		/// </summary>
+		/// <param name="criteria"></param>
+		/// <returns></returns>
+    	long Count(DetachedCriteria criteria);
     }
 }
