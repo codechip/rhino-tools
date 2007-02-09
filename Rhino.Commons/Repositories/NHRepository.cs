@@ -206,34 +206,6 @@ namespace Rhino.Commons
 			}
 		}
 
-		/// <summary>
-		/// Check if there is any records in the db for <typeparamref name="T"/>
-		/// </summary>
-		/// <param name="id">the object id</param>
-		/// <returns><c>true</c> if there's at least one row</returns>
-		public bool Exists(object id)
-		{
-			return 0 != Session.CreateCriteria(typeof(T))
-				.Add(Expression.Eq("id", id))
-				.SetProjection(Projections.RowCount())
-				.UniqueResult<long>();
-		}
-
-		/// <summary>
-		/// Check if any instance matches the criteria.
-		/// </summary>
-		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
-		public bool Exists(params ICriterion[] criterias)
-		{
-			ICriteria criteria = Session.CreateCriteria(typeof(T));
-			foreach (ICriterion criterion in criterias)
-			{
-				criteria.Add(criterion);
-			}
-			return 0 != criteria
-				.SetProjection(Projections.RowCount())
-				.UniqueResult<long>();
-		}
 
 		/// <summary>
 		/// Check if any instance matches the criteria.
