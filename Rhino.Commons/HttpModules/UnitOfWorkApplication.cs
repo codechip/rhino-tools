@@ -10,7 +10,6 @@ namespace Rhino.Commons.HttpModules
 {
     public class UnitOfWorkApplication : HttpApplication, IContainerAccessor
     {
-        static ILog logger = LogManager.GetLogger(typeof (UnitOfWorkApplication));
         private static IWindsorContainer windsorContainer;
 
 		public UnitOfWorkApplication()
@@ -62,30 +61,10 @@ namespace Rhino.Commons.HttpModules
 		}
 
 
-    	public override void Init()
-        {
-			base.Init();
-            logger.Info("Starting Unit Of Work Application");
-            BeginRequest += new EventHandler(context_BeginRequest);
-            EndRequest += new EventHandler(context_EndRequest);
-        }
-
-        private void context_BeginRequest(object sender, EventArgs e)
-        {
-            logger.Debug("Starting Unit Of Work For Request");
-            UnitOfWork.Start();
-        }
-
-    	private void context_EndRequest(object sender, EventArgs e)
-        {
-            logger.Debug("Disposing Unit Of Work For Request");
-            UnitOfWork.Current.Dispose();
-        }
-
         public override void Dispose()
         {
-            BeginRequest -= new EventHandler(context_BeginRequest);
-            EndRequest -= new EventHandler(context_EndRequest);
+            BeginRequest -= new EventHandler(UnitOfWorkApplication_BeginRequest);
+            EndRequest -= new EventHandler(UnitOfWorkApplication_EndRequest);
         }
 
     	protected virtual void CreateContainer()
