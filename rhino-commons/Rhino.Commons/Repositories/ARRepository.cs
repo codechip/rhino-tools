@@ -386,14 +386,41 @@ namespace Rhino.Commons
 				{
 					command.CommandText = sp_name;
 					command.CommandType = CommandType.StoredProcedure;
-					foreach (Parameter parameter in parameters)
-					{
-						IDbDataParameter sp_arg = command.CreateParameter();
-						sp_arg.ParameterName = parameter.Name;
-						sp_arg.Value = parameter.Value;
-						command.Parameters.Add(sp_arg);
-					}
-					return (T) command.ExecuteScalar();
+
+					RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+
+					return command.ExecuteScalar();
+				}
+			}
+			finally
+			{
+				sessionFactory.ConnectionProvider.CloseConnection(connection);
+			}
+		}
+
+		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
+		                                                  params Parameter[] parameters)
+		{
+			ISessionFactory sessionFactory = ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof(T));
+			IDbConnection connection = sessionFactory.ConnectionProvider.GetConnection();
+
+			try
+			{
+				using (IDbCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sp_name;
+					command.CommandType = CommandType.StoredProcedure;
+
+					RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+					IDataReader reader = command.ExecuteReader();
+					ICollection<T2> results = new List<T2>();
+
+					while (reader.Read())
+						results.Add(converter(reader));
+
+					reader.Close();
+
+					return results;
 				}
 			}
 			finally
@@ -427,14 +454,22 @@ namespace Rhino.Commons
 		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
 		public bool Exists(DetachedCriteria criteria)
 		{
+			return 0 != Count(criteria);
+		}
+
+		/// <summary>
+		/// Counts the number of instances matching the criteria.
+		/// </summary>
+		/// <returns></returns>
+		public long Count(DetachedCriteria criteria)
+		{
 			ISession session = OpenSession();
 			try
 			{
 				criteria.SetProjection(Projections.RowCount());
-				ICriteria crit = RepositoryHelper<T>
-					.GetExecutableCriteria(session, criteria, null);
-
-				return 0 != crit.UniqueResult<long>();
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, null);
+				object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
+				return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
 			}
 			finally
 			{

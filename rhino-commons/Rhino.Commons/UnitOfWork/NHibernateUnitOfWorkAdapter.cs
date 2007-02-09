@@ -8,14 +8,26 @@ namespace Rhino.Commons
 {
 	public class NHibernateUnitOfWorkAdapter : IUnitOfWorkImplementor
 	{
+		private readonly NHibernateUnitOfWorkFactory factory;
 		private ISession session;
 
-		private readonly IUnitOfWorkImplementor previous;
+		private readonly NHibernateUnitOfWorkAdapter previous;
 		private int usageCount = 1;
 
-		public IUnitOfWorkImplementor Previous
+		IUnitOfWorkImplementor IUnitOfWorkImplementor.Previous
 		{
 			get { return previous; }
+		}
+
+
+		public NHibernateUnitOfWorkAdapter Previous
+		{
+			get { return previous; }
+		}
+
+		public NHibernateUnitOfWorkFactory Factory
+		{
+			get { return factory; }
 		}
 
 		public bool IsInActiveTransaction
@@ -51,12 +63,13 @@ namespace Rhino.Commons
 			usageCount -= 1;
 			if (usageCount != 0)
 				return;
-			UnitOfWork.DisposeUnitOfWork(this);
+			factory.DisposeUnitOfWork(this);
 			session.Dispose();
 		}
 
-		public NHibernateUnitOfWorkAdapter(ISession session, IUnitOfWorkImplementor previous)
+		public NHibernateUnitOfWorkAdapter(NHibernateUnitOfWorkFactory factory, ISession session, NHibernateUnitOfWorkAdapter previous)
 		{
+			this.factory = factory;
 			this.session = session;
 			this.previous = previous;
 		}

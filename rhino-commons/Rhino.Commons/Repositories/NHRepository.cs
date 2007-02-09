@@ -17,12 +17,12 @@ namespace Rhino.Commons
 
 		public T Get(object id)
 		{
-			return (T) Session.Get(typeof (T), id);
+			return (T)Session.Get(typeof(T), id);
 		}
 
 		public T Load(object id)
 		{
-			return (T) Session.Load(typeof (T), id);
+			return (T)Session.Load(typeof(T), id);
 		}
 
 		public void Delete(T entity)
@@ -107,13 +107,13 @@ namespace Rhino.Commons
 		public T FindOne(params ICriterion[] criteria)
 		{
 			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
-			return (T) crit.UniqueResult();
+			return (T)crit.UniqueResult();
 		}
 
 		public T FindOne(string namedQuery, params Parameter[] parameters)
 		{
 			IQuery query = RepositoryHelper<T>.CreateQuery(Session, namedQuery, parameters);
-			return (T) query.UniqueResult();
+			return (T)query.UniqueResult();
 		}
 
 		public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
@@ -133,7 +133,7 @@ namespace Rhino.Commons
 		public T FindOne(DetachedCriteria criteria)
 		{
 			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
-			return (T) executableCriteria.UniqueResult();
+			return (T)executableCriteria.UniqueResult();
 		}
 
 		public T FindFirst(DetachedCriteria criteria, params Order[] orders)
@@ -141,7 +141,7 @@ namespace Rhino.Commons
 			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
 			executableCriteria.SetFirstResult(0);
 			executableCriteria.SetMaxResults(1);
-			return (T) executableCriteria.UniqueResult();
+			return (T)executableCriteria.UniqueResult();
 		}
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
@@ -154,14 +154,50 @@ namespace Rhino.Commons
 				{
 					command.CommandText = sp_name;
 					command.CommandType = CommandType.StoredProcedure;
-					foreach (Parameter parameter in parameters)
-					{
-						IDbDataParameter sp_arg = command.CreateParameter();
-						sp_arg.ParameterName = parameter.Name;
-						sp_arg.Value = parameter.Value;
-						command.Parameters.Add(sp_arg);
-					}
+
+					RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+
 					return command.ExecuteScalar();
+				}
+			}
+			finally
+			{
+				connectionProvider.CloseConnection(connection);
+			}
+		}
+
+		/// <summary>
+		/// Execute the specified stored procedure with the given parameters and then converts
+		/// the results using the supplied delegate.
+		/// </summary>
+		/// <typeparam name="T2">The collection type to return.</typeparam>
+		/// <param name="converter">The delegate which converts the raw results.</param>
+		/// <param name="sp_name">The name of the stored procedure.</param>
+		/// <param name="parameters">Parameters for the stored procedure.</param>
+		/// <returns></returns>
+		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
+														  params Parameter[] parameters)
+		{
+			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.NHibernateSessionFactory.ConnectionProvider;
+			IDbConnection connection = connectionProvider.GetConnection();
+
+			try
+			{
+				using (IDbCommand command = connection.CreateCommand())
+				{
+					command.CommandText = sp_name;
+					command.CommandType = CommandType.StoredProcedure;
+
+					RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+					IDataReader reader = command.ExecuteReader();
+					ICollection<T2> results = new List<T2>();
+
+					while (reader.Read())
+						results.Add(converter(reader));
+
+					reader.Close();
+
+					return results;
 				}
 			}
 			finally
@@ -205,9 +241,20 @@ namespace Rhino.Commons
 		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
 		public bool Exists(DetachedCriteria criteria)
 		{
-			ICriteria executableCriteria = criteria.SetProjection(Projections.RowCount())
-				.GetExecutableCriteria(Session);
-			return 0 != executableCriteria.UniqueResult<long>();
+			return 0 != Count(criteria);
+		}
+
+		/// <summary>
+		/// Counts the number of instances matching the criteria.
+		/// </summary>
+		/// <param name="criteria"></param>
+		/// <returns></returns>
+		public long Count(DetachedCriteria criteria)
+		{
+			ICriteria executableCriteria = criteria.SetProjection(Projections.RowCount()).GetExecutableCriteria(Session);
+
+			object countMayBe_Int32_Or_Int64_DependingOnDatabase = executableCriteria.UniqueResult();
+			return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
 		}
 	}
 }

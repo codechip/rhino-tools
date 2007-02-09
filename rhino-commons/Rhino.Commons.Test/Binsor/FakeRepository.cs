@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using NHibernate.Expression;
 
 namespace Rhino.Commons.Test.Binsor
@@ -159,12 +160,38 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
+		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
+		                                                  params Parameter[] parameters)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Check if there is any records in the db for <typeparamref name="T"/>
+		/// </summary>
+		/// <returns><c>true</c> if there's at least one row</returns>
+		public bool Exists()
+		{
+			throw new NotImplementedException();
+		}
+
 		/// <summary>
 		/// Check if there is any records in the db for <typeparamref name="T"/>
 		/// </summary>
 		/// <param name="id">the object id</param>
 		/// <returns><c>true</c> if there's at least one row</returns>
 		public bool Exists(object id)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Check if there is any records in the db for <typeparamref name="T"/>
+		/// </summary>
+		/// <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
+		/// <param name="args">Positional parameters for the filter string</param>
+		/// <returns><c>true</c> if there's at least one row</returns>
+		public bool Exists(string filter, params object[] args)
 		{
 			throw new NotImplementedException();
 		}
@@ -178,9 +205,19 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
+		#region IRepository<T> Members
+
+
 		public bool Exists(DetachedCriteria criteria)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
+
+		public long Count(DetachedCriteria criteria)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }
