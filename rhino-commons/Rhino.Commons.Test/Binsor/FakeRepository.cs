@@ -166,47 +166,6 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
-		/// Check if there is any records in the db for <typeparamref name="T"/>
-		/// </summary>
-		/// <returns><c>true</c> if there's at least one row</returns>
-		public bool Exists()
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Check if there is any records in the db for <typeparamref name="T"/>
-		/// </summary>
-		/// <param name="id">the object id</param>
-		/// <returns><c>true</c> if there's at least one row</returns>
-		public bool Exists(object id)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Check if there is any records in the db for <typeparamref name="T"/>
-		/// </summary>
-		/// <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
-		/// <param name="args">Positional parameters for the filter string</param>
-		/// <returns><c>true</c> if there's at least one row</returns>
-		public bool Exists(string filter, params object[] args)
-		{
-			throw new NotImplementedException();
-		}
-
-		/// <summary>
-		/// Check if any instance matches the criteria.
-		/// </summary>
-		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
-		public bool Exists(params ICriterion[] criterias)
-		{
-			throw new NotImplementedException();
-		}
-
-		#region IRepository<T> Members
-
 
 		public bool Exists(DetachedCriteria criteria)
 		{
@@ -217,7 +176,5 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			throw new NotImplementedException();
 		}
-
-		#endregion
 	}
 }

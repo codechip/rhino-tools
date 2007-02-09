@@ -430,25 +430,6 @@ namespace Rhino.Commons
 		}
 
 		/// <summary>
-		/// Check if there is any records in the db for <typeparamref name="T"/>
-		/// </summary>
-		/// <param name="id">the object id</param>
-		/// <returns><c>true</c> if there's at least one row</returns>
-		public bool Exists(object id)
-		{
-			return ActiveRecordMediator<T>.Exists(id);
-		}
-
-		/// <summary>
-		/// Check if any instance matches the criteria.
-		/// </summary>
-		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
-		public bool Exists(params ICriterion[] criterias)
-		{
-			return ActiveRecordMediator<T>.Exists(criterias);
-		}
-
-		/// <summary>
 		/// Check if any instance matches the criteria.
 		/// </summary>
 		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
