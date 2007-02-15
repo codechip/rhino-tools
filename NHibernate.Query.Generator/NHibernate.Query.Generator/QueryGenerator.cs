@@ -87,7 +87,7 @@ namespace NHibernate.Query.Generator
 					AddComponentsGroupBy(node, groupByForClass);
 
 					if (groupByForClass.Members.Count != 0)
-						groupByDeclaration.Members.Add(groupByForClass);
+                        AddToMembersWithSimpleXmlComment(groupByDeclaration,groupByForClass);
 				}
 			}
 		}
@@ -103,11 +103,14 @@ namespace NHibernate.Query.Generator
 					//this is to handle the case of a component with a name, for instance, in a composite id 
 					if (componentNode.Attributes["name"] == null)
 					{
-						groupByForClass.Members.AddRange(groupByForComponent.Members);
+					    foreach (CodeTypeMember member in groupByForComponent.Members)
+					    {
+					        AddToMembersWithSimpleXmlComment(groupByForClass,member);
+					    }
 					}
 					else if (groupByForComponent.Members.Count != 0)
 					{
-						groupByForClass.Members.Add(groupByForComponent);
+                        AddToMembersWithSimpleXmlComment(groupByForClass, groupByForComponent);
 					}
 				}
 			}
@@ -140,7 +143,7 @@ namespace NHibernate.Query.Generator
 						"GroupProperty", new CodePrimitiveExpression(associationPath));
 
 					prop.GetStatements.Add(new CodeMethodReturnStatement(invokeExpression));
-					groupableClassDeclaration.Members.Add(prop);
+                    AddToMembersWithSimpleXmlComment(groupableClassDeclaration, prop);
 				}
 			}
 			return groupableClassDeclaration;
@@ -162,7 +165,7 @@ namespace NHibernate.Query.Generator
 
 					if (orderByForClass.Members.Count != 0)
 					{
-						orderByDeclaration.Members.Add(orderByForClass);
+                        AddToMembersWithSimpleXmlComment(orderByDeclaration, orderByForClass);
 					}
 				}
 			}
@@ -188,11 +191,14 @@ namespace NHibernate.Query.Generator
 					//this is to handle the case of a component with a name, for instance, in a composite id 
 					if (componentNode.Attributes["name"] == null)
 					{
-						orderByForClass.Members.AddRange(orderByForComponent.Members);
+					    foreach (CodeTypeMember member in orderByForComponent.Members)
+					    {
+					        AddToMembersWithSimpleXmlComment(orderByForClass,member);
+					    }
 					}
 					else if (orderByForComponent.Members.Count != 0)
 					{
-						orderByForClass.Members.Add(orderByForComponent);
+                        AddToMembersWithSimpleXmlComment(orderByForClass, orderByForComponent);
 					}
 				}
 			}
@@ -223,7 +229,7 @@ namespace NHibernate.Query.Generator
 					CodeObjectCreateExpression create =
 						new CodeObjectCreateExpression("Query.OrderByClause", new CodePrimitiveExpression(associationPath));
 					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
-					orderableClassDeclaration.Members.Add(prop);
+                    AddToMembersWithSimpleXmlComment(orderableClassDeclaration, prop);
 				}
 			}
 			return orderableClassDeclaration;
@@ -274,7 +280,7 @@ namespace NHibernate.Query.Generator
 
 					if (projectByForClass.Members.Count != 0)
 					{
-						projectByDeclaration.Members.Add(projectByForClass);
+                        AddToMembersWithSimpleXmlComment(projectByDeclaration, projectByForClass);
 					}
 				}
 			}
@@ -291,11 +297,14 @@ namespace NHibernate.Query.Generator
 					//this is to handle the case of a component with a name, for instance, in a composite id 
 					if (componentNode.Attributes["name"] == null)
 					{
-						projectByForClass.Members.AddRange(projectByForComponent.Members);
+                        foreach (CodeTypeMember member in projectByForComponent.Members)
+					    {
+					        AddToMembersWithSimpleXmlComment(projectByForClass,member);
+					    }
 					}
 					else if (projectByForComponent.Members.Count != 0)
 					{
-						projectByForClass.Members.Add(projectByForComponent);
+                        AddToMembersWithSimpleXmlComment(projectByForClass,projectByForComponent);
 					}
 				}
 			}
@@ -338,7 +347,7 @@ namespace NHibernate.Query.Generator
 						new CodeObjectCreateExpression(propBuilderType,
 														 new CodePrimitiveExpression(associationPath));
 					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
-					projectByForClassDeclaration.Members.Add(prop);
+                    AddToMembersWithSimpleXmlComment(projectByForClassDeclaration,prop);
 				}
 			}
 			return projectByForClassDeclaration;	
@@ -510,7 +519,7 @@ namespace NHibernate.Query.Generator
 		/// <summary>
 		/// Create a property that return a new object each time it is called
 		/// </summary>
-		private static void CreatePropertyInParentClass(
+		private void CreatePropertyInParentClass(
 			string genericParameterName,
 			CodeTypeDeclaration innerClass,
 			string name,
@@ -527,7 +536,7 @@ namespace NHibernate.Query.Generator
 						new CodeTypeReference(innerClass.Name, new CodeTypeReference(genericParameterName)),
 						new CodePrimitiveExpression(name),
 						associationExpression)));
-			parent.Members.Add(prop);
+            AddToMembersWithSimpleXmlComment(parent, prop);
 		}
 
 		/// <summary>
@@ -558,9 +567,9 @@ namespace NHibernate.Query.Generator
 			prop.Type = field.Type;
 			prop.Attributes = MemberAttributes.Public | MemberAttributes.Static;
 			prop.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(null, field.Name)));
-			parent.Members.Add(innerClass);
-			parent.Members.Add(field);
-			parent.Members.Add(prop);
+            AddToMembersWithSimpleXmlComment(parent,innerClass);
+            AddToMembersWithSimpleXmlComment(parent, field);
+            AddToMembersWithSimpleXmlComment(parent, prop);
 
 			//ctor
 			CodeConstructor ctor = new CodeConstructor();
@@ -568,7 +577,7 @@ namespace NHibernate.Query.Generator
 
 			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression("this"));
 			ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression(null));
-			innerClass.Members.Add(ctor);
+            AddToMembersWithSimpleXmlComment(innerClass, ctor);
 			return innerClass;
 		}
 
@@ -602,8 +611,7 @@ namespace NHibernate.Query.Generator
 			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof (string), "associationPath"));
 			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
 			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
-			innerClass.Members.Add(ctor);
-
+            AddToMembersWithSimpleXmlComment(innerClass, ctor);
 
 			// ctor for backtracking
 			CodeConstructor ctor2 = new CodeConstructor();
@@ -614,9 +622,9 @@ namespace NHibernate.Query.Generator
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
 			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("backTrackAssociationOnEquality"));
-			innerClass.Members.Add(ctor2);
+            AddToMembersWithSimpleXmlComment(innerClass, ctor2);
 
-			parent.Members.Add(innerClass);
+            AddToMembersWithSimpleXmlComment(parent, innerClass);
 			return innerClass;
 		}
 
@@ -634,7 +642,7 @@ namespace NHibernate.Query.Generator
 		/// Generates the property for query, e.g:
 		/// Queries.GetAllEmployeeByName
 		/// </summary>
-		private static void GeneratePropertyForQuery(XmlNode queryNode, CodeNamespace ns)
+		private void GeneratePropertyForQuery(XmlNode queryNode, CodeNamespace ns)
 		{
 			string name = GetName(queryNode);
 			CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Queries");
@@ -647,7 +655,7 @@ namespace NHibernate.Query.Generator
 			prop.HasGet = true;
 			prop.HasSet = false;
 			prop.GetStatements.Add(new CodeMethodReturnStatement(new CodePrimitiveExpression(name)));
-			innerClass.Members.Add(prop);
+            AddToMembersWithSimpleXmlComment(innerClass, prop);
 		}
 
 		/// <summary>
@@ -710,7 +718,7 @@ namespace NHibernate.Query.Generator
 				propertyType = "Query_" + GetTypeNameForDisplay(parentType);
 			CodeMemberProperty prop = new CodeMemberProperty();
 			prop.Attributes = MemberAttributes.Public;
-			innerClass.Members.Add(prop);
+            AddToMembersWithSimpleXmlComment(innerClass, prop);
 			prop.Name = name;
 			prop.HasGet = true;
 			prop.HasSet = false;
@@ -827,5 +835,13 @@ namespace NHibernate.Query.Generator
 			}
 			return node.Attributes["extends"].Value;
 		}
+
+        private void AddToMembersWithSimpleXmlComment(CodeTypeDeclaration typeDeclaration, CodeTypeMember member)
+        {
+            member.Comments.Add(new CodeCommentStatement(
+                string.Format(@"Query for member {0}",  member.Name)
+                , true));
+            typeDeclaration.Members.Add(member);
+        }
 	}
 }
