@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NHibernate.Property;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Reflection;
 using System.Collections;
 using NHibernate.Generics;

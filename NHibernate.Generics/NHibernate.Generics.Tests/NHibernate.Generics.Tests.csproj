@@ -38,13 +38,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MbUnit.Framework, Version=1.0.2531.41788, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Tools\MbUnit\MbUnit.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.3.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files\TestDriven.NET 1.1\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

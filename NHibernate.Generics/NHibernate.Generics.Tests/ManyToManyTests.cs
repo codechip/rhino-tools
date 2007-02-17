@@ -6,7 +6,7 @@ using System.Text;
 using NHibernate.Expression;
 using NHibernate.Generics;
 
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace NHibernate.Generics.Tests
 {
