@@ -30,7 +30,7 @@
 			AssemblyCopyright="Oren Eini (c) 2006"
 			AssemblyDescription="$(ProjectName)"
 			AssemblyInformationalVersion="$(Version).$(Revision)"
-			 AssemblyTitle ="$(ProjectName)"
+			 AssemblyTitle ="$(ProjectName)$(ExtraInfo)"
 			 CodeLanguage="CS"
 			 CLSCompliant ="true"
 			 AssemblyVersion ="$(Version).$(Revision)"
@@ -68,7 +68,7 @@
 	</Target>
 	
 	<Target Name="UnitTest" Condition="$(EnableTest)">
-		<NUnit Assemblies="@(TestAssembly)" ToolPath="$(SharedLibsDir)\Tools\NUnit"  OutputXmlFile ="Test.xml"   />
+		<MbUnit Assemblies="@(TestAssembly)" />
 	</Target>
 	
 	<Target Name="Upload" Condition="$(FtpUsername) != ''">
@@ -85,4 +85,5 @@
 			Command='$(SharedLibsDir)\Tools\RegisterFile\registerFile "$(WebUser)" "$(WebPass)" $(SectionId) "$(ProjectName) Nightly Build For Revision $(Revision) @ $(humanDate)" "application/x-zip" C:\domains\ayende.com\wwwroot\Builds\$(ShortName)\Nightlies\$(ZipFileName)'/>
 	</Target>
 	<Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets"/>
+	<UsingTask TaskName="MbUnit.MSBuild.Tasks.MbUnit"  AssemblyFile="$(SharedLibsDir)\Tools\MbUnit\MbUnit.MSBuild.Tasks.dll" />
 </Project>
