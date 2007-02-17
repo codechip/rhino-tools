@@ -30,6 +30,23 @@
             </summary>
             <value>The lifestyle.</value>
         </member>
+        <member name="T:Castle.Core.ComponentActivatorAttribute">
+            <summary>
+            Associates a custom component with a component
+            </summary>
+        </member>
+        <member name="M:Castle.Core.ComponentActivatorAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Core.ComponentActivatorAttribute"/> class.
+            </summary>
+            <param name="componentActivatorType">Type of the component activator.</param>
+        </member>
+        <member name="P:Castle.Core.ComponentActivatorAttribute.ComponentActivatorType">
+            <summary>
+            Gets the type of the component activator.
+            </summary>
+            <value>The type of the component activator.</value>
+        </member>
         <member name="T:Castle.Core.DoNotWireAttribute">
             <summary>
             Marks as property to be skipped and not be wired
