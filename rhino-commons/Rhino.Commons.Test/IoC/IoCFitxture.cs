@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Castle.Windsor;
 using NHibernate.Expression;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Rhino.Commons.Test.IoCTests
 {

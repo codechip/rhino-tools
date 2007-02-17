@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NHibernate;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.NHibernate

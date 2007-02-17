@@ -1,5 +1,5 @@
 using System.Reflection;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Rhino.Commons.Test
 {
