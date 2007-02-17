@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace NHibernate.Query.Generator.Tests
 {

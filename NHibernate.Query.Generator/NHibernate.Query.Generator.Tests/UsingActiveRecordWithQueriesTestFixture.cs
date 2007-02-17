@@ -8,7 +8,7 @@ using NHibernate.Cfg;
 using NHibernate.Expression;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
 using NHibernate.Tool.hbm2ddl;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Query;
 
 namespace NHibernate.Query.Generator.Tests

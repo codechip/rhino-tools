@@ -4,9 +4,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using MbUnit.Core.Exceptions;
 using Microsoft.CSharp;
 using NHibernate.Expression;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Query;
 using Expr = NHibernate.Expression.Expression;
 
