@@ -7,7 +7,7 @@ using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Mocks;
 
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests.UserInteface

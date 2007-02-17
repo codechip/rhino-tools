@@ -1,8 +1,7 @@
 using System.Collections;
 using Ayende.NHibernateQueryAnalyzer.Model;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
-using Ayende.NHibernateQueryAnalyzer.UnitTests.Asserts;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 {
@@ -43,9 +42,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 			Project prj = repository.GetProjectById(current.Id);
 			Assert.IsNotNull(prj, "Project was not saved in the database");
 			Assert.AreEqual(3, prj.Files.Count, "Files count is wrong");
-			ListAssert.In(TestDataUtil.TestConfigFile, prj.Files);
-			ListAssert.In(TestDataUtil.TestDllFile, prj.Files);
-			ListAssert.In(TestDataUtil.TestMappingFile, prj.Files);
+			CollectionAssert.Contains(prj.Files,TestDataUtil.TestConfigFile);
+			CollectionAssert.Contains( prj.Files, TestDataUtil.TestDllFile);
+			CollectionAssert.Contains(prj.Files, TestDataUtil.TestMappingFile);
 			current = prj;
 		}
 

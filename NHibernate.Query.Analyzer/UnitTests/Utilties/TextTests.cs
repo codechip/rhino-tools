@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Utilties
 {

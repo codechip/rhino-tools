@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Tests.Utilties;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Utilities
 {

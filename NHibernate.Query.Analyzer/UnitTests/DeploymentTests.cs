@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Ayende.NHibernateQueryAnalyzer.UnitTests.Asserts;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests
 {
@@ -55,7 +54,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests
 
 			foreach (string file in requiredAssemblies)
 			{
-				FileAssert.Exists(Path.Combine(basePath, file), file + " does not exists");
+				FileAssert.Exists(Path.Combine(basePath, file));
 			}
 		}
 	}

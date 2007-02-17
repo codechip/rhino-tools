@@ -1,6 +1,6 @@
 using Ayende.NHibernateQueryAnalyzer.SchemaEditing;
 using NHibernate.Mapping.Hbm;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Xml.Serialization;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Utilties
 {

@@ -7,14 +7,14 @@ using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 {
 	
 
-	[TestFixture]	 
-	[Category("Integration")]
+	[TestFixture]
+	//[Category("Integration")]
 	public class BuildingProjectTests
 	{
 		private Project current;

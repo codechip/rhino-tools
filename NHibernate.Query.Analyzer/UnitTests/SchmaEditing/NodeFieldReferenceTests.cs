@@ -1,8 +1,7 @@
 using Ayende.NHibernateQueryAnalyzer.SchemaEditing;
 using Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing;
-using Ayende.NHibernateQueryAnalyzer.UnitTests.Asserts;
 using NHibernate.Mapping.Hbm;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.SchmaEditing
 {
@@ -24,17 +23,17 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchmaEditing
 		[Test]
 		public void NodeFieldReferenceNames()
 		{
-			ListAssert.In("subclass", fieldReference.Names);
-			ListAssert.In("class", fieldReference.Names);
-			ListAssert.In("joined-subclass", fieldReference.Names);
+			CollectionAssert.Contains(fieldReference.Names,"subclass");
+			CollectionAssert.Contains(fieldReference.Names, "class");
+			CollectionAssert.Contains(fieldReference.Names,"joined-subclass");
 		}
 
 		[Test]
 		public void NodeFieldReferenceTypes()
 		{
-			ListAssert.In(typeof(@class), fieldReference.Types);
-			ListAssert.In(typeof(subclass), fieldReference.Types);
-			ListAssert.In(typeof(joinedsubclass), fieldReference.Types);
+			CollectionAssert.Contains(fieldReference.Types,typeof(@class));
+			CollectionAssert.Contains(fieldReference.Types, typeof(subclass));
+			CollectionAssert.Contains(fieldReference.Types,typeof(joinedsubclass));
 		}
 
 		[Test]
@@ -42,8 +41,8 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchmaEditing
 		{
 			@class clz = new @class();
 			ISchemaEditorNode child = fieldReference.AddValue(clz);
-			ListAssert.In(child,parent.ActiveNodes);
-            ListAssert.In(clz,hm.Items);
+			CollectionAssert.Contains(parent.ActiveNodes,child);
+            CollectionAssert.Contains(hm.Items, clz);
 			Assert.AreSame(clz,child.Value);
 			Assert.AreEqual("class",child.Name);
 		}
@@ -54,8 +53,8 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchmaEditing
 			@class clz = new @class();
 			ISchemaEditorNode child = fieldReference.AddValue(clz);
 			fieldReference.RemoveValue(child);
-			ListAssert.NotIn(child,parent.ActiveNodes);
-			ListAssert.NotIn(clz,hm.Items);
+			CollectionAssert.DoesNotContain(parent.ActiveNodes,child);
+			CollectionAssert.DoesNotContain(hm.Items, clz);
 		}
 
 		[Test]

@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Utiltites
 {

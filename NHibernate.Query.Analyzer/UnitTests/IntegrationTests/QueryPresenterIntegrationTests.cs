@@ -8,13 +8,13 @@ using Ayende.NHibernateQueryAnalyzer.UnitTests.UserInteface;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Mocks;
 
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 {
 	[TestFixture]
-	[Category("Integration")]
+	//[Category("Integration")]
 	public class QueryPresenterIntegrationTests
 	{
 		private Project prj;

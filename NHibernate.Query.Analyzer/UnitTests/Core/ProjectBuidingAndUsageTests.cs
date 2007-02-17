@@ -3,8 +3,7 @@ using System.Collections;
 using Ayende.NHibernateQueryAnalyzer.Model;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
-using Ayende.NHibernateQueryAnalyzer.UnitTests.Asserts;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 {
@@ -91,9 +90,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 		{
 			current.RemoveFile(TestDataUtil.TestConfigFile);
 			Assert.AreEqual(2,current.Files.Count);
-			ListAssert.In(TestDataUtil.TestDllFile,current.Files);
-			ListAssert.In(TestDataUtil.TestMappingFile,current.Files);
-			ListAssert.NotIn(TestDataUtil.TestConfigFile,current.Files);
+			CollectionAssert.Contains(current.Files, TestDataUtil.TestDllFile);
+			CollectionAssert.Contains(current.Files,TestDataUtil.TestMappingFile);
+			CollectionAssert.DoesNotContain(current.Files,TestDataUtil.TestConfigFile);
 		}
 
 

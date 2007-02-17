@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate.Driver;
-using NUnit.Framework;
+using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
 {

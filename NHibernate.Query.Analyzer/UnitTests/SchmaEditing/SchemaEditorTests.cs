@@ -2,9 +2,8 @@ using System;
 using System.IO;
 using System.Xml;
 using Ayende.NHibernateQueryAnalyzer.SchemaEditing;
-using Ayende.NHibernateQueryAnalyzer.UnitTests.Asserts;
 using NHibernate.Mapping.Hbm;
-using NUnit.Framework;
+using MbUnit.Framework;
 using System.Reflection;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
@@ -146,7 +145,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 			ISchemaEditorNode node = schemaEditor.RootNode.ActiveNodes[0];
 			Assert.IsTrue(node.ActiveAttributes.Count>0);
 			foreach (AttributeFieldReference attribute in node.ActiveAttributes)
-				ListAssert.In(attribute, schemaEditor.RootNode.ActiveNodes[0].Attributes);
+				CollectionAssert.Contains(schemaEditor.RootNode.ActiveNodes[0].Attributes,attribute);
 		}
 
 		[Test]
@@ -155,9 +154,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 			ISchemaEditorNode node = schemaEditor.CreateChild(schemaEditor.RootNode, typeof(@class));
 			hibernatemapping hm = schemaEditor.RootNode.Value as hibernatemapping;
 			Assert.IsNotNull(node, "Returned a null node");
-			ListAssert.In(node, schemaEditor.RootNode.ActiveNodes);
+			CollectionAssert.Contains(schemaEditor.RootNode.ActiveNodes,node);
 			Assert.IsNotNull(node.Value, "Newly created node with a null value");
-			ListAssert.In(node.Value, hm.Items);
+			CollectionAssert.Contains(hm.Items, node.Value);
 			Assert.AreEqual(typeof (@class), node.Value.GetType());
 		}
 
@@ -167,10 +166,10 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 		{
 			ISchemaEditorNode node = schemaEditor.CreateChild(schemaEditor.RootNode, typeof(@class));
 			hibernatemapping hm = schemaEditor.RootNode.Value as hibernatemapping;
-			ListAssert.In(node, schemaEditor.RootNode.ActiveNodes);
+			CollectionAssert.Contains(schemaEditor.RootNode.ActiveNodes,node);
 			schemaEditor.RemoveChild(schemaEditor.RootNode, node);
-			ListAssert.NotIn(node, schemaEditor.RootNode.ActiveNodes);
-			ListAssert.NotIn(node.Value, hm.Items);
+			CollectionAssert.DoesNotContain(schemaEditor.RootNode.ActiveNodes,node);
+			CollectionAssert.DoesNotContain(hm.Items,node.Value);
 		}
 
 		[Test]
@@ -210,7 +209,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 				id = schemaEditor.CreateChild(clazz,typeof(id));
 			@class clazzValue = clazz.Value as @class;
 			Assert.IsNotNull(id, "Returned a null node");
-			ListAssert.In(id, clazz.ActiveNodes);
+			CollectionAssert.Contains(clazz.ActiveNodes,id);
 			Assert.IsNotNull(id.Value, "Newly created node with a null value");
 			Assert.AreSame(id.Value,clazzValue.Item1/*id or composite-id*/,"Didn't set id in class");
 			Assert.AreEqual(typeof (id), id.Value.GetType());
@@ -223,7 +222,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 				id = schemaEditor.CreateChild(clazz,typeof(id));
 			@class clazzValue = clazz.Value as @class;
 			schemaEditor.RemoveChild(clazz,id);
-			ListAssert.NotIn(id, clazz.ActiveNodes);
+			CollectionAssert.DoesNotContain(clazz.ActiveNodes,id);
 			Assert.IsNull(clazzValue.Item/*id or composite-id*/,"Didn't reset id in class");
 		}
 
@@ -235,9 +234,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 				oneToOne = schemaEditor.CreateChild(clazz,typeof(onetoone));
 			@class clazzValue = clazz.Value as @class;
 			Assert.IsNotNull(oneToOne, "Returned a null node");
-			ListAssert.In(oneToOne, clazz.ActiveNodes);
+			CollectionAssert.Contains(clazz.ActiveNodes,oneToOne);
 			Assert.IsNotNull(oneToOne.Value, "Newly created node with a null value");
-			ListAssert.In(oneToOne.Value, clazzValue.Items);
+			CollectionAssert.Contains(clazzValue.Items, oneToOne.Value);
 			Assert.AreEqual(typeof (onetoone), oneToOne.Value.GetType());
 		}
 
@@ -248,8 +247,8 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.SchemaEditing
 				oneToOne = schemaEditor.CreateChild(clazz,typeof(onetoone));
 			@class clazzValue = clazz.Value as @class;
 			schemaEditor.RemoveChild(clazz, oneToOne);
-			ListAssert.NotIn(oneToOne, clazz.ActiveNodes);
-			ListAssert.NotIn(oneToOne.Value, clazzValue.Items);
+			CollectionAssert.DoesNotContain(clazz.ActiveNodes,oneToOne);
+			CollectionAssert.DoesNotContain(clazzValue.Items,oneToOne.Value);
 		}
 
 		/// <summary>
