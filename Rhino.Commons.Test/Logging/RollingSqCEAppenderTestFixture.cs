@@ -4,7 +4,7 @@ using System.IO;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Commons.Logging;
 
 namespace Rhino.Commons.Test.Logging

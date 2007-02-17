@@ -1,5 +1,5 @@
 using System.Threading;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Commons;
 
 [TestFixture]

@@ -4,7 +4,7 @@ using System.Text;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;
-using NUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Commons.Binsor;
 using Rhino.Commons.Test.Components;
 
