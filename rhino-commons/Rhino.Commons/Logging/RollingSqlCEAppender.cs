@@ -3,6 +3,7 @@ using System.Collections;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Web;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
@@ -42,6 +43,11 @@ namespace Rhino.Commons.Logging
 
 		public RollingSqlCEAppender()
 		{
+			//this is apperantly required in order to work correctly under ASP.Net
+			if(HttpContext.Current!=null)
+			{
+				AppDomain.CurrentDomain.SetData("SQLServerCompactEditionUnderWebHosting", true);
+			}
 			m_usePreparedCommand = false;
 			ConnectionType = "System.Data.SqlServerCe.SqlCeConnection, System.Data.SqlServerCe";
 			ReconnectOnError = true;
