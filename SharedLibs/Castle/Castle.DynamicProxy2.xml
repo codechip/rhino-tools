@@ -20,6 +20,28 @@
             
             </summary>
         </member>
+        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.InitializeConstructorArgs(System.Type,System.Attribute,System.Object[],System.Reflection.ParameterInfo[])">
+            <summary>
+            Here we try to match a constructor argument to its value.
+            Since we can't get the values from the assembly, we use some heuristics to get it.
+            a/ we first try to match all the properties on the attributes by name (case insensitive) to the argument
+            b/ if we fail we try to match them by property type, with some smarts about convertions (i,e: can use Guid for string).
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.ReplaceIfBetterMatch(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo,System.Reflection.PropertyInfo)">
+            <summary>
+            We have the following rules here.
+            Try to find a matching type, failing that, if the parameter is string, get the first property (under the assumption that
+            we can convert it.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.ConvertValue(System.Object,System.Type)">
+            <summary>
+            Attributes can only accept simple types, so we return null for null,
+            if the value is passed as string we call to string (should help with converting), 
+            otherwise, we use the value as is (enums, integer, etc).
+            </summary>
+        </member>
         <member name="T:Castle.DynamicProxy.Generators.Emitters.LdcOpCodesDictionary">
             <summary>
             Provides appropriate Ldc.X opcode for the type of primitive value to be loaded.
@@ -172,6 +194,12 @@
             <param name="method"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.ShouldCreateNewSlot(System.Reflection.MethodInfo)">
+            <summary>
+            Checks if the method has the same signature as a method that was marked as
+            one that should generate a new vtable slot.
+            </summary>
+        </member>
         <member name="M:Castle.DynamicProxy.Generators.CacheKey.#ctor(System.Type,System.Type[],Castle.DynamicProxy.ProxyGenerationOptions)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.Generators.CacheKey"/> class.
@@ -206,6 +234,22 @@
             <param name="sourceType"></param>
             <param name="targetType"></param>
             <returns></returns>
+        </member>
+        <member name="T:Castle.DynamicProxy.Generators.InterfaceGeneratorType">
+            <summary>
+            This is used by the ProxyObjectReference class durin de-serialiation, to know
+            which generator it should use
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.Serialization.ProxyObjectReference">
+            <summary>
+            Handles the deserialization of proxies.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.Serialization.ProxyObjectReference.ResetScope">
+            <summary>
+            Usefull for test cases
+            </summary>
         </member>
         <member name="T:Castle.DynamicProxy.IProxyGenerationHook">
             <summary>
@@ -295,6 +339,21 @@
             <param name="options"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.DynamicProxy.InternalsHelper.IsInternalToDynamicProxy(System.Reflection.Assembly)">
+            <summary>
+            Determines whether this assembly has internals visisble to dynamic proxy.
+            </summary>
+            <param name="asm">The asm.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.InternalsHelper.IsInternal(System.Reflection.MethodInfo)">
+            <summary>
+            Determines whether the specified method is internal.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>
+            	<c>true</c> if the specified method is internal; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:Castle.DynamicProxy.ModuleScope">
             <summary>
             Summary description for ModuleScope.
@@ -333,11 +392,20 @@
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.CreateClassProxy(System.Type,System.Type[],Castle.Core.Interceptor.IInterceptor[])">
             <summary>
-            
+            Creates the class proxy.
             </summary>
-            <param name="targetType"></param>
-            <param name="interfaces"></param>
-            <param name="interceptors"></param>
+            <param name="targetType">Type of the target.</param>
+            <param name="interfaces">The interfaces.</param>
+            <param name="interceptors">The interceptors.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerator.CreateClassProxy(System.Type,Castle.Core.Interceptor.IInterceptor[],System.Object[])">
+            <summary>
+            Creates the class proxy.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="interceptors">The interceptors.</param>
+            <param name="constructorArgs">The constructor args.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.CreateClassProxy(System.Type,Castle.DynamicProxy.ProxyGenerationOptions,Castle.Core.Interceptor.IInterceptor[])">
@@ -351,13 +419,13 @@
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.CreateClassProxy(System.Type,System.Type[],Castle.DynamicProxy.ProxyGenerationOptions,System.Object[],Castle.Core.Interceptor.IInterceptor[])">
             <summary>
-            
+            Creates the class proxy.
             </summary>
-            <param name="targetType"></param>
-            <param name="interfaces"></param>
-            <param name="options"></param>
-            <param name="interceptors"></param>
-            <param name="constructorArgs"></param>
+            <param name="targetType">Type of the target.</param>
+            <param name="interfaces">The interfaces.</param>
+            <param name="options">The options.</param>
+            <param name="constructorArgs">The constructor args.</param>
+            <param name="interceptors">The interceptors.</param>
             <returns></returns>
         </member>
         <member name="P:Castle.DynamicProxy.ProxyGenerator.ProxyBuilder">
