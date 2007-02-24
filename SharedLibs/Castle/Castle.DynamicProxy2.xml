@@ -110,12 +110,7 @@
             </summary>
             <remarks>
             TODO: 
-            - Add events so people can hook into the proxy generation and change the generated code
-            - Add serialization support
-            - Add Xml serialization support
-            - Allow one to specify the base class for interface proxies
             - Use the interceptor selector if provided
-            - Expose parameters of non-parameterless constructors on the generated constructor
             - Add tests and fixes for 'leaking this' problem
             - Mixin support
             </remarks>
@@ -212,6 +207,15 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.Generators.EventToGenerate.#ctor(Castle.DynamicProxy.Generators.Emitters.EventEmitter,System.Reflection.MethodInfo,System.Reflection.MethodInfo,System.Reflection.EventAttributes)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.Generators.EventToGenerate"/> class.
+            </summary>
+            <param name="emitter">The emitter.</param>
+            <param name="addMethod">The add method.</param>
+            <param name="removeMethod">The remove method.</param>
+            <param name="attributes">The attributes.</param>
         </member>
         <member name="T:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator">
             <summary>
@@ -374,9 +378,15 @@
             Used to lock the module builder creation
             </summary>
         </member>
-        <member name="T:Castle.DynamicProxy.ProxyGenerationOptions">
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook)">
             <summary>
-            
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
             </summary>
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.#ctor(Castle.DynamicProxy.IProxyBuilder)">
@@ -433,6 +443,23 @@
             Gets the proxy builder instance.
             </summary>
             <value>The proxy builder.</value>
+        </member>
+        <member name="M:Castle.DynamicProxy.RemotableInvocation.Proceed">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.DynamicProxy.RemotableInvocation.Method">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Castle.DynamicProxy.RemotableInvocation.MethodInvocationTarget">
+            <summary>
+            For interface proxies, this will point to the
+            <see cref="T:System.Reflection.MethodInfo"/> on the target class
+            </summary>
         </member>
     </members>
 </doc>
