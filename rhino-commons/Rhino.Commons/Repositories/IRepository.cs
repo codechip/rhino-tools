@@ -171,6 +171,12 @@ namespace Rhino.Commons
 		/// <returns>The entity or null</returns>
 		T FindFirst(DetachedCriteria criteria, params Order[] orders);
 
+		/// <summary>
+		/// Find the first entity of type
+		/// </summary>
+		/// <param name="orders">Optional orderring</param>
+		/// <returns>The entity or null</returns>
+		T FindFirst(params Order[] orders);
 
 		/// <summary>
 		/// Execute the specified stored procedure with the given parameters
@@ -201,10 +207,22 @@ namespace Rhino.Commons
 		bool Exists(DetachedCriteria criteria);
 
 		/// <summary>
+		/// Check if any instance of the type exists
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		bool Exists();
+
+		/// <summary>
 		/// Counts the number of instances matching the criteria.
 		/// </summary>
 		/// <param name="criteria"></param>
 		/// <returns></returns>
     	long Count(DetachedCriteria criteria);
+
+		/// <summary>
+		/// Counts the overall number of instances.
+		/// </summary>
+		/// <returns></returns>
+    	long Count();
     }
 }

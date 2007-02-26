@@ -144,6 +144,16 @@ namespace Rhino.Commons
 			return (T)executableCriteria.UniqueResult();
 		}
 
+		/// <summary>
+		/// Find the first entity of type
+		/// </summary>
+		/// <param name="orders">Optional orderring</param>
+		/// <returns>The entity or null</returns>
+		public T FindFirst(params Order[] orders)
+		{
+			return FindFirst(null, orders);
+		}
+
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
 			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.NHibernateSessionFactory.ConnectionProvider;
@@ -217,6 +227,15 @@ namespace Rhino.Commons
 		}
 
 		/// <summary>
+		/// Check if any instance of the type exists
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		public bool Exists()
+		{
+			return Exists(null);
+		}
+
+		/// <summary>
 		/// Counts the number of instances matching the criteria.
 		/// </summary>
 		/// <param name="criteria"></param>
@@ -227,6 +246,15 @@ namespace Rhino.Commons
 
 			object countMayBe_Int32_Or_Int64_DependingOnDatabase = executableCriteria.UniqueResult();
 			return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
+		}
+
+		/// <summary>
+		/// Counts the overall number of instances.
+		/// </summary>
+		/// <returns></returns>
+		public long Count()
+		{
+			return Count(null);
 		}
 	}
 }
