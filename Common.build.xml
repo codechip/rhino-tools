@@ -68,7 +68,7 @@
 	</Target>
 	
 	<Target Name="UnitTest" Condition="$(EnableTest)">
-		<MbUnit Assemblies="@(TestAssembly)" />
+		<MbUnit Assemblies="@(TestAssembly)" ReportFileNameFormat="MbUnit.Results" ReportTypes ="html; xml"  ReportOutputDirectory="$(MSBuildProjectDirectory)" />
 	</Target>
 	
 	<Target Name="Upload" Condition="$(FtpUsername) != ''">

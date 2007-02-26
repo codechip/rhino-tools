@@ -4258,12 +4258,6 @@
             Do we need to qualify index names with the schema name?
             </summary>
         </member>
-        <member name="P:NHibernate.Dialect.Dialect.SupportsMultipleQueries">
-            <summary>
-            Can we issue several select queries in a single query, and get
-            several result sets back?
-            </summary>
-        </member>
         <member name="P:NHibernate.Dialect.Dialect.MultipleQueriesSeparator">
             <summary>
             How we seperate the queries when we use multiply queries.
@@ -4765,7 +4759,7 @@
         </member>
         <member name="T:NHibernate.Dialect.MsSqlCeDialect">
             <summary>
-            A dialect for SQL Server Everywhere.
+            A dialect for SQL Server Everywhere (SQL Server CE).
             </summary>
         </member>
         <member name="T:NHibernate.Dialect.MySQLDialect">
@@ -4928,9 +4922,30 @@
             An SQL dialect for PostgreSQL 8.1 and above.
             </summary>
             <remarks>
+            <para>
             PostgreSQL 8.1 supports <c>FOR UPDATE ... NOWAIT</c> syntax.
-            See <see cref="T:NHibernate.Dialect.PostgreSQLDialect"/> for more information.
+            </para>
+            <para>
+            PostgreSQL supports Identity column using the "SERIAL" type.
+            Serial type is a "virtual" type that will automatically:
+            </para>
+            <list type="bullet">
+            <item><description>Create a sequence named tablename_colname_seq.</description></item>
+            <item><description>Set the default value of this column to the next value of the 
+            sequence. (using function <c>nextval('tablename_colname_seq')</c>)</description></item>
+            <item><description>Add a "NOT NULL" constraint to this column.</description></item>
+            <item><description>Set the sequence as "owned by" the table.</description></item>
+            </list>
+            <para>
+            To insert the next value of the sequence into the serial column,
+            exclude the column from the list of columns 
+            in the INSERT statement or use the DEFAULT key word.
+            </para>
+            <para>
+            If the table or the column is dropped, the sequence is dropped too.
+            </para>
             </remarks>
+            <seealso cref="T:NHibernate.Dialect.PostgreSQLDialect"/>
         </member>
         <member name="T:NHibernate.Dialect.PostgreSQLDialect">
             <summary>
@@ -4970,6 +4985,55 @@
         </member>
         <member name="P:NHibernate.Dialect.PostgreSQLDialect.DropConstraints">
             <summary></summary>
+        </member>
+        <member name="M:NHibernate.Dialect.PostgreSQL81Dialect.GetIdentitySelectString(System.String,System.String)">
+            <summary>
+            PostgreSQL 8.1 and above defined the fuction <c>lastval()</c> that returns the
+            value of the last sequence that <c>nextval()</c> was used on in the current session.
+            Call <c>lastval()</c> if <c>nextval()</c> has not yet been called in the current
+            session throw an exception.
+            </summary>
+            <param name="identityColumn">not used</param>
+            <param name="tableName">not used</param>
+            <returns></returns>
+        </member>
+        <member name="P:NHibernate.Dialect.PostgreSQL81Dialect.SupportsIdentityColumns">
+            <summary>
+            PostgreSQL supports Identity column using the "SERIAL" type.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Dialect.PostgreSQL81Dialect.HasDataTypeInIdentityColumn">
+            <summary>
+            PostgreSQL doesn't have type in identity column.
+            </summary>
+            <remarks>
+            To create an identity column it uses the SQL syntax
+            <c>CREATE TABLE tablename (colname SERIAL);</c> or 
+            <c>CREATE TABLE tablename (colname BIGSERIAL);</c>
+            </remarks>
+        </member>
+        <member name="P:NHibernate.Dialect.PostgreSQL81Dialect.IdentityColumnString">
+            <summary>
+            PostgreSQL supports <c>serial</c> and <c>serial4</c> type for 4 bytes integer auto increment column.
+            <c>bigserial</c> or <c>serial8</c> can be used for 8 bytes integer auto increment column.
+            This dialect uses <c>serial</c>
+            </summary>
+        </member>
+        <member name="P:NHibernate.Dialect.PostgreSQL81Dialect.NoColumnsInsertString">
+            <summary>
+            The sql syntax to insert a row without specifying any column in PostgreSQL is
+            <c>INSERT INTO table DEFAULT VALUES;</c>
+            </summary>
+        </member>
+        <member name="T:NHibernate.Dialect.PostgreSQL82Dialect">
+            <summary>
+            An SQL dialect for PostgreSQL 8.2 and above.
+            </summary>
+            <remarks>
+            PostgreSQL 8.2 supports <c>DROP TABLE IF EXISTS tablename</c>
+            and <c>DROP SEQUENCE IF EXISTS sequencename</c> syntax.
+            See <see cref="T:NHibernate.Dialect.PostgreSQLDialect"/> for more information.
+            </remarks>
         </member>
         <member name="T:NHibernate.Dialect.SQLiteDialect">
             <summary>
@@ -5264,6 +5328,12 @@
             it is set to <c>true</c>.
             </para>
             </remarks>
+        </member>
+        <member name="P:NHibernate.Driver.IDriver.SupportsMultipleQueries">
+            <summary>
+            Can we issue several select queries in a single query, and get
+            several result sets back?
+            </summary>
         </member>
         <member name="M:NHibernate.Driver.DriverBase.FormatNameForSql(System.String)">
             <summary>
@@ -6292,12 +6362,12 @@
         </member>
         <member name="T:NHibernate.Driver.SqlServerCeDriver">
             <summary>
-            A NHibernate Driver for using the SqlClient DataProvider
+            A NHibernate driver for Microsoft SQL Server CE data provider
             </summary>
         </member>
         <member name="M:NHibernate.Driver.SqlServerCeDriver.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:NHibernate.Driver.SqlClientDriver"/> class.
+            Initializes a new instance of the <see cref="T:NHibernate.Driver.SqlServerCeDriver"/> class.
             </summary>
         </member>
         <member name="P:NHibernate.Driver.SqlServerCeDriver.UseNamedPrefixInSql">
@@ -8636,7 +8706,7 @@
             criterion types would extend <c>AbstractCriterion</c>.
             </remarks>
         </member>
-        <member name="M:NHibernate.Expression.ICriterion.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery)">
+        <member name="M:NHibernate.Expression.ICriterion.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery,System.Collections.IDictionary)">
             <summary>
             Render a SqlString fragment for the expression.
             </summary>
@@ -8660,7 +8730,7 @@
             looks like.
             </remarks>
         </member>
-        <member name="M:NHibernate.Expression.AbstractCriterion.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery)">
+        <member name="M:NHibernate.Expression.AbstractCriterion.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery,System.Collections.IDictionary)">
             <summary>
             Render a SqlString for the expression.
             </summary>
@@ -8792,7 +8862,7 @@
             </summary>
             <returns>An arry of <see cref="T:NHibernate.Engine.TypedValue"/>s.</returns>
         </member>
-        <member name="M:NHibernate.Expression.LogicalExpression.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery)">
+        <member name="M:NHibernate.Expression.LogicalExpression.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery,System.Collections.IDictionary)">
             <summary>
             Converts the LogicalExpression to a <see cref="T:NHibernate.SqlCommand.SqlString"/>.
             </summary>
@@ -8949,7 +9019,7 @@
             <param name="propertyName">The name of the Property in the class.</param>
             <param name="value">The value for the Property.</param>
         </member>
-        <member name="M:NHibernate.Expression.SimpleExpression.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery)">
+        <member name="M:NHibernate.Expression.SimpleExpression.ToSqlString(NHibernate.ICriteria,NHibernate.Expression.ICriteriaQuery,System.Collections.IDictionary)">
             <summary>
             Converts the SimpleExpression to a <see cref="T:NHibernate.SqlCommand.SqlString"/>.
             </summary>
@@ -21581,6 +21651,42 @@
         <member name="M:NHibernate.SqlCommand.SqlUpdateBuilder.ToSqlString">
             <summary></summary>
         </member>
+        <member name="T:NHibernate.SqlCommand.SubselectClauseExtractor">
+            <summary>
+            Given an SQL SELECT statement, parse it to extract clauses starting with
+            <c>FROM</c>, up to and not including <c>ORDER BY</c> (known collectively
+            as a subselect clause).
+            </summary>
+        </member>
+        <member name="F:NHibernate.SqlCommand.SubselectClauseExtractor.builder">
+            <summary>
+            Contains the subselect clause as it is being built.
+            </summary>
+        </member>
+        <member name="M:NHibernate.SqlCommand.SubselectClauseExtractor.#ctor(System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.SqlCommand.SubselectClauseExtractor"/> class.
+            </summary>
+            <param name="sqlParts">The parts of an <see cref="T:NHibernate.SqlCommand.SqlString"/> to extract the subselect clause from.</param>
+        </member>
+        <member name="M:NHibernate.SqlCommand.SubselectClauseExtractor.ProcessPartBeforeFrom(System.Object)">
+            <summary>
+            Looks for a <c>FROM</c> clause in the <paramref name="part"/>
+            and adds the clause to the result if found.
+            </summary>
+            <param name="part">A <see cref="T:System.String"/> or a <see cref="T:NHibernate.SqlCommand.Parameter"/>.</param>
+            <returns><see langword="true"/> if the part contained a <c>FROM</c> clause,
+            <see langword="false"/> otherwise.</returns>
+        </member>
+        <member name="M:NHibernate.SqlCommand.SubselectClauseExtractor.GetSqlString">
+            <summary>
+            Returns the subselect clause of the statement
+            being processed.
+            </summary>
+            <returns>An <see cref="T:NHibernate.SqlCommand.SqlString"/> containing
+            the subselect clause of the original <c>SELECT</c>
+            statement.</returns>
+        </member>
         <member name="T:NHibernate.SqlCommand.WhereBuilder">
             <summary>
             Allows us to construct SQL WHERE fragments
@@ -27929,7 +28035,7 @@
         </member>
         <member name="M:NHibernate.Util.StringHelper.Split(System.String,System.String)">
             <summary>
-            Just a faחade for calling string.Split()
+            Just a façade for calling string.Split()
             We don't use our StringTokenizer because string.Split() is
             more efficient (but it only works when we don't want to retrieve the delimiters)
             </summary>
@@ -28077,6 +28183,14 @@
             aliases of this form.
             </summary>
             <returns>an alias of the form <c>foo1_</c></returns>
+        </member>
+        <member name="M:NHibernate.Util.StringHelper.InternedIfPossible(System.String)">
+            <summary>
+            Returns the interned string equal to <paramref name="str"/> if there is one, or <paramref name="str"/>
+            otherwise.
+            </summary>
+            <param name="str">A <see cref="T:System.String"/></param>
+            <returns>A <see cref="T:System.String"/></returns>
         </member>
         <member name="T:NHibernate.Util.StringTokenizer">
             <summary>

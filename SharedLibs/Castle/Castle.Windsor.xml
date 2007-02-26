@@ -294,6 +294,19 @@
             </code>
             </example>
         </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.DefaultXmlProcessorEngine.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlProcessor.DefaultXmlProcessorEngine"/> class.
+            </summary>
+            <param name="environmentName">Name of the environment.</param>
+        </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.DefaultXmlProcessorEngine.#ctor(System.String,Castle.MicroKernel.SubSystems.Resource.IResourceSubSystem)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlProcessor.DefaultXmlProcessorEngine"/> class.
+            </summary>
+            <param name="environmentName">Name of the environment.</param>
+            <param name="resourceSubSystem">The resource sub system.</param>
+        </member>
         <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.DefaultXmlProcessorEngine.DispatchProcessAll(Castle.Windsor.Configuration.Interpreters.XmlProcessor.IXmlProcessorNodeList)">
             <summary>
             Processes the element.
@@ -320,6 +333,23 @@
             Pendent
             </summary>
         </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor.#ctor(System.String,Castle.MicroKernel.SubSystems.Resource.IResourceSubSystem)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor"/> class.
+            </summary>
+            <param name="environmentName">Name of the environment.</param>
+            <param name="resourceSubSystem">The resource sub system.</param>
+        </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlProcessor.XmlProcessor"/> class.
+            </summary>
+        </member>
         <member name="T:Castle.Windsor.Configuration.Interpreters.AbstractInterpreter">
             <summary>
             Provides common methods for those who wants 
@@ -341,6 +371,12 @@
             <param name="resource"></param>
             <param name="store"></param>
         </member>
+        <member name="P:Castle.Windsor.Configuration.IConfigurationInterpreter.EnvironmentName">
+            <summary>
+            Gets or sets the name of the environment.
+            </summary>
+            <value>The name of the environment.</value>
+        </member>
         <member name="P:Castle.Windsor.Configuration.IConfigurationInterpreter.Source">
             <summary>
             Exposes the reference to <see cref="T:Castle.Core.Resource.IResource"/>
@@ -355,6 +391,19 @@
             </summary>
             <param name="resource"></param>
             <param name="store"></param>
+        </member>
+        <member name="P:Castle.Windsor.Configuration.Interpreters.AbstractInterpreter.Source">
+            <summary>
+            Exposes the reference to <see cref="T:Castle.Core.Resource.IResource"/>
+            which the interpreter is likely to hold
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Castle.Windsor.Configuration.Interpreters.AbstractInterpreter.EnvironmentName">
+            <summary>
+            Gets or sets the name of the environment.
+            </summary>
+            <value>The name of the environment.</value>
         </member>
         <member name="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter">
             <summary>
@@ -376,16 +425,34 @@
             </code>
             </summary>
         </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/> class.
+            </summary>
+            <param name="filename">The filename.</param>
+        </member>
+        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.#ctor(Castle.Core.Resource.IResource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/> class.
+            </summary>
+            <param name="source">The source.</param>
+        </member>
         <member name="M:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.GetConfigValue(System.String)">
             <summary>
             If a config value is an empty string we return null, this is to keep
             backward compability with old code
             </summary>
         </member>
-        <member name="T:Castle.Windsor.Configuration.CascadeConfigurationStore">
+        <member name="P:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.Kernel">
             <summary>
-            Enables a hierarchical configuration store. 
+            Gets or sets the kernel.
             </summary>
+            <value>The kernel.</value>
         </member>
         <member name="T:Castle.Windsor.Installer.DefaultComponentInstaller">
             <summary>
@@ -570,6 +637,13 @@
             </summary>
             <param name="childContainer"></param>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.GetChildContainer(System.String)">
+            <summary>
+            Gets a child container instance by name.
+            </summary>
+            <param name="name">The container's name.</param>
+            <returns>The child container instance or null</returns>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve``1">
             <summary>
             Returns a component instance by the service
@@ -611,14 +685,23 @@
             <param name="arguments"></param>
             <returns></returns>
         </member>
+        <member name="P:Castle.Windsor.IWindsorContainer.Name">
+            <summary>
+            Gets the container's name
+            </summary>
+            <remarks>
+            Only useful when child containers are being used
+            </remarks>
+            <value>The container's name.</value>
+        </member>
         <member name="P:Castle.Windsor.IWindsorContainer.Item(System.String)">
             <summary>
-            Shortcut to the method <see cref="M:Castle.Windsor.IWindsorContainer.Resolve(System.String)"/>
+            Shortcut to <see cref="M:Castle.Windsor.IWindsorContainer.Resolve(System.String)"/>
             </summary>
         </member>
         <member name="P:Castle.Windsor.IWindsorContainer.Item(System.Type)">
             <summary>
-            Shortcut to the method <see cref="M:Castle.Windsor.IWindsorContainer.Resolve(System.Type)"/>
+            Shortcut to <see cref="M:Castle.Windsor.IWindsorContainer.Resolve(System.Type)"/>
             </summary>
         </member>
         <member name="P:Castle.Windsor.IWindsorContainer.Kernel">
@@ -652,6 +735,23 @@
             </summary>
             <param name="interpreter">The instance of an <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation.</param>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.Windsor.Configuration.IConfigurationInterpreter,Castle.Windsor.IEnvironmentInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.WindsorContainer"/> class.
+            </summary>
+            <param name="interpreter">The interpreter.</param>
+            <param name="environmentInfo">The environment info.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.WindsorContainer"/> class using a
+            xml file to configure it.
+            <para>
+            Equivalent to the use of <c>new WindsorContainer(new XmlInterpreter(xmlFile))</c>
+            </para>
+            </summary>
+            <param name="xmlFile">The XML file.</param>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.MicroKernel.IKernel,Castle.Windsor.IComponentsInstaller)">
             <summary>
             Constructs a container using the specified <see cref="T:Castle.MicroKernel.IKernel"/>
@@ -661,8 +761,21 @@
             This constructs sets the Kernel.ProxyFactory property to
             <see cref="T:Castle.Windsor.Proxy.DefaultProxyFactory"/>
             </remarks>
-            <param name="kernel"></param>
-            <param name="installer"></param>
+            <param name="kernel">Kernel instance</param>
+            <param name="installer">Installer instance</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(System.String,Castle.MicroKernel.IKernel,Castle.Windsor.IComponentsInstaller)">
+            <summary>
+            Constructs a container using the specified <see cref="T:Castle.MicroKernel.IKernel"/>
+            implementation. Rarely used.
+            </summary>
+            <remarks>
+            This constructs sets the Kernel.ProxyFactory property to
+            <see cref="T:Castle.Windsor.Proxy.DefaultProxyFactory"/>
+            </remarks>
+            <param name="name">Container's name</param>
+            <param name="kernel">Kernel instance</param>
+            <param name="installer">Installer instance</param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.#ctor(Castle.MicroKernel.IProxyFactory)">
             <summary>
@@ -675,8 +788,16 @@
             Constructs a container assigning a parent container 
             before starting the dependency resolution.
             </summary>
-            <param name="parent">The instance of an <see cref="T:Castle.Windsor.IWindsorContainer"/>.</param>
-            <param name="interpreter">The instance of an <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation.</param>
+            <param name="parent">The instance of an <see cref="T:Castle.Windsor.IWindsorContainer"/></param>
+            <param name="interpreter">The instance of an <see cref="T:Castle.Windsor.Configuration.IConfigurationInterpreter"/> implementation</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.#ctor(System.String,Castle.Windsor.IWindsorContainer,Castle.Windsor.Configuration.IConfigurationInterpreter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.WindsorContainer"/> class.
+            </summary>
+            <param name="name">The container's name.</param>
+            <param name="parent">The parent.</param>
+            <param name="interpreter">The interpreter.</param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.AddFacility(System.String,Castle.MicroKernel.IFacility)">
             <summary>
@@ -814,10 +935,26 @@
             </summary>
             <param name="childContainer"></param>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.GetChildContainer(System.String)">
+            <summary>
+            Gets a child container instance by name.
+            </summary>
+            <param name="name">The container's name.</param>
+            <returns>The child container instance or null</returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.Dispose">
             <summary>
             Executes Dispose on underlying <see cref="T:Castle.MicroKernel.IKernel"/>
             </summary>
+        </member>
+        <member name="P:Castle.Windsor.WindsorContainer.Name">
+            <summary>
+            Gets the container's name
+            </summary>
+            <remarks>
+            Only useful when child containers are being used
+            </remarks>
+            <value>The container's name.</value>
         </member>
         <member name="P:Castle.Windsor.WindsorContainer.Kernel">
             <summary>
@@ -914,6 +1051,20 @@
             <summary>
             Shortcut to the method <see cref="M:Castle.Windsor.AsyncInitializationContainer.Resolve(System.Type)"/>
             </summary>
+        </member>
+        <member name="T:Castle.Windsor.IEnvironmentInfo">
+            <summary>
+            Gets the environment information (name). Implementors should 
+            use to define their environments and how those affect the configuration.
+            It is also used by the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/>
+            to define a flag with the environment name.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IEnvironmentInfo.GetEnvironmentName">
+            <summary>
+            Gets the name of the environment.
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>
