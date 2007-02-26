@@ -226,6 +226,16 @@ namespace Rhino.Commons
     		return InternalRepository.FindFirst(criteria, orders);
     	}
 
+		/// <summary>
+		/// Find the first entity of type
+		/// </summary>
+		/// <param name="orders">Optional orderring</param>
+		/// <returns>The entity or null</returns>
+		public static T FindFirst(params Order[] orders)
+		{
+			return InternalRepository.FindFirst(orders);
+		}
+
     	/// <summary>
     	/// Execute the specified stored procedure with the given parameters
     	/// and return the result.
@@ -262,6 +272,15 @@ namespace Rhino.Commons
     		return InternalRepository.Exists(criteria);
     	}
 
+		/// <summary>
+		/// Check if any instance of the type exists
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		public static bool Exists()
+		{
+			return InternalRepository.Exists();
+		}
+
     	/// <summary>
     	/// Counts the number of instances matching the criteria.
     	/// </summary>
@@ -271,5 +290,14 @@ namespace Rhino.Commons
     	{
     		return InternalRepository.Count(criteria);
     	}
+
+		/// <summary>
+		/// Counts the overall number of instances.
+		/// </summary>
+		/// <returns></returns>
+    	public static long Count()
+		{
+			return InternalRepository.Count();
+		}
     }
 }

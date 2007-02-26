@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Castle.Core;
 using Castle.MicroKernel;
@@ -19,7 +20,9 @@ namespace Rhino.Commons.Test.Binsor
 		public void TestInitialize()
 		{
 			_container = new RhinoContainer();
-			BooReader.Read(_container, @"..\..\Binsor\Windsor.boo");
+			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.boo"));
+			Console.WriteLine(path);
+			BooReader.Read(_container, path);
 		}
 
 		[Test]
