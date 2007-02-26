@@ -155,6 +155,16 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
+		/// <summary>
+		/// Find the first entity of type
+		/// </summary>
+		/// <param name="orders">Optional orderring</param>
+		/// <returns>The entity or null</returns>
+		public T FindFirst(params Order[] orders)
+		{
+			throw new NotImplementedException();
+		}
+
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
 			throw new NotImplementedException();
@@ -172,7 +182,25 @@ namespace Rhino.Commons.Test.Binsor
 			throw new Exception("The method or operation is not implemented.");
 		}
 
+		/// <summary>
+		/// Check if any instance of the type exists
+		/// </summary>
+		/// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+		public bool Exists()
+		{
+			throw new NotImplementedException();
+		}
+
 		public long Count(DetachedCriteria criteria)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Counts the overall number of instances.
+		/// </summary>
+		/// <returns></returns>
+		public long Count()
 		{
 			throw new NotImplementedException();
 		}

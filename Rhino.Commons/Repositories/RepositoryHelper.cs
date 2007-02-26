@@ -36,7 +36,15 @@ namespace Rhino.Commons
 
 		public static ICriteria GetExecutableCriteria(ISession session, DetachedCriteria criteria, Order[] orders)
 		{
-			ICriteria executableCriteria = criteria.GetExecutableCriteria(session);
+			ICriteria executableCriteria;
+			if (criteria != null)
+			{
+				executableCriteria = criteria.GetExecutableCriteria(session);
+			}
+			else
+			{
+				executableCriteria = session.CreateCriteria(typeof (T));
+			}
 
 			AddCaching(executableCriteria);
 			if (orders != null)
@@ -52,7 +60,7 @@ namespace Rhino.Commons
 		public static void AddCaching(ICriteria crit)
 		{
 			if (With.Caching.ShouldForceCacheRefresh == false &&
-				With.Caching.Enabled)
+			    With.Caching.Enabled)
 			{
 				crit.SetCacheable(true);
 				if (With.Caching.CurrentCacheRegion != null)
@@ -62,7 +70,7 @@ namespace Rhino.Commons
 
 		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria)
 		{
-			ICriteria crit = session.CreateCriteria(typeof(T));
+			ICriteria crit = session.CreateCriteria(typeof (T));
 			foreach (ICriterion criterion in criteria)
 			{
 				//allow some fancy antics like returning possible return 
