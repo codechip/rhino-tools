@@ -49,7 +49,7 @@ namespace Rhino.Commons
 		/// <param name="entity">the entity to save</param>
 		public virtual void Save(T entity)
 		{
-			ActiveRecordMediator<T>.Save(entity);
+			ActiveRecordMediator<T>.Create(entity);
 		}
 
 		/// <summary>
