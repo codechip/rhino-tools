@@ -466,9 +466,9 @@ namespace Rhino.Commons
 			ISession session = OpenSession();
 			try
 			{
-				criteria.SetProjection(Projections.RowCount());
 				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, null);
-				object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
+                crit.SetProjection(Projections.RowCount());
+                object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
 				return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
 			}
 			finally
