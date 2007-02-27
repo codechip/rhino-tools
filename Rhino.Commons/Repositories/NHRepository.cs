@@ -242,9 +242,9 @@ namespace Rhino.Commons
 		/// <returns></returns>
 		public long Count(DetachedCriteria criteria)
 		{
-			ICriteria executableCriteria = criteria.SetProjection(Projections.RowCount()).GetExecutableCriteria(Session);
-
-			object countMayBe_Int32_Or_Int64_DependingOnDatabase = executableCriteria.UniqueResult();
+			ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
+        		crit.SetProjection(Projections.RowCount());
+	        	object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
 			return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
 		}
 
