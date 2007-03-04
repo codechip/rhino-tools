@@ -51,32 +51,7 @@
 								  Assembly=".net"
 								  DiskId="1" />
 						</Component>
-						<Component Id="Castle_Core"
-								   Guid="364F8B9E-9CA1-A535-4662-45B73B559C43">
-							<File Id="_439738D3F3603A992F373A1446A80F52"
-								  Name="Core.DLL"
-								  LongName="Castle.Core.dll"
-								  Source="$(var.BuildPath)Castle.Core.dll"
-								  Vital="yes"
-								  KeyPath="yes"
-								  AssemblyManifest="_439738D3F3603A992F373A1446A80F52"
-								  AssemblyApplication="_439738D3F3603A992F373A1446A80F52"
-								  Assembly=".net"
-								  DiskId="1" />
-						</Component>
-						<Component Id="ActiveRecord"
-								   Guid="81799360-19E9-DDDC-2712-30DDF8FE6332">
-							<File Id="_4875AE11A6286D60A23F24569AED12A4"
-								  Name="AR.DLL"
-								  LongName="Castle.ActiveRecord.dll"
-								  Source="$(var.BuildPath)Castle.ActiveRecord.dll"
-								  Vital="yes"
-								  KeyPath="yes"
-								  AssemblyManifest="_4875AE11A6286D60A23F24569AED12A4"
-								  AssemblyApplication="_4875AE11A6286D60A23F24569AED12A4"
-								  Assembly=".net"
-								  DiskId="1" />
-						</Component>
+						
 						<Component Id="NHib"
 								   Guid="DD834FE3-0AFB-EC57-2653-95AEAD063057">
 							<File Id="_97F7B1EF155F06F8481033EAC03671CF"
@@ -288,8 +263,6 @@
 					 Description="The files required for NHibernate Query Generator to work">
 				<ComponentRef Id="DynamicProxy" />
 				<ComponentRef Id="Log4Net" />
-				<ComponentRef Id="Castle_Core" />
-				<ComponentRef Id="ActiveRecord" />
 				<ComponentRef Id="NHib" />
 				<ComponentRef Id="iesi_collections" />
 				<ComponentRef Id="NHQG_CONF" />
