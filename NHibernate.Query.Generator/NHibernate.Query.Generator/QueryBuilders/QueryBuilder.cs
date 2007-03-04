@@ -8,7 +8,7 @@ namespace Query
 {
 	public partial class QueryBuilder<T>
 	{
-		protected string name;
+		protected string myName;
 		/// <summary>
 		/// This is needed so we can support
 		/// Where.Comment.Post == post
@@ -22,14 +22,14 @@ namespace Query
 
 		public QueryBuilder(string name, string associationPath, bool backTrackAssociationsOnEquality)
 		{
-			this.name = name;
+			this.myName = name;
 			this.associationPath = associationPath;
 			this.backTrackAssociationsOnEquality = backTrackAssociationsOnEquality;
 		}
 
 		public QueryBuilder(string name, string associationPath)
 		{
-			this.name = name;
+			this.myName = name;
 			this.associationPath = associationPath ?? "this";
 		}
 
@@ -42,13 +42,13 @@ namespace Query
 		{
 			AbstractCriterion eq;
 			if (value == null)
-				eq = Expression.IsNull(name);
+				eq = Expression.IsNull(myName);
 			else
-				eq = Expression.Eq(name, value);
+				eq = Expression.Eq(myName, value);
 			QueryBuilder<T> self = this;
 			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
+				self = new QueryBuilder<T>(myName, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(eq);
@@ -60,13 +60,13 @@ namespace Query
 		{
 			AbstractCriterion eq;
 			if (value == null)
-				eq = Expression.IsNotNull(name);
+				eq = Expression.IsNotNull(myName);
 			else
-				eq = Expression.Not(Expression.Eq(name, value));
+				eq = Expression.Not(Expression.Eq(myName, value));
 			QueryBuilder<T> self = this;
 			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
+				self = new QueryBuilder<T>(myName, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(eq);
@@ -75,11 +75,11 @@ namespace Query
 
 		public QueryBuilder<T> In<K>(params K[] values)
 		{
-			AbstractCriterion inExpression = Expression.In(name, values);
+			AbstractCriterion inExpression = Expression.In(myName, values);
 			QueryBuilder<T> self = this;
 			if (backTrackAssociationsOnEquality)
 			{
-				self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
+				self = new QueryBuilder<T>(myName, BackTrackAssociationPath(associationPath));
 				children.Add(self);
 			}
 			self.AddCriterion(inExpression);
@@ -108,11 +108,11 @@ namespace Query
 		{
 			get
 			{
-				AbstractCriterion notNullExpression = new NotNullExpression(name);
+				AbstractCriterion notNullExpression = new NotNullExpression(myName);
 				QueryBuilder<T> self = this;
 				if (backTrackAssociationsOnEquality)
 				{
-					self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
+					self = new QueryBuilder<T>(myName, BackTrackAssociationPath(associationPath));
 					children.Add(self);
 				}
 				self.AddCriterion(notNullExpression);
@@ -124,11 +124,11 @@ namespace Query
 		{
 			get
 			{
-				AbstractCriterion nullExpression = new NullExpression(name);
+				AbstractCriterion nullExpression = new NullExpression(myName);
 				QueryBuilder<T> self = this;
 				if (backTrackAssociationsOnEquality)
 				{
-					self = new QueryBuilder<T>(name, BackTrackAssociationPath(associationPath));
+					self = new QueryBuilder<T>(myName, BackTrackAssociationPath(associationPath));
 					children.Add(self);
 				}
 				self.AddCriterion(nullExpression);
@@ -150,7 +150,7 @@ namespace Query
 
 		public static QueryBuilder<T> operator &(QueryBuilder<T> lhs, QueryBuilder<T> rhs)
 		{
-			QueryBuilder<T> combined = new QueryBuilder<T>(lhs.name, null);
+			QueryBuilder<T> combined = new QueryBuilder<T>(lhs.myName, null);
 			combined.children.Add(lhs);
 			combined.children.Add(rhs);
 			return combined;
@@ -158,7 +158,7 @@ namespace Query
 		
 		public static QueryBuilder<T> operator !(QueryBuilder<T> other)
 		{
-			QueryBuilder<T> not = new QueryBuilder<T>(other.name, null);
+			QueryBuilder<T> not = new QueryBuilder<T>(other.myName, null);
 			if(other.children.Count!=0)
 			{
 				throw new InvalidOperationException("Cannot use ! operator on complex queries");
@@ -185,7 +185,7 @@ Use HQL for this functionality...",
 						rhs.associationPath));
 			}
 
-			QueryBuilder<T> combined = new QueryBuilder<T>(lhs.name, null);
+			QueryBuilder<T> combined = new QueryBuilder<T>(lhs.myName, null);
 			Conjunction lhs_conjunction = Expression.Conjunction();
 			Conjunction rhs_conjunction = Expression.Conjunction();
 			foreach (ICriterion criterion in lhs.criterions)
@@ -302,14 +302,14 @@ Use HQL for this functionality...",
 
 		public QueryBuilder<T> Between(object lo, object hi)
 		{
-			AbstractCriterion betweenExpression = new BetweenExpression(name, lo, hi);
+			AbstractCriterion betweenExpression = new BetweenExpression(myName, lo, hi);
 			AddCriterion(betweenExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> EqProperty(string otherPropertyName)
 		{
-			AbstractCriterion eqPropertyExpression = new EqPropertyExpression(name, otherPropertyName);
+			AbstractCriterion eqPropertyExpression = new EqPropertyExpression(myName, otherPropertyName);
 			AddCriterion(eqPropertyExpression);
 			return this;
 		}
@@ -317,69 +317,69 @@ Use HQL for this functionality...",
 
 		public QueryBuilder<T> Ge(object value)
 		{
-			AbstractCriterion geExpression = new GeExpression(name, value);
+			AbstractCriterion geExpression = new GeExpression(myName, value);
 			AddCriterion(geExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> Gt(object value)
 		{
-			AbstractCriterion gtExpression = new GtExpression(name, value);
+			AbstractCriterion gtExpression = new GtExpression(myName, value);
 			AddCriterion(gtExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> InsensitiveLike(object value)
 		{
-			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(name, value);
+			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(myName, value);
 			AddCriterion(insensitiveLikeExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> InsensitiveLike(string value, MatchMode matchMode)
 		{
-			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(name, value, matchMode);
+			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(myName, value, matchMode);
 			AddCriterion(insensitiveLikeExpression);
 			return this;
 		}
 		public QueryBuilder<T> Le(object value)
 		{
-			AbstractCriterion leExpression = new LeExpression(name, value);
+			AbstractCriterion leExpression = new LeExpression(myName, value);
 			AddCriterion(leExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> LeProperty(string otherPropertyName)
 		{
-			AbstractCriterion lePropertyExpression = new LePropertyExpression(name, otherPropertyName);
+			AbstractCriterion lePropertyExpression = new LePropertyExpression(myName, otherPropertyName);
 			AddCriterion(lePropertyExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> Like(object value)
 		{
-			AbstractCriterion likeExpression = new LikeExpression(name, value);
+			AbstractCriterion likeExpression = new LikeExpression(myName, value);
 			AddCriterion(likeExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> Like(string value, MatchMode matchMode)
 		{
-			AbstractCriterion likeExpression = new LikeExpression(name, value, matchMode);
+			AbstractCriterion likeExpression = new LikeExpression(myName, value, matchMode);
 			AddCriterion(likeExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> Lt(object value)
 		{
-			AbstractCriterion ltExpression = new LtExpression(name, value);
+			AbstractCriterion ltExpression = new LtExpression(myName, value);
 			AddCriterion(ltExpression);
 			return this;
 		}
 
 		public QueryBuilder<T> LtProperty(string otherPropertyName)
 		{
-			AbstractCriterion ltPropertyExpression = new LtPropertyExpression(name, otherPropertyName);
+			AbstractCriterion ltPropertyExpression = new LtPropertyExpression(myName, otherPropertyName);
 			AddCriterion(ltPropertyExpression);
 			return this;
 		}

@@ -13,17 +13,20 @@ namespace NHibernate.Query.Generator
 	/// </summary>
 	public class QueryGenerator
 	{
-		string[] classesXpath = {
+		static readonly string[] classesXpath = {
 			                        	"/nh:hibernate-mapping//nh:class", "/nh:hibernate-mapping//nh:joined-subclass",
 			                        	"/nh:hibernate-mapping//nh:subclass"
 			                        };
-		string[] compnentsPath = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+        static readonly string[] compnentsPath = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+        static readonly string[] classes = { "class", "subclass", "joined-subclass" };
 
-		string[] projectByProperties = { "nh:property", "nh:key-property", };
-		string[] groupableProperties = { "nh:property", "nh:key-property", };
-		
-		private const string UseTheQueryClass = "UseTheQueryClass";
-		private string[] numericTypeNames = new string[] { "int", "integer", "smallint", "bigint", "tinyint", "decimal"
+        static readonly string[] orderableProperties = { "nh:property", "nh:key-property", "nh:id" };
+
+        static readonly string[] projectByProperties = { "nh:property", "nh:key-property", };
+        static readonly string[] groupableProperties = { "nh:property", "nh:key-property", };
+
+        static readonly string UseTheQueryClass = "UseTheQueryClass";
+        static readonly string[] numericTypeNames = new string[] { "int", "integer", "smallint", "bigint", "tinyint", "decimal"
 		                                                   , "float", "double", "short", "long", "big_decimal", "Int32"
 		                                                   , "Int64", "Int16", "Single", "Decimal", "Double"
 		                                                   , "System.Int32", "System.Int64", "System.Int16"
@@ -206,7 +209,6 @@ namespace NHibernate.Query.Generator
 
 		private CodeTypeDeclaration GenerateOrderByForClass(XmlNode node, bool addPrefix)
 		{
-			string[] orderableProperties = {"nh:property", "nh:key-property",};
 			//here we allow for a node without name
 			string typeNameForDisplay;
 			if (node.Attributes["name"] != null)
@@ -824,7 +826,6 @@ namespace NHibernate.Query.Generator
 
 		private static string GetFullNameOfBaseClass(XmlNode node)
 		{
-			string[] classes = {"class", "subclass", "joined-subclass"};
 			if (node.Attributes["extends"] == null) ///does it extends anything explicitly?
 			{
 				if(Array.IndexOf(classes, node.ParentNode.Name)!=-1)
