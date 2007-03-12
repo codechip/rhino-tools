@@ -7,7 +7,7 @@ using NHibernate.Expression;
 
 namespace Rhino.Commons
 {
-	public class ARRepository<T> : IRepository<T> where T : class
+	public class ARRepository<T> : IRepository<T>
 	{
 		/// <summary>
 		/// Get the entity from the persistance store, or return null
@@ -17,7 +17,7 @@ namespace Rhino.Commons
 		/// <returns>Either the entity that matches the id, or a null</returns>
 		public virtual T Get(object id)
 		{
-			return ActiveRecordMediator<T>.FindByPrimaryKey(id, false);
+			return (T)ActiveRecordMediator.FindByPrimaryKey(typeof(T),id, false);
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Rhino.Commons
 		/// <returns>The entity that matches the id</returns>
 		public virtual T Load(object id)
 		{
-			return ActiveRecordMediator<T>.FindByPrimaryKey(id, true);
+			return (T)ActiveRecordMediator.FindByPrimaryKey(typeof(T),id, true);
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Rhino.Commons
 		/// <param name="entity">The entity to delete</param>
 		public virtual void Delete(T entity)
 		{
-			ActiveRecordMediator<T>.Delete(entity);
+			ActiveRecordMediator.Delete(entity);
 		}
 
 		/// <summary>
@@ -49,15 +49,16 @@ namespace Rhino.Commons
 		/// <param name="entity">the entity to save</param>
 		public virtual void Save(T entity)
 		{
-			ActiveRecordMediator<T>.Create(entity);
+			ActiveRecordMediator.Create(entity);
 		}
 
-		/// <summary>
-		/// Loads all the entities that match the criteria
-		/// by order
-		/// </summary>
-		/// <param name="criteria">the criteria to look for</param>
-		/// <returns>All the entities that match the criteria</returns>
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="order">the order in which to bring the data</param>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
 		{
 			ISession session = OpenSession();
