@@ -157,12 +157,15 @@
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />
+    <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
+    <Compile Include="Logging\RollingSqlliteAppender.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
     <Compile Include="Tasks\ActiveRecord_CreateDatabase.cs" />
     <Compile Include="Tasks\Boo.cs" />
+    <Compile Include="Tasks\SqlBatchExecute.cs" />
     <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
     <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
     <Compile Include="Threading\ThreadPool\WorkItem.cs" />

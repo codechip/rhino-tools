@@ -12,7 +12,7 @@ using Environment = NHibernate.Cfg.Environment;
 
 namespace Rhino.Commons.Tasks
 {
-	public class ActiveRecord_CreateDatabase : Task
+    public class ActiveRecord_CreateDatabase : Task
 	{
 		private ITaskItem[] assemblies;
 		private string connectionString;
