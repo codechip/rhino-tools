@@ -13,48 +13,59 @@ namespace Query {
     
     public partial class Where {
         
+        /// Query for member _root_query_WeirdClass
         static Root_Query_WeirdClass _root_query_WeirdClass = new Root_Query_WeirdClass();
         
+        /// Query for member WeirdClass
         public static Root_Query_WeirdClass WeirdClass {
             get {
                 return _root_query_WeirdClass;
             }
         }
         
+        /// Query for member Query_WeirdClass
         public partial class Query_WeirdClass<T1> : Query.QueryBuilder<T1>
          {
             
+            /// Query for member .ctor
             public Query_WeirdClass(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
+            /// Query for member .ctor
             public Query_WeirdClass(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                     base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
+            /// Query for member Address
             public virtual Query_Address<T1> Address {
                 get {
                     return new Query_Address<T1>("Address", null);
                 }
             }
             
+            /// Query for member Key
             public virtual Query_Key<T1> Key {
                 get {
                     return new Query_Key<T1>("Key", associationPath);
                 }
             }
             
+            /// Query for member Query_Address
             public partial class Query_Address<T2> : Query.QueryBuilder<T2>
              {
                 
+                /// Query for member .ctor
                 public Query_Address(string name, string associationPath) : 
                         base(name, associationPath) {
                 }
                 
+                /// Query for member .ctor
                 public Query_Address(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                         base(name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
+                /// Query for member 
                 public virtual Query.PropertyQueryBuilder<T1> Street {
                     get {
                         string temp = associationPath;
@@ -63,17 +74,21 @@ namespace Query {
                 }
             }
             
+            /// Query for member Query_Key
             public partial class Query_Key<T3> : Query.QueryBuilder<T3>
              {
                 
+                /// Query for member .ctor
                 public Query_Key(string name, string associationPath) : 
                         base(name, associationPath) {
                 }
                 
+                /// Query for member .ctor
                 public Query_Key(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                         base(name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
+                /// Query for member 
                 public virtual Query.PropertyQueryBuilder<T1> Department {
                     get {
                         string temp = associationPath;
@@ -81,6 +96,7 @@ namespace Query {
                     }
                 }
                 
+                /// Query for member 
                 public virtual Query.PropertyQueryBuilder<T1> Level {
                     get {
                         string temp = associationPath;
@@ -90,8 +106,10 @@ namespace Query {
             }
         }
         
+        /// Query for member Root_Query_WeirdClass
         public partial class Root_Query_WeirdClass : Query_WeirdClass<NHibernate.Query.Generator.Tests.ActiveRecord.WeirdClass> {
             
+            /// Query for member .ctor
             public Root_Query_WeirdClass() : 
                     base("this", null) {
             }
@@ -100,10 +118,13 @@ namespace Query {
     
     public partial class OrderBy {
         
+        /// Query for member WeirdClass
         public partial class WeirdClass {
             
+            /// Query for member Address
             public partial class Address {
                 
+                /// Query for member Street
                 public static Query.OrderByClause Street {
                     get {
                         return new Query.OrderByClause("Address.Street");
@@ -111,14 +132,17 @@ namespace Query {
                 }
             }
             
+            /// Query for member Key
             public partial class Key {
                 
+                /// Query for member Department
                 public static Query.OrderByClause Department {
                     get {
                         return new Query.OrderByClause("Key.Department");
                     }
                 }
                 
+                /// Query for member Level
                 public static Query.OrderByClause Level {
                     get {
                         return new Query.OrderByClause("Key.Level");
@@ -130,10 +154,13 @@ namespace Query {
     
     public partial class ProjectBy {
         
+        /// Query for member WeirdClass
         public partial class WeirdClass {
             
+            /// Query for member Address
             public partial class Address {
                 
+                /// Query for member Street
                 public static Query.PropertyProjectionBuilder Street {
                     get {
                         return new Query.PropertyProjectionBuilder("Address.Street");
@@ -141,14 +168,17 @@ namespace Query {
                 }
             }
             
+            /// Query for member Key
             public partial class Key {
                 
+                /// Query for member Department
                 public static Query.PropertyProjectionBuilder Department {
                     get {
                         return new Query.PropertyProjectionBuilder("Key.Department");
                     }
                 }
                 
+                /// Query for member Level
                 public static Query.NumericPropertyProjectionBuilder Level {
                     get {
                         return new Query.NumericPropertyProjectionBuilder("Key.Level");
@@ -160,10 +190,13 @@ namespace Query {
     
     public partial class GroupBy {
         
+        /// Query for member WeirdClass
         public partial class WeirdClass {
             
+            /// Query for member Address
             public partial class Address {
                 
+                /// Query for member Street
                 public static NHibernate.Expression.IProjection Street {
                     get {
                         return NHibernate.Expression.Projections.GroupProperty("Address.Street");
@@ -171,14 +204,17 @@ namespace Query {
                 }
             }
             
+            /// Query for member Key
             public partial class Key {
                 
+                /// Query for member Department
                 public static NHibernate.Expression.IProjection Department {
                     get {
                         return NHibernate.Expression.Projections.GroupProperty("Key.Department");
                     }
                 }
                 
+                /// Query for member Level
                 public static NHibernate.Expression.IProjection Level {
                     get {
                         return NHibernate.Expression.Projections.GroupProperty("Key.Level");

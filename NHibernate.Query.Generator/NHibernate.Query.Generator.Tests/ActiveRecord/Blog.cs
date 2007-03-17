@@ -39,4 +39,20 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 			set { posts = value; }
 		}
 	}
+
+	[ActiveRecord]
+	public class DerivedBlog : Blog{}
+	
+	[ActiveRecord]
+	public class DerivedBlog2 : DerivedBlog
+	{
+		private string attribute;
+
+		[Property]
+		public string Attribute
+		{
+			get { return attribute; }
+			set { attribute = value; }
+		}
+	}
 }

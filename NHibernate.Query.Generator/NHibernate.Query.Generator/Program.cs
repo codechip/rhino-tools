@@ -146,13 +146,13 @@ namespace NHibernate.Query.Generator
             int i = 0;
             foreach (string xml in xmls)
             {
-                string genFile = "Where." + asm.FullName;
+                string genFile = "Where." + asm.GetName().Name;
                 if (i > 0)
                 {
                     genFile += i.ToString();
                 }
                 genFile += "." + targetExtention;
-                GenerateSingleFile(new StringReader(xml), genFile);
+                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile));
                 i += 1;
             }
 

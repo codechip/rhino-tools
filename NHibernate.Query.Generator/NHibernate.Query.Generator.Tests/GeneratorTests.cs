@@ -165,7 +165,7 @@ namespace NHibernate.Query.Generator.Tests
 			System.Type customerType = customer.GetType();
 			PropertyInfo property = customerType.GetProperty("Name");
 			object result = property.GetValue(customer, null);
-			FieldInfo field = result.GetType().GetField("name", BindingFlags.Instance | BindingFlags.NonPublic);
+			FieldInfo field = result.GetType().GetField("myName", BindingFlags.Instance | BindingFlags.NonPublic);
 			object value = field.GetValue(result);
 			Assert.AreEqual("Name", value);
 		}

@@ -13,25 +13,31 @@ namespace Query {
     
     public partial class Where {
         
+        /// Query for member _root_query_Blog
         static Root_Query_Blog _root_query_Blog = new Root_Query_Blog();
         
+        /// Query for member Blog
         public static Root_Query_Blog Blog {
             get {
                 return _root_query_Blog;
             }
         }
         
+        /// Query for member Query_Blog
         public partial class Query_Blog<T1> : Query.QueryBuilder<T1>
          {
             
+            /// Query for member .ctor
             public Query_Blog(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
+            /// Query for member .ctor
             public Query_Blog(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                     base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
+            /// Query for member 
             public virtual Query.PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
@@ -39,6 +45,7 @@ namespace Query {
                 }
             }
             
+            /// Query for member 
             public virtual Query.QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
@@ -46,6 +53,7 @@ namespace Query {
                 }
             }
             
+            /// Query for member 
             public virtual Query_User<T1> Author {
                 get {
                     string temp = associationPath;
@@ -56,8 +64,10 @@ namespace Query {
             }
         }
         
+        /// Query for member Root_Query_Blog
         public partial class Root_Query_Blog : Query_Blog<NHibernate.Query.Generator.Tests.ActiveRecord.Blog> {
             
+            /// Query for member .ctor
             public Root_Query_Blog() : 
                     base("this", null) {
             }
@@ -66,11 +76,20 @@ namespace Query {
     
     public partial class OrderBy {
         
+        /// Query for member Blog
         public partial class Blog {
             
+            /// Query for member Name
             public static Query.OrderByClause Name {
                 get {
                     return new Query.OrderByClause("Name");
+                }
+            }
+            
+            /// Query for member Id
+            public static Query.OrderByClause Id {
+                get {
+                    return new Query.OrderByClause("Id");
                 }
             }
         }
@@ -78,8 +97,10 @@ namespace Query {
     
     public partial class ProjectBy {
         
+        /// Query for member Blog
         public partial class Blog {
             
+            /// Query for member Name
             public static Query.PropertyProjectionBuilder Name {
                 get {
                     return new Query.PropertyProjectionBuilder("Name");
@@ -90,8 +111,10 @@ namespace Query {
     
     public partial class GroupBy {
         
+        /// Query for member Blog
         public partial class Blog {
             
+            /// Query for member Name
             public static NHibernate.Expression.IProjection Name {
                 get {
                     return NHibernate.Expression.Projections.GroupProperty("Name");

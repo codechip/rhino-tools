@@ -1,7 +1,11 @@
 using Castle.ActiveRecord;
 
+[assembly: HqlNamedQuery("AllCats", "from Cat")]
+
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
+	
+
 	[ActiveRecord(DiscriminatorValue = "C", DiscriminatorColumn = "subclass", DiscriminatorType = "String")]
 	public class Cat : ActiveRecordBase<Cat>
 	{

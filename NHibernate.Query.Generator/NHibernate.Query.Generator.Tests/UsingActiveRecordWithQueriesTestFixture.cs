@@ -23,6 +23,14 @@ namespace NHibernate.Query.Generator.Tests
 		private SessionScope sessionScope;
 
 		[Test]
+		public void QueryWithJoinOverSamePropertyName()
+		{
+			Project[] projects = Project.FindAll(Where.Project.Componnet.Component.Version == "v1.0");
+			Assert.AreEqual(1, projects.Length );
+			Assert.AreEqual("v1.0", projects[0].Componnet.Component.Version );
+		}
+
+		[Test]
 		public void CanProjectProperties()
 		{
 			ProjectionQuery<User> query = new ProjectionQuery<User>(
@@ -186,9 +194,7 @@ namespace NHibernate.Query.Generator.Tests
 			Comment[] c = Comment.FindAll(Where.Comment.Post.In(post));
 			Assert.AreEqual(1, c.Length);
 
-			ArrayList arrayList = new ArrayList();
-			arrayList.Add(post);
-			c = Comment.FindAll(Where.Comment.Post.In(arrayList));
+			c = Comment.FindAll(Where.Comment.Post.In(post));
 			Assert.AreEqual(1, c.Length);
 
 			List<Post> list = new List<Post>();
@@ -243,7 +249,10 @@ namespace NHibernate.Query.Generator.Tests
 			                               typeof (User),
 			                               typeof (Comment),
 										   typeof (Cat),
-										   typeof (DomesticCat));
+										   typeof (DomesticCat),
+										   typeof(Project),
+										   typeof(InstalledComponnet),
+										   typeof(Componnet));
 		}
 
 		[SetUp]
@@ -284,6 +293,13 @@ namespace NHibernate.Query.Generator.Tests
 			DomesticCat domesticCat = new DomesticCat();
 			domesticCat.Name = "Domestic Cat";
 			domesticCat.Save();
+
+			Componnet componnet = new Componnet("v1.0");
+			componnet.Save();
+			InstalledComponnet ic = new InstalledComponnet(componnet);
+			ic.Save();
+
+			new Project(ic).Save();
 		}
 
 		[TearDown]

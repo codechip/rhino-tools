@@ -13,25 +13,31 @@ namespace Query {
     
     public partial class Where {
         
-        static Root_Query_User _root_query_User = new Root_Query_User();
+        /// Query for member _root_query_DerivedBlog
+        static Root_Query_DerivedBlog _root_query_DerivedBlog = new Root_Query_DerivedBlog();
         
-        public static Root_Query_User User {
+        /// Query for member DerivedBlog
+        public static Root_Query_DerivedBlog DerivedBlog {
             get {
-                return _root_query_User;
+                return _root_query_DerivedBlog;
             }
         }
         
-        public partial class Query_User<T1> : Query.QueryBuilder<T1>
+        /// Query for member Query_DerivedBlog
+        public partial class Query_DerivedBlog<T1> : Query.QueryBuilder<T1>
          {
             
-            public Query_User(string name, string associationPath) : 
+            /// Query for member .ctor
+            public Query_DerivedBlog(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
-            public Query_User(string name, string associationPath, bool backTrackAssoicationOnEquality) : 
-                    base(name, associationPath, backTrackAssoicationOnEquality) {
+            /// Query for member .ctor
+            public Query_DerivedBlog(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
+            /// Query for member 
             public virtual Query.PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
@@ -39,24 +45,30 @@ namespace Query {
                 }
             }
             
-            public virtual Query.PropertyQueryBuilder<T1> Email {
-                get {
-                    string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Email", temp);
-                }
-            }
-            
+            /// Query for member 
             public virtual Query.QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
                     return new Query.QueryBuilder<T1>("Id", temp);
                 }
             }
+            
+            /// Query for member 
+            public virtual Query_User<T1> Author {
+                get {
+                    string temp = associationPath;
+                    temp = ((temp + ".") 
+                                + "Author");
+                    return new Query_User<T1>("Author", temp, true);
+                }
+            }
         }
         
-        public partial class Root_Query_User : Query_User<NHibernate.Query.Generator.Tests.ActiveRecord.User> {
+        /// Query for member Root_Query_DerivedBlog
+        public partial class Root_Query_DerivedBlog : Query_DerivedBlog<NHibernate.Query.Generator.Tests.ActiveRecord.DerivedBlog> {
             
-            public Root_Query_User() : 
+            /// Query for member .ctor
+            public Root_Query_DerivedBlog() : 
                     base("this", null) {
             }
         }
@@ -64,17 +76,20 @@ namespace Query {
     
     public partial class OrderBy {
         
-        public partial class User {
+        /// Query for member DerivedBlog
+        public partial class DerivedBlog {
             
+            /// Query for member Name
             public static Query.OrderByClause Name {
                 get {
                     return new Query.OrderByClause("Name");
                 }
             }
             
-            public static Query.OrderByClause Email {
+            /// Query for member Id
+            public static Query.OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Email");
+                    return new Query.OrderByClause("Id");
                 }
             }
         }
@@ -82,17 +97,13 @@ namespace Query {
     
     public partial class ProjectBy {
         
-        public partial class User {
+        /// Query for member DerivedBlog
+        public partial class DerivedBlog {
             
+            /// Query for member Name
             public static Query.PropertyProjectionBuilder Name {
                 get {
                     return new Query.PropertyProjectionBuilder("Name");
-                }
-            }
-            
-            public static Query.PropertyProjectionBuilder Email {
-                get {
-                    return new Query.PropertyProjectionBuilder("Email");
                 }
             }
         }
@@ -100,17 +111,13 @@ namespace Query {
     
     public partial class GroupBy {
         
-        public partial class User {
+        /// Query for member DerivedBlog
+        public partial class DerivedBlog {
             
+            /// Query for member Name
             public static NHibernate.Expression.IProjection Name {
                 get {
                     return NHibernate.Expression.Projections.GroupProperty("Name");
-                }
-            }
-            
-            public static NHibernate.Expression.IProjection Email {
-                get {
-                    return NHibernate.Expression.Projections.GroupProperty("Email");
                 }
             }
         }

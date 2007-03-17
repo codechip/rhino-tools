@@ -8,4 +8,7 @@
     </StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
+  <PropertyGroup>
+    <ProjectView>ShowAllFiles</ProjectView>
+  </PropertyGroup>
 </Project>

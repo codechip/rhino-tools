@@ -60,8 +60,21 @@
   <ItemGroup>
     <Compile Include="..\NHibernate.Query.Generator\QueryBuilders\QueryBuilder.cs" />
     <Compile Include="ActiveRecord\Cat.cs" />
-    <Compile Include="ActiveRecord\Queries\Cat.cs" />
-    <Compile Include="ActiveRecord\Queries\WeirdClass.cs" />
+    <Compile Include="ActiveRecord\Componnet.cs" />
+    <Compile Include="ActiveRecord\InstalledComponnet.cs" />
+    <Compile Include="ActiveRecord\Project.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Blog.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Cat.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Comment.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Componnet.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.DerivedBlog.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.DerivedBlog2.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.InstalledComponnet.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.NHibernate.Query.Generator.Tests.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Post.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Project.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.User.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.WeirdClass.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
@@ -75,10 +88,6 @@
     <Compile Include="ActiveRecord\Blog.cs" />
     <Compile Include="ActiveRecord\Comment.cs" />
     <Compile Include="ActiveRecord\Post.cs" />
-    <Compile Include="ActiveRecord\Queries\Blog.cs" />
-    <Compile Include="ActiveRecord\Queries\Comment.cs" />
-    <Compile Include="ActiveRecord\Queries\Post.cs" />
-    <Compile Include="ActiveRecord\Queries\User.cs" />
     <Compile Include="ActiveRecord\User.cs" />
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="Model.cs" />
@@ -109,7 +118,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>"NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>"NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
   </PropertyGroup>
 </Project>
