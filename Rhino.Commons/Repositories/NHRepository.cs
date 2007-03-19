@@ -138,7 +138,7 @@ namespace Rhino.Commons
 
 		public T FindFirst(DetachedCriteria criteria, params Order[] orders)
 		{
-			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, null);
+			ICriteria executableCriteria = RepositoryHelper<T>.GetExecutableCriteria(Session, criteria, orders);
 			executableCriteria.SetFirstResult(0);
 			executableCriteria.SetMaxResults(1);
 			return (T)executableCriteria.UniqueResult();

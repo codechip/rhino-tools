@@ -367,7 +367,7 @@ namespace Rhino.Commons
 			ISession session = OpenSession();
 			try
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(session, criteria, orders);
 				crit.SetMaxResults(1);
 				return crit.UniqueResult<T>();
 			}
