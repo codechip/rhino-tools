@@ -16,8 +16,7 @@ namespace Rhino.Commons.ForTesting
 	public class ActiveRecordEmbeddedDBTestFixtureBase
 	{
 		public static string DatabaseFilename = "TempDB.sdf";
-
-
+		
 		private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized  : InPlaceConfigurationSource
 		{
 			public InPlaceConfigurationSource_AlwaysLazy_AndPluralized()
@@ -37,11 +36,25 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
 		public void FixtureInitialize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
+			FixtureInitialize(rhinoContainerConfig, new InPlaceConfigurationSource_AlwaysLazy_AndPluralized(), assemblies);
+		}
+
+		/// <summary>
+		/// Initialize Active Record, and initialize the container.
+		/// If <paramref name="rhinoContainerConfig"/> is <see langword="null" /> or <see cref="string.Empty">string.Empty</see>
+		/// a <see cref="RhinoContainer">RhinoContainer</see> will not be initialized.
+		/// </summary>
+		/// <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="RhinoContainer">RhinoContainer</see> 
+		/// or <see langword="null" />.</param>
+		/// <param name="cfg">The configuration to supply to AR</param>
+		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
+		public void FixtureInitialize(string rhinoContainerConfig, InPlaceConfigurationSource cfg, params Assembly[] assemblies)
+		{
+			if (cfg == null) throw new ArgumentNullException("cfg");
+
 			IoC.Reset();
 			ActiveRecordStarter.ResetInitializationFlag();
 
-
-			InPlaceConfigurationSource cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
 			cfg.Add(typeof(ActiveRecordBase), CreateProperties());
 			
 			//here we either configure the IUnitOfWorkFactory appropriately (which calls ActiveRecordStarter)
