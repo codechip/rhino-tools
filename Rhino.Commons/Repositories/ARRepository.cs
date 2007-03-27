@@ -52,7 +52,18 @@ namespace Rhino.Commons
 			ActiveRecordMediator.Create(entity);
 		}
 
-        /// <summary>
+
+	    /// <summary>
+	    /// Register the entity for update in the database when the unit of work
+	    /// is completed. (UPDATE)
+	    /// </summary>
+	    /// <param name="entity"></param>
+	    public void Update(T entity)
+	    {
+	        ActiveRecordMediator.Update(entity);
+	    }
+
+	    /// <summary>
         /// Loads all the entities that match the criteria
         /// by order
         /// </summary>

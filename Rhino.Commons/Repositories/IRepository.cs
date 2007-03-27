@@ -33,10 +33,17 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Register te entity for save in the database when the unit of work
-        /// is completed.
+        /// is completed. (INSERT)
         /// </summary>
         /// <param name="entity">the entity to save</param>
         void Save(T entity);
+
+        /// <summary>
+        /// Register the entity for update in the database when the unit of work
+        /// is completed. (UPDATE)
+        /// </summary>
+        /// <param name="entity"></param>
+        void Update(T entity);
 
         /// <summary>
         /// Loads all the entities that match the criteria
