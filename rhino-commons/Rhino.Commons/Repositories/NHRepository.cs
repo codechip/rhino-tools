@@ -35,7 +35,13 @@ namespace Rhino.Commons
 			Session.Save(entity);
 		}
 
-		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+
+	    public void Update(T entity)
+	    {
+	        Session.Update(entity);
+	    }
+
+	    public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
 		{
 			ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(Session, criteria);
 			crit.AddOrder(order);

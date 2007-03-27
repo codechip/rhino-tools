@@ -114,7 +114,17 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
-		/// <summary>
+
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+	    public void Update(T entity)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    /// <summary>
 		/// Execute the named query and return all the results
 		/// </summary>
 		/// <param name="namedQuery">The named query to execute</param>

@@ -51,7 +51,7 @@ namespace Rhino.Commons
 
     	/// <summary>
     	/// Register te entity for save in the database when the unit of work
-    	/// is completed.
+    	/// is completed. (INSERT)
     	/// </summary>
     	/// <param name="entity">the entity to save</param>
     	public static void Save(T entity)
@@ -59,7 +59,17 @@ namespace Rhino.Commons
     		InternalRepository.Save(entity);
     	}
 
-    	/// <summary>
+        /// <summary>
+        /// Register the entity for update in the database when the unit of work
+        /// is completed. (UPDATE)
+        /// </summary>
+        /// <param name="entity"></param>
+        public static void Update(T entity)
+        {
+            InternalRepository.Update(entity);
+        }
+
+        /// <summary>
     	/// Loads all the entities that match the criteria
     	/// by order
     	/// </summary>
