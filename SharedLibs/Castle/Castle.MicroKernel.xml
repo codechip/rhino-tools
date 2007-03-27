@@ -1217,39 +1217,6 @@
             </summary>
             <param name="customComponentActivator">The custom component activator.</param>
         </member>
-        <member name="T:Castle.MicroKernel.ModelBuilder.Inspectors.ComponentProxyInspector">
-            <summary>
-            Inspects the component configuration looking for information
-            that can influence the generation of a proxy for that component.
-            </summary>
-        </member>
-        <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.ComponentProxyInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
-            <summary>
-            Seaches for proxy behavior in the configuration and, if unsuccessful
-            look for the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/> attribute in 
-            the implementation type.
-            </summary>
-            <param name="kernel"></param>
-            <param name="model"></param>
-        </member>
-        <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.ComponentProxyInspector.ReadProxyBehaviorFromConfiguration(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
-            <summary>
-            Reads the proxy behavior associated with the 
-            component configuration and applies it to the model.
-            </summary>
-            <exception cref="T:System.Configuration.ConfigurationException">
-            If the conversion fails
-            </exception>
-            <param name="kernel"></param>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.ComponentProxyInspector.ReadProxyBehaviorFromType(Castle.Core.ComponentModel)">
-            <summary>
-            Check if the type exposes the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/>.
-            </summary>
-            <param name="model"></param>
-        </member>
         <member name="T:Castle.MicroKernel.ModelBuilder.Inspectors.ConfigurationModelInspector">
             <summary>
             Uses the ConfigurationStore registered in the kernel to obtain
