@@ -83,7 +83,8 @@ namespace Rhino.Commons
 			WorkStarted(item);
 			try
 			{
-				item.Callback(item.State);
+                if(item.Cancelled==false)
+				    item.Callback(item.State);
 			}
 			catch (Exception e)
 			{

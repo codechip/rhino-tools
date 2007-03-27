@@ -6,6 +6,7 @@ namespace Rhino.Commons
     {
         private WaitCallback _callback;
         private object _state;
+        private bool doNotRun;
         private ExecutionContext _ctx;
 
         internal WorkItem(WaitCallback wc, object state, ExecutionContext ctx)
@@ -28,6 +29,19 @@ namespace Rhino.Commons
         public ExecutionContext Context
         {
             get { return _ctx; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="WorkItem"/> is canceled.
+        /// This is valid if and only if the work item has not started running yet.
+        /// If the WorkItem has started running, it is ignored
+        /// </summary>
+        /// <value><c>true</c> if doNotRun; otherwise, <c>false</c>.</value>
+        public bool DoNotRun
+        {
+            get { return doNotRun; }
+            set { doNotRun = value; }
         }
     }
 }
