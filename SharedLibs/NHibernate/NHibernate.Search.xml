@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NHibernate.Search</name>
+    </assembly>
+    <members>
+        <member name="T:NHibernate.Search.Impl.BatchedQueueingProcessor">
+            <summary>
+             Batch work until #ExecuteQueue is called.
+             The work is then executed synchronously or asynchronously
+            </summary>
+        </member>
+        <member name="T:NHibernate.Search.Impl.IQueueingProcessor">
+            <summary>
+             Pile work operations
+             No thread safety has to be implemented, the queue being scoped already
+             The implementation must be "stateless" wrt the queue through (ie not store the queue state)
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.IQueueingProcessor.PerformWork(System.Collections.Generic.List{NHibernate.Search.Impl.LuceneWork})">
+            <summary>
+            Performs all the work in the queue
+            </summary>
+            <param name="queue">The queue.</param>
+        </member>
+        <member name="M:NHibernate.Search.Impl.IQueueingProcessor.CancelWork(System.Collections.Generic.List{NHibernate.Search.Impl.LuceneWork})">
+            <summary>
+            Rollback 
+            </summary>
+            <param name="queue"></param>
+        </member>
+        <member name="T:NHibernate.Search.IStringBridge">
+            <summary>
+            Transform an object into a string representation
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.IStringBridge.ObjectToString(System.Object)">
+            <summary>
+            convert the object representation to a String
+            The return String must not be null, it can be empty though</summary>
+            <param name="?"></param>
+        </member>
+        <member name="M:NHibernate.Search.ITwoWayStringBridge.StringToObject(System.String)">
+            <summary>
+            Convert the string representation to an object
+            </summary>
+        </member>
+        <member name="T:NHibernate.Search.Impl.DocumentBuilder">
+            <summary>
+            Set up and provide a manager for indexes classes
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.DocumentBuilder.AddToWorkQueue(System.Object,System.Object,NHibernate.Search.WorkType,System.Collections.Generic.List{NHibernate.Search.Impl.LuceneWork},NHibernate.Search.SearchFactory)">
+            <summary>
+            This add the new work to the queue, so it can be processed in a batch fashion later
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.FullTextQueryImpl.#ctor(Lucene.Net.Search.Query,System.Type[],NHibernate.Engine.ISessionImplementor)">
+            <summary>
+            classes must be immutable
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.FullTextQueryImpl.Enumerable``1">
+            <summary>
+            Return an interator on the results.
+            Retrieve the object one by one (initialize it during the next() operation)
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.IFullTextSession.Index(System.Object)">
+            <summary>
+            Force the (re)indexing of a given <b>managed</b> object.
+            Indexation is batched per transaction</summary>
+            <param name="entity"></param>
+        </member>
+        <member name="T:NHibernate.Search.Impl.IBackendQueueProcessorFactory">
+            <summary>
+            Build stateful backend processor
+            Must have a no arg constructor
+            The factory typically prepare or pool the resources needed by the queue processor
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.IBackendQueueProcessorFactory.GetProcessor(System.Collections.Generic.List{NHibernate.Search.Impl.LuceneWork})">
+            <summary>
+            Return a runnable implementation responsible for processing the queue to a given backend
+            </summary>
+            <param name="queue"></param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:NHibernate.Search.Impl.LuceneBackendQueueProcessor" -->
+        <member name="M:NHibernate.Search.Impl.LuceneBackendQueueProcessor.SortQueueToAvoidDeadLocks(System.Collections.Generic.List{NHibernate.Search.Impl.LuceneWork},NHibernate.Search.Impl.LuceneWorkspace)">
+            <summary>
+            one must lock the directory providers in the exact same order to avoid
+            dead lock between concurrent threads or processes
+            To achieve that, the work will be done per directory provider
+            We rely on the both the DocumentBuilder.GetHashCode() and the GetWorkHashCode() to 
+            sort them by predictive order at all times, and to put deletes before adds
+            </summary>
+        </member>
+        <member name="T:NHibernate.Search.Impl.LuceneWorkspace">
+            <summary>
+            Lucene workspace
+            This is not intended to be used in a multithreaded environment
+            <p/>
+            One cannot execute modification through an IndexReader when an IndexWriter has been acquired on the same underlying directory
+            One cannot get an IndexWriter when an IndexReader have been acquired and modificed on the same underlying directory
+            The recommended approach is to execute all the modifications on the IndexReaders, {@link #Dispose()} }, and acquire the
+            index writers
+            </summary>
+        </member>
+        <member name="M:NHibernate.Search.Impl.LuceneWorkspace.Dispose">
+            <summary>
+            release resources consumed in the workspace if any
+            </summary>
+        </member>
+        <member name="F:NHibernate.Search.SearchFactory.lockableDirectoryProviders">
+            <summary>
+            Note that we will lock on the values in this dictionary
+            </summary>
+        </member>
+        <member name="T:NHibernate.Search.IFieldBridge">
+            <summary>
+            Put an object inside the document.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Search.Impl.Work">
+            <summary>
+            work unit. Only make sense inside the same session since it uses the scope principle
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:NHibernate.Search.Storage.FSMasterDirectoryProvider" -->
+        <!-- Badly formed XML comment ignored for member "T:NHibernate.Search.Storage.FSSlaveDirectoryProvider" -->
+        <member name="M:NHibernate.Search.DirectoryProviderHelper.GetSourceDirectory(System.String,System.String,System.String,System.Collections.IDictionary)">
+            <summary>
+            Build a directory name out of a root and relative path, guessing the significant part
+            and checking for the file availability
+            </summary>
+        </member>
+    </members>
+</doc>
