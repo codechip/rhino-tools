@@ -523,18 +523,18 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T9> Name {
+            public virtual Query.ProjectionClauseProperty<T9> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T9>("Name", temp);
+                    return new Query.ProjectionClauseProperty<T9>("Name", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T9> Id {
+            public virtual Query.ProjectionClauseProperty<T9> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T9>("Id", temp);
+                    return new Query.ProjectionClauseProperty<T9>("Id", temp);
                 }
             }
             
@@ -570,10 +570,10 @@ namespace Query {
                 }
                 
                 /// Projection for member 
-                public virtual Query.ProjectionClausePropertyNumeric<T9> Phone {
+                public virtual Query.ProjectionClauseProperty<T9> Phone {
                     get {
                         string temp = associationPath;
-                        return new Query.ProjectionClausePropertyNumeric<T9>("Home.Phone", temp);
+                        return new Query.ProjectionClauseProperty<T9>("Home.Phone", temp);
                     }
                 }
                 
@@ -613,10 +613,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T11> Pk {
+            public virtual Query.ProjectionClauseProperty<T11> Pk {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T11>("Pk", temp);
+                    return new Query.ProjectionClauseProperty<T11>("Pk", temp);
                 }
             }
         }
@@ -645,18 +645,18 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T12> Name {
+            public virtual Query.ProjectionClauseProperty<T12> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T12>("Name", temp);
+                    return new Query.ProjectionClauseProperty<T12>("Name", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T12> CustomerId {
+            public virtual Query.ProjectionClauseProperty<T12> CustomerId {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T12>("CustomerId", temp);
+                    return new Query.ProjectionClauseProperty<T12>("CustomerId", temp);
                 }
             }
             
@@ -695,10 +695,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T13> Foo {
+            public virtual Query.ProjectionClauseProperty<T13> Foo {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T13>("Foo", temp);
+                    return new Query.ProjectionClauseProperty<T13>("Foo", temp);
                 }
             }
         }
@@ -727,10 +727,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T14> Foo {
+            public virtual Query.ProjectionClauseProperty<T14> Foo {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T14>("Foo", temp);
+                    return new Query.ProjectionClauseProperty<T14>("Foo", temp);
                 }
             }
         }
@@ -759,10 +759,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T15> Bar {
+            public virtual Query.ProjectionClauseProperty<T15> Bar {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T15>("Bar", temp);
+                    return new Query.ProjectionClauseProperty<T15>("Bar", temp);
                 }
             }
         }
@@ -791,10 +791,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T16> Bar {
+            public virtual Query.ProjectionClauseProperty<T16> Bar {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T16>("Bar", temp);
+                    return new Query.ProjectionClauseProperty<T16>("Bar", temp);
                 }
             }
         }

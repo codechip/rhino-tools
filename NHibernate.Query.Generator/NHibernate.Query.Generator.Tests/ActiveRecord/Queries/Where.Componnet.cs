@@ -101,18 +101,18 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Version {
+            public virtual Query.ProjectionClauseProperty<T2> Version {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Version", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Version", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Id {
+            public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Id", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
         }

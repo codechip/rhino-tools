@@ -119,26 +119,26 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Name {
+            public virtual Query.ProjectionClauseProperty<T2> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Name", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Name", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Attribute {
+            public virtual Query.ProjectionClauseProperty<T2> Attribute {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Attribute", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Attribute", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Id {
+            public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Id", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
             

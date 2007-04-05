@@ -76,7 +76,7 @@ namespace NHibernate.Query.Generator
 			CreateClasses(ctdWhere, new GeneratorPart("Where", "Where", "WhereClause", "WhereClause", "WhereClauseProperty", true, true));
 			
 			// Todo: Figure out how to isolate the numerics again, for now make everything numeric
-			CreateClasses(ctdProject, new GeneratorPart("ProjectBy", "Projection", "ProjectionRoot", "ProjectionEntity", "ProjectionClausePropertyNumeric", true, true));
+			CreateClasses(ctdProject, new GeneratorPart("ProjectBy", "Projection", "ProjectionRoot", "ProjectionEntity", "ProjectionClauseProperty", true, true));
 			CreateClasses(ctdOrder, new GeneratorPart("OrderBy", "OrderBy", "QueryPart", "QueryPart", "OrderByClauseProperty", false, false));
 			CreateQueries(queryNameSpace, hbm);
 			_provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());

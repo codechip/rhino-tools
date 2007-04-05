@@ -73,33 +73,18 @@
     <Compile Include="ActiveRecord\Queries\Where.DerivedBlog2.cs" />
     <Compile Include="ActiveRecord\Queries\Where.InstalledComponnet.cs" />
     <Compile Include="ActiveRecord\Queries\Where.NHibernate.Query.Generator.Tests.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Payment.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Post.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Project.cs" />
     <Compile Include="ActiveRecord\Queries\Where.User.cs" />
     <Compile Include="ActiveRecord\Queries\Where.WeirdClass.cs" />
-    <Compile Include="ActiveRecord\Where.Payment.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ActiveRecord\Blog.cs" />
     <Compile Include="ActiveRecord\Comment.cs" />
     <Compile Include="ActiveRecord\Post.cs" />
     <Compile Include="ActiveRecord\User.cs" />
-    <Compile Include="ExtendingWhere.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FieldProblems.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GeneratorTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestUtil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NHibernate.Query.Generator\NHibernate.Query.Generator.csproj">

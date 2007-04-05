@@ -181,10 +181,10 @@ namespace Query {
                 }
                 
                 /// Projection for member 
-                public virtual Query.ProjectionClausePropertyNumeric<T4> Street {
+                public virtual Query.ProjectionClauseProperty<T4> Street {
                     get {
                         string temp = associationPath;
-                        return new Query.ProjectionClausePropertyNumeric<T4>("Address.Street", temp);
+                        return new Query.ProjectionClauseProperty<T4>("Address.Street", temp);
                     }
                 }
             }
@@ -204,18 +204,18 @@ namespace Query {
                 }
                 
                 /// Projection for member 
-                public virtual Query.ProjectionClausePropertyNumeric<T4> Department {
+                public virtual Query.ProjectionClauseProperty<T4> Department {
                     get {
                         string temp = associationPath;
-                        return new Query.ProjectionClausePropertyNumeric<T4>("Key.Department", temp);
+                        return new Query.ProjectionClauseProperty<T4>("Key.Department", temp);
                     }
                 }
                 
                 /// Projection for member 
-                public virtual Query.ProjectionClausePropertyNumeric<T4> Level {
+                public virtual Query.ProjectionClauseProperty<T4> Level {
                     get {
                         string temp = associationPath;
-                        return new Query.ProjectionClausePropertyNumeric<T4>("Key.Level", temp);
+                        return new Query.ProjectionClauseProperty<T4>("Key.Level", temp);
                     }
                 }
             }

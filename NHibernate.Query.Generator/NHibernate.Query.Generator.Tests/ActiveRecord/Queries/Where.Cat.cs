@@ -160,18 +160,18 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T3> subclass {
+            public virtual Query.ProjectionClauseProperty<T3> subclass {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T3>("subclass", temp);
+                    return new Query.ProjectionClauseProperty<T3>("subclass", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T3> Id {
+            public virtual Query.ProjectionClauseProperty<T3> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T3>("Id", temp);
+                    return new Query.ProjectionClauseProperty<T3>("Id", temp);
                 }
             }
         }
@@ -200,10 +200,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T4> Name {
+            public virtual Query.ProjectionClauseProperty<T4> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T4>("Name", temp);
+                    return new Query.ProjectionClauseProperty<T4>("Name", temp);
                 }
             }
         }
