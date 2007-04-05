@@ -15,7 +15,7 @@ namespace NHibernate.Query.Generator.Tests
 			string resource = "NHibernate.Query.Generator.Tests.WithTopLevelAssemblySpecification.hbm.xml";
 			Assembly assembly = TestUtil.GetAssemblyFromResource(resource);
 
-			System.Type whereType = assembly.GetType("Query.Where+Query_Broker`1");
+			System.Type whereType = assembly.GetType("Query.Where+Where_Broker`1");
 			Assert.IsNotNull(whereType, "We should have gotten a Broker type");
 
 			Assert.IsNotNull(whereType.GetProperty("Id"), "Should have an id property");
@@ -34,7 +34,7 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(property.PropertyType.GetProperty("DisplayName"),
 			"Should have Name.DisplayName");
 
-			System.Type orderByType = assembly.GetType("Query.OrderBy+Broker+Name");
+			System.Type orderByType = assembly.GetType("Query.OrderBy+OrderBy_Broker`1+OrderBy_Name`1");
 			Assert.IsNotNull(orderByType, "Should have an order by for Broker.Name");
 
 			Assert.IsNotNull(orderByType.GetProperty("FirstName"), "Should have a FirstName");

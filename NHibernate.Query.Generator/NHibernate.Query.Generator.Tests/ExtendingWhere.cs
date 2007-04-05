@@ -7,9 +7,9 @@ namespace Query
 {
 	public partial class Where
 	{
-		public partial class Root_Query_User
+		public partial class Root_Where_User
 		{
-			public virtual QueryBuilder<User> IsInGroup(string groupName)
+			public virtual WhereClause<User> IsInGroup(string groupName)
 			{
 				AbstractCriterion criterion = Expression.Sql("? in (select 'Administrators')", 
 															 groupName, NHibernateUtil.String);

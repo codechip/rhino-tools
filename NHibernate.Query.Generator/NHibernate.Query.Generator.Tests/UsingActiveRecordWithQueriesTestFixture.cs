@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Castle.ActiveRecord;
@@ -226,6 +227,46 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsTrue(cats[0] is DomesticCat);
 		}
 
+		[Test]
+		public void CanProjectPropertiesFromAssociation()
+		{
+			ProjectionQuery<Blog> query = new ProjectionQuery<Blog>(
+				For.Blog.ProjectBy(ProjectBy.Blog.Name && ProjectBy.Blog.Author.Name),
+				ProjectBy.Blog.Name && ProjectBy.Blog.Author.Name);
+			object[] execute = query.Execute()[0];
+			Assert.AreEqual("Ayende @ Blog", execute[0]);
+			Assert.AreEqual("Ayende", execute[1]);
+		}
+
+		[Test]
+		public void CanAutoGroupProjections()
+		{
+			ProjectionQuery<Payment> query = new ProjectionQuery<Payment>(
+				For.Payment.ProjectBy(ProjectBy.Payment.Amount.Max() && ProjectBy.Payment.PayDate),
+				OrderBy.Payment.PayDate.Desc,
+				ProjectBy.Payment.Amount.Max() && ProjectBy.Payment.PayDate);
+			IList<object[]> execute = query.Execute();
+			Assert.AreEqual(2, execute.Count);
+			Assert.AreEqual(100, execute[0][0]);
+			Assert.AreEqual(DateTime.Today, execute[0][1]);
+			Assert.AreEqual(200, execute[1][0]);
+			Assert.AreEqual(DateTime.Today.AddDays(-7), execute[1][1]);
+		}
+
+
+		[Test]
+		public void CanProjectDistinct()
+		{
+			ProjectionQuery<Payment> query = new ProjectionQuery<Payment>(
+				For.Payment.ProjectBy(ProjectBy.Payment.Distinct() && ProjectBy.Payment.PayDate),
+				OrderBy.Payment.PayDate.Desc,
+				ProjectBy.Payment.Distinct() && ProjectBy.Payment.PayDate);
+			IList<object[]> execute = query.Execute();
+			Assert.AreEqual(2, execute.Count);
+			Assert.AreEqual(DateTime.Today, execute[0][1]);
+			Assert.AreEqual(DateTime.Today.AddDays(-7), execute[1][1]);
+		}
+
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{
@@ -252,7 +293,8 @@ namespace NHibernate.Query.Generator.Tests
 										   typeof (DomesticCat),
 										   typeof(Project),
 										   typeof(InstalledComponnet),
-										   typeof(Componnet));
+										   typeof(Componnet),
+											 typeof(Payment));
 		}
 
 		[SetUp]
@@ -300,6 +342,26 @@ namespace NHibernate.Query.Generator.Tests
 			ic.Save();
 
 			new Project(ic).Save();
+
+			Payment payment = new Payment();
+			payment.Amount = 100;
+			payment.PayDate = DateTime.Today;
+			payment.Save();
+
+			Payment payment1 = new Payment();
+			payment1.Amount = 100;
+			payment1.PayDate = DateTime.Today;
+			payment1.Save();
+
+			Payment payment2 = new Payment();
+			payment2.Amount = 200;
+			payment2.PayDate = DateTime.Today.AddDays(-7);
+			payment2.Save();
+
+			Payment payment3 = new Payment();
+			payment3.Amount = 200;
+			payment3.PayDate = DateTime.Today.AddDays(-7);
+			payment3.Save();
 		}
 
 		[TearDown]

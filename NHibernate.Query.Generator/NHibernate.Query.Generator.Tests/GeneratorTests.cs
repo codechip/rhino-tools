@@ -78,10 +78,10 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
-			System.Type compositeCustomerOrderring = asm.GetType("Query.OrderBy+CompositeCustomer");
+			System.Type compositeCustomerOrderring = asm.GetType("Query.OrderBy+OrderBy_CompositeCustomer`1");
 			PropertyInfo property = compositeCustomerOrderring.GetProperty("CustomerId");
 			Assert.IsNotNull(property);
-			Assert.AreEqual(typeof(OrderByClause), property.PropertyType);
+			Assert.AreEqual(typeof(OrderByClauseProperty<>).Name, property.PropertyType.Name);
 		}
 
 		[Test]
@@ -89,23 +89,23 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
-			System.Type homeType = asm.GetType("Query.OrderBy+Customer+Home");
+			System.Type homeType = asm.GetType("Query.OrderBy+OrderBy_Customer`1+OrderBy_Home`1");
 			PropertyInfo property = homeType.GetProperty("Phone");
 			Assert.IsNotNull(property);
-			Assert.AreEqual(typeof(OrderByClause), property.PropertyType);
+			Assert.AreEqual(typeof(OrderByClauseProperty<>).Name, property.PropertyType.Name);
 	
 		}
 
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForEachOfthePersistentPropertiesInTheMapping()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:property", "Customer", typeof(PropertyQueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:property", "Customer", typeof(WhereClauseProperty<>));
 		}
 
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForPrimaryKey()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(WhereClause<>));
 		}
 
 		[Test]
@@ -113,14 +113,14 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-property",
 									  "CompositeCustomer",
-									  typeof(PropertyQueryBuilder<>));
+									  typeof(WhereClauseProperty<>));
 		}
 
 
 		[Test]
 		public void NestedTypeSupportsManyToOne()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:many-to-one", "Customer", "Query.Where+Query_Address`1");
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:many-to-one", "Customer", "Query.Where+Where_Address`1");
 		}
 
 		[Test]
@@ -128,13 +128,13 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:composite-id/nh:key-many-to-one",
 									  "CompositeCustomer",
-									  "Query.Where+Query_BadCustomer`1");
+									  "Query.Where+Where_BadCustomer`1");
 		}
 
 		[Test]
 		public void NestedTypeSupportIDProperty()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(WhereClause<>));
 		}
 
 
@@ -165,7 +165,7 @@ namespace NHibernate.Query.Generator.Tests
 			System.Type customerType = customer.GetType();
 			PropertyInfo property = customerType.GetProperty("Name");
 			object result = property.GetValue(customer, null);
-			FieldInfo field = result.GetType().GetField("myName", BindingFlags.Instance | BindingFlags.NonPublic);
+			FieldInfo field = result.GetType().GetField("name", BindingFlags.Instance | BindingFlags.NonPublic);
 			object value = field.GetValue(result);
 			Assert.AreEqual("Name", value);
 		}
@@ -269,9 +269,9 @@ namespace NHibernate.Query.Generator.Tests
 			object home = customerType.GetProperty("Home").GetValue(customer, null);
 			System.Type homeType = home.GetType();
 			object phone = homeType.GetProperty("Phone").GetValue(home, null);
-			Assert.AreEqual(typeof(PropertyQueryBuilder<>), phone.GetType().GetGenericTypeDefinition());
+			Assert.AreEqual(typeof(WhereClauseProperty<>), phone.GetType().GetGenericTypeDefinition());
 			object address = homeType.GetProperty("Address").GetValue(home, null);
-			Assert.AreEqual("Query.Where+Query_Address`1", address.GetType().GetGenericTypeDefinition().FullName);
+			Assert.AreEqual("Query.Where+Where_Address`1", address.GetType().GetGenericTypeDefinition().FullName);
 		}
 
 		#region Util Methods

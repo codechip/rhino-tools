@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>cs "D:\OSS\rhino-tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\NHibernate.Query.Generator.Tests.dll" "D:\OSS\rhino-tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\\ActiveRecord\Queries"</StartArguments>
+    <StartArguments>cs "C:\Users\abombss\Documents\Visual Studio 2005\Projects\OSS\rhino-tools-nhqg-2.0\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\NHibernate.Query.Generator.Tests.dll" "C:\Users\abombss\Documents\Visual Studio 2005\Projects\OSS\rhino-tools-nhqg-2.0\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\ActiveRecord\Queries"</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>
@@ -20,5 +20,6 @@
     <ApplicationRevision>0</ApplicationRevision>
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>true</VerifyUploadedFiles>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>

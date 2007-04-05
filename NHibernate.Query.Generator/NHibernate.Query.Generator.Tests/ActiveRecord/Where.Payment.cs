@@ -13,53 +13,53 @@ namespace Query {
     
     public partial class For {
         
-        /// Query Builder for member User
-        public static Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User> User {
+        /// Query Builder for member Payment
+        public static Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Payment> Payment {
             get {
-                return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.User>();
+                return new Query.QueryBuilder<NHibernate.Query.Generator.Tests.ActiveRecord.Payment>();
             }
         }
     }
     
     public partial class Where {
         
-        /// Where for member _root_Where_User
-        static Root_Where_User _root_Where_User = new Root_Where_User();
+        /// Where for member _root_Where_Payment
+        static Root_Where_Payment _root_Where_Payment = new Root_Where_Payment();
         
-        /// Where for member User
-        public static Root_Where_User User {
+        /// Where for member Payment
+        public static Root_Where_Payment Payment {
             get {
-                return _root_Where_User;
+                return _root_Where_Payment;
             }
         }
         
-        /// Where for member Where_User
-        public partial class Where_User<T1> : Query.WhereClause<T1>
+        /// Where for member Where_Payment
+        public partial class Where_Payment<T1> : Query.WhereClause<T1>
          {
             
             /// Where for member .ctor
-            public Where_User(string name, string associationPath) : 
+            public Where_Payment(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
             /// Where for member .ctor
-            public Where_User(string name, string associationPath, bool backTrack) : 
+            public Where_Payment(string name, string associationPath, bool backTrack) : 
                     base(name, associationPath, backTrack) {
             }
             
             /// Where for member 
-            public virtual Query.WhereClauseProperty<T1> Name {
+            public virtual Query.WhereClauseProperty<T1> PayDate {
                 get {
                     string temp = associationPath;
-                    return new Query.WhereClauseProperty<T1>("Name", temp);
+                    return new Query.WhereClauseProperty<T1>("PayDate", temp);
                 }
             }
             
             /// Where for member 
-            public virtual Query.WhereClauseProperty<T1> Email {
+            public virtual Query.WhereClauseProperty<T1> Amount {
                 get {
                     string temp = associationPath;
-                    return new Query.WhereClauseProperty<T1>("Email", temp);
+                    return new Query.WhereClauseProperty<T1>("Amount", temp);
                 }
             }
             
@@ -72,11 +72,11 @@ namespace Query {
             }
         }
         
-        /// Where for member Root_Where_User
-        public partial class Root_Where_User : Where_User<NHibernate.Query.Generator.Tests.ActiveRecord.User> {
+        /// Where for member Root_Where_Payment
+        public partial class Root_Where_Payment : Where_Payment<NHibernate.Query.Generator.Tests.ActiveRecord.Payment> {
             
             /// Where for member .ctor
-            public Root_Where_User() : 
+            public Root_Where_Payment() : 
                     base("this", null) {
             }
         }
@@ -84,60 +84,60 @@ namespace Query {
     
     public partial class ProjectBy {
         
-        /// Projection for member _root_Projection_User
-        static Root_Projection_User _root_Projection_User = new Root_Projection_User();
+        /// Projection for member _root_Projection_Payment
+        static Root_Projection_Payment _root_Projection_Payment = new Root_Projection_Payment();
         
-        /// Projection for member User
-        public static Root_Projection_User User {
+        /// Projection for member Payment
+        public static Root_Projection_Payment Payment {
             get {
-                return _root_Projection_User;
+                return _root_Projection_Payment;
             }
         }
         
-        /// Projection for member Projection_User
-        public partial class Projection_User<T2> : Query.ProjectionEntity<T2>
+        /// Projection for member Projection_Payment
+        public partial class Projection_Payment<T2> : Query.ProjectionEntity<T2>
          {
             
             /// Projection for member .ctor
-            public Projection_User(string name, string associationPath) : 
+            public Projection_Payment(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_User(string name, string associationPath, bool backTrack) : 
+            public Projection_Payment(string name, string associationPath, bool backTrack) : 
                     base(name, associationPath, backTrack) {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Name {
+            public virtual Query.ProjectionClauseProperty<T2> PayDate {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Name", temp);
+                    return new Query.ProjectionClauseProperty<T2>("PayDate", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Email {
+            public virtual Query.ProjectionClauseProperty<T2> Amount {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Email", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Amount", temp);
                 }
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClausePropertyNumeric<T2> Id {
+            public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.ProjectionClausePropertyNumeric<T2>("Id", temp);
+                    return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
         }
         
-        /// Projection for member Root_Projection_User
-        public partial class Root_Projection_User : Projection_User<NHibernate.Query.Generator.Tests.ActiveRecord.User> {
+        /// Projection for member Root_Projection_Payment
+        public partial class Root_Projection_Payment : Projection_Payment<NHibernate.Query.Generator.Tests.ActiveRecord.Payment> {
             
             /// Projection for member .ctor
-            public Root_Projection_User() : 
+            public Root_Projection_Payment() : 
                     base("this", null) {
             }
         }
@@ -145,43 +145,43 @@ namespace Query {
     
     public partial class OrderBy {
         
-        /// OrderBy for member _root_OrderBy_User
-        static Root_OrderBy_User _root_OrderBy_User = new Root_OrderBy_User();
+        /// OrderBy for member _root_OrderBy_Payment
+        static Root_OrderBy_Payment _root_OrderBy_Payment = new Root_OrderBy_Payment();
         
-        /// OrderBy for member User
-        public static Root_OrderBy_User User {
+        /// OrderBy for member Payment
+        public static Root_OrderBy_Payment Payment {
             get {
-                return _root_OrderBy_User;
+                return _root_OrderBy_Payment;
             }
         }
         
-        /// OrderBy for member OrderBy_User
-        public partial class OrderBy_User<T3> : Query.QueryPart
+        /// OrderBy for member OrderBy_Payment
+        public partial class OrderBy_Payment<T3> : Query.QueryPart
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_User(string name, string associationPath) : 
+            public OrderBy_Payment(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_User(string name, string associationPath, bool backTrack) : 
+            public OrderBy_Payment(string name, string associationPath, bool backTrack) : 
                     base(name, associationPath, backTrack) {
             }
             
             /// OrderBy for member 
-            public virtual Query.OrderByClauseProperty<T3> Name {
+            public virtual Query.OrderByClauseProperty<T3> PayDate {
                 get {
                     string temp = associationPath;
-                    return new Query.OrderByClauseProperty<T3>("Name", temp);
+                    return new Query.OrderByClauseProperty<T3>("PayDate", temp);
                 }
             }
             
             /// OrderBy for member 
-            public virtual Query.OrderByClauseProperty<T3> Email {
+            public virtual Query.OrderByClauseProperty<T3> Amount {
                 get {
                     string temp = associationPath;
-                    return new Query.OrderByClauseProperty<T3>("Email", temp);
+                    return new Query.OrderByClauseProperty<T3>("Amount", temp);
                 }
             }
             
@@ -194,11 +194,11 @@ namespace Query {
             }
         }
         
-        /// OrderBy for member Root_OrderBy_User
-        public partial class Root_OrderBy_User : OrderBy_User<NHibernate.Query.Generator.Tests.ActiveRecord.User> {
+        /// OrderBy for member Root_OrderBy_Payment
+        public partial class Root_OrderBy_Payment : OrderBy_Payment<NHibernate.Query.Generator.Tests.ActiveRecord.Payment> {
             
             /// OrderBy for member .ctor
-            public Root_OrderBy_User() : 
+            public Root_OrderBy_Payment() : 
                     base("this", null) {
             }
         }
