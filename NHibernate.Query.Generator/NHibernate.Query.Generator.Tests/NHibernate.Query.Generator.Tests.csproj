@@ -83,8 +83,13 @@
     <Compile Include="ActiveRecord\Comment.cs" />
     <Compile Include="ActiveRecord\Post.cs" />
     <Compile Include="ActiveRecord\User.cs" />
+    <Compile Include="ExtendingWhere.cs" />
+    <Compile Include="FieldProblems.cs" />
+    <Compile Include="GeneratorTests.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestUtil.cs" />
+    <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NHibernate.Query.Generator\NHibernate.Query.Generator.csproj">
