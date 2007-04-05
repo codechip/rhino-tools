@@ -253,20 +253,6 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual(DateTime.Today.AddDays(-7), execute[1][1]);
 		}
 
-
-		[Test]
-		public void CanProjectDistinct()
-		{
-			ProjectionQuery<Payment> query = new ProjectionQuery<Payment>(
-				For.Payment.ProjectBy(ProjectBy.Payment.Distinct() && ProjectBy.Payment.PayDate),
-				OrderBy.Payment.PayDate.Desc,
-				ProjectBy.Payment.Distinct() && ProjectBy.Payment.PayDate);
-			IList<object[]> execute = query.Execute();
-			Assert.AreEqual(2, execute.Count);
-			Assert.AreEqual(DateTime.Today, execute[0][1]);
-			Assert.AreEqual(DateTime.Today.AddDays(-7), execute[1][1]);
-		}
-
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{
