@@ -1,4 +1,4 @@
 <h2>Questions for ${subject.Name}:</h2>
 <?brail 
-component GridComponentWithAutoGenerateColumns, {"source":questions}
+component SmartGridComponent, {"source":questions}
 ?>
