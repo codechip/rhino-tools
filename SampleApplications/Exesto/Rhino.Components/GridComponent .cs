@@ -103,9 +103,9 @@ namespace Rhino.Components
 			}
 			PaginationHelper paginationHelper = (PaginationHelper)Context.ContextVars["PaginationHelper"];
 			StringWriter output = new StringWriter();
-			output.Write(@"<div id='pagination'><span id='paginationLeft'>
+			output.Write(@"<div class='pagination'><span class='paginationLeft'>
 Showing {0} - {1} of {2} 
-</span><span id='paginationRight'>",
+</span><span class='paginationRight'>",
 				page.FirstItem, page.LastItem, page.TotalItems);
 			if (page.HasFirst)
 				CreateLink(output, paginationHelper, 1, "first");
@@ -169,7 +169,7 @@ Showing {0} - {1} of {2}
 			}
 			else
 			{
-				RenderText("<table id='grid'>");
+				RenderText("<table class='grid'>");
 			}
 		}
 
