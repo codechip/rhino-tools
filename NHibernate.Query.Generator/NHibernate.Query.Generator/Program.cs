@@ -160,7 +160,7 @@ namespace NHibernate.Query.Generator
 
         private static bool IsActiveRecordType(System.Type type)
         {
-            foreach (object customAttribute in type.GetCustomAttributes(true))
+            foreach (object customAttribute in type.GetCustomAttributes(false))
             {
                 if (customAttribute.GetType().Name == "ActiveRecordAttribute")
                     return true;
