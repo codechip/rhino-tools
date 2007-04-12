@@ -31,6 +31,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -124,7 +126,7 @@
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Threading\ThreadSafeQueue.cs" />
-    <Compile Include="Threading\WaitForConsumersEvent.cs" />
+    <Compile Include="Threading\CountdownLatch.cs" />
     <Compile Include="ToPublic\SqlCommandSet.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Repositories\Parameter.cs" />
@@ -183,6 +185,9 @@
     <Compile Include="XmlRead.cs" />
     <Compile Include="XmlUpdate.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
