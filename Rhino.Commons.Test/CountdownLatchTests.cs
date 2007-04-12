@@ -7,13 +7,13 @@ using System.Threading;
 namespace Rhino.Commons.Test
 {
     [TestFixture]
-    public class WaitForConsumersEventTests
+    public class CountdownLatchTests
     {
         [Test]
         public void WaitForEventWithTimeout()
         {
-            WaitForConsumersEvent wait = new WaitForConsumersEvent(5);
-            bool result = wait.WaitOne(TimeSpan.FromMilliseconds(5));
+            CountdownLatch countdown = new CountdownLatch(5);
+            bool result = countdown.WaitOne(TimeSpan.FromMilliseconds(5));
             Assert.IsFalse(result);
         }
 
@@ -21,7 +21,7 @@ namespace Rhino.Commons.Test
         public void WaitForEventToRun()
         {
             int count = 5000;
-            WaitForConsumersEvent wait = new WaitForConsumersEvent(count);
+            CountdownLatch countdown = new CountdownLatch(count);
             bool[] done = new bool[count];
             for (int i = 0; i < count; i++)
             {
@@ -29,10 +29,10 @@ namespace Rhino.Commons.Test
                 ThreadPool.QueueUserWorkItem(delegate
                 {
                     done[j] = true;
-                    wait.Set();
+                    countdown.Set();
                 });
             }
-            bool result = wait.WaitOne();
+            bool result = countdown.WaitOne();
             Assert.IsTrue(result);
             for (int i = 0; i < count; i++)
             {
@@ -44,33 +44,33 @@ namespace Rhino.Commons.Test
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Should be zero or greater\r\nParameter name: numberOfConsumers\r\nActual value was -2.")]
         public void WaitForConumersThrowsIfGetsNegativeConsumers()
         {
-            new WaitForConsumersEvent(-2).WaitOne();
+            new CountdownLatch(-2).WaitOne();
         }
 
         [Test]
         public void WaitForConsumersDoesNotWaitIfConsumersAreZero()
         {
-            bool result = new WaitForConsumersEvent(0).WaitOne();
+            bool result = new CountdownLatch(0).WaitOne();
             Assert.IsTrue(result);
         }
 
         [Test]
         public void ResetWaitForConsumers()
         {
-            WaitForConsumersEvent wait = new WaitForConsumersEvent(0);
-            bool result = wait.WaitOne();
+            CountdownLatch countdown = new CountdownLatch(0);
+            bool result = countdown.WaitOne();
             Assert.IsTrue(result);
-            wait.Reset(5);
-            result = wait.WaitOne(TimeSpan.FromMilliseconds(5));
+            countdown.Reset(5);
+            result = countdown.WaitOne(TimeSpan.FromMilliseconds(5));
             Assert.IsFalse(result);
             for (int i = 0; i < 5; i++)
             {
                 ThreadPool.QueueUserWorkItem(delegate
                 {
-                    wait.Set();
+                    countdown.Set();
                 });
             }
-            result = wait.WaitOne();
+            result = countdown.WaitOne();
             Assert.IsTrue(result);
 
         }

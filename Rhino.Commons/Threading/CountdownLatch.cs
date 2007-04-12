@@ -5,12 +5,16 @@ using System.Threading;
 
 namespace Rhino.Commons
 {
-    public class WaitForConsumersEvent : IDisposable
+	/// <summary>
+	/// Allows a master thread to wait for a set of
+	/// subservient threads to complete work.
+	/// </summary>
+    public class CountdownLatch : IDisposable
     {
         int numberOfConsumers;
         ManualResetEvent doneWaitingEvent;
 
-        public WaitForConsumersEvent(int numberOfConsumers)
+        public CountdownLatch(int numberOfConsumers)
         {
             bool initialState = SetConsumers(numberOfConsumers);
             doneWaitingEvent = new ManualResetEvent(initialState);

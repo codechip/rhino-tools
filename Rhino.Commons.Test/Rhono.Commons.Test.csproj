@@ -112,7 +112,7 @@
     <Compile Include="Binsor\Fubar.cs" />
     <Compile Include="StaticReflectionTests.cs" />
     <Compile Include="ValidationTests.cs" />
-    <Compile Include="WaitForConsumersEventTests.cs" />
+    <Compile Include="CountdownLatchTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -126,6 +126,9 @@
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
