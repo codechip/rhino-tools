@@ -4,7 +4,7 @@ using System.IO;
 using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
-using Settings=Rhino.Commons.Properties.Settings;
+using Settings = Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {
@@ -13,13 +13,25 @@ namespace Rhino.Commons
 		static object lockObj = new object();
 		public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 		private static ISessionFactory sessionFactory;
-		
-		public void Init()
+		private static Configuration cfg;
+		private INHibernateInitializationAware initializationAware;
+
+
+		public INHibernateInitializationAware InitializationAware
 		{
-			//we lazy initialize here
+			get { return initializationAware; }
+			set { initializationAware = value; }
 		}
 
-		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection,IUnitOfWorkImplementor previous)
+		public void Init()
+		{
+			if (InitializationAware != null && cfg != null)
+			{
+				InitializationAware.Initialized(cfg, NHibernateSessionFactory);
+			}
+		}
+
+		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
 		{
 			ISession session = CreateSession(maybeUserProvidedConnection);
 			session.FlushMode = FlushMode.Commit;
@@ -29,10 +41,10 @@ namespace Rhino.Commons
 
 		private static ISession CreateSession(IDbConnection maybeUserProvidedConnection)
 		{
-			if (IoC.Container.Kernel.HasComponent(typeof (IInterceptor)))
+			if (IoC.Container.Kernel.HasComponent(typeof(IInterceptor)))
 			{
 				IInterceptor interceptor = IoC.Resolve<IInterceptor>();
-				if(maybeUserProvidedConnection==null)
+				if (maybeUserProvidedConnection == null)
 					return NHibernateSessionFactory.OpenSession(interceptor);
 				return NHibernateSessionFactory.OpenSession(maybeUserProvidedConnection, interceptor);
 			}
@@ -52,7 +64,14 @@ namespace Rhino.Commons
 		public static void RegisterSessionFactory(ISessionFactory factory)
 		{
 			Validation.NotNull(factory, "factory");
+			RegisterSessionFactory(null, factory);
+		}
+
+		public static void RegisterSessionFactory(Configuration cfg, ISessionFactory factory)
+		{
+			Validation.NotNull(factory, "factory");
 			ISessionFactory old = sessionFactory;
+			NHibernateUnitOfWorkFactory.cfg = cfg;
 			sessionFactory = factory;
 			if (old != null)
 			{
@@ -77,14 +96,14 @@ namespace Rhino.Commons
 					{
 						if (sessionFactory != null)
 							return sessionFactory;
-						Configuration cfg = new Configuration();
+						cfg = new Configuration();
 						//if not this, assume loading from app.config
 						string hibernateConfig = Settings.Default.HibernateConfig;
 						//if not rooted, assume path from base directory
 						if (Path.IsPathRooted(hibernateConfig) == false)
 						{
 							hibernateConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-							                               hibernateConfig);
+														   hibernateConfig);
 						}
 						if (File.Exists(hibernateConfig))
 							cfg.Configure(new XmlTextReader(hibernateConfig));
@@ -106,7 +125,7 @@ namespace Rhino.Commons
 		{
 			get
 			{
-				ISession session = (ISession) Local.Data[CurrentNHibernateSessionKey];
+				ISession session = (ISession)Local.Data[CurrentNHibernateSessionKey];
 				if (session == null)
 					throw new InvalidOperationException("You are not in a unit of work");
 				return session;
@@ -117,7 +136,7 @@ namespace Rhino.Commons
 		public void DisposeUnitOfWork(NHibernateUnitOfWorkAdapter adapter)
 		{
 			ISession session = null;
-			if(adapter.Previous!=null)
+			if (adapter.Previous != null)
 				session = adapter.Previous.Session;
 			CurrentNHibernateSession = session;
 			UnitOfWork.DisposeUnitOfWork(adapter);

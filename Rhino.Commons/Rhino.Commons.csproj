@@ -172,6 +172,7 @@
     <Compile Include="Threading\ThreadPool\WorkItemStatus.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
     <Compile Include="UnitOfWork\RhinoTransaction.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
