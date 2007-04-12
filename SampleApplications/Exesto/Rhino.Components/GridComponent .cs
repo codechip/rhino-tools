@@ -169,7 +169,7 @@ Showing {0} - {1} of {2}
 			}
 			else
 			{
-				RenderText("<table class='grid'>");
+				RenderText("<table class='grid' cellspacing='0' cellpadding='0'>");
 			}
 		}
 

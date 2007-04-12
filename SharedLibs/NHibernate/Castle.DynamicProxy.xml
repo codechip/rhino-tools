@@ -605,12 +605,6 @@
             
             </summary>
         </member>
-        <member name="T:Castle.DynamicProxy.IProxy">
-            <summary>
-            A Generic Interface for Proxies which provides 
-            access to the underlying interceptor
-            </summary>
-        </member>
         <member name="T:Castle.DynamicProxy.ProxyGenerator">
             <summary>
             Generates a Java style proxy. This overrides the .Net proxy requirements 

@@ -6,6 +6,7 @@ using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
 using Castle.ActiveRecord.Framework.Scopes;
 using NHibernate;
+using NHibernate.Cfg;
 
 namespace Rhino.Commons
 {
@@ -15,6 +16,14 @@ namespace Rhino.Commons
 		static object lockObj = new object();
 		private static bool initialized = false;
 		private readonly IConfigurationSource configurationSource;
+		private INHibernateInitializationAware initializationAware;
+
+
+		public INHibernateInitializationAware InitializationAware
+		{
+			get { return initializationAware; }
+			set { initializationAware = value; }
+		}
 
 		public ActiveRecordUnitOfWorkFactory(Assembly[] assemblies)
 		{
@@ -52,13 +61,19 @@ namespace Rhino.Commons
 				{
 					if(!initialized)
 					{
+						ActiveRecordStarter.ResetInitializationFlag();
 						ActiveRecordStarter.Initialize(assemblies, configurationSource);
-						
+						if (InitializationAware!=null)
+						{
+							ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
+							Configuration configuration = holder.GetConfiguration(typeof(ActiveRecordBase));
+							ISessionFactory sessionFactory = holder.GetSessionFactory(typeof(ActiveRecordBase));
+							InitializationAware.Initialized(configuration, sessionFactory);
+						}
 						initialized = true;
 					}
 				}
 			}
 		}
-
 	}
 }

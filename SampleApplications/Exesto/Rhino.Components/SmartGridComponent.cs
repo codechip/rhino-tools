@@ -39,6 +39,7 @@ namespace Rhino.Components
 			bool isAlternate = false;
 			foreach (object item in source)
 			{
+				PropertyBag["item"] = item;
 				if (isAlternate)
 					RenderText("<tr class='grid_alternateItem'>");
 				else
@@ -49,11 +50,11 @@ namespace Rhino.Components
 						continue;
 					if (Context.HasSection(property.Name))
 					{
-						PropertyBag["item"] = property.GetValue(item, null);
+						PropertyBag["value"] = property.GetValue(item, null);
 						Context.RenderSection(property.Name);
 						continue;
 					}
-					RenderText("<td>");
+					RenderStartCell();
 					object val = property.GetValue(item, null) ?? "null";
 					RenderText(val.ToString());
 					RenderText("</td>");
@@ -61,6 +62,16 @@ namespace Rhino.Components
 				isAlternate = !isAlternate;
 				RenderText("</tr>");
 			}
+		}
+
+		private void RenderStartCell()
+		{
+			if(Context.HasSection("startCell"))
+			{
+				Context.RenderSection("startCell");
+				return;
+			}
+			RenderText("<td>");
 		}
 
 		protected override void ShowHeader(IEnumerable source)
@@ -83,10 +94,20 @@ namespace Rhino.Components
 					Context.RenderSection(overrideSection);
 					continue;
 				}
-				RenderText("<th class='grid_header'>");
+				RenderHeaderCellStart();
 				RenderText(SplitPascalCase(property.Name));
 				RenderText("</th>");
 			}
+		}
+
+		private void RenderHeaderCellStart()
+		{
+			if(Context.HasSection("startHeaderCell"))
+			{
+				Context.RenderSection("startHeaderCell");
+				return;
+			}
+			RenderText("<th class='grid_header'>");
 		}
 
 
