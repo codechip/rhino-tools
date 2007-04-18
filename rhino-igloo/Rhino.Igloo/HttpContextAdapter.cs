@@ -178,5 +178,15 @@ namespace Rhino.Igloo
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
         }
+
+
+    	/// <summary>
+    	/// Adds the refresh header to refresh the page after the waitTime is over.
+    	/// </summary>
+    	/// <param name="waitTime">The wait time.</param>
+    	public void AddRefreshHeaderAfter(TimeSpan waitTime)
+    	{
+    		context.Response.AddHeader("Refresh", waitTime.Seconds.ToString());
+    	}
     }
 }

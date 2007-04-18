@@ -16,8 +16,9 @@ namespace Rhino.Igloo.Tests
 	    private bool signOutCalled;
 		private IIdentity identity = new GenericIdentity("test");
         private IList<UploadedFile> uploadedFiles = new List<UploadedFile>();
+		private TimeSpan? refreshWaitTime;
 
-	    public void Redirect(string destination)
+		public void Redirect(string destination)
 		{
 			LastRedirectedUrl = destination;
 		}
@@ -106,5 +107,21 @@ namespace Rhino.Igloo.Tests
 	    {
 	        throw new NotImplementedException();
 	    }
+
+
+		/// <summary>
+		/// Adds the refresh header to refresh the page after the waitTime is over.
+		/// </summary>
+		/// <param name="waitTime">The wait time.</param>
+		public void AddRefreshHeaderAfter(TimeSpan waitTime)
+		{
+			this.RefreshWaitTime = waitTime;
+		}
+
+		public TimeSpan? RefreshWaitTime
+		{
+			get { return refreshWaitTime; }
+			set { refreshWaitTime = value; }
+		}
 	}
 }

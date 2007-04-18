@@ -103,15 +103,16 @@ namespace Rhino.Igloo
                 foreach (KeyValuePair<InjectAttribute, PropertyInfo> kvp in membersToInject)
                 {
                     PropertyInfo propertyInfo = kvp.Value;
-                    object instanceToInject = Scope.Input[kvp.Key.Name];
+                    string instanceToInject = Scope.Input[kvp.Key.Name];
 
                     if (instanceToInject == null)
                         continue;
                     try
                     {
 
-                        instanceToInject = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
-                        propertyInfo.SetValue(instance, instanceToInject, null);
+                        object result = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
+						if (result != null)
+							propertyInfo.SetValue(instance, result, null);
                     }
                     catch(Exception e)
                     {
@@ -134,7 +135,7 @@ namespace Rhino.Igloo
             }
         }
 
-        private static object ConvertKey(object instance, object key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
+        private static object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
         {
             if (key == null)
                 return null;

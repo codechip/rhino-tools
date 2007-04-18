@@ -79,5 +79,11 @@ namespace Rhino.Igloo
         /// </summary>
         /// <param name="path">The path.</param>
 	    void EnsureDirectoryExists(string path);
+
+		/// <summary>
+		/// Adds the refresh header to refresh the page after the waitTime is over.
+		/// </summary>
+		/// <param name="waitTime">The wait time.</param>
+		void AddRefreshHeaderAfter(TimeSpan waitTime);
 	}
 }

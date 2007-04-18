@@ -14,7 +14,7 @@ namespace Rhino.Igloo
         /// <param name="type">The type.</param>
         /// <param name="inject">The inject.</param>
         /// <returns></returns>
-        public static object ConvertTo(Type type, object inject)
+        public static object ConvertTo(Type type, string inject)
         {
             if (inject == null)
             {
@@ -25,6 +25,14 @@ namespace Rhino.Igloo
             }
             if (type.IsInstanceOfType(inject))
                 return inject;
+			else if(type == typeof(int))
+			{
+				int temp;
+				if(int.TryParse(inject, out temp))
+					return temp;
+				else 
+					return null;
+			}
             else if (typeof(IConvertible).IsAssignableFrom(type))
                 return Convert.ChangeType(inject, type);
 

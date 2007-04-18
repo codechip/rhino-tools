@@ -2,5 +2,5 @@ using System;
 
 namespace Rhino.Igloo
 {
-	internal sealed class ViewAttribute : Attribute{}
+	public sealed class ViewAttribute : Attribute{}
 }
