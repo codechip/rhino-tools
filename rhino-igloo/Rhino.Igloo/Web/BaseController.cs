@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Castle.Components.Validator;
 using Castle.Core;
 using log4net;
@@ -110,15 +111,25 @@ namespace Rhino.Igloo
         }
 
         /// <summary>
+        /// Tries to parse the date using dd/MM/yyyy format
+        /// </summary>
+        /// <param name="inputName">Name of the input.</param>
+        /// <returns></returns>
+        protected static DateTime? TryParseDate(string inputName)
+        {
+            return TryParseDate(inputName, "dd/MM/yyyy");
+        }
+
+	    /// <summary>
         /// Tries to parse the inputName as date.
         /// </summary>
         /// <param name="inputName">The inputName.</param>
         /// <returns></returns>
-        protected static DateTime? TryParseDate(string inputName)
+        protected static DateTime? TryParseDate(string inputName, params string [] formats)
         {
             DateTime datetime;
             string userInput = Scope.Input[inputName];
-            if (DateTime.TryParse(userInput, out datetime))
+            if (DateTime.TryParseExact(userInput, formats,CultureInfo.InvariantCulture,DateTimeStyles.None,out datetime))
                 return datetime;
             return null;
         }
