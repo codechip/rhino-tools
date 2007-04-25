@@ -74,7 +74,7 @@ namespace Rhino.Igloo
         /// </summary>
         /// <param name="inputName">The inputName.</param>
         /// <returns></returns>
-        protected static bool? TryParseBool(string inputName)
+        protected static bool? TryParseBoolFromInput(string inputName)
         {
             bool b;
             string userInput = Scope.Input[inputName];
@@ -101,7 +101,7 @@ namespace Rhino.Igloo
         /// </summary>
         /// <param name="inputName">The inputName.</param>
         /// <returns></returns>
-        protected static int? TryParseInt32(string inputName)
+        protected static int? TryParseInt32FromInput(string inputName)
         {
             int i;
             string userInput = Scope.Input[inputName];
@@ -111,21 +111,36 @@ namespace Rhino.Igloo
         }
 
         /// <summary>
+        /// Tries the parse userInput as integer.
+        /// </summary>
+        /// <param name="userInput">The user input.</param>
+        /// <returns></returns>
+        protected static int? TryParseInt32(string userInput)
+        {
+            int i;
+            if (int.TryParse(userInput, out i))
+                return i;
+            return null;
+        }
+
+
+        /// <summary>
         /// Tries to parse the date using dd/MM/yyyy format
         /// </summary>
         /// <param name="inputName">Name of the input.</param>
         /// <returns></returns>
-        protected static DateTime? TryParseDate(string inputName)
+        protected static DateTime? TryParseDateFromInput(string inputName)
         {
-            return TryParseDate(inputName, "dd/MM/yyyy");
+            return TryParseDateFromInput(inputName, "dd/MM/yyyy");
         }
 
-	    /// <summary>
+        /// <summary>
         /// Tries to parse the inputName as date.
         /// </summary>
         /// <param name="inputName">The inputName.</param>
+        /// <param name="formats">The formats.</param>
         /// <returns></returns>
-        protected static DateTime? TryParseDate(string inputName, params string [] formats)
+        protected static DateTime? TryParseDateFromInput(string inputName, params string[] formats)
         {
             DateTime datetime;
             string userInput = Scope.Input[inputName];
@@ -156,19 +171,6 @@ namespace Rhino.Igloo
         {
             string maybeId = Scope.Input[inputKey];
             return TryGetByIdString<T>(maybeId);
-        }
-
-        /// <summary>
-        /// Tries to get the text for the input key.
-        /// </summary>
-        /// <param name="inputKey">The input key.</param>
-        /// <returns></returns>
-        protected static string TryGetFromInputText<T>(string inputKey)
-        {
-            string maybeId = Scope.Input[inputKey];
-            if (string.IsNullOrEmpty(maybeId))
-                return null;
-            return maybeId.ToString();
         }
 
         /// <summary>
