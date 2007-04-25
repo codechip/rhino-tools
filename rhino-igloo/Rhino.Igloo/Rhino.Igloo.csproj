@@ -10,7 +10,7 @@
     <RootNamespace>Rhino.Igloo</RootNamespace>
     <AssemblyName>Rhino.Igloo</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>ayende-open-source.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,26 +32,30 @@
   <ItemGroup>
     <Reference Include="Castle.Components.Validator, Version=0.0.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.Components.Validator.dll</HintPath>
+      <HintPath>..\..\SharedLib\Castle.Components.Validator.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLib\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
+      <HintPath>..\..\SharedLib\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=2.0.0.1001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\SharedLib\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Commons, Version=1.5.497.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+    <Reference Include="Rhino.Commons, Version=1.5.532.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\rhino-commons\Rhino.Commons\bin\Rhino.Commons.dll</HintPath>
+      <HintPath>..\..\SharedLib\Rhino.Commons.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLib\System.Web.Extensions.dll</HintPath>
+      <HintPath>..\..\SharedLib\System.Web.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -113,9 +117,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\ayende-open-source.snk">
-      <Link>ayende-open-source.snk</Link>
-    </None>
+    <None Include="ayende-open-source.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
