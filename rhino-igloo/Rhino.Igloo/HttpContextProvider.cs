@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using Rhino.Igloo;
@@ -20,7 +21,7 @@ namespace Rhino.Igloo
 			get
 			{
 				if (HttpContext.Current == null)
-					throw new InvalidOperationException(Resources.CanNotUseHttpContextProviderWhenNotInAWebContext);
+					return new ThrowingContextAdapter();
 				return new HttpContextAdapter(HttpContext.Current);
 			}
 		}
