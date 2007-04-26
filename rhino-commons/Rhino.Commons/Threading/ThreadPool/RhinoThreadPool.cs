@@ -18,12 +18,12 @@ namespace Rhino.Commons
 		/// <summary>
 		/// Guranteed to be called before a work item starts executing
 		/// </summary>
-		public static Proc<WorkItem> WorkStarted = delegate { };
+		public static event Proc<WorkItem> WorkStarted = delegate { };
 
 		/// <summary>
 		/// Guranteed to be called after a work item has finished executing (but not if the thread was forcefully aborted).
 		/// </summary>
-        public static Proc<WorkItem> WorkFinished = delegate { };
+        public static event Proc<WorkItem> WorkFinished = delegate { };
 
 		/// <summary>
 		/// Any modification to this variable should be done under the _callbacks lock!
