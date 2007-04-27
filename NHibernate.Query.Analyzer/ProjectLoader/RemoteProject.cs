@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -182,53 +182,129 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
 				{
 					//doing it like this because want to keep it version safe
-					if(referencedAssembly.FullName.Contains("ActiveRecord"))
+					Assembly arAsm = GetActiveRecordAsembly(assembly);
+					if(arAsm!=null)
 					{
-						AddActiveRecordAssembly(assembly);
+						arAsm.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModel")
+							.GetField("pluralizeTableNames", BindingFlags.Static|BindingFlags.NonPublic)
+							.SetValue(null,pluralizeTableNames);
+						AddActiveRecordAssembly(assembly, arAsm);
 						break;	
 					}
 				}
 			}
 		}
 
-		private void AddActiveRecordAssembly(Assembly assembly)
-		{
-			ActiveRecordModelBuilder activeRecordModelBuilder = new ActiveRecordModelBuilder();
-			List<ActiveRecordModel> models = new List<ActiveRecordModel>();
-			foreach (Type type in assembly.GetTypes())
-			{
-				bool arType = false;
-				foreach (Attribute attribute in type.GetCustomAttributes(true))
-				{
-					if(attribute.GetType().Name == "ActiveRecordAttribute")
-					{
-						arType = true;
-						break;
-					}
-				}
-				if(!arType)
-					continue;
-				usingActiveRecord = true;
-				ActiveRecordModel model = activeRecordModelBuilder.Create(type);
-				if (model == null)
-					continue;
-				models.Add(model);
-				GraphConnectorVisitor graphConnectorVisitor = new GraphConnectorVisitor(activeRecordModelBuilder.Models);
-				graphConnectorVisitor.VisitModel(model);
-			}
+		private void AddActiveRecordAssembly(Assembly asm, Assembly activeRecordAssembly)
+        {
+            if (activeRecordAssembly == null)
+            {
+                throw new InvalidOperationException(string.Format("Could not find Active Record assembly referenced from {0}", asm));
+            }
+            object activeRecordModelBuilder =
+                Activator.CreateInstance(
+                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder"));
+            ArrayList models = new ArrayList();
+            foreach (System.Type type in asm.GetTypes())
+            {
+                if (IsActiveRecordType(type) == false)
+                    continue;
+                object model = Invoke(activeRecordModelBuilder, "Create", type);
+                if (model == null)
+                    continue;
+                models.Add(model);
+            }
 
-			foreach (ActiveRecordModel model in models)
-			{
-				XmlGenerationVisitor xmlVisitor = new XmlGenerationVisitor();
-				SemanticVerifierVisitor semanticVisitor = new SemanticVerifierVisitor(activeRecordModelBuilder.Models);
-				semanticVisitor.VisitNode(model);
-				xmlVisitor.CreateXml(model);
-				cfg.AddXml(xmlVisitor.Xml, model.Type.FullName);
-			}
-			
-			ActiveRecordStarter.ResetInitializationFlag();
-			ActiveRecordStarter.Initialize(assembly, ActiveRecordSectionHandler.Instance);
-		}
+            object graphConnectorVisitor =
+                Activator.CreateInstance(
+                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
+                    new object[] { Get(activeRecordModelBuilder, "Models") });
+
+            Invoke(graphConnectorVisitor, "VisitNodes", models);
+
+            object semanticVisitor =
+                Activator.CreateInstance(
+                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
+                    new object[] { Get(activeRecordModelBuilder, "Models") });
+
+            Invoke(semanticVisitor, "VisitNodes", models);
+
+            foreach (object model in models)
+            {
+                bool isNestedType = (bool)Get(model, "IsNestedType");
+                bool isDiscriminatorSubClass = (bool)Get(model, "IsDiscriminatorSubClass");
+                bool isJoinedSubClass = (bool)Get(model, "IsJoinedSubClass");
+
+                if (!isNestedType && !isDiscriminatorSubClass && !isJoinedSubClass)
+                {
+                    object xmlVisitor =
+                        Activator.CreateInstance(
+                            activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
+
+                    Invoke(xmlVisitor, "CreateXml", model);
+
+                	cfg.AddXmlString((string) Get(xmlVisitor, "Xml"));
+                }
+            }
+
+            object assemblyXmlGenerator =
+                Activator.CreateInstance(
+                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.AssemblyXmlGenerator"),
+                    new object[] { });
+
+            string[] xmls = (string[])Invoke(assemblyXmlGenerator, "CreateXmlConfigurations", asm);
+            foreach (string xml in xmls)
+            {
+                cfg.AddXmlString(xml);
+            }
+
+        }
+
+        private static bool IsActiveRecordType(System.Type type)
+        {
+            foreach (object customAttribute in type.GetCustomAttributes(false))
+            {
+                if (customAttribute.GetType().Name == "ActiveRecordAttribute")
+                    return true;
+            }
+            return false;
+        }
+
+        public static object Invoke(object obj, string name, params object[] args)
+        {
+            return obj.GetType().GetMethod(name).Invoke(obj, args);
+        }
+
+
+        public static object Get(object obj, string name)
+        {
+            return obj.GetType().GetProperty(name).GetValue(obj, null);
+        }
+
+        static List<Assembly> visited = new List<Assembly>();
+		private bool pluralizeTableNames;
+
+		/// <summary>
+        /// This is needed to make sure that we work with different versions of Active Record
+        /// </summary>
+        private static Assembly GetActiveRecordAsembly(Assembly assembly)
+        {
+            if (visited.Contains(assembly))
+                return null;
+            visited.Add(assembly);
+            System.Type type = assembly.GetType("Castle.ActiveRecord.ActiveRecordBase", false);
+            if (type != null)
+                return type.Assembly;
+            foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies())
+            {
+                Assembly refAsm = Assembly.Load(assemblyName);
+                Assembly result = GetActiveRecordAsembly(refAsm);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
 
 		private void LoadMappings(IList mappings)
 		{
@@ -248,24 +324,23 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 					logger.Debug("Loading configurations: " + configuration);
 				cfg.Configure(configuration);
 			}
-			Hashtable props = new Hashtable();
 			string app_config = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
-			LoadFromActiveRecordConfig(app_config, "/configuration/activerecord/config/add", props);
-			if (props.Count > 0)
-			{
-				cfg.Properties = props;
-			}
+			LoadFromActiveRecordConfig(app_config, cfg);
 		}
 
-		private static void LoadFromActiveRecordConfig(string configuration, string path, Hashtable props)
+		private void LoadFromActiveRecordConfig(string configuration, Configuration cfg)
 		{
 			XPathDocument xdoc = new XPathDocument(configuration);
-			foreach (XPathNavigator node in xdoc.CreateNavigator().Select(path))
+			foreach (XPathNavigator node in xdoc.CreateNavigator().Select("/configuration/activerecord/config/add"))
 			{
 				string key = node.GetAttribute("key","");
 				string val = node.GetAttribute("value", "");	
-				props[key] = val;
+				cfg.Properties[key] = val;
 			}
+			XPathNavigator pluralize = xdoc.CreateNavigator().SelectSingleNode("/configuration/activerecord/@pluralizeTableNames");
+			if(pluralize==null)
+				return;
+			this.pluralizeTableNames = "true".Equals(pluralize.Value,StringComparison.InvariantCultureIgnoreCase);
 		}
 
 		#endregion
