@@ -75,6 +75,15 @@
             when needed.
             </remarks>
         </member>
+        <member name="M:Castle.MicroKernel.ComponentActivator.DefaultComponentActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.ComponentActivator.DefaultComponentActivator"/> class.
+            </summary>
+            <param name="model"></param>
+            <param name="kernel"></param>
+            <param name="onCreation"></param>
+            <param name="onDestruction"></param>
+        </member>
         <member name="T:Castle.MicroKernel.ComponentActivator.WebUserControlComponentActivator">
             <summary>
             Attempts to dynamically load a UserControl by invoking Page.LoadControl.  
@@ -1024,6 +1033,19 @@
             Summary description for HandlerException.
             </summary>
         </member>
+        <member name="M:Castle.MicroKernel.Handlers.HandlerException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Handlers.HandlerException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.Handlers.HandlerException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Handlers.HandlerException"/> class.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
+        </member>
         <member name="T:Castle.MicroKernel.HandlerState">
             <summary>
             Possible states for a IHandler instance
@@ -1499,9 +1521,19 @@
             registered
             </summary>
         </member>
+        <member name="M:Castle.MicroKernel.Releasers.LifecycledComponentsReleasePolicy.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Releasers.LifecycledComponentsReleasePolicy"/> class.
+            </summary>
+        </member>
         <member name="T:Castle.MicroKernel.Releasers.NoTrackingReleasePolicy">
             <summary>
             No tracking of component instances are made.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Releasers.NoTrackingReleasePolicy.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Releasers.NoTrackingReleasePolicy"/> class.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Resolvers.DefaultDependencyResolver">
@@ -1620,6 +1652,19 @@
             <summary>
             Summary description for DependencyResolverException.
             </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Resolvers.DependencyResolverException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Resolvers.DependencyResolverException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.Resolvers.DependencyResolverException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Resolvers.DependencyResolverException"/> class.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:Castle.MicroKernel.SubSystems.Configuration.DefaultConfigurationStore">
             <summary>
@@ -1889,6 +1934,20 @@
             <param name="configuration"></param>
             <param name="targetType"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.SubSystems.Conversion.AbstractTypeConverter.CanHandleType(System.Type,Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Returns true if this instance of <c>ITypeConverter</c>
+            is able to handle the specified type with the specified
+            configuration
+            </summary>
+            <param name="type"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+            <remarks>
+            The default behavior is to just pass it to the normal CanHadnleType
+            peeking into the configuration is used for some advanced functionality
+            </remarks>
         </member>
         <member name="M:Castle.MicroKernel.SubSystems.Conversion.GenericDictionaryConverter.#ctor">
             <summary>

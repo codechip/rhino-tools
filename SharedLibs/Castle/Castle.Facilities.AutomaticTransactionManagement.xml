@@ -122,5 +122,10 @@
             Pendent
             </summary>
         </member>
+        <member name="M:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfo.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.AutomaticTransactionManagement.TransactionMetaInfo"/> class.
+            </summary>
+        </member>
     </members>
 </doc>

@@ -33,6 +33,13 @@
             modifications
             </summary>
         </member>
+        <member name="M:Castle.Services.Transaction.ITransaction.SetRollbackOnly">
+            <summary>
+            Signals that this transaction can only be rolledback. 
+            This is used when the transaction is not being managed by
+            the callee.
+            </summary>
+        </member>
         <member name="M:Castle.Services.Transaction.ITransaction.Enlist(Castle.Services.Transaction.IResource)">
             <summary>
             Register a participant on the transaction.
@@ -347,12 +354,6 @@
         <member name="T:Castle.Services.Transaction.StandardTransaction">
             <summary>
             Implements a transaction root.
-            </summary>
-        </member>
-        <member name="M:Castle.Services.Transaction.StandardTransaction.ChildTransactionRolledBack">
-            <summary>
-            Invoked by child transactions, meaning that 
-            some sort of error has occured, so 
             </summary>
         </member>
         <member name="T:Castle.Services.Transaction.ChildTransaction">

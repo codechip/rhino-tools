@@ -509,11 +509,75 @@
             Constructs a DefaultProxyFactory
             </summary>
         </member>
-        <member name="T:Castle.Windsor.WindsorContainer">
+        <member name="T:Castle.Windsor.Proxy.ProxyComponentInspector">
             <summary>
-            Implementation of <see cref="T:Castle.Windsor.IWindsorContainer"/>
-            which delegates to <see cref="T:Castle.MicroKernel.IKernel"/> implementation.
+            Inspects the component configuration looking for information
+            that can influence the generation of a proxy for that component.
             </summary>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Seaches for proxy behavior in the configuration and, if unsuccessful
+            look for the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/> attribute in 
+            the implementation type.
+            </summary>
+            <param name="kernel"></param>
+            <param name="model"></param>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ReadProxyBehaviorFromConfiguration(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Reads the proxy behavior associated with the 
+            component configuration and applies it to the model.
+            </summary>
+            <exception cref="T:System.Configuration.ConfigurationException">
+            If the conversion fails
+            </exception>
+            <param name="kernel"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ReadProxyBehaviorFromType(Castle.Core.ComponentModel)">
+            <summary>
+            Check if the type exposes the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/>.
+            </summary>
+            <param name="model"></param>
+        </member>
+        <member name="T:Castle.Windsor.Proxy.ProxyConstants">
+            <summary>
+            Holds the keys used by the proxy factories.
+            </summary>
+        </member>
+        <member name="F:Castle.Windsor.Proxy.ProxyConstants.ProxyOptionsKey">
+            <summary>
+            Key used to supply custom proxy options.
+            </summary>
+        </member>
+        <member name="T:Castle.Windsor.Proxy.ProxyUtil">
+            <summary>
+            Helper support for proxy configuration.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyUtil.ObtainProxyGenerationOptions(Castle.Core.ComponentModel,System.Boolean)">
+            <summary>
+            Obtains the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> associated with the <see cref="T:Castle.Core.ComponentModel"/>.
+            </summary>
+            <param name="model">The component model.</param>
+            <param name="createOnDemand">true if the options should be created if not present.</param>
+            <returns>The associated proxy options for the component model.</returns>
+        </member>
+        <member name="T:Castle.Windsor.IEnvironmentInfo">
+            <summary>
+            Gets the environment information (name). Implementors should 
+            use to define their environments and how those affect the configuration.
+            It is also used by the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/>
+            to define a flag with the environment name.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IEnvironmentInfo.GetEnvironmentName">
+            <summary>
+            Gets the name of the environment.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Castle.Windsor.IWindsorContainer">
             <summary>
@@ -713,6 +777,12 @@
             <summary>
             Gets or sets the parent container if this instance
             is a sub container.
+            </summary>
+        </member>
+        <member name="T:Castle.Windsor.WindsorContainer">
+            <summary>
+            Implementation of <see cref="T:Castle.Windsor.IWindsorContainer"/>
+            which delegates to <see cref="T:Castle.MicroKernel.IKernel"/> implementation.
             </summary>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.#ctor">
@@ -976,95 +1046,6 @@
             <summary>
             Shortcut to the method <see cref="M:Castle.Windsor.WindsorContainer.Resolve(System.Type)"/>
             </summary>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.AddFacility(System.String,Castle.MicroKernel.IFacility)">
-            <summary>
-            Registers a facility within the kernel.
-            </summary>
-            <param name="key"></param>
-            <param name="facility"></param>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.AddComponent(System.String,System.Type)">
-            <summary>
-            Adds a component to be managed by the container
-            </summary>
-            <param name="key"></param>
-            <param name="classType"></param>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.AddComponent(System.String,System.Type,System.Type)">
-            <summary>
-            Adds a component to be managed by the container
-            </summary>
-            <param name="key"></param>
-            <param name="serviceType"></param>
-            <param name="classType"></param>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.Resolve(System.String)">
-            <summary>
-            Returns a component instance by the key
-            </summary>
-            <param name="key"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.Resolve(System.Type)">
-            <summary>
-            Returns a component instance by the service
-            </summary>
-            <param name="service"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.Release(System.Object)">
-            <summary>
-            Releases a component instance
-            </summary>
-            <param name="instance"></param>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.AddChildContainer(Castle.Windsor.IWindsorContainer)">
-            <summary>
-            Registers a subcontainer. The components exposed
-            by this container will be accessible from subcontainers.
-            </summary>
-            <param name="childContainer"></param>
-        </member>
-        <member name="M:Castle.Windsor.AsyncInitializationContainer.Dispose">
-            <summary>
-            Executes Dispose on underlying <see cref="T:Castle.MicroKernel.IKernel"/>
-            </summary>
-        </member>
-        <member name="P:Castle.Windsor.AsyncInitializationContainer.Kernel">
-            <summary>
-            Returns the inner instance of the MicroKernel
-            </summary>
-        </member>
-        <member name="P:Castle.Windsor.AsyncInitializationContainer.Parent">
-            <summary>
-            Gets or sets the parent container if this instance
-            is a sub container.
-            </summary>
-        </member>
-        <member name="P:Castle.Windsor.AsyncInitializationContainer.Item(System.String)">
-            <summary>
-            Shortcut to the method <see cref="M:Castle.Windsor.AsyncInitializationContainer.Resolve(System.String)"/>
-            </summary>
-        </member>
-        <member name="P:Castle.Windsor.AsyncInitializationContainer.Item(System.Type)">
-            <summary>
-            Shortcut to the method <see cref="M:Castle.Windsor.AsyncInitializationContainer.Resolve(System.Type)"/>
-            </summary>
-        </member>
-        <member name="T:Castle.Windsor.IEnvironmentInfo">
-            <summary>
-            Gets the environment information (name). Implementors should 
-            use to define their environments and how those affect the configuration.
-            It is also used by the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/>
-            to define a flag with the environment name.
-            </summary>
-        </member>
-        <member name="M:Castle.Windsor.IEnvironmentInfo.GetEnvironmentName">
-            <summary>
-            Gets the name of the environment.
-            </summary>
-            <returns></returns>
         </member>
     </members>
 </doc>

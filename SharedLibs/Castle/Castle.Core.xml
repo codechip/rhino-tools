@@ -47,6 +47,22 @@
             </summary>
             <value>The type of the component activator.</value>
         </member>
+        <member name="T:Castle.Core.ComponentProxyBehaviorAttribute">
+            <summary>
+            Specifies the proxying behavior for a component.
+            </summary>
+        </member>
+        <member name="M:Castle.Core.ComponentProxyBehaviorAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/> class.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.ComponentProxyBehaviorAttribute.UseSingleInterfaceProxy">
+            <summary>
+            Determines if the component requires a single interface proxy.
+            </summary>
+            <value><c>true</c> if the component requires a single interface proxy.</value>
+        </member>
         <member name="T:Castle.Core.DoNotWireAttribute">
             <summary>
             Marks as property to be skipped and not be wired
@@ -170,11 +186,30 @@
             New interface that is going to be used by DynamicProxy 2
             </summary>
         </member>
+        <member name="M:Castle.Core.Interceptor.IInvocation.GetConcreteMethod">
+            <summary>
+            Returns the concrete instantiation of <see cref="P:Castle.Core.Interceptor.IInvocation.Method"/>, with any generic parameters bound to real types.
+            </summary>
+            <returns>The concrete instantiation of <see cref="P:Castle.Core.Interceptor.IInvocation.Method"/>, or <see cref="P:Castle.Core.Interceptor.IInvocation.Method"/> if not a generic method.</returns>
+            <remarks>Can be slower than calling <see cref="P:Castle.Core.Interceptor.IInvocation.Method"/>.</remarks>
+        </member>
+        <member name="M:Castle.Core.Interceptor.IInvocation.GetConcreteMethodInvocationTarget">
+            <summary>
+            Returns the concrete instantiation of <see cref="P:Castle.Core.Interceptor.IInvocation.MethodInvocationTarget"/>, with any generic parameters bound to real types.
+            </summary>
+            <returns>The concrete instantiation of <see cref="P:Castle.Core.Interceptor.IInvocation.MethodInvocationTarget"/>, or <see cref="P:Castle.Core.Interceptor.IInvocation.MethodInvocationTarget"/> if not a generic method.</returns>
+            <remarks>Can be slower than calling <see cref="P:Castle.Core.Interceptor.IInvocation.MethodInvocationTarget"/>.</remarks>
+        </member>
         <member name="M:Castle.Core.Interceptor.IInvocation.Proceed">
             <summary>
             
             </summary>
             <returns></returns>
+        </member>
+        <member name="P:Castle.Core.Interceptor.IInvocation.GenericArguments">
+            <summary>
+            The generic arguments of the method, or null if not a generic method.
+            </summary>
         </member>
         <member name="P:Castle.Core.Interceptor.IInvocation.Method">
             <summary>
@@ -201,7 +236,13 @@
         </member>
         <member name="M:Castle.Core.Interceptor.IProxyTargetAccessor.DynProxyGetTarget">
             <summary>
-            
+            Get the proxy target (note that null is a valid target!)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Core.Interceptor.IProxyTargetAccessor.GetInterceptors">
+            <summary>
+            Gets the interceptors for the proxy
             </summary>
             <returns></returns>
         </member>
@@ -1221,6 +1262,28 @@
             It also helps when you have a utility that does not have a logger to supply.
             </summary>
         </member>
+        <member name="T:Castle.Core.Logging.IExtendedLogger">
+            <summary>
+            Provides an interface that supports <see cref="T:Castle.Core.Logging.ILogger"/> and
+            allows the storage and retrieval of Contexts. These are supported in
+            both log4net and NLog.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.GlobalProperties">
+            <summary>
+            Exposes the Global Context of the extended logger. 
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadProperties">
+            <summary>
+            Exposes the Thread Context of the extended logger.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadStacks">
+            <summary>
+            Exposes the Thread Stack of the extended logger.
+            </summary>
+        </member>
         <member name="M:Castle.Core.Logging.NullLogger.#ctor">
             <summary>
             Creates a new <c>NullLogger</c>.
@@ -1549,6 +1612,47 @@
             </summary>
             <value>false</value>
         </member>
+        <member name="P:Castle.Core.Logging.NullLogger.GlobalProperties">
+            <summary>
+            Returns empty context properties.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.NullLogger.ThreadProperties">
+            <summary>
+            Returns empty context properties.
+            </summary>
+        </member>
+        <member name="P:Castle.Core.Logging.NullLogger.ThreadStacks">
+            <summary>
+            Returns empty context stacks.
+            </summary>
+        </member>
+        <member name="T:Castle.Core.Logging.IContextProperties">
+            <summary>
+            Interface for Context Properties implementations
+            </summary>
+            <remarks>
+            <para>
+            This interface defines a basic property get set accessor.
+            </para>
+            <para>
+            Based on the ContextPropertiesBase of log4net, by Nicko Cadell.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:Castle.Core.Logging.IContextProperties.Item(System.String)">
+            <summary>
+            Gets or sets the value of a property
+            </summary>
+            <value>
+            The value for the property with the specified key
+            </value>
+            <remarks>
+            <para>
+            Gets or sets the value of a property
+            </para>
+            </remarks>
+        </member>
         <member name="T:Castle.Core.Logging.StreamLogger">
             <summary>
             The Stream Logger class.  This class can stream log information
@@ -1665,54 +1769,6 @@
             </summary>
             <param name="newName">Ignored</param>
             <returns>This ILogger instance.</returns> 
-        </member>
-        <member name="T:Castle.Core.Logging.IContextProperties">
-            <summary>
-            Interface for Context Properties implementations
-            </summary>
-            <remarks>
-            <para>
-            This interface defines a basic property get set accessor.
-            </para>
-            <para>
-            Based on the ContextPropertiesBase of log4net, by Nicko Cadell.
-            </para>
-            </remarks>
-        </member>
-        <member name="P:Castle.Core.Logging.IContextProperties.Item(System.String)">
-            <summary>
-            Gets or sets the value of a property
-            </summary>
-            <value>
-            The value for the property with the specified key
-            </value>
-            <remarks>
-            <para>
-            Gets or sets the value of a property
-            </para>
-            </remarks>
-        </member>
-        <member name="T:Castle.Core.Logging.IExtendedLogger">
-            <summary>
-            Provides an interface that supports <see cref="T:Castle.Core.Logging.ILogger"/> and
-            allows the storage and retrieval of Contexts. These are supported in
-            both log4net and NLog.
-            </summary>
-        </member>
-        <member name="P:Castle.Core.Logging.IExtendedLogger.GlobalProperties">
-            <summary>
-            Exposes the Global Context of the extended logger. 
-            </summary>
-        </member>
-        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadProperties">
-            <summary>
-            Exposes the Thread Context of the extended logger.
-            </summary>
-        </member>
-        <member name="P:Castle.Core.Logging.IExtendedLogger.ThreadStacks">
-            <summary>
-            Exposes the Thread Stack of the extended logger.
-            </summary>
         </member>
         <member name="T:Castle.Core.Logging.LoggerLevel">
             <summary>
@@ -1938,6 +1994,12 @@
             <summary>
             Summary description for MutableConfiguration.
             </summary>
+        </member>
+        <member name="M:Castle.Core.Configuration.MutableConfiguration.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Core.Configuration.MutableConfiguration"/> class.
+            </summary>
+            <param name="name">The name.</param>
         </member>
         <member name="T:Castle.Core.LifestyleType">
             <summary>

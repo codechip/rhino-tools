@@ -227,12 +227,13 @@
             
             </summary>
         </member>
-        <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.FindMethodOnTargetType(System.Reflection.MethodInfo,System.Type)">
+        <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.FindMethodOnTargetType(System.Reflection.MethodInfo,System.Type,System.Boolean)">
             <summary>
             Finds the type of the method on target.
             </summary>
             <param name="methodOnInterface">The method on interface.</param>
             <param name="proxyTargetType">Type of the proxy target.</param>
+            <param name="checkMixins">if set to <c>true</c> will check implementation on mixins.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.IsTypeEquivalent(System.Type,System.Type)">
@@ -253,11 +254,23 @@
         <member name="T:Castle.DynamicProxy.Serialization.ProxyObjectReference">
             <summary>
             Handles the deserialization of proxies.
+            See here for more details:
+            http://groups.google.com/group/castle-project-devel/msg/fb5ef9656d050ba5
             </summary>
         </member>
         <member name="M:Castle.DynamicProxy.Serialization.ProxyObjectReference.ResetScope">
             <summary>
             Usefull for test cases
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.Serialization.ProxySerializer">
+            <summary>
+            Assists in serializing instances of the generated proxy types so that they can be deserialized via <see cref="T:Castle.DynamicProxy.Serialization.ProxyObjectReference"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.Serialization.ProxySerializer.Indirection">
+            <summary>
+            Used to circumvent a serialization bug, where direct self references and directly held delegates are not deserialized correctly.
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.IProxyGenerationHook">
@@ -297,11 +310,11 @@
         </member>
         <member name="M:Castle.DynamicProxy.IProxyBuilder.CreateClassProxy(System.Type,Castle.DynamicProxy.ProxyGenerationOptions)">
             <summary>
-            Implementors should return a proxy for the specified type
+            Implementors should return a proxy for the specified type.
             </summary>
-            <param name="theClass"></param>
-            <param name="options"></param>
-            <returns></returns>
+            <param name="theClass">The proxy base class.</param>
+            <param name="options">The proxy generation options.</param>
+            <returns>The generated proxy type.</returns>
         </member>
         <member name="M:Castle.DynamicProxy.IProxyBuilder.CreateClassProxy(System.Type,System.Type[],Castle.DynamicProxy.ProxyGenerationOptions)">
             <summary>
@@ -317,7 +330,7 @@
             <summary>
             Implementors should return a proxy for the specified
             interface that 'proceeds' executions to the 
-            specified target
+            specified target.
             </summary>
             <param name="theInterface"></param>
             <param name="interfaces"></param>
@@ -329,7 +342,7 @@
             <summary>
             Implementors should return a proxy for the specified
             interface that delegate all executions to the 
-            specified interceptor(s)
+            specified interceptor(s).
             </summary>
             <param name="theInterface"></param>
             <param name="interfaces"></param>
@@ -383,6 +396,46 @@
             Used to lock the module builder creation
             </summary>
         </member>
+        <member name="M:Castle.DynamicProxy.ModuleScope.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ModuleScope"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.ModuleScope.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ModuleScope"/> class.
+            </summary>
+            <param name="savePhysicalAssembly">if set to <c>true</c> saves the generated module.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ModuleScope.SaveAssembly">
+            <summary>
+            Saves the generated assembly.
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.PersistentProxyBuilder">
+            <summary>
+            ProxyBuilder that persists the generated type.
+            </summary>
+            <remarks>
+            The saved assembly contains just the last generated type.
+            </remarks>
+        </member>
+        <member name="M:Castle.DynamicProxy.PersistentProxyBuilder.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.PersistentProxyBuilder"/> class.
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.ProxyGenerationOptions">
+            <summary>
+            The proxy generation options, note that this is a statefull class with regard to mixin.
+            </summary>
+        </member>
+        <member name="F:Castle.DynamicProxy.ProxyGenerationOptions.Default">
+            <summary>
+            Gets the default options
+            </summary>
+            <value>The default.</value>
+        </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
@@ -393,6 +446,35 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
             </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.AddMixinInterfaceImplementation(System.Object)">
+            <summary>
+            This is required because a mixin may implement more than a single interface.
+            In order to track that, we register them all here, and when we instansiate the proxy, we pass it the 
+            mixins implementations, where each interface has an object that implements it.
+            Example:
+            FooBar foo implements IFoo and IBar
+            
+            proxy ctor would be:
+            
+            public Proxy(IFoo, IBar, IInterceptor[], object target)
+            
+            And will be invoked with:
+            new Proxy(foo, foo, inteceptors, target);
+            </summary>
+            <param name="mixin">The mixin.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.InspectAndRegisterMixinInterfaces">
+            <summary>
+            Because we need to cache the types based on the mixed in mixins, we do the following here:
+             - Get all the mixin interfaces
+             - Sort them by full name
+             - Return them by position
+            
+            The idea is to have reproducable behavior for the case that mixins are registered in different orders.
+            This method is here because it is required 
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.#ctor(Castle.DynamicProxy.IProxyBuilder)">
             <summary>
