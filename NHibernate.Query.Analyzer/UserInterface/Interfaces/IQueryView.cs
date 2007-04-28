@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Data;
 using Ayende.NHibernateQueryAnalyzer.Model;
+using NHibernate;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
 {
@@ -19,5 +20,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
 		void SetParameterMissing(string name, bool missingState);
 		void ShowObjectGraph();
 		IQueryPresenter QueryPresenter { get; }
+        
+
 	}
 }

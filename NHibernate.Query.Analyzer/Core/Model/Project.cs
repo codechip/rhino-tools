@@ -433,6 +433,19 @@ namespace Ayende.NHibernateQueryAnalyzer.Model
             }
         }
 
+        public virtual NHibernate.Cfg.Configuration NHibernateConfiguration
+        {
+            get
+            {
+                return remoteProject.Cfg;
+            }
+        }
+
+        public virtual SortedList MappingFiles
+        {
+            get { return remoteProject.MappingFilesCollection; }
+        }
+
         public virtual IList RunHql(string hql, params TypedParameter[] parameters)
         {
             if (!isProjectBuilt)

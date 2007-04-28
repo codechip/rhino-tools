@@ -2,6 +2,7 @@ using System;
 using Ayende.NHibernateQueryAnalyzer.Model;
 using NHibernate;
 
+
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
 {
 	public interface IQueryPresenter : IPresenter
@@ -19,5 +20,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
 		IQueryView View { get; }
 
 		Query Query { get; }
+        NHibernate.Cfg.Configuration NHibernateConfiguration { get; }
+        System.Collections.SortedList MappingFiles { get; }
+        
 	}
 }

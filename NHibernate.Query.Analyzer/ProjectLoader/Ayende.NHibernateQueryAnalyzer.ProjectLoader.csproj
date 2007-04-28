@@ -86,17 +86,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Dot Net\Downloads\NHibernate 1.2.0\bin\net-2.0\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables, Version=1.2.0.1001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Nullables, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\Nullables.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Dot Net\Downloads\NHibernate 1.2.0\bin\net-2.0\Nullables.dll</HintPath>
     </Reference>
-    <Reference Include="Nullables.NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Nullables.NHibernate, Version=1.2.0.3001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\Nullables.NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Dot Net\Downloads\NHibernate 1.2.0\bin\net-2.0\Nullables.NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

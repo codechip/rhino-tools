@@ -22,6 +22,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 		private IMainView view;
 		private Project currentProject;
 		private IProjectView currentPrjView;
+        private NHibernate.Cfg.Configuration nHibernateConfiguration;
 
 		public IProjectsRepository Repository
 		{
@@ -142,7 +143,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 			Project prj = view.SelectExistingProject();
 			if (prj != null)
 			{
-return DisplayProject(prj);
+                return DisplayProject(prj);
 			}
             return null;
 		}
@@ -154,8 +155,11 @@ return DisplayProject(prj);
 		public void ExecuteActiveQuery()
 		{
 			IQueryView qv = view.ActiveDocument as IQueryView;
-			if (qv != null)
-				qv.QueryPresenter.ExecuteQuery();
+            if (qv != null)
+            {
+                //qv.QueryPresenter.NHibernateConfiguration = 
+                qv.QueryPresenter.ExecuteQuery();
+            }
 		}
 
 		public IQueue Queue
@@ -166,6 +170,7 @@ return DisplayProject(prj);
 		public void AddNewQuery()
 		{
 			IQueryPresenter qp = new QueryPresenter(this);
+            //qp.NHibernateConfiguration = this.nHibernateConfiguration;
 			view.Display(qp.View);
 		}
 
@@ -281,5 +286,16 @@ return DisplayProject(prj);
 			if(CurrentProjectView!=null)
 				view.Title = CurrentProjectView.Title;
 		}
+
+        public NHibernate.Cfg.Configuration NHibernateConfiguration
+        {
+            get { return nHibernateConfiguration; }
+            set { nHibernateConfiguration = value; }
+        }
+
+        public ICollection MappingFiles
+        {
+            get { return currentProject.MappingFiles; }
+        }
 	}
 }

@@ -39,5 +39,6 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
 
 		void CreateNewCfgDocument();
 		void OpenCfgDocument(string name);
+        NHibernate.Cfg.Configuration NHibernateConfiguration { get; set; }
 	}
 }

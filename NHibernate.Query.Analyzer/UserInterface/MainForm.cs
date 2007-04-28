@@ -10,6 +10,7 @@ using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters;
 using log4net;
 using WeifenLuo.WinFormsUI;
+using NHibernate.Cfg;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 {

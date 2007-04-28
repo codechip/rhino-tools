@@ -27,7 +27,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 			ICommand buildProject = new BuildProjectCommand(view, prj, mainPresenter.Repository);
 			mainPresenter.EnqueueCommand(buildProject);
 			view.DisplayProjectState(false, false);
-			view.StartWait("Building project..", 15, 100);
+			view.StartWait("Building project..", 5, 1000);
 		}
 
 		public void EditProject()

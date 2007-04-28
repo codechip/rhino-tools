@@ -6,6 +6,7 @@ using Ayende.NHibernateQueryAnalyzer.UserInterface.Commands;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 using NHibernate;
+using NHibernate.Cfg;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 {
@@ -18,6 +19,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 		private IQueryView view;
 		private Query query;
 		public const string DefaultName = "New Query";
+        private Configuration nHibernateConfiguration;
 
 		public QueryPresenter(IMainPresenter mainPresenter):this(mainPresenter, new Query(DefaultName,string.Empty))
 		{}
@@ -30,6 +32,22 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 		}
 
 		private static Regex parameters = new Regex(@"(?<=:)\w+", RegexOptions.Compiled);
+
+        //public virtual void PopulateEntitiesInEntityExplorer()
+        //{
+        //    mainPresenter.CurrentProject.
+        //}
+
+        public Configuration NHibernateConfiguration
+        {
+            get { return mainPresenter.CurrentProject.NHibernateConfiguration; }
+        }
+
+        public virtual SortedList MappingFiles
+        {
+            get { return mainPresenter.CurrentProject.MappingFiles; }
+        }
+        
 
 		public virtual string TranslateHql()
 		{
@@ -192,6 +210,15 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 			get { return query; }
 			set { query = value; }
 		}
+
+        //public NHibernate.Cfg.Configuration NHibernateConfiguration
+        //{
+        //    get { return mainPresenter.CurrentProject.NHibernateConfiguration; }
+        //    set { nHibernateConfiguration = value; }
+        //}
+
+
+       
 
 	}
 }

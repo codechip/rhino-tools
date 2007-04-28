@@ -16,6 +16,7 @@ using NHibernate.Engine;
 using NHibernate.Hql;
 using NHibernate.Hql.Classic;
 using NHibernate.Type;
+using NHibernate.Mapping;
 
 namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 {
@@ -32,7 +33,10 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		private HqlResultGraph currentHqlGraph;
 		private IList assemblies;
 		private IList basePaths;
-        private static readonly MethodInfo prepareQueryCommand = typeof(QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+
+		private static readonly MethodInfo prepareQueryCommand =
+			typeof (QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+
 		private static readonly MethodInfo getQuery = Type.GetType("NHibernate.Impl.SessionFactoryImpl,NHibernate").GetMethod("GetQuery");
 		private bool usingActiveRecord;
 
@@ -43,6 +47,35 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		public Configuration Cfg
 		{
 			get { return cfg; }
+		}
+
+
+		public SortedList MappingFilesCollection
+		{
+			get
+			{
+				SortedList list = new SortedList();
+
+				foreach (PersistentClass model in cfg.ClassMappings)
+				{
+					string EntityName = model.MappedClass.Name;
+
+					MappingEntity entity = new MappingEntity();
+					entity.EntityName = EntityName;
+					entity.TableName = model.Table.Name;
+
+					foreach (Property property in model.PropertyCollection)
+					{
+						entity.AddProperty(property.Name, property.Type.Name, property.Type.IsEntityType, property.Type.ReturnedClass.Name);
+					}
+
+					Property IdentityProperty = model.IdentifierProperty;
+					entity.AddProperty(IdentityProperty.Name, IdentityProperty.Type.Name, false, IdentityProperty.Type.ReturnedClass.Name);
+					list.Add(entity.EntityName, entity);
+				}
+
+				return list;
+			}
 		}
 
 		public ISessionFactory Factory
@@ -78,7 +111,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public string[] HqlToSql(string hqlQuery, IDictionary parameters)
 		{
-			SessionScope scope=null;
+			SessionScope scope = null;
 			if (usingActiveRecord)
 			{
 				scope = new SessionScope();
@@ -101,8 +134,8 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			}
 			finally
 			{
-				if(scope!=null)
-					scope .Dispose();
+				if (scope != null)
+					scope.Dispose();
 			}
 		}
 
@@ -123,26 +156,27 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		{
 			if (logger.IsDebugEnabled)
 				logger.Debug("Translating HQL Query: " + hqlQuery);
-            IList commands = HqlToCommandList(hqlQuery, qp, session);
-            IList sql = new ArrayList();
-            foreach (IDbCommand command in commands)
-		    {
-                sql.Add(command.CommandText);
-		    }
+			IList commands = HqlToCommandList(hqlQuery, qp, session);
+			IList sql = new ArrayList();
+			foreach (IDbCommand command in commands)
+			{
+				sql.Add(command.CommandText);
+			}
 			return sql;
 		}
 
-        private IList HqlToCommandList(string hqlQuery, QueryParameters qp, ISessionImplementor session)
-        {
-            ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor)factory;
-            IQueryTranslator[] queryTranslators = (IQueryTranslator[])getQuery.Invoke(factoryImplementor, new object[] { hqlQuery, false, null });
-            IList commands = new ArrayList();
-            foreach (IQueryTranslator translator in queryTranslators) {
-                IDbCommand cmd = (IDbCommand)prepareQueryCommand.Invoke(translator, new object[] { qp, false, session });
-                commands.Add(cmd);
-            }
-            return commands;
-        }
+		private IList HqlToCommandList(string hqlQuery, QueryParameters qp, ISessionImplementor session)
+		{
+			ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor) factory;
+			IQueryTranslator[] queryTranslators = (IQueryTranslator[]) getQuery.Invoke(factoryImplementor, new object[] {hqlQuery, false, null});
+			IList commands = new ArrayList();
+			foreach (IQueryTranslator translator in queryTranslators)
+			{
+				IDbCommand cmd = (IDbCommand) prepareQueryCommand.Invoke(translator, new object[] {qp, false, session});
+				commands.Add(cmd);
+			}
+			return commands;
+		}
 
 		private static void AddParameters(TypedParameter[] parameters, IQuery query)
 		{
@@ -161,7 +195,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 			this.basePaths = basePaths;
 			this.assemblies = assemblies;
-            basePaths.Add(AppDomain.CurrentDomain.BaseDirectory);
+			basePaths.Add(AppDomain.CurrentDomain.BaseDirectory);
 			LoadConfigurations(configurations);
 			LoadAssemblies(assemblies);
 			LoadMappings(mappings);
@@ -176,134 +210,133 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				if (logger.IsDebugEnabled)
 					logger.Debug("Loading assembly: " + assemblyFileName);
 				Assembly assembly = LoadAssembly(assemblyFileName);
-                if (!basePaths.Contains(assemblyFileName))
-                    basePaths.Add(Path.GetDirectoryName(assemblyFileName));
+				if (!basePaths.Contains(assemblyFileName))
+					basePaths.Add(Path.GetDirectoryName(assemblyFileName));
 				cfg.AddAssembly(assembly);
 				foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
 				{
 					//doing it like this because want to keep it version safe
 					Assembly arAsm = GetActiveRecordAsembly(assembly);
-					if(arAsm!=null)
+					if (arAsm != null)
 					{
 						arAsm.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModel")
-							.GetField("pluralizeTableNames", BindingFlags.Static|BindingFlags.NonPublic)
-							.SetValue(null,pluralizeTableNames);
+							.GetField("pluralizeTableNames", BindingFlags.Static | BindingFlags.NonPublic)
+							.SetValue(null, pluralizeTableNames);
 						AddActiveRecordAssembly(assembly, arAsm);
-						break;	
+						break;
 					}
 				}
 			}
 		}
 
 		private void AddActiveRecordAssembly(Assembly asm, Assembly activeRecordAssembly)
-        {
-            if (activeRecordAssembly == null)
-            {
-                throw new InvalidOperationException(string.Format("Could not find Active Record assembly referenced from {0}", asm));
-            }
-            object activeRecordModelBuilder =
-                Activator.CreateInstance(
-                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder"));
-            ArrayList models = new ArrayList();
-            foreach (System.Type type in asm.GetTypes())
-            {
-                if (IsActiveRecordType(type) == false)
-                    continue;
-                object model = Invoke(activeRecordModelBuilder, "Create", type);
-                if (model == null)
-                    continue;
-                models.Add(model);
-            }
+		{
+			if (activeRecordAssembly == null)
+			{
+				throw new InvalidOperationException(string.Format("Could not find Active Record assembly referenced from {0}", asm));
+			}
+			object activeRecordModelBuilder =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder"));
+			ArrayList models = new ArrayList();
+			foreach (System.Type type in asm.GetTypes())
+			{
+				if (IsActiveRecordType(type) == false)
+					continue;
+				object model = Invoke(activeRecordModelBuilder, "Create", type);
+				if (model == null)
+					continue;
+				models.Add(model);
+			}
 
-            object graphConnectorVisitor =
-                Activator.CreateInstance(
-                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
-                    new object[] { Get(activeRecordModelBuilder, "Models") });
+			object graphConnectorVisitor =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
+					new object[] {Get(activeRecordModelBuilder, "Models")});
 
-            Invoke(graphConnectorVisitor, "VisitNodes", models);
+			Invoke(graphConnectorVisitor, "VisitNodes", models);
 
-            object semanticVisitor =
-                Activator.CreateInstance(
-                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
-                    new object[] { Get(activeRecordModelBuilder, "Models") });
+			object semanticVisitor =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
+					new object[] {Get(activeRecordModelBuilder, "Models")});
 
-            Invoke(semanticVisitor, "VisitNodes", models);
+			Invoke(semanticVisitor, "VisitNodes", models);
 
-            foreach (object model in models)
-            {
-                bool isNestedType = (bool)Get(model, "IsNestedType");
-                bool isDiscriminatorSubClass = (bool)Get(model, "IsDiscriminatorSubClass");
-                bool isJoinedSubClass = (bool)Get(model, "IsJoinedSubClass");
+			foreach (object model in models)
+			{
+				bool isNestedType = (bool) Get(model, "IsNestedType");
+				bool isDiscriminatorSubClass = (bool) Get(model, "IsDiscriminatorSubClass");
+				bool isJoinedSubClass = (bool) Get(model, "IsJoinedSubClass");
 
-                if (!isNestedType && !isDiscriminatorSubClass && !isJoinedSubClass)
-                {
-                    object xmlVisitor =
-                        Activator.CreateInstance(
-                            activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
+				if (!isNestedType && !isDiscriminatorSubClass && !isJoinedSubClass)
+				{
+					object xmlVisitor =
+						Activator.CreateInstance(
+							activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor"));
 
-                    Invoke(xmlVisitor, "CreateXml", model);
+					Invoke(xmlVisitor, "CreateXml", model);
 
-                	cfg.AddXmlString((string) Get(xmlVisitor, "Xml"));
-                }
-            }
+					cfg.AddXmlString((string) Get(xmlVisitor, "Xml"));
+				}
+			}
 
-            object assemblyXmlGenerator =
-                Activator.CreateInstance(
-                    activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.AssemblyXmlGenerator"),
-                    new object[] { });
+			object assemblyXmlGenerator =
+				Activator.CreateInstance(
+					activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.AssemblyXmlGenerator"),
+					new object[] {});
 
-            string[] xmls = (string[])Invoke(assemblyXmlGenerator, "CreateXmlConfigurations", asm);
-            foreach (string xml in xmls)
-            {
-                cfg.AddXmlString(xml);
-            }
+			string[] xmls = (string[]) Invoke(assemblyXmlGenerator, "CreateXmlConfigurations", asm);
+			foreach (string xml in xmls)
+			{
+				cfg.AddXmlString(xml);
+			}
+		}
 
-        }
+		private static bool IsActiveRecordType(System.Type type)
+		{
+			foreach (object customAttribute in type.GetCustomAttributes(false))
+			{
+				if (customAttribute.GetType().Name == "ActiveRecordAttribute")
+					return true;
+			}
+			return false;
+		}
 
-        private static bool IsActiveRecordType(System.Type type)
-        {
-            foreach (object customAttribute in type.GetCustomAttributes(false))
-            {
-                if (customAttribute.GetType().Name == "ActiveRecordAttribute")
-                    return true;
-            }
-            return false;
-        }
-
-        public static object Invoke(object obj, string name, params object[] args)
-        {
-            return obj.GetType().GetMethod(name).Invoke(obj, args);
-        }
+		public static object Invoke(object obj, string name, params object[] args)
+		{
+			return obj.GetType().GetMethod(name).Invoke(obj, args);
+		}
 
 
-        public static object Get(object obj, string name)
-        {
-            return obj.GetType().GetProperty(name).GetValue(obj, null);
-        }
+		public static object Get(object obj, string name)
+		{
+			return obj.GetType().GetProperty(name).GetValue(obj, null);
+		}
 
-        static List<Assembly> visited = new List<Assembly>();
+		private static List<Assembly> visited = new List<Assembly>();
 		private bool pluralizeTableNames;
 
 		/// <summary>
-        /// This is needed to make sure that we work with different versions of Active Record
-        /// </summary>
-        private static Assembly GetActiveRecordAsembly(Assembly assembly)
-        {
-            if (visited.Contains(assembly))
-                return null;
-            visited.Add(assembly);
-            System.Type type = assembly.GetType("Castle.ActiveRecord.ActiveRecordBase", false);
-            if (type != null)
-                return type.Assembly;
-            foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies())
-            {
-                Assembly refAsm = Assembly.Load(assemblyName);
-                Assembly result = GetActiveRecordAsembly(refAsm);
-                if (result != null)
-                    return result;
-            }
-            return null;
-        }
+		/// This is needed to make sure that we work with different versions of Active Record
+		/// </summary>
+		private static Assembly GetActiveRecordAsembly(Assembly assembly)
+		{
+			if (visited.Contains(assembly))
+				return null;
+			visited.Add(assembly);
+			System.Type type = assembly.GetType("Castle.ActiveRecord.ActiveRecordBase", false);
+			if (type != null)
+				return type.Assembly;
+			foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies())
+			{
+				Assembly refAsm = Assembly.Load(assemblyName);
+				Assembly result = GetActiveRecordAsembly(refAsm);
+				if (result != null)
+					return result;
+			}
+			return null;
+		}
 
 
 		private void LoadMappings(IList mappings)
@@ -333,14 +366,14 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			XPathDocument xdoc = new XPathDocument(configuration);
 			foreach (XPathNavigator node in xdoc.CreateNavigator().Select("/configuration/activerecord/config/add"))
 			{
-				string key = node.GetAttribute("key","");
-				string val = node.GetAttribute("value", "");	
+				string key = node.GetAttribute("key", "");
+				string val = node.GetAttribute("value", "");
 				cfg.Properties[key] = val;
 			}
 			XPathNavigator pluralize = xdoc.CreateNavigator().SelectSingleNode("/configuration/activerecord/@pluralizeTableNames");
-			if(pluralize==null)
+			if (pluralize == null)
 				return;
-			this.pluralizeTableNames = "true".Equals(pluralize.Value,StringComparison.InvariantCultureIgnoreCase);
+			this.pluralizeTableNames = "true".Equals(pluralize.Value, StringComparison.InvariantCultureIgnoreCase);
 		}
 
 		#endregion
@@ -374,18 +407,17 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 						string asmPath = TryGuessAssemblyFilename(assemblyName);
 						asm = Assembly.LoadFrom(asmPath);
 					}
-					
 				}
 				catch (Exception ex)
 				{
 					if (logger.IsErrorEnabled)
 						logger.Error(ex);
 					throw;
-                }
-			    //register loaded assembly
-                loadedAssemblies[assemblyName] = asm; //filename
-                loadedAssemblies[asm.FullName] = asm; //full assembly name
-                loadedAssemblies[asm.GetName().Name] = asm; //short assembly name
+				}
+				//register loaded assembly
+				loadedAssemblies[assemblyName] = asm; //filename
+				loadedAssemblies[asm.FullName] = asm; //full assembly name
+				loadedAssemblies[asm.GetName().Name] = asm; //short assembly name
 			}
 			return asm;
 		}
@@ -393,7 +425,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		private string TryGuessAssemblyFilename(string name)
 		{
 			name = name.Split(',')[0]; //Get just the assembly name
-          	foreach (string path in basePaths)
+			foreach (string path in basePaths)
 			{
 				string filename = Path.Combine(path, name);
 				string dll = filename + ".dll", exe = filename + ".exe";
@@ -408,7 +440,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		public HqlResultGraph RunHql(string hql, params TypedParameter[] parameters)
 		{
 			SessionScope scope = null;
-			if(usingActiveRecord)
+			if (usingActiveRecord)
 			{
 				scope = new SessionScope();
 			}
@@ -433,7 +465,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			}
 			finally
 			{
-				if(scope!=null)
+				if (scope != null)
 					scope.Dispose();
 			}
 		}
@@ -445,7 +477,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		private static bool ExceptionStackSerializable(Exception ex)
 		{
 			return ex.GetType().IsSerializable && (ex.InnerException == null || //If null, then it's true and the rest won't get evaluate.
-				ExceptionStackSerializable(ex.InnerException));
+			                                       ExceptionStackSerializable(ex.InnerException));
 		}
 
 		public HqlResultGraph CurrentHqlGraph
@@ -478,26 +510,25 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			if (usingActiveRecord)
 			{
 				scope = new SessionScope();
-			} 
+			}
 			try
 			{
 				using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
 				{
-					
-						IList commands = HqlToCommandList(hqlQuery, TypedParameterToQueryParameter(parameters), session);
-					    DataSet ds = new DataSet();
-                        foreach (IDbCommand command in commands)
-					    {
-                            using (command)
-                            {
-                                command.Connection = session.Connection;
-                                using (IDataReader reader = command.ExecuteReader())
-                                {
-                                    AddResultsToDataSet(reader, ds);
-                                }
-                            }
-					    }
-                        return ds;
+					IList commands = HqlToCommandList(hqlQuery, TypedParameterToQueryParameter(parameters), session);
+					DataSet ds = new DataSet();
+					foreach (IDbCommand command in commands)
+					{
+						using (command)
+						{
+							command.Connection = session.Connection;
+							using (IDataReader reader = command.ExecuteReader())
+							{
+								AddResultsToDataSet(reader, ds);
+							}
+						}
+					}
+					return ds;
 				}
 			}
 			catch (Exception ex)
@@ -512,19 +543,19 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			}
 			finally
 			{
-				if(scope!=null)
+				if (scope != null)
 				{
 					scope.Dispose();
 				}
 			}
 		}
 
-	    private void AddResultsToDataSet(IDataReader reader, DataSet ds)
+		private void AddResultsToDataSet(IDataReader reader, DataSet ds)
 		{
 			int ordinal;
 			DataRow row;
 			DataTable table;
-		    table = CreateSchema(ds, reader.GetSchemaTable());
+			table = CreateSchema(ds, reader.GetSchemaTable());
 			while (reader.Read())
 			{
 				row = table.NewRow();
@@ -555,7 +586,6 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 				{
 					ds.Tables[table].Columns.Add(column);
 					ds.Tables[table].Columns[column].DataType = (Type) row["DataType"];
-
 				}
 			}
 			return ds.Tables[table];
@@ -583,6 +613,5 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 			}
 			return ht;
 		}
-
 	}
 }
