@@ -11,8 +11,6 @@ using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 {
-	
-
 	[TestFixture]
 	//[Category("Integration")]
 	public class BuildingProjectTests

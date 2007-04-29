@@ -27,8 +27,8 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.IntegrationTests
 
 		#region Sql & Hql statements
 
-		public const string parametrizedOneSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=@p0)";
-		public const string nonParametrizedSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=1)";
+		public const string parametrizedOneSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=@p0 )";
+		public const string nonParametrizedSql = "select testprojec0_._id as column1_0_, testprojec0_.Data as Data0_ from TestFile testprojec0_ where (testprojec0_._id=1 )";
 		public const string parametrizedOne = "from TestProject tp where tp.Id = :id";
 		public const string nonParametrized = "from TestProject tp where tp.Id = 1";
 

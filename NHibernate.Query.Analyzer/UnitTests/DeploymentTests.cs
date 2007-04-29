@@ -42,7 +42,6 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests
 											  "Ayende.NHibernateQueryAnalyzer.ProjectLoader.dll",
 											  "Ayende.NHibernateQueryAnalyzer.UnitTests.dll",
 											  "Ayende.NHibernateQueryAnalyzer.Utilities.dll",
-											  "Castle.DynamicProxy.dll",
 											  "Iesi.Collections.dll",
 											  "log4net.dll",
 											  "NHibernate.dll",
