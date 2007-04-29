@@ -552,14 +552,50 @@
             Key used to supply custom proxy options.
             </summary>
         </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyOptions.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyOptions.AddAdditionalInterfaces(System.Type[])">
+            <summary>
+            Adds the additional interfaces to proxy.
+            </summary>
+            <param name="interfaces">The interfaces.</param>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyOptions.Equals(System.Object)">
+            <summary>
+            Equalses the specified obj.
+            </summary>
+            <param name="obj">The obj.</param>
+            <returns>true if equal.</returns>
+        </member>
+        <member name="M:Castle.Windsor.Proxy.ProxyOptions.GetHashCode">
+            <summary>
+            Gets the hash code.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Windsor.Proxy.ProxyOptions.AdditionalInterfaces">
+            <summary>
+            Gets the additional interfaces to proxy.
+            </summary>
+            <value>The interfaces.</value>
+        </member>
         <member name="T:Castle.Windsor.Proxy.ProxyUtil">
             <summary>
             Helper support for proxy configuration.
             </summary>
         </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyUtil.ObtainProxyGenerationOptions(Castle.Core.ComponentModel,System.Boolean)">
+        <member name="M:Castle.Windsor.Proxy.ProxyUtil.ObtainProxyOptions(Castle.Core.ComponentModel,System.Boolean)">
             <summary>
-            Obtains the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> associated with the <see cref="T:Castle.Core.ComponentModel"/>.
+            Obtains the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> associated with the <see cref="T:Castle.Core.ComponentModel"/>.
             </summary>
             <param name="model">The component model.</param>
             <param name="createOnDemand">true if the options should be created if not present.</param>

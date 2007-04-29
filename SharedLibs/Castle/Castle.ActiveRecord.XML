@@ -796,6 +796,76 @@
             </summary>
             <value>The unsaved value.</value>
         </member>
+        <member name="T:Castle.ActiveRecord.CompositeUserTypeAttribute">
+            <summary>
+            Maps the property to db using a NHibernate's <see cref="T:NHibernate.UserTypes.ICompositeUserType"/>.
+            </summary>
+            <remarks>
+            You should specify the column names and the ICompositeUserType implementor.
+            </remarks>
+            <example>
+            <code>
+            	[CompositeUserType(typeof(DoubleStringType), new string[] {"Product_FirstName", "Product_LastName"})]
+            	public string[] Name
+            	{
+            		get { return name; }
+            		set { name = value; }
+            	}
+            </code>
+            or 
+            <code>
+            	[CompositeUserType(
+            		typeof(DoubleStringType), 
+            		new string[]{"Manufacturer_FirstName", "Manufacturer_LastName"}, 
+            		Length = new int[] {4, 5} )]
+            	public string[] ManufacturerName
+            	{
+            		get { return manufacturerName; }
+            		set { manufacturerName = value; }
+            	}
+            </code>
+            </example>
+        </member>
+        <member name="M:Castle.ActiveRecord.CompositeUserTypeAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.CompositeUserTypeAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.CompositeUserTypeAttribute.#ctor(System.Type,System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.CompositeUserTypeAttribute"/> class.
+            </summary>
+            <param name="compositeType">Type of the ICompositeUserType implmentor.</param>
+            <param name="columnNames">The column names.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.CompositeUserTypeAttribute.CompositeType">
+            <summary>
+            Gets or sets the type of the ICompositeUserType implementor.
+            </summary>
+            <value>The type of the composite.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.CompositeUserTypeAttribute.ColumnNames">
+            <summary>
+            Gets or sets the column names.
+            </summary>
+            <value>The column names.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.CompositeUserTypeAttribute.Length">
+            <summary>
+            Gets or sets the length of the columns.
+            </summary>
+            <value>The columns length.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.CompositeUserTypeAttribute.Update">
+            <summary>
+            Set to <c>false</c> to ignore this property when updating entities of this ActiveRecord class.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.CompositeUserTypeAttribute.Insert">
+            <summary>
+            Set to <c>false</c> to ignore this property when inserting entities of this ActiveRecord class.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.OptimisticLocking">
             <summary>
             Defines the values for optimistic locking
@@ -2960,6 +3030,12 @@
             </summary>
             <value><c>true</c> if should use auto import; otherwise, <c>false</c>.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.CompositeUserType">
+            <summary>
+            Gets the composite user types properties.
+            </summary>
+            <value>The type of the composite user.</value>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.AnyModel">
             <summary>
             Model for [Any] association, a polymorphic assoication without common base class
@@ -3091,6 +3167,36 @@
             Gets the composite key att.
             </summary>
             <value>The composite key att.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel">
+            <summary>
+            Model for representing a Composite User type map.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.CompositeUserTypeAttribute)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel"/> class.
+            </summary>
+            <param name="prop">The property marked with the attribute.</param>
+            <param name="attribute">The metadata attribute.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Accept(Castle.ActiveRecord.Framework.Internal.IVisitor)">
+            <summary>
+            Accepts the specified visitor and call the relevant IVisitor.Visit***() method
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Property">
+            <summary>
+            Gets the property marked with the attribute.
+            </summary>
+            <value>The property.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Attribute">
+            <summary>
+            Gets the attribute instance.
+            </summary>
+            <value>The attribute.</value>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.DependentObjectModel">
             <summary>
@@ -3731,6 +3837,12 @@
             </summary>
             <param name="model">The model.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IVisitor.VisitCompositeUserType(Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel)">
+            <summary>
+            Visits the custom composite user type.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitNode(Castle.ActiveRecord.Framework.Internal.IVisitable)">
             <summary>
             Visits the node.
@@ -3868,6 +3980,12 @@
             Visits the Dependent Object א
             </summary>
             <param name="model">The model</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitCompositeUserType(Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel)">
+            <summary>
+            Visits the custom composite user type.
+            </summary>
+            <param name="model">The model.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.GuessType(System.Type,System.Type)">
             <summary>
@@ -4223,6 +4341,12 @@
         <member name="M:Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor.VisitHilo(Castle.ActiveRecord.Framework.Internal.HiloModel)">
             <summary>
             Visits the hilo.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor.VisitCompositeUserType(Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel)">
+            <summary>
+            Visits the custom composite user type.
             </summary>
             <param name="model">The model.</param>
         </member>
@@ -8662,18 +8786,18 @@
             </summary>
             <value>The instance.</value>
         </member>
-        <member name="T:Castle.ActiveRecord.Framework.InterceptorFacotry">
+        <member name="T:Castle.ActiveRecord.Framework.InterceptorFactory">
             <summary>
             Create an interceptor for the session.
             Allow to override the default for creating the intercetor
             </summary>
         </member>
-        <member name="F:Castle.ActiveRecord.Framework.InterceptorFacotry.Create">
+        <member name="F:Castle.ActiveRecord.Framework.InterceptorFactory.Create">
             <summary>
             Create the 
             </summary>
         </member>
-        <member name="T:Castle.ActiveRecord.Framework.InterceptorFacotry.CreateInterceptor">
+        <member name="T:Castle.ActiveRecord.Framework.InterceptorFactory.CreateInterceptor">
             <summary>
             Creates an instance of the interceptor
             </summary>

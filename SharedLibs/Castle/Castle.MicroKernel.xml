@@ -194,32 +194,32 @@
             with difference model. (See IoC 51 for the details)
             </summary>
         </member>
-        <member name="T:Castle.MicroKernel.Exceptions.CircularDependecyException">
+        <member name="T:Castle.MicroKernel.Exceptions.CircularDependencyException">
             <summary>
             Exception throw when a circular dependency is detected
             </summary>
         </member>
-        <member name="M:Castle.MicroKernel.Exceptions.CircularDependecyException.#ctor">
+        <member name="M:Castle.MicroKernel.Exceptions.CircularDependencyException.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependecyException"/> class.
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependencyException"/> class.
             </summary>
         </member>
-        <member name="M:Castle.MicroKernel.Exceptions.CircularDependecyException.#ctor(System.String)">
+        <member name="M:Castle.MicroKernel.Exceptions.CircularDependencyException.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependecyException"/> class.
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependencyException"/> class.
             </summary>
             <param name="message">The message.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Exceptions.CircularDependecyException.#ctor(System.String,System.Exception)">
+        <member name="M:Castle.MicroKernel.Exceptions.CircularDependencyException.#ctor(System.String,System.Exception)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependecyException"/> class.
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependencyException"/> class.
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Exceptions.CircularDependecyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:Castle.MicroKernel.Exceptions.CircularDependencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependecyException"/> class.
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependencyException"/> class.
             </summary>
             <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
             <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
