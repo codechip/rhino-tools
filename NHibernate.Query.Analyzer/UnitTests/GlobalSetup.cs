@@ -11,7 +11,7 @@ using MbUnit.Framework;
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests
 {
 	[TestFixture]
-	public class GlobalSetup
+	public static class GlobalSetup
 	{
 		[SetUp]
 		public static void Setup()

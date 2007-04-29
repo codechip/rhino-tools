@@ -117,7 +117,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
-    <PreBuildEvent>"NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
   </PropertyGroup>
 </Project>
