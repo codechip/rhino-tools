@@ -114,5 +114,12 @@ namespace Rhino.Igloo
 		/// </summary>
 		/// <param name="waitTime">The wait time.</param>
 		void AddRefreshHeaderAfter(TimeSpan waitTime);
+
+		/// <summary>
+		/// Adds the refresh header to refresh the page after the waitTime is over.
+		/// </summary>
+		/// <param name="url">The URL.</param>
+		/// <param name="waitTime">The wait time.</param>
+		void AddRefreshHeaderAfter(string url, TimeSpan waitTime);
 	}
 }

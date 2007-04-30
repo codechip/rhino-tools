@@ -80,12 +80,13 @@ namespace Rhino.Igloo
         {
             if (key == null)
                 throw new ArgumentNullException("key", "The key cannnot be null");
-            foreach (string formKey in context.Request.Form.AllKeys)
+			string aspNetFormKey = "$" + key;
+			foreach (string formKey in context.Request.Form.AllKeys)
             {
-                if (formKey != null && formKey.EndsWith(key))
+            	if (formKey != null && formKey.EndsWith(aspNetFormKey))
                     return context.Request.Form[formKey];
             }
-            return context.Request.QueryString[key];
+        	return context.Request.QueryString[key];
         }
 
 
@@ -97,9 +98,10 @@ namespace Rhino.Igloo
         {
             if (key == null)
                 throw new ArgumentNullException("key", "The key cannnot be null");
-            foreach (string formKey in context.Request.Form.AllKeys)
+			string aspNetFormKey = "$" + key;
+			foreach (string formKey in context.Request.Form.AllKeys)
             {
-                if (formKey != null && formKey.EndsWith(key))
+				if (formKey != null && formKey.EndsWith(aspNetFormKey))
                     return context.Request.Form.GetValues(formKey);
             }
             return context.Request.QueryString.GetValues(key); 
@@ -217,5 +219,16 @@ namespace Rhino.Igloo
     	{
     		context.Response.AddHeader("Refresh", waitTime.Seconds.ToString());
     	}
+
+		/// <summary>
+		/// Adds the refresh header to refresh the page after the waitTime is over.
+		/// </summary>
+		/// <param name="url">The URL.</param>
+		/// <param name="waitTime">The wait time.</param>
+		public void AddRefreshHeaderAfter(string url, TimeSpan waitTime)
+		{
+			url = ((Page)context.Handler).ResolveUrl(url);
+			context.Response.AddHeader("Refresh", string.Format("{0}; URL={1}", waitTime.Seconds, url));
+		}
     }
 }

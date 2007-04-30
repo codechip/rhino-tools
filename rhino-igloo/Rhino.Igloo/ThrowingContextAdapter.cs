@@ -144,5 +144,15 @@ namespace Rhino.Igloo
 		{
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
+
+		/// <summary>
+		/// Adds the refresh header to refresh the page after the waitTime is over.
+		/// </summary>
+		/// <param name="url">The URL.</param>
+		/// <param name="waitTime">The wait time.</param>
+		public void AddRefreshHeaderAfter(string url, TimeSpan waitTime)
+		{
+			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+		}
 	}
 }

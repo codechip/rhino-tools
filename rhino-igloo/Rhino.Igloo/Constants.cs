@@ -34,6 +34,11 @@ namespace Rhino.Igloo
 	/// </summary>
 	public class Constants
 	{
+		/// <summary>
+		/// Redirect
+		/// </summary>
+		public const string Redirect = "Redirect";
+
 	    /// <summary>
         /// ErrorMessage
         /// </summary>
