@@ -83,7 +83,7 @@ namespace Rhino.Igloo
 			string aspNetFormKey = "$" + key;
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
-            	if (formKey != null && formKey.EndsWith(aspNetFormKey))
+            	if (formKey != null && (formKey.EndsWith(aspNetFormKey) || key == formKey) )
                     return context.Request.Form[formKey];
             }
         	return context.Request.QueryString[key];
@@ -101,7 +101,7 @@ namespace Rhino.Igloo
 			string aspNetFormKey = "$" + key;
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
-				if (formKey != null && formKey.EndsWith(aspNetFormKey))
+				if (formKey != null && (formKey.EndsWith(aspNetFormKey) || key==formKey) )
                     return context.Request.Form.GetValues(formKey);
             }
             return context.Request.QueryString.GetValues(key); 
