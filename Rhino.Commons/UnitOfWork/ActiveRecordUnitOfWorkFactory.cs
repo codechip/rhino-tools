@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,8 +25,8 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using System;
 using System.Data;
@@ -42,7 +43,7 @@ namespace Rhino.Commons
 	public class ActiveRecordUnitOfWorkFactory : IUnitOfWorkFactory
 	{
 		private readonly Assembly[] assemblies;
-		static object lockObj = new object();
+		private static object lockObj = new object();
 		private static bool initialized = false;
 		private readonly IConfigurationSource configurationSource;
 		private INHibernateInitializationAware initializationAware;
@@ -84,24 +85,38 @@ namespace Rhino.Commons
 
 		private void InitializeIfNeccecary()
 		{
-			if(!initialized)
+			if (!initialized)
 			{
-				lock(lockObj)
+				lock (lockObj)
 				{
-					if(!initialized)
+					if (!initialized)
 					{
 						ActiveRecordStarter.ResetInitializationFlag();
 						ActiveRecordStarter.Initialize(assemblies, configurationSource);
-						if (InitializationAware!=null)
+						if (InitializationAware != null)
 						{
 							ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-							Configuration configuration = holder.GetConfiguration(typeof(ActiveRecordBase));
-							ISessionFactory sessionFactory = holder.GetSessionFactory(typeof(ActiveRecordBase));
+							Configuration configuration = holder.GetConfiguration(typeof (ActiveRecordBase));
+							ISessionFactory sessionFactory = holder.GetSessionFactory(typeof (ActiveRecordBase));
 							InitializationAware.Initialized(configuration, sessionFactory);
 						}
 						initialized = true;
 					}
 				}
+			}
+		}
+
+		public static ISession CurrentSession
+		{
+			get
+			{
+				ISessionScope scope = SessionScope.Current;
+				if (scope == null)
+					throw new InvalidOperationException("You are not in a unit of work");
+				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
+				ISessionFactory sessionFactory = holder.GetSessionFactory(typeof (ActiveRecordBase));
+
+				return holder.CreateSession(typeof (ActiveRecordBase));
 			}
 		}
 	}
