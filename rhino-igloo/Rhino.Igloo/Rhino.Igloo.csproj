@@ -102,6 +102,9 @@
     <Compile Include="Web\BaseScriptService.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Web\BaseWebService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Web\CommonWebUI.cs" />
     <Compile Include="Web\ComponentRepository.cs" />
     <Compile Include="Web\InjectAttribute.cs" />
