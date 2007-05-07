@@ -178,6 +178,21 @@ namespace Rhino.Igloo
             return null;
         }
 
+
+        /// <summary>
+        /// Tries the parse date.
+        /// </summary>
+        /// <param name="userInput">The user input.</param>
+        /// <param name="formats">The formats.</param>
+        /// <returns></returns>
+        protected static DateTime? TryParseDate(string userInput, params string[] formats)
+        {
+            DateTime datetime;
+            
+            if (DateTime.TryParseExact(userInput, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out datetime))
+                return datetime;
+            return null;
+        }
         /// <summary>
         /// Tries to get the value for the input key.
         /// </summary>

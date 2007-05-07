@@ -86,6 +86,9 @@ namespace Rhino.Igloo
 
             foreach (PropertyInfo info in controllersToInject)
             {
+                if(info.CanWrite==false)
+                    return;
+
                 object controller = IoC.Container.Resolve(info.PropertyType);
                 info.SetValue(instance, controller, null);
             }
