@@ -71,6 +71,7 @@ namespace Bumbler
 					case SqlDataType.Real:
 						return typeof(float).FullName;
 					case SqlDataType.Int:
+					case SqlDataType.TinyInt:
 						return typeof(int).FullName;
 					case SqlDataType.DateTime:
 					case SqlDataType.SmallDateTime:
@@ -89,6 +90,8 @@ namespace Bumbler
 						return typeof(short).FullName;
 					case SqlDataType.Bit:
 						return typeof(bool).FullName;
+					case SqlDataType.UniqueIdentifier:
+						return typeof(Guid).FullName;
 					default:
 						throw new NotSupportedException(column.DataType.SqlDataType.ToString());
 				}
