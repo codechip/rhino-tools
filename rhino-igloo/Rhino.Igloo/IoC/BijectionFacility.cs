@@ -65,7 +65,7 @@ namespace Rhino.Igloo
             // Added a ComponentCache Repository to track it
             Kernel.AddComponent("component.repository", typeof(ComponentRepository));
             Kernel.ComponentModelBuilder.AddContributor(new InjectionInspector());
-            Kernel.ComponentCreated += new Castle.MicroKernel.ComponentInstanceDelegate(Kernel_ComponentCreated);
+            Kernel.ComponentCreated += Kernel_ComponentCreated;
             RegisterViewComponent();
             RegisterControllers();
         }

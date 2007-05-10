@@ -74,13 +74,6 @@ namespace Rhino.Igloo
         /// <param name="model">The component model</param>
         public void ProcessModel(IKernel kernel, ComponentModel model)
         {
-            RetrieveInMembers(model);
-        }
-
-        #endregion
-
-        private void RetrieveInMembers(ComponentModel model)
-        {
             PropertyInfo[] properties = model.Implementation.GetProperties(BINDING_FLAGS_SET);
 
             IDictionary<InjectAttribute, PropertyInfo> inMembers = new Dictionary<InjectAttribute, PropertyInfo>();
@@ -102,6 +95,7 @@ namespace Rhino.Igloo
             }
             model.ExtendedProperties[InMembers] = inMembers;
             model.ExtendedProperties[InEntityMembers] = inEntityMembers;
-        }
-    }
+		}
+		#endregion
+	}
 }
