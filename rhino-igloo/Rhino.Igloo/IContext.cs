@@ -85,10 +85,10 @@ namespace Rhino.Igloo
 	    void SignOut();
 
 		/// <summary>
-		/// Gets the identity of the current user
+		/// Gets the principal of the current user
 		/// </summary>
 		/// <value>The identity.</value>
-		IIdentity Identity { get; }
+		IPrincipal CurrentUser { get; }
 
         /// <summary>
         /// Gets the uploaded files.

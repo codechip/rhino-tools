@@ -43,7 +43,7 @@ namespace Rhino.Igloo.Tests
 		private IDictionary<string, object> session = new Dictionary<string, object>();
 	    private string lastUser;
 	    private bool signOutCalled;
-		private IIdentity identity = new GenericIdentity("test");
+		private IPrincipal principal = new GenericPrincipal(new GenericIdentity("test"), null);
         private IList<UploadedFile> uploadedFiles = new List<UploadedFile>();
 		private TimeSpan? refreshWaitTime;
 		private string refreshUrl;
@@ -118,10 +118,11 @@ namespace Rhino.Igloo.Tests
 	        signOutCalled = true;
 	    }
 
-		public IIdentity Identity
-		{
-			get { return identity; }
-		}
+
+	    public IPrincipal CurrentUser
+	    {
+            get { return principal; }
+	    }
 
 	    public IList<UploadedFile> UploadedFiles
 	    {

@@ -159,12 +159,12 @@ namespace Rhino.Igloo
 
 
         /// <summary>
-        /// Gets the identity.
+        /// Gets the principal of the current user.
         /// </summary>
-        /// <value>The identity.</value>
-        public IIdentity Identity
+        /// <value>The principal.</value>
+        public IPrincipal CurrentUser
         {
-            get { return context.User.Identity; }
+            get { return context.User; }
         }
 
         /// <summary>

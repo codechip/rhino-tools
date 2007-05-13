@@ -99,16 +99,13 @@ namespace Rhino.Igloo
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
 
-		/// <summary>
-		/// Gets the identity of the current user
-		/// </summary>
-		/// <value>The identity.</value>
-		public IIdentity Identity
-		{
-			get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); }
-		}
 
-		/// <summary>
+	    public IPrincipal CurrentUser
+	    {
+            get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); } 
+	    }
+
+	    /// <summary>
 		/// Gets the uploaded files.
 		/// </summary>
 		/// <value>The uploaded files.</value>
