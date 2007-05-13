@@ -2,7 +2,11 @@
   <CompletionStatisticsManager />
   <EditorManager>
     <RecentFiles>
-      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/f:Program.cs" caret="245" scrollPosition="0|0" />
+      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/f:Program.cs" caret="0" scrollPosition="0|0" />
+      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/d:Mapping/f:OneToManyMapping.cs" caret="0" scrollPosition="0|0" />
+      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/d:Mapping/f:ColumnMapping.cs" caret="0" scrollPosition="0|0" />
+      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/d:Mapping/f:ClassMapping.cs" caret="552" scrollPosition="0|0" />
+      <File id="EBDBB53D-7358-494B-B2CB-31354B6D620B/f:Bumble.cs" caret="165" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>
@@ -13,10 +17,10 @@
     <NAntPath value="" />
   </NAntValidationSettings>
   <ReFormatCode>
-    <ReorderMembers>False</ReorderMembers>
-    <OptimizeUsings>False</OptimizeUsings>
-    <RemoveRedundantThis>False</RemoveRedundantThis>
-    <ShortenReferences>False</ShortenReferences>
+    <ReorderMembers>True</ReorderMembers>
+    <OptimizeUsings>True</OptimizeUsings>
+    <RemoveRedundantThis>True</RemoveRedundantThis>
+    <ShortenReferences>True</ShortenReferences>
   </ReFormatCode>
   <SharedSolutionDisabledTemplatesManager>
     <DisabledTemplates />

@@ -12,13 +12,50 @@ namespace Bumbler
 {
 	public partial class Bumble : IDisposable, IQuackFu
 	{
-		private readonly ISession session;
 		private static Dictionary<string, ISessionFactory> connectionStringToSessionFactoryCache = new Dictionary<string, ISessionFactory>();
+		private readonly ISession session;
 
 		public Bumble(ISession session)
 		{
 			this.session = session;
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			session.Dispose();
+		}
+
+		#endregion
+
+		#region IQuackFu Members
+
+		public object QuackGet(string name, object[] parameters)
+		{
+			string entityName = Inflector.Singularize(name) ?? name;
+			return Query("from " + entityName);
+		}
+
+		public object QuackInvoke(string name, params object[] args)
+		{
+			if (name.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
+			{
+				Type type = Type.GetType("Bumble." + name.Substring(3));
+				if (type != null)
+				{
+					return session.Get(type, args[0]);
+				}
+			}
+			throw new NotImplementedException("Can't call unknown method on bubmle");
+		}
+
+		public object QuackSet(string name, object[] parameters, object value)
+		{
+			throw new NotImplementedException("Can't set on bubmle!");
+		}
+
+		#endregion
 
 		public IList Query(string query)
 		{
@@ -57,35 +94,6 @@ namespace Bumbler
 			cfg.Properties.Add("hibernate.connection.connection_string", connectionString);
 			cfg.AddAssembly(assembly);
 			return cfg.BuildSessionFactory();
-		}
-
-		public void Dispose()
-		{
-			session.Dispose();
-		}
-
-		public object QuackGet(string name, object[] parameters)
-		{
-			string entityName = Inflector.Singularize(name) ?? name;
-			return Query("from " + entityName);
-		}
-
-		public object QuackSet(string name, object[] parameters, object value)
-		{
-			throw new NotImplementedException("Can't set on bubmle!");
-		}
-
-		public object QuackInvoke(string name, params object[] args)
-		{
-			if (name.StartsWith("Get", StringComparison.InvariantCultureIgnoreCase))
-			{
-				Type type = Type.GetType("Bumble." + name.Substring(3));
-				if (type != null)
-				{
-					return session.Get(type, args[0]);
-				}
-			}
-			throw new NotImplementedException("Can't call unknown method on bubmle");
 		}
 	}
 }

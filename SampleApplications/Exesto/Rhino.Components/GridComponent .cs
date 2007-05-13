@@ -26,25 +26,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-// Copyright 2004-2006 Castle Project - http://www.castleproject.org/
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 using System;
 using System.Collections;
 using System.IO;
-using System.Text;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 
@@ -58,12 +42,17 @@ namespace Rhino.Components
                 "pagination", "empty",
                 "item", "alternateItem",
                 "tablestart", "tableend",
-				"link"
+				"link",
             };
 
 		public override bool SupportsSection(string name)
 		{
-			return Array.IndexOf(sections, name) != -1;
+			foreach (string section in sections)
+			{
+				if(section.Equals(name,StringComparison.InvariantCultureIgnoreCase))
+					return true;
+			}
+			return false;
 		}
 
 		public override void Render()
@@ -229,7 +218,6 @@ Showing {0} - {1} of {2}
 				throw new ViewComponentException("A GridComponent must has a header");
 			}
 			Context.RenderSection("header");
-
 		}
 	}
 }
