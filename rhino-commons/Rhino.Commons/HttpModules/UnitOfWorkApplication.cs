@@ -40,6 +40,7 @@ namespace Rhino.Commons.HttpModules
 	public class UnitOfWorkApplication : HttpApplication, IContainerAccessor
 	{
 		private static IWindsorContainer windsorContainer;
+		private FileSystemWatcher watcher;
 
 		public UnitOfWorkApplication()
 		{
@@ -94,6 +95,8 @@ namespace Rhino.Commons.HttpModules
 		{
 			BeginRequest -= new EventHandler(UnitOfWorkApplication_BeginRequest);
 			EndRequest -= new EventHandler(UnitOfWorkApplication_EndRequest);
+			if(watcher!=null)
+				watcher.Dispose();
 		}
 
 		protected virtual void CreateContainer()
@@ -104,8 +107,17 @@ namespace Rhino.Commons.HttpModules
 				//In ASP.Net apps, the current directory and the base path are NOT the same.
 				windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
 			}
+			FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
+			watcher = new FileSystemWatcher(Path.GetDirectoryName(windsorConfig));
+			watcher.Filter = Path.GetFileName(windsorConfig);
+			watcher.Created += resetIoC;
+			watcher.Changed += resetIoC;
+			watcher.Deleted += resetIoC;
+
 			windsorContainer = new RhinoContainer(windsorConfig);
 			IoC.Initialize(windsorContainer);
+			
+			watcher.EnableRaisingEvents = true;
 		}
 	}
 }
