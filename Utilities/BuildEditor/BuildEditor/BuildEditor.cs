@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,12 +40,13 @@ namespace BuildEditor
 				fileNameLabel.Text = fileName;
 				LoadFile();
 				watcher = new FileSystemWatcher(Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
-				watcher.Changed += delegate { LoadFile(); };
-				watcher.Created += delegate { LoadFile(); };
+				watcher.Changed += delegate { Invoke((Proc)LoadFile); };
+				watcher.Created += delegate { Invoke((Proc)LoadFile); };
 				watcher.EnableRaisingEvents = true;
 			}
 		}
 
+		public delegate void Proc();
 		private void LoadFile()
 		{
 			Environment.CurrentDirectory = Path.GetDirectoryName(fileName);
@@ -59,7 +61,13 @@ namespace BuildEditor
 			XmlNode node = xdoc.SelectSingleNode("/build:Project/build:PropertyGroup", nsMgr);
 			if (node == null)
 				return;
-
+			parametersTable.AutoScroll = false;
+			parametersTable.SuspendLayout();
+			foreach (Control control in new ArrayList(parametersTable.Controls))
+			{
+				if(parametersTable.GetRow(control)!=0)
+					parametersTable.Controls.Remove(control);
+			}
 			foreach (XmlNode xmlNode in node.ChildNodes)
 			{
 				if (xmlNode.NodeType != XmlNodeType.Element)
@@ -122,6 +130,8 @@ namespace BuildEditor
 				this.parametersTable.Controls.Add(val, 1, this.parametersTable.RowCount - 1);
 			}
 			this.parametersTable.RowCount += 1;
+			parametersTable.ResumeLayout(true);
+			parametersTable.AutoScroll = true;
 		}
 
 		public delegate Control BuildSpecialCase(TextBox textbox);

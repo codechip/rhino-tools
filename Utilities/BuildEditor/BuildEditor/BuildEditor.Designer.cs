@@ -32,6 +32,7 @@ namespace BuildEditor
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.OpenToolBarItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+			this.fileNameLabel = new System.Windows.Forms.ToolStripLabel();
 			this.parametersTable = new System.Windows.Forms.TableLayoutPanel();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
@@ -40,7 +41,6 @@ namespace BuildEditor
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.exec = new System.Windows.Forms.Button();
 			this.command = new System.Windows.Forms.TextBox();
-			this.fileNameLabel = new System.Windows.Forms.ToolStripLabel();
 			this.toolStrip1.SuspendLayout();
 			this.parametersTable.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -73,9 +73,15 @@ namespace BuildEditor
 			this.toolStripLabel1.Name = "toolStripLabel1";
 			this.toolStripLabel1.Size = new System.Drawing.Size(0, 22);
 			// 
+			// fileNameLabel
+			// 
+			this.fileNameLabel.Name = "fileNameLabel";
+			this.fileNameLabel.Size = new System.Drawing.Size(0, 22);
+			// 
 			// parametersTable
 			// 
 			this.parametersTable.AutoScroll = true;
+			this.parametersTable.AutoSize = true;
 			this.parametersTable.ColumnCount = 2;
 			this.parametersTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
 			this.parametersTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -131,7 +137,7 @@ namespace BuildEditor
 			// 
 			// exec
 			// 
-			this.exec.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.exec.Dock = System.Windows.Forms.DockStyle.Right;
 			this.exec.Location = new System.Drawing.Point(925, 0);
 			this.exec.Name = "exec";
 			this.exec.Size = new System.Drawing.Size(75, 45);
@@ -142,18 +148,13 @@ namespace BuildEditor
 			// 
 			// command
 			// 
-			this.command.Dock = System.Windows.Forms.DockStyle.Left;
+			this.command.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.command.Location = new System.Drawing.Point(0, 0);
 			this.command.Multiline = true;
 			this.command.Name = "command";
 			this.command.ReadOnly = true;
-			this.command.Size = new System.Drawing.Size(925, 45);
+			this.command.Size = new System.Drawing.Size(1000, 45);
 			this.command.TabIndex = 3;
-			// 
-			// fileNameLabel
-			// 
-			this.fileNameLabel.Name = "fileNameLabel";
-			this.fileNameLabel.Size = new System.Drawing.Size(0, 22);
 			// 
 			// BuildEditor
 			// 

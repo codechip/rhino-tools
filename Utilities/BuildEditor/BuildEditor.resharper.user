@@ -1,8 +1,13 @@
 <Configuration>
   <CompletionStatisticsManager>
-    <ItemStatistics item="Qualified:System.Xml.XmlNode">
-      <Item value="NodeType" priority="0" />
-      <Item value="Name" priority="0" />
+    <ItemStatistics item="Qualified:System.Windows.Forms.Panel">
+      <Item value="Width" priority="0" />
+      <Item value="Dock" priority="0" />
+      <Item value="Controls" priority="1" />
+      <Item value="Height" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Forms.Control.ControlCollection">
+      <Item value="Add" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Windows.Forms.Button">
       <Item value="Text" priority="0" />
@@ -15,27 +20,32 @@
       <Item value="IndexOf" priority="0" />
       <Item value="Contains" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Xml.XmlNode">
+      <Item value="NodeType" priority="0" />
+      <Item value="Name" priority="0" />
+    </ItemStatistics>
     <ItemStatistics item="Qualified:System.Windows.Forms.TextBox">
       <Item value="Text" priority="1" />
       <Item value="Width" priority="0" />
       <Item value="Dock" priority="0" />
       <Item value="Height" priority="0" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:System.Windows.Forms.Panel">
-      <Item value="Width" priority="0" />
-      <Item value="Dock" priority="0" />
+    <ItemStatistics item="Qualified:System.Windows.Forms.TableLayoutPanel">
+      <Item value="SuspendLayout" priority="0" />
+      <Item value="GetRow" priority="0" />
+      <Item value="ResumeLayout" priority="0" />
       <Item value="Controls" priority="1" />
-      <Item value="Height" priority="0" />
+      <Item value="AutoScroll" priority="0" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:System.Windows.Forms.Control.ControlCollection">
-      <Item value="Add" priority="1" />
+    <ItemStatistics item="Qualified:System.Windows.Forms.TableLayoutControlCollection">
+      <Item value="Remove" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
       <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/d:UnknownPath/f:Default.build" caret="0" scrollPosition="0|0" />
       <File id="0F8BC564-C2FA-4102-B8C5-E4967B79B74F/f:BuildEditor.Designer.cs" caret="0" scrollPosition="0|0" />
-      <File id="0F8BC564-C2FA-4102-B8C5-E4967B79B74F/f:BuildEditor.cs" caret="5243" scrollPosition="0|159" />
+      <File id="0F8BC564-C2FA-4102-B8C5-E4967B79B74F/f:BuildEditor.cs" caret="2065" scrollPosition="0|38" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>
