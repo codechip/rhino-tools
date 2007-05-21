@@ -121,9 +121,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\ProjectLoader\Ayende.NHibernateQueryAnalyzer.ProjectLoader.csproj">
-      <Name>Ayende.NHibernateQueryAnalyzer.ProjectLoader</Name>
       <Project>{CCF2B115-63F5-404A-BBC0-19DFBB0A34AA}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Ayende.NHibernateQueryAnalyzer.ProjectLoader</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserInterface\Ayende.NHibernateQueryAnalyzer.UserInterface.csproj">
       <Name>Ayende.NHibernateQueryAnalyzer.UserInterface</Name>

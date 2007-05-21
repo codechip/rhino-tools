@@ -972,6 +972,11 @@
             Use a seperate SELECT statement to load the data
             </summary>
         </member>
+        <member name="F:Castle.ActiveRecord.FetchEnum.SubSelect">
+            <summary>
+            Use a seperate SELECT statement to load the data, re-running the original query in a subselect
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.CascadeEnum">
             <summary>
             Defines the cascading behaviour of this association.
@@ -7721,6 +7726,23 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedCriteria">The criteria.</param>
+            <param name="orders">The sort order - used to determine which record is the first one.</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="targetType">The target type</param>
+            <param name="criteria">The criteria expression</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Expression.ICriterion[])">
             <summary>
             Searches and returns the a row. If more than one is found, 
@@ -7901,6 +7923,15 @@
             <param name="criteria">The criteria expression</param>
             <returns>The count result</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Returns the number of records of the specified 
+            type in the database
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedCriteria">The criteria expression</param>
+            <returns>The count result</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type)">
             <summary>
             Check if there is any records in the db for the target type
@@ -7929,6 +7960,14 @@
             <summary>
             Check if any instance matches the criteria.
             </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Check if any instance matching the criteria exists in the database.
+            </summary>
+            <param name="targetType">The target type.</param>
+            <param name="detachedCriteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Save(System.Object)">
@@ -8052,6 +8091,21 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="detachedCriteria">The criteria.</param>
+            <param name="orders">The sort order - used to determine which record is the first one.</param>
+            <returns>A <c>targetType</c> instance or <c>null.</c></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Searches and returns the first row.
+            </summary>
+            <param name="criteria">The criteria expression</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expression.ICriterion[])">
             <summary>
             Searches and returns the first row.
@@ -8059,21 +8113,19 @@
             <param name="criterias">The criterias.</param>
             <returns>A instance the targetType or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Searches and returns a row. If more than one is found, 
+            throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
+            </summary>
+            <param name="criteria">The criteria</param>
+            <returns>A <c>targetType</c> instance or <c>null</c></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll">
             <summary>
             Returns all instances found for the specified type.
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
-            <summary>
-            Returns a portion of the query results (sliced)
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
-            <summary>
-            Returns a portion of the query results (sliced)
-            </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
             <summary>
@@ -8091,6 +8143,26 @@
             </summary>
             <param name="criterias"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+            <summary>
+            Returns all instances found for the specified type according to the criteria
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Returns a portion of the query results (sliced)
+            </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.DeleteAll">
             <summary>
@@ -8172,6 +8244,14 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Returns the number of records of the specified 
+            type in the database
+            </summary>
+            <param name="detachedCriteria">The criteria expression</param>
+            <returns>The count result</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists">
             <summary>
             Check if there is any records in the db for the target type
@@ -8185,6 +8265,26 @@
             <param name="filter">A sql where string i.e. Person=? and DOB &gt; ?</param>
             <param name="args">Positional parameters for the filter string</param>
             <returns><c>true</c> if there's at least one row</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(System.Object)">
+            <summary>
+            Check if the <paramref name="id"/> exists in the database.
+            </summary>
+            <param name="id">The id to check on</param>
+            <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expression.ICriterion[])">
+            <summary>
+            Check if any instance matches the criteria.
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Check if any instance matching the criteria exists in the database.
+            </summary>
+            <param name="detachedCriteria">The criteria expression</param>		
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
         <member name="T:Castle.ActiveRecord.SessionFactoryHolderDelegate">
             <summary>
