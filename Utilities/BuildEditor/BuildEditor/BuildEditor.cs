@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -14,6 +15,7 @@ namespace BuildEditor
 	public partial class BuildEditor : Form
 	{
 		private string fileName;
+		FileSystemWatcher watcher;
 
 		public BuildEditor()
 		{
@@ -31,14 +33,21 @@ namespace BuildEditor
 				ofd.Filter = "Build Files | *.xml;*.build";
 				if (ofd.ShowDialog(this) != DialogResult.OK)
 					return;
+				if (watcher != null)
+					watcher.Dispose();
 				fileName = ofd.FileName;
 				fileNameLabel.Text = fileName;
 				LoadFile();
+				watcher = new FileSystemWatcher(Path.GetDirectoryName(fileName), Path.GetFileName(fileName));
+				watcher.Changed += delegate { LoadFile(); };
+				watcher.Created += delegate { LoadFile(); };
+				watcher.EnableRaisingEvents = true;
 			}
 		}
 
 		private void LoadFile()
 		{
+			Environment.CurrentDirectory = Path.GetDirectoryName(fileName);
 			options.Clear();
 
 			XmlDocument xdoc = new XmlDocument();
@@ -53,7 +62,7 @@ namespace BuildEditor
 
 			foreach (XmlNode xmlNode in node.ChildNodes)
 			{
-				if(xmlNode.NodeType!=XmlNodeType.Element)
+				if (xmlNode.NodeType != XmlNodeType.Element)
 					continue;
 				Label name = new Label();
 				string nodeName = xmlNode.Name;
@@ -62,19 +71,20 @@ namespace BuildEditor
 				bool isBoolean, initial;
 				isBoolean = bool.TryParse(xmlNode.InnerText, out initial);
 				Control val;
+				BuildSpecialCase specialCase = GetSpecialCaseControl(xmlNode.Name);
 				if (isBoolean)
 				{
 					CheckBox ck = new CheckBox();
 					originalOptions[nodeName] = initial.ToString();
 					ck.CheckedChanged += delegate
-					                     	{
-					                     		options[nodeName] = ck.Checked.ToString();
-					                     		Changed();
-					                     	};
+											{
+												options[nodeName] = ck.Checked.ToString();
+												Changed();
+											};
 					ck.Checked = initial;
 					val = ck;
 				}
-				else if (xmlNode.Name.IndexOf("ConnectionString",StringComparison.InvariantCultureIgnoreCase)!=-1)
+				else if (specialCase != null)
 				{
 					Panel panel = new Panel();
 					panel.Dock = DockStyle.Fill;
@@ -87,18 +97,11 @@ namespace BuildEditor
 										};
 					t.Text = xmlNode.InnerText;
 					t.Dock = DockStyle.Fill;
-					
-					Button change = new Button();
-					change.Click += delegate
-					                	{
-					                		t.Text = PromptForConnectionString(t.Text);
-					                	};
-					change.Dock = DockStyle.Right;
-					change.Text = "...";
-					change.Width = 30;
+
+
 					panel.Controls.Add(t);
-					panel.Controls.Add(change);
-					panel.Height= t.Height;
+					panel.Controls.Add(specialCase(t));
+					panel.Height = t.Height;
 					val = panel;
 				}
 				else
@@ -106,12 +109,12 @@ namespace BuildEditor
 					TextBox t = new TextBox();
 					originalOptions[nodeName] = xmlNode.InnerText;
 					t.TextChanged += delegate
-					                 	{
-					                 		options[nodeName] = t.Text;
-					                 		Changed();
-					                 	};
+										{
+											options[nodeName] = t.Text;
+											Changed();
+										};
 					t.Text = xmlNode.InnerText;
-					t.Dock=DockStyle.Fill;
+					t.Dock = DockStyle.Fill;
 					val = t;
 				}
 				this.parametersTable.RowCount += 1;
@@ -119,6 +122,67 @@ namespace BuildEditor
 				this.parametersTable.Controls.Add(val, 1, this.parametersTable.RowCount - 1);
 			}
 			this.parametersTable.RowCount += 1;
+		}
+
+		public delegate Control BuildSpecialCase(TextBox textbox);
+
+		private BuildSpecialCase GetSpecialCaseControl(string name)
+		{
+			if (name.IndexOf("ConnectionString", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				return delegate(TextBox t)
+				{
+					Button change = new Button();
+					change.Click += delegate { t.Text = PromptForConnectionString(t.Text); };
+					change.Dock = DockStyle.Right;
+					change.Text = "...";
+					change.Width = 30;
+					return change;
+				};
+			}
+			if (name.IndexOf("File", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				return delegate(TextBox t)
+				{
+					Button change = new Button();
+					change.Click += delegate
+					{
+						OpenFileDialog dialog = new OpenFileDialog();
+						dialog.Multiselect = false;
+						dialog.FileName = t.Text;
+						if (dialog.ShowDialog(this) == DialogResult.OK)
+						{
+							t.Text = dialog.FileName;
+						}
+					};
+					change.Dock = DockStyle.Right;
+					change.Text = "...";
+					change.Width = 30;
+					return change;
+				};
+			}
+			if (name.IndexOf("Folder", StringComparison.InvariantCultureIgnoreCase) != -1 ||
+				name.IndexOf("Dir", StringComparison.InvariantCultureIgnoreCase) != -1)
+			{
+				return delegate(TextBox t)
+				{
+					Button change = new Button();
+					change.Click += delegate
+					{
+						FolderBrowserDialog dialog = new FolderBrowserDialog();
+						dialog.SelectedPath = t.Text;
+						if (dialog.ShowDialog(this) == DialogResult.OK)
+						{
+							t.Text = dialog.SelectedPath;
+						}
+					};
+					change.Dock = DockStyle.Right;
+					change.Text = "...";
+					change.Width = 30;
+					return change;
+				};
+			}
+			return null;
 		}
 
 		private void Changed()
@@ -133,7 +197,7 @@ namespace BuildEditor
 			sb.Append(fileName).Append(" ");
 			foreach (KeyValuePair<string, string> pair in options)
 			{
-				if(pair.Value == originalOptions[pair.Key])
+				if (pair.Value == originalOptions[pair.Key])
 					continue;
 				sb.Append(" /p:\"").Append(pair.Key)
 					.Append("=")
