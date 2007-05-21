@@ -106,6 +106,10 @@ namespace Rhino.Commons
         {
 			if(containerToReset==null)
 				return;
+			if (ReferenceEquals(LocalContainer, containerToReset))
+			{
+				LocalContainer = null;
+			}
             if (ReferenceEquals(GlobalContainer, containerToReset))
             {
                 GlobalContainer = null;
