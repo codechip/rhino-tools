@@ -83,10 +83,13 @@ namespace Rhino.Igloo
 			string aspNetFormKey = "$" + key;
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
-            	if (formKey != null && (formKey.EndsWith(aspNetFormKey) || key == formKey) )
-                    return context.Request.Form[formKey];
+				if (formKey != null && (formKey.EndsWith(aspNetFormKey) || key == formKey))
+					return context.Server.HtmlEncode(context.Request.Form[formKey]);
             }
-        	return context.Request.QueryString[key];
+        	string result = context.Request.QueryString[key];
+			if (string.IsNullOrEmpty(result) == false)
+				return context.Server.HtmlEncode(result);
+        	return result;
         }
 
 
@@ -102,12 +105,27 @@ namespace Rhino.Igloo
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
 				if (formKey != null && (formKey.EndsWith(aspNetFormKey) || key==formKey) )
-                    return context.Request.Form.GetValues(formKey);
+				{
+					string[] results = context.Request.Form.GetValues(formKey);
+					return HtmlEncode(results);
+				}
             }
-            return context.Request.QueryString.GetValues(key); 
+        	return HtmlEncode(context.Request.QueryString.GetValues(key));
         }
 
-        /// <summary>
+		private string[] HtmlEncode(string[] results)
+    	{
+    		for (int i = 0; i < results.Length; i++)
+    		{
+				if(string.IsNullOrEmpty(results[i])==false)
+				{
+					results[i] = context.Server.HtmlEncode(results[i]);
+				}
+    		}
+    		return results;
+    	}
+
+    	/// <summary>
         /// Gets from the session.
         /// </summary>
         /// <param name="key">The key.</param>
