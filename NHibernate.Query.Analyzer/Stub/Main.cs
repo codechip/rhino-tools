@@ -26,15 +26,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
 using System;
+using System.Threading;
 using System.Windows.Forms;
-using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface;
 using NHibernate.Cfg;
 using SLSExceptionReporter;
-using System.Reflection;
 
 namespace Ayende.NHibernateQueryAnalyzer
 {
@@ -48,7 +46,7 @@ namespace Ayende.NHibernateQueryAnalyzer
 		{
 			try
 			{
-				Application.ThreadException+=new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+				Application.ThreadException+=new ThreadExceptionEventHandler(Application_ThreadException);
 				Configuration cfg = new Configuration().AddAssembly(typeof(ProjectsRepository).Assembly);
 				IProjectsRepository dataManager = new ProjectsRepository(cfg);
 				Application.Run(new MainForm(dataManager));
@@ -70,7 +68,7 @@ namespace Ayende.NHibernateQueryAnalyzer
 			reporter.DisplayException(e);
 		}
 
-		private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 		{
 			ShowError(e.Exception);
 		}
