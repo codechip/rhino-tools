@@ -84,7 +84,7 @@ namespace XsdToSchemaUICode
 			AddRequiredTags(ns, xsd);
 
 			// Code generator to build code with.
-			ICodeGenerator generator = new CSharpCodeProvider().CreateGenerator();
+            CodeDomProvider generator = new CSharpCodeProvider();
 
 			// Generate untouched version
 			using (StreamWriter sw = new StreamWriter(dest, false))

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-	<class name="Ayende.NHibernateQueryAnalyzer.Model.Project, Ayende.NHibernateQueryAnalyzer.Core" table="projects">
+	<class name="Ayende.NHibernateQueryAnalyzer.Core.Model.Project, Ayende.NHibernateQueryAnalyzer.Core" table="Projects">
 		<id name="Id" column="id" type="Int32" unsaved-value="0" access="nosetter.camelcase">
-			<generator class="identity" />
+			<generator class="native" />
 		</id>
 		<property name="Name" column="name" type="String" access="nosetter.camelcase" length="255" />
 		<set name="Queries" inverse="true" lazy="false">
 			<key column="project_id"/>
-			<one-to-many class="Ayende.NHibernateQueryAnalyzer.Model.Query, Ayende.NHibernateQueryAnalyzer.Core"/>
+			<one-to-many class="Ayende.NHibernateQueryAnalyzer.Core.Model.Query, Ayende.NHibernateQueryAnalyzer.Core"/>
 		</set>
-		<bag table="files" name="Files" access="nosetter.camelcase" lazy="true">
+		<bag table="Files" name="Files" access="nosetter.camelcase" lazy="true">
 			<key column="project_id"/>
 			<element type="String" column="filename" />
 		</bag>

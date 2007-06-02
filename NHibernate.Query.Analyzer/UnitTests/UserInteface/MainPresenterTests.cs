@@ -29,7 +29,7 @@
 
 using System;
 using System.Collections;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters;

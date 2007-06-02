@@ -30,7 +30,7 @@
 using System.Collections;
 using NHibernate;
 
-namespace Ayende.NHibernateQueryAnalyzer.Model
+namespace Ayende.NHibernateQueryAnalyzer.Core.Model
 {
 	public interface IProjectsRepository
 	{

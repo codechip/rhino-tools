@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using System.IO;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters;

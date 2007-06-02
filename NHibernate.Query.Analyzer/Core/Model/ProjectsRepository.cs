@@ -26,237 +26,225 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
+using System;
 using System.Collections;
-using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using log4net;
 using NHibernate;
 using NHibernate.Cfg;
-using Environment = System.Environment;
+using NHibernate.Tool.hbm2ddl;
+using Environment=System.Environment;
 
-namespace Ayende.NHibernateQueryAnalyzer.Model
+namespace Ayende.NHibernateQueryAnalyzer.Core.Model
 {
-	public class ProjectsRepository : IProjectsRepository
-	{
-		#region Variables
+    public class ProjectsRepository : IProjectsRepository
+    {
+        #region Variables
 
-		private ISessionFactory factory;
-		private ISession session;
-		private static ILog logger = LogManager.GetLogger(typeof (ProjectsRepository));
+        private readonly ISessionFactory factory;
+        private ISession session;
+        private static readonly ILog logger = LogManager.GetLogger(typeof(ProjectsRepository));
 
-		#endregion 
-		
-		#region Properties
-		/// <summary>
-		/// Gets the current session (create one if it doesn't exist).
-		/// Since we're using sqlite for the database, the single connection
-		/// is not important to close, so it'll always be open.
-		/// </summary>
-		private ISession Session
-		{
-			get
-			{
-				if (session == null)
-				{
-					if (logger.IsDebugEnabled)
-						logger.Debug("Openning a new session");
-					session = factory.OpenSession();
-				}
-				return session;
-			}
-		}
+        #endregion
 
-		#endregion 
+        #region Properties
+        /// <summary>
+        /// Gets the current session (create one if it doesn't exist).
+        /// Since we're using sqlite for the database, the single connection
+        /// is not important to close, so it'll always be open.
+        /// </summary>
+        private ISession Session
+        {
+            get
+            {
+                if (session == null)
+                {
+                    if (logger.IsDebugEnabled)
+                        logger.Debug("Openning a new session");
+                    session = factory.OpenSession();
+                }
+                return session;
+            }
+        }
 
-		#region Project Management
+        #endregion
 
-		/// <summary>
-		/// Removes the project and all its associate data from NQA's database.
-		/// </summary>
-		/// <param name="project">The project to remove.</param>
-		public void RemoveProject(Project project)
-		{
-			if (logger.IsInfoEnabled)
-				logger.Info("Removing project: " + project.Name);
-			Session.Delete(project);
-			Session.Flush();
-		}
+        #region Project Management
 
-		public Project GetProjectById(int id)
-		{
-			return (Project) Session.Get(typeof (Project), id);
-		}
+        /// <summary>
+        /// Removes the project and all its associate data from NQA's database.
+        /// </summary>
+        /// <param name="project">The project to remove.</param>
+        public void RemoveProject(Project project)
+        {
+            if (logger.IsInfoEnabled)
+                logger.Info("Removing project: " + project.Name);
+            Session.Delete(project);
+            Session.Flush();
+        }
 
-		public Project GetProjectByName(string projectName)
-		{
-			IQuery query = Session.CreateQuery("from Project prj where prj.Name = :name").SetString("name", projectName);
-			IList list = query.List();
-			if (list.Count > 0)
-				return (Project) list[0];
-			else
-				return null;
-		}
+        public Project GetProjectById(int id)
+        {
+            return (Project)Session.Get(typeof(Project), id);
+        }
 
-		public IList GetProjectsStartingWith(string similarProjectName)
-		{
-			IQuery query = Session.CreateQuery("from Project prj where prj.Name like :name").SetString("name", similarProjectName + "%");
-			return query.List();
+        public Project GetProjectByName(string projectName)
+        {
+            IQuery query = Session.CreateQuery("from Project prj where prj.Name = :name").SetString("name", projectName);
+            IList list = query.List();
+            if (list.Count > 0)
+                return (Project)list[0];
+            else
+                return null;
+        }
 
-		}
+        public IList GetProjectsStartingWith(string similarProjectName)
+        {
+            IQuery query = Session.CreateQuery("from Project prj where prj.Name like :name").SetString("name", similarProjectName + "%");
+            return query.List();
 
-		public Project CreateProject(string projectName)
-		{
-			return new Project(projectName);
-		}
+        }
 
-		public void SaveProject(Project prj)
-		{
-			if (prj.Id == 0)
-				Session.Save(prj);
-			else
-				Session.Update(prj);
-			Session.Flush();
-		}
+        public Project CreateProject(string projectName)
+        {
+            return new Project(projectName);
+        }
 
-		public void RemoveFromCache(Project current)
-		{
-			Session.Evict(current);
-		}
+        public void SaveProject(Project prj)
+        {
+            if (prj.Id == 0)
+                Session.Save(prj);
+            else
+                Session.Update(prj);
+            Session.Flush();
+        }
 
-		public IList GetAllProejcts()
-		{
-			if (logger.IsDebugEnabled) logger.Debug("GetAllProjects called");
-			return Session.CreateCriteria(typeof (Project)).List();
-		}
+        public void RemoveFromCache(Project current)
+        {
+            Session.Evict(current);
+        }
 
-		#endregion 
+        public IList GetAllProejcts()
+        {
+            if (logger.IsDebugEnabled) logger.Debug("GetAllProjects called");
+            return Session.CreateCriteria(typeof(Project)).List();
+        }
 
-		#region c'tors
+        #endregion
 
-		public ProjectsRepository(Configuration cfg) : this(cfg, new DataBaseSetup())
-		{}
+        #region c'tors
 
-		public ProjectsRepository(Configuration cfg, DataBaseSetup dataBaseSetup)
-		{
-			dataBaseSetup.SetupDataBase(cfg);
-			factory = cfg.BuildSessionFactory();
-			if (logger.IsDebugEnabled)
-				logger.Debug("Application data factory created successfully.");
-		}
+        public ProjectsRepository(Configuration cfg)
+            : this(cfg, new DataBaseSetup(cfg))
+        { }
 
-		#endregion 
+        public ProjectsRepository(Configuration cfg, IDataBaseSetup dataBaseSetup)
+        {
+            dataBaseSetup.SetupDataBase();
+            factory = cfg.BuildSessionFactory();
+            if (logger.IsDebugEnabled)
+                logger.Debug("Application data factory created successfully.");
+        }
 
-		#region Context class
+        #endregion
 
-		public class DataBaseSetup : IDataBaseSetupImpl
-		{
-			/// <summary>
-			/// Ensures the database file exists.
-			/// If it doesn't exist, it and the tables will be created
-			/// </summary>
-			public virtual void EnsureDatabaseFileExists(string path)
-			{
-				if (!File.Exists(path))
-				{
-					if (logger.IsDebugEnabled)
-						logger.Debug("Data file does not exist, creating from scratch.");
-					CreateDB(path);
-				}
-			}
+        #region Context class
 
-			/// <summary>
-			/// Gets the data source file path.
-			/// </summary>
-			public virtual string GetDataSourceFilePath(string cnstr)
-			{
-				Regex dataSourceRegEx = new Regex(@".*Data\s+Source\s*=(?<DataSource>([^;]*))");
+        public class DataBaseSetup : IDataBaseSetupImpl
+        {
+            private readonly Configuration cfg;
 
-				Match m = dataSourceRegEx.Match(cnstr);
-				string path = m.Groups["DataSource"].Value;
-				if (logger.IsDebugEnabled)
-					logger.Debug("Data file is: " + path);
-				return path;
-			}
+            public DataBaseSetup(Configuration cfg)
+            {
+                this.cfg = cfg;
+            }
 
-			/// <summary>
-			/// Expend any envirnment variables in the connection string.
-			/// </summary>
-			public virtual string ExpandEnvironmentVariablesInConnectionString(Configuration cfg)
-			{
-				string connectionStringProeprty = "hibernate.connection.connection_string";
-				string cnstr = cfg.GetProperty(connectionStringProeprty);
-				if (logger.IsDebugEnabled)
-					logger.Debug("Connection String is:" + cnstr);
-				cnstr = Environment.ExpandEnvironmentVariables(cnstr);
-				if (logger.IsDebugEnabled)
-					logger.Debug("Expanded connection string is: " + cnstr);
-				cfg.SetProperty(connectionStringProeprty, cnstr);
-				return cnstr;
-			}
+            /// <summary>
+            /// Ensures the database file exists.
+            /// If it doesn't exist, it and the tables will be created
+            /// </summary>
+            public virtual void EnsureDatabaseFileExists(string path)
+            {
+                if (!File.Exists(path))
+                {
+                    if (logger.IsDebugEnabled)
+                        logger.Debug("Data file does not exist, creating from scratch.");
+                    CreateDatabase(path);
+                }
+            }
 
-			private void CreateDB(string path)
-			{
-				if (logger.IsDebugEnabled)
-					logger.Debug("Creating database at: " + path);
-				string folder = Path.GetDirectoryName(path);
-				if (!Directory.Exists(folder))
-				{
-					if (logger.IsDebugEnabled)
-						logger.Debug("Directory does not exist, creating directory; " + folder);
-					Directory.CreateDirectory(folder);
-				}
-				using (SQLiteConnection con = new SQLiteConnection("Data Source=" + path + ";Version=3;New=True"))
-					CreateDatabase(con);
-			}
+            /// <summary>
+            /// Gets the data source file path.
+            /// </summary>
+            public virtual string GetDataSourceFilePath(string cnstr)
+            {
+                Regex dataSourceRegEx = new Regex(@".*Data\s+Source\s*=(?<DataSource>([^;]*))");
 
-			public virtual void CreateDatabase(IDbConnection con)
-			{
-				con.Open();
-				if (logger.IsDebugEnabled)
-					logger.Debug("Database created successfully.");
-				using (IDbCommand command = con.CreateCommand())
-				{
-					using (TextReader sql = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Ayende.NHibernateQueryAnalyzer.Core.Setup.sql")))
-					{
-						//This is a hack to overcome the fact that SQLLiteCommand doesn't support 
-						//Multiply commands.
-						foreach (string sqlCommand in sql.ReadToEnd().Split('$'))
-						{
-							if (logger.IsDebugEnabled)
-								logger.Debug("Executing command: " + sqlCommand);
-							command.CommandText = sqlCommand;
-							command.ExecuteNonQuery();
-						}
-					}
-				}
-			}
+                Match m = dataSourceRegEx.Match(cnstr);
+                string path = m.Groups["DataSource"].Value;
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Data file is: " + path);
+                return path;
+            }
 
-			public void SetupDataBase(Configuration cfg)
-			{
-				string cnstr = ExpandEnvironmentVariablesInConnectionString(cfg);
-				string path = GetDataSourceFilePath(cnstr);
-				EnsureDatabaseFileExists(path);
-			}
-		}
+            /// <summary>
+            /// Expend any envirnment variables in the connection string.
+            /// </summary>
+            public virtual string ExpandEnvironmentVariablesInConnectionString()
+            {
+                string connectionStringProeprty = "hibernate.connection.connection_string";
+                string cnstr = cfg.GetProperty(connectionStringProeprty);
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Connection String is:" + cnstr);
+                cnstr = Environment.ExpandEnvironmentVariables(cnstr);
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Expanded connection string is: " + cnstr);
+                cfg.SetProperty(connectionStringProeprty, cnstr);
+                return cnstr;
+            }
 
-		#endregion
+            public void CreateDatabase(string path)
+            {
+                if (logger.IsDebugEnabled)
+                    logger.Debug("Creating database at: " + path);
+                string folder = Path.GetDirectoryName(path);
+                if (!Directory.Exists(folder))
+                {
+                    if (logger.IsDebugEnabled)
+                        logger.Debug("Directory does not exist, creating directory; " + folder);
+                    Directory.CreateDirectory(folder);
+                }
+                using (SQLiteConnection con = new SQLiteConnection("Data Source=" + path + ";Version=3;New=True"))
+                {
+                    con.Open();
+                    new SchemaExport(cfg).Execute(true, true, false, true, con, Console.Out);
+                }
+            }
 
-		#region Query
+            public void SetupDataBase()
+            {
+                string cnstr = ExpandEnvironmentVariablesInConnectionString();
+                string path = GetDataSourceFilePath(cnstr);
+                EnsureDatabaseFileExists(path);
+            }
+        }
 
-		public void SaveQuery(Query q)
-		{
-			if (q.Id == 0)
-				Session.Save(q);
-			else
-				Session.Update(q);
-			Session.Flush();
-		}
+        #endregion
 
-		#endregion 
-	}
+        #region Query
 
+        public void SaveQuery(Query q)
+        {
+            if (q.Id == 0)
+                Session.Save(q);
+            else
+                Session.Update(q);
+            Session.Flush();
+        }
+
+        #endregion
+    }
 }

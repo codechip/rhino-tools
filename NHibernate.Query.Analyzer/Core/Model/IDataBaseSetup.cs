@@ -29,10 +29,10 @@
 
 using NHibernate.Cfg;
 
-namespace Ayende.NHibernateQueryAnalyzer.Model
+namespace Ayende.NHibernateQueryAnalyzer.Core.Model
 {
 	public interface IDataBaseSetup
 	{
-		void SetupDataBase(Configuration cfg);
+		void SetupDataBase();
 	}
 }

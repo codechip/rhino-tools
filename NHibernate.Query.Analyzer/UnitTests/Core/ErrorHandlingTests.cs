@@ -31,7 +31,7 @@ using System;
 using System.Collections;
 using System.IO;
 using Ayende.NHibernateQueryAnalyzer.Exceptions;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.UnitTests.Core

@@ -144,7 +144,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Model\Project.hbm.xml" />
     <EmbeddedResource Include="Model\Query.hbm.xml" />
-    <EmbeddedResource Include="Setup.sql" />
     <Compile Include="Exceptions\Exceptions.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -27,7 +27,7 @@
 #endregion
 
 
-namespace Ayende.NHibernateQueryAnalyzer.Model {
+namespace Ayende.NHibernateQueryAnalyzer.Core.Model {
 	/// <summary>
 	/// Summary description for Query.
 	/// </summary>

@@ -63,7 +63,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Utilities
 			}
 			catch (Exception e)
 			{
-				return "Error getting value!";
+			    return string.Format("Error getting value! {0}", e.Message);
 			}
 		}
 

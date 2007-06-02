@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using System.Text.RegularExpressions;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Commands;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
@@ -45,10 +45,9 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 	public class QueryPresenter : IQueryPresenter
 	{
 		private readonly IMainPresenter mainPresenter;
-		private IQueryView view;
+		private readonly IQueryView view;
 		private Query query;
 		public const string DefaultName = "New Query";
-        private Configuration nHibernateConfiguration;
 
 		public QueryPresenter(IMainPresenter mainPresenter):this(mainPresenter, new Query(DefaultName,string.Empty))
 		{}
@@ -60,7 +59,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Presenters
 			this.view = CreateView();
 		}
 
-		private static Regex parameters = new Regex(@"(?<=:)\w+", RegexOptions.Compiled);
+		private static readonly Regex parameters = new Regex(@"(?<=:)\w+", RegexOptions.Compiled);
 
         //public virtual void PopulateEntitiesInEntityExplorer()
         //{

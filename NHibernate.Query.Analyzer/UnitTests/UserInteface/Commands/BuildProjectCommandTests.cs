@@ -28,7 +28,7 @@
 
 
 using System.Collections;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
 using Ayende.NHibernateQueryAnalyzer.UnitTests.TestUtilities;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Commands;

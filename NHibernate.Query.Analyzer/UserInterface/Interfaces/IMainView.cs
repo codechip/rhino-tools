@@ -29,7 +29,7 @@
 
 using System.Collections;
 using System.Windows.Forms;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using WeifenLuo.WinFormsUI;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces

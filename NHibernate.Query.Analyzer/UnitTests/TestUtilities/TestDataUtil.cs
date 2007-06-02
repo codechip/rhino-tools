@@ -31,7 +31,7 @@
 
 using System;
 using System.IO;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using NHibernate.Cfg;
 using NHibernate.Driver;
 

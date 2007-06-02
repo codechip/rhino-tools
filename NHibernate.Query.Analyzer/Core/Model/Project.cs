@@ -38,7 +38,7 @@ using Ayende.NHibernateQueryAnalyzer.Utilities;
 using Iesi.Collections;
 using log4net;
 
-namespace Ayende.NHibernateQueryAnalyzer.Model
+namespace Ayende.NHibernateQueryAnalyzer.Core.Model
 {
     public class Project : IDisposable
     {
@@ -231,7 +231,9 @@ namespace Ayende.NHibernateQueryAnalyzer.Model
                 appDomain = AppDomain.CreateDomain(Name, null, AppDomainSetup);
                 //This is so the domain can pick up the stuff that it needs like the project loaders
                 //and nhibernate.
-                remoteProject = (RemoteProject)appDomain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Ayende.NHibernateQueryAnalyzer.ProjectLoader.dll"), "Ayende.NHibernateQueryAnalyzer.ProjectLoader.RemoteProject");
+                remoteProject = (RemoteProject)appDomain.CreateInstanceFromAndUnwrap(
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Ayende.NHibernateQueryAnalyzer.ProjectLoader.dll"), 
+                    "Ayende.NHibernateQueryAnalyzer.ProjectLoader.RemoteProject");
                 remoteProject.BuildInternalProject(assemblies, mappings, configurations, basePaths);
                 isProjectBuilt = true;
             }

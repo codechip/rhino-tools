@@ -28,7 +28,7 @@
 
 
 using System;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using NHibernate;
 
 

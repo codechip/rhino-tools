@@ -29,7 +29,7 @@
 
 using System;
 using System.Collections;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.ProjectLoader;
 using Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities;
 using MbUnit.Framework;
@@ -37,7 +37,7 @@ using MbUnit.Framework;
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 {
 	/// <summary>
-	/// A TestFixture for the <see cref="Ayende.NHibernateQueryAnalyzer.Model.Project"/> 
+	/// A TestFixture for the <see cref="Ayende.NHibernateQueryAnalyzer.Core.Model.Project"/> 
 	/// class
 	/// </summary>
 	[TestFixture]

@@ -29,7 +29,7 @@
 
 using System;
 using System.Text;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Commands

@@ -31,7 +31,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Controls

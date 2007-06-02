@@ -29,7 +29,8 @@
 
 using System;
 using System.Windows.Forms;
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.UserInterface;
 using NHibernate.Cfg;
 using SLSExceptionReporter;

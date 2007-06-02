@@ -27,7 +27,7 @@
 #endregion
 
 
-using Ayende.NHibernateQueryAnalyzer.Model;
+using Ayende.NHibernateQueryAnalyzer.Core.Model;
 using Ayende.NHibernateQueryAnalyzer.Utilities;
 
 namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Interfaces
