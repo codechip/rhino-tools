@@ -45,9 +45,11 @@ namespace Query
 		/// criteria
 		/// </summary>
 		protected string associationPath;
-		private bool backTrackAssociationsOnEquality;
-		private ICollection<QueryBuilder<T>> children = new List<QueryBuilder<T>>();
-		private ICollection<ICriterion> criterions = new List<ICriterion>();
+		private readonly bool backTrackAssociationsOnEquality;
+        private readonly IList<OrderByClause> orderByClauses = new List<OrderByClause>(); 
+        private readonly ICollection<QueryBuilder<T>> children = new List<QueryBuilder<T>>();
+		private readonly ICollection<ICriterion> criterions = new List<ICriterion>();
+        private PropertyProjectionBuilder propertyProjection = null;
 
 		public QueryBuilder(string name, string associationPath, bool backTrackAssociationsOnEquality)
 		{
@@ -66,6 +68,34 @@ namespace Query
 		{
 			criterions.Add(criterion);
 		}
+
+        public QueryBuilder<T> SetProjection(PropertyProjectionBuilder propertyProjection)
+        {
+            if (propertyProjection == null) throw new ArgumentNullException("propertyProjection");
+            this.propertyProjection = propertyProjection;
+            return this;
+
+        }
+
+        public QueryBuilder<T> AddOrder(OrderByClause orderByClause)
+        {
+            this.orderByClauses.Add(orderByClause);
+            return this;
+
+        }
+
+        public QueryBuilder<T> AddOrder(params OrderByClause[] orderByClauses)
+        {
+            if (orderByClauses != null)
+            {
+                foreach (OrderByClause orderByClause in orderByClauses)
+                {
+                    AddOrder(orderByClause);
+                }
+            }
+            return this;
+
+        }
 
 		public QueryBuilder<T> Eq(object value)
 		{
@@ -165,8 +195,6 @@ namespace Query
 			}
 		}
 
-		#region Operator Overloading Magic
-
 		public static QueryBuilder<T> operator ==(QueryBuilder<T> expr, object other)
 		{
 			return expr.Eq(other);
@@ -256,7 +284,17 @@ Use HQL for this functionality...",
 				detachedCriteria = DetachedCriteria.For(typeof( T ));
 			else
 				detachedCriteria = DetachedCriteria.For( typeof( T ), alias );
-			
+
+            if (this.propertyProjection != null)
+            {
+                ProjectionList projectionList = this.propertyProjection;
+                detachedCriteria.SetProjection(projectionList);
+            }
+            foreach (OrderByClause orderByClause in orderByClauses)
+            {
+                detachedCriteria.AddOrder(orderByClause);
+            }
+
 			Dictionary<string, ICollection<ICriterion>> criterionsByAssociation = new Dictionary<string, ICollection<ICriterion>>();
 			AddByAssociationPath( criterionsByAssociation );
 
@@ -272,7 +310,6 @@ Use HQL for this functionality...",
 			}
 			return detachedCriteria;
 		}
-		#endregion
 
 		[System.ComponentModel.Browsable(false)]
 		[System.ComponentModel.Localizable(false)]

@@ -14,55 +14,55 @@ namespace Query {
     public partial class Where {
         
         /// <summary>
-        /// Query helper for member Where.Cat
+        /// Query helper for member Where.Istoric
         /// </summary>
-        public static Root_Query_Cat Cat {
+        public static Root_Query_Istoric Istoric {
             get {
-                return new Root_Query_Cat();
+                return new Root_Query_Istoric();
             }
         }
         
         /// <summary>
-        /// Query helper for member Where.DomesticCat
+        /// Query helper for member Where.MesajIst
         /// </summary>
-        public static Root_Query_DomesticCat DomesticCat {
+        public static Root_Query_MesajIst MesajIst {
             get {
-                return new Root_Query_DomesticCat();
+                return new Root_Query_MesajIst();
             }
         }
         
         /// <summary>
-        /// Query helper for member Where.Query_Cat
+        /// Query helper for member Where.Query_Istoric
         /// </summary>
-        public partial class Query_Cat<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Istoric<T1> : Query.QueryBuilder<T1>
          {
             
             /// <summary>
-            /// Query helper for member Query_Cat..ctor
+            /// Query helper for member Query_Istoric..ctor
             /// </summary>
-            public Query_Cat(string name, string associationPath) : 
+            public Query_Istoric(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
             /// <summary>
-            /// Query helper for member Query_Cat..ctor
+            /// Query helper for member Query_Istoric..ctor
             /// </summary>
-            public Query_Cat(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+            public Query_Istoric(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                     base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
-            /// Query helper for member Query_Cat.
+            /// Query helper for member Query_Istoric.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> subclass {
+            public virtual Query.PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("subclass", temp);
+                    return new Query.PropertyQueryBuilder<T1>("Name", temp);
                 }
             }
             
             /// <summary>
-            /// Query helper for member Query_Cat.
+            /// Query helper for member Query_Istoric.
             /// </summary>
             public virtual Query.QueryBuilder<T1> Id {
                 get {
@@ -73,58 +73,58 @@ namespace Query {
         }
         
         /// <summary>
-        /// Query helper for member Where.Root_Query_Cat
+        /// Query helper for member Where.Root_Query_Istoric
         /// </summary>
-        public partial class Root_Query_Cat : Query_Cat<NHibernate.Query.Generator.Tests.ActiveRecord.Cat> {
+        public partial class Root_Query_Istoric : Query_Istoric<NHibernate.Query.Generator.Tests.ActiveRecord.Istoric> {
             
             /// <summary>
-            /// Query helper for member Root_Query_Cat..ctor
+            /// Query helper for member Root_Query_Istoric..ctor
             /// </summary>
-            public Root_Query_Cat() : 
+            public Root_Query_Istoric() : 
                     base("this", null) {
             }
         }
         
         /// <summary>
-        /// Query helper for member Where.Query_DomesticCat
+        /// Query helper for member Where.Query_MesajIst
         /// </summary>
-        public partial class Query_DomesticCat<T2> : Query_Cat<T2>
+        public partial class Query_MesajIst<T2> : Query_Istoric<T2>
          {
             
             /// <summary>
-            /// Query helper for member Query_DomesticCat..ctor
+            /// Query helper for member Query_MesajIst..ctor
             /// </summary>
-            public Query_DomesticCat(string name, string associationPath) : 
+            public Query_MesajIst(string name, string associationPath) : 
                     base(name, associationPath) {
             }
             
             /// <summary>
-            /// Query helper for member Query_DomesticCat..ctor
+            /// Query helper for member Query_MesajIst..ctor
             /// </summary>
-            public Query_DomesticCat(string name, string associationPath, bool backTrackAssociationOnEquality) : 
+            public Query_MesajIst(string name, string associationPath, bool backTrackAssociationOnEquality) : 
                     base(name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
-            /// Query helper for member Query_DomesticCat.
+            /// Query helper for member Query_MesajIst.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T2> Name {
+            public virtual Query.PropertyQueryBuilder<T2> Email {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T2>("Name", temp);
+                    return new Query.PropertyQueryBuilder<T2>("Email", temp);
                 }
             }
         }
         
         /// <summary>
-        /// Query helper for member Where.Root_Query_DomesticCat
+        /// Query helper for member Where.Root_Query_MesajIst
         /// </summary>
-        public partial class Root_Query_DomesticCat : Query_DomesticCat<NHibernate.Query.Generator.Tests.ActiveRecord.DomesticCat> {
+        public partial class Root_Query_MesajIst : Query_MesajIst<NHibernate.Query.Generator.Tests.ActiveRecord.MesajIst> {
             
             /// <summary>
-            /// Query helper for member Root_Query_DomesticCat..ctor
+            /// Query helper for member Root_Query_MesajIst..ctor
             /// </summary>
-            public Root_Query_DomesticCat() : 
+            public Root_Query_MesajIst() : 
                     base("this", null) {
             }
         }
@@ -133,21 +133,21 @@ namespace Query {
     public partial class OrderBy {
         
         /// <summary>
-        /// Query helper for member OrderBy.Cat
+        /// Query helper for member OrderBy.Istoric
         /// </summary>
-        public partial class Cat {
+        public partial class Istoric {
             
             /// <summary>
-            /// Query helper for member Cat.subclass
+            /// Query helper for member Istoric.Name
             /// </summary>
-            public static Query.OrderByClause subclass {
+            public static Query.OrderByClause Name {
                 get {
-                    return new Query.OrderByClause("subclass");
+                    return new Query.OrderByClause("Name");
                 }
             }
             
             /// <summary>
-            /// Query helper for member Cat.Id
+            /// Query helper for member Istoric.Id
             /// </summary>
             public static Query.OrderByClause Id {
                 get {
@@ -157,16 +157,16 @@ namespace Query {
         }
         
         /// <summary>
-        /// Query helper for member OrderBy.DomesticCat
+        /// Query helper for member OrderBy.MesajIst
         /// </summary>
-        public partial class DomesticCat : Cat {
+        public partial class MesajIst : Istoric {
             
             /// <summary>
-            /// Query helper for member DomesticCat.Name
+            /// Query helper for member MesajIst.Email
             /// </summary>
-            public static Query.OrderByClause Name {
+            public static Query.OrderByClause Email {
                 get {
-                    return new Query.OrderByClause("Name");
+                    return new Query.OrderByClause("Email");
                 }
             }
         }
@@ -175,31 +175,31 @@ namespace Query {
     public partial class ProjectBy {
         
         /// <summary>
-        /// Query helper for member ProjectBy.Cat
+        /// Query helper for member ProjectBy.Istoric
         /// </summary>
-        public partial class Cat {
+        public partial class Istoric {
             
             /// <summary>
-            /// Query helper for member Cat.subclass
+            /// Query helper for member Istoric.Name
             /// </summary>
-            public static Query.PropertyProjectionBuilder subclass {
+            public static Query.PropertyProjectionBuilder Name {
                 get {
-                    return new Query.PropertyProjectionBuilder("subclass");
+                    return new Query.PropertyProjectionBuilder("Name");
                 }
             }
         }
         
         /// <summary>
-        /// Query helper for member ProjectBy.DomesticCat
+        /// Query helper for member ProjectBy.MesajIst
         /// </summary>
-        public partial class DomesticCat : Cat {
+        public partial class MesajIst : Istoric {
             
             /// <summary>
-            /// Query helper for member DomesticCat.Name
+            /// Query helper for member MesajIst.Email
             /// </summary>
-            public static Query.PropertyProjectionBuilder Name {
+            public static Query.PropertyProjectionBuilder Email {
                 get {
-                    return new Query.PropertyProjectionBuilder("Name");
+                    return new Query.PropertyProjectionBuilder("Email");
                 }
             }
         }
@@ -208,31 +208,31 @@ namespace Query {
     public partial class GroupBy {
         
         /// <summary>
-        /// Query helper for member GroupBy.Cat
+        /// Query helper for member GroupBy.Istoric
         /// </summary>
-        public partial class Cat {
+        public partial class Istoric {
             
             /// <summary>
-            /// Query helper for member Cat.subclass
+            /// Query helper for member Istoric.Name
             /// </summary>
-            public static NHibernate.Expression.IProjection subclass {
+            public static NHibernate.Expression.IProjection Name {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("subclass");
+                    return NHibernate.Expression.Projections.GroupProperty("Name");
                 }
             }
         }
         
         /// <summary>
-        /// Query helper for member GroupBy.DomesticCat
+        /// Query helper for member GroupBy.MesajIst
         /// </summary>
-        public partial class DomesticCat : Cat {
+        public partial class MesajIst : Istoric {
             
             /// <summary>
-            /// Query helper for member DomesticCat.Name
+            /// Query helper for member MesajIst.Email
             /// </summary>
-            public static NHibernate.Expression.IProjection Name {
+            public static NHibernate.Expression.IProjection Email {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("Name");
+                    return NHibernate.Expression.Projections.GroupProperty("Email");
                 }
             }
         }

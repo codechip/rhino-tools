@@ -34,67 +34,121 @@ using System.Text;
 using Castle.ActiveRecord;
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
-	[ActiveRecord]
-	public class WeirdClass : ActiveRecordBase<WeirdClass>
-	{
-		WeirdKey key = new WeirdKey();
-		Address address = new Address();
-		
-		[CompositeKey]
-		public WeirdKey Key
-		{
-			get { return key; }
-			set { key = value; }
-		}
+    [ActiveRecord]
+    public class WeirdClass : ActiveRecordBase<WeirdClass>
+    {
+        WeirdKey key = new WeirdKey();
+        Address address = new Address();
 
-		[Nested]
-		public Address Address
-		{
-			get { return address; }
-			set { address = value; }
-		}
-	}
-	
-	public class Address
-	{
-		string street;
+        [CompositeKey]
+        public WeirdKey Key
+        {
+            get { return key; }
+            set { key = value; }
+        }
 
-		[Property]
-		public string Street
-		{
-			get { return street; }
-			set { street = value; }
-		}
-	}
+        [Nested]
+        public Address Address
+        {
+            get { return address; }
+            set { address = value; }
+        }
+    }
 
-	[Serializable]
-	public class WeirdKey
-	{
-		string department;
-		int level;
+    public class Address
+    {
+        string street;
+        Electronic electronic;
 
-		[KeyProperty]
-		public string Department
-		{
-			get { return department; }
-			set { department = value; }
-		}
+        [Property]
+        public string Street
+        {
+            get { return street; }
+            set { street = value; }
+        }
 
-		[KeyProperty]
-		public int Level
-		{
-			get { return level; }
-			set { level = value; }
-		}
+        [Nested]
+        public Electronic Electronic
+        {
+            get { return electronic; }
+            set { electronic = value; }
+        }
+    }
 
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+    public class Electronic
+    {
+        string email;
 
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-	}
+        [Property]
+        public string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+    }
+
+    [Serializable]
+    public class WeirdKey
+    {
+        string department;
+        int level;
+
+        [KeyProperty]
+        public string Department
+        {
+            get { return department; }
+            set { department = value; }
+        }
+
+        [KeyProperty]
+        public int Level
+        {
+            get { return level; }
+            set { level = value; }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
+
+    [ActiveRecord("_istoric"), JoinedBase]
+    public class Istoric : ActiveRecordBase<Istoric>
+    {
+        int id;
+        private string name;
+
+        [PrimaryKey]
+        public virtual int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        [Property]
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+    }
+
+
+    [ActiveRecord("_mesaj")]
+    public class MesajIst : Istoric
+    {
+        private string email;
+        [Property]
+        public virtual string Email
+        {
+            get { return email; }
+            set { email = value; }
+        }
+    }
 }

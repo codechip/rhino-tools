@@ -70,6 +70,7 @@
     <Compile Include="ActiveRecord\Queries\Where.DerivedBlog.cs" />
     <Compile Include="ActiveRecord\Queries\Where.DerivedBlog2.cs" />
     <Compile Include="ActiveRecord\Queries\Where.InstalledComponnet.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Istoric.cs" />
     <Compile Include="ActiveRecord\Queries\Where.NHibernate.Query.Generator.Tests.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Post.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Project.cs" />
@@ -117,7 +118,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
-    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
   </PropertyGroup>
 </Project>

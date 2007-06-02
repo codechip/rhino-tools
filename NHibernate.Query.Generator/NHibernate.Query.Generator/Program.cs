@@ -33,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using CommandLine;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
 
@@ -46,7 +47,13 @@ namespace NHibernate.Query.Generator
 
         private static void Main(string[] args)
         {
-            string inputFilePattern = GetCommandLineArguments(args);
+            ApplicationOptions options = new ApplicationOptions();
+            if (Parser.ParseArgumentsWithUsage(args, options)==false)
+                Environment.Exit(2);
+            string inputFilePattern = options.InputFilePattern;
+            targetExtention = options.Lang.ToString().ToLower();
+            outputDir = options.OutputDirectory;
+
             try
             {
                 SetupCodeProvider();
@@ -56,7 +63,7 @@ namespace NHibernate.Query.Generator
                 string fileName = Path.GetFileName(inputFilePattern);
                 foreach (string file in Directory.GetFiles(directoryName, fileName))
                 {
-                    OutputFile(file);
+                    OutputFile(file, options.BaseNamespace);
                 }
                 OutputQueryBuilder();
             }
@@ -81,19 +88,19 @@ namespace NHibernate.Query.Generator
             }
         }
 
-        private static void OutputFile(string file)
+        private static void OutputFile(string file, string baseNamespace)
         {
             string fileExt = Path.GetExtension(file);
             string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + "." + targetExtention);
             // hbm file
             if (fileExt.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                GenerateSingleFile(File.OpenText(file), outputFile);
+                GenerateSingleFile(File.OpenText(file), outputFile, baseNamespace);
             }
             else if (fileExt.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
                      fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase)) // Active Record...
             {
-                GenerateFromActiveRecordAssembly(file);
+                GenerateFromActiveRecordAssembly(file, baseNamespace);
             }
         }
 
@@ -107,7 +114,7 @@ namespace NHibernate.Query.Generator
             Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
         }
 
-        private static void GenerateFromActiveRecordAssembly(string file)
+        private static void GenerateFromActiveRecordAssembly(string file, string baseNamespace)
         {
             string fullPath = Path.GetFullPath(file);
             RegisterAssemblyResolver(fullPath);
@@ -162,7 +169,7 @@ namespace NHibernate.Query.Generator
 
                     System.Type type = (System.Type)Get(model, "Type");
                     string genFile = Path.Combine(outputDir, "Where." + type.Name + "." + targetExtention);
-                    GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile);
+                    GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile, baseNamespace);
                 }
             }
 
@@ -181,7 +188,7 @@ namespace NHibernate.Query.Generator
                     genFile += i.ToString();
                 }
                 genFile += "." + targetExtention;
-                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile));
+                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile), baseNamespace);
                 i += 1;
             }
 
@@ -246,28 +253,14 @@ namespace NHibernate.Query.Generator
             };
         }
 
-        private static void GenerateSingleFile(TextReader input, string destinationFile)
+        private static void GenerateSingleFile(TextReader input, string destinationFile, string baseNamespace)
         {
-            QueryGenerator generator = new QueryGenerator(input, provider);
+            QueryGenerator generator = new QueryGenerator(input, provider, baseNamespace);
             using (StreamWriter outputStream = File.CreateText(destinationFile))
             {
                 generator.Generate(outputStream);
             }
             Console.WriteLine("Successfuly created file {0}", destinationFile);
-        }
-
-        private static string GetCommandLineArguments(string[] args)
-        {
-            if (args.Length != 3)
-            {
-                Console.WriteLine("Usage:");
-                Console.WriteLine("      NHibernate.Query.Generator <cs or vb> <*.hbm.xml> <output-dir>");
-                Console.WriteLine("      NHibernate.Query.Generator <cs or vb> asssembly.dll <output-dir>");
-                Environment.Exit(1);
-            }
-            targetExtention = args[0];
-            outputDir = args[2];
-            return args[1];
         }
 
         private static void SetupCodeProvider()

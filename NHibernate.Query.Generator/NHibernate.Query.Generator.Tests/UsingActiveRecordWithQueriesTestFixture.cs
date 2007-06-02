@@ -331,7 +331,13 @@ namespace NHibernate.Query.Generator.Tests
 			new Project(ic).Save();
 		}
 
-		[TearDown]
+        [Test]
+        public void CanUseJoinedBaseClass()
+        {
+            PropertyQueryBuilder<MesajIst> email = Where.MesajIst.Email;
+        }
+
+	    [TearDown]
 		public void TestCleanup()
 		{
 			sessionScope.Dispose();
