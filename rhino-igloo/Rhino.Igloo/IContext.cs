@@ -121,5 +121,12 @@ namespace Rhino.Igloo
 		/// <param name="url">The URL.</param>
 		/// <param name="waitTime">The wait time.</param>
 		void AddRefreshHeaderAfter(string url, TimeSpan waitTime);
+
+        /// <summary>
+        /// Maps the path (translate ~/ to the correct virtual path)
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+	    string MapPath(string path);
 	}
 }

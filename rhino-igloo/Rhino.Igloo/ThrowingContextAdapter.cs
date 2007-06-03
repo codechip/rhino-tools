@@ -151,5 +151,16 @@ namespace Rhino.Igloo
 		{
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
+
+
+	    /// <summary>
+	    /// Maps the path (translate ~/ to the correct virtual path)
+	    /// </summary>
+	    /// <param name="path">The path.</param>
+	    /// <returns></returns>
+	    public string MapPath(string path)
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+	    }
 	}
 }

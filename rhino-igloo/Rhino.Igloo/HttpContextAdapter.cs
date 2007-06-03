@@ -248,5 +248,16 @@ namespace Rhino.Igloo
 			url = ((Page)context.Handler).ResolveUrl(url);
 			context.Response.AddHeader("Refresh", string.Format("{0}; URL={1}", waitTime.Seconds, url));
 		}
+
+
+        /// <summary>
+        /// Maps the path (translate ~/ to the correct virtual path)
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public string MapPath(string path)
+        {
+            return context.Response.ApplyAppPathModifier(path);
+        }
     }
 }

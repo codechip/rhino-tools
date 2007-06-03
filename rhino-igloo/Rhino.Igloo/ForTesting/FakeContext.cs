@@ -171,5 +171,16 @@ namespace Rhino.Igloo.Tests
 			get { return refreshWaitTime; }
 			set { refreshWaitTime = value; }
 		}
+
+
+	    /// <summary>
+	    /// Maps the path (translate ~/ to the correct virtual path)
+	    /// </summary>
+	    /// <param name="path">The path.</param>
+	    /// <returns></returns>
+	    public string MapPath(string path)
+	    {
+	        return path;
+	    }
 	}
 }
