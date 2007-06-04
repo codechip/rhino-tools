@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_WeirdClass
         /// </summary>
-        public partial class Query_WeirdClass<T1> : Query.QueryBuilder<T1>
+        public partial class Query_WeirdClass<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -63,7 +63,7 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_WeirdClass.Query_Address
             /// </summary>
-            public partial class Query_Address<T2> : Query.QueryBuilder<T2>
+            public partial class Query_Address<T2> : QueryBuilder<T2>
              {
                 
                 /// <summary>
@@ -83,10 +83,10 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Query_Address.
                 /// </summary>
-                public virtual Query.PropertyQueryBuilder<T1> Street {
+                public virtual PropertyQueryBuilder<T1> Street {
                     get {
                         string temp = associationPath;
-                        return new Query.PropertyQueryBuilder<T1>("Address.Street", temp);
+                        return new PropertyQueryBuilder<T1>("Address.Street", temp);
                     }
                 }
                 
@@ -102,7 +102,7 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Query_Address.Query_Electronic
                 /// </summary>
-                public partial class Query_Electronic<T3> : Query.QueryBuilder<T3>
+                public partial class Query_Electronic<T3> : QueryBuilder<T3>
                  {
                     
                     /// <summary>
@@ -122,10 +122,10 @@ namespace Query {
                     /// <summary>
                     /// Query helper for member Query_Electronic.
                     /// </summary>
-                    public virtual Query.PropertyQueryBuilder<T1> Email {
+                    public virtual PropertyQueryBuilder<T1> Email {
                         get {
                             string temp = associationPath;
-                            return new Query.PropertyQueryBuilder<T1>("Address.Electronic.Email", temp);
+                            return new PropertyQueryBuilder<T1>("Address.Electronic.Email", temp);
                         }
                     }
                 }
@@ -134,7 +134,7 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_WeirdClass.Query_Key
             /// </summary>
-            public partial class Query_Key<T4> : Query.QueryBuilder<T4>
+            public partial class Query_Key<T4> : QueryBuilder<T4>
              {
                 
                 /// <summary>
@@ -154,20 +154,20 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Query_Key.
                 /// </summary>
-                public virtual Query.PropertyQueryBuilder<T1> Department {
+                public virtual PropertyQueryBuilder<T1> Department {
                     get {
                         string temp = associationPath;
-                        return new Query.PropertyQueryBuilder<T1>("Key.Department", temp);
+                        return new PropertyQueryBuilder<T1>("Key.Department", temp);
                     }
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Key.
                 /// </summary>
-                public virtual Query.PropertyQueryBuilder<T1> Level {
+                public virtual PropertyQueryBuilder<T1> Level {
                     get {
                         string temp = associationPath;
-                        return new Query.PropertyQueryBuilder<T1>("Key.Level", temp);
+                        return new PropertyQueryBuilder<T1>("Key.Level", temp);
                     }
                 }
             }
@@ -202,9 +202,9 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Address.Street
                 /// </summary>
-                public static Query.OrderByClause Street {
+                public static OrderByClause Street {
                     get {
-                        return new Query.OrderByClause("Address.Street");
+                        return new OrderByClause("Address.Street");
                     }
                 }
                 
@@ -216,9 +216,9 @@ namespace Query {
                     /// <summary>
                     /// Query helper for member Electronic.Email
                     /// </summary>
-                    public static Query.OrderByClause Email {
+                    public static OrderByClause Email {
                         get {
-                            return new Query.OrderByClause("Address.Electronic.Email");
+                            return new OrderByClause("Address.Electronic.Email");
                         }
                     }
                 }
@@ -232,18 +232,18 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Key.Department
                 /// </summary>
-                public static Query.OrderByClause Department {
+                public static OrderByClause Department {
                     get {
-                        return new Query.OrderByClause("Key.Department");
+                        return new OrderByClause("Key.Department");
                     }
                 }
                 
                 /// <summary>
                 /// Query helper for member Key.Level
                 /// </summary>
-                public static Query.OrderByClause Level {
+                public static OrderByClause Level {
                     get {
-                        return new Query.OrderByClause("Key.Level");
+                        return new OrderByClause("Key.Level");
                     }
                 }
             }
@@ -265,9 +265,9 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Address.Street
                 /// </summary>
-                public static Query.PropertyProjectionBuilder Street {
+                public static PropertyProjectionBuilder Street {
                     get {
-                        return new Query.PropertyProjectionBuilder("Address.Street");
+                        return new PropertyProjectionBuilder("Address.Street");
                     }
                 }
                 
@@ -279,9 +279,9 @@ namespace Query {
                     /// <summary>
                     /// Query helper for member Electronic.Email
                     /// </summary>
-                    public static Query.PropertyProjectionBuilder Email {
+                    public static PropertyProjectionBuilder Email {
                         get {
-                            return new Query.PropertyProjectionBuilder("Address.Electronic.Email");
+                            return new PropertyProjectionBuilder("Address.Electronic.Email");
                         }
                     }
                 }
@@ -295,18 +295,18 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Key.Department
                 /// </summary>
-                public static Query.PropertyProjectionBuilder Department {
+                public static PropertyProjectionBuilder Department {
                     get {
-                        return new Query.PropertyProjectionBuilder("Key.Department");
+                        return new PropertyProjectionBuilder("Key.Department");
                     }
                 }
                 
                 /// <summary>
                 /// Query helper for member Key.Level
                 /// </summary>
-                public static Query.NumericPropertyProjectionBuilder Level {
+                public static NumericPropertyProjectionBuilder Level {
                     get {
-                        return new Query.NumericPropertyProjectionBuilder("Key.Level");
+                        return new NumericPropertyProjectionBuilder("Key.Level");
                     }
                 }
             }

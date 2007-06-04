@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_User
         /// </summary>
-        public partial class Query_User<T1> : Query.QueryBuilder<T1>
+        public partial class Query_User<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,30 +45,37 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_User.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Name {
+            public virtual PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Name", temp);
+                    return new PropertyQueryBuilder<T1>("Name", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_User.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Email {
+            public virtual PropertyQueryBuilder<T1> Email {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Email", temp);
+                    return new PropertyQueryBuilder<T1>("Email", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_User.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
+                }
+            }
+            
+            public virtual CollectionQueryBuilder<T1> Blogs {
+                get {
+                    string temp = associationPath;
+                    return new CollectionQueryBuilder<T1>("Blogs", temp);
                 }
             }
         }
@@ -97,27 +104,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member User.Name
             /// </summary>
-            public static Query.OrderByClause Name {
+            public static OrderByClause Name {
                 get {
-                    return new Query.OrderByClause("Name");
+                    return new OrderByClause("Name");
                 }
             }
             
             /// <summary>
             /// Query helper for member User.Email
             /// </summary>
-            public static Query.OrderByClause Email {
+            public static OrderByClause Email {
                 get {
-                    return new Query.OrderByClause("Email");
+                    return new OrderByClause("Email");
                 }
             }
             
             /// <summary>
             /// Query helper for member User.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -133,18 +140,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member User.Name
             /// </summary>
-            public static Query.PropertyProjectionBuilder Name {
+            public static PropertyProjectionBuilder Name {
                 get {
-                    return new Query.PropertyProjectionBuilder("Name");
+                    return new PropertyProjectionBuilder("Name");
                 }
             }
             
             /// <summary>
             /// Query helper for member User.Email
             /// </summary>
-            public static Query.PropertyProjectionBuilder Email {
+            public static PropertyProjectionBuilder Email {
                 get {
-                    return new Query.PropertyProjectionBuilder("Email");
+                    return new PropertyProjectionBuilder("Email");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member User.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }

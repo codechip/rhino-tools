@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_Blog
         /// </summary>
-        public partial class Query_Blog<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Blog<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,20 +45,20 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Blog.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Name {
+            public virtual PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Name", temp);
+                    return new PropertyQueryBuilder<T1>("Name", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Blog.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
             
@@ -71,6 +71,13 @@ namespace Query {
                     temp = ((temp + ".") 
                                 + "Author");
                     return new Query_User<T1>("Author", temp, true);
+                }
+            }
+            
+            public virtual CollectionQueryBuilder<T1> Posts {
+                get {
+                    string temp = associationPath;
+                    return new CollectionQueryBuilder<T1>("Posts", temp);
                 }
             }
         }
@@ -99,18 +106,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Blog.Name
             /// </summary>
-            public static Query.OrderByClause Name {
+            public static OrderByClause Name {
                 get {
-                    return new Query.OrderByClause("Name");
+                    return new OrderByClause("Name");
                 }
             }
             
             /// <summary>
             /// Query helper for member Blog.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -126,9 +133,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Blog.Name
             /// </summary>
-            public static Query.PropertyProjectionBuilder Name {
+            public static PropertyProjectionBuilder Name {
                 get {
-                    return new Query.PropertyProjectionBuilder("Name");
+                    return new PropertyProjectionBuilder("Name");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member Blog.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }

@@ -58,11 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NHibernate.Query.Generator\QueryBuilders\QueryBuilder.cs" />
     <Compile Include="ActiveRecord\Cat.cs" />
     <Compile Include="ActiveRecord\Componnet.cs" />
     <Compile Include="ActiveRecord\InstalledComponnet.cs" />
     <Compile Include="ActiveRecord\Project.cs" />
+    <Compile Include="ActiveRecord\Queries\QueryBuilder.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Blog.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Cat.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Comment.cs" />

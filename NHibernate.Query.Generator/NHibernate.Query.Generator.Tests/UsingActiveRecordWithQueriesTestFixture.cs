@@ -102,8 +102,17 @@ namespace NHibernate.Query.Generator.Tests
 			findOne = User.FindOne(Where.User.IsInGroup("Users"));
 			Assert.IsNull(findOne);
 		}
-		
-		[Test]
+
+        [Test]
+        public void CanQueryOverCollections()
+        {
+            User one = User.FindOne(Where.User.Blogs.Exists(
+                                        Where.Blog.Name == "Ayende @ Blog"
+                                        ));
+            Assert.IsNotNull(one);
+        }
+
+	    [Test]
 		public void CanUseOrderringOnCompositeProperties()
 		{
 			WeirdClass weird = new WeirdClass();

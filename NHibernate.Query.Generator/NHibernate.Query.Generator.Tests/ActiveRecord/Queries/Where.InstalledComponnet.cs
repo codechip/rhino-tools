@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_InstalledComponnet
         /// </summary>
-        public partial class Query_InstalledComponnet<T1> : Query.QueryBuilder<T1>
+        public partial class Query_InstalledComponnet<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,10 +45,10 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_InstalledComponnet.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
             
@@ -89,15 +89,30 @@ namespace Query {
             /// <summary>
             /// Query helper for member InstalledComponnet.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
     }
     
     public partial class ProjectBy {
+        
+        /// <summary>
+        /// Query helper for member ProjectBy.InstalledComponnet
+        /// </summary>
+        public partial class InstalledComponnet {
+            
+            /// <summary>
+            /// Query helper for member InstalledComponnet.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
+                }
+            }
+        }
     }
     
     public partial class GroupBy {

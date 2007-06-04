@@ -34,7 +34,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_Cat
         /// </summary>
-        public partial class Query_Cat<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Cat<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -54,20 +54,20 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Cat.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> subclass {
+            public virtual PropertyQueryBuilder<T1> subclass {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("subclass", temp);
+                    return new PropertyQueryBuilder<T1>("subclass", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Cat.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
         }
@@ -108,10 +108,10 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_DomesticCat.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T2> Name {
+            public virtual PropertyQueryBuilder<T2> Name {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T2>("Name", temp);
+                    return new PropertyQueryBuilder<T2>("Name", temp);
                 }
             }
         }
@@ -140,18 +140,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Cat.subclass
             /// </summary>
-            public static Query.OrderByClause subclass {
+            public static OrderByClause subclass {
                 get {
-                    return new Query.OrderByClause("subclass");
+                    return new OrderByClause("subclass");
                 }
             }
             
             /// <summary>
             /// Query helper for member Cat.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -164,9 +164,9 @@ namespace Query {
             /// <summary>
             /// Query helper for member DomesticCat.Name
             /// </summary>
-            public static Query.OrderByClause Name {
+            public static OrderByClause Name {
                 get {
-                    return new Query.OrderByClause("Name");
+                    return new OrderByClause("Name");
                 }
             }
         }
@@ -182,9 +182,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Cat.subclass
             /// </summary>
-            public static Query.PropertyProjectionBuilder subclass {
+            public static PropertyProjectionBuilder subclass {
                 get {
-                    return new Query.PropertyProjectionBuilder("subclass");
+                    return new PropertyProjectionBuilder("subclass");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member Cat.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }
@@ -197,9 +206,9 @@ namespace Query {
             /// <summary>
             /// Query helper for member DomesticCat.Name
             /// </summary>
-            public static Query.PropertyProjectionBuilder Name {
+            public static PropertyProjectionBuilder Name {
                 get {
-                    return new Query.PropertyProjectionBuilder("Name");
+                    return new PropertyProjectionBuilder("Name");
                 }
             }
         }

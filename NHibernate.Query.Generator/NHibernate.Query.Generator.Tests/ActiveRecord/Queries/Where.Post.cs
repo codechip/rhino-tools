@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_Post
         /// </summary>
-        public partial class Query_Post<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Post<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,30 +45,30 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Post.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Title {
+            public virtual PropertyQueryBuilder<T1> Title {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Title", temp);
+                    return new PropertyQueryBuilder<T1>("Title", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Post.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Contnet {
+            public virtual PropertyQueryBuilder<T1> Contnet {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Contnet", temp);
+                    return new PropertyQueryBuilder<T1>("Contnet", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Post.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
             
@@ -81,6 +81,13 @@ namespace Query {
                     temp = ((temp + ".") 
                                 + "Blog");
                     return new Query_Blog<T1>("Blog", temp, true);
+                }
+            }
+            
+            public virtual CollectionQueryBuilder<T1> Comments {
+                get {
+                    string temp = associationPath;
+                    return new CollectionQueryBuilder<T1>("Comments", temp);
                 }
             }
         }
@@ -109,27 +116,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member Post.Title
             /// </summary>
-            public static Query.OrderByClause Title {
+            public static OrderByClause Title {
                 get {
-                    return new Query.OrderByClause("Title");
+                    return new OrderByClause("Title");
                 }
             }
             
             /// <summary>
             /// Query helper for member Post.Contnet
             /// </summary>
-            public static Query.OrderByClause Contnet {
+            public static OrderByClause Contnet {
                 get {
-                    return new Query.OrderByClause("Contnet");
+                    return new OrderByClause("Contnet");
                 }
             }
             
             /// <summary>
             /// Query helper for member Post.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -145,18 +152,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member Post.Title
             /// </summary>
-            public static Query.PropertyProjectionBuilder Title {
+            public static PropertyProjectionBuilder Title {
                 get {
-                    return new Query.PropertyProjectionBuilder("Title");
+                    return new PropertyProjectionBuilder("Title");
                 }
             }
             
             /// <summary>
             /// Query helper for member Post.Contnet
             /// </summary>
-            public static Query.PropertyProjectionBuilder Contnet {
+            public static PropertyProjectionBuilder Contnet {
                 get {
-                    return new Query.PropertyProjectionBuilder("Contnet");
+                    return new PropertyProjectionBuilder("Contnet");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member Post.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_Componnet
         /// </summary>
-        public partial class Query_Componnet<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Componnet<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,20 +45,20 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Componnet.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Version {
+            public virtual PropertyQueryBuilder<T1> Version {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Version", temp);
+                    return new PropertyQueryBuilder<T1>("Version", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Componnet.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
         }
@@ -87,18 +87,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Componnet.Version
             /// </summary>
-            public static Query.OrderByClause Version {
+            public static OrderByClause Version {
                 get {
-                    return new Query.OrderByClause("Version");
+                    return new OrderByClause("Version");
                 }
             }
             
             /// <summary>
             /// Query helper for member Componnet.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -114,9 +114,18 @@ namespace Query {
             /// <summary>
             /// Query helper for member Componnet.Version
             /// </summary>
-            public static Query.PropertyProjectionBuilder Version {
+            public static PropertyProjectionBuilder Version {
                 get {
-                    return new Query.PropertyProjectionBuilder("Version");
+                    return new PropertyProjectionBuilder("Version");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member Componnet.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }

@@ -65,7 +65,7 @@ namespace NHibernate.Query.Generator
                 {
                     OutputFile(file, options.BaseNamespace);
                 }
-                OutputQueryBuilder();
+                OutputQueryBuilder(options.BaseNamespace);
             }
             catch (ReflectionTypeLoadException e)
             {
@@ -104,13 +104,15 @@ namespace NHibernate.Query.Generator
             }
         }
 
-        private static void OutputQueryBuilder()
+        private static void OutputQueryBuilder(string baseNamespace)
         {
             //write query builders so user can just include the whole directory.
             Stream namedExp =
                 typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder." +
                                                                     targetExtention);
-            File.WriteAllText(Path.Combine(outputDir, "QueryBuilder." + targetExtention), new StreamReader(namedExp).ReadToEnd());
+            string code = new StreamReader(namedExp).ReadToEnd().Replace("%QueryNamespace%", baseNamespace);
+            string filename = Path.Combine(outputDir, "QueryBuilder." + targetExtention);
+            File.WriteAllText(filename, code);
             Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
         }
 

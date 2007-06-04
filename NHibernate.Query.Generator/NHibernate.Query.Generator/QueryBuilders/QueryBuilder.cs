@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using NHibernate.Expression;
 using NHibernate.Type;
 
-namespace Query
+namespace %QueryNamespace%
 {
 	public partial class QueryBuilder<T>
 	{
@@ -358,6 +358,27 @@ Use HQL for this functionality...",
 			}
 		}
 	}
+
+    public partial class CollectionQueryBuilder<T> : QueryBuilder<T>
+    {
+        public CollectionQueryBuilder(string name, string associationPath) : base(name, associationPath)
+        {
+        }
+       
+        public QueryBuilder<T> Exists(DetachedCriteria criteria)
+        {
+            criteria= criteria.SetProjection(Projections.Property("id"));
+            AddCriterion(Subqueries.Exists(criteria));
+            return this;
+        }
+
+        public QueryBuilder<T> NotExists(DetachedCriteria criteria)
+        {
+            criteria= criteria.SetProjection(Projections.Property("id"));
+            AddCriterion(Subqueries.NotExists(criteria));
+            return this;
+        }
+    }
 
 	public partial class PropertyQueryBuilder<T> : QueryBuilder<T>
 	{

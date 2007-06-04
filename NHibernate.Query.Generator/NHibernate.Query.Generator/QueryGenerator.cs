@@ -51,7 +51,7 @@ namespace NHibernate.Query.Generator
 
         static readonly string[] orderableProperties = { "nh:property", "nh:key-property", "nh:id" };
 
-        static readonly string[] projectByProperties = { "nh:property", "nh:key-property", };
+        static readonly string[] projectByProperties = { "nh:property", "nh:key-property", "nh:id" };
         static readonly string[] groupableProperties = { "nh:property", "nh:key-property", };
 
         static readonly string UseTheQueryClass = "UseTheQueryClass";
@@ -265,10 +265,10 @@ namespace NHibernate.Query.Generator
 					CodeMemberProperty prop = new CodeMemberProperty();
 					prop.Name = GetName(propertyNode);
 					prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;
-					prop.Type = new CodeTypeReference("Query.OrderByClause");
+					prop.Type = new CodeTypeReference("OrderByClause");
 					string associationPath = GetPath(prefix, prop.Name);
 					CodeObjectCreateExpression create =
-						new CodeObjectCreateExpression("Query.OrderByClause", new CodePrimitiveExpression(associationPath));
+						new CodeObjectCreateExpression("OrderByClause", new CodePrimitiveExpression(associationPath));
 					prop.GetStatements.Add(new CodeMethodReturnStatement(create));
                     AddToMembersWithSimpleXmlComment(orderableClassDeclaration, prop);
 				}
@@ -379,9 +379,9 @@ namespace NHibernate.Query.Generator
 					}
 					string propBuilderType;
 					if (isNumeric)
-						propBuilderType = "Query.NumericPropertyProjectionBuilder";
+						propBuilderType = "NumericPropertyProjectionBuilder";
 					else
-						propBuilderType = "Query.PropertyProjectionBuilder";
+						propBuilderType = "PropertyProjectionBuilder";
 					
 					CodeMemberProperty prop = new CodeMemberProperty();
 					prop.Name = GetName(propertyNode);
@@ -444,7 +444,7 @@ namespace NHibernate.Query.Generator
 			GenerateProperties(null,
 			                   genericName,
 			                   AssociationBehavior.DoNotAdd,
-			                   "Query.PropertyQueryBuilder",
+			                   "PropertyQueryBuilder",
 			                   classNode,
 			                   innerClass,
 			                   "nh:property");
@@ -453,12 +453,15 @@ namespace NHibernate.Query.Generator
 			GenerateProperties(null,
 			                   genericName,
 			                   AssociationBehavior.DoNotAdd,
-			                   "Query.QueryBuilder",
+			                   "QueryBuilder",
 			                   classNode,
 			                   innerClass,
 			                   "nh:id");
 			// generate reference to related query obj
-			GenerateProperties( null, genericName, associationBehavior, UseTheQueryClass, classNode, innerClass, "nh:many-to-one", "nh:one-to-one" );
+			GenerateProperties( null, genericName, associationBehavior, UseTheQueryClass, classNode, innerClass, 
+                "nh:many-to-one", "nh:one-to-one" );
+
+		    GenerateCollections(genericName, associationBehavior, UseTheQueryClass, classNode, innerClass, "nh:set", "nh:bag", "nh:list");
 
 			// generate reference to component
 			GenerateComponents(genericName, innerClass, classNode, "", "nh:component", "nh:dynamic-component");
@@ -466,7 +469,38 @@ namespace NHibernate.Query.Generator
 			GenerateCompositeId(genericName, innerClass, associationBehavior, classNode, "nh:composite-id");
 		}
 
-		private void GenerateCompositeId(
+        private void GenerateCollections(
+            string genericTypeName,
+            AssociationBehavior associationBehavior,
+            string propertyType,
+            XmlNode classNode,
+            CodeTypeDeclaration innerClass,
+            params string[] props)
+	    {
+            foreach (string xpathForClass in props)
+            {
+                foreach (XmlNode collectionNode in classNode.SelectNodes(xpathForClass, nsMgr))
+                {
+                    CodeMemberProperty col = new CodeMemberProperty();
+                    col.Name = collectionNode.Attributes["name"].Value;
+                    col.Attributes = MemberAttributes.Public;
+                    col.Type = new CodeTypeReference("CollectionQueryBuilder");
+                    col.Type.TypeArguments.Add(genericTypeName);
+                    CodeMethodReturnStatement result = new CodeMethodReturnStatement();
+                    CodeVariableDeclarationStatement var = new CodeVariableDeclarationStatement(
+                        typeof (string), "temp", 
+                        new CodeVariableReferenceExpression("associationPath"));
+                    col.GetStatements.Add(var);
+                    result.Expression = new CodeObjectCreateExpression(col.Type,
+                                                                       new CodePrimitiveExpression(col.Name),
+                                                                       new CodeVariableReferenceExpression(var.Name));
+                    col.GetStatements.Add(result);
+                    innerClass.Members.Add(col);
+                }
+            }
+	    }
+
+	    private void GenerateCompositeId(
 			string genericName,
 			CodeTypeDeclaration innerClass,
 			AssociationBehavior associationBehavior,
@@ -510,7 +544,7 @@ namespace NHibernate.Query.Generator
 					GenerateProperties(prefix,
 					                   genericTypeName,
 					                   AssociationBehavior.DoNotAdd,
-					                   "Query.PropertyQueryBuilder",
+					                   "PropertyQueryBuilder",
 					                   idNode,
 					                   idClass,
 					                   "nh:key-property");
@@ -544,7 +578,7 @@ namespace NHibernate.Query.Generator
 					GenerateProperties(newPrefix,
 					                   genericParameterName,
 					                   AssociationBehavior.DoNotAdd,
-					                   "Query.PropertyQueryBuilder",
+					                   "PropertyQueryBuilder",
 					                   classNode,
 					                   innerClass,
 					                   "nh:property",
@@ -637,7 +671,7 @@ namespace NHibernate.Query.Generator
 
 			string classname;
 			if (extends == null)
-				classname = "Query.QueryBuilder";
+				classname = "QueryBuilder";
 			else
 				classname = "Query_" + extends;
 

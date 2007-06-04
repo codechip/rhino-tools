@@ -4,7 +4,7 @@
     </StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>/lang:cs /files:"E:\OSS\rhino-tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\NHibernate.Query.Generator.Tests.dll" /out:"E:\OSS\rhino-tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\\ActiveRecord\Queries"</StartArguments>
+    <StartArguments>/lang:cs /files:"E:\OSS\rhino tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\bin\Debug\NHibernate.Query.Generator.Tests.dll" /out:"E:\OSS\rhino tools\NHibernate.Query.Generator\NHibernate.Query.Generator.Tests\\ActiveRecord\Queries"</StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>

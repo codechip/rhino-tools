@@ -25,7 +25,7 @@ namespace Query {
         /// <summary>
         /// Query helper for member Where.Query_Comment
         /// </summary>
-        public partial class Query_Comment<T1> : Query.QueryBuilder<T1>
+        public partial class Query_Comment<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
@@ -45,30 +45,30 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Comment.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Author {
+            public virtual PropertyQueryBuilder<T1> Author {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Author", temp);
+                    return new PropertyQueryBuilder<T1>("Author", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Comment.
             /// </summary>
-            public virtual Query.PropertyQueryBuilder<T1> Content {
+            public virtual PropertyQueryBuilder<T1> Content {
                 get {
                     string temp = associationPath;
-                    return new Query.PropertyQueryBuilder<T1>("Content", temp);
+                    return new PropertyQueryBuilder<T1>("Content", temp);
                 }
             }
             
             /// <summary>
             /// Query helper for member Query_Comment.
             /// </summary>
-            public virtual Query.QueryBuilder<T1> Id {
+            public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new Query.QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>("Id", temp);
                 }
             }
             
@@ -109,27 +109,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member Comment.Author
             /// </summary>
-            public static Query.OrderByClause Author {
+            public static OrderByClause Author {
                 get {
-                    return new Query.OrderByClause("Author");
+                    return new OrderByClause("Author");
                 }
             }
             
             /// <summary>
             /// Query helper for member Comment.Content
             /// </summary>
-            public static Query.OrderByClause Content {
+            public static OrderByClause Content {
                 get {
-                    return new Query.OrderByClause("Content");
+                    return new OrderByClause("Content");
                 }
             }
             
             /// <summary>
             /// Query helper for member Comment.Id
             /// </summary>
-            public static Query.OrderByClause Id {
+            public static OrderByClause Id {
                 get {
-                    return new Query.OrderByClause("Id");
+                    return new OrderByClause("Id");
                 }
             }
         }
@@ -145,18 +145,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member Comment.Author
             /// </summary>
-            public static Query.PropertyProjectionBuilder Author {
+            public static PropertyProjectionBuilder Author {
                 get {
-                    return new Query.PropertyProjectionBuilder("Author");
+                    return new PropertyProjectionBuilder("Author");
                 }
             }
             
             /// <summary>
             /// Query helper for member Comment.Content
             /// </summary>
-            public static Query.PropertyProjectionBuilder Content {
+            public static PropertyProjectionBuilder Content {
                 get {
-                    return new Query.PropertyProjectionBuilder("Content");
+                    return new PropertyProjectionBuilder("Content");
+                }
+            }
+            
+            /// <summary>
+            /// Query helper for member Comment.Id
+            /// </summary>
+            public static NumericPropertyProjectionBuilder Id {
+                get {
+                    return new NumericPropertyProjectionBuilder("Id");
                 }
             }
         }
