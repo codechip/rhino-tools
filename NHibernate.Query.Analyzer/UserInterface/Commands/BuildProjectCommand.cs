@@ -91,7 +91,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.Commands
 		{
 			repository.SaveProject(prj);//to save the isBuildSuccessfully flag.
 			view.DisplayProjectState(false, true);
-			view.EndWait("Project was build successfully");
+			view.EndWait("Project was built successfully");
 		}
 
 		private void BuildingProjectFailed(Exception ex)

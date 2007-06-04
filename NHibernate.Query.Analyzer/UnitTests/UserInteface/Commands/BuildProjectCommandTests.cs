@@ -103,7 +103,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UnitTests.UserInteface.Commands
 			repository.SaveProject(prj);
 			prj.BuildProject();
 			view.DisplayProjectState(false,true);
-			view.EndWait("Project was build successfully");
+			view.EndWait("Project was built successfully");
 			mocks.ReplayAll();
 			build.Execute();
 		}
