@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Samples\Project\BookStore\BookStore\BookStore.nunit" total="1" failures="0" not-run="0" date="2007-05-24" time="21:09:16">
+  <environment nunit-version="2.4.1.0" clr-version="2.0.50727.42" os-version="Microsoft Windows NT 5.1.2600 Service Pack 2" platform="Win32NT" cwd="C:\Samples\Project\BookStore\BookStore\bin\Release" machine-name="TCHR_86" user="Administrator" user-domain="TCHR_86" />
+  <culture-info current-culture="he-IL" current-uiculture="en-US" />
+  <test-suite name="C:\Samples\Project\BookStore\BookStore\BookStore.nunit" success="True" time="1.078" asserts="0">
+    <results>
+      <test-suite name="C:\Samples\Project\BookStore\BookStore\bin\Debug\BookStore.exe" success="True" time="1.078" asserts="0">
+        <results>
+          <test-suite name="BookStore" success="True" time="1.063" asserts="0">
+            <results>
+              <test-suite name="Tests" success="True" time="1.063" asserts="0">
+                <results>
+                  <test-suite name="BooksTest" success="True" time="1.031" asserts="0">
+                    <results>
+                      <test-case name="BookStore.Tests.BooksTest.Add_New_Book_Will_Create_A_Single_Copy" executed="True" success="True" time="1.031" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
