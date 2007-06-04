@@ -162,5 +162,27 @@ namespace Rhino.Igloo
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
+
+
+	    /// <summary>
+	    /// Html decode the string
+	    /// </summary>
+	    /// <param name="htmlEncodedString">The HTML encoded string.</param>
+	    /// <returns></returns>
+	    public string HtmlDecode(string htmlEncodedString)
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
+
+
+	    /// <summary>
+	    /// Html decode the string
+	    /// </summary>
+	    /// <param name="htmlString">The HTML string.</param>
+	    /// <returns></returns>
+	    public string HtmlEncode(string htmlString)
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
 	}
 }

@@ -128,5 +128,19 @@ namespace Rhino.Igloo
         /// <param name="path">The path.</param>
         /// <returns></returns>
 	    string MapPath(string path);
+
+        /// <summary>
+        /// Html decode the string
+        /// </summary>
+        /// <param name="htmlEncodedString">The HTML encoded string.</param>
+        /// <returns></returns>
+	    string HtmlDecode(string htmlEncodedString);
+
+	    /// <summary>
+	    /// Html decode the string
+	    /// </summary>
+	    /// <param name="htmlString">The HTML string.</param>
+	    /// <returns></returns>
+	    string HtmlEncode(string htmlString);
 	}
 }

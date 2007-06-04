@@ -182,5 +182,27 @@ namespace Rhino.Igloo.Tests
 	    {
 	        return path;
 	    }
+
+
+	    /// <summary>
+	    /// Html decode the string
+	    /// </summary>
+	    /// <param name="htmlEncodedString">The HTML encoded string.</param>
+	    /// <returns></returns>
+	    public string HtmlDecode(string htmlEncodedString)
+	    {
+	        return htmlEncodedString;
+	    }
+
+
+	    /// <summary>
+	    /// Html decode the string
+	    /// </summary>
+	    /// <param name="htmlString">The HTML string.</param>
+	    /// <returns></returns>
+	    public string HtmlEncode(string htmlString)
+	    {
+	        return htmlString;
+	    }
 	}
 }

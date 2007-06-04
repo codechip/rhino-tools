@@ -115,6 +115,8 @@ namespace Rhino.Igloo
 
 		private string[] HtmlEncode(string[] results)
     	{
+            if (results==null)
+                return new string[0];
     		for (int i = 0; i < results.Length; i++)
     		{
 				if(string.IsNullOrEmpty(results[i])==false)
@@ -258,6 +260,27 @@ namespace Rhino.Igloo
         public string MapPath(string path)
         {
             return context.Response.ApplyAppPathModifier(path);
+        }
+
+
+        /// <summary>
+        /// Html decode the string
+        /// </summary>
+        /// <param name="htmlEncodedString">The HTML encoded string.</param>
+        /// <returns></returns>
+        public string HtmlDecode(string htmlEncodedString)
+        {
+            return context.Server.HtmlDecode(htmlEncodedString);
+        }
+
+        /// <summary>
+        /// Html decode the string
+        /// </summary>
+        /// <param name="htmlString">The HTML string.</param>
+        /// <returns></returns>
+        public string HtmlEncode(string htmlString)
+        {
+            return context.Server.HtmlEncode(htmlString);
         }
     }
 }
