@@ -14,36 +14,36 @@ namespace Query {
     public partial class Where {
         
         /// <summary>
-        /// Query helper for member Where.DerivedBlog
+        /// Query helper for member Where.Role
         /// </summary>
-        public static Root_Query_DerivedBlog DerivedBlog {
+        public static Root_Query_Role Role {
             get {
-                return new Root_Query_DerivedBlog();
+                return new Root_Query_Role();
             }
         }
         
         /// <summary>
-        /// Query helper for member Where.Query_DerivedBlog
+        /// Query helper for member Where.Query_Role
         /// </summary>
-        public partial class Query_DerivedBlog<T1> : QueryBuilder<T1>
+        public partial class Query_Role<T1> : QueryBuilder<T1>
          {
             
             /// <summary>
-            /// Query helper for member Query_DerivedBlog..ctor
+            /// Query helper for member Query_Role..ctor
             /// </summary>
-            public Query_DerivedBlog(QueryBuilder<T1> parent, string name, string associationPath) : 
+            public Query_Role(QueryBuilder<T1> parent, string name, string associationPath) : 
                     base(parent, name, associationPath) {
             }
             
             /// <summary>
-            /// Query helper for member Query_DerivedBlog..ctor
+            /// Query helper for member Query_Role..ctor
             /// </summary>
-            public Query_DerivedBlog(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+            public Query_Role(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
                     base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
-            /// Query helper for member Query_DerivedBlog.
+            /// Query helper for member Query_Role.
             /// </summary>
             public virtual PropertyQueryBuilder<T1> Name {
                 get {
@@ -53,7 +53,7 @@ namespace Query {
             }
             
             /// <summary>
-            /// Query helper for member Query_DerivedBlog.
+            /// Query helper for member Query_Role.
             /// </summary>
             public virtual QueryBuilder<T1> Id {
                 get {
@@ -62,55 +62,43 @@ namespace Query {
                 }
             }
             
-            /// <summary>
-            /// Query helper for member Query_DerivedBlog.
-            /// </summary>
-            public virtual Query_User<T1> Author {
+            public virtual Query_Collection_Users Users {
                 get {
                     string temp = associationPath;
-                    temp = ((temp + ".") 
-                                + "Author");
-                    return new Query_User<T1>(this, "Author", temp, true);
+                    temp = (temp + ".Users");
+                    return new Query_Collection_Users(this, "Users", temp);
                 }
             }
             
-            public virtual Query_Collection_Posts Posts {
-                get {
-                    string temp = associationPath;
-                    temp = (temp + ".Posts");
-                    return new Query_Collection_Posts(this, "Posts", temp);
-                }
-            }
-            
-            public class Query_Collection_Posts : CollectionQueryBuilder<T1> {
+            public class Query_Collection_Users : CollectionQueryBuilder<T1> {
                 
-                public Query_Collection_Posts(QueryBuilder<T1> parent, string name, string associationPath) : 
+                public Query_Collection_Users(QueryBuilder<T1> parent, string name, string associationPath) : 
                         base(parent, name, associationPath) {
                 }
                 
-                public virtual Query_Post<T1> With() {
-                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                public virtual Query_User<T1> With() {
+                    Query_User<T1> query = new Query_User<T1>(this, this.myName, this.associationPath);
                     query.joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
                     query.fetchMode = NHibernate.FetchMode.Default;
                     return query;
                 }
                 
-                public virtual Query_Post<T1> With(NHibernate.SqlCommand.JoinType joinType) {
-                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                public virtual Query_User<T1> With(NHibernate.SqlCommand.JoinType joinType) {
+                    Query_User<T1> query = new Query_User<T1>(this, this.myName, this.associationPath);
                     query.joinType = joinType;
                     query.fetchMode = NHibernate.FetchMode.Default;
                     return query;
                 }
                 
-                public virtual Query_Post<T1> With(NHibernate.FetchMode fetchMode) {
-                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                public virtual Query_User<T1> With(NHibernate.FetchMode fetchMode) {
+                    Query_User<T1> query = new Query_User<T1>(this, this.myName, this.associationPath);
                     query.joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
                     query.fetchMode = fetchMode;
                     return query;
                 }
                 
-                public virtual Query_Post<T1> With(NHibernate.SqlCommand.JoinType joinType, NHibernate.FetchMode fetchMode) {
-                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                public virtual Query_User<T1> With(NHibernate.SqlCommand.JoinType joinType, NHibernate.FetchMode fetchMode) {
+                    Query_User<T1> query = new Query_User<T1>(this, this.myName, this.associationPath);
                     query.joinType = joinType;
                     query.fetchMode = fetchMode;
                     return query;
@@ -119,14 +107,14 @@ namespace Query {
         }
         
         /// <summary>
-        /// Query helper for member Where.Root_Query_DerivedBlog
+        /// Query helper for member Where.Root_Query_Role
         /// </summary>
-        public partial class Root_Query_DerivedBlog : Query_DerivedBlog<NHibernate.Query.Generator.Tests.ActiveRecord.DerivedBlog> {
+        public partial class Root_Query_Role : Query_Role<NHibernate.Query.Generator.Tests.ActiveRecord.Role> {
             
             /// <summary>
-            /// Query helper for member Root_Query_DerivedBlog..ctor
+            /// Query helper for member Root_Query_Role..ctor
             /// </summary>
-            public Root_Query_DerivedBlog() : 
+            public Root_Query_Role() : 
                     base(null, "this", null) {
             }
         }
@@ -135,12 +123,12 @@ namespace Query {
     public partial class OrderBy {
         
         /// <summary>
-        /// Query helper for member OrderBy.DerivedBlog
+        /// Query helper for member OrderBy.Role
         /// </summary>
-        public partial class DerivedBlog {
+        public partial class Role {
             
             /// <summary>
-            /// Query helper for member DerivedBlog.Name
+            /// Query helper for member Role.Name
             /// </summary>
             public static OrderByClause Name {
                 get {
@@ -149,7 +137,7 @@ namespace Query {
             }
             
             /// <summary>
-            /// Query helper for member DerivedBlog.Id
+            /// Query helper for member Role.Id
             /// </summary>
             public static OrderByClause Id {
                 get {
@@ -162,12 +150,12 @@ namespace Query {
     public partial class ProjectBy {
         
         /// <summary>
-        /// Query helper for member ProjectBy.DerivedBlog
+        /// Query helper for member ProjectBy.Role
         /// </summary>
-        public partial class DerivedBlog {
+        public partial class Role {
             
             /// <summary>
-            /// Query helper for member DerivedBlog.Name
+            /// Query helper for member Role.Name
             /// </summary>
             public static PropertyProjectionBuilder Name {
                 get {
@@ -176,7 +164,7 @@ namespace Query {
             }
             
             /// <summary>
-            /// Query helper for member DerivedBlog.Id
+            /// Query helper for member Role.Id
             /// </summary>
             public static NumericPropertyProjectionBuilder Id {
                 get {
@@ -189,12 +177,12 @@ namespace Query {
     public partial class GroupBy {
         
         /// <summary>
-        /// Query helper for member GroupBy.DerivedBlog
+        /// Query helper for member GroupBy.Role
         /// </summary>
-        public partial class DerivedBlog {
+        public partial class Role {
             
             /// <summary>
-            /// Query helper for member DerivedBlog.Name
+            /// Query helper for member Role.Name
             /// </summary>
             public static NHibernate.Expression.IProjection Name {
                 get {

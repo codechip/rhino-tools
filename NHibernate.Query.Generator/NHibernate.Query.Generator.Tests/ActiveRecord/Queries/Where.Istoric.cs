@@ -40,15 +40,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Istoric..ctor
             /// </summary>
-            public Query_Istoric(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Istoric(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Istoric..ctor
             /// </summary>
-            public Query_Istoric(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Istoric(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -57,7 +57,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("Name", temp);
+                    return new PropertyQueryBuilder<T1>(this, "Name", temp);
                 }
             }
             
@@ -67,7 +67,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Query {
             /// Query helper for member Root_Query_Istoric..ctor
             /// </summary>
             public Root_Query_Istoric() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
         
@@ -94,15 +94,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_MesajIst..ctor
             /// </summary>
-            public Query_MesajIst(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_MesajIst(QueryBuilder<T2> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_MesajIst..ctor
             /// </summary>
-            public Query_MesajIst(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_MesajIst(QueryBuilder<T2> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -111,7 +111,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T2> Email {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T2>("Email", temp);
+                    return new PropertyQueryBuilder<T2>(this, "Email", temp);
                 }
             }
         }
@@ -125,7 +125,7 @@ namespace Query {
             /// Query helper for member Root_Query_MesajIst..ctor
             /// </summary>
             public Root_Query_MesajIst() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

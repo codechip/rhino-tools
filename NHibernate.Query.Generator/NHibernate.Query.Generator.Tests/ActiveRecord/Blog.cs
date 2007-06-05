@@ -41,28 +41,28 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 		ISet<Post> posts = new HashedSet<Post>();
 
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[Property]
-		public string Name
+		public virtual  string Name
 		{
 			get { return name;}
 			set { name = value; }
 		}
 
 		[BelongsTo]
-		public User Author
+		public virtual  User Author
 		{
 			get { return author;  }
 			set { author = value; }
 		}
 
 		[HasMany]
-		public ISet<Post> Posts
+		public virtual  ISet<Post> Posts
 		{
 			get { return posts; }
 			set { posts = value; }
@@ -70,15 +70,15 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 	}
 
 	[ActiveRecord]
-	public class DerivedBlog : Blog{}
+	public   class DerivedBlog : Blog{}
 	
 	[ActiveRecord]
-	public class DerivedBlog2 : DerivedBlog
+	public   class DerivedBlog2 : DerivedBlog
 	{
 		private string attribute;
 
 		[Property]
-		public string Attribute
+		public virtual  string Attribute
 		{
 			get { return attribute; }
 			set { attribute = value; }

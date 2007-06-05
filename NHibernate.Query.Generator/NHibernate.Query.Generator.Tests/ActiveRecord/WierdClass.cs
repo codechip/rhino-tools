@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,63 +25,61 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
-
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Castle.ActiveRecord;
+
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
     [ActiveRecord]
     public class WeirdClass : ActiveRecordBase<WeirdClass>
     {
-        WeirdKey key = new WeirdKey();
-        Address address = new Address();
+        private WeirdKey key = new WeirdKey();
+        private Address address = new Address();
 
         [CompositeKey]
-        public WeirdKey Key
+        public virtual WeirdKey Key
         {
             get { return key; }
             set { key = value; }
         }
 
         [Nested]
-        public Address Address
+        public virtual Address Address
         {
             get { return address; }
             set { address = value; }
         }
     }
 
-    public class Address
+    public  class Address
     {
-        string street;
-        Electronic electronic;
+        private string street;
+        private Electronic electronic;
 
         [Property]
-        public string Street
+        public virtual string Street
         {
             get { return street; }
             set { street = value; }
         }
 
         [Nested]
-        public Electronic Electronic
+        public virtual Electronic Electronic
         {
             get { return electronic; }
             set { electronic = value; }
         }
     }
 
-    public class Electronic
+    public  class Electronic
     {
-        string email;
+        private string email;
 
         [Property]
-        public string Email
+        public virtual string Email
         {
             get { return email; }
             set { email = value; }
@@ -88,51 +87,51 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
     }
 
     [Serializable]
-    public class WeirdKey
+    public  class WeirdKey
     {
-        string department;
-        int level;
+        private string department;
+        private int level;
 
         [KeyProperty]
-        public string Department
+        public virtual string Department
         {
             get { return department; }
             set { department = value; }
         }
 
         [KeyProperty]
-        public int Level
+        public virtual int Level
         {
             get { return level; }
             set { level = value; }
         }
 
-        public override bool Equals(object obj)
+        public  override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
-        public override int GetHashCode()
+        public  override int GetHashCode()
         {
             return base.GetHashCode();
         }
     }
 
     [ActiveRecord("_istoric"), JoinedBase]
-    public class Istoric : ActiveRecordBase<Istoric>
+    public  class Istoric : ActiveRecordBase<Istoric>
     {
-        int id;
+        private int id;
         private string name;
 
         [PrimaryKey]
-        public virtual int Id
+        public virtual  int Id
         {
             get { return id; }
             set { id = value; }
         }
 
         [Property]
-        public virtual string Name
+        public  virtual string Name
         {
             get { return name; }
             set { name = value; }
@@ -141,11 +140,12 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 
 
     [ActiveRecord("_mesaj")]
-    public class MesajIst : Istoric
+    public  class MesajIst : Istoric
     {
         private string email;
+
         [Property]
-        public virtual string Email
+        public  virtual string Email
         {
             get { return email; }
             set { email = value; }

@@ -32,30 +32,30 @@ using Castle.ActiveRecord;
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
 	[ActiveRecord]
-	public class Componnet  : ActiveRecordBase<Componnet>
+	public   class Componnet  : ActiveRecordBase<Componnet>
 	{
 		private int id;
 		private string version;
 
-		public Componnet(string version)
+		public   Componnet(string version)
 		{
 			this.version = version;
 		}
 
-		public Componnet()
+		public   Componnet()
 		{
 
 		}
 
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[Property]
-		public string Version
+		public virtual  string Version
 		{
 			get { return version; }
 			set { version = value; }

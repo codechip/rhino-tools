@@ -33,39 +33,47 @@ using Iesi.Collections.Generic;
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
 	[ActiveRecord("Users")]
-	public class User : ActiveRecordBase<User>
+	public   class User : ActiveRecordBase<User>
 	{
 		int id;
 		string name;
 		string email;
 		ISet<Blog> blogs = new HashedSet<Blog>();
+	    private ISet<Role> roles = new HashedSet<Role>();
 
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[Property]
-		public string Name
+		public virtual  string Name
 		{
 			get { return name; }
 			set { name = value; }
 		}
 
 		[Property]
-		public string Email
+		public virtual  string Email
 		{
 			get { return email; }
 			set { email = value; }
 		}
 
-		[HasMany]
-		public ISet<Blog> Blogs
+        [HasMany(Lazy = true)]
+		public virtual  ISet<Blog> Blogs
 		{
 			get { return blogs; }
 			set { blogs = value; }
 		}
+
+        [HasAndBelongsToMany(Table="UsersRoles", ColumnKey = "UserId", ColumnRef = "RoleId")]
+	    public virtual ISet<Role> Roles
+	    {
+	        get { return roles; }
+	        set { roles = value; }
+	    }
 	}
 }

@@ -33,7 +33,7 @@ using Iesi.Collections.Generic;
 namespace NHibernate.Query.Generator.Tests.ActiveRecord
 {
 	[ActiveRecord("Posts")]
-	public class Post : ActiveRecordBase<Post>
+	public   class Post : ActiveRecordBase<Post>
 	{
 		int id;
 		string title;
@@ -42,35 +42,35 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 		ISet<Comment> comments = new HashedSet<Comment>();
 
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[Property]
-		public string Title
+		public virtual  string Title
 		{
 			get { return title; }
 			set { title = value; }
 		}
 
 		[Property]
-		public string Contnet
+		public virtual  string Contnet
 		{
 			get { return contnet; }
 			set { contnet = value; }
 		}
 
 		[BelongsTo]
-		public Blog Blog
+		public virtual  Blog Blog
 		{
 			get { return blog; }
 			set { blog = value; }
 		}
 
 		[HasMany]
-		public ISet<Comment> Comments
+		public virtual  ISet<Comment> Comments
 		{
 			get { return comments; }
 			set { comments = value; }

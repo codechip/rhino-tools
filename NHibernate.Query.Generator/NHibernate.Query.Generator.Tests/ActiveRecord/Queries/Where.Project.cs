@@ -31,15 +31,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Project..ctor
             /// </summary>
-            public Query_Project(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Project(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Project..ctor
             /// </summary>
-            public Query_Project(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Project(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -48,7 +48,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
             
@@ -60,7 +60,7 @@ namespace Query {
                     string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Componnet");
-                    return new Query_InstalledComponnet<T1>("Componnet", temp, true);
+                    return new Query_InstalledComponnet<T1>(this, "Componnet", temp, true);
                 }
             }
         }
@@ -74,7 +74,7 @@ namespace Query {
             /// Query helper for member Root_Query_Project..ctor
             /// </summary>
             public Root_Query_Project() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

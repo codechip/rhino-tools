@@ -48,14 +48,14 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 		}
 
 		[PrimaryKey]
-		public int Id
+        public virtual int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[BelongsTo]
-		public Componnet Component
+		public virtual Componnet Component
 		{
 			get { return component; }
 			set { component = value; }

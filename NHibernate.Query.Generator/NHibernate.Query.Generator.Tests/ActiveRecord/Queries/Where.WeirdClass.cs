@@ -31,15 +31,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_WeirdClass..ctor
             /// </summary>
-            public Query_WeirdClass(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_WeirdClass(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_WeirdClass..ctor
             /// </summary>
-            public Query_WeirdClass(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_WeirdClass(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -47,7 +47,7 @@ namespace Query {
             /// </summary>
             public virtual Query_Address<T1> Address {
                 get {
-                    return new Query_Address<T1>("Address", null);
+                    return new Query_Address<T1>(this, "Address", null);
                 }
             }
             
@@ -56,7 +56,7 @@ namespace Query {
             /// </summary>
             public virtual Query_Key<T1> Key {
                 get {
-                    return new Query_Key<T1>("Key", associationPath);
+                    return new Query_Key<T1>(this, "Key", associationPath);
                 }
             }
             
@@ -69,33 +69,33 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Query_Address..ctor
                 /// </summary>
-                public Query_Address(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Query_Address(QueryBuilder<T2> parent, string name, string associationPath) : 
+                        base(parent, name, associationPath) {
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Address..ctor
                 /// </summary>
-                public Query_Address(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                        base(name, associationPath, backTrackAssociationOnEquality) {
+                public Query_Address(QueryBuilder<T2> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                        base(parent, name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Address.
                 /// </summary>
-                public virtual PropertyQueryBuilder<T1> Street {
+                public virtual PropertyQueryBuilder<T2> Street {
                     get {
                         string temp = associationPath;
-                        return new PropertyQueryBuilder<T1>("Address.Street", temp);
+                        return new PropertyQueryBuilder<T2>(this, "Address.Street", temp);
                     }
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Address.Electronic
                 /// </summary>
-                public virtual Query_Electronic<T1> Electronic {
+                public virtual Query_Electronic<T2> Electronic {
                     get {
-                        return new Query_Electronic<T1>("Address.Electronic", null);
+                        return new Query_Electronic<T2>(this, "Address.Electronic", null);
                     }
                 }
                 
@@ -108,24 +108,24 @@ namespace Query {
                     /// <summary>
                     /// Query helper for member Query_Electronic..ctor
                     /// </summary>
-                    public Query_Electronic(string name, string associationPath) : 
-                            base(name, associationPath) {
+                    public Query_Electronic(QueryBuilder<T3> parent, string name, string associationPath) : 
+                            base(parent, name, associationPath) {
                     }
                     
                     /// <summary>
                     /// Query helper for member Query_Electronic..ctor
                     /// </summary>
-                    public Query_Electronic(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                            base(name, associationPath, backTrackAssociationOnEquality) {
+                    public Query_Electronic(QueryBuilder<T3> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                            base(parent, name, associationPath, backTrackAssociationOnEquality) {
                     }
                     
                     /// <summary>
                     /// Query helper for member Query_Electronic.
                     /// </summary>
-                    public virtual PropertyQueryBuilder<T1> Email {
+                    public virtual PropertyQueryBuilder<T3> Email {
                         get {
                             string temp = associationPath;
-                            return new PropertyQueryBuilder<T1>("Address.Electronic.Email", temp);
+                            return new PropertyQueryBuilder<T3>(this, "Address.Electronic.Email", temp);
                         }
                     }
                 }
@@ -140,34 +140,34 @@ namespace Query {
                 /// <summary>
                 /// Query helper for member Query_Key..ctor
                 /// </summary>
-                public Query_Key(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Query_Key(QueryBuilder<T4> parent, string name, string associationPath) : 
+                        base(parent, name, associationPath) {
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Key..ctor
                 /// </summary>
-                public Query_Key(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                        base(name, associationPath, backTrackAssociationOnEquality) {
+                public Query_Key(QueryBuilder<T4> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                        base(parent, name, associationPath, backTrackAssociationOnEquality) {
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Key.
                 /// </summary>
-                public virtual PropertyQueryBuilder<T1> Department {
+                public virtual PropertyQueryBuilder<T4> Department {
                     get {
                         string temp = associationPath;
-                        return new PropertyQueryBuilder<T1>("Key.Department", temp);
+                        return new PropertyQueryBuilder<T4>(this, "Key.Department", temp);
                     }
                 }
                 
                 /// <summary>
                 /// Query helper for member Query_Key.
                 /// </summary>
-                public virtual PropertyQueryBuilder<T1> Level {
+                public virtual PropertyQueryBuilder<T4> Level {
                     get {
                         string temp = associationPath;
-                        return new PropertyQueryBuilder<T1>("Key.Level", temp);
+                        return new PropertyQueryBuilder<T4>(this, "Key.Level", temp);
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace Query {
             /// Query helper for member Root_Query_WeirdClass..ctor
             /// </summary>
             public Root_Query_WeirdClass() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

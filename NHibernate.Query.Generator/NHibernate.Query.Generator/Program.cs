@@ -110,7 +110,7 @@ namespace NHibernate.Query.Generator
             Stream namedExp =
                 typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder." +
                                                                     targetExtention);
-            string code = new StreamReader(namedExp).ReadToEnd().Replace("%QueryNamespace%", baseNamespace);
+            string code = new StreamReader(namedExp).ReadToEnd().Replace("QueryNamespace", baseNamespace);
             string filename = Path.Combine(outputDir, "QueryBuilder." + targetExtention);
             File.WriteAllText(filename, code);
             Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);

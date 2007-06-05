@@ -31,15 +31,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Componnet..ctor
             /// </summary>
-            public Query_Componnet(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Componnet(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Componnet..ctor
             /// </summary>
-            public Query_Componnet(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Componnet(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -48,7 +48,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> Version {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("Version", temp);
+                    return new PropertyQueryBuilder<T1>(this, "Version", temp);
                 }
             }
             
@@ -58,7 +58,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace Query {
             /// Query helper for member Root_Query_Componnet..ctor
             /// </summary>
             public Root_Query_Componnet() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

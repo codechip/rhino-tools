@@ -31,15 +31,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Comment..ctor
             /// </summary>
-            public Query_Comment(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Comment(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Comment..ctor
             /// </summary>
-            public Query_Comment(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Comment(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -48,7 +48,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> Author {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("Author", temp);
+                    return new PropertyQueryBuilder<T1>(this, "Author", temp);
                 }
             }
             
@@ -58,7 +58,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> Content {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("Content", temp);
+                    return new PropertyQueryBuilder<T1>(this, "Content", temp);
                 }
             }
             
@@ -68,7 +68,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
             
@@ -80,7 +80,7 @@ namespace Query {
                     string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Post");
-                    return new Query_Post<T1>("Post", temp, true);
+                    return new Query_Post<T1>(this, "Post", temp, true);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace Query {
             /// Query helper for member Root_Query_Comment..ctor
             /// </summary>
             public Root_Query_Comment() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

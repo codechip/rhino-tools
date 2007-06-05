@@ -40,15 +40,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Cat..ctor
             /// </summary>
-            public Query_Cat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Cat(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Cat..ctor
             /// </summary>
-            public Query_Cat(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Cat(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -57,7 +57,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> subclass {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("subclass", temp);
+                    return new PropertyQueryBuilder<T1>(this, "subclass", temp);
                 }
             }
             
@@ -67,7 +67,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Query {
             /// Query helper for member Root_Query_Cat..ctor
             /// </summary>
             public Root_Query_Cat() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
         
@@ -94,15 +94,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_DomesticCat..ctor
             /// </summary>
-            public Query_DomesticCat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_DomesticCat(QueryBuilder<T2> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_DomesticCat..ctor
             /// </summary>
-            public Query_DomesticCat(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_DomesticCat(QueryBuilder<T2> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -111,7 +111,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T2> Name {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T2>("Name", temp);
+                    return new PropertyQueryBuilder<T2>(this, "Name", temp);
                 }
             }
         }
@@ -125,7 +125,7 @@ namespace Query {
             /// Query helper for member Root_Query_DomesticCat..ctor
             /// </summary>
             public Root_Query_DomesticCat() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

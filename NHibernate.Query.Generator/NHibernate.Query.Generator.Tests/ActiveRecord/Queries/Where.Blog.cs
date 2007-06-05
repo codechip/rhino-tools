@@ -31,15 +31,15 @@ namespace Query {
             /// <summary>
             /// Query helper for member Query_Blog..ctor
             /// </summary>
-            public Query_Blog(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Query_Blog(QueryBuilder<T1> parent, string name, string associationPath) : 
+                    base(parent, name, associationPath) {
             }
             
             /// <summary>
             /// Query helper for member Query_Blog..ctor
             /// </summary>
-            public Query_Blog(string name, string associationPath, bool backTrackAssociationOnEquality) : 
-                    base(name, associationPath, backTrackAssociationOnEquality) {
+            public Query_Blog(QueryBuilder<T1> parent, string name, string associationPath, bool backTrackAssociationOnEquality) : 
+                    base(parent, name, associationPath, backTrackAssociationOnEquality) {
             }
             
             /// <summary>
@@ -48,7 +48,7 @@ namespace Query {
             public virtual PropertyQueryBuilder<T1> Name {
                 get {
                     string temp = associationPath;
-                    return new PropertyQueryBuilder<T1>("Name", temp);
+                    return new PropertyQueryBuilder<T1>(this, "Name", temp);
                 }
             }
             
@@ -58,7 +58,7 @@ namespace Query {
             public virtual QueryBuilder<T1> Id {
                 get {
                     string temp = associationPath;
-                    return new QueryBuilder<T1>("Id", temp);
+                    return new QueryBuilder<T1>(this, "Id", temp);
                 }
             }
             
@@ -70,14 +70,50 @@ namespace Query {
                     string temp = associationPath;
                     temp = ((temp + ".") 
                                 + "Author");
-                    return new Query_User<T1>("Author", temp, true);
+                    return new Query_User<T1>(this, "Author", temp, true);
                 }
             }
             
-            public virtual CollectionQueryBuilder<T1> Posts {
+            public virtual Query_Collection_Posts Posts {
                 get {
                     string temp = associationPath;
-                    return new CollectionQueryBuilder<T1>("Posts", temp);
+                    temp = (temp + ".Posts");
+                    return new Query_Collection_Posts(this, "Posts", temp);
+                }
+            }
+            
+            public class Query_Collection_Posts : CollectionQueryBuilder<T1> {
+                
+                public Query_Collection_Posts(QueryBuilder<T1> parent, string name, string associationPath) : 
+                        base(parent, name, associationPath) {
+                }
+                
+                public virtual Query_Post<T1> With() {
+                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                    query.joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
+                    query.fetchMode = NHibernate.FetchMode.Default;
+                    return query;
+                }
+                
+                public virtual Query_Post<T1> With(NHibernate.SqlCommand.JoinType joinType) {
+                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                    query.joinType = joinType;
+                    query.fetchMode = NHibernate.FetchMode.Default;
+                    return query;
+                }
+                
+                public virtual Query_Post<T1> With(NHibernate.FetchMode fetchMode) {
+                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                    query.joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
+                    query.fetchMode = fetchMode;
+                    return query;
+                }
+                
+                public virtual Query_Post<T1> With(NHibernate.SqlCommand.JoinType joinType, NHibernate.FetchMode fetchMode) {
+                    Query_Post<T1> query = new Query_Post<T1>(this, this.myName, this.associationPath);
+                    query.joinType = joinType;
+                    query.fetchMode = fetchMode;
+                    return query;
                 }
             }
         }
@@ -91,7 +127,7 @@ namespace Query {
             /// Query helper for member Root_Query_Blog..ctor
             /// </summary>
             public Root_Query_Blog() : 
-                    base("this", null) {
+                    base(null, "this", null) {
             }
         }
     }

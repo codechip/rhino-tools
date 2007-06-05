@@ -36,7 +36,7 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 	
 
 	[ActiveRecord(DiscriminatorValue = "C", DiscriminatorColumn = "subclass", DiscriminatorType = "String")]
-	public class Cat : ActiveRecordBase<Cat>
+	public   class Cat : ActiveRecordBase<Cat>
 	{
 		[Field(Column = "subclass", Update = false, Insert = false, Access = PropertyAccess.Field)]
 		protected string subclass = "C";
@@ -44,7 +44,7 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 		int id;
 
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
@@ -52,15 +52,15 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 	}
 
 	[ActiveRecord(DiscriminatorValue = "D")]
-	public class DomesticCat : Cat
+	public   class DomesticCat : Cat
 	{
-		public DomesticCat()
+		public   DomesticCat()
 		{
 			subclass = "D";
 		}
 
 		[Property]
-		public string Name
+		public virtual  string Name
 		{
 			get { return _name; }
 			set { _name = value; }

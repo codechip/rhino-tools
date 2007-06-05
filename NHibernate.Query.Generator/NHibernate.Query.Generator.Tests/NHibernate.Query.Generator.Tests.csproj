@@ -74,8 +74,11 @@
     <Compile Include="ActiveRecord\Queries\Where.NHibernate.Query.Generator.Tests.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Post.cs" />
     <Compile Include="ActiveRecord\Queries\Where.Project.cs" />
+    <Compile Include="ActiveRecord\Queries\Where.Role.cs" />
     <Compile Include="ActiveRecord\Queries\Where.User.cs" />
     <Compile Include="ActiveRecord\Queries\Where.WeirdClass.cs" />
+    <Compile Include="ActiveRecord\Queries\WithTopLevelAssemblySpecification.hbm.cs" />
+    <Compile Include="ActiveRecord\Role.cs" />
     <Compile Include="ActiveRecord\WierdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
@@ -118,7 +121,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"</PostBuildEvent>
-    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"
+"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(ProjectDir)\*.hbm.xml" /out:"$(ProjectDir) "</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -44,28 +44,28 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
 		Post post;
 		
 		[PrimaryKey]
-		public int Id
+		public virtual  int Id
 		{
 			get { return id; }
 			set { id = value; }
 		}
 
 		[Property]
-		public string Author
+		public virtual  string Author
 		{
 			get { return author; }
 			set { author = value; }
 		}
 
 		[Property]
-		public string Content
+		public virtual  string Content
 		{
 			get { return content; }
 			set { content = value; }
 		}
 
 		[BelongsTo]
-		public Post Post
+		public virtual  Post Post
 		{
 			get { return post; }
 			set { post = value; }
