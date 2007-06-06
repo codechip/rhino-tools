@@ -569,29 +569,29 @@ Use HQL for this functionality...",
 
     public partial class ProjectBy
     {
-        public static PropertyProjectionBuilder RowCount
+        public static IProjection RowCount
         {
-            get { return new PropertyProjectionBuilder(Projections.RowCount()); }
+            get { return Projections.RowCount(); }
         }
 
-        public static PropertyProjectionBuilder Id
+        public static IProjection Id
         {
-            get { return new PropertyProjectionBuilder(Projections.Id()); }
+            get { return Projections.Id(); }
         }
 
-        public static PropertyProjectionBuilder Distinct(IProjection projection)
+        public static IProjection Distinct(IProjection projection)
         {
-            return new PropertyProjectionBuilder(Projections.Distinct(projection));
+            return Projections.Distinct(projection);
         }
 
-        public static PropertyProjectionBuilder SqlProjection(string sql, string[] aliases, IType[] types)
+        public static IProjection SqlProjection(string sql, string[] aliases, IType[] types)
         {
-            return new PropertyProjectionBuilder(Projections.SqlProjection(sql, aliases, types));
+            return Projections.SqlProjection(sql, aliases, types);
         }
 
-        public static PropertyProjectionBuilder SqlGroupByProjection(string sql, string groupBy, string[] aliases, IType[] types)
+        public static IProjection SqlGroupByProjection(string sql, string groupBy, string[] aliases, IType[] types)
         {
-            return new PropertyProjectionBuilder(Projections.SqlGroupProjection(sql, groupBy, aliases, types));
+            return Projections.SqlGroupProjection(sql, groupBy, aliases, types);
         }
     }
 
