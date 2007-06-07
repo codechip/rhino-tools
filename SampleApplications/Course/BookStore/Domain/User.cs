@@ -6,10 +6,10 @@ namespace BookStore.Domain
 {
     public class User
     {
-        private  int _ID = 0;
-        private string _lastname;
-        private string _username;
-        private string _firstname;
+        private  int id = 0;
+        private string lastname;
+        private string username;
+        private string firstname;
 
         public User(string uname, string fname, string lname)
         {
@@ -25,26 +25,26 @@ namespace BookStore.Domain
         
         public int ID
         {
-            get { return _ID; }
-            set { _ID = value; }
+            get { return id; }
+            set { id = value; }
         }
 
         public string Username
         {
-            get { return _username; }
-            set { _username = value; }
+            get { return username; }
+            set { username = value; }
         }
 
         public string Firstname
         {
-            get { return _firstname; }
-            set { _firstname = value; }
+            get { return firstname; }
+            set { firstname = value; }
         }
 
         public string Lastname
         {
-            get { return _lastname; }
-            set { _lastname = value; }
+            get { return lastname; }
+            set { lastname = value; }
         }
     }
 }

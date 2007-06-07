@@ -142,7 +142,7 @@ namespace BookStore.Repositories
             });
         }
 
-        internal ICollection<Book> GetBooksCheckedOutBy(User user)
+        public ICollection<Book> GetBooksCheckedOutBy(User user)
         {
             return With.Transaction<ICollection<Book>>(delegate(SqlCommand command)
             {

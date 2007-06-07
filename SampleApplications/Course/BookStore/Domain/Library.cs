@@ -43,17 +43,17 @@ namespace BookStore.Domain
             booksRepository.AddBookCopy(book);
         }
 
-        internal IList<Book> GetBookList()
+        public IList<Book> GetBookList()
         {
             return booksRepository.GetBookList();
         }
 
-        internal IList<BookCopy> GetBookCopies(Book book1)
+        public IList<BookCopy> GetBookCopies(Book book1)
         {
             return booksRepository.GetBookCopies(book1);
         }
 
-        internal Book GetBookByISBN(string isbn)
+        public Book GetBookByISBN(string isbn)
         {
             return booksRepository.GetBookByISBN(isbn);
         }
@@ -67,17 +67,17 @@ namespace BookStore.Domain
             users.Add(user);
         }
 
-        internal IList<User> GetUsers()
+        public IList<User> GetUsers()
         {
             return usersRepository.GetUsers();
         }
 
-        internal void CheckOutCopyOf(Book book1, User user)
+        public void CheckOutCopyOf(Book book1, User user)
         {
             booksRepository.CheckOut(book1, user, TimeSpan.FromDays(14) );
         }
 
-        internal ICollection<Book> GetBooksCheckedOutBy(User user)
+        public ICollection<Book> GetBooksCheckedOutBy(User user)
         {
             return booksRepository.GetBooksCheckedOutBy(user);
         }

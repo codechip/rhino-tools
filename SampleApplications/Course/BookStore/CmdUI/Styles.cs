@@ -8,7 +8,7 @@ namespace BookStore.CmdUI
     {
         public class ChangeConsoleColor : IDisposable
         {
-            ConsoleColor old;
+            readonly ConsoleColor old;
 
             public ChangeConsoleColor(ConsoleColor newColor)
             {

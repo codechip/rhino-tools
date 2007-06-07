@@ -9,7 +9,7 @@ namespace BookStore.Controllers
 {
     public class AddUserController : BaseController
     {
-        IAddUserView view = ApplicationFactory.CreateAddUserView();
+        readonly IAddUserView view = ApplicationFactory.CreateAddUserView();
 
         public override IView View
         {

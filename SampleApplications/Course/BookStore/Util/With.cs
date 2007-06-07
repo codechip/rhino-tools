@@ -4,37 +4,20 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 using BookStore.Properties;
-using System.Web;
 
 namespace BookStore.Util
 {
     public static class With
     {
-        private static int TransactionCounter
-        {
-            get { return (int)(HttpContext.Current.Items[TransactionCounterKey] ?? 0); }
-            set { HttpContext.Current.Items[TransactionCounterKey] = value; }
-        }
+        private static int transactionCounter = 0;
 
         public static int TotalOpenedTransactionCount;
 
         public delegate T Func<T>(SqlCommand command);
         public delegate void Proc(SqlCommand command);
 
-        static object TransactionCounterKey = new object();
-        private static object ConnectionKey = new object();
-        private static object TransactionKey = new object();
-
-        private static SqlConnection ActiveConnection
-        {
-            get { return (SqlConnection)HttpContext.Current.Items[ConnectionKey]; }
-            set { HttpContext.Current.Items[ConnectionKey] = value; }
-        }
-        private static SqlTransaction ActiveTransaction
-        {
-            get { return (SqlTransaction)HttpContext.Current.Items[TransactionKey]; }
-            set { HttpContext.Current.Items[ConnectionKey] = value; }
-        }
+        private static SqlConnection activeConnection;
+        private static SqlTransaction activeTransaction;
 
         public static T Transaction<T>(Func<T> exec)
         {
@@ -56,9 +39,9 @@ namespace BookStore.Util
             StartTransaction(isolation);
             try
             {
-                using (SqlCommand command = ActiveConnection.CreateCommand())
+                using (SqlCommand command = activeConnection.CreateCommand())
                 {
-                    command.Transaction = ActiveTransaction;
+                    command.Transaction = activeTransaction;
                     exec(command);
                 }
                 CommitTransaction();
@@ -76,43 +59,43 @@ namespace BookStore.Util
 
         private static void DisposeTransaction()
         {
-            if (TransactionCounter <= 0)
+            if (transactionCounter <= 0)
             {
-                ActiveConnection.Dispose();
-                ActiveConnection = null;
+                activeConnection.Dispose();
+                activeConnection = null;
             }
         }
 
         private static void RollbackTransaction()
         {
-            ActiveTransaction.Rollback();
-            ActiveTransaction.Dispose();
-            ActiveTransaction = null;
-            TransactionCounter = 0;
+            activeTransaction.Rollback();
+            activeTransaction.Dispose();
+            activeTransaction = null;
+            transactionCounter = 0;
         }
 
         private static void CommitTransaction()
         {
-            TransactionCounter--;
-            if (TransactionCounter == 0 && ActiveTransaction != null)
+            transactionCounter--;
+            if (transactionCounter == 0 && activeTransaction != null)
             {
-                ActiveTransaction.Commit();
-                ActiveTransaction.Dispose();
-                ActiveTransaction = null;
+                activeTransaction.Commit();
+                activeTransaction.Dispose();
+                activeTransaction = null;
             }
         }
 
         private static void StartTransaction(IsolationLevel isolation)
         {
-            if (TransactionCounter <= 0)
+            if (transactionCounter <= 0)
             {
-                TransactionCounter = 0;
-                ActiveConnection = new SqlConnection(Settings.Default.Database);
-                ActiveConnection.Open();
-                ActiveTransaction = ActiveConnection.BeginTransaction(isolation);
+                transactionCounter = 0;
+                activeConnection = new SqlConnection(Settings.Default.Database);
+                activeConnection.Open();
+                activeTransaction = activeConnection.BeginTransaction(isolation);
                 TotalOpenedTransactionCount++;
             }
-            TransactionCounter++;
+            transactionCounter++;
         }
     }
 }

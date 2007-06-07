@@ -12,12 +12,12 @@ namespace BookStore.Controllers
     {
         public static bool IsOnConsole;
 
-        static Library library = new Library();
+        static readonly Library library = new Library();
 
-        public static IGenericUserInterface CreateUserInterface()
+        public static ISelectOptionsView CreateSelectOptionsView()
         {
             if (IsOnConsole)
-                return new GenericConsoleUserInterface();
+                return new ConsoleSelectOptionsView();
             else
                 return new WinFormGenericUserInterface(); }
 
@@ -26,10 +26,10 @@ namespace BookStore.Controllers
             return library;
         }
 
-        internal static IAddUserView CreateAddUserView()
+        public static IAddUserView CreateAddUserView()
         {
             if (IsOnConsole)
-                return new ConsoleAddUserInterface();
+                return new ConsoleAddUserView();
             else
                 throw new NotSupportedException("don't have view for this");
         

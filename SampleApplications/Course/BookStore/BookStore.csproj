@@ -51,16 +51,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdUI\CommonConsoleView.cs" />
-    <Compile Include="CmdUI\ConsoleAddUserInterface.cs" />
+    <Compile Include="CmdUI\ConsoleAddUserView.cs" />
     <Compile Include="CmdUI\Styles.cs" />
     <Compile Include="Controllers\AddUserController.cs" />
     <Compile Include="Controllers\ApplicationFactory.cs" />
     <Compile Include="Controllers\AddDataController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="UI\Command.cs" />
     <Compile Include="UI\IAddUserView.cs" />
-    <Compile Include="UI\IUserInterface.cs" />
+    <Compile Include="UI\ISelectOptionsView.cs" />
     <Compile Include="Controllers\MainController.cs" />
-    <Compile Include="CmdUI\ConsoleUserInterface.cs" />
+    <Compile Include="CmdUI\ConsoleSelectOptionsView.cs" />
     <Compile Include="Domain\BookCopy.cs" />
     <Compile Include="Domain\Book.cs" />
     <Compile Include="Domain\LateReturn.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Tests\BooksTest.cs" />
     <Compile Include="Tests\UsersTest.cs" />
     <Compile Include="UI\IView.cs" />
-    <Compile Include="Util\With.ForWeb.cs" />
+    <Compile Include="Util\With.cs" />
     <Compile Include="WinUI\WinFormGenericUserInterface.cs">
       <SubType>Form</SubType>
     </Compile>

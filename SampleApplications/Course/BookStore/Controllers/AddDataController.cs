@@ -8,7 +8,7 @@ namespace BookStore.Controllers
 {
     public class AddDataController : BaseController
     {
-        IGenericUserInterface view = ApplicationFactory.CreateUserInterface();
+        readonly ISelectOptionsView view = ApplicationFactory.CreateSelectOptionsView();
 
         public override IView View
         {

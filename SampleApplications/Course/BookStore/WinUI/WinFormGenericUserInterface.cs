@@ -9,7 +9,7 @@ using BookStore.UI;
 
 namespace BookStore.WinUI
 {
-    public partial class WinFormGenericUserInterface : Form, IGenericUserInterface
+    public partial class WinFormGenericUserInterface : Form, ISelectOptionsView
     {
         static bool isFirstTime = true;
 

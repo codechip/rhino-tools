@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using BookStore.UI;
-using BookStore.CmdUI;
 
 namespace BookStore.Controllers
 {
     public class MainController : BaseController
     {
-        IGenericUserInterface view = ApplicationFactory.CreateUserInterface();
+        readonly ISelectOptionsView view = ApplicationFactory.CreateSelectOptionsView();
 
         public override IView View
         {
