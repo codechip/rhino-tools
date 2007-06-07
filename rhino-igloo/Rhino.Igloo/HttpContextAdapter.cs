@@ -66,7 +66,7 @@ namespace Rhino.Igloo
         /// <param name="destination">The destination.</param>
         public void Redirect(string destination)
         {
-            destination = ((Page) context.Handler).ResolveUrl(destination);
+            destination = context.Response.ApplyAppPathModifier(destination);
             // NOTE: This must not throw exception (which it would do if endRequest is true
             // because it is called from transactional methods.
             context.Response.Redirect(destination, false);
@@ -247,7 +247,7 @@ namespace Rhino.Igloo
 		/// <param name="waitTime">The wait time.</param>
 		public void AddRefreshHeaderAfter(string url, TimeSpan waitTime)
 		{
-		    url = context.Response.ApplyAppPathModifier(url);
+			url = context.Response.ApplyAppPathModifier(url);
 			context.Response.AddHeader("Refresh", string.Format("{0}; URL={1}", waitTime.Seconds, url));
 		}
 
