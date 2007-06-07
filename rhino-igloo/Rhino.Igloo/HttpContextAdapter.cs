@@ -247,7 +247,7 @@ namespace Rhino.Igloo
 		/// <param name="waitTime">The wait time.</param>
 		public void AddRefreshHeaderAfter(string url, TimeSpan waitTime)
 		{
-			url = ((Page)context.Handler).ResolveUrl(url);
+		    url = context.Response.ApplyAppPathModifier(url);
 			context.Response.AddHeader("Refresh", string.Format("{0}; URL={1}", waitTime.Seconds, url));
 		}
 
