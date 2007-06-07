@@ -59,6 +59,19 @@ namespace Rhino.Commons
 			Session.Delete(entity);
 		}
 
+		public void DeleteAll()
+		{
+			Session.Delete(String.Format("from {0}", typeof(T).Name));
+		}
+
+		public void DeleteAll(DetachedCriteria where)
+		{
+            foreach (object entity in where.GetExecutableCriteria(Session).List())
+            {
+                Session.Delete(entity);
+            }
+		}
+
 		public void Save(T entity)
 		{
 			Session.Save(entity);

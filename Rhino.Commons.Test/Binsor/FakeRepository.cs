@@ -132,6 +132,25 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			throw new NotImplementedException();
 		}
+		
+		/// <summary>
+		/// Registers all entities for deletion when the unit of work
+		/// is completed.
+		/// </summary>
+		public virtual void DeleteAll()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Registers all entities for deletion that match the supplied
+		/// HQL condition when the unit of work is completed.
+		/// </summary>
+		/// <param name="where">HQL condition to select the rows to be deleted</param>
+		public void DeleteAll(DetachedCriteria where)
+		{
+			throw new NotImplementedException();
+		}
 
 		/// <summary>
 		/// Register te entity for save in the database when the unit of work
