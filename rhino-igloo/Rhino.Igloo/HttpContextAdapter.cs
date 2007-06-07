@@ -282,5 +282,14 @@ namespace Rhino.Igloo
         {
             return context.Server.HtmlEncode(htmlString);
         }
+
+
+        /// <summary>
+        /// Ends the current request
+        /// </summary>
+        public void EndResponse()
+        {
+            context.Response.End();
+        }
     }
 }

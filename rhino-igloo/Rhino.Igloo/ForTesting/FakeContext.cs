@@ -47,8 +47,9 @@ namespace Rhino.Igloo.Tests
         private IList<UploadedFile> uploadedFiles = new List<UploadedFile>();
 		private TimeSpan? refreshWaitTime;
 		private string refreshUrl;
+	    private bool hasEnded;
 
-		public void Redirect(string destination)
+	    public void Redirect(string destination)
 		{
 			LastRedirectedUrl = destination;
 		}
@@ -203,6 +204,25 @@ namespace Rhino.Igloo.Tests
 	    public string HtmlEncode(string htmlString)
 	    {
 	        return htmlString;
+	    }
+
+
+	    /// <summary>
+	    /// Ends the current request
+	    /// </summary>
+	    public void EndResponse()
+	    {
+	        HasEnded = true;
+	    }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has ended.
+        /// </summary>
+        /// <value><c>true</c> if this instance has ended; otherwise, <c>false</c>.</value>
+	    public bool HasEnded
+	    {
+	        get { return hasEnded; }
+	        set { hasEnded = value; }
 	    }
 	}
 }

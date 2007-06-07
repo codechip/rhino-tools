@@ -184,5 +184,14 @@ namespace Rhino.Igloo
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
         }
+
+
+	    /// <summary>
+	    /// Ends the current request
+	    /// </summary>
+	    public void EndResponse()
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
 	}
 }

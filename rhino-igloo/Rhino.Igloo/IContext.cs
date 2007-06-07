@@ -142,5 +142,10 @@ namespace Rhino.Igloo
 	    /// <param name="htmlString">The HTML string.</param>
 	    /// <returns></returns>
 	    string HtmlEncode(string htmlString);
+
+        /// <summary>
+        /// Ends the current request
+        /// </summary>
+	    void EndResponse();
 	}
 }

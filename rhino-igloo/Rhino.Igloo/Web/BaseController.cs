@@ -255,5 +255,10 @@ namespace Rhino.Igloo
 				return validatorRunner;
 			}
 		}
+
+	    public virtual void Initialize()
+	    {
+	        
+	    }
 	}
 }

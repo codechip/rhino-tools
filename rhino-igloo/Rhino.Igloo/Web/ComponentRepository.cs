@@ -83,14 +83,20 @@ namespace Rhino.Igloo
             if (!(_componentsByType.TryGetValue(type, out controllersToInject) ||
                 _componentsByType.TryGetValue(type.BaseType, out controllersToInject)))
                 return;
-
+            List<BaseController> controllers = new List<BaseController>();
             foreach (PropertyInfo info in controllersToInject)
             {
                 if(info.CanWrite==false)
                     return;
 
-                object controller = IoC.Container.Resolve(info.PropertyType);
+                BaseController controller = (BaseController)IoC.Container.Resolve(info.PropertyType);
+                controllers.Add(controller);
                 info.SetValue(instance, controller, null);
+            }
+
+            foreach (BaseController controller in controllers)
+            {
+                controller.Initialize();
             }
         }
     }
