@@ -22,7 +22,7 @@ namespace BookStore.WinUI
         {
             Button item = new Button();
             item.Text = commandName;
-            item.Click += delegate { cmd(); };
+            item.Click += delegate {  cmd(); };
             theAmazingLayout.Controls.Add(item);
         }
 

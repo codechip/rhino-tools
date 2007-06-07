@@ -74,7 +74,14 @@ namespace BookStore.Domain
 
         public void CheckOutCopyOf(Book book1, User user)
         {
-            booksRepository.CheckOut(book1, user, TimeSpan.FromDays(14) );
+            // remember transactions!
+            // find if book has free copies
+            //  if not, throw NoFreeBookException
+            // find copy id #
+            // add new row to the checkouts table, with the proper data
+
+
+            //booksRepository.CheckOut(book1, user, TimeSpan.FromDays(14) );
         }
 
         public ICollection<Book> GetBooksCheckedOutBy(User user)

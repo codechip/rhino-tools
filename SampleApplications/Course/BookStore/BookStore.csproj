@@ -50,14 +50,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AddBookController.cs" />
+    <Compile Include="Controllers\AddBookCopyController.cs" />
     <Compile Include="CmdUI\CommonConsoleView.cs" />
+    <Compile Include="CmdUI\ConsoleAddBookCopyView.cs" />
+    <Compile Include="CmdUI\ConsoleAddBookView.cs" />
     <Compile Include="CmdUI\ConsoleAddUserView.cs" />
     <Compile Include="CmdUI\Styles.cs" />
     <Compile Include="Controllers\AddUserController.cs" />
     <Compile Include="Controllers\ApplicationFactory.cs" />
     <Compile Include="Controllers\AddDataController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BaseMenuController.cs" />
+    <Compile Include="Controllers\ReportsMenuController.cs" />
     <Compile Include="UI\Command.cs" />
+    <Compile Include="UI\IAddBookCopyView.cs" />
+    <Compile Include="UI\IAddBookView.cs" />
     <Compile Include="UI\IAddUserView.cs" />
     <Compile Include="UI\ISelectOptionsView.cs" />
     <Compile Include="Controllers\MainController.cs" />

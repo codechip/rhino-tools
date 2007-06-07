@@ -3,34 +3,34 @@ using System.Collections.Generic;
 using System.Text;
 using BookStore.UI;
 using BookStore.CmdUI;
+using BookStore.Controllers;
 
 namespace BookStore.Controllers
 {
-    public class AddDataController : BaseController
+    public class AddDataController : BaseMenuController
     {
-        readonly ISelectOptionsView view = ApplicationFactory.CreateSelectOptionsView();
-
-        public override IView View
-        {
-            get { return view; }
-        }
-
         public AddDataController()
         {
-            view.AddCommand("Add User", MoveToAddUserController);
-            view.AddCommand("Add Book", NotImplemented);
-            view.AddCommand("Add Copy Of Existing Book", NotImplemented);
-        }
-
-        public void Run()
-        {
-            view.Display();
+            View.AddCommand("Add User", MoveToAddUserController);
+            View.AddCommand("Add Book", MoveToAddBookController);
+            View.AddCommand("Add Copy Of Existing Book", MoveToAddBookCopyController);
         }
 
         public void MoveToAddUserController()
         {
             new AddUserController().Run();
         }
+
+        public void MoveToAddBookController()
+        {
+            new AddBookController().Run();
+        }
+
+        public void MoveToAddBookCopyController()
+        {
+            new AddBookCopyController().Run();
+        }
+
     }
 
 }

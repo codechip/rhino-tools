@@ -7,16 +7,16 @@ using System.Data;
 
 namespace BookStore.Controllers
 {
-    public class AddUserController : BaseController
+    public class AddUserController : BaseController<IAddUserView>
     {
         readonly IAddUserView view = ApplicationFactory.CreateAddUserView();
 
-        public override IView View
+        public override IAddUserView View
         {
             get { return view; }
         }
 
-        public void Run()
+        protected override void DoRun()
         {
             view.GetDataFromUser();
             try

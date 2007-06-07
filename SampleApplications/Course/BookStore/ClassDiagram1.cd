@@ -1,200 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Tahoma" Size="8.25" />
-  <Class Name="BookStore.Repositories.BookRepository" Collapsed="true">
-    <Position X="14.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Repositories\BookRepository.cs</FileName>
-      <HashCode>AAAAAAAAAAQABAAwABgAAAAAAAAGAEAAAAAgAIAAAIA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="BookFindAvailableCopy" Hidden="true" />
-      <Field Name="BookGetAllCheckedOutByUser" Hidden="true" />
-      <Field Name="InsertBookSp" Hidden="true" />
-    </Members>
-  </Class>
-  <Class Name="BookStore.Repositories.UsersRepository" Collapsed="true">
-    <Position X="14.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Repositories\UsersRepository.cs</FileName>
-      <HashCode>IAAAAAAAAAAAAAAAAAgAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="InsertUserSp" Hidden="true" />
-    </Members>
-  </Class>
-  <Class Name="BookStore.Domain.Library" Collapsed="true">
-    <Position X="12.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Domain\Library.cs</FileName>
-      <HashCode>IBAAAACAABAAAAAAACiAAAICAAAGAAAgAAAgAAAAAIA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="books" Hidden="true" />
-      <Field Name="booksRepository" Hidden="true" />
-      <Field Name="users" Hidden="true" />
-      <Field Name="usersRepository" Hidden="true" />
-    </Members>
-  </Class>
-  <Class Name="BookStore.Controllers.AddDataController">
-    <Position X="0.75" Y="2.75" Width="2" />
+  <Class Name="BookStore.Controllers.AddDataController" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Controllers\AddDataController.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAYAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
     </TypeIdentifier>
-    <Members>
-      <Field Name="view" Hidden="true" />
-    </Members>
   </Class>
-  <Class Name="BookStore.Controllers.MainController">
-    <Position X="3.5" Y="2.75" Width="2" />
+  <Class Name="BookStore.Controllers.MainController" Collapsed="true">
+    <Position X="2.75" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Controllers\MainController.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
     </TypeIdentifier>
-    <Members>
-      <Field Name="view" Hidden="true" />
-    </Members>
   </Class>
-  <Class Name="BookStore.Controllers.AddUserController">
-    <Position X="6.25" Y="2.75" Width="1.5" />
+  <Class Name="BookStore.Controllers.AddUserController" Collapsed="true">
+    <Position X="5" Y="2.75" Width="2" />
     <TypeIdentifier>
       <FileName>Controllers\AddUserController.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAABAAA=</HashCode>
     </TypeIdentifier>
-    <Members>
-      <Field Name="view" Hidden="true" />
-    </Members>
   </Class>
-  <Class Name="BookStore.Controllers.ApplicationFactory" Collapsed="true">
-    <Position X="12.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Controllers\ApplicationFactory.cs</FileName>
-      <HashCode>AIAAAAAAAAAIAAAAAAAAAAAgAAAAAAABAAAAAAAgAAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="library" Hidden="true" />
-    </Members>
-  </Class>
-  <Class Name="BookStore.Controllers.BaseController">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+  <Class Name="BookStore.Controllers.BaseController&lt;TView&gt;" Collapsed="true">
+    <Position X="2.75" Y="1.5" Width="2" />
     <TypeIdentifier>
       <FileName>Controllers\BaseController.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAEAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAFAAI=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Class Name="BookStore.CmdUI.CommonConsoleView">
-    <Position X="3.25" Y="5.5" Width="1.75" />
+  <Class Name="BookStore.Controllers.BaseMenuController" Collapsed="true">
+    <Position X="1.25" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <FileName>CmdUI\CommonConsoleView.cs</FileName>
-      <HashCode>AAAAAAgAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\BaseMenuController.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAABAAA=</HashCode>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="BookStore.CmdUI.ConsoleSelectOptionsView">
-    <Position X="3.25" Y="7.25" Width="2" />
-    <TypeIdentifier>
-      <FileName>CmdUI\ConsoleSelectOptionsView.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAABCAAAAAQEAAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="commandNames" Hidden="true" />
-      <Field Name="commandNameToCommand" Hidden="true" />
-    </Members>
-    <InheritanceLine Type="BookStore.CmdUI.CommonConsoleView" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="4.875" Y="6.74" />
-        <Point X="4.875" Y="7.25" />
-      </Path>
-    </InheritanceLine>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="BookStore.CmdUI.ConsoleAddUserView">
-    <Position X="0.75" Y="6" Width="2.25" />
-    <TypeIdentifier>
-      <FileName>CmdUI\ConsoleAddUserView.cs</FileName>
-      <HashCode>AAAAAAACAAAQAAAAAABAAAAAAAAgAAAAAgIAAAEAAAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="userFirstName" Hidden="true" />
-      <Field Name="userLastName" Hidden="true" />
-      <Field Name="userName" Hidden="true" />
-    </Members>
-    <InheritanceLine Type="BookStore.CmdUI.CommonConsoleView" FixedFromPoint="true">
-      <Path>
-        <Point X="3.75" Y="6.74" />
-        <Point X="3.75" Y="6.974" />
-        <Point X="3" Y="6.974" />
-      </Path>
-    </InheritanceLine>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="BookStore.WinUI.WinFormGenericUserInterface">
-    <Position X="2.25" Y="9.75" Width="3.25" />
-    <TypeIdentifier>
-      <FileName>WinUI\WinFormGenericUserInterface.cs</FileName>
-      <HashCode>AAAEAAgAACAAAAACAASEAQACAAAAAAAIAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="components" Hidden="true" />
-      <Method Name="Dispose" Hidden="true" />
-      <Method Name="InitializeComponent" Hidden="true" />
-      <Field Name="isFirstTime" Hidden="true" />
-      <Field Name="theAmazingLayout" Hidden="true" />
-    </Members>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="BookStore.Util.With">
-    <Position X="0.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Util\With.cs</FileName>
-      <HashCode>AACAAIAAJAAAAAAEAEAAACAAAABAAAAAAAAAAAAAIAA=</HashCode>
-    </TypeIdentifier>
-    <Members>
-      <Field Name="activeConnection" Hidden="true" />
-      <Field Name="activeTransaction" Hidden="true" />
-      <Field Name="TotalOpenedTransactionCount" Hidden="true" />
-      <Field Name="transactionCounter" Hidden="true" />
-    </Members>
-    <NestedTypes>
-      <Delegate Name="BookStore.Util.With.Func&lt;T&gt;" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Util\With.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-      <Delegate Name="BookStore.Util.With.Proc" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Util\With.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Delegate>
-    </NestedTypes>
-  </Class>
-  <Interface Name="BookStore.UI.IAddUserView">
-    <Position X="7.5" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>UI\IAddUserView.cs</FileName>
-      <HashCode>AAAAAAAAAAQAAAAAAAAAACAAAAAAAAAAAQAAAAIAAAA=</HashCode>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="BookStore.UI.ISelectOptionsView">
-    <Position X="9.75" Y="7.5" Width="1.75" />
-    <TypeIdentifier>
-      <FileName>UI\ISelectOptionsView.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAACAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="BookStore.UI.IView">
-    <Position X="8.75" Y="5.5" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>UI\IView.cs</FileName>
-      <HashCode>AAAAAAgAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Interface>
-  <Delegate Name="BookStore.UI.Command" Collapsed="true">
-    <Position X="12.5" Y="2.75" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>UI\Command.cs</FileName>
-      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Delegate>
 </ClassDiagram>

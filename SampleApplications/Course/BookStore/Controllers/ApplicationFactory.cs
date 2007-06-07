@@ -34,5 +34,23 @@ namespace BookStore.Controllers
                 throw new NotSupportedException("don't have view for this");
         
         }
+
+        public static IAddBookView CreateAddBookView()
+        {
+            if (IsOnConsole)
+                return new ConsoleAddBookView();
+            else
+                throw new NotSupportedException("don't have view for this");
+
+        }
+
+        public static IAddBookCopyView CreateAddBookCopyView()
+        {
+            if (IsOnConsole)
+                return new ConsoleAddBookCopyView();
+            else
+                throw new NotSupportedException("don't have view for this");
+
+        }
     }
 }

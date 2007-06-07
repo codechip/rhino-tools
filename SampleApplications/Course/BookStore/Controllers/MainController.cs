@@ -2,33 +2,26 @@ using BookStore.UI;
 
 namespace BookStore.Controllers
 {
-    public class MainController : BaseController
+    public class MainController : BaseMenuController
     {
-        readonly ISelectOptionsView view = ApplicationFactory.CreateSelectOptionsView();
-
-        public override IView View
-        {
-            get { return view; }
-        }
-
         public MainController()
         {
-            view.AddCommand("Add Data", MoveToAddDataController);
-            view.AddCommand("Checkout a book", NotImplemented);
-            view.AddCommand("Return Book", NotImplemented);
-            view.AddCommand("Search Book", NotImplemented);
-            view.AddCommand("Search User", NotImplemented);
-            view.AddCommand("Reports", NotImplemented);
+            View.AddCommand("Add Data", MoveToAddDataController);
+            View.AddCommand("Checkout a book", NotImplemented);
+            View.AddCommand("Return Book", NotImplemented);
+            View.AddCommand("Search Book", NotImplemented);
+            View.AddCommand("Search User", NotImplemented);
+            View.AddCommand("Reports", MoveToReportsMenuController);
+        }
+
+        public void MoveToReportsMenuController()
+        {
+            new ReportsMenuController().Run();
         }
 
         public void MoveToAddDataController()
         {
             new AddDataController().Run();
-        }
-
-        public void Run()
-        {
-            view.Display();
         }
     }
 }

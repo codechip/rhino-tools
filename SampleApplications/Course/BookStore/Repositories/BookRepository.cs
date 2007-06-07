@@ -121,7 +121,10 @@ namespace BookStore.Repositories
             });
         }
 
-
+        /// <summary>
+        /// This is not working!
+        /// Left for home
+        /// </summary>
         public void CheckOut(Book book, User user, TimeSpan checkOutDuration)
         {
             With.Transaction(IsolationLevel.Serializable, delegate(SqlCommand command)

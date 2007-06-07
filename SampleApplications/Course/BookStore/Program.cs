@@ -13,11 +13,12 @@ namespace BookStore
     {
         static void Main(string[] args)
         {
-            ApplicationFactory.IsOnConsole = false;
+                ApplicationFactory.IsOnConsole = true;
 
-            Console.WriteLine("Welcome to the library!");
-            MainController controller = new MainController();
-            controller.Run();
+                Console.WriteLine("Welcome to the library!");
+                MainController controller = new MainController();
+                controller.Run();
+         
         }
     }
 }
