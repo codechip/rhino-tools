@@ -78,6 +78,26 @@ namespace Rhino.Commons
     		InternalRepository.Delete(entity);
     	}
 
+		/// <summary>
+		/// Registers all entities for deletion when the unit of work
+		/// is completed.
+		/// </summary>
+		public static void DeleteAll()
+		{
+			InternalRepository.DeleteAll();	
+		}
+
+
+        /// <summary>
+        /// Registers all entities for deletion that match the supplied
+        /// criteria condition when the unit of work is completed.
+        /// </summary>
+        /// <param name="where">criteria condition to select the rows to be deleted</param>
+        public static void DeleteAll(DetachedCriteria where)
+		{
+			InternalRepository.DeleteAll(where);
+		}
+
     	/// <summary>
     	/// Register te entity for save in the database when the unit of work
     	/// is completed. (INSERT)
