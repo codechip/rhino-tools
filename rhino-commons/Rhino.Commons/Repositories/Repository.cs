@@ -109,6 +109,15 @@ namespace Rhino.Commons
     	}
 
         /// <summary>
+        /// Saves or update the entity, based on its usaved-value
+        /// </summary>
+        /// <param name="entity"></param>
+        public static void SaveOrUpdate(T entity)
+        {
+            InternalRepository.SaveOrUpdate(entity);
+        }
+
+        /// <summary>
         /// Register the entity for update in the database when the unit of work
         /// is completed. (UPDATE)
         /// </summary>

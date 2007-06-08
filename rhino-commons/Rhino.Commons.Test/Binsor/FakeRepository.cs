@@ -162,8 +162,16 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
+	    /// <summary>
+	    /// Saves or update the entity, based on its usaved-value
+	    /// </summary>
+	    /// <param name="entity"></param>
+	    public void SaveOrUpdate(T entity)
+	    {
+	        throw new NotImplementedException();
+	    }
 
-        /// <summary>
+	    /// <summary>
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>

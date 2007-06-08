@@ -78,6 +78,15 @@ namespace Rhino.Commons
 		}
 
 
+	    /// <summary>
+	    /// Saves or update the entity, based on its usaved-value
+	    /// </summary>
+	    /// <param name="entity"></param>
+	    public void SaveOrUpdate(T entity)
+	    {
+	        Session.SaveOrUpdate(entity);
+	    }
+
 	    public void Update(T entity)
 	    {
 	        Session.Update(entity);
