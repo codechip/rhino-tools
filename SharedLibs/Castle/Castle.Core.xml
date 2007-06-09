@@ -63,6 +63,11 @@
             </summary>
             <value><c>true</c> if the component requires a single interface proxy.</value>
         </member>
+        <member name="P:Castle.Core.ComponentProxyBehaviorAttribute.AdditionalInterfaces">
+            <summary>
+             Gets or sets the additional interfaces used during proxy generation.
+            </summary>
+        </member>
         <member name="T:Castle.Core.DoNotWireAttribute">
             <summary>
             Marks as property to be skipped and not be wired
@@ -229,20 +234,9 @@
             interceptor is acting.
             </summary>
         </member>
-        <member name="T:Castle.Core.Interceptor.IProxyTargetAccessor">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="M:Castle.Core.Interceptor.IProxyTargetAccessor.DynProxyGetTarget">
             <summary>
             Get the proxy target (note that null is a valid target!)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Core.Interceptor.IProxyTargetAccessor.GetInterceptors">
-            <summary>
-            Gets the interceptors for the proxy
             </summary>
             <returns></returns>
         </member>
