@@ -38,19 +38,19 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_Componnet(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_Componnet(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_Componnet(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_Componnet(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> Version {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("Version", temp);
                 }
             }
@@ -58,7 +58,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClause<T1> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClause<T1>("Id", temp);
                 }
             }
@@ -91,19 +91,19 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_Componnet(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_Componnet(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_Componnet(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_Componnet(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Version {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Version", temp);
                 }
             }
@@ -111,7 +111,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
@@ -144,19 +144,19 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_Componnet(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_Componnet(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_Componnet(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_Componnet(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Version {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Version", temp);
                 }
             }
@@ -164,7 +164,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Id", temp);
                 }
             }

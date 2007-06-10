@@ -252,7 +252,7 @@ namespace NHibernate.Query.Generator
 																				idClass,
 																				ClassName.GetName(idNode),
 																				innerClass,
-																				new CodeVariableReferenceExpression("associationPath"),
+																				new CodeVariableReferenceExpression("QpAssociationPath"),
 																				part.ClauseName);
 					}
 
@@ -427,21 +427,21 @@ namespace NHibernate.Query.Generator
 			// ClauseName_Blog(string name, string associationPath) : BaseClass<T1>(name, associationPath);
 			CodeConstructor ctor = new CodeConstructor();
 			ctor.Attributes = MemberAttributes.Public;
-			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
-			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "associationPath"));
-			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
-			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
+			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "QpName"));
+			ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "QpAssociationPath"));
+			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("QpName"));
+			ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("QpAssociationPath"));
 			AddToMembersWithSimpleXmlComment(innerClass, ctor, part.ClauseName);
 
 			// ctor for backtracking
 			CodeConstructor ctor2 = new CodeConstructor();
 			ctor2.Attributes = MemberAttributes.Public;
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "associationPath"));
-			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(bool), "backTrack"));
-			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
-			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
-			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("backTrack"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "QpName"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "QpAssociationPath"));
+			ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(bool), "QpBackTrack"));
+			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("QpName"));
+			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("QpAssociationPath"));
+			ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("QpBackTrack"));
 			AddToMembersWithSimpleXmlComment(innerClass, ctor2, part.ClauseName);
 
 			AddToMembersWithSimpleXmlComment(parent, innerClass, part.ClauseName);
@@ -551,7 +551,7 @@ namespace NHibernate.Query.Generator
 			CodeObjectCreateExpression newExpr = new CodeObjectCreateExpression(prop.Type);
 
 			CodeVariableDeclarationStatement var =
-				new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("associationPath"));
+				new CodeVariableDeclarationStatement(typeof(string), "temp", new CodeVariableReferenceExpression("QpAssociationPath"));
 			prop.GetStatements.Add(var);
 			switch (associationBehavior)
 			{

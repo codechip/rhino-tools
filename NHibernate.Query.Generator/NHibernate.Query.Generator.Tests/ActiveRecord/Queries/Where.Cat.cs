@@ -55,19 +55,19 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_Cat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_Cat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_Cat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_Cat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> subclass {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("subclass", temp);
                 }
             }
@@ -75,7 +75,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClause<T1> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClause<T1>("Id", temp);
                 }
             }
@@ -95,19 +95,19 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_DomesticCat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_DomesticCat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_DomesticCat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_DomesticCat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member 
             public virtual Query.WhereClauseProperty<T2> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T2>("Name", temp);
                 }
             }
@@ -150,19 +150,19 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_Cat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_Cat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_Cat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_Cat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T3> subclass {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T3>("subclass", temp);
                 }
             }
@@ -170,7 +170,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T3> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T3>("Id", temp);
                 }
             }
@@ -190,19 +190,19 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_DomesticCat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_DomesticCat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_DomesticCat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_DomesticCat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T4> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T4>("Name", temp);
                 }
             }
@@ -245,19 +245,19 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_Cat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_Cat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_Cat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_Cat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T5> subclass {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T5>("subclass", temp);
                 }
             }
@@ -265,7 +265,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T5> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T5>("Id", temp);
                 }
             }
@@ -285,19 +285,19 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_DomesticCat(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_DomesticCat(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_DomesticCat(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_DomesticCat(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T6> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T6>("Name", temp);
                 }
             }

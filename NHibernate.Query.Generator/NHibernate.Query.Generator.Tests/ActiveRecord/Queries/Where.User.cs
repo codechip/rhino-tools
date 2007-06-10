@@ -38,19 +38,19 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_User(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_User(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_User(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_User(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("Name", temp);
                 }
             }
@@ -58,7 +58,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> Email {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("Email", temp);
                 }
             }
@@ -66,7 +66,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClause<T1> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClause<T1>("Id", temp);
                 }
             }
@@ -99,19 +99,19 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_User(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_User(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_User(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_User(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Name", temp);
                 }
             }
@@ -119,7 +119,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Email {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Email", temp);
                 }
             }
@@ -127,7 +127,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
@@ -160,19 +160,19 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_User(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_User(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_User(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_User(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Name {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Name", temp);
                 }
             }
@@ -180,7 +180,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Email {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Email", temp);
                 }
             }
@@ -188,7 +188,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Id", temp);
                 }
             }

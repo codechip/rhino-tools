@@ -16,9 +16,9 @@ namespace Query
 	{
 		#region Fields
 
-		protected internal WhereClause<T> where;
+		protected internal WhereClause<T> whereClause;
 		protected internal ProjectionClauseProperty<T> projection;
-		protected internal OrderByClauseProperty<T> order;
+		protected internal OrderByClauseProperty<T> orderClause;
 		protected internal ICollection<ICriterion> subqueries = new List<ICriterion>();
 		protected internal bool whereHasValue;
 		protected internal bool projectionHasValue;
@@ -32,10 +32,10 @@ namespace Query
 
 		public virtual QueryBuilder<T> Where(WhereClause<T> whereClause)
 		{
-			if (where)
-				where = where && whereClause;
+			if (this.whereClause)
+				this.whereClause = this.whereClause && whereClause;
 			else
-				where = whereClause;
+				this.whereClause = whereClause;
 			whereHasValue = true;
 			return this;
 		}
@@ -49,7 +49,7 @@ namespace Query
 		{
 			if (!whereHasValue)
 				return Where(whereClause);
-			where = where || whereClause;
+			this.whereClause = this.whereClause || whereClause;
 			return this;
 		}
 
@@ -76,9 +76,9 @@ namespace Query
 		public virtual QueryBuilder<T> Order(OrderByClauseProperty<T> orderByClause)
 		{
 			if (!orderHasValue)
-				order = orderByClause;
+				orderClause = orderByClause;
 			else
-				order = order && orderByClause;
+				orderClause = orderClause && orderByClause;
 			orderHasValue = true;
 			return this;
 		}
@@ -118,7 +118,7 @@ namespace Query
 
 		public virtual void ResetOrderBy()
 		{
-			order = null;
+			orderClause = null;
 			orderHasValue = false;
 		}
 
@@ -130,7 +130,7 @@ namespace Query
 
 		public virtual void ResetWhere()
 		{
-			where = null;
+			whereClause = null;
 			whereHasValue = false;
 		}
 
@@ -172,13 +172,13 @@ namespace Query
 			IDictionary<string, DetachedCriteria> criterias = new Dictionary<string, DetachedCriteria>();
 
 			if (whereHasValue)
-				where.BuildQuery(detachedCriteria, criterias);
+				whereClause.BuildQuery(detachedCriteria, criterias);
 
 			if (projectionHasValue)
 				projection.BuildQuery(detachedCriteria, criterias);
 
 			if (orderHasValue)
-				order.BuildQuery(detachedCriteria, criterias);
+				orderClause.BuildQuery(detachedCriteria, criterias);
 
 			foreach (ICriterion c in subqueries)
 				detachedCriteria.Add(c);
@@ -200,9 +200,9 @@ namespace Query
 
 		protected internal CustomResultQueryBuilder(QueryBuilder<T> inner, ConstructorInfo ci)
 		{
-			this.order = inner.order;
+			this.orderClause = inner.orderClause;
 			this.projection = inner.projection;
-			this.where = inner.where;
+			this.whereClause = inner.whereClause;
 			this.orderHasValue = inner.orderHasValue;
 			this.projectionHasValue = inner.projectionHasValue;
 			this.whereHasValue = inner.whereHasValue;
@@ -235,9 +235,9 @@ namespace Query
 	{
 		#region Fields
 
-		protected internal string name;
-		protected internal bool backTrack;
-		protected internal string associationPath;
+		private string qpName;
+		private bool qpBackTrack;
+		private string qpAssociationPath;
 
 		#endregion
 
@@ -250,33 +250,43 @@ namespace Query
 
 		public QueryPart(string name, string associationPath, bool backTrack)
 		{
-			this.name = name;
-			this.associationPath = associationPath ?? "this";
-			this.backTrack = backTrack;
+			this.qpName = name;
+			this.qpAssociationPath = associationPath ?? "this";
+			this.qpBackTrack = backTrack;
 		}
 
 		#endregion
 
 		#region Properties
 
-		protected internal virtual string Name
+		protected virtual bool QpBackTrack
 		{
-			get { return name; }
+			get { return qpBackTrack; }
 		}
 
-		protected internal virtual string Alias
+		protected virtual string QpName
 		{
-			get { return MakeAliasFromAssociationPath(associationPath); }
+			get { return qpName; }
 		}
 
-		protected internal virtual string AliasAndName
+		protected virtual string QpAssociationPath
 		{
-			get { return String.IsNullOrEmpty(Alias) ? Name : Alias + "." + Name; }
+			get { return qpAssociationPath; }
 		}
 
-		protected internal virtual bool IsOnRoot
+		protected virtual string QpAlias
 		{
-			get { return String.IsNullOrEmpty(Alias); }
+			get { return MakeAliasFromAssociationPath(qpAssociationPath); }
+		}
+
+		protected virtual string QpAliasAndName
+		{
+			get { return String.IsNullOrEmpty(QpAlias) ? QpName : QpAlias + "." + QpName; }
+		}
+
+		protected virtual bool QpIsOnRoot
+		{
+			get { return String.IsNullOrEmpty(QpAlias); }
 		}
 
 		#endregion
@@ -320,19 +330,19 @@ namespace Query
 		#endregion
 
 		/// <summary>
-		/// Adds a new criteria using the Alias if the criteria does not already exist.
+		/// Adds a new criteria using the QpAlias if the criteria does not already exist.
 		/// </summary>
-		/// <param name="rootCriteria"></param>
-		/// <param name="criterias"></param>
+		/// <param qpName="rootCriteria"></param>
+		/// <param qpName="criterias"></param>
 		protected virtual void EnsureCriteriaExistsForAlias(DetachedCriteria rootCriteria,
 																												IDictionary<string, DetachedCriteria> criterias)
 		{
-			if (backTrack)
+			if (QpBackTrack)
 				return;
-			if (IsOnRoot)
+			if (QpIsOnRoot)
 				return;
-			if (criterias.ContainsKey(Alias) == false)
-				criterias.Add(Alias, rootCriteria.CreateCriteria(Alias, Alias));
+			if (criterias.ContainsKey(QpAlias) == false)
+				criterias.Add(QpAlias, rootCriteria.CreateCriteria(QpAlias, QpAlias));
 		}
 
 		protected static string BackTrackAssociationPath(string associationPath)
@@ -370,9 +380,9 @@ namespace Query
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="expr"></param>
+		/// <param qpName="expr"></param>
 		/// <returns></returns>
-		/// <remarks>Should be implicit but breaks active record integration with order by clauses.</remarks>
+		/// <remarks>Should be implicit but breaks active record integration with orderClause by clauses.</remarks>
 		public static explicit operator DetachedCriteria(QueryClause<T> expr)
 		{
 		  return expr.ToDetachedCriteria(null);
@@ -472,10 +482,10 @@ namespace Query
 		{
 			foreach (ICriterion criterion in criterions)
 			{
-				if (IsOnRoot)
+				if (QpIsOnRoot)
 					rootCriteria.Add(criterion);
 				else
-					criterias[Alias].Add(criterion);
+					criterias[QpAlias].Add(criterion);
 			}
 
 			if (children != null)
@@ -489,13 +499,13 @@ namespace Query
 		{
 			AbstractCriterion eq;
 			if (value == null)
-				eq = Expression.IsNull(name);
+				eq = Expression.IsNull(QpName);
 			else
-				eq = Expression.Eq(name, value);
+				eq = Expression.Eq(QpName, value);
 			WhereClause<T> self = this;
-			if (backTrack)
+			if (QpBackTrack)
 			{
-				self = new WhereClause<T>(name, BackTrackAssociationPath(associationPath));
+				self = new WhereClause<T>(QpName, BackTrackAssociationPath(QpAssociationPath));
 				AddChild(self);
 			}
 			self.AddCriterion(eq);
@@ -507,13 +517,13 @@ namespace Query
 		{
 			AbstractCriterion eq;
 			if (value == null)
-				eq = Expression.IsNotNull(name);
+				eq = Expression.IsNotNull(QpName);
 			else
-				eq = Expression.Not(Expression.Eq(name, value));
+				eq = Expression.Not(Expression.Eq(QpName, value));
 			WhereClause<T> self = this;
-			if (backTrack)
+			if (QpBackTrack)
 			{
-				self = new WhereClause<T>(name, BackTrackAssociationPath(associationPath));
+				self = new WhereClause<T>(QpName, BackTrackAssociationPath(QpAssociationPath));
 				AddChild(self);
 			}
 			self.AddCriterion(eq);
@@ -522,11 +532,11 @@ namespace Query
 
 		public WhereClause<T> In<K>(params K[] values)
 		{
-			AbstractCriterion inExpression = Expression.In(name, values);
+			AbstractCriterion inExpression = Expression.In(QpName, values);
 			WhereClause<T> self = this;
-			if (backTrack)
+			if (QpBackTrack)
 			{
-				self = new WhereClause<T>(name, BackTrackAssociationPath(associationPath));
+				self = new WhereClause<T>(QpName, BackTrackAssociationPath(QpAssociationPath));
 				AddChild(self);
 			}
 			self.AddCriterion(inExpression);
@@ -555,11 +565,11 @@ namespace Query
 		{
 			get
 			{
-				AbstractCriterion notNullExpression = new NotNullExpression(name);
+				AbstractCriterion notNullExpression = new NotNullExpression(QpName);
 				WhereClause<T> self = this;
-				if (backTrack)
+				if (QpBackTrack)
 				{
-					self = new WhereClause<T>(name, BackTrackAssociationPath(associationPath));
+					self = new WhereClause<T>(QpName, BackTrackAssociationPath(QpAssociationPath));
 					AddChild(self);
 				}
 				self.AddCriterion(notNullExpression);
@@ -571,11 +581,11 @@ namespace Query
 		{
 			get
 			{
-				AbstractCriterion nullExpression = new NullExpression(name);
+				AbstractCriterion nullExpression = new NullExpression(QpName);
 				WhereClause<T> self = this;
-				if (backTrack)
+				if (QpBackTrack)
 				{
-					self = new WhereClause<T>(name, BackTrackAssociationPath(associationPath));
+					self = new WhereClause<T>(QpName, BackTrackAssociationPath(QpAssociationPath));
 					AddChild(self);
 				}
 				self.AddCriterion(nullExpression);
@@ -599,7 +609,7 @@ namespace Query
 
 		public static WhereClause<T> operator &(WhereClause<T> lhs, WhereClause<T> rhs)
 		{
-			WhereClause<T> combined = new WhereClause<T>(lhs.name, null);
+			WhereClause<T> combined = new WhereClause<T>(lhs.QpName, null);
 			combined.AddChild(lhs);
 			combined.AddChild(rhs);
 			return combined;
@@ -607,7 +617,7 @@ namespace Query
 
 		public static WhereClause<T> operator !(WhereClause<T> other)
 		{
-			WhereClause<T> not = new WhereClause<T>(other.name, null);
+			WhereClause<T> not = new WhereClause<T>(other.QpName, null);
 			if (other.children == null || other.children.Count != 0)
 			{
 				throw new InvalidOperationException("Cannot use ! operator on complex queries");
@@ -623,18 +633,18 @@ namespace Query
 
 		public static WhereClause<T> operator |(WhereClause<T> lhs, WhereClause<T> rhs)
 		{
-			if (lhs.associationPath != rhs.associationPath)
+			if (lhs.QpAssociationPath != rhs.QpAssociationPath)
 			{
 				throw new InvalidOperationException(
 					string.Format(
 						@"OR attempted between {0} and {1}.
 You can't OR between two Query parts that belong to different associations.
 Use HQL for this functionality...",
-						lhs.associationPath,
-						rhs.associationPath));
+						lhs.QpAssociationPath,
+						rhs.QpAssociationPath));
 			}
 
-			WhereClause<T> combined = new WhereClause<T>(lhs.name, null);
+			WhereClause<T> combined = new WhereClause<T>(lhs.QpName, null);
 			Conjunction lhs_conjunction = Expression.Conjunction();
 			Conjunction rhs_conjunction = Expression.Conjunction();
 			foreach (ICriterion criterion in lhs.criterions)
@@ -705,14 +715,14 @@ Use HQL for this functionality...",
 
 		public WhereClause<T> Between(object lo, object hi)
 		{
-			AbstractCriterion betweenExpression = new BetweenExpression(name, lo, hi);
+			AbstractCriterion betweenExpression = new BetweenExpression(QpName, lo, hi);
 			AddCriterion(betweenExpression);
 			return this;
 		}
 
 		public WhereClause<T> EqProperty(string otherPropertyName)
 		{
-			AbstractCriterion eqPropertyExpression = new EqPropertyExpression(name, otherPropertyName);
+			AbstractCriterion eqPropertyExpression = new EqPropertyExpression(QpName, otherPropertyName);
 			AddCriterion(eqPropertyExpression);
 			return this;
 		}
@@ -720,70 +730,70 @@ Use HQL for this functionality...",
 
 		public WhereClause<T> Ge(object value)
 		{
-			AbstractCriterion geExpression = new GeExpression(name, value);
+			AbstractCriterion geExpression = new GeExpression(QpName, value);
 			AddCriterion(geExpression);
 			return this;
 		}
 
 		public WhereClause<T> Gt(object value)
 		{
-			AbstractCriterion gtExpression = new GtExpression(name, value);
+			AbstractCriterion gtExpression = new GtExpression(QpName, value);
 			AddCriterion(gtExpression);
 			return this;
 		}
 
 		public WhereClause<T> InsensitiveLike(object value)
 		{
-			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(name, value);
+			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(QpName, value);
 			AddCriterion(insensitiveLikeExpression);
 			return this;
 		}
 
 		public WhereClause<T> InsensitiveLike(string value, MatchMode matchMode)
 		{
-			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(name, value, matchMode);
+			AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(QpName, value, matchMode);
 			AddCriterion(insensitiveLikeExpression);
 			return this;
 		}
 
 		public WhereClause<T> Le(object value)
 		{
-			AbstractCriterion leExpression = new LeExpression(name, value);
+			AbstractCriterion leExpression = new LeExpression(QpName, value);
 			AddCriterion(leExpression);
 			return this;
 		}
 
 		public WhereClause<T> LeProperty(string otherPropertyName)
 		{
-			AbstractCriterion lePropertyExpression = new LePropertyExpression(name, otherPropertyName);
+			AbstractCriterion lePropertyExpression = new LePropertyExpression(QpName, otherPropertyName);
 			AddCriterion(lePropertyExpression);
 			return this;
 		}
 
 		public WhereClause<T> Like(object value)
 		{
-			AbstractCriterion likeExpression = new LikeExpression(name, value);
+			AbstractCriterion likeExpression = new LikeExpression(QpName, value);
 			AddCriterion(likeExpression);
 			return this;
 		}
 
 		public WhereClause<T> Like(string value, MatchMode matchMode)
 		{
-			AbstractCriterion likeExpression = new LikeExpression(name, value, matchMode);
+			AbstractCriterion likeExpression = new LikeExpression(QpName, value, matchMode);
 			AddCriterion(likeExpression);
 			return this;
 		}
 
 		public WhereClause<T> Lt(object value)
 		{
-			AbstractCriterion ltExpression = new LtExpression(name, value);
+			AbstractCriterion ltExpression = new LtExpression(QpName, value);
 			AddCriterion(ltExpression);
 			return this;
 		}
 
 		public WhereClause<T> LtProperty(string otherPropertyName)
 		{
-			AbstractCriterion ltPropertyExpression = new LtPropertyExpression(name, otherPropertyName);
+			AbstractCriterion ltPropertyExpression = new LtPropertyExpression(QpName, otherPropertyName);
 			AddCriterion(ltPropertyExpression);
 			return this;
 		}
@@ -886,7 +896,7 @@ Use HQL for this functionality...",
 
 		public static OrderByClauseProperty<T> operator &(OrderByClauseProperty<T> lhs, OrderByClauseProperty<T> rhs)
 		{
-			return Combine(lhs, rhs, new OrderByClauseProperty<T>(lhs.name, lhs.associationPath, lhs.backTrack, lhs.ascending));
+			return Combine(lhs, rhs, new OrderByClauseProperty<T>(lhs.QpName, lhs.QpAssociationPath, lhs.QpBackTrack, lhs.ascending));
 		}
 
 		public static bool operator true(OrderByClauseProperty<T> exp)
@@ -901,7 +911,7 @@ Use HQL for this functionality...",
 
 		public static implicit operator Order(OrderByClauseProperty<T> order)
 		{
-			return new Order(order.AliasAndName, order.ascending);
+			return new Order(order.QpAliasAndName, order.ascending);
 		}
 
 		#endregion
@@ -945,28 +955,28 @@ Use HQL for this functionality...",
 
 		public ProjectionClauseProperty<T> ProjectBy()
 		{
-			projection = Projections.Property(AliasAndName);
+			projection = Projections.Property(QpAliasAndName);
 			return this;
 		}
 
 		public ProjectionClauseProperty<T> GroupBy()
 		{
-			return MakeGroup(Projections.GroupProperty(AliasAndName));
+			return MakeGroup(Projections.GroupProperty(QpAliasAndName));
 		}
 
 		public ProjectionClauseProperty<T> Count()
 		{
-			return MakeGroup(Projections.Count(AliasAndName));
+			return MakeGroup(Projections.Count(QpAliasAndName));
 		}
 
 		public ProjectionClauseProperty<T> CountDistinct()
 		{
-			return MakeGroup(Projections.CountDistinct(AliasAndName));
+			return MakeGroup(Projections.CountDistinct(QpAliasAndName));
 		}
 
 		public ProjectionClauseProperty<T> Min()
 		{
-			return MakeGroup(Projections.Min(AliasAndName));
+			return MakeGroup(Projections.Min(QpAliasAndName));
 		}
 
 		public ProjectionClauseProperty<T> Max()
@@ -1029,7 +1039,7 @@ Use HQL for this functionality...",
 		private static IProjection EnsureDefault(ProjectionClauseProperty<T> expr)
 		{
 			if (expr.projection == null)
-				return expr.hasGrouping ? Projections.GroupProperty(expr.AliasAndName) : Projections.Property(expr.AliasAndName);
+				return expr.hasGrouping ? Projections.GroupProperty(expr.QpAliasAndName) : Projections.Property(expr.QpAliasAndName);
 			return expr.projection;
 		}
 
@@ -1043,22 +1053,22 @@ Use HQL for this functionality...",
 				lhs.hasGrouping = true;
 				return
 					Combine(ConvertToGrouping(lhs, false), rhs,
-									new ProjectionClauseProperty<T>(lhs.name, lhs.associationPath, lhs.backTrack,
-																									ConvertToGrouping(lhs.AliasAndName, lhs.projection)));
+									new ProjectionClauseProperty<T>(lhs.QpName, lhs.QpAssociationPath, lhs.QpBackTrack,
+																									ConvertToGrouping(lhs.QpAliasAndName, lhs.projection)));
 			}
 
 			if (lhs.hasGrouping && !rhs.hasGrouping)
 				return
 					Combine(lhs, ConvertToGrouping(rhs, true),
-									new ProjectionClauseProperty<T>(lhs.name, lhs.associationPath, lhs.backTrack, lhs.projection));
+									new ProjectionClauseProperty<T>(lhs.QpName, lhs.QpAssociationPath, lhs.QpBackTrack, lhs.projection));
 
 			if (!lhs.hasGrouping && rhs.hasGrouping)
 				return
 					Combine(ConvertToGrouping(lhs, false), rhs,
-									new ProjectionClauseProperty<T>(lhs.name, lhs.associationPath, lhs.backTrack,
-																									ConvertToGrouping(lhs.AliasAndName, lhs.projection)));
+									new ProjectionClauseProperty<T>(lhs.QpName, lhs.QpAssociationPath, lhs.QpBackTrack,
+																									ConvertToGrouping(lhs.QpAliasAndName, lhs.projection)));
 			return
-				Combine(lhs, rhs, new ProjectionClauseProperty<T>(lhs.name, lhs.associationPath, lhs.backTrack, lhs.projection));
+				Combine(lhs, rhs, new ProjectionClauseProperty<T>(lhs.QpName, lhs.QpAssociationPath, lhs.QpBackTrack, lhs.projection));
 		}
 
 		internal static IProjection ConvertToGrouping(string aliasAndName, IProjection projection)
@@ -1076,24 +1086,24 @@ Use HQL for this functionality...",
 		private static ProjectionClauseProperty<T> ConvertToGrouping(ProjectionClauseProperty<T> expr, bool addToFront)
 		{
 			if (expr.clauses == null || expr.clauses.Count == 0)
-				return new ProjectionClauseProperty<T>(expr.name, expr.associationPath, expr.backTrack,
-																	 ConvertToGrouping(expr.AliasAndName, expr.projection));
+				return new ProjectionClauseProperty<T>(expr.QpName, expr.QpAssociationPath, expr.QpBackTrack,
+																	 ConvertToGrouping(expr.QpAliasAndName, expr.projection));
 
 			ProjectionClauseProperty<T> converted;
 			if (addToFront)
 			{
-				converted = new ProjectionClauseProperty<T>(expr.Name, expr.associationPath, expr.backTrack,
-																										ConvertToGrouping(expr.AliasAndName, expr.projection));
+				converted = new ProjectionClauseProperty<T>(expr.QpName, expr.QpAssociationPath, expr.QpBackTrack,
+																										ConvertToGrouping(expr.QpAliasAndName, expr.projection));
 				converted.hasGrouping = true;
 				converted.AddOne(converted);
 			}
 			else
 			{
-				converted = new ProjectionClauseProperty<T>(expr.clauses[0].Name, expr.clauses[0].associationPath, expr.clauses[0].backTrack,
-																					ConvertToGrouping(expr.clauses[0].AliasAndName,
+				converted = new ProjectionClauseProperty<T>(expr.clauses[0].QpName, expr.clauses[0].QpAssociationPath, expr.clauses[0].QpBackTrack,
+																					ConvertToGrouping(expr.clauses[0].QpAliasAndName,
 																														expr.clauses[0].projection));
 				ProjectionClauseProperty<T> np =
-					new ProjectionClauseProperty<T>(converted.Name, converted.associationPath, converted.backTrack,
+					new ProjectionClauseProperty<T>(converted.QpName, converted.QpAssociationPath, converted.QpBackTrack,
 																					converted.projection);
 				np.hasGrouping = true;
 				converted.AddOne(np);
@@ -1104,8 +1114,8 @@ Use HQL for this functionality...",
 			foreach (ProjectionClauseProperty<T> p in expr.clauses)
 			{
 				ProjectionClauseProperty<T> np =
-					new ProjectionClauseProperty<T>(p.name, p.associationPath, p.backTrack,
-																					ConvertToGrouping(p.AliasAndName, p.projection));
+					new ProjectionClauseProperty<T>(p.QpName, p.QpAssociationPath, p.QpBackTrack,
+																					ConvertToGrouping(p.QpAliasAndName, p.projection));
 				np.hasGrouping = true;
 				p.clauses.Add(np);
 
@@ -1144,12 +1154,12 @@ Use HQL for this functionality...",
 
 		public ProjectionClauseProperty<T> Sum()
 		{
-			return MakeGroup(Projections.Sum(AliasAndName));
+			return MakeGroup(Projections.Sum(QpAliasAndName));
 		}
 
 		public ProjectionClauseProperty<T> Avg()
 		{
-			return MakeGroup(Projections.Avg(AliasAndName));
+			return MakeGroup(Projections.Avg(QpAliasAndName));
 		}
 	}
 

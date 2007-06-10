@@ -38,19 +38,19 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_Post(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_Post(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_Post(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_Post(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> Title {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("Title", temp);
                 }
             }
@@ -58,7 +58,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClauseProperty<T1> Contnet {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClauseProperty<T1>("Contnet", temp);
                 }
             }
@@ -66,7 +66,7 @@ namespace Query {
             /// Where for member 
             public virtual Query.WhereClause<T1> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.WhereClause<T1>("Id", temp);
                 }
             }
@@ -74,7 +74,7 @@ namespace Query {
             /// Where for member 
             public virtual Where_Blog<T1> Blog {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     temp = ((temp + ".") 
                                 + "Blog");
                     return new Where_Blog<T1>("Blog", temp, true);
@@ -109,19 +109,19 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_Post(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_Post(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_Post(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_Post(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Title {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Title", temp);
                 }
             }
@@ -129,7 +129,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Contnet {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Contnet", temp);
                 }
             }
@@ -137,7 +137,7 @@ namespace Query {
             /// Projection for member 
             public virtual Query.ProjectionClauseProperty<T2> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.ProjectionClauseProperty<T2>("Id", temp);
                 }
             }
@@ -145,7 +145,7 @@ namespace Query {
             /// Projection for member 
             public virtual Projection_Blog<T2> Blog {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     temp = ((temp + ".") 
                                 + "Blog");
                     return new Projection_Blog<T2>("Blog", temp, true);
@@ -180,19 +180,19 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_Post(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_Post(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_Post(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_Post(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Title {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Title", temp);
                 }
             }
@@ -200,7 +200,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Contnet {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Contnet", temp);
                 }
             }
@@ -208,7 +208,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual Query.OrderByClauseProperty<T3> Id {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     return new Query.OrderByClauseProperty<T3>("Id", temp);
                 }
             }
@@ -216,7 +216,7 @@ namespace Query {
             /// OrderBy for member 
             public virtual OrderBy_Blog<T3> Blog {
                 get {
-                    string temp = associationPath;
+                    string temp = QpAssociationPath;
                     temp = ((temp + ".") 
                                 + "Blog");
                     return new OrderBy_Blog<T3>("Blog", temp, true);

@@ -20,7 +20,7 @@ namespace NHibernate.Query.Generator.Tests
 
 			Assert.IsNotNull(whereType.GetProperty("Id"), "Should have an id property");
 			PropertyInfo property = whereType.GetProperty("Name");
-			Assert.IsNotNull(property, "Should have a property called name");
+			Assert.IsNotNull(property, "Should have a property called Name");
 			Assert.IsNotNull(property.PropertyType.GetProperty("FirstName"),
 				"Should have Name.FirstName");
 			Assert.IsNotNull(property.PropertyType.GetProperty("LastName"),
@@ -30,12 +30,12 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(property.PropertyType.GetProperty("Prefix"),
 				"Should have Name.Prefix");
 			Assert.IsNotNull(property.PropertyType.GetProperty("Suffix"),
-				"Should have Name.Suffix");
+				"Should havepName.Suffix");
 			Assert.IsNotNull(property.PropertyType.GetProperty("DisplayName"),
 			"Should have Name.DisplayName");
 
 			System.Type orderByType = assembly.GetType("Query.OrderBy+OrderBy_Broker`1+OrderBy_Name`1");
-			Assert.IsNotNull(orderByType, "Should have an order by for Broker.Name");
+			Assert.IsNotNull(orderByType, "Should have an orderClause by for Broker.Name");
 
 			Assert.IsNotNull(orderByType.GetProperty("FirstName"), "Should have a FirstName");
 			Assert.IsNotNull(orderByType.GetProperty("LastName"), "Should have a LastName");

@@ -46,7 +46,7 @@ namespace NHibernate.Query.Generator.Tests
 			Assembly asm = TestUtil.GetAssemblyFromCode(code);
 
 			System.Type whereType = asm.GetType("Query.Where");
-			Assert.IsNotNull(whereType, "Should have gotten an assembly with a where type");
+			Assert.IsNotNull(whereType, "Should have gotten an assembly with a whereClause type");
 
 			PropertyInfo customerProperty = whereType.GetProperty("Customer");
 
@@ -69,7 +69,7 @@ namespace NHibernate.Query.Generator.Tests
 		}
 
 		/// <summary>
-		/// Hard to explain it by the name of the test, but in general, I want to test
+		/// Hard to explain it by the qpName of the test, but in general, I want to test
 		/// that it has OrderBy.CompositeCustomer.CustomerId, and not 
 		/// OrderBy.CompositeCustomer.Key.CustomerId
 		/// </summary>
@@ -165,8 +165,8 @@ namespace NHibernate.Query.Generator.Tests
 			System.Type customerType = customer.GetType();
 			PropertyInfo property = customerType.GetProperty("Name");
 			object result = property.GetValue(customer, null);
-			FieldInfo field = result.GetType().GetField("name", BindingFlags.Instance | BindingFlags.NonPublic);
-			object value = field.GetValue(result);
+			PropertyInfo prop = result.GetType().GetProperty("QpName", BindingFlags.Instance | BindingFlags.NonPublic);
+			object value = prop.GetValue(result, null);
 			Assert.AreEqual("Name", value);
 		}
 

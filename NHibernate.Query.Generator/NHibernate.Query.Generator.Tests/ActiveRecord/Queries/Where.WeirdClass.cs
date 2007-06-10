@@ -38,13 +38,13 @@ namespace Query {
          {
             
             /// Where for member .ctor
-            public Where_WeirdClass(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Where_WeirdClass(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Where for member .ctor
-            public Where_WeirdClass(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Where_WeirdClass(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Where for member Address
@@ -57,7 +57,7 @@ namespace Query {
             /// Where for member Key
             public virtual Where_Key<T1> Key {
                 get {
-                    return new Where_Key<T1>("Key", associationPath);
+                    return new Where_Key<T1>("Key", QpAssociationPath);
                 }
             }
             
@@ -66,19 +66,19 @@ namespace Query {
              {
                 
                 /// Where for member .ctor
-                public Where_Address(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Where_Address(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// Where for member .ctor
-                public Where_Address(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public Where_Address(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// Where for member 
                 public virtual Query.WhereClauseProperty<T1> Street {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.WhereClauseProperty<T1>("Address.Street", temp);
                     }
                 }
@@ -89,19 +89,19 @@ namespace Query {
              {
                 
                 /// Where for member .ctor
-                public Where_Key(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Where_Key(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// Where for member .ctor
-                public Where_Key(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public Where_Key(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// Where for member 
                 public virtual Query.WhereClauseProperty<T1> Department {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.WhereClauseProperty<T1>("Key.Department", temp);
                     }
                 }
@@ -109,7 +109,7 @@ namespace Query {
                 /// Where for member 
                 public virtual Query.WhereClauseProperty<T1> Level {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.WhereClauseProperty<T1>("Key.Level", temp);
                     }
                 }
@@ -143,13 +143,13 @@ namespace Query {
          {
             
             /// Projection for member .ctor
-            public Projection_WeirdClass(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public Projection_WeirdClass(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// Projection for member .ctor
-            public Projection_WeirdClass(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public Projection_WeirdClass(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// Projection for member Address
@@ -162,7 +162,7 @@ namespace Query {
             /// Projection for member Key
             public virtual Projection_Key<T4> Key {
                 get {
-                    return new Projection_Key<T4>("Key", associationPath);
+                    return new Projection_Key<T4>("Key", QpAssociationPath);
                 }
             }
             
@@ -171,19 +171,19 @@ namespace Query {
              {
                 
                 /// Projection for member .ctor
-                public Projection_Address(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Projection_Address(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// Projection for member .ctor
-                public Projection_Address(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public Projection_Address(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// Projection for member 
                 public virtual Query.ProjectionClauseProperty<T4> Street {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.ProjectionClauseProperty<T4>("Address.Street", temp);
                     }
                 }
@@ -194,19 +194,19 @@ namespace Query {
              {
                 
                 /// Projection for member .ctor
-                public Projection_Key(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public Projection_Key(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// Projection for member .ctor
-                public Projection_Key(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public Projection_Key(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// Projection for member 
                 public virtual Query.ProjectionClauseProperty<T4> Department {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.ProjectionClauseProperty<T4>("Key.Department", temp);
                     }
                 }
@@ -214,7 +214,7 @@ namespace Query {
                 /// Projection for member 
                 public virtual Query.ProjectionClauseProperty<T4> Level {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.ProjectionClauseProperty<T4>("Key.Level", temp);
                     }
                 }
@@ -248,13 +248,13 @@ namespace Query {
          {
             
             /// OrderBy for member .ctor
-            public OrderBy_WeirdClass(string name, string associationPath) : 
-                    base(name, associationPath) {
+            public OrderBy_WeirdClass(string QpName, string QpAssociationPath) : 
+                    base(QpName, QpAssociationPath) {
             }
             
             /// OrderBy for member .ctor
-            public OrderBy_WeirdClass(string name, string associationPath, bool backTrack) : 
-                    base(name, associationPath, backTrack) {
+            public OrderBy_WeirdClass(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                    base(QpName, QpAssociationPath, QpBackTrack) {
             }
             
             /// OrderBy for member Address
@@ -267,7 +267,7 @@ namespace Query {
             /// OrderBy for member Key
             public virtual OrderBy_Key<T7> Key {
                 get {
-                    return new OrderBy_Key<T7>("Key", associationPath);
+                    return new OrderBy_Key<T7>("Key", QpAssociationPath);
                 }
             }
             
@@ -276,19 +276,19 @@ namespace Query {
              {
                 
                 /// OrderBy for member .ctor
-                public OrderBy_Address(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public OrderBy_Address(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// OrderBy for member .ctor
-                public OrderBy_Address(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public OrderBy_Address(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// OrderBy for member 
                 public virtual Query.OrderByClauseProperty<T7> Street {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.OrderByClauseProperty<T7>("Address.Street", temp);
                     }
                 }
@@ -299,19 +299,19 @@ namespace Query {
              {
                 
                 /// OrderBy for member .ctor
-                public OrderBy_Key(string name, string associationPath) : 
-                        base(name, associationPath) {
+                public OrderBy_Key(string QpName, string QpAssociationPath) : 
+                        base(QpName, QpAssociationPath) {
                 }
                 
                 /// OrderBy for member .ctor
-                public OrderBy_Key(string name, string associationPath, bool backTrack) : 
-                        base(name, associationPath, backTrack) {
+                public OrderBy_Key(string QpName, string QpAssociationPath, bool QpBackTrack) : 
+                        base(QpName, QpAssociationPath, QpBackTrack) {
                 }
                 
                 /// OrderBy for member 
                 public virtual Query.OrderByClauseProperty<T7> Department {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.OrderByClauseProperty<T7>("Key.Department", temp);
                     }
                 }
@@ -319,7 +319,7 @@ namespace Query {
                 /// OrderBy for member 
                 public virtual Query.OrderByClauseProperty<T7> Level {
                     get {
-                        string temp = associationPath;
+                        string temp = QpAssociationPath;
                         return new Query.OrderByClauseProperty<T7>("Key.Level", temp);
                     }
                 }
