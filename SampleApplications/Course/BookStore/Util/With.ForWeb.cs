@@ -33,7 +33,7 @@ namespace BookStore.Util
         private static SqlTransaction ActiveTransaction
         {
             get { return (SqlTransaction)HttpContext.Current.Items[TransactionKey]; }
-            set { HttpContext.Current.Items[ConnectionKey] = value; }
+            set { HttpContext.Current.Items[TransactionKey] = value; }
         }
 
         public static T Transaction<T>(Func<T> exec)
