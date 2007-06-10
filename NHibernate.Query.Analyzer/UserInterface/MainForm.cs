@@ -640,13 +640,13 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 
 		private void helpMenu_OnlineHelp_Click(object sender, System.EventArgs e)
 		{
-			ProcessStartInfo psi = new	ProcessStartInfo("http://www.ayende.com/projects/nhiberante-query-analyzer.aspx");
+			ProcessStartInfo psi = new	ProcessStartInfo("http://www.ayende.com/projects/nhibernate-query-analyzer.aspx");
 			Process.Start(psi);
 		}
 
 		private void help_ReportBug_Click(object sender, System.EventArgs e)
 		{
-			ProcessStartInfo psi = new	ProcessStartInfo("http://bugs.ayende.com/?do=newtask&project=3");
+            ProcessStartInfo psi = new ProcessStartInfo("http://groups.google.com/group/rhino-tools-dev");
 			Process.Start(psi);		
 		}
 
