@@ -64,9 +64,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.AutomaticTransactionManagement.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -116,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +132,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
+    <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />

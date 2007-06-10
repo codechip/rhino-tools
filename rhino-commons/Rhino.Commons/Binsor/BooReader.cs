@@ -41,7 +41,8 @@ namespace Rhino.Commons.Binsor
 {
 	public static class BooReader
 	{
-		static object BinsorComponents = new object();
+		static readonly object BinsorComponents = new object();
+        static readonly object BinsorFacilities = new object();
 
 		public static ICollection<Component> Components
 		{
@@ -53,6 +54,17 @@ namespace Rhino.Commons.Binsor
 				return components;
 			}
 		}
+
+	    public static ICollection<Facility> Facilities
+	    {
+	        get
+            {
+                ICollection<Facility> facilities = (ICollection<Facility>)Local.Data[BinsorFacilities];
+                if (facilities == null)
+                    Local.Data[BinsorFacilities] = facilities = new List<Facility>();
+                return facilities;
+	        }
+	    }
 
 
 		private static BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
@@ -69,6 +81,10 @@ namespace Rhino.Commons.Binsor
 				{
 					IConfigurationRunner conf = GetConfigurationInstanceFromFile(fileName, generationOptions);
 					conf.Run();
+				    foreach (Facility facility in Facilities)
+				    {
+				        facility.Register();
+				    }
 					foreach (Component component in Components)
 					{
 						component.Register();
@@ -90,7 +106,7 @@ namespace Rhino.Commons.Binsor
 			else
 				compiler.Parameters.Pipeline = new CompileToFile();
 			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
-			compiler.Parameters.Pipeline.Replace(typeof(ProcessMethodBodiesWithDuckTyping), new TransformComponentReferences());
+			compiler.Parameters.Pipeline.Replace(typeof(ProcessMethodBodiesWithDuckTyping), new TransformUnknownReferences());
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(fileInput);
 			compiler.Parameters.References.Add(typeof(BooReader).Assembly);

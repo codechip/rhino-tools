@@ -99,7 +99,7 @@
     <Compile Include="Binsor\Component.cs" />
     <Compile Include="Binsor\BooReader.cs" />
     <Compile Include="Binsor\IConfigurationRunner.cs" />
-    <Compile Include="Binsor\TransformComponentReferences.cs" />
+    <Compile Include="Binsor\TransformUnknownReferences.cs" />
     <Compile Include="BulkDeleter.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DateRange.cs" />
@@ -148,6 +148,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Binsor\Facility.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />

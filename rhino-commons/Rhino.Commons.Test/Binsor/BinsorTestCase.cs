@@ -105,8 +105,9 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			IHandler handler = _container.Kernel.GetHandler("defualt_repository");
 			Assert.AreEqual(LifestyleType.Transient, handler.ComponentModel.LifestyleType); 
-			
 		}
+
+        
 	}
 }
 
