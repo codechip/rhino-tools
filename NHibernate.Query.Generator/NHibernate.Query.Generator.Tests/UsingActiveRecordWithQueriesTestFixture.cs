@@ -253,6 +253,17 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual(DateTime.Today.AddDays(-7), execute[1][1]);
 		}
 
+		[Test]
+		public void CanSumNumericProjections()
+		{
+			ProjectionQuery<Payment> query = new ProjectionQuery<Payment>(
+				For.Payment.ProjectBy(ProjectBy.Payment.Amount.Sum() && ProjectBy.Payment.Amount.Avg()),
+				ProjectBy.Payment.Amount.Sum() && ProjectBy.Payment.Amount.Avg());
+			IList<object[]> execute = query.Execute();
+			Assert.AreEqual(1, execute.Count);
+			Assert.AreEqual(600, execute[0][0]);
+		}
+
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{

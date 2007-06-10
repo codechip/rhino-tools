@@ -168,10 +168,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClauseProperty<T3> Id {
+            public virtual Query.ProjectionClausePropertyNumeric<T3> Id {
                 get {
                     string temp = QpAssociationPath;
-                    return new Query.ProjectionClauseProperty<T3>("Id", temp);
+                    return new Query.ProjectionClausePropertyNumeric<T3>("Id", temp);
                 }
             }
         }

@@ -212,10 +212,10 @@ namespace Query {
                 }
                 
                 /// Projection for member 
-                public virtual Query.ProjectionClauseProperty<T4> Level {
+                public virtual Query.ProjectionClausePropertyNumeric<T4> Level {
                     get {
                         string temp = QpAssociationPath;
-                        return new Query.ProjectionClauseProperty<T4>("Key.Level", temp);
+                        return new Query.ProjectionClausePropertyNumeric<T4>("Key.Level", temp);
                     }
                 }
             }

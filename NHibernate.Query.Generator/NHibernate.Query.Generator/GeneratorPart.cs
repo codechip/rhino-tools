@@ -13,6 +13,7 @@ namespace NHibernate.Query.Generator
 		public string PropertyClassName;
 		public bool RootIsGeneric;
 		public bool EntityIsGeneric;
+		public bool IsNumeric;
 
 		public GeneratorPart(string ns, string clauseName, string rootClassName, string entityClassName, string propertyClassName, bool rootIsGeneric, bool entityIsGeneric)
 		{
@@ -23,6 +24,7 @@ namespace NHibernate.Query.Generator
 			this.PropertyClassName = propertyClassName;
 			this.RootIsGeneric = rootIsGeneric;
 			this.EntityIsGeneric = entityIsGeneric;
+			this.IsNumeric = false;
 		}
 	}
 }

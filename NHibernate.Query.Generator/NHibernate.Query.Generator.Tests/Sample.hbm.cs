@@ -531,10 +531,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClauseProperty<T9> Id {
+            public virtual Query.ProjectionClausePropertyNumeric<T9> Id {
                 get {
                     string temp = QpAssociationPath;
-                    return new Query.ProjectionClauseProperty<T9>("Id", temp);
+                    return new Query.ProjectionClausePropertyNumeric<T9>("Id", temp);
                 }
             }
             
@@ -653,10 +653,10 @@ namespace Query {
             }
             
             /// Projection for member 
-            public virtual Query.ProjectionClauseProperty<T12> CustomerId {
+            public virtual Query.ProjectionClausePropertyNumeric<T12> CustomerId {
                 get {
                     string temp = QpAssociationPath;
-                    return new Query.ProjectionClauseProperty<T12>("CustomerId", temp);
+                    return new Query.ProjectionClausePropertyNumeric<T12>("CustomerId", temp);
                 }
             }
             

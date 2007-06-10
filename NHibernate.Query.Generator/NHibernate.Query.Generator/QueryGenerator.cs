@@ -498,12 +498,26 @@ namespace NHibernate.Query.Generator
 			{
 				foreach (XmlNode propertyNode in classNode.SelectNodes(prop, nsMgr))
 				{
+					string propBuilderType = propertyType;
+					part.IsNumeric = false;
+					if (propertyNode.Attributes["type"] != null)
+					{
+						string nodeTypeName = propertyNode.Attributes["type"].Value;
+						part.IsNumeric = (Array.BinarySearch(numericTypeNames, nodeTypeName) >= 0);
+					}
+					if (part.ClauseName.Equals("Projection"))
+					{
+						if (part.IsNumeric)
+						{
+							propBuilderType = "Query.ProjectionClausePropertyNumeric";
+						}
+					}
 					string type = GetNodeClassType(propertyNode);
 					GenerateProperty(prefix,
 													 genericTypeName,
 													 innerClass,
 													 ClassName.GetName(propertyNode),
-													 propertyType,
+													 propBuilderType,
 													 type,
 													 associationBehavior, part);
 				}
