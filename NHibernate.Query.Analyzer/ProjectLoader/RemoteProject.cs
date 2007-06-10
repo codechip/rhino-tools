@@ -31,6 +31,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Reflection;
@@ -44,6 +45,8 @@ using NHibernate.Hql;
 using NHibernate.Hql.Classic;
 using NHibernate.Mapping;
 using NHibernate.Type;
+using Configuration=System.Configuration.Configuration;
+using Environment=NHibernate.Cfg.Environment;
 
 namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 {
@@ -54,10 +57,10 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
         #region Variables
 
-        private static readonly ILog logger = LogManager.GetLogger(typeof(RemoteProject));
+        private static readonly ILog logger = LogManager.GetLogger(typeof (RemoteProject));
 
         private static readonly MethodInfo prepareQueryCommand =
-            typeof(QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+            typeof (QueryTranslator).GetMethod("PrepareQueryCommand", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static List<Assembly> visited = new List<Assembly>();
 
@@ -164,7 +167,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
         public string[] HqlToSql(string hqlQuery, IDictionary parameters)
         {
-            using (ISessionImplementor session = (ISessionImplementor)factory.OpenSession())
+            using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
             {
                 IList list = HqlToSqlList(hqlQuery,
                                           CreateQueryParameters(parameters), session);
@@ -175,7 +178,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
                     if (logger.IsDebugEnabled)
                         logger.Debug("Resulting SQL: " + sqlString);
                 }
-                return (string[])cmds.ToArray(typeof(string));
+                return (string[]) cmds.ToArray(typeof (string));
             }
         }
 
@@ -185,7 +188,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             Hashtable ht = new Hashtable(parameters.Count);
             foreach (DictionaryEntry parameter in parameters)
             {
-                TypedParameter tp = (TypedParameter)parameter.Value;
+                TypedParameter tp = (TypedParameter) parameter.Value;
                 ht[parameter.Key] = new TypedValue(tp.IType, tp.Value);
             }
             qp.NamedParameters = ht;
@@ -207,13 +210,13 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
         private IList HqlToCommandList(string hqlQuery, QueryParameters qp, ISessionImplementor session)
         {
-            ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor)factory;
+            ISessionFactoryImplementor factoryImplementor = (ISessionFactoryImplementor) factory;
             IQueryTranslator[] queryTranslators =
-                (IQueryTranslator[])getQuery.Invoke(factoryImplementor, new object[] { hqlQuery, false, null });
+                (IQueryTranslator[]) getQuery.Invoke(factoryImplementor, new object[] {hqlQuery, false, null});
             IList commands = new ArrayList();
             foreach (IQueryTranslator translator in queryTranslators)
             {
-                IDbCommand cmd = (IDbCommand)prepareQueryCommand.Invoke(translator, new object[] { qp, false, session });
+                IDbCommand cmd = (IDbCommand) prepareQueryCommand.Invoke(translator, new object[] {qp, false, session});
                 commands.Add(cmd);
             }
             return commands;
@@ -286,7 +289,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             {
                 asmTypes = asm.GetTypes();
             }
-            catch (ReflectionTypeLoadException ex)//for types that inherit from other assemblies
+            catch (ReflectionTypeLoadException ex) //for types that inherit from other assemblies
             {
                 asmTypes = ex.Types;
             }
@@ -304,22 +307,22 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             object graphConnectorVisitor =
                 Activator.CreateInstance(
                     activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.GraphConnectorVisitor"),
-                    new object[] { Get(activeRecordModelBuilder, "Models") });
+                    new object[] {Get(activeRecordModelBuilder, "Models")});
 
             Invoke(graphConnectorVisitor, "VisitNodes", models);
 
             object semanticVisitor =
                 Activator.CreateInstance(
                     activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor"),
-                    new object[] { Get(activeRecordModelBuilder, "Models") });
+                    new object[] {Get(activeRecordModelBuilder, "Models")});
 
             Invoke(semanticVisitor, "VisitNodes", models);
 
             foreach (object model in models)
             {
-                bool isNestedType = (bool)Get(model, "IsNestedType");
-                bool isDiscriminatorSubClass = (bool)Get(model, "IsDiscriminatorSubClass");
-                bool isJoinedSubClass = (bool)Get(model, "IsJoinedSubClass");
+                bool isNestedType = (bool) Get(model, "IsNestedType");
+                bool isDiscriminatorSubClass = (bool) Get(model, "IsDiscriminatorSubClass");
+                bool isJoinedSubClass = (bool) Get(model, "IsJoinedSubClass");
 
                 if (!isNestedType && !isDiscriminatorSubClass && !isJoinedSubClass)
                 {
@@ -329,18 +332,20 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
                     Invoke(xmlVisitor, "CreateXml", model);
 
-                    cfg.AddXmlString((string)Get(xmlVisitor, "Xml"));
+                    cfg.AddXmlString((string) Get(xmlVisitor, "Xml"));
                 }
             }
 
-            Type assemblyXmlGeneratorType = activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.AssemblyXmlGenerator");
-            if (assemblyXmlGeneratorType != null)//we may have a slightly old version of ActiveRecord, that doesn't have this
+            Type assemblyXmlGeneratorType =
+                activeRecordAssembly.GetType("Castle.ActiveRecord.Framework.Internal.AssemblyXmlGenerator");
+            if (assemblyXmlGeneratorType != null)
+                //we may have a slightly old version of ActiveRecord, that doesn't have this
             {
                 object assemblyXmlGenerator =
-                      Activator.CreateInstance(
-                          assemblyXmlGeneratorType,
-                          new object[] { });
-                string[] xmls = (string[])Invoke(assemblyXmlGenerator, "CreateXmlConfigurations", asm);
+                    Activator.CreateInstance(
+                        assemblyXmlGeneratorType,
+                        new object[] {});
+                string[] xmls = (string[]) Invoke(assemblyXmlGenerator, "CreateXmlConfigurations", asm);
                 foreach (string xml in xmls)
                 {
                     cfg.AddXmlString(xml);
@@ -411,6 +416,12 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             }
             string app_config = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
             LoadFromActiveRecordConfig(app_config);
+            if (cfg.Properties[Environment.ConnectionStringName] != null)
+            {
+                throw new ConfigurationErrorsException("You cannot use " + Environment.ConnectionStringName +
+                                                       " with NHibernate Query Analyzer, please use " +
+                                                       Environment.ConnectionString);
+            }
         }
 
         private void LoadFromActiveRecordConfig(string configuration)
@@ -440,7 +451,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
         {
             if (logger.IsInfoEnabled)
                 logger.Info("Resolving assembly: " + assemblyName);
-            Assembly asm = (Assembly)loadedAssemblies[assemblyName];
+            Assembly asm = (Assembly) loadedAssemblies[assemblyName];
             if (asm == null)
             {
                 if (logger.IsInfoEnabled)
@@ -542,7 +553,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
         {
             try
             {
-                using (ISessionImplementor session = (ISessionImplementor)factory.OpenSession())
+                using (ISessionImplementor session = (ISessionImplementor) factory.OpenSession())
                 {
                     IList commands = HqlToCommandList(hqlQuery, TypedParameterToQueryParameter(parameters), session);
                     DataSet ds = new DataSet();
@@ -596,18 +607,18 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
                 throw new InvalidOperationException("Empty schema table! Fix this somehow!");
             string column, table, baseTableName = "BaseTableName";
             if (schemaTable.Rows[0].IsNull(baseTableName) == false)
-                table = (string)schemaTable.Rows[0][baseTableName];
+                table = (string) schemaTable.Rows[0][baseTableName];
             else
                 table = "Unknown table name";
             if (ds.Tables[table] == null)
                 ds.Tables.Add(table);
             foreach (DataRow row in schemaTable.Rows)
             {
-                column = (string)row["ColumnName"];
+                column = (string) row["ColumnName"];
                 if (ds.Tables[table].Columns[column] == null)
                 {
                     ds.Tables[table].Columns.Add(column);
-                    ds.Tables[table].Columns[column].DataType = (Type)row["DataType"];
+                    ds.Tables[table].Columns[column].DataType = (Type) row["DataType"];
                 }
             }
             return ds.Tables[table];
