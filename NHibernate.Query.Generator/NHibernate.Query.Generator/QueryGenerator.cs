@@ -498,6 +498,8 @@ namespace NHibernate.Query.Generator
 
                     string collectionName = collectionNode.Attributes["name"].Value;
                     string collectionClassName = GetClassNameFromCollection(collectionNode);
+                    if(collectionClassName==null)//not a node type we can handle
+                        continue;
                     CodeTypeDeclaration collectionDerived =
                         new CodeTypeDeclaration("Query_Collection_" + collectionName);
                     collectionDerived.BaseTypes.Add(type);
@@ -1044,7 +1046,7 @@ namespace NHibernate.Query.Generator
                 node.SelectSingleNode("nh:composite-element/@class", nsMgr);
             if (classNode == null) //this may happen if we let NH guess the class type
             {
-                throw new InvalidOperationException("Can't find attribute 'nh:one-to-many/@class' or 'nh:many-to-many/@class' on element " + node.Name + " " + GetName(node));
+                return null;
             }
             return GetTypeNameForDisplay(classNode.Value);
      
