@@ -113,6 +113,11 @@
     <Compile Include="ActiveRecord\Comment.cs" />
     <Compile Include="ActiveRecord\Post.cs" />
     <Compile Include="ActiveRecord\User.cs" />
+    <Compile Include="NHibernate\Mappings\Book.hbm.cs" />
+    <Compile Include="NHibernate\Mappings\BookCopy.hbm.cs" />
+    <Compile Include="NHibernate\Mappings\LateReturn.hbm.cs" />
+    <Compile Include="NHibernate\Mappings\LibraryUser.hbm.cs" />
+    <Compile Include="UsingNHibernateWithQueriesTestFixture.cs" />
     <Compile Include="ExtendingWhere.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -121,6 +126,10 @@
     </Compile>
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="NHibernate\Book.cs" />
+    <Compile Include="NHibernate\BookCopy.cs" />
+    <Compile Include="NHibernate\LateReturn.cs" />
+    <Compile Include="NHibernate\LibraryUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sample.hbm.cs">
       <SubType>Code</SubType>
@@ -143,6 +152,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Sample.hbm.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernate\Mappings\Book.hbm.xml" />
+    <EmbeddedResource Include="NHibernate\Mappings\BookCopy.hbm.xml" />
+    <EmbeddedResource Include="NHibernate\Mappings\LateReturn.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernate\Mappings\LibraryUser.hbm.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -152,12 +169,10 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>cd "$(ProjectDir)"
-..\NHibernate.Query.Generator\bin\Debug\NHQG.exe cs *.hbm.xml .
-..\NHibernate.Query.Generator\bin\Debug\NHQG.exe cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)ActiveRecord\Queries"</PostBuildEvent>
-    <PreBuildEvent>
-cd "$(ProjectDir)"
-..\NHibernate.Query.Generator\bin\Debug\NHQG.exe cs *.hbm.xml .
-..\NHibernate.Query.Generator\bin\Debug\NHQG.exe cs "$(TargetDir)$(TargetFileName)" "$(ProjectDir)ActiveRecord\Queries"</PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"
+"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(ProjectDir)\*.hbm.xml" /out:"$(ProjectDir) "
+"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(ProjectDir)\NHibernate\Mappings\*.hbm.xml" /out:"$(ProjectDir)\NHibernate\Mappings"</PreBuildEvent>
   </PropertyGroup>
 </Project>

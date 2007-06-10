@@ -24,7 +24,7 @@ namespace NHibernate.Query.Generator
 			{
 				using (StringReader reader = new StringReader(inputFileContent))
 				{
-					QueryGenerator qg = new QueryGenerator(reader, CodeProvider);
+					QueryGenerator qg = new QueryGenerator(reader, CodeProvider, "Query");
 					using (TextWriter writer = new StreamWriter(ms))
 					{
 						qg.Generate(writer);

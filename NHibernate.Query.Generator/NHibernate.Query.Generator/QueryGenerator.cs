@@ -36,16 +36,18 @@ namespace NHibernate.Query.Generator
 		private XmlDocument hbm = new XmlDocument();
 		private XmlNamespaceManager nsMgr;
 		private string hbmCodeNameSpace;
+		private readonly string baseNamespace;
 
 		/// <summary>
 		/// This is used to avoid name collisions when generating the generic query types.
 		/// </summary>
 		private int genericTypeNamesRequested = 1;
 
-		public QueryGenerator(TextReader reader, CodeDomProvider provider)
+		public QueryGenerator(TextReader reader, CodeDomProvider provider, string baseNamespace)
 		{
 			_reader = reader;
 			_provider = provider;
+			this.baseNamespace = baseNamespace;
 			Array.Sort(numericTypeNames);
 		}
 
@@ -412,7 +414,7 @@ namespace NHibernate.Query.Generator
 			innerClass.IsPartial = true;
 			string genericParameterName = GetGenericParameterName();
 			innerClass.TypeParameters.Add(genericParameterName);
-
+			//Console.WriteLine(className.TypeName + " : " + parent.Name);
 			string classname;
 			if (className.ExtendsTypeName == null)
 				classname = "Query." + part.EntityClassName;

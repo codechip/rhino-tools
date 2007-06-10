@@ -62,7 +62,9 @@
     <Reference Include="VSLangProj80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationOptions.cs" />
     <Compile Include="ClassName.cs" />
+    <Compile Include="CommandLineArguments.cs" />
     <Compile Include="GeneratorPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssociationBehavior.cs" />
