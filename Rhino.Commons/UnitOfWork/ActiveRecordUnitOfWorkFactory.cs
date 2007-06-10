@@ -61,15 +61,28 @@ namespace Rhino.Commons
 			this.configurationSource = ActiveRecordSectionHandler.Instance;
 		}
 
+        public ActiveRecordUnitOfWorkFactory(string[] assemblyNames)
+            : this(assemblyNames, ActiveRecordSectionHandler.Instance)
+        {
+        }
+
 		public ActiveRecordUnitOfWorkFactory(Assembly[] assemblies, IConfigurationSource configurationSource)
 		{
 			this.assemblies = assemblies;
 			this.configurationSource = configurationSource;
 		}
 
-		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
+        public ActiveRecordUnitOfWorkFactory(string[] assemblyNames, IConfigurationSource configurationSource)
+        {
+            this.configurationSource = configurationSource;
+            this.assemblies = new Assembly[assemblyNames.Length];
+            for (int i = 0; i < assemblyNames.Length; i++)
+                this.assemblies[i] = Assembly.Load(assemblyNames[i]);
+        }
+
+	    public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
 		{
-			InitializeIfNeccecary();
+			InitializeIfNecessary();
 			ISessionScope scope;
 			if (maybeUserProvidedConnection == null)
 				scope = new SessionScope(FlushAction.Never);
@@ -80,10 +93,10 @@ namespace Rhino.Commons
 
 		public void Init()
 		{
-			InitializeIfNeccecary();
+			InitializeIfNecessary();
 		}
 
-		private void InitializeIfNeccecary()
+		private void InitializeIfNecessary()
 		{
 			if (!initialized)
 			{
