@@ -42,6 +42,7 @@ namespace Rhino.Igloo
     public sealed class InjectEntityAttribute : Attribute
     {
         private string _name;
+        private string eagerLoad;
 
         /// <summary>
         /// The scope variable name. Defaults to the name of
@@ -52,6 +53,15 @@ namespace Rhino.Igloo
             get { return _name; }
             set { _name = value; }
         }
-       
+
+        /// <summary>
+        /// Gets the eager load.
+        /// </summary>
+        /// <value>The eager load.</value>
+        public string EagerLoad
+        {
+            get { return eagerLoad; }
+            set { eagerLoad = value; }
+        }
     }
 }

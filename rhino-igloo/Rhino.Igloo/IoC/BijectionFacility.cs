@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,17 +25,18 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Castle.ActiveRecord;
+using Castle.Core;
 using Castle.MicroKernel.Facilities;
-using Rhino.Igloo;
 using log4net;
-using Rhino.Commons;
+using NHibernate;
+using NHibernate.Expression;
 
 namespace Rhino.Igloo
 {
@@ -78,7 +80,7 @@ namespace Rhino.Igloo
                 foreach (Type type in assembly.GetExportedTypes())
                 {
                     if (typeof(BaseController).IsAssignableFrom(type) &&
-                        AttributeUtil.ShouldSkipAutomaticRegistration(type)==false)
+                        AttributeUtil.ShouldSkipAutomaticRegistration(type) == false)
                     {
                         Kernel.AddComponent(type.Name, type);
                     }
@@ -106,12 +108,13 @@ namespace Rhino.Igloo
             }
         }
 
-        private static void Kernel_ComponentCreated(Castle.Core.ComponentModel model, object instance)
+        private static void Kernel_ComponentCreated(ComponentModel model, object instance)
         {
             IDictionary<InjectAttribute, PropertyInfo> members =
                 model.ExtendedProperties[InjectionInspector.InMembers] as IDictionary<InjectAttribute, PropertyInfo>;
             IDictionary<InjectEntityAttribute, PropertyInfo> entitiesToInject =
-                model.ExtendedProperties[InjectionInspector.InEntityMembers] as IDictionary<InjectEntityAttribute, PropertyInfo>;
+                model.ExtendedProperties[InjectionInspector.InEntityMembers] as
+                IDictionary<InjectEntityAttribute, PropertyInfo>;
             if (members != null)
                 InjectMembers(instance, members);
             if (entitiesToInject != null)
@@ -125,7 +128,7 @@ namespace Rhino.Igloo
         /// <param name="instance">The instance.</param>
         /// <param name="membersToInject">The members to inject.</param>
         private static void InjectMembers(Object instance,
-            IDictionary<InjectAttribute, PropertyInfo> membersToInject)
+                                          IDictionary<InjectAttribute, PropertyInfo> membersToInject)
         {
             if (membersToInject != null && membersToInject.Count > 0)
             {
@@ -138,20 +141,21 @@ namespace Rhino.Igloo
                         continue;
                     try
                     {
-
                         object result = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
-						if (result != null)
-							propertyInfo.SetValue(instance, result, null);
+                        if (result != null)
+                            propertyInfo.SetValue(instance, result, null);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
-                        logger.Debug(string.Format("Failed to convert {0} to type {1}", kvp.Key.Name, kvp.Value.PropertyType), e);
+                        logger.Debug(
+                            string.Format("Failed to convert {0} to type {1}", kvp.Key.Name, kvp.Value.PropertyType), e);
                     }
                 }
             }
         }
 
-        private static void InjectEntities(object instance, IDictionary<InjectEntityAttribute, PropertyInfo> entitiesToInject)
+        private static void InjectEntities(object instance,
+                                           IDictionary<InjectEntityAttribute, PropertyInfo> entitiesToInject)
         {
             foreach (KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp in entitiesToInject)
             {
@@ -159,18 +163,34 @@ namespace Rhino.Igloo
                 if (key == null)
                     continue;
 
-                object entity = ActiveRecordMediator.FindByPrimaryKey(kvp.Value.PropertyType, key, false);
+                object entity = null;
+                if (kvp.Key.EagerLoad != null)
+                {
+                    DetachedCriteria criteria = DetachedCriteria.For(kvp.Value.PropertyType)
+                      .Add(Expression.Eq("id", key))
+                      .SetFetchMode(kvp.Key.EagerLoad, FetchMode.Join);
+                    object[] all = (object[])ActiveRecordMediator.FindAll(kvp.Value.PropertyType, criteria);
+                    if (all.Length > 0)
+                        entity = all[0];
+                }
+                else
+                {
+                    entity = ActiveRecordMediator.FindByPrimaryKey(kvp.Value.PropertyType, key);
+                }
                 kvp.Value.SetValue(instance, entity, null);
+
             }
         }
 
-        private static object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
+        private static
+            object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
         {
             if (key == null)
                 return null;
             try
             {
-                return ConversionUtil.ConvertTo(typeof(int), key);;
+                return ConversionUtil.ConvertTo(typeof(int), key);
+                ;
             }
             catch (Exception e)
             {
@@ -179,6 +199,4 @@ namespace Rhino.Igloo
             }
         }
     }
-
-
 }
