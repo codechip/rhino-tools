@@ -954,7 +954,7 @@ namespace NHibernate.Query.Generator
                     newExpr.Parameters.Add(new CodePrimitiveExpression(propertyNameInGeneratedCode));
                     break;
                 case AssociationBehavior.AddAssociationFromName:
-                    AddAssociationPathFromExpression(prop, new CodePrimitiveExpression(name));
+                    AddAssociationPathFromExpression(prop, new CodePrimitiveExpression(propertyNameInGeneratedCode));
                     newExpr.Parameters.Add(new CodePrimitiveExpression(propertyNameInGeneratedCode));
                     break;
                 case AssociationBehavior.AddAssociationHardCoded:
