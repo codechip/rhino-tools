@@ -1040,7 +1040,8 @@ namespace NHibernate.Query.Generator
         private string GetClassNameFromCollection(XmlNode node)
         {
             XmlNode classNode = node.SelectSingleNode("nh:one-to-many/@class", nsMgr) ??
-                node.SelectSingleNode("nh:many-to-many/@class", nsMgr);
+                node.SelectSingleNode("nh:many-to-many/@class", nsMgr) ??
+                node.SelectSingleNode("nh:composite-element/@class", nsMgr);
             if (classNode == null) //this may happen if we let NH guess the class type
             {
                 throw new InvalidOperationException("Can't find attribute 'nh:one-to-many/@class' or 'nh:many-to-many/@class' on element " + node.Name + " " + GetName(node));
