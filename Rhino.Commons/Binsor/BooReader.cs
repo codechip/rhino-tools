@@ -94,6 +94,7 @@ namespace Rhino.Commons.Binsor
 			finally
 			{
 				Components.Clear();
+				Facilities.Clear();
 			}
 		}
 

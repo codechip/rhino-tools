@@ -43,7 +43,7 @@ namespace Rhino.Commons.Test.Binsor
             string attribute = logging.FacilityConfig.Attributes["loggingApi"];
             Assert.AreEqual("Log4net", attribute);
             attribute = logging.FacilityConfig.Attributes["configFile"];
-            Assert.AreEqual("Config/log4net.config", attribute);
+            Assert.AreEqual("log4net.config", attribute);
         }
 
         [Test]

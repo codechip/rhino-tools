@@ -37,7 +37,7 @@ Facility("factory", FactorySupportFacility)
 
 Facility("loggerFacility", LoggingFacility, 
 	loggingApi: "Log4net", 
-	configFile: "Config/log4net.config",
+	configFile: "log4net.config",
 	NestedConfig: {
 		something: "foo",
 		bar: "nar"
