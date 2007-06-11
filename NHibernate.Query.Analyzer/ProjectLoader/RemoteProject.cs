@@ -45,7 +45,7 @@ using NHibernate.Hql;
 using NHibernate.Hql.Classic;
 using NHibernate.Mapping;
 using NHibernate.Type;
-using Configuration=System.Configuration.Configuration;
+using Configuration=NHibernate.Cfg.Configuration;
 using Environment=NHibernate.Cfg.Environment;
 
 namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
