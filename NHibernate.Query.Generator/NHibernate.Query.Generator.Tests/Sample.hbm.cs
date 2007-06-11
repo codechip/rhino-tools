@@ -13,49 +13,49 @@ namespace Query {
     
     public partial class For {
         
-        /// Query Builder for member Customer
+        /// member Customer
         public static Query.QueryBuilder<My.Simple.Model.Customer> Customer {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.Customer>();
             }
         }
         
-        /// Query Builder for member Address
+        /// member Address
         public static Query.QueryBuilder<My.Simple.Model.Address> Address {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.Address>();
             }
         }
         
-        /// Query Builder for member CompositeCustomer
+        /// member CompositeCustomer
         public static Query.QueryBuilder<My.Simple.Model.CompositeCustomer> CompositeCustomer {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.CompositeCustomer>();
             }
         }
         
-        /// Query Builder for member BadCustomer
+        /// member BadCustomer
         public static Query.QueryBuilder<My.Simple.Model.BadCustomer> BadCustomer {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.BadCustomer>();
             }
         }
         
-        /// Query Builder for member BadCustomer2
+        /// member BadCustomer2
         public static Query.QueryBuilder<My.Simple.Model.BadCustomer2> BadCustomer2 {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.BadCustomer2>();
             }
         }
         
-        /// Query Builder for member ValuedCustomer
+        /// member ValuedCustomer
         public static Query.QueryBuilder<My.Simple.Model.ValuedCustomer> ValuedCustomer {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.ValuedCustomer>();
             }
         }
         
-        /// Query Builder for member ValuedCustomer2
+        /// member ValuedCustomer2
         public static Query.QueryBuilder<My.Simple.Model.ValuedCustomer2> ValuedCustomer2 {
             get {
                 return new Query.QueryBuilder<My.Simple.Model.ValuedCustomer2>();
@@ -1184,7 +1184,7 @@ namespace Query {
     
     public partial class Queries {
         
-        /// Named Query for member MyQuery
+        /// member MyQuery
         public static string MyQuery {
             get {
                 return "MyQuery";
@@ -1194,7 +1194,7 @@ namespace Query {
     
     public partial class Queries {
         
-        /// Named Query for member HerQuery
+        /// member HerQuery
         public static string HerQuery {
             get {
                 return "HerQuery";

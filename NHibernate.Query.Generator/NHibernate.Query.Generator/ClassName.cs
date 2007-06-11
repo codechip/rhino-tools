@@ -5,14 +5,46 @@ using System.Xml;
 
 namespace NHibernate.Query.Generator
 {
+
 	public class ClassName
 	{
+		static readonly string[] XPathForClass = {
+			                        	"/nh:hibernate-mapping//nh:class", "/nh:hibernate-mapping//nh:joined-subclass",
+			                        	"/nh:hibernate-mapping//nh:subclass"};
+
+		static readonly string[] XPathForComponents = { "nh:component", "nh:dynamic-component", "nh:composite-id" };
+
+		static readonly string[] XPathForQueries = {"/nh:hibernate-mapping/nh:query"};
+
 		static readonly string[] classes = { "class", "subclass", "joined-subclass" };
+		
+		static readonly string[] numericTypeNames = new string[] { "int", "integer", "smallint", "bigint", "tinyint", "decimal"
+		                                                   , "float", "double", "short", "long", "big_decimal", "Int32"
+		                                                   , "Int64", "Int16", "Single", "Decimal", "Double"
+		                                                   , "System.Int32", "System.Int64", "System.Int16"
+		                                                   , "System.Single", "System.Decimal", "System.Double" };
+
+		private static XmlNamespaceManager xmlNsMgr;
+		private static string hbmCodeNamespace;
+		private static string baseNamespace;
+		private static bool isInitialized;
 
 		private string genericTypeName;
 		private string typeName;
 		private string extendsTypeName;
 		private string typeNameForCode;
+		private XmlNode xmlNode;
+		private ClassName parentClassName;
+
+
+		public ClassName(XmlNode classNode)
+		{
+			this.genericTypeName = GetTypeNameForCode(HbmCodeNamespace, GetName(classNode));
+			this.typeNameForCode = GetTypeNameForCode(HbmCodeNamespace, GetName(classNode));
+			this.typeName = GetTypeNameForDisplay(classNode);
+			this.extendsTypeName = GetBaseTypeForDiplay(classNode);
+			this.xmlNode = classNode;
+		}
 
 		public ClassName(string hbmCodeNamespace, XmlNode classNode)
 		{
@@ -20,20 +52,133 @@ namespace NHibernate.Query.Generator
 			this.typeNameForCode = GetTypeNameForCode(hbmCodeNamespace, GetName(classNode));
 			this.typeName = GetTypeNameForDisplay(classNode);
 			this.extendsTypeName = GetBaseTypeForDiplay(classNode);
+			this.xmlNode = classNode;
+		}
+
+		public static void Init(XmlNamespaceManager xmlNsMgr, string baseNamespace, string hbmCodeNamespace)
+		{
+			ClassName.xmlNsMgr = xmlNsMgr;
+			ClassName.hbmCodeNamespace = hbmCodeNamespace;
+			ClassName.baseNamespace = baseNamespace;
+			Array.Sort(numericTypeNames);
+			isInitialized = true;
+		}
+
+		public static XmlNamespaceManager XmlNsMgr
+		{
+			get { EnsureInit(); return xmlNsMgr; }
+		}
+
+		public static string BaseNamespace
+		{
+			get { EnsureInit(); return baseNamespace; }
+		}
+
+		public static string HbmCodeNamespace
+		{
+			get { EnsureInit(); return hbmCodeNamespace; }
+		}
+		
+		public XmlNode XmlNode
+		{
+			get { return xmlNode; }
+		}
+
+		public static IEnumerable<ClassName> SelectClassesFromDoc(XmlDocument doc)
+		{
+			EnsureInit();
+			foreach(XmlNode node in SelectNodes(doc, XPathForClass))
+				yield return new ClassName(node);
+		}
+
+		public static IEnumerable<ClassName> SelectQueriesFromDoc(XmlDocument doc)
+		{
+			EnsureInit();
+			foreach (XmlNode node in SelectNodes(doc, XPathForQueries))
+				yield return new ClassName(node);
+		}
+
+		private static void EnsureInit()
+		{
+			if (!isInitialized)
+				throw new InvalidOperationException("ClassName must be initialized first by calling the Init method!");
+		}
+
+		public IEnumerable<ClassName> SelectPropertiesForClass(ClassName className)
+		{
+			yield break;
+		}
+
+		public IEnumerable<ClassName> SelectComponentsForClass(ClassName className)
+		{
+			yield break;
+		}
+
+		private static IEnumerable<XmlNode> SelectNodes(XmlNode node, params string[] xpathExpressions)
+		{
+			foreach (string xpExpr in xpathExpressions)
+				foreach (XmlNode foundNode in node.SelectNodes(xpExpr, XmlNsMgr))
+					yield return foundNode;
+		}
+
+		public ClassName ParentClassName
+		{
+			get { return parentClassName; }
+		}
+
+		public string Name
+		{
+			get { return GetName(XmlNode); }
+		}
+
+		public string TypeName
+		{
+			get { return typeName; }
+		}
+
+		public string FqnsTypeName
+		{
+			get { return ""; }
+		}
+
+		public bool IsNumeric
+		{
+			get 
+			{ 
+				if (XmlNode == null || string.IsNullOrEmpty(XmlNode.Attributes["type"].Value))
+					return false;
+				return (Array.BinarySearch(numericTypeNames, XmlNode.Attributes["type"].Value) >= 0);
+			}
+		}
+
+		public bool IsGeneric
+		{
+			get { return false; }
+		}
+
+		public bool IsComponent
+		{
+			get { return false; }
+		}
+
+		public bool IsCollection
+		{
+			get { return false; }
+		}
+
+		public string GetTypeNameForCode(string baseNamespace)
+		{
+			return baseNamespace + "." + TypeNameForCode;
 		}
 
 		public string TypeNameForCode
 		{
 			get { return typeNameForCode; }
 		}
+
 		public string GenericTypeName
 		{
 			get { return genericTypeName; }
-		}
-
-		public string TypeName
-		{
-			get { return typeName; }
 		}
 
 		public string ExtendsTypeName

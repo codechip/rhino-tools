@@ -79,6 +79,7 @@
     <Compile Include="Program.cs" />
     <EmbeddedResource Include="QueryBuilders\QueryBuilder.cs" />
     <Compile Include="QueryGenerator.cs" />
+    <Compile Include="BaseGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ayende-open-source.snk">

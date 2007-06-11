@@ -58,11 +58,12 @@ namespace NHibernate.Query.Generator
 			queryNamespace.Types.Add(ctd);
 			return ctd;
 		}
+
 		public void Generate(TextWriter writer)
 		{
 			//General CodeDOM setup
 			CodeCompileUnit unit = new CodeCompileUnit();
-			CodeNamespace queryNameSpace = new CodeNamespace("Query");
+			CodeNamespace queryNameSpace = new CodeNamespace(baseNamespace);
 			unit.Namespaces.Add(queryNameSpace);
 			
 			CodeTypeDeclaration ctdFor = CreateDeclarationAndAddPartialType(queryNameSpace, "For");
@@ -73,14 +74,34 @@ namespace NHibernate.Query.Generator
 
 			ValidateAndLoadXmlDocument();
 
-			CreateQueryBuilders(ctdFor, "QueryBuilder");
-			//CreateClassesOnlyForEntities(ctdFrom, "FromClause");
+			ClassName.Init(nsMgr, baseNamespace, hbmCodeNameSpace);
+			QueryBuilderGenerator qbg = new QueryBuilderGenerator();
+			RootGenerator rg = new RootGenerator();
+			
+			// Generate the main QueryBuilder and all supporting QueryPart classes.
+			foreach(ClassName className in ClassName.SelectClassesFromDoc(hbm))
+			{
+				qbg.Generate(queryNameSpace, ctdFor, className, QueryPartOptions.QueryBuilderOptions);
+				//rg.Generate(queryNameSpace, ctdWhere, className, QueryPartOptions.WhereOptions);
+				//rg.Generate(queryNameSpace, ctdOrder, className, QueryPartOptions.OrderByOptions);
+				//rg.Generate(queryNameSpace, ctdProject, className, QueryPartOptions.ProjectionOptions);
+			}
+
+			// Generate properties for named queries
+			NamedQueryGenerator nqg = new NamedQueryGenerator();
+			foreach(ClassName className in ClassName.SelectQueriesFromDoc(hbm))
+			{
+				nqg.Generate(queryNameSpace, ctdFor, className, QueryPartOptions.NamedQueryOptions);
+			}
+
+			//CreateQueryBuilders(ctdFor, "QueryBuilder");
+			////CreateClassesOnlyForEntities(ctdFrom, "FromClause");
 			CreateClasses(ctdWhere, new GeneratorPart("Where", "Where", "WhereClause", "WhereClause", "WhereClauseProperty", true, true));
 			
-			// Todo: Figure out how to isolate the numerics again, for now make everything numeric
+			//// Todo: Figure out how to isolate the numerics again, for now make everything numeric
 			CreateClasses(ctdProject, new GeneratorPart("ProjectBy", "Projection", "ProjectionRoot", "ProjectionEntity", "ProjectionClauseProperty", true, true));
 			CreateClasses(ctdOrder, new GeneratorPart("OrderBy", "OrderBy", "QueryPart", "QueryPart", "OrderByClauseProperty", false, false));
-			CreateQueries(queryNameSpace, hbm);
+			//CreateQueries(queryNameSpace, hbm);
 			_provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());
 		}
 
