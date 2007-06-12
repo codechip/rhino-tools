@@ -175,7 +175,7 @@ namespace Rhino.Igloo
                 }
                 else
                 {
-                    entity = ActiveRecordMediator.FindByPrimaryKey(kvp.Value.PropertyType, key);
+                    entity = ActiveRecordMediator.FindByPrimaryKey(kvp.Value.PropertyType, key,false);
                 }
                 kvp.Value.SetValue(instance, entity, null);
 
