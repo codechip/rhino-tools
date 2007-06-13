@@ -1,0 +1,181 @@
+/* css document */
+/* links */
+A:link	{
+color:#888888;
+text-decoration:none;
+	}
+A:hover	{
+color:#E11284;
+text-decoration:none;
+	}
+A:active	{
+color:#888888;
+text-decoration:none;
+	}
+A:visited	{
+color:#888888;
+text-decoration:none;
+	}
+	
+/* content */	
+#content
+{
+text-align: left;
+width: 700px;
+margin: 0 auto
+}
+
+ #navigation
+{
+position: relative;
+left: 175px;
+top:120px
+}
+
+ #flash
+{
+position: relative;
+left: 0px;
+top: 115px
+}
+
+/* left and right conent */
+.container2 {
+   position: relative;
+   height: 50px;
+   }
+
+.left-element {
+   position: absolute;
+   left: 0;
+   width: 30%;
+   margin: 4;
+   white-space: wrap;
+   padding: 4;
+   }
+
+.right-element {
+   position: absolute;
+   right: 0;
+   width: 65%;
+   text-align: left; /* depends on element width */
+   margin: 4;
+   white-space: wrap;
+   padding: 0px;   
+   }
+
+body {
+  background-image:url(images/bg.gif);
+  background-repeat:repeat-x;
+  }
+  
+  div.float {
+  float: left;
+  }
+  
+  h1 { 
+  color: green
+  font-weight: bold; 
+  font-size: 22pt;
+  line-height: 14pt; 
+  font-family: arial; 
+  font-variant: normal;
+  font-style: normal;
+}
+
+/* styling post */
+.thinborder{
+  float:left;
+  border:solid 1px yellowgreen;
+  padding:5px;
+  margin-right:5px;
+}
+
+.dropcap {
+  float: left;
+  font: normal 60pt/0.8em georgia,
+  helvetica, verdana, arial, 
+  sans-serif;
+  color: yellowgreen;
+  margin-right: 3px;
+}
+
+.pullout{
+  width:30%;
+  padding:10px;
+  background-color:yellowgreen;
+  color:#f5f5f5;
+  float:right;
+  font: bold 14pt/1em arial, 
+  helvetica, sans-serif;
+  text-align:left;
+  letter-spacing: 0.05em;
+  margin:5px;
+  clear: both;
+}
+
+/* blockquote styling */
+blockquote.withline   {
+font-family: "arial", courier, monospace;
+text-align: justify; padding:5px;
+border-left:1px solid yellowgreen;}
+  
+/* rounded corners */
+/* set millions of background images */
+.rbroundbox { background: url(images/nt.gif) repeat; }
+.rbtop div { background: url(images/tl.gif) no-repeat top left; }
+.rbtop { background: url(images/tr.gif) no-repeat top right; }
+.rbbot div { background: url(images/bl.gif) no-repeat bottom left; }
+.rbbot { background: url(images/br.gif) no-repeat bottom right; }
+
+/* height and width stuff, width not really nessisary. */
+.rbtop div, .rbtop, .rbbot div, .rbbot {
+width: 100%;
+height: 7px;
+font-size: 1px;
+}
+.rbcontent { margin: 0 7px; }
+.rbroundbox { width: 100%; margin: 1em auto; }
+
+/* navigation listamatic*/
+#navcontainer
+{
+width: 12em;
+padding: 0 0 1em 0;
+margin-bottom: 1em;
+font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+color: #333;
+}
+
+#navcontainer ul
+{
+list-style: none;
+margin: 0;
+padding: 0;
+border: none;
+}
+
+#navcontainer li
+{
+border-bottom: 1px solid #000000;
+margin: 0;
+}
+
+#navcontainer li a
+{
+display: block;
+padding: 5px 5px 5px 0.5em;
+background-color: #ffffff;
+color: #888888;
+text-decoration: none;
+width: 100%;
+}
+
+html>body #navcontainer li a { width: auto; }
+
+#navcontainer li a:hover
+{
+background-color: #E11284;
+color: #fff;
+}
+/* Zoom Cloud */

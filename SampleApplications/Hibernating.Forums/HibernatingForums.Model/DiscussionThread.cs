@@ -1,0 +1,4 @@
+namespace HibernatingForums.Model
+{
+
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link rel="StyleSheet" href="/style.css" type="text/css" />
+	<title>Hibernating Forums </title>
+	<style type="text/css">
+/*<![CDATA[*/
+ p.c1 {text-align:justify;}
+/*]]>*/
+</style>
+</head>
+<body>
+	<div id="content">
+		<div class="rbroundbox">
+			<div class="rbtop">
+				<div>
+				</div>
+			</div>
+			<div class="rbcontent">
+				<strong>Important:</strong> This is a sample application, meant to focus on the
+				service / data layer, do not consider anything that I am doing on the UI seriously
+				I am <i>not</i> a UI guy, and I refuse to play one on TV.
+			</div>
+			<div class="rbbot">
+				<div>
+				</div>
+			</div>
+		</div>
+		<!-- /rbroundbox -->
+		<div class="container2">
+			<div class="left-element">
+				<% OutputSubView("/Shared/ForumsList") %>
+				<div class="rbroundbox">
+					<div class="rbtop">
+						<div>
+						</div>
+					</div>
+					<div class="rbcontent">
+						<% component LastPostInfo %>
+					</div>
+					<!-- /rbcontent -->
+					<div class="rbbot">
+						<div>
+						</div>
+					</div>
+				</div>
+				<!-- /rbroundbox -->
+			</div>
+			${ChildOutput}
+			<div class="rbroundbox">
+				<div class="rbtop">
+				</div>
+				<div class="rbcontent">
+					<em>(c) 2007 Ayende Rahien | Design by: <a href="mailto:liarfish@gmail.com">DENiAL</a></em>
+				</div>
+				<!-- /rbcontent -->
+				<div class="rbbot">
+				</div>
+			</div>
+			<!-- /rbroundbox -->
+		</div>
+	</div>
+	</div>
+</body>
+</html>

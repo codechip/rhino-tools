@@ -1,0 +1,10 @@
+<div id="navcontainer">
+	<h5>Forums list:</h5>
+	<ul id="navlist">
+		<li id="active"><a href="index.html" id="current" name="current">Framworks</a> </li>
+		<li><a href="index.html">Books</a> </li>
+		<li><a href="index.html">Rants</a> </li>
+		<li><a href="index.html">Bugs</a> </li>
+		<li><a href="index.html">Who thinks this is cool?</a> </li>
+	</ul>
+</div>

@@ -1,0 +1,12 @@
+<div class="right-element">
+	<p>
+		<h1>Welcome to Hibernating Forums</h1>
+		<h4>The forums so quite no one post here :-D</h4>
+	</p>
+	<% OutputSubView("/Shared/ShowPost") %>
+	<blockquote class="withline">
+			This is just a sample application to show MonoRail and Active Record
+	</blockquote>
+	<p>
+	Well, what do we do now?
+	</p>
