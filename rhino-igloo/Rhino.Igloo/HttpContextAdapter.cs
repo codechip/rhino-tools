@@ -259,7 +259,7 @@ namespace Rhino.Igloo
         /// <returns></returns>
         public string MapPath(string path)
         {
-            return context.Response.ApplyAppPathModifier(path);
+            return context.Server.MapPath(path);
         }
 
 

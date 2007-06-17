@@ -51,7 +51,7 @@ namespace Rhino.Igloo
         /// Adds the service reference.
         /// </summary>
         /// <param myName="path">The path.</param>
-        protected void AddServiceReference(string path)
+        public void AddServiceReference(string path)
         {
             ServiceReference reference = new ServiceReference(path);
             ((BaseMaster)Master).ScriptManager.Services.Add(reference);
