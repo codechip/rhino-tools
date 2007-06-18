@@ -30,6 +30,7 @@
 using System;
 using System.Web;
 using System.Web.UI;
+using Rhino.Commons.HttpModules;
 
 namespace Rhino.Igloo
 {
@@ -68,5 +69,11 @@ namespace Rhino.Igloo
 	            return Request.ApplicationPath + "/Services";
 	        }
 	    }
+
+        protected override void OnPreRender(EventArgs e)
+        {
+            Title += " - Query Count: " + EnsureMaxNumberOfQueriesPerRequestModule.QueryCount;
+            base.OnPreRender(e);
+        }
     }
 }
