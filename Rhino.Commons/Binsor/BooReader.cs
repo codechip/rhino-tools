@@ -107,7 +107,9 @@ namespace Rhino.Commons.Binsor
 			else
 				compiler.Parameters.Pipeline = new CompileToFile();
 			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
-			compiler.Parameters.Pipeline.Replace(typeof(ProcessMethodBodiesWithDuckTyping), new TransformUnknownReferences());
+			compiler.Parameters.Pipeline.Replace(
+                typeof(ProcessMethodBodiesWithDuckTyping), 
+                new TransformUnknownReferences());
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(fileInput);
 			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
