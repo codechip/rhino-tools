@@ -65,6 +65,7 @@ namespace Rhino.Commons.HttpModules
 		public IWindsorContainer Container
 		{
 			get { return windsorContainer; }
+			private set { windsorContainer = value; }
 		}
 
 		public virtual void Application_Start(object sender, EventArgs e)
@@ -83,10 +84,10 @@ namespace Rhino.Commons.HttpModules
 
 		public virtual void Application_End(object sender, EventArgs e)
 		{
-			if (windsorContainer != null) //can happen if this isn't the first app
+			if (Container != null) //can happen if this isn't the first app
 			{
-				IoC.Reset(windsorContainer);
-				windsorContainer.Dispose();
+				IoC.Reset(Container);
+				Container.Dispose();
 			}
 		}
 
@@ -99,7 +100,7 @@ namespace Rhino.Commons.HttpModules
 				watcher.Dispose();
 		}
 
-		protected virtual void CreateContainer()
+		private void CreateContainer()
 		{
 			string windsorConfig = Settings.Default.WindsorConfig;
 			if (!Path.IsPathRooted(windsorConfig))
@@ -114,10 +115,15 @@ namespace Rhino.Commons.HttpModules
 			watcher.Changed += resetIoC;
 			watcher.Deleted += resetIoC;
 
-			windsorContainer = new RhinoContainer(windsorConfig);
-			IoC.Initialize(windsorContainer);
+			Container = CreateContainer(windsorConfig);
+			IoC.Initialize(Container);
 			
 			watcher.EnableRaisingEvents = true;
+		}
+
+		protected virtual IWindsorContainer CreateContainer(string windsorConfig)
+		{
+			return new RhinoContainer(windsorConfig);
 		}
 	}
 }
