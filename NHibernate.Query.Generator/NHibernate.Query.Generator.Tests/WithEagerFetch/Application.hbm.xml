@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" 
+            xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+            xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+            namespace="NHibernate.Query.Generator.Tests.WithEagerFetch" 
+            assembly="NHibernate.Query.Generator.Tests">
+
+	<class name="Application" table="Applications" lazy="true">
+
+    <id name="Id" type="Guid">
+      <generator class="guid"/>
+    </id>
+    <version name="Version" type="long" unsaved-value="0"/>
+
+		<property name="Name" type="String" length="50" not-null="true"/>
+    <property name="Description" type="String" length="250"/>
+		<property name="Obsolete" type="Boolean"/>
+
+    <set name="Operations" lazy="true" inverse="true">
+      <key column="ApplicationId"/>
+      <one-to-many class="Operation" not-found="ignore"/>
+    </set>
+
+  </class>
+
+</hibernate-mapping>

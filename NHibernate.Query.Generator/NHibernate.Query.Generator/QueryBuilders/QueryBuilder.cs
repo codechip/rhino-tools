@@ -27,15 +27,10 @@
 #endregion
 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using NHibernate;
-using NHibernate.Expression;
-using NHibernate.SqlCommand;
-using NHibernate.Type;
 
 
+//Don't optimize the using statements in this file, as naming conflicts between 
+//generated code and other (project) objects may occur.
 namespace QueryNamespace
 {
     public partial class QueryBuilder<T>
@@ -49,16 +44,16 @@ namespace QueryNamespace
         /// </summary>
         protected string associationPath;
         private readonly bool backTrackAssociationsOnEquality;
-        private readonly IList<OrderByClause> orderByClauses = new List<OrderByClause>();
-        private readonly ICollection<QueryBuilder<T>> children = new List<QueryBuilder<T>>();
-        private readonly ICollection<ICriterion> criterions = new List<ICriterion>();
+        private readonly System.Collections.Generic.IList<OrderByClause> orderByClauses = new System.Collections.Generic.List<OrderByClause>();
+        private readonly System.Collections.Generic.ICollection<QueryBuilder<T>> children = new System.Collections.Generic.List<QueryBuilder<T>>();
+        private readonly System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion> criterions = new System.Collections.Generic.List<NHibernate.Expression.ICriterion>();
         private PropertyProjectionBuilder propertyProjection = null;
-        public JoinType joinType = JoinType.InnerJoin;
-        public FetchMode fetchMode = FetchMode.Default;
+        public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
+        public NHibernate.FetchMode fetchMode = NHibernate.FetchMode.Default;
         protected QueryBuilder<T> parent;
 
         public QueryBuilder(QueryBuilder<T> parent, string name, string associationPath, bool backTrackAssociationsOnEquality)
-               :this(parent,name, associationPath)
+            : this(parent, name, associationPath)
         {
             this.backTrackAssociationsOnEquality = backTrackAssociationsOnEquality;
         }
@@ -72,14 +67,14 @@ namespace QueryNamespace
                 parent.children.Add(this);
         }
 
-        protected void AddCriterion(ICriterion criterion)
+        protected void AddCriterion(NHibernate.Expression.ICriterion criterion)
         {
             criterions.Add(criterion);
         }
 
         public QueryBuilder<T> SetProjection(PropertyProjectionBuilder propertyProjection)
         {
-            if (propertyProjection == null) throw new ArgumentNullException("propertyProjection");
+            if (propertyProjection == null) throw new System.ArgumentNullException("propertyProjection");
             this.propertyProjection = propertyProjection;
             return this;
 
@@ -107,11 +102,11 @@ namespace QueryNamespace
 
         public QueryBuilder<T> Eq(object value)
         {
-            AbstractCriterion eq;
+            NHibernate.Expression.AbstractCriterion eq;
             if (value == null)
-                eq = Expression.IsNull(myName);
+                eq = NHibernate.Expression.Expression.IsNull(myName);
             else
-                eq = Expression.Eq(myName, value);
+                eq = NHibernate.Expression.Expression.Eq(myName, value);
             QueryBuilder<T> self = this;
             if (backTrackAssociationsOnEquality)
             {
@@ -125,15 +120,15 @@ namespace QueryNamespace
 
         public QueryBuilder<T> NotEq(object value)
         {
-            AbstractCriterion eq;
+            NHibernate.Expression.AbstractCriterion eq;
             if (value == null)
-                eq = Expression.IsNotNull(myName);
+                eq = NHibernate.Expression.Expression.IsNotNull(myName);
             else
-                eq = Expression.Not(Expression.Eq(myName, value));
+                eq = NHibernate.Expression.Expression.Not(NHibernate.Expression.Expression.Eq(myName, value));
             QueryBuilder<T> self = this;
             if (backTrackAssociationsOnEquality)
             {
-                self = new QueryBuilder<T>(this,myName, BackTrackAssociationPath(associationPath));
+                self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
                 children.Add(self);
             }
             self.AddCriterion(eq);
@@ -142,11 +137,11 @@ namespace QueryNamespace
 
         public QueryBuilder<T> In<K>(params K[] values)
         {
-            AbstractCriterion inExpression = Expression.In(myName, values);
+            NHibernate.Expression.AbstractCriterion inExpression = NHibernate.Expression.Expression.In(myName, values);
             QueryBuilder<T> self = this;
             if (backTrackAssociationsOnEquality)
             {
-                self = new QueryBuilder<T>(this,myName, BackTrackAssociationPath(associationPath));
+                self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
                 children.Add(self);
             }
             self.AddCriterion(inExpression);
@@ -155,19 +150,19 @@ namespace QueryNamespace
 
         public QueryBuilder<T> In(params object[] values)
         {
-            In((ICollection)values);
+            In((System.Collections.ICollection)values);
             return this;
         }
 
-        public QueryBuilder<T> In<K>(ICollection<K> values)
+        public QueryBuilder<T> In<K>(System.Collections.Generic.ICollection<K> values)
         {
-            In(new List<K>(values).ToArray());
+            In(new System.Collections.Generic.List<K>(values).ToArray());
             return this;
         }
 
-        public QueryBuilder<T> In<K>(IEnumerable<K> values)
+        public QueryBuilder<T> In<K>(System.Collections.Generic.IEnumerable<K> values)
         {
-            In(new List<K>(values).ToArray());
+            In(new System.Collections.Generic.List<K>(values).ToArray());
             return this;
         }
 
@@ -175,7 +170,7 @@ namespace QueryNamespace
         {
             get
             {
-                AbstractCriterion notNullExpression = new NotNullExpression(myName);
+                NHibernate.Expression.AbstractCriterion notNullExpression = new NHibernate.Expression.NotNullExpression(myName);
                 QueryBuilder<T> self = this;
                 if (backTrackAssociationsOnEquality)
                 {
@@ -191,7 +186,7 @@ namespace QueryNamespace
         {
             get
             {
-                AbstractCriterion nullExpression = new NullExpression(myName);
+                NHibernate.Expression.AbstractCriterion nullExpression = new NHibernate.Expression.NullExpression(myName);
                 QueryBuilder<T> self = this;
                 if (backTrackAssociationsOnEquality)
                 {
@@ -215,9 +210,23 @@ namespace QueryNamespace
 
         public static QueryBuilder<T> operator &(QueryBuilder<T> lhs, QueryBuilder<T> rhs)
         {
-            QueryBuilder<T> combined = new QueryBuilder<T>(null,lhs.myName, null);
-            combined.children.Add(lhs);
-            combined.children.Add(rhs);
+            QueryBuilder<T> combined = new QueryBuilder<T>(null, lhs.myName, null);
+
+            QueryBuilder<T> lhsRoot = lhs;
+            while (ReferenceEquals(lhsRoot.parent, null) == false)
+            {
+                lhsRoot = lhsRoot.parent;
+            }
+
+            QueryBuilder<T> rhsRoot = rhs;
+            while (ReferenceEquals(rhsRoot.parent, null) == false)
+            {
+                rhsRoot = rhsRoot.parent;
+            }
+
+
+            combined.children.Add(lhsRoot);
+            combined.children.Add(rhsRoot);
             return combined;
         }
 
@@ -226,15 +235,15 @@ namespace QueryNamespace
             QueryBuilder<T> not = new QueryBuilder<T>(other, other.myName, null);
             if (other.children.Count != 0)
             {
-                throw new InvalidOperationException("Cannot use ! operator on complex queries");
+                throw new System.InvalidOperationException("Cannot use ! operator on complex queries");
             }
-            Conjunction conjunction = new Conjunction();
-            foreach (ICriterion crit in other.criterions)
+            NHibernate.Expression.Conjunction conjunction = new NHibernate.Expression.Conjunction();
+            foreach (NHibernate.Expression.ICriterion crit in other.criterions)
             {
                 conjunction.Add(crit);
             }
             other.criterions.Clear();
-            not.AddCriterion(Expression.Not(conjunction));
+            not.AddCriterion(NHibernate.Expression.Expression.Not(conjunction));
             return not;
         }
 
@@ -242,7 +251,7 @@ namespace QueryNamespace
         {
             if (lhs.associationPath != rhs.associationPath)
             {
-                throw new InvalidOperationException(
+                throw new System.InvalidOperationException(
                     string.Format(
                         @"OR attempted between {0} and {1}.
 You can't OR between two Query parts that belong to different associations.
@@ -251,18 +260,18 @@ Use HQL for this functionality...",
                         rhs.associationPath));
             }
 
-            QueryBuilder<T> combined = new QueryBuilder<T>(null,lhs.myName, null);
-            Conjunction lhs_conjunction = Expression.Conjunction();
-            Conjunction rhs_conjunction = Expression.Conjunction();
-            foreach (ICriterion criterion in lhs.criterions)
+            QueryBuilder<T> combined = new QueryBuilder<T>(null, lhs.myName, null);
+            NHibernate.Expression.Conjunction lhs_conjunction = NHibernate.Expression.Expression.Conjunction();
+            NHibernate.Expression.Conjunction rhs_conjunction = NHibernate.Expression.Expression.Conjunction();
+            foreach (NHibernate.Expression.ICriterion criterion in lhs.criterions)
             {
                 lhs_conjunction.Add(criterion);
             }
-            foreach (ICriterion criterion in rhs.criterions)
+            foreach (NHibernate.Expression.ICriterion criterion in rhs.criterions)
             {
                 rhs_conjunction.Add(criterion);
             }
-            combined.criterions.Add(Expression.Or(lhs_conjunction, rhs_conjunction));
+            combined.criterions.Add(NHibernate.Expression.Expression.Or(lhs_conjunction, rhs_conjunction));
             return combined;
         }
 
@@ -276,31 +285,31 @@ Use HQL for this functionality...",
             return false;
         }
 
-        public static implicit operator DetachedCriteria(QueryBuilder<T> expr)
+        public static implicit operator NHibernate.Expression.DetachedCriteria(QueryBuilder<T> expr)
         {
             return expr.ToDetachedCriteria(null);
         }
 
-        public DetachedCriteria ToDetachedCriteria()
+        public NHibernate.Expression.DetachedCriteria ToDetachedCriteria()
         {
             return ToDetachedCriteria(null);
         }
 
-        public DetachedCriteria ToDetachedCriteria(string alias)
+        public NHibernate.Expression.DetachedCriteria ToDetachedCriteria(string alias)
         {
-            if (ReferenceEquals(parent,null)==false)//can't use != we overloaded that
+            if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
             {
                 return parent.ToDetachedCriteria(alias);
             }
-            DetachedCriteria detachedCriteria;
-            if (String.IsNullOrEmpty(alias))
-                detachedCriteria = DetachedCriteria.For(typeof(T));
+            NHibernate.Expression.DetachedCriteria detachedCriteria;
+            if (string.IsNullOrEmpty(alias))
+                detachedCriteria = NHibernate.Expression.DetachedCriteria.For(typeof(T));
             else
-                detachedCriteria = DetachedCriteria.For(typeof(T), alias);
+                detachedCriteria = NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);
 
             if (this.propertyProjection != null)
             {
-                ProjectionList projectionList = this.propertyProjection;
+                NHibernate.Expression.ProjectionList projectionList = this.propertyProjection;
                 detachedCriteria.SetProjection(projectionList);
             }
             foreach (OrderByClause orderByClause in orderByClauses)
@@ -308,22 +317,22 @@ Use HQL for this functionality...",
                 detachedCriteria.AddOrder(orderByClause);
             }
 
-            Dictionary<string, KeyValuePair<JoinType, FetchMode>> criterionsByJoinTypeAndFetchMode =
-                new Dictionary<string, KeyValuePair<JoinType, FetchMode>>();
-            Dictionary<string, ICollection<ICriterion>> criterionsByAssociation = 
-                new Dictionary<string, ICollection<ICriterion>>();
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>> criterionsByJoinTypeAndFetchMode =
+                new System.Collections.Generic.Dictionary<string, System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>>();
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> criterionsByAssociation =
+                new System.Collections.Generic.Dictionary<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>>();
             AddByAssociationPath(criterionsByAssociation, criterionsByJoinTypeAndFetchMode);
 
-            foreach (KeyValuePair<string, ICollection<ICriterion>> pair in criterionsByAssociation)
+            foreach (System.Collections.Generic.KeyValuePair<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> pair in criterionsByAssociation)
             {
-                DetachedCriteria temp = detachedCriteria;
-                KeyValuePair<JoinType, FetchMode> val = criterionsByJoinTypeAndFetchMode[pair.Key];
+                NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
+                System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = criterionsByJoinTypeAndFetchMode[pair.Key];
                 if (pair.Key != "this")
                 {
                     temp = detachedCriteria.SetFetchMode(pair.Key, val.Value)
                             .CreateCriteria(pair.Key, val.Key);
                 }
-                foreach (ICriterion criterion in pair.Value)
+                foreach (NHibernate.Expression.ICriterion criterion in pair.Value)
                 {
                     temp.Add(criterion);
                 }
@@ -335,7 +344,7 @@ Use HQL for this functionality...",
         [System.ComponentModel.Localizable(false)]
         public override bool Equals(object obj)
         {
-            throw new InvalidOperationException("You can't use Equals()! Use Eq()");
+            throw new System.InvalidOperationException("You can't use Equals()! Use Eq()");
         }
 
 
@@ -346,10 +355,10 @@ Use HQL for this functionality...",
             return base.GetHashCode();
         }
 
-        protected static QueryBuilder<T> FromCriterion(AbstractCriterion criterion,
+        protected static QueryBuilder<T> FromCriterion(NHibernate.Expression.AbstractCriterion criterion,
             string name, string associationPath)
         {
-            QueryBuilder<T> queryBuilder = new QueryBuilder<T>(null,name, associationPath);
+            QueryBuilder<T> queryBuilder = new QueryBuilder<T>(null, name, associationPath);
             queryBuilder.AddCriterion(criterion);
             return queryBuilder;
         }
@@ -365,27 +374,25 @@ Use HQL for this functionality...",
         }
 
         private void AddByAssociationPath(
-            IDictionary<string, ICollection<ICriterion>> criterionsByAssociation,
-            IDictionary<string, KeyValuePair<JoinType, FetchMode>> criterionsByJoinTypeAndFetchMode)
+            System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> criterionsByAssociation,
+            System.Collections.Generic.IDictionary<string, System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>> criterionsByJoinTypeAndFetchMode)
         {
             if (criterionsByAssociation.ContainsKey(associationPath) == false)
-                criterionsByAssociation.Add(associationPath, new List<ICriterion>());
-            if (criterionsByJoinTypeAndFetchMode.ContainsKey(associationPath) == false)
+                criterionsByAssociation.Add(associationPath, new System.Collections.Generic.List<NHibernate.Expression.ICriterion>());
+            if (criterionsByJoinTypeAndFetchMode.ContainsKey(associationPath) == false ||
+                this.parent is CollectionQueryBuilder<T>)
             {
-                KeyValuePair<JoinType, FetchMode> val = new KeyValuePair<JoinType, FetchMode>(
-                    JoinType.InnerJoin, FetchMode.Default);
-                criterionsByJoinTypeAndFetchMode.Add(associationPath, val);
+                System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = new System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>(
+                    this.joinType, this.fetchMode);
+                criterionsByJoinTypeAndFetchMode[associationPath] = val;
             }
-           
-            foreach (ICriterion criterion in criterions)
+
+            foreach (NHibernate.Expression.ICriterion criterion in criterions)
             {
                 criterionsByAssociation[associationPath].Add(criterion);
             }
             foreach (QueryBuilder<T> child in children)
             {
-                KeyValuePair<JoinType, FetchMode> val = new KeyValuePair<JoinType, FetchMode>(
-                    child.joinType, child.fetchMode);
-                criterionsByJoinTypeAndFetchMode[child.associationPath] = val;
                 child.AddByAssociationPath(criterionsByAssociation, criterionsByJoinTypeAndFetchMode);
             }
         }
@@ -400,23 +407,23 @@ Use HQL for this functionality...",
             {
                 if (associationPath == null || associationPath == "this")
                 {
-                    throw new InvalidOperationException(
+                    throw new System.InvalidOperationException(
                         "BUG: tried to create a nested query builder with no assoication path!");
                 }
             }
         }
 
-        public QueryBuilder<T> Exists(DetachedCriteria criteria)
+        public QueryBuilder<T> Exists(NHibernate.Expression.DetachedCriteria criteria)
         {
-            criteria = criteria.SetProjection(Projections.Property("id"));
-            AddCriterion(Subqueries.Exists(criteria));
+            criteria = criteria.SetProjection(NHibernate.Expression.Projections.Property("id"));
+            AddCriterion(NHibernate.Expression.Subqueries.Exists(criteria));
             return this;
         }
 
-        public QueryBuilder<T> NotExists(DetachedCriteria criteria)
+        public QueryBuilder<T> NotExists(NHibernate.Expression.DetachedCriteria criteria)
         {
-            criteria = criteria.SetProjection(Projections.Property("id"));
-            AddCriterion(Subqueries.NotExists(criteria));
+            criteria = criteria.SetProjection(NHibernate.Expression.Projections.Property("id"));
+            AddCriterion(NHibernate.Expression.Subqueries.NotExists(criteria));
             return this;
         }
     }
@@ -430,14 +437,14 @@ Use HQL for this functionality...",
 
         public QueryBuilder<T> Between(object lo, object hi)
         {
-            AbstractCriterion betweenExpression = new BetweenExpression(myName, lo, hi);
+            NHibernate.Expression.AbstractCriterion betweenExpression = new NHibernate.Expression.BetweenExpression(myName, lo, hi);
             AddCriterion(betweenExpression);
             return this;
         }
 
         public QueryBuilder<T> EqProperty(string otherPropertyName)
         {
-            AbstractCriterion eqPropertyExpression = new EqPropertyExpression(myName, otherPropertyName);
+            NHibernate.Expression.AbstractCriterion eqPropertyExpression = new NHibernate.Expression.EqPropertyExpression(myName, otherPropertyName);
             AddCriterion(eqPropertyExpression);
             return this;
         }
@@ -445,69 +452,69 @@ Use HQL for this functionality...",
 
         public QueryBuilder<T> Ge(object value)
         {
-            AbstractCriterion geExpression = new GeExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion geExpression = new NHibernate.Expression.GeExpression(myName, value);
             AddCriterion(geExpression);
             return this;
         }
 
         public QueryBuilder<T> Gt(object value)
         {
-            AbstractCriterion gtExpression = new GtExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion gtExpression = new NHibernate.Expression.GtExpression(myName, value);
             AddCriterion(gtExpression);
             return this;
         }
 
         public QueryBuilder<T> InsensitiveLike(object value)
         {
-            AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion insensitiveLikeExpression = new NHibernate.Expression.InsensitiveLikeExpression(myName, value);
             AddCriterion(insensitiveLikeExpression);
             return this;
         }
 
-        public QueryBuilder<T> InsensitiveLike(string value, MatchMode matchMode)
+        public QueryBuilder<T> InsensitiveLike(string value, NHibernate.Expression.MatchMode matchMode)
         {
-            AbstractCriterion insensitiveLikeExpression = new InsensitiveLikeExpression(myName, value, matchMode);
+            NHibernate.Expression.AbstractCriterion insensitiveLikeExpression = new NHibernate.Expression.InsensitiveLikeExpression(myName, value, matchMode);
             AddCriterion(insensitiveLikeExpression);
             return this;
         }
         public QueryBuilder<T> Le(object value)
         {
-            AbstractCriterion leExpression = new LeExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion leExpression = new NHibernate.Expression.LeExpression(myName, value);
             AddCriterion(leExpression);
             return this;
         }
 
         public QueryBuilder<T> LeProperty(string otherPropertyName)
         {
-            AbstractCriterion lePropertyExpression = new LePropertyExpression(myName, otherPropertyName);
+            NHibernate.Expression.AbstractCriterion lePropertyExpression = new NHibernate.Expression.LePropertyExpression(myName, otherPropertyName);
             AddCriterion(lePropertyExpression);
             return this;
         }
 
         public QueryBuilder<T> Like(object value)
         {
-            AbstractCriterion likeExpression = new LikeExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion likeExpression = new NHibernate.Expression.LikeExpression(myName, value);
             AddCriterion(likeExpression);
             return this;
         }
 
-        public QueryBuilder<T> Like(string value, MatchMode matchMode)
+        public QueryBuilder<T> Like(string value, NHibernate.Expression.MatchMode matchMode)
         {
-            AbstractCriterion likeExpression = new LikeExpression(myName, value, matchMode);
+            NHibernate.Expression.AbstractCriterion likeExpression = new NHibernate.Expression.LikeExpression(myName, value, matchMode);
             AddCriterion(likeExpression);
             return this;
         }
 
         public QueryBuilder<T> Lt(object value)
         {
-            AbstractCriterion ltExpression = new LtExpression(myName, value);
+            NHibernate.Expression.AbstractCriterion ltExpression = new NHibernate.Expression.LtExpression(myName, value);
             AddCriterion(ltExpression);
             return this;
         }
 
         public QueryBuilder<T> LtProperty(string otherPropertyName)
         {
-            AbstractCriterion ltPropertyExpression = new LtPropertyExpression(myName, otherPropertyName);
+            NHibernate.Expression.AbstractCriterion ltPropertyExpression = new NHibernate.Expression.LtPropertyExpression(myName, otherPropertyName);
             AddCriterion(ltPropertyExpression);
             return this;
         }
@@ -561,37 +568,37 @@ Use HQL for this functionality...",
             }
         }
 
-        public static implicit operator Order(OrderByClause order)
+        public static implicit operator NHibernate.Expression.Order(OrderByClause order)
         {
-            return new Order(order.name, order.ascending);
+            return new NHibernate.Expression.Order(order.name, order.ascending);
         }
     }
 
     public partial class ProjectBy
     {
-        public static IProjection RowCount
+        public static NHibernate.Expression.IProjection RowCount
         {
-            get { return Projections.RowCount(); }
+            get { return NHibernate.Expression.Projections.RowCount(); }
         }
 
-        public static IProjection Id
+        public static NHibernate.Expression.IProjection Id
         {
-            get { return Projections.Id(); }
+            get { return NHibernate.Expression.Projections.Id(); }
         }
 
-        public static IProjection Distinct(IProjection projection)
+        public static NHibernate.Expression.IProjection Distinct(NHibernate.Expression.IProjection projection)
         {
-            return Projections.Distinct(projection);
+            return NHibernate.Expression.Projections.Distinct(projection);
         }
 
-        public static IProjection SqlProjection(string sql, string[] aliases, IType[] types)
+        public static NHibernate.Expression.IProjection SqlProjection(string sql, string[] aliases, NHibernate.Type.IType[] types)
         {
-            return Projections.SqlProjection(sql, aliases, types);
+            return NHibernate.Expression.Projections.SqlProjection(sql, aliases, types);
         }
 
-        public static IProjection SqlGroupByProjection(string sql, string groupBy, string[] aliases, IType[] types)
+        public static NHibernate.Expression.IProjection SqlGroupByProjection(string sql, string groupBy, string[] aliases, NHibernate.Type.IType[] types)
         {
-            return Projections.SqlGroupProjection(sql, groupBy, aliases, types);
+            return NHibernate.Expression.Projections.SqlGroupProjection(sql, groupBy, aliases, types);
         }
     }
 
@@ -599,47 +606,47 @@ Use HQL for this functionality...",
     public partial class PropertyProjectionBuilder
     {
         protected string name;
-        ProjectionList list;
+        NHibernate.Expression.ProjectionList list;
 
         public PropertyProjectionBuilder(string name)
         {
             this.name = name;
         }
 
-        public PropertyProjectionBuilder(IProjection projection)
+        public PropertyProjectionBuilder(NHibernate.Expression.IProjection projection)
         {
-            list = Projections.ProjectionList().Add(projection);
+            list = NHibernate.Expression.Projections.ProjectionList().Add(projection);
         }
 
         public PropertyProjectionBuilder Count
         {
-            get { return new PropertyProjectionBuilder(Projections.Count(name)); }
+            get { return new PropertyProjectionBuilder(NHibernate.Expression.Projections.Count(name)); }
         }
 
         public PropertyProjectionBuilder DistinctCount
         {
-            get { return new PropertyProjectionBuilder(Projections.CountDistinct(name)); }
+            get { return new PropertyProjectionBuilder(NHibernate.Expression.Projections.CountDistinct(name)); }
         }
 
         public PropertyProjectionBuilder Max
         {
-            get { return new PropertyProjectionBuilder(Projections.Max(name)); }
+            get { return new PropertyProjectionBuilder(NHibernate.Expression.Projections.Max(name)); }
         }
 
         public PropertyProjectionBuilder Min
         {
-            get { return new PropertyProjectionBuilder(Projections.Min(name)); }
+            get { return new PropertyProjectionBuilder(NHibernate.Expression.Projections.Min(name)); }
         }
 
 
         #region Operator Overloading Magic
 
-        public static implicit operator ProjectionList(PropertyProjectionBuilder projection)
+        public static implicit operator NHibernate.Expression.ProjectionList(PropertyProjectionBuilder projection)
         {
             if (projection.list != null)
                 return projection.list;
-            return Projections.ProjectionList()
-                .Add(Projections.Property(projection.name));
+            return NHibernate.Expression.Projections.ProjectionList()
+                .Add(NHibernate.Expression.Projections.Property(projection.name));
         }
 
         public static PropertyProjectionBuilder operator &(PropertyProjectionBuilder lhs, PropertyProjectionBuilder rhs)
@@ -648,7 +655,7 @@ Use HQL for this functionality...",
             {
                 if (rhs.list == null)
                 {
-                    lhs.list.Add(Projections.Property(rhs.name));
+                    lhs.list.Add(NHibernate.Expression.Projections.Property(rhs.name));
                 }
                 else
                 {
@@ -656,30 +663,30 @@ Use HQL for this functionality...",
                 }
                 return lhs;
             }
-            lhs.list = Projections.ProjectionList()
-                .Add(Projections.Property(lhs.name))
-                .Add(Projections.Property(rhs.name));
+            lhs.list = NHibernate.Expression.Projections.ProjectionList()
+                .Add(NHibernate.Expression.Projections.Property(lhs.name))
+                .Add(NHibernate.Expression.Projections.Property(rhs.name));
             return lhs;
         }
 
-        public static PropertyProjectionBuilder operator &(PropertyProjectionBuilder lhs, IProjection rhs)
+        public static PropertyProjectionBuilder operator &(PropertyProjectionBuilder lhs, NHibernate.Expression.IProjection rhs)
         {
             if (lhs.list != null)
             {
                 lhs.list.Add(rhs);
             }
-            lhs.list = Projections.ProjectionList()
+            lhs.list = NHibernate.Expression.Projections.ProjectionList()
                 .Add(rhs);
             return lhs;
         }
 
-        public static PropertyProjectionBuilder operator &(IProjection lhs, PropertyProjectionBuilder rhs)
+        public static PropertyProjectionBuilder operator &(NHibernate.Expression.IProjection lhs, PropertyProjectionBuilder rhs)
         {
             if (rhs.list != null)
             {
                 rhs.list.Add(lhs);
             }
-            rhs.list = Projections.ProjectionList()
+            rhs.list = NHibernate.Expression.Projections.ProjectionList()
                 .Add(lhs);
             return rhs;
         }
@@ -702,19 +709,19 @@ Use HQL for this functionality...",
     {
         public NumericPropertyProjectionBuilder(string name) : base(name) { }
 
-        public IProjection Avg
+        public NHibernate.Expression.IProjection Avg
         {
-            get { return Projections.Avg(name); }
+            get { return NHibernate.Expression.Projections.Avg(name); }
         }
 
-        public IProjection Sum
+        public NHibernate.Expression.IProjection Sum
         {
-            get { return Projections.Sum(name); }
+            get { return NHibernate.Expression.Projections.Sum(name); }
         }
 
-        public static implicit operator PropertyProjection(NumericPropertyProjectionBuilder projection)
+        public static implicit operator NHibernate.Expression.PropertyProjection(NumericPropertyProjectionBuilder projection)
         {
-            return Projections.Property(projection.name);
+            return NHibernate.Expression.Projections.Property(projection.name);
         }
     }
 }
