@@ -135,6 +135,11 @@ namespace Rhino.Igloo.Tests
 	        throw new NotImplementedException();
 	    }
 
+        public string GetHostName()
+        {
+            throw new NotImplementedException();
+        }
+
 	    public void EnsureDirectoryExists(string path)
 	    {
 	        throw new NotImplementedException();

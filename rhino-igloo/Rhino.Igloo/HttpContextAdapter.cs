@@ -221,6 +221,15 @@ namespace Rhino.Igloo
         }
 
         /// <summary>
+        /// Gets the host name
+        /// </summary>
+        /// <returns></returns>
+        public string GetHostName()
+        {
+            return context.Request.UserHostAddress;
+        }
+
+        /// <summary>
         /// Ensures that the directory exists.
         /// </summary>
         /// <param name="path">The path.</param>

@@ -124,6 +124,15 @@ namespace Rhino.Igloo
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
 
+        /// <summary>
+        /// Gets the host name
+        /// </summary>
+        /// <returns></returns>
+        public string GetHostName()
+        {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
+
 		/// <summary>
 		/// Ensures that the directory exists.
 		/// </summary>

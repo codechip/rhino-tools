@@ -104,6 +104,12 @@ namespace Rhino.Igloo
 	    string GetFullPath(string directory);
 
         /// <summary>
+        /// Gets the host name
+        /// </summary>
+        /// <returns></returns>
+	    string GetHostName();
+
+        /// <summary>
         /// Ensures that the directory exists.
         /// </summary>
         /// <param name="path">The path.</param>
