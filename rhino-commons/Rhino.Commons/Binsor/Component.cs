@@ -36,7 +36,7 @@ using Castle.MicroKernel;
 
 namespace Rhino.Commons.Binsor
 {
-	public class Component : IQuackFu
+	public class Component : IQuackFu, INeedSecondPassRegistration
 	{
 		private readonly IDictionary _attributes = new Hashtable();
 		private readonly IDictionary _parameters = new Hashtable();
@@ -60,7 +60,7 @@ namespace Rhino.Commons.Binsor
 			this._name = name;
 			_service = service;
 			_impl = impl;
-			BooReader.Components.Add(this);
+		    BooReader.NeedSecondPassRegistrations.Add(this);
 		}
 
 		public Component(string name, Type service, IDictionary parameters) : this(name, service)
@@ -84,18 +84,25 @@ namespace Rhino.Commons.Binsor
 			get { return _name; }
 		}
 
-		public void Register()
+        public Component Register()
 		{
 			IKernel kernel = IoC.Container.Kernel;
 			kernel.AddComponent(_name, _service, _impl);
 			IHandler handler = kernel.GetHandler(_name);
 			handler.ComponentModel.LifestyleType = lifestyle;
-			kernel.RegisterCustomDependencies(_name, _parameters);
-			foreach (KeyValuePair<string, string> pair in _references)
-			{
-				handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
-			}
+            return this;
 		}
+
+        public void RegisterSecondPass()
+        {
+            IKernel kernel = IoC.Container.Kernel;
+            IHandler handler = kernel.GetHandler(_name);
+            kernel.RegisterCustomDependencies(_name, _parameters);
+            foreach (KeyValuePair<string, string> pair in _references)
+            {
+                handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
+            }
+        }
 
 		public object QuackGet(string name, object[] property_parameters)
 		{
@@ -128,9 +135,14 @@ namespace Rhino.Commons.Binsor
 		}
 	}
 
-	public class ComponentReference
+    public interface INeedSecondPassRegistration
+    {
+        void RegisterSecondPass();
+    }
+
+    public class ComponentReference
 	{
-		string name;
+	    readonly string name;
 
 		public string Name
 		{

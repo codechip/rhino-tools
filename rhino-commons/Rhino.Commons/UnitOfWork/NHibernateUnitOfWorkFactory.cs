@@ -39,14 +39,24 @@ namespace Rhino.Commons
 {
 	public class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
 	{
-		static object lockObj = new object();
+		static readonly object lockObj = new object();
 		public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 		private static ISessionFactory sessionFactory;
 		private static Configuration cfg;
 		private INHibernateInitializationAware initializationAware;
+	    private readonly string configurationFileName;
 
+        public NHibernateUnitOfWorkFactory()
+        {
 
-		public INHibernateInitializationAware InitializationAware
+        }
+
+	    public NHibernateUnitOfWorkFactory(string configurationFileName)
+	    {
+	        this.configurationFileName = configurationFileName;
+	    }
+
+	    public INHibernateInitializationAware InitializationAware
 		{
 			get { return initializationAware; }
 			set { initializationAware = value; }
@@ -68,7 +78,7 @@ namespace Rhino.Commons
 			return new NHibernateUnitOfWorkAdapter(this, session, (NHibernateUnitOfWorkAdapter)previous);
 		}
 
-		private static ISession CreateSession(IDbConnection maybeUserProvidedConnection)
+		private ISession CreateSession(IDbConnection maybeUserProvidedConnection)
 		{
 			if (IoC.Container.Kernel.HasComponent(typeof(IInterceptor)))
 			{
@@ -115,7 +125,7 @@ namespace Rhino.Commons
 		/// It is provided to support complex scenarios only, and it is possible
 		/// to configure its behavior externally via configuration.
 		/// </summary>
-		public static ISessionFactory NHibernateSessionFactory
+		public ISessionFactory NHibernateSessionFactory
 		{
 			get
 			{
@@ -127,7 +137,7 @@ namespace Rhino.Commons
 							return sessionFactory;
 						cfg = new Configuration();
 						//if not this, assume loading from app.config
-						string hibernateConfig = Settings.Default.HibernateConfig;
+                        string hibernateConfig = configurationFileName ?? Settings.Default.HibernateConfig;
 						//if not rooted, assume path from base directory
 						if (Path.IsPathRooted(hibernateConfig) == false)
 						{
