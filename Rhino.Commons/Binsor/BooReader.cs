@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Boo.Lang.Compiler;
+using Boo.Lang.Compiler.Ast.Visitors;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
 using Boo.Lang.Compiler.Steps;
@@ -39,93 +40,84 @@ using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-	public static class BooReader
-	{
-		static readonly object BinsorComponents = new object();
-        static readonly object BinsorFacilities = new object();
+    public static class BooReader
+    {
+        private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
 
-		public static ICollection<Component> Components
-		{
-			get
-			{
-				ICollection<Component> components = (ICollection<Component>)Local.Data[BinsorComponents];
-				if (components == null)
-					Local.Data[BinsorComponents] = components = new List<Component>();
-				return components;
-			}
-		}
-
-	    public static ICollection<Facility> Facilities
-	    {
-	        get
+        internal static ICollection<INeedSecondPassRegistration> NeedSecondPassRegistrations
+        {
+            get
             {
-                ICollection<Facility> facilities = (ICollection<Facility>)Local.Data[BinsorFacilities];
-                if (facilities == null)
-                    Local.Data[BinsorFacilities] = facilities = new List<Facility>();
-                return facilities;
-	        }
-	    }
+                ICollection<INeedSecondPassRegistration> data = (ICollection<INeedSecondPassRegistration>)
+                    Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
+                if (data == null)
+                {
+                    Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] =
+                        data = new List<INeedSecondPassRegistration>();
+                }
+                return data;
+            }
+            set
+            {
+                Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] = value;
+            }
+        }
 
+        public static void Read(IWindsorContainer contianer, string fileName)
+        {
+            Read(contianer, fileName, GenerationOptions.Memory);
+        }
+        public static void Read(IWindsorContainer contianer, string fileName, GenerationOptions generationOptions)
+        {
+            try
+            {
+                using (IoC.UseLocalContainer(contianer))
+                {
+                    IConfigurationRunner conf = GetConfigurationInstanceFromFile(fileName, generationOptions);
+                    conf.Run();
+                    foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+                    {
+                        needSecondPassRegistration.RegisterSecondPass();
+                    }
+                }
+            }
+            finally
+            {
+                NeedSecondPassRegistrations = null;
+            }
+        }
 
-		private static BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
-
-		public static void Read(IWindsorContainer contianer, string fileName)
-		{
-			Read(contianer, fileName, GenerationOptions.Memory);
-		}
-		public static void Read(IWindsorContainer contianer, string fileName, GenerationOptions generationOptions)
-		{
-			try
-			{
-				using (IoC.UseLocalContainer(contianer))
-				{
-					IConfigurationRunner conf = GetConfigurationInstanceFromFile(fileName, generationOptions);
-					conf.Run();
-				    foreach (Facility facility in Facilities)
-				    {
-				        facility.Register();
-				    }
-					foreach (Component component in Components)
-					{
-						component.Register();
-					}
-				}
-			}
-			finally
-			{
-				Components.Clear();
-				Facilities.Clear();
-			}
-		}
-
-		private static IConfigurationRunner GetConfigurationInstanceFromFile(string fileName, GenerationOptions generationOptions)
-		{
-			FileInput fileInput = new FileInput(fileName);
-			BooCompiler compiler = new BooCompiler();
-			if (generationOptions == GenerationOptions.Memory)
-				compiler.Parameters.Pipeline = new CompileToMemory();
-			else
-				compiler.Parameters.Pipeline = new CompileToFile();
-			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
-			compiler.Parameters.Pipeline.Replace(
-                typeof(ProcessMethodBodiesWithDuckTyping), 
+        private static IConfigurationRunner GetConfigurationInstanceFromFile(string fileName, GenerationOptions generationOptions)
+        {
+            FileInput fileInput = new FileInput(fileName);
+            BooCompiler compiler = new BooCompiler();
+            compiler.Parameters.Ducky = true;
+            if (generationOptions == GenerationOptions.Memory)
+                compiler.Parameters.Pipeline = new CompileToMemory();
+            else
+                compiler.Parameters.Pipeline = new CompileToFile();
+            compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
+            compiler.Parameters.Pipeline.Replace(
+                typeof(ProcessMethodBodiesWithDuckTyping),
                 new TransformUnknownReferences());
-			compiler.Parameters.OutputType = CompilerOutputType.Library;
-			compiler.Parameters.Input.Add(fileInput);
-			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
-			CompilerContext run = compiler.Run();
-			if (run.Errors.Count != 0)
-			{
-				throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
-			}
-			Type type = run.GeneratedAssembly.GetType(Path.GetFileNameWithoutExtension(fileName));
-			return Activator.CreateInstance(type) as IConfigurationRunner;
-		}
+            compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
+                new RegisterComponentAndFacilitiesAfterCreation());
+            compiler.Parameters.OutputType = CompilerOutputType.Library;
+            compiler.Parameters.Input.Add(fileInput);
+            compiler.Parameters.References.Add(typeof(BooReader).Assembly);
+            CompilerContext run = compiler.Run();
+            if (run.Errors.Count != 0)
+            {
+                throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
+            }
+            Type type = run.GeneratedAssembly.GetType(Path.GetFileNameWithoutExtension(fileName));
+            return Activator.CreateInstance(type) as IConfigurationRunner;
+        }
 
-		public enum GenerationOptions
-		{
-			Memory,
-			File
-		}
-	}
+        public enum GenerationOptions
+        {
+            Memory,
+            File
+        }
+    }
 }

@@ -12,13 +12,12 @@ namespace Rhino.Commons.Binsor
     {
         private readonly Type facility;
         private readonly string key;
-        private IConfiguration configuration = new MutableConfiguration("facility");
+        private readonly IConfiguration configuration = new MutableConfiguration("facility");
 
         public Facility(string name, Type facility)
         {
             this.key = name;
             this.facility = facility;
-            BooReader.Facilities.Add(this);
         }
 
         public string Key
@@ -26,11 +25,12 @@ namespace Rhino.Commons.Binsor
             get { return key; }
         }
 
-        public void Register()
+        public Facility Register()
         {
             IKernel kernel = IoC.Container.Kernel;
             kernel.ConfigurationStore.AddFacilityConfiguration(key, configuration);
             kernel.AddFacility(key, (IFacility)Activator.CreateInstance(facility));
+            return this;
         }
 
         public object QuackGet(string name, object[] property_parameters)

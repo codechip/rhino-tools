@@ -213,7 +213,10 @@ namespace Rhino.Commons
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.NHibernateSessionFactory.ConnectionProvider;
+			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+                .GetSessionImplementation()
+                .Factory
+                .ConnectionProvider;
 			IDbConnection connection = connectionProvider.GetConnection();
 			try
 			{
@@ -245,7 +248,10 @@ namespace Rhino.Commons
 		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
 														  params Parameter[] parameters)
 		{
-			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.NHibernateSessionFactory.ConnectionProvider;
+			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+                    .GetSessionImplementation()
+                    .Factory
+                    .ConnectionProvider;
 			IDbConnection connection = connectionProvider.GetConnection();
 
 			try

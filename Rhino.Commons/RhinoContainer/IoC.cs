@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using Castle.Windsor;
 
 namespace Rhino.Commons
@@ -35,7 +36,7 @@ namespace Rhino.Commons
     public static class IoC
     {
         private static IWindsorContainer container;
-        private static object LocalContainerKey = new object();
+        private static readonly object LocalContainerKey = new object();
 
         public static void Initialize(IWindsorContainer windsorContainer)
         {
@@ -65,8 +66,25 @@ namespace Rhino.Commons
 
         private static IWindsorContainer LocalContainer
         {
-            get { return Local.Data[LocalContainerKey] as IWindsorContainer; }
-            set { Local.Data[LocalContainerKey] = value; }
+            get
+            {
+                if (LocalContainerStack.Count==0)
+                    return null;
+                return LocalContainerStack.Peek();
+            }
+        }
+
+        private static Stack<IWindsorContainer> LocalContainerStack
+        {
+            get
+            {
+                Stack<IWindsorContainer> stack = Local.Data[LocalContainerKey] as Stack<IWindsorContainer>;
+                if(stack==null)
+                {
+                    Local.Data[LocalContainerKey] = stack = new Stack<IWindsorContainer>();
+                }
+                return stack;
+            }
         }
 
         public static bool IsInitialized
@@ -95,10 +113,10 @@ namespace Rhino.Commons
         /// <returns></returns>
         public static IDisposable UseLocalContainer(IWindsorContainer localContainer)
         {
-            LocalContainer = localContainer;
+            LocalContainerStack.Push(localContainer);
             return new DisposableAction(delegate
             {
-                LocalContainer = null;
+                Reset(localContainer);
             });
         }
 
@@ -108,7 +126,10 @@ namespace Rhino.Commons
 				return;
 			if (ReferenceEquals(LocalContainer, containerToReset))
 			{
-				LocalContainer = null;
+			    LocalContainerStack.Pop();
+                if(LocalContainerStack.Count==0)
+                    Local.Data[LocalContainerKey] = null;
+                return;
 			}
             if (ReferenceEquals(GlobalContainer, containerToReset))
             {

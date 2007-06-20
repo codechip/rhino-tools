@@ -149,6 +149,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Compile Include="Binsor\Facility.cs" />
+    <Compile Include="Binsor\RegisterComponentAndFacilitiesAfterCreation.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />

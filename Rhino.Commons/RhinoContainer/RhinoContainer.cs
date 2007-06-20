@@ -29,6 +29,7 @@
 
 using System;
 using System.IO;
+using Castle.Core.Resource;
 using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Conversion;
 using Castle.Windsor;
@@ -44,33 +45,37 @@ namespace Rhino.Commons
 
         public RhinoContainer()
         {
+        }
 
+        public RhinoContainer(IWindsorContainer parent)
+            : base(parent, new XmlInterpreter(new StaticContentResource("<configuration/>")))
+        {
         }
 
         public RhinoContainer(string fileName)
         {
-			if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
-				BooReader.Read(this, fileName);
-			else
-				InitalizeFromConfigurationSource(new XmlInterpreter(fileName));
-    	}
-
-    	public RhinoContainer(IConfigurationInterpreter interpreter)
-            : base()
-        {
-    		InitalizeFromConfigurationSource(interpreter);
+            if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
+                BooReader.Read(this, fileName);
+            else
+                InitalizeFromConfigurationSource(new XmlInterpreter(fileName));
         }
 
-    	private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter)
-    	{
-    		DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
-    		conversionManager.Add(new ConfigurationObjectConverter());
+        public RhinoContainer(IConfigurationInterpreter interpreter)
+            : base()
+        {
+            InitalizeFromConfigurationSource(interpreter);
+        }
 
-    		interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
-    		RunInstaller();
-    	}
+        private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter)
+        {
+            DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
+            conversionManager.Add(new ConfigurationObjectConverter());
 
-    	public override T Resolve<T>(string key)
+            interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
+            RunInstaller();
+        }
+
+        public override T Resolve<T>(string key)
         {
             AssertNotDisposed();
             return base.Resolve<T>(key);
