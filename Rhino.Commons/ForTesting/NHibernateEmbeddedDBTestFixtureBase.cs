@@ -81,7 +81,8 @@ namespace Rhino.Commons.ForTesting
 			{
 				if (!IoC.IsInitialized)
 					IoC.Initialize(new RhinoContainer(rhinoContainerConfig));
-				NHibernateUnitOfWorkFactory.RegisterSessionFactory(sessionFactory);
+			    NHibernateUnitOfWorkFactory hibernateUnitOfWorkFactory = (NHibernateUnitOfWorkFactory)IoC.Resolve<IUnitOfWorkFactory>();
+                hibernateUnitOfWorkFactory.RegisterSessionFactory(sessionFactory);
 			}
 		}
 
