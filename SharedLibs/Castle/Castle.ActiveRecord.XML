@@ -4,140 +4,6 @@
         <name>Castle.ActiveRecord</name>
     </assembly>
     <members>
-        <member name="T:Castle.ActiveRecord.AbstractValidationAttribute">
-            <summary>
-            The base class for all the validation attributes.
-            This class define a <seealso cref="P:Castle.ActiveRecord.AbstractValidationAttribute.Validator"/> property that is used to retrieve the validtor that is used to 
-            validate the value of the property.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.AbstractValidationAttribute.#ctor(Castle.ActiveRecord.Framework.IValidator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.AbstractValidationAttribute"/> class.
-            </summary>
-            <param name="validator">The validator.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.AbstractValidationAttribute.#ctor(Castle.ActiveRecord.Framework.IValidator,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.AbstractValidationAttribute"/> class.
-            </summary>
-            <param name="validator">The validator.</param>
-            <param name="errorMessage">The error message.</param>
-        </member>
-        <member name="P:Castle.ActiveRecord.AbstractValidationAttribute.Validator">
-            <summary>
-            Gets the validator for this attribute.
-            Each attribute that inherits from this class will have its own validtor.
-            </summary>
-            <value>The validator.</value>
-        </member>
-        <member name="T:Castle.ActiveRecord.ValidateConfirmationAttribute">
-            <summary>
-            This it used when you need to accept two identical inputs from the user, for instnace, 
-            a password and its confirmation.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateConfirmationAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateConfirmationAttribute"/> class.
-            </summary>
-            <param name="confirmationFieldOrProperty">The confirmation field or property that should be verified against this one.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateConfirmationAttribute.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateConfirmationAttribute"/> class.
-            </summary>
-            <param name="confirmationFieldOrProperty">The confirmation field or property that should be verified against this one.</param>
-            <param name="errorMessage">The error message to display if this property and the configuration property are not the same.</param>
-        </member>
-        <member name="T:Castle.ActiveRecord.ValidateCreditCardAttribute">
-            <summary>
-            Properties decorated with this attribute will be validated to ensure that they represent a valid
-            credit card number.
-            <see ref="CreditCardValidator"/> for more details.
-            </summary>
-            <remarks>
-            Note that this merely check the validity of the format of the value, not whatever this it an existing and valid one
-            </remarks>
-            <example>
-            //just validate that this is a credit card of any type
-            [ValidateCreditCard("You didn't fill the credit card infomration correctly.")]
-            
-            //Validate that this is a VISA or Discover card
-            [ValidateCreditCard(CreditCardValidator.CardType.VISA | CreditCardValidator.CardType.Discover, 
-            	"You need to specify a VISA or Discover card")]
-            </example>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType,System.String)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-            <param name="errorMessage">The error message to be displayed if the validation fails.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(System.String[])">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(System.String[],System.String)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-            <param name="errorMessage">The error message to be displayed if the validation fails.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType,System.String[])">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateCreditCardAttribute.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType,System.String[],System.String)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-            <param name="errorMessage">The error message to be displayed if the validation fails.</param>
-        </member>
-        <member name="T:Castle.ActiveRecord.ValidateEmailAttribute">
-            <summary>
-            Validate that this email address is a valid one.
-            </summary>
-            <remarks>
-            This only check the format of the email, not if it really exists.
-            </remarks>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateEmailAttribute.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateEmailAttribute"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateEmailAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateEmailAttribute"/> class.
-            </summary>
-            <param name="errorMessage">The error message.</param>
-        </member>
         <member name="T:Castle.ActiveRecord.ValidateIsUniqueAttribute">
             <summary>
             Validate that the property's value is unique in the database when saved
@@ -154,72 +20,12 @@
             </summary>
             <param name="errorMessage">The error message.</param>
         </member>
-        <member name="T:Castle.ActiveRecord.ValidateLengthAttribute">
+        <member name="M:Castle.ActiveRecord.ValidateIsUniqueAttribute.Build">
             <summary>
-            Validate that this property has the required length (either exact or in range)
+            Constructs and configures an <see cref="T:Castle.Components.Validator.IValidator"/>
+            instance based on the properties set on the attribute instance.
             </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateLengthAttribute.#ctor(System.Int32)">
-            <summary>
-            Initializes a new exact length validator.
-            </summary>
-            <param name="exactLength">The exact length required.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateLengthAttribute.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new exact length validator.
-            </summary>
-            <param name="exactLength">The exact length required.</param>
-            <param name="errorMessage">The error message to be displayed if the validation fails.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateLengthAttribute.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Initializes a new range based length validator.
-            </summary>
-            <param name="minLength">The minimum length, or <c>int.MinValue</c> if this should not be tested.</param>
-            <param name="maxLength">The maximum length, or <c>int.MaxValue</c> if this should not be tested.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateLengthAttribute.#ctor(System.Int32,System.Int32,System.String)">
-            <summary>
-            Initializes a new range based length validator.
-            </summary>
-            <param name="minLength">The minimum length, or <c>int.MinValue</c> if this should not be tested.</param>
-            <param name="maxLength">The maximum length, or <c>int.MaxValue</c> if this should not be tested.</param>
-            <param name="errorMessage">The error message to be displayed if the validation fails.</param>
-        </member>
-        <member name="T:Castle.ActiveRecord.ValidateNotEmptyAttribute">
-            <summary>
-            Validate that the property is not null or empty (for strings)
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateNotEmptyAttribute.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateNotEmptyAttribute"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateNotEmptyAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateNotEmptyAttribute"/> class.
-            </summary>
-            <param name="errorMessage">The error message.</param>
-        </member>
-        <member name="T:Castle.ActiveRecord.ValidateRegExpAttribute">
-            <summary>
-            Validate that the property match the given regular expression
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateRegExpAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateRegExpAttribute"/> class.
-            </summary>
-            <param name="pattern">The pattern.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidateRegExpAttribute.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidateRegExpAttribute"/> class.
-            </summary>
-            <param name="pattern">The pattern.</param>
-            <param name="errorMessage">The error message.</param>
+            <returns></returns>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordAttribute">
             <summary>
@@ -1540,7 +1346,7 @@
             It represents the &lt;query&gt; element.
             </summary>
             <example>
-            [assemly: HqlNamedQuery("allAdultUsers", "from User where user.Age > 21")]
+            [assembly: HqlNamedQuery("allAdultUsers", "from User where user.Age > 21")]
             </example>
         </member>
         <member name="M:Castle.ActiveRecord.HqlNamedQueryAttribute.#ctor(System.String,System.String)">
@@ -2670,6 +2476,12 @@
             </summary>
             <param name="pluralize">if set to <c>true</c> Active Record will pluralize inferred table names.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ProcessConfiguration(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Processes the configuration applying any substitutions.
+            </summary>
+            <param name="config">The configuration</param>
+        </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ThreadScopeInfoImplementation">
             <summary>
             Return a type that implements
@@ -3043,7 +2855,7 @@
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.AnyModel">
             <summary>
-            Model for [Any] association, a polymorphic assoication without common base class
+            Model for [Any] association, a polymorphic association without common base class
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AnyModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.AnyAttribute)">
@@ -4399,6 +4211,11 @@
             </summary>
             <value>The models.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.ValidatorRegistry">
+            <summary>
+            Gets the validator registry used to create the validators
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelCollection">
             <summary>
             Map System.Type to their ActiveRecordModel
@@ -5558,6 +5375,13 @@
             <param name="interceptor">the NHibernate interceptor</param>
             <returns>the newly created session</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ISessionScope.FailSession(NHibernate.ISession)">
+            <summary>
+            This method will be called if a session action fails. 
+            The scope may then decide to use an different approach to flush/dispose it.
+            </summary>
+            <param name="session">The session that failed</param>
+        </member>
         <member name="P:Castle.ActiveRecord.ISessionScope.FlushAction">
             <summary>
             Returns the <see cref="P:Castle.ActiveRecord.ISessionScope.FlushAction"/> defined 
@@ -5671,6 +5495,12 @@
             Discards the sessions.
             </summary>
             <param name="sessions">The sessions.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.FailSession(NHibernate.ISession)">
+            <summary>
+            Marks the session as failed
+            </summary>
+            <param name="session">The session</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.SetFlushMode(NHibernate.ISession)">
             <summary>
@@ -5858,6 +5688,12 @@
             <param name="interceptor">the NHibernate interceptor</param>
             <returns>the newly created session</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.DifferentDatabaseScope.FailSession(NHibernate.ISession)">
+            <summary>
+            This is called when a session has a failure
+            </summary>
+            <param name="session">the session</param>
+        </member>
         <member name="P:Castle.ActiveRecord.Framework.Scopes.DifferentDatabaseScope.WantsToCreateTheSession">
             <summary>
             We want to be in charge of creating the session
@@ -5950,6 +5786,11 @@
             avoiding too much opens/flushes/closes.
             </summary>
         </member>
+        <member name="F:Castle.ActiveRecord.SessionScope.hasSessionError">
+            <summary>
+            Is set to true if the session went stalled due to an error (usually db operations)
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.SessionScope.#ctor(Castle.ActiveRecord.FlushAction,Castle.ActiveRecord.SessionScopeType)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.SessionScope"/> class.
@@ -5979,6 +5820,20 @@
             Performs the disposal.
             </summary>
             <param name="sessions">The sessions.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.SessionScope.FailSession(NHibernate.ISession)">
+            <summary>
+            This is called when an action on a session fails
+            </summary>
+            <param name="session">The session</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.SessionScope.HasSessionError">
+            <summary>
+            Gets or sets a flag indicating whether this instance has session error.
+            </summary>
+            <value>
+            	<c>true</c> if this instance has session error; otherwise, <c>false</c>.
+            </value>
         </member>
         <member name="P:Castle.ActiveRecord.SessionScope.Current">
             <summary>
@@ -6187,6 +6042,12 @@
             </summary>
             <param name="sessions">The sessions.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.TransactionScope.FailSession(NHibernate.ISession)">
+            <summary>
+            This is called when a session has a failure
+            </summary>
+            <param name="session">the session</param>
+        </member>
         <member name="M:Castle.ActiveRecord.TransactionScope.DiscardSessions(System.Collections.ICollection)">
             <summary>
             Discards the sessions.
@@ -6215,306 +6076,6 @@
             </summary>
             <value>The current stack.</value>
         </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.AbstractValidator">
-            <summary>
-            Abstract <see cref="T:Castle.ActiveRecord.Framework.IValidator"/> implementation
-            </summary>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.IValidator">
-            <summary>
-            Define the basic contract for validators
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.IValidator.Initialize(System.Reflection.PropertyInfo)">
-            <summary>
-            Implementors should perform any initialization logic
-            </summary>
-            <param name="property">The target property</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.IValidator.Perform(System.Object)">
-            <summary>
-            Implementors should perform the actual validation upon
-            the property value
-            </summary>
-            <param name="instance"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.IValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Implementors should perform the actual validation upon
-            the property value
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.IValidator.Property">
-            <summary>
-            The target property
-            </summary>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.IValidator.ErrorMessage">
-            <summary>
-            The error message to be displayed if the validation fails
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.AbstractValidator.GetFieldOrPropertyValue(System.Object,System.String)">
-            <summary>
-            Obtains the value of a property or field on a specific instance.
-            </summary>
-            <param name="instance">The instance to inspect.</param>
-            <param name="fieldOrPropertyName">The name of the field or property to inspect.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.AbstractValidator.Initialize(System.Reflection.PropertyInfo)">
-            <summary>
-            Implementors should perform any initialization logic
-            </summary>
-            <param name="property">The target property</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.AbstractValidator.Perform(System.Object)">
-            <summary>
-            Implementors should perform the actual validation upon
-            the property value
-            </summary>
-            <param name="instance"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.AbstractValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Implementors should perform the actual validation upon
-            the property value
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.AbstractValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.AbstractValidator.Property">
-            <summary>
-            The target property
-            </summary>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.AbstractValidator.ErrorMessage">
-            <summary>
-            The error message to be displayed if the validation fails
-            </summary>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator">
-            <summary>
-            Validates that a property and a matching property are the same.
-            This it used when you need to accept two identical inputs from the user, for instnace, 
-            a password and its confirmation.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator"/> class.
-            </summary>
-            <param name="confirmationFieldOrProperty">The confirmation field or property.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Check that the confirmation property has the same value as this property.
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator.BuildErrorMessage">
-            <summary>
-            Builds the default error message.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.ConfirmationValidator.ConfirmationFieldOrProperty">
-            <summary>
-            Gets the confirmation field or property.
-            </summary>
-            <value>The confirmation field or property.</value>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.CreditCardValidator">
-            <summary>
-            This validator validate that the is a valid credit card number in:
-            <list type="unordered">
-            <item>Amex </item>		
-            <item> DinersClub </item>		
-            <item> Discover </item>		
-            <item> Discover </item>		
-            <item> enRoute </item>		
-            <item> JCB </item>		
-            <item> MasterCard </item>		
-            <item> VISA</item>
-            </list>
-            It is possible to specify more than a single card type.
-            You can also specify exceptions for test cards.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.CreditCardValidator"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType)">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.#ctor(System.String[])">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.#ctor(Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType,System.String[])">
-            <summary>
-            Initializes a new credit card validator.
-            </summary>
-            <param name="allowedTypes">The card types to accept.</param>
-            <param name="exceptions">An array of card numbers to skip checking for (eg. gateway test numbers). Only digits should be provided for the exceptions.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Validate that the propety value matches a valid (formatted) credit card
-            Note: null values are consider OK always, combine with <see cref="T:Castle.ActiveRecord.Framework.Validators.NullCheckValidator"/> if required.
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.AllowedTypes">
-            <summary>
-            Gets the allowed credit card types.
-            </summary>
-            <value>The <see cref="T:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType"/> representing the allowed types.</value>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.Exceptions">
-            <summary>
-            An array of card numbers to skip checking for (eg. gateway test numbers).
-            </summary>
-            <value>A <see cref="T:System.Array"/>representing the card numbers to skip checking.</value>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType">
-            <summary>
-            Define the known card types
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.MasterCard">
-            <summary>
-            MasterCard Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.VISA">
-            <summary>
-            VISA Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.Amex">
-            <summary>
-            American Express Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.DinersClub">
-            <summary>
-            Diners Club Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.enRoute">
-            <summary>
-            enRoute Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.Discover">
-            <summary>
-            Discover Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.JCB">
-            <summary>
-            JCB Card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.Unknown">
-            <summary>
-            Unkown card
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.CreditCardValidator.CardType.All">
-            <summary>
-            All (known) cards
-            </summary>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.EmailValidator">
-            <summary>
-            Validate that this is a valid (formatted) email using regex
-            </summary>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator">
-            <summary>
-            Validate a property using regular expression
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator"/> class.
-            </summary>
-            <param name="expression">The expression.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator.#ctor(System.String,System.Text.RegularExpressions.RegexOptions)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator"/> class.
-            </summary>
-            <param name="expression">The expression.</param>
-            <param name="options">The regular expression options.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Validate that the property value match the given regex
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.RegularExpressionValidator.RegexRule">
-            <summary>
-            Gets the regular expression rule.
-            </summary>
-            <value>The regular expression rule.</value>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.Validators.EmailValidator.emailRule">
-            <summary>
-            From http://www.codeproject.com/aspnet/Valid_Email_Addresses.asp
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.EmailValidator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.EmailValidator"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.EmailValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator">
             <summary>
             Validate that the property's value is unique in the database when saved
@@ -6525,7 +6086,7 @@
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator"/> class.
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.Perform(System.Object,System.Object)">
+        <member name="M:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.IsValid(System.Object,System.Object)">
             <summary>
             Perform the check that the property value is unqiue in the table
             </summary>
@@ -6539,76 +6100,24 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.LengthValidator">
+        <member name="M:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.ApplyWebValidation(Castle.Components.Validator.WebValidationConfiguration,Castle.Components.Validator.InputElementType,Castle.Components.Validator.IWebValidationGenerator,System.Collections.IDictionary,System.String)">
             <summary>
-            Ensures that a property's string representation 
-            is within the desired length limitations.
+            Applies the web validation by setting up one or
+            more input rules on <see cref="T:Castle.Components.Validator.IWebValidationGenerator"/>.
             </summary>
+            <param name="config">The config.</param>
+            <param name="inputType">Type of the input.</param>
+            <param name="generator">The generator.</param>
+            <param name="attributes">The attributes.</param>
+            <param name="target">The target.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.LengthValidator.#ctor(System.Int32)">
+        <member name="P:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.SupportsWebValidation">
             <summary>
-            Initializes a new exact length validator.
+            Gets a value indicating whether this validator supports web validation.
             </summary>
-            <param name="exactLength">The exact length required.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.LengthValidator.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Initializes a new range based length validator.
-            </summary>
-            <param name="minLength">The minimum length, or <c>int.MinValue</c> if this should not be tested.</param>
-            <param name="maxLength">The maximum length, or <c>int.MaxValue</c> if this should not be tested.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.LengthValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Validate that the property value matches the length requirements.
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.LengthValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.LengthValidator.ExactLength">
-            <summary>
-            Gets the exact length of the field.
-            </summary>
-            <value>The exact length of the field.</value>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.LengthValidator.MinLength">
-            <summary>
-            Gets the minimum length.
-            </summary>
-            <value>The minimum length.</value>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.LengthValidator.MaxLength">
-            <summary>
-            Gets the maximun length.
-            </summary>
-            <value>The maximun length.</value>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.Validators.NullCheckValidator">
-            <summary>
-            Ensures that a property was 
-            filled with some value
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.NullCheckValidator.Perform(System.Object,System.Object)">
-            <summary>
-            Check that this property has a value that is not null or empty (if string)
-            </summary>
-            <param name="instance"></param>
-            <param name="fieldValue"></param>
-            <returns><c>true</c> if the field is OK</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.NullCheckValidator.BuildErrorMessage">
-            <summary>
-            Builds the error message.
-            </summary>
-            <returns></returns>
+            <value>
+            	<see langword="true"/> if web validation is supported; otherwise, <see langword="false"/>.
+            </value>
         </member>
         <member name="T:Castle.ActiveRecord.NHibernateDelegate">
             <summary>
@@ -6636,13 +6145,14 @@
             <param name="state"></param>
             <returns>Return <c>true</c> if you have changed the state. <c>false</c> otherwise</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordHooksBase.BeforeLoad(System.Collections.IDictionary)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordHooksBase.BeforeLoad(System.Object,System.Collections.IDictionary)">
             <summary>
             Hook to transform the read data 
             from the database before populating 
             the object instance
             </summary>
-            <param name="adapter"></param>
+            <param name="id">id of the obejct</param>
+            <param name="adapter">list of properties and their values</param>
             <returns>Return <c>true</c> if you have changed the state. <c>false</c> otherwise</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordHooksBase.BeforeDelete(System.Collections.IDictionary)">
@@ -8411,7 +7921,6 @@
         <member name="T:Castle.ActiveRecord.ActiveRecordValidationBase">
             <summary>
             Extends <see cref="T:Castle.ActiveRecord.ActiveRecordBase"/> adding automatic validation support.
-            <seealso cref="M:Castle.ActiveRecord.ActiveRecordValidationBase.IsValid"/>
             </summary>
             <example>
             <code>
@@ -8435,24 +7944,9 @@
             </code>
             </example>
         </member>
-        <member name="F:Castle.ActiveRecord.ActiveRecordValidationBase.__validators">
-            <summary>
-            List of validators that should be executed for this class
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.ActiveRecordValidationBase._errorMessages">
-            <summary>
-            List of error messages
-            </summary>
-        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.#ctor">
             <summary>
             Constructs an ActiveRecordValidationBase
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.CollectValidators">
-            <summary>
-            Collect the validations applied to this class properties.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.IsValid">
@@ -8461,6 +7955,30 @@
             validation error was found.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.IsValid(Castle.Components.Validator.RunWhen)">
+            <summary>
+            Performs the fields validation for the specified action.
+            </summary>
+            <param name="runWhen">Use validators appropriate to the action being performed.</param>
+            <returns>True if no validation error was found</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.BeforeSave(System.Collections.IDictionary)">
+            <summary>
+            Override the base hook to call validators required for create.
+            </summary>
+            <param name="state">The current state of the object</param>
+            <returns>Returns true if the state has changed otherwise false</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.OnFlushDirty(System.Object,System.Collections.IDictionary,System.Collections.IDictionary,NHibernate.Type.IType[])">
+            <summary>
+            Override the base hook to call validators required for update.
+            </summary>
+            <param name="id">object id</param>
+            <param name="previousState">The previous state of the object</param>
+            <param name="currentState">The current state of the object</param>
+            <param name="types">Property types</param>
+            <returns>Returns true if the state has changed otherwise false</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase.OnNotValid">
             <summary>
@@ -8509,26 +8027,10 @@
             </code>
             </example>
         </member>
-        <member name="F:Castle.ActiveRecord.ActiveRecordValidationBase`1.__validators">
-            <summary>
-            List of validators that should be executed for this class
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.ActiveRecordValidationBase`1._errorMessages">
-            <summary>
-            List of error messages
-            </summary>
-        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.#ctor">
             <summary>
             Constructs an ActiveRecordValidationBase
             </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.CollectValidators(System.Type)">
-            <summary>
-            Collect the validations applied to this class properties.
-            </summary>
-            <param name="targetType"></param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.IsValid">
             <summary>
@@ -8536,6 +8038,30 @@
             validation error was found.
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.IsValid(Castle.Components.Validator.RunWhen)">
+            <summary>
+            Performs the fields validation for the specified action.
+            </summary>
+            <param name="runWhen">Use validators appropriate to the action being performed.</param>
+            <returns>True if no validation error was found</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.BeforeSave(System.Collections.IDictionary)">
+            <summary>
+            Override the base hook to call validators required for create.
+            </summary>
+            <param name="state">The current state of the object</param>
+            <returns>Returns true if the state has changed otherwise false</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.OnFlushDirty(System.Object,System.Collections.IDictionary,System.Collections.IDictionary,NHibernate.Type.IType[])">
+            <summary>
+            Override the base hook to call validators required for update.
+            </summary>
+            <param name="id">object id</param>
+            <param name="previousState">The previous state of the object</param>
+            <param name="currentState">The current state of the object</param>
+            <param name="types">Property types</param>
+            <returns>Returns true if the state has changed otherwise false</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordValidationBase`1.OnNotValid">
             <summary>
@@ -8955,6 +8481,12 @@
             </summary>
             <param name="session"></param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.ISessionFactoryHolder.FailSession(NHibernate.ISession)">
+            <summary>
+            Called if an action on the session fails
+            </summary>
+            <param name="session"></param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.ISessionFactoryHolder.GetRootType(System.Type)">
             <summary>
             Gets the type of the root.
@@ -9047,6 +8579,12 @@
         <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.ReleaseSession(NHibernate.ISession)">
             <summary>
             Releases the specified session
+            </summary>
+            <param name="session"></param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.FailSession(NHibernate.ISession)">
+            <summary>
+            Called if an action on the session fails
             </summary>
             <param name="session"></param>
         </member>
@@ -9251,61 +8789,72 @@
             <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
             <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
         </member>
-        <member name="T:Castle.ActiveRecord.ValidationException">
+        <member name="T:Castle.ActiveRecord.Framework.ValidationHookDispatcher">
             <summary>
-            This exception is raised when a validation error occurs
+            This class processes the events generated by NHibernate and validates objects
+            where the object is not derived from ActiveRecordBase. If you want to use it
+            you could create a facility that replaces the default HookDispatcher along
+            the lines of the following:
+            <code>
+            public class ValidateFacility : IFacility
+            {
+                public void Init(IKernel kernel, Castle.Core.Configuration.IConfiguration facilityConfig)
+                {
+                    InterceptorFactory.Create = new InterceptorFactory.CreateInterceptor(CreateValidationInterceptor);
+                }
+            
+                private IInterceptor CreateValidationInterceptor()
+                {
+                    return ValidationHookDispatcher.Instance;
+                }
+            }
+            </code>
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.#ctor(System.String)">
+        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidationException"/> class.
+            Initializes a new instance of the ValidationHookDispatcher class.
             </summary>
-            <param name="message">The message.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.#ctor(System.String,System.Exception)">
+        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.OnFlushDirty(System.Object,System.Object,System.Object[],System.Object[],System.String[],NHibernate.Type.IType[])">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidationException"/> class.
+            Called when an object is detected to be dirty, during a flush.
             </summary>
-            <param name="message">The message.</param>
-            <param name="innerException">The inner exception.</param>
+            <param name="currentState"></param>
+            <param name="entity"></param>
+            <param name="id"></param>
+            <param name="previousState"></param>
+            <param name="propertyNames"></param>
+            <param name="types"></param>
+            <remarks>
+            The interceptor may modify the detected <c>currentState</c>, which will be propagated to
+            both the database and the persistent object. Note that all flushes end in an actual
+            synchronization with the database, in which as the new <c>currentState</c> will be propagated
+            to the object, but not necessarily (immediately) to the database. It is strongly recommended
+            that the interceptor <b>not</b> modify the <c>previousState</c>.
+            </remarks>
+            <returns><c>true</c> if the user modified the <c>currentState</c> in any way</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.OnSave(System.Object,System.Object,System.Object[],System.String[],NHibernate.Type.IType[])">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidationException"/> class.
+            Called before an object is saved
             </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
-            <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+            <param name="entity"></param>
+            <param name="id"></param>
+            <param name="propertyNames"></param>
+            <param name="state"></param>
+            <param name="types"></param>
+            <remarks>
+            The interceptor may modify the <c>state</c>, which will be used for the SQL <c>INSERT</c>
+            and propagated to the persistent object
+            </remarks>
+            <returns><c>true</c> if the user modified the <c>state</c> in any way</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="P:Castle.ActiveRecord.Framework.ValidationHookDispatcher.Instance">
             <summary>
-            When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> with information about the exception.
+            Gets the sole instance.
             </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">The info parameter is a null reference (Nothing in Visual Basic). </exception>
-            <PermissionSet><IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*"/><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter"/></PermissionSet>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.#ctor(System.String,System.String[])">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidationException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-            <param name="errorMessages">The error messages.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.ValidationException.#ctor(System.String,System.Exception,System.String[])">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.ValidationException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-            <param name="innerException">The inner exception.</param>
-            <param name="errorMessages">The error messages.</param>
-        </member>
-        <member name="P:Castle.ActiveRecord.ValidationException.ValidationErrorMessages">
-            <summary>
-            Returns a list of current validation errors messages, if available.
-            </summary>
+            <value>The instance.</value>
         </member>
     </members>
 </doc>
