@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,8 +25,8 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using System;
 using System.Web;
@@ -38,86 +39,112 @@ using Rhino.Commons.Properties;
 
 namespace Rhino.Commons.HttpModules
 {
-	/// <summary>
-	/// This verifies that the current request has performed less than the configurable 
-	/// number of queries (MaxNumberOfQueriesPerRequest).
-	/// Can be temporarily ignored using ?hack=true
-	/// </summary>
-	public class EnsureMaxNumberOfQueriesPerRequestModule : IHttpModule
-	{
-		static readonly object key = new object();
-		private int maxNumberOfQueriesPerRequest = Settings.Default.MaxNumberOfQueriesPerRequest;
+    /// <summary>
+    /// This verifies that the current request has performed less than the configurable 
+    /// number of queries (MaxNumberOfQueriesPerRequest).
+    /// Can be temporarily ignored using ?hack=true
+    /// </summary>
+    public class EnsureMaxNumberOfQueriesPerRequestModule : IHttpModule
+    {
+        private static readonly object key = new object();
+        private readonly int maxNumberOfQueriesPerRequest = Settings.Default.MaxNumberOfQueriesPerRequest;
 
-		public void Init(HttpApplication context)
-		{
-			// we need to make the check here because an HttpModule can be created more then
-			// once in an application lifetime, so we should be careful not to add the counter
-			// twice.
-			Logger logger = (Logger)LogManager.GetLogger("NHibernate.SQL").Logger;
-			lock (logger)
-			{
-				if (HasCountingAppender(logger) == false)
-					logger.AddAppender(new CountToContextItemsAppender());
-			}
-			context.EndRequest += new EventHandler(context_EndRequest);
-		}
+        #region IHttpModule Members
 
-		private static bool HasCountingAppender(Logger logger)
-		{
-			foreach (object appender in logger.Appenders)
-			{
-				if (appender is CountToContextItemsAppender)
-					return true;
-			}
-			return false;
-		}
+        public void Init(HttpApplication context)
+        {
+            // we need to make the check here because an HttpModule can be created more then
+            // once in an application lifetime, so we should be careful not to add the counter
+            // twice.
+            Logger logger = (Logger) LogManager.GetLogger("NHibernate.SQL").Logger;
+            lock (logger)
+            {
+                if (HasCountingAppender(logger) == false)
+                {
+                    logger.AddAppender(new CountToContextItemsAppender());
+                    logger.Level = logger.Hierarchy.LevelMap["DEBUG"];
+                }
+            }
+            context.EndRequest += new EventHandler(context_EndRequest);
+        }
 
-		void context_EndRequest(object sender, EventArgs e)
-		{
-			// this is a using ?hack=<something>, we allow this, probably the developer is developing the page
-			if (string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["hack"]) == false)
-				return;
-			object maybeVal = HttpContext.Current.Items[key];
-			int count = 0;
-			if (maybeVal != null)
-				count = (int)maybeVal;
-			if (count > maxNumberOfQueriesPerRequest)
-			{
-				throw new PerformancePolicyViolationException(
-					string.Format(
-						@"Only {0} queries are allowed per web request, but {1} queries were perfromed during this web request. 
+        public void Dispose()
+        {
+        }
+
+        #endregion
+
+        private static bool HasCountingAppender(IAppenderAttachable logger)
+        {
+            foreach (IAppender appender in logger.Appenders)
+            {
+                if (appender is CountToContextItemsAppender)
+                    return true;
+            }
+            return false;
+        }
+
+        private void context_EndRequest(object sender, EventArgs e)
+        {
+            // this is a using ?hack=<something>, we allow this, probably the developer is developing the page
+            if (string.IsNullOrEmpty(HttpContext.Current.Request.QueryString["hack"]) == false)
+                return;
+            if (QueryCount > maxNumberOfQueriesPerRequest)
+            {
+                throw new PerformancePolicyViolationException(
+                    string.Format(
+                        @"Only {0} queries are allowed per web request, but {1} queries were perfromed during this web request. 
 Optimize the data access code. You can continue working by adding the query string parameter hack=true.",
-						maxNumberOfQueriesPerRequest, count));
-			}
-		}
+                        maxNumberOfQueriesPerRequest, QueryCount));
+            }
+        }
 
-		public void Dispose()
-		{
-		}
+        /// <summary>
+        /// Gets the query count.
+        /// </summary>
+        /// <value>The query count.</value>
+        public static int QueryCount
+        {
+            get
+            {
+                object maybeVal = HttpContext.Current.Items[key];
+                int count = 0;
+                if (maybeVal != null)
+                    count = (int) maybeVal;
+                return count;
+            }
+        }
 
-		public class CountToContextItemsAppender : IAppender
-		{
-			private string name;
+        #region Nested type: CountToContextItemsAppender
 
-			public void Close()
-			{
+        public class CountToContextItemsAppender : IAppender
+        {
+            private string name;
 
-			}
+            #region IAppender Members
 
-			public void DoAppend(LoggingEvent loggingEvent)
-			{
-				object maybeVal = HttpContext.Current.Items[key];
-				int current = 0;
-				if (maybeVal != null)
-					current = (int)maybeVal;
-				HttpContext.Current.Items[key] = current + 1;
-			}
+            public void Close()
+            {
+            }
 
-			public string Name
-			{
-				get { return name; }
-				set { name = value; }
-			}
-		}
-	}
+            public void DoAppend(LoggingEvent loggingEvent)
+            {
+                object maybeVal = HttpContext.Current.Items[key];
+                int current = 0;
+                if (maybeVal != null)
+                    current = (int) maybeVal;
+                HttpContext.Current.Items[key] = current + 1;
+            }
+
+            public string Name
+            {
+                get { return name; }
+                set { name = value; }
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
 }
