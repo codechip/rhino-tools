@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HierarchicalContainers", "HierarchicalContainers\HierarchicalContainers.csproj", "{708724F1-9306-45F7-9DFF-E6F80F718666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons", "..\..\..\rhino-commons\Rhino.Commons\Rhino.Commons.csproj", "{F6321543-E1EC-4999-A562-D9F060C8E3DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{708724F1-9306-45F7-9DFF-E6F80F718666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{708724F1-9306-45F7-9DFF-E6F80F718666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{708724F1-9306-45F7-9DFF-E6F80F718666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{708724F1-9306-45F7-9DFF-E6F80F718666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

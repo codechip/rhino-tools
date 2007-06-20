@@ -1,0 +1,37 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <StartDirectory />
+    <UseShadowCopy>False</UseShadowCopy>
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles>
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Windsor.boo" caret="147" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Program.cs" caret="255" scrollPosition="0|0" />
+    </RecentFiles>
+  </EditorManager>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:@Rhino.Commons.IoC">
+      <Item value="Container" priority="0" />
+      <Item value="Initialize" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

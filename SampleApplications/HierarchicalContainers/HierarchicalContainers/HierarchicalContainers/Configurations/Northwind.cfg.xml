@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory >
+    <!-- properties -->
+    <property name="hibernate.connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
+    <property name="hibernate.connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.dialect">NHibernate.Dialect.MsSql2005Dialect</property>
+    <property name="hibernate.use_outer_join">true</property>
+    <property name="hibernate.connection.connection_string">Data Source=localhost; Initial Catalog=Northwind;Integrated Security=SSPI;</property>
+
+    <mapping resource="HierarchicalContainers.Northwind.Blog.hbm.xml" assembly="HierarchicalContainers"/>
+
+  </session-factory>
+</hibernate-configuration>

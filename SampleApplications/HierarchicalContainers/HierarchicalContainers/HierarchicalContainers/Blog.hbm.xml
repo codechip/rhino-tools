@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+  xmlns="urn:nhibernate-mapping-2.2"
+  namespace="HierarchicalContainers"
+  assembly="HierarchicalContainers" 
+  default-lazy="false">
+  <class name="Blog" table="BLOGS" lazy="false">
+    <id name="Id" column="BLOG_ID" unsaved-value="0">
+      <generator class="native" />
+    </id>
+    <property name="Name" column="NAME" not-null="true" unique="true" />
+    <bag name="Items" inverse="true" lazy="true" order-by="DATE_TIME" cascade="all">
+      <key column="BLOG_ID" />
+      <one-to-many class="Blog" />
+    </bag>
+  </class>
+</hibernate-mapping>
+
