@@ -89,7 +89,7 @@ namespace Rhino.Commons
 
 		public bool Overlap(DateRange range)
 		{
-			return Overlap(range.start) || Overlap(range.end);
+		    return !(range.start >= this.end | range.end <= this.start);
 		}
 
 		public void ForEachDay(Proc<DateTime> action)
