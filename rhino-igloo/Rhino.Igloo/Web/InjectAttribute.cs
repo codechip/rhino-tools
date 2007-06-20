@@ -42,6 +42,7 @@ namespace Rhino.Igloo
     public sealed class InjectAttribute : Attribute
     {
         private string _name;
+        private ScopeType scope = ScopeType.Input;
 
         /// <summary>
         /// The scope variable myName. Defaults to the name of
@@ -52,5 +53,18 @@ namespace Rhino.Igloo
             get { return _name; }
             set { _name = value; }
         }
+
+        public ScopeType Scope
+        {
+            get { return scope; }
+            set { scope = value; }
+        }
+    }
+
+    public enum ScopeType
+    {
+        Input,
+        Session,
+        Flash
     }
 }

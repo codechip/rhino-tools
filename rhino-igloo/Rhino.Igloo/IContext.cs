@@ -153,5 +153,26 @@ namespace Rhino.Igloo
         /// Ends the current request
         /// </summary>
 	    void EndResponse();
+
+
+	    /// <summary>
+	    /// Return the Url of the request
+	    /// </summary>
+	    /// <returns></returns>
+	    Uri Url();
+
+	    /// <summary>
+	    /// Url encode the string
+	    /// </summary>
+	    /// <param name="s">The unencoded url</param>
+	    /// <returns>The encoded url</returns>
+	    string UrlEncode(string s);
+
+	    /// <summary>
+	    /// Url decode the string
+	    /// </summary>
+	    /// <param name="s">The encoded url</param>
+	    /// <returns>The unencoded url</returns>
+	    string UrlDecode(string s);
 	}
 }

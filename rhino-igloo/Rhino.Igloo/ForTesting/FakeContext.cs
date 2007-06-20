@@ -220,7 +220,22 @@ namespace Rhino.Igloo.Tests
 	        HasEnded = true;
 	    }
 
-        /// <summary>
+	    public Uri Url()
+	    {
+	        return new Uri(lastRedirectedUrl);
+	    }
+
+	    public string UrlEncode(string s)
+	    {
+	        return s;
+	    }
+
+	    public string UrlDecode(string s)
+	    {
+	        return s;
+	    }
+
+	    /// <summary>
         /// Gets or sets a value indicating whether this instance has ended.
         /// </summary>
         /// <value><c>true</c> if this instance has ended; otherwise, <c>false</c>.</value>

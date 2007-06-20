@@ -29,10 +29,12 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Castle.ActiveRecord;
 using Castle.Core;
+using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using log4net;
 using NHibernate;
@@ -47,7 +49,7 @@ namespace Rhino.Igloo
     {
         private static ILog logger = LogManager.GetLogger(typeof(BijectionFacility));
 
-        private readonly Assembly[] assemblies;
+        private Assembly[] assemblies = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BijectionFacility"/> class.
@@ -59,17 +61,59 @@ namespace Rhino.Igloo
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BijectionFacility"/> class.
+        /// </summary>
+        public BijectionFacility()
+        {
+        }
+
+        /// <summary>
         /// The custom initialization for the Facility.
         /// </summary>
         /// <remarks>It must be overriden.</remarks>
         protected override void Init()
         {
+            if (assemblies == null)
+            {
+                if (FacilityConfig == null)
+                {
+                    logger.Fatal("Configuration for Bijection Facility not found.");
+                    throw new FacilityException("Sorry, but the Bijection Facility depends on a proper configuration node.");
+                }
+
+                IConfiguration assemblyConfig = FacilityConfig.Children["assemblies"];
+
+                if (assemblyConfig == null || assemblyConfig.Children.Count == 0)
+                {
+                    logger.Fatal("No assembly specified on Bijection Facility config.");
+
+                    throw new FacilityException("You need to specify at least one assembly that contains " +
+                        "the Inject decorated classes. For example, <assemblies><item>MyAssembly</item></assemblies>");
+                }
+
+                ConfigurationCollection assembliyConfigNodes = assemblyConfig.Children;
+
+                this.assemblies = new Assembly[assembliyConfigNodes.Count];
+
+                for (int i = 0; i < assembliyConfigNodes.Count; i++)
+                {
+                    IConfiguration assemblyNode = assembliyConfigNodes[i];
+                    assemblies[i] = ObtainAssembly(assemblyNode.Value);
+                }
+            }
+
             // Added a ComponentCache Repository to track it
             Kernel.AddComponent("component.repository", typeof(ComponentRepository));
             Kernel.ComponentModelBuilder.AddContributor(new InjectionInspector());
             Kernel.ComponentCreated += Kernel_ComponentCreated;
             RegisterViewComponent();
             RegisterControllers();
+        }
+
+        private Assembly ObtainAssembly(String assemblyName)
+        {
+            logger.DebugFormat("Loading assembly '{0}' for BijectionFacility", assemblyName);
+            return Assembly.Load(assemblyName);
         }
 
         private void RegisterControllers()
@@ -135,15 +179,27 @@ namespace Rhino.Igloo
                 foreach (KeyValuePair<InjectAttribute, PropertyInfo> kvp in membersToInject)
                 {
                     PropertyInfo propertyInfo = kvp.Value;
-                    string instanceToInject = Scope.Input[kvp.Key.Name];
-
-                    if (instanceToInject == null)
-                        continue;
                     try
                     {
-                        object result = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
-                        if (result != null)
-                            propertyInfo.SetValue(instance, result, null);
+                        switch (kvp.Key.Scope)
+                        {
+                            case ScopeType.Input:
+                                string instanceToInject = Scope.Input[kvp.Key.Name];
+                                if (instanceToInject == null)
+                                    continue;
+                                object result = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
+                                if (result != null)
+                                    propertyInfo.SetValue(instance, result, null);
+                                break;
+                            case ScopeType.Session:
+                                propertyInfo.SetValue(instance, Scope.Session[kvp.Key.Name], null);
+                                break;
+                            case ScopeType.Flash:
+                                propertyInfo.SetValue(instance, Scope.Flash[kvp.Key.Name], null);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException("ScopeType.Scope");
+                        }
                     }
                     catch (Exception e)
                     {
@@ -182,15 +238,13 @@ namespace Rhino.Igloo
             }
         }
 
-        private static
-            object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
+        private static object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
         {
             if (key == null)
                 return null;
             try
             {
                 return ConversionUtil.ConvertTo(typeof(int), key);
-                ;
             }
             catch (Exception e)
             {

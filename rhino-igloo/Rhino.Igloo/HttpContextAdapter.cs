@@ -300,5 +300,35 @@ namespace Rhino.Igloo
         {
             context.Response.End();
         }
+
+        /// <summary>
+        /// Return the Url of the request.
+        /// </summary>
+        /// <returns></returns>
+        public Uri Url()
+        {
+            return context.Request.Url;
+        }
+
+        /// <summary>
+        /// Url encode the string
+        /// </summary>
+        /// <param name="s">The unencoded url</param>
+        /// <returns>The encoded url</returns>
+        public string UrlEncode(string s)
+        {
+            return context.Server.UrlEncode(s);
+        }
+
+        /// <summary>
+        /// Url decode the string
+        /// </summary>
+        /// <param name="s">The encoded url</param>
+        /// <returns>The unencoded url</returns>
+        public string UrlDecode(string s)
+        {
+            return context.Server.UrlDecode(s);
+        }
+
     }
 }
