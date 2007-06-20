@@ -29,6 +29,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Web;
 using log4net;
 using log4net.Appender;
@@ -46,7 +48,8 @@ namespace Rhino.Commons.HttpModules
     /// </summary>
     public class EnsureMaxNumberOfQueriesPerRequestModule : IHttpModule
     {
-        private static readonly object key = new object();
+        private static readonly object numberOfQueriesKey = new object();
+        private static readonly object queriesTextKey = new object();
         private readonly int maxNumberOfQueriesPerRequest = Settings.Default.MaxNumberOfQueriesPerRequest;
 
         #region IHttpModule Members
@@ -56,7 +59,7 @@ namespace Rhino.Commons.HttpModules
             // we need to make the check here because an HttpModule can be created more then
             // once in an application lifetime, so we should be careful not to add the counter
             // twice.
-            Logger logger = (Logger) LogManager.GetLogger("NHibernate.SQL").Logger;
+            Logger logger = (Logger)LogManager.GetLogger("NHibernate.SQL").Logger;
             lock (logger)
             {
                 if (HasCountingAppender(logger) == false)
@@ -91,11 +94,19 @@ namespace Rhino.Commons.HttpModules
                 return;
             if (QueryCount > maxNumberOfQueriesPerRequest)
             {
-                throw new PerformancePolicyViolationException(
-                    string.Format(
-                        @"Only {0} queries are allowed per web request, but {1} queries were performed during this web request. 
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat(
+                    @"Only {0} queries are allowed per web request, but {1} queries were performed during this web request. 
 Optimize the data access code. You can continue working by adding the query string parameter hack=true.",
-                        maxNumberOfQueriesPerRequest, QueryCount));
+                    maxNumberOfQueriesPerRequest, QueryCount);
+                sb.AppendLine().AppendLine("The queries: ");
+                foreach (string query in Queries)
+                {
+                    sb.AppendLine("----")
+                        .AppendLine(query);
+                }
+                throw new PerformancePolicyViolationException(
+                    sb.ToString());
             }
         }
 
@@ -107,11 +118,24 @@ Optimize the data access code. You can continue working by adding the query stri
         {
             get
             {
-                object maybeVal = HttpContext.Current.Items[key];
+                object maybeVal = HttpContext.Current.Items[numberOfQueriesKey];
                 int count = 0;
                 if (maybeVal != null)
-                    count = (int) maybeVal;
+                    count = (int)maybeVal;
                 return count;
+            }
+        }
+
+        public static List<String> Queries
+        {
+            get
+            {
+                List<String> queries = ((List<string>)HttpContext.Current.Items[queriesTextKey]);
+                if (queries == null)
+                {
+                    HttpContext.Current.Items[queriesTextKey] = queries = new List<String>();
+                }
+                return queries;
             }
         }
 
@@ -129,11 +153,18 @@ Optimize the data access code. You can continue working by adding the query stri
 
             public void DoAppend(LoggingEvent loggingEvent)
             {
-                object maybeVal = HttpContext.Current.Items[key];
+                if(string.Empty.Equals(loggingEvent.MessageObject))
+                    return;//can happen for batch queries, this is a noise issue, basically.
+                object maybeVal = HttpContext.Current.Items[numberOfQueriesKey];
                 int current = 0;
                 if (maybeVal != null)
-                    current = (int) maybeVal;
-                HttpContext.Current.Items[key] = current + 1;
+                    current = (int)maybeVal;
+                HttpContext.Current.Items[numberOfQueriesKey] = current + 1;
+
+                if (loggingEvent.MessageObject != null)
+                {
+                    Queries.Add(loggingEvent.MessageObject.ToString());
+                }
             }
 
             public string Name
