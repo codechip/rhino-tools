@@ -45,8 +45,11 @@ namespace Rhino.Commons.Binsor
 		private readonly LifestyleType lifestyle = LifestyleType.Singleton;
 		private readonly Type _service;
 		private readonly Type _impl;
+        //important, we need to get this when we create the component, because we need
+        //to support nested components
+	    private readonly IKernel kernel = IoC.Container.Kernel;
 
-		public Component(string name, Type service) : this(name, service, service)
+	    public Component(string name, Type service) : this(name, service, service)
 		{
 		}
 
@@ -86,16 +89,14 @@ namespace Rhino.Commons.Binsor
 
         public Component Register()
 		{
-			IKernel kernel = IoC.Container.Kernel;
-			kernel.AddComponent(_name, _service, _impl);
-			IHandler handler = kernel.GetHandler(_name);
+            this.kernel.AddComponent(_name, _service, _impl);
+			IHandler handler = this.kernel.GetHandler(_name);
 			handler.ComponentModel.LifestyleType = lifestyle;
             return this;
 		}
 
         public void RegisterSecondPass()
         {
-            IKernel kernel = IoC.Container.Kernel;
             IHandler handler = kernel.GetHandler(_name);
             kernel.RegisterCustomDependencies(_name, _parameters);
             foreach (KeyValuePair<string, string> pair in _references)

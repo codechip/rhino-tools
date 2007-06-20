@@ -13,6 +13,9 @@ namespace Rhino.Commons.Binsor
         private readonly Type facility;
         private readonly string key;
         private readonly IConfiguration configuration = new MutableConfiguration("facility");
+        //important, we need to get this when we create the facility, because we need
+        //to support nested components
+        private readonly IKernel kernel = IoC.Container.Kernel;
 
         public Facility(string name, Type facility)
         {
@@ -27,9 +30,8 @@ namespace Rhino.Commons.Binsor
 
         public Facility Register()
         {
-            IKernel kernel = IoC.Container.Kernel;
-            kernel.ConfigurationStore.AddFacilityConfiguration(key, configuration);
-            kernel.AddFacility(key, (IFacility)Activator.CreateInstance(facility));
+            this.kernel.ConfigurationStore.AddFacilityConfiguration(key, configuration);
+            this.kernel.AddFacility(key, (IFacility)Activator.CreateInstance(facility));
             return this;
         }
 
