@@ -93,7 +93,7 @@ namespace Rhino.Commons.HttpModules
             {
                 throw new PerformancePolicyViolationException(
                     string.Format(
-                        @"Only {0} queries are allowed per web request, but {1} queries were perfromed during this web request. 
+                        @"Only {0} queries are allowed per web request, but {1} queries were performed during this web request. 
 Optimize the data access code. You can continue working by adding the query string parameter hack=true.",
                         maxNumberOfQueriesPerRequest, QueryCount));
             }
