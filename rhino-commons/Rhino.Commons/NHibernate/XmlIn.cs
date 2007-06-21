@@ -75,7 +75,7 @@ namespace Rhino.Commons
 		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery, IDictionary enabledFilters)
 		{
 			//we only need this for SQL Server, and or large amount of values
-			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
+            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 10)
 			{
 				return expr.ToSqlString(criteria, criteriaQuery, enabledFilters);
 			}
@@ -123,7 +123,7 @@ namespace Rhino.Commons
 		public override TypedValue[] GetTypedValues(ICriteria criteria, ICriteriaQuery criteriaQuery)
 		{
 			//we only need this for SQL Server, and or large amount of values
-			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
+			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 10)
 			{
 				return expr.GetTypedValues(criteria, criteriaQuery);
 			}
@@ -134,7 +134,7 @@ namespace Rhino.Commons
 			{
 				entityType = (EntityType)type;
 			}
-			CriteriaImpl crit = (CriteriaImpl)criteria;
+			CriteriaImpl crit = GetCriteriaImpl(criteria);
 			StringWriter sw = new StringWriter();
 			XmlWriter writer = XmlWriter.Create(sw);
 			writer.WriteStartElement("items");
@@ -219,6 +219,14 @@ namespace Rhino.Commons
 				return value;
 			}
 		}
+
+	    private static CriteriaImpl GetCriteriaImpl(ICriteria criteria)
+	    {
+	        CriteriaImpl result = criteria as CriteriaImpl;
+            if(result!=null)
+                return result;
+	        return GetCriteriaImpl(((CriteriaImpl.Subcriteria) criteria).Parent);
+	    }
 	}
 
 }
