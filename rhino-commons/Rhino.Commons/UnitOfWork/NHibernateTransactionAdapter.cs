@@ -27,13 +27,14 @@
 #endregion
 
 
+using NHibernate;
 namespace Rhino.Commons
 {
 	public class NHibernateTransactionAdapter : RhinoTransaction
 	{
-		private readonly NHibernate.ITransaction transaction;
+		private readonly ITransaction transaction;
 
-		public NHibernateTransactionAdapter(NHibernate.ITransaction transaction)
+		public NHibernateTransactionAdapter(ITransaction transaction)
 		{
 			this.transaction = transaction;
 		}
