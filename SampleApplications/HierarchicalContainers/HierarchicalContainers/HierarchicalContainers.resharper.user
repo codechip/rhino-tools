@@ -24,14 +24,125 @@
   </NAntValidationSettings>
   <EditorManager>
     <RecentFiles>
-      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Windsor.boo" caret="147" scrollPosition="0|0" />
-      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Program.cs" caret="255" scrollPosition="0|0" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:With/f:With.Cache.cs" caret="2945" scrollPosition="0|21" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Repositories/f:NHRepository.cs" caret="7372" scrollPosition="0|169" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:BinsorCompilerStep.cs" caret="1914" scrollPosition="0|0" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:BooReader.cs" caret="2613" scrollPosition="14|4" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/f:DisposableAction.cs" caret="2534" scrollPosition="0|15" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:TransformUnknownReferences.cs" caret="2557" scrollPosition="0|0" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:RhinoContainer/f:RhinoContainer.cs" caret="2125" scrollPosition="0|13" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:RegisterComponentAndFacilitiesAfterCreation.cs" caret="1722" scrollPosition="0|0" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:Component.cs" caret="2310" scrollPosition="0|26" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:Binsor/f:Facility.cs" caret="334" scrollPosition="0|6" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Blog.cs" caret="99" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Windsor.boo" caret="186" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Blog.hbm.xml" caret="63" scrollPosition="0|0" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:RhinoContainer/f:IoC.cs" caret="2179" scrollPosition="0|6" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:UnitOfWork/f:UnitOfWork.cs" caret="3304" scrollPosition="12|37" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:UnitOfWork/f:NHibernateUnitOfWorkFactory.cs" caret="4923" scrollPosition="0|66" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:ForTesting/f:NHibernateEmbeddedDBTestFixtureBase.cs" caret="4197" scrollPosition="0|34" />
+      <File id="F6321543-E1EC-4999-A562-D9F060C8E3DF/d:ForTesting/f:NHibernateInMemoryTestFixtureBase.cs" caret="3891" scrollPosition="0|45" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Northwind/f:Blog.cs" caret="94" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Southsand/f:Blog.cs" caret="95" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Southsand/f:Blog.hbm.xml" caret="131" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Northwind/f:Blog.hbm.xml" caret="132" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Configurations/f:hibernate.cfg.xml" caret="633" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Configurations/f:Northwind.cfg.xml" caret="633" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/d:Configurations/f:Southsand.cfg.xml" caret="633" scrollPosition="0|0" />
+      <File id="708724F1-9306-45F7-9DFF-E6F80F718666/f:Program.cs" caret="1671" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <CompletionStatisticsManager>
     <ItemStatistics item="Qualified:@Rhino.Commons.IoC">
       <Item value="Container" priority="0" />
       <Item value="Initialize" priority="0" />
+      <Item value="Resolve" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.Windsor.IWindsorContainer">
+      <Item value="AddChildContainer" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IDictionary&lt;string,Castle.Windsor.IWindsorContainer&gt;">
+      <Item value="Add" priority="0" />
+      <Item value="ContainsKey" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.NHibernateUnitOfWorkFactory">
+      <Item value="CurrentNHibernateSession" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.NHibernateUnitOfWorkFactory.CurrentNHibernateSession">
+      <Item value="GetSessionImplementation" priority="2" />
+      <Item value="Connection" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:NHibernate.Engine.ISessionFactoryImplementor">
+      <Item value="ConnectionProvider" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.MethodInvocationExpression">
+      <Item value="Target" priority="8" />
+      <Item value="Arguments" priority="1" />
+      <Item value="ParentNode" priority="1" />
+      <Item value="ToString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@">
+      <Item value="Parameters" priority="3" />
+      <Item value="Enter" priority="0" />
+      <Item value="GetType" priority="0" />
+      <Item value="Init" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerParameters">
+      <Item value="Pipeline" priority="2" />
+      <Item value="Ducky" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerPipeline">
+      <Item value="Add" priority="3" />
+      <Item value="Insert" priority="1" />
+      <Item value="InsertAfter" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.Expression">
+      <Item value="NodeType" priority="1" />
+      <Item value="ToString" priority="6" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.Node">
+      <Item value="Replace" priority="1" />
+      <Item value="ParentNode" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.Block">
+      <Item value="Statements" priority="0" />
+      <Item value="Replace" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.ExpressionStatement">
+      <Item value="Expression" priority="4" />
+      <Item value="ReplaceBy" priority="0" />
+      <Item value="Replace" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.TypeSystem.BooCodeBuilder">
+      <Item value="CreateMethodInvocation" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Console">
+      <Item value="Out" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.IoC.LocalContainerStack">
+      <Item value="Peek" priority="1" />
+      <Item value="Push" priority="0" />
+      <Item value="Pop" priority="0" />
+      <Item value="Count" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.KeyValuePair&lt;string,Castle.Windsor.IWindsorContainer&gt;">
+      <Item value="Key" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection.BindingFlags">
+      <Item value="NonPublic" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.BinaryExpression">
+      <Item value="Right" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:NHibernate.ISessionFactory">
+      <Item value="Dialect" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.UnitOfWork">
+      <Item value="Start" priority="0" />
+      <Item value="Current" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.IDbConnection">
+      <Item value="ConnectionString" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>

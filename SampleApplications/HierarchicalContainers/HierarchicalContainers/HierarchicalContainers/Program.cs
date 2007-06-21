@@ -20,7 +20,8 @@ namespace HierarchicalContainers
                 using(UnitOfWork.Start())
                 {
                     Console.WriteLine(
-                        NHibernateUnitOfWorkFactory.CurrentNHibernateSession.Connection.ConnectionString
+                        NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+                            .Connection.ConnectionString
                         );
                 }
                 using(containerSelector.Enter("Northwind"))
@@ -28,7 +29,8 @@ namespace HierarchicalContainers
                     using (UnitOfWork.Start())
                     {
                         Console.WriteLine(
-                            NHibernateUnitOfWorkFactory.CurrentNHibernateSession.Connection.ConnectionString
+                            NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+                                .Connection.ConnectionString
                             );
                     }
                 }
@@ -37,7 +39,8 @@ namespace HierarchicalContainers
                     using (UnitOfWork.Start())
                     {
                         Console.WriteLine(
-                            NHibernateUnitOfWorkFactory.CurrentNHibernateSession.Connection.ConnectionString
+                            NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+                                .Connection.ConnectionString
                             );
                     }
                 }
