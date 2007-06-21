@@ -30,7 +30,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Collections;
 
 namespace Rhino.Commons
@@ -110,6 +109,11 @@ namespace Rhino.Commons
             {
                 action(item);
             }
+        }
+
+        public static T[] ToArray<T>(object list)
+        {
+            return ToArray<T>((IList) list);
         }
         
         public static T[] ToArray<T>(IList list)
