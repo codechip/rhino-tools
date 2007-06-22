@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="MyBlog.Blog">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Blog.cs</FileName>
+      <HashCode>IAACACAAQAAEMEAARCAAAEAAAAAAAEAAAABAAAAQAgA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Posts" />
+      <Property Name="Users" />
+      <Property Name="Tags" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="allowsComments" Hidden="true" />
+      <Field Name="createdAt" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Field Name="posts" Hidden="true" />
+      <Field Name="subtitle" Hidden="true" />
+      <Field Name="tags" Hidden="true" />
+      <Field Name="title" Hidden="true" />
+      <Field Name="users" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MyBlog.Category">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Category.cs</FileName>
+      <HashCode>AAACAAAAAAAEAAAABAAAAAQAAAAEAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Posts" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="id" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+      <Field Name="posts" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MyBlog.Comment">
+    <Position X="6" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Comment.cs</FileName>
+      <HashCode>AAQCAAAEACAAAAAgAAAAAAQACAAEAAgIAAAgCAAAIgA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Post" />
+    </ShowAsAssociation>
+    <Members>
+      <Field Name="email" Hidden="true" />
+      <Field Name="homePage" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Field Name="ip" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+      <Field Name="post" Hidden="true" />
+      <Field Name="text" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MyBlog.Post">
+    <Position X="3.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Post.cs</FileName>
+      <HashCode>AAArAAAAQgAAAEACAAAAAgAQAAAAEEAAAABAAAAAKwA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Blog" />
+      <Property Name="User" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Comments" />
+      <Property Name="Categories" />
+      <Property Name="Tags" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="blog" Hidden="true" />
+      <Field Name="categories" Hidden="true" />
+      <Field Name="comments" Hidden="true" />
+      <Field Name="content" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Field Name="postedAt" Hidden="true" />
+      <Field Name="tags" Hidden="true" />
+      <Field Name="title" Hidden="true" />
+      <Field Name="user" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MyBlog.Tag" Collapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Tag.cs</FileName>
+      <HashCode>EAACABAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="entity" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="MyBlog.User">
+    <Position X="0.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>User.cs</FileName>
+      <HashCode>AAACAAAAACAMIAAgDSAAQAEAEEAAABACAAAAAgAAAgA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Blogs" />
+      <Property Name="Posts" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="bio" Hidden="true" />
+      <Field Name="blogs" Hidden="true" />
+      <Field Name="createdAt" Hidden="true" />
+      <Field Name="email" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Field Name="image" Hidden="true" />
+      <Field Name="password" Hidden="true" />
+      <Field Name="posts" Hidden="true" />
+      <Field Name="username" Hidden="true" />
+    </Members>
+  </Class>
+</ClassDiagram>

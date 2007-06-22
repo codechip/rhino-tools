@@ -1,0 +1,4 @@
+What is this?
+=============
+
+I often need  a model to play with NHibernate, so this is the default one that I will use.

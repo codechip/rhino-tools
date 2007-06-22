@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog", "Blog\Blog.csproj", "{1F2D844F-519D-48E7-BC4B-EDF8CB481315}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Console", "Blog.Console\Blog.Console.csproj", "{925C2189-5795-453C-B3DA-10497DAC6FEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F2D844F-519D-48E7-BC4B-EDF8CB481315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2D844F-519D-48E7-BC4B-EDF8CB481315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2D844F-519D-48E7-BC4B-EDF8CB481315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2D844F-519D-48E7-BC4B-EDF8CB481315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{925C2189-5795-453C-B3DA-10497DAC6FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{925C2189-5795-453C-B3DA-10497DAC6FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{925C2189-5795-453C-B3DA-10497DAC6FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{925C2189-5795-453C-B3DA-10497DAC6FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
