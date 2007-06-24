@@ -131,6 +131,8 @@
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
+    <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
+    <Compile Include="With\With.Log.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
   </ItemGroup>
   <ItemGroup>
