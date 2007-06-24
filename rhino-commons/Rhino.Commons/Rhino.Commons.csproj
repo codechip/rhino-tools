@@ -164,6 +164,7 @@
     <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="Logging\RollingSqlliteAppender.cs" />
+    <Compile Include="NHibernate\CriteriaBatch.cs" />
     <Compile Include="NHibernate\XmlIn.cs" />
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />

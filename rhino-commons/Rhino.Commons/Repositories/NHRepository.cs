@@ -41,7 +41,7 @@ namespace Rhino.Commons
 	{
 		protected virtual ISession Session
 		{
-			get { return NHibernateUnitOfWorkFactory.CurrentNHibernateSession; }
+            get { return UnitOfWork.CurrentSession; }
 		}
 
 		public T Get(object id)
@@ -213,7 +213,7 @@ namespace Rhino.Commons
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+            IConnectionProvider connectionProvider = UnitOfWork.CurrentSession
                 .GetSessionImplementation()
                 .Factory
                 .ConnectionProvider;
@@ -248,7 +248,7 @@ namespace Rhino.Commons
 		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
 														  params Parameter[] parameters)
 		{
-			IConnectionProvider connectionProvider = NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+            IConnectionProvider connectionProvider = UnitOfWork.CurrentSession
                     .GetSessionImplementation()
                     .Factory
                     .ConnectionProvider;

@@ -78,7 +78,7 @@ namespace Rhino.Commons
 			[EditorBrowsable(EditorBrowsableState.Never)]
 			public static void ClearQueryCacheRegion(string region)
 			{
-				NHibernateUnitOfWorkFactory.CurrentNHibernateSession
+				UnitOfWork.CurrentSession
                     .GetSessionImplementation()
                     .Factory
                     .EvictQueries(region);

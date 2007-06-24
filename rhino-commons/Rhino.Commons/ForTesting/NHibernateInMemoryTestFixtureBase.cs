@@ -164,7 +164,7 @@ namespace Rhino.Commons.ForTesting
 		public void CreateUnitOfWork()
 		{
 			UnitOfWork.Start();
-			SetupDB(NHibernateUnitOfWorkFactory.CurrentNHibernateSession);
+			SetupDB(IoC.Resolve<IUnitOfWorkFactory>().CurrentSession);
 		}
 
 		/// <summary>

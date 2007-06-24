@@ -29,6 +29,7 @@
 
 using System;
 using System.Data;
+using NHibernate;
 
 namespace Rhino.Commons
 {
@@ -98,6 +99,18 @@ namespace Rhino.Commons
 				return unitOfWork;
 			}
 		}
+
+        /// <summary>
+        /// Gets the current session.
+        /// </summary>
+        /// <value>The current session.</value>
+	    public static ISession CurrentSession
+	    {
+	        get
+	        {
+	            return IoC.Resolve<IUnitOfWorkFactory>().CurrentSession;
+	        }
+	    }
 
 		/// <summary>
 		/// Called internally to clear the current UoW and move to the previous one.

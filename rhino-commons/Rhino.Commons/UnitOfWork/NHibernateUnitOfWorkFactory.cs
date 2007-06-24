@@ -26,14 +26,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
 using System;
 using System.Data;
 using System.IO;
 using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
-using Settings = Rhino.Commons.Properties.Settings;
+using Settings=Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {
@@ -160,7 +159,7 @@ namespace Rhino.Commons
         /// Note: Prefer to avoid using this member.
         /// It is provided to support complex scenarios only.
         /// </summary>
-        public static ISession CurrentNHibernateSession
+        public ISession CurrentSession
         {
             get
             {
@@ -177,7 +176,7 @@ namespace Rhino.Commons
             ISession session = null;
             if (adapter.Previous != null)
                 session = adapter.Previous.Session;
-            CurrentNHibernateSession = session;
+            CurrentSession = session;
             UnitOfWork.DisposeUnitOfWork(adapter);
         }
     }

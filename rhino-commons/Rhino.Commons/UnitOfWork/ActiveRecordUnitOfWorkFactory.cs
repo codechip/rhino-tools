@@ -119,7 +119,7 @@ namespace Rhino.Commons
 			}
 		}
 
-		public static ISession CurrentSession
+		public ISession CurrentSession
 		{
 			get
 			{
@@ -127,8 +127,6 @@ namespace Rhino.Commons
 				if (scope == null)
 					throw new InvalidOperationException("You are not in a unit of work");
 				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-				ISessionFactory sessionFactory = holder.GetSessionFactory(typeof (ActiveRecordBase));
-
 				return holder.CreateSession(typeof (ActiveRecordBase));
 			}
 		}
