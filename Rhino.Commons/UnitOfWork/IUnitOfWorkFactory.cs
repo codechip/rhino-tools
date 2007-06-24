@@ -28,6 +28,7 @@
 
 
 using System.Data;
+using NHibernate;
 
 namespace Rhino.Commons
 {
@@ -45,5 +46,7 @@ namespace Rhino.Commons
 		/// <param name="previous">Previous unit of work, if existed</param>
 		/// <returns>A usable unit of work</returns>
 		IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous);
+
+        ISession CurrentSession { get; }
 	}
 }

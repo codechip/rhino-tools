@@ -142,5 +142,16 @@ namespace Rhino.Commons
 			}
 			return dic;
 		}
+
+        public static object Single(ICollection collection)
+        {
+            if(collection.Count==0)
+                return null;
+            if (collection.Count > 1)
+                throw new InvalidOperationException("Collection does not have exactly one item");
+            IEnumerator enumerator = collection.GetEnumerator();
+            enumerator.MoveNext();
+            return enumerator.Current;
+        }
     }
 }
