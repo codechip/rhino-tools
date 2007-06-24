@@ -161,6 +161,7 @@
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />
+    <Compile Include="Logging\ActiveLoggerFilterScope.cs" />
     <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="Logging\RollingSqlliteAppender.cs" />
@@ -184,8 +185,10 @@
     <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
     <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
     <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
+    <Compile Include="Logging\InMemoryMessageAppender.cs" />
     <Compile Include="With\With.Cache.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
+    <Compile Include="With\With.Log.cs" />
     <Compile Include="XmlRead.cs" />
     <Compile Include="XmlUpdate.cs" />
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
