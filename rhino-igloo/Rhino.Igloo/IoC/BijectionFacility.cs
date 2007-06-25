@@ -123,7 +123,7 @@ namespace Rhino.Igloo
             LifestyleType controllerLifeCycle = HttpContext.Current == null ? LifestyleType.Transient :
                 LifestyleType.PerWebRequest;
             
-            Kernel.AddComponent("BaseController", typeof(BaseController));
+            Kernel.AddComponent("BaseController", typeof(BaseController),controllerLifeCycle);
             foreach (Assembly assembly in assemblies)
             {
                 foreach (Type type in assembly.GetExportedTypes())
