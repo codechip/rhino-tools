@@ -216,10 +216,14 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.SchemaEditing
 			Nodes.Add((TreeNode)child);
 			activeNodes.Add(child);
 		}
-
+        public void DisplayCurrentElementAttributes(PropertyGrid attributeGrid)
+        {
+            attributeGrid.SelectedObject = Attributes;
+        }
 		public void DisplayCurrentElementAttributes(ListView attributesList)
 		{
-			attributesList.Items.Clear();
+			/* replaced by property grid
+            attributesList.Items.Clear();
 			foreach (AttributeFieldReference attribute in Attributes)
 			{
 				string val = attribute.HasValue ? 
@@ -237,6 +241,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface.SchemaEditing
 				
 				attributesList.Items.Add(lvi);
 			}
+             */
 		}
 
 		private static string GetValue(AttributeFieldReference attribute)

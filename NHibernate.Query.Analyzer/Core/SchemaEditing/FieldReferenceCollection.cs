@@ -29,6 +29,8 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Ayende.NHibernateQueryAnalyzer.SchemaEditing
 {
@@ -138,7 +140,7 @@ namespace Ayende.NHibernateQueryAnalyzer.SchemaEditing
 	/// current value of the <see cref="FieldReferenceCollection.Count"/> property.
 	/// </para></remarks>
 	[Serializable]
-	public class FieldReferenceCollection : IList, ICloneable
+	public class FieldReferenceCollection : IList, ICloneable,ICustomTypeDescriptor
 	{
 		private readonly Data _data;
 
@@ -2037,7 +2039,141 @@ namespace Ayende.NHibernateQueryAnalyzer.SchemaEditing
 		}
 
 		#endregion
-	}
+
+        #region ICustomTypeDescriptor Members
+
+        #region ICustomTypeDescriptor Members
+
+        public AttributeCollection GetAttributes()
+        {
+            return new AttributeCollection(new Attribute[0]);
+        }
+
+        public string GetClassName()
+        {
+            return TypeDescriptor.GetClassName(_data);
+        }
+
+        public string GetComponentName()
+        {
+            return TypeDescriptor.GetComponentName(_data);
+        }
+
+        public TypeConverter GetConverter()
+        {
+            return null;
+        }
+
+        public EventDescriptor GetDefaultEvent()
+        {
+            return TypeDescriptor.GetDefaultEvent(_data);
+        }
+
+        public PropertyDescriptor GetDefaultProperty()
+        {
+            return TypeDescriptor.GetDefaultProperty(_data);
+        }
+
+        public object GetEditor(Type editorBaseType)
+        {
+            return null;
+        }
+
+        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        {
+            return TypeDescriptor.GetEvents(_data, attributes);
+        }
+
+        public EventDescriptorCollection GetEvents()
+        {
+            return TypeDescriptor.GetEvents(_data);
+        }
+
+        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+            return GetProperties();
+        }
+
+        public PropertyDescriptorCollection GetProperties()
+        {
+            List<AttributePropertyDescriptor> atts = new List<AttributePropertyDescriptor>();
+            for (int i = 0; i < _data.Items.Length; ++i)
+            {
+                if( null != _data.Items[i] )
+                    atts.Add(new AttributePropertyDescriptor(_data.Items[i]));
+            }
+            return new PropertyDescriptorCollection(atts.ToArray());
+        }
+
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return _data;
+        }
+
+        #endregion
+
+        #endregion
+       
+   
+    }
 
 	#endregion
+    #region Helper class for custom type descriptor
+    internal class AttributePropertyDescriptor : PropertyDescriptor
+    {
+        IFieldReference field;
+        public AttributePropertyDescriptor(IFieldReference field)
+            :base(field.Name,new Attribute[0])
+        {
+            this.field = field;
+        }
+        public override string DisplayName
+        {
+            get
+            {
+                return Name;
+            }
+        }
+        public override string Name
+        {
+            get
+            {
+                return field.Name;
+            }
+        }
+        public override object GetValue(object component)
+        {
+            return field.Value;
+
+        }
+        public override void SetValue(object component, object value)
+        {
+            field.Value = value;
+        }
+        public override Type ComponentType
+        {
+            get { return field.GetType(); }
+        }
+        public override bool IsReadOnly
+        {
+            get { return false; }
+        }
+        public override Type PropertyType
+        {
+            get { return field.Type; }
+        }
+        public override bool CanResetValue(object component)
+        {
+            return false;
+        }
+        public override void ResetValue(object component)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+        public override bool ShouldSerializeValue(object component)
+        {
+            return false;
+        }
+    }
+    #endregion
 }
