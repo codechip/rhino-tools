@@ -122,16 +122,19 @@
     <None Include="app.config" />
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
+    <None Include="UoW\Windsor.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
+    <Compile Include="UoW\TransactionalFlush.cs" />
     <Compile Include="With\With.Log.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -33,7 +33,7 @@ using Castle.ActiveRecord;
 
 namespace Rhino.Commons
 {
-	public class ActiveRecordUnitOfWorkAdapter : IUnitOfWorkImplementor
+	public class ActiveRecordUnitOfWorkAdapter : BaseUnitOfWorkFactory, IUnitOfWorkImplementor
 	{
 		private readonly ISessionScope scope;
 		private IUnitOfWorkImplementor previous;
@@ -86,7 +86,8 @@ namespace Rhino.Commons
 			return transactionAdapter;
 		}
 
-		///<summary>
+
+	    ///<summary>
 		///Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		///</summary>
 		///<filterpriority>2</filterpriority>

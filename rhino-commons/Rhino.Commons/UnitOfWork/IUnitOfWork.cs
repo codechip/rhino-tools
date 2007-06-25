@@ -40,5 +40,7 @@ namespace Rhino.Commons
 
 		RhinoTransaction BeginTransaction();
 		RhinoTransaction BeginTransaction(IsolationLevel isolationLevel);
+		void TransactionalFlush();
+		void TransactionalFlush(IsolationLevel isolationLevel);
 	}
 }

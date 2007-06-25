@@ -44,6 +44,8 @@ namespace Rhino.Commons.Test.NHibernate
 		[TestFixtureSetUp]
 		public void OneTimeTestInitialize()
 		{
+            sessionFactory = null;
+
 			FixtureInitialize(typeof(SMS).Assembly);
 		}
 
