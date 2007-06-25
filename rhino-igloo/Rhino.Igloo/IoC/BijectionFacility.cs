@@ -32,6 +32,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Web;
 using Castle.ActiveRecord;
 using Castle.Core;
 using Castle.Core.Configuration;
@@ -118,6 +119,10 @@ namespace Rhino.Igloo
 
         private void RegisterControllers()
         {
+            //transient for testing, per web request for real work
+            LifestyleType controllerLifeCycle = HttpContext.Current == null ? LifestyleType.Transient :
+                LifestyleType.PerWebRequest;
+            
             Kernel.AddComponent("BaseController", typeof(BaseController));
             foreach (Assembly assembly in assemblies)
             {
@@ -126,7 +131,7 @@ namespace Rhino.Igloo
                     if (typeof(BaseController).IsAssignableFrom(type) &&
                         AttributeUtil.ShouldSkipAutomaticRegistration(type) == false)
                     {
-                        Kernel.AddComponent(type.Name, type);
+                        Kernel.AddComponent(type.Name, type, controllerLifeCycle);
                     }
                 }
             }
