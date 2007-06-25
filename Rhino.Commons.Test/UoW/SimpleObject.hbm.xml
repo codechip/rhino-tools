@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping default-lazy='false'
+	assembly='Rhino.Commons.Test'
+	namespace='Rhino.Commons.Test.UoW'
+	xmlns='urn:nhibernate-mapping-2.2'>
+	<class name='SimpleObject'>
+		<id name="Id" column="SimpleObjectId">
+			<generator class="assigned"/>
+		</id>
+		<version name="ConcurrencyId" unsaved-value="-1"/>
+
+		<property name="TwoCharactersMax" length="2"/>
+	</class>
+</hibernate-mapping>

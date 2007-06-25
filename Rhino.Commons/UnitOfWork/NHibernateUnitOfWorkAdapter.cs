@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -26,19 +26,15 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using NHibernate;
 
 namespace Rhino.Commons
 {
-	public class NHibernateUnitOfWorkAdapter : IUnitOfWorkImplementor
+	public class NHibernateUnitOfWorkAdapter : BaseUnitOfWorkFactory, IUnitOfWorkImplementor
 	{
 		private readonly NHibernateUnitOfWorkFactory factory;
-		private ISession session;
+		private readonly ISession session;
 
 		private readonly NHibernateUnitOfWorkAdapter previous;
 		private int usageCount = 1;
@@ -87,7 +83,7 @@ namespace Rhino.Commons
 			return new NHibernateTransactionAdapter(session.BeginTransaction(isolationLevel));
 		}
 
-		public void Dispose()
+	    public void Dispose()
 		{
 			usageCount -= 1;
 			if (usageCount != 0)
