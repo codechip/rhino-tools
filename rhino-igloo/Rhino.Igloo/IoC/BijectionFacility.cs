@@ -120,7 +120,8 @@ namespace Rhino.Igloo
         private void RegisterControllers()
         {
             //transient for testing, per web request for real work
-            LifestyleType controllerLifeCycle = HttpContext.Current == null ? LifestyleType.Transient :
+            LifestyleType controllerLifeCycle = HttpContext.Current == null ? 
+                LifestyleType.Transient :
                 LifestyleType.PerWebRequest;
             
             Kernel.AddComponent("BaseController", typeof(BaseController),controllerLifeCycle);
