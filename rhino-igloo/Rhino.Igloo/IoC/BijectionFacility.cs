@@ -119,12 +119,7 @@ namespace Rhino.Igloo
 
         private void RegisterControllers()
         {
-            //transient for testing, per web request for real work
-            LifestyleType controllerLifeCycle = HttpContext.Current == null ? 
-                LifestyleType.Transient :
-                LifestyleType.PerWebRequest;
-            
-            Kernel.AddComponent("BaseController", typeof(BaseController),controllerLifeCycle);
+             Kernel.AddComponent("BaseController", typeof(BaseController));
             foreach (Assembly assembly in assemblies)
             {
                 foreach (Type type in assembly.GetExportedTypes())
@@ -132,7 +127,7 @@ namespace Rhino.Igloo
                     if (typeof(BaseController).IsAssignableFrom(type) &&
                         AttributeUtil.ShouldSkipAutomaticRegistration(type) == false)
                     {
-                        Kernel.AddComponent(type.Name, type, controllerLifeCycle);
+                        Kernel.AddComponent(type.Name, type);
                     }
                 }
             }

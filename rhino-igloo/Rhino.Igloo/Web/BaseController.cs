@@ -42,6 +42,7 @@ namespace Rhino.Igloo
 	/// <summary>
 	/// Base class for all the controllers
 	/// </summary>
+	[Transient]
 	public class BaseController
 	{
 		private static IValidatorRegistry validationRegistry = new CachedValidationRegistry();
