@@ -43,6 +43,17 @@ namespace Rhino.Commons
             GlobalContainer = windsorContainer;
         }
 
+		public static object Resolve(Type serviceType)
+		{
+			   return Container.Resolve(serviceType);
+		}
+		
+		public static object Resolve(Type serviceType, string serviceName)
+		{
+			   return Container.Resolve(serviceName, serviceType);
+        }
+
+
         public static T Resolve<T>()
         {
             return Container.Resolve<T>();
