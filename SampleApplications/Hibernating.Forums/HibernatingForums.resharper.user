@@ -1,0 +1,94 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <StartDirectory />
+    <UseShadowCopy>False</UseShadowCopy>
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles>
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Controllers/f:HomeController.cs" caret="205" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Views/d:Shared/f:ForumsList.brail" caret="332" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:ViewComponents/f:LastPostInfoComponent.cs" caret="152" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Views/d:Components/d:LastPostInfo/f:default.brail" caret="0" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Views/d:layouts/f:default.brail" caret="1315" scrollPosition="0|39" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Views/d:Home/f:index.brail" caret="213" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/d:Views/d:Shared/f:ShowPost.brail" caret="154" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/f:Global.asax.cs" caret="117" scrollPosition="0|0" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/f:Web.config" caret="1531" scrollPosition="0|24" />
+      <File id="2E803FF9-D51A-46C7-B093-DB36B0234C22/f:Windsor.boo" caret="461" scrollPosition="0|0" />
+      <File id="FA67A3DE-985D-4FAB-99E4-D992FEFC08B3/f:Windsor.boo" caret="161" scrollPosition="0|0" />
+      <File id="AC846907-A9F0-4EA6-999C-DE40FE52EE85/f:User.cs" caret="825" scrollPosition="0|29" />
+      <File id="AC846907-A9F0-4EA6-999C-DE40FE52EE85/f:Forum.cs" caret="720" scrollPosition="0|12" />
+      <File id="AC846907-A9F0-4EA6-999C-DE40FE52EE85/f:Post.cs" caret="808" scrollPosition="0|27" />
+      <File id="FA67A3DE-985D-4FAB-99E4-D992FEFC08B3/f:ModelPersistanceFixture.cs" caret="238" scrollPosition="0|0" />
+      <File id="FA67A3DE-985D-4FAB-99E4-D992FEFC08B3/f:DiscussionThreadFixture.cs" caret="273" scrollPosition="0|13" />
+      <File id="AC846907-A9F0-4EA6-999C-DE40FE52EE85/f:DiscussionThread.cs" caret="1110" scrollPosition="0|32" />
+    </RecentFiles>
+  </EditorManager>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:NHibernate.ISession">
+      <Item value="CreateMultiCriteria" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.UnitOfWork.CurrentSession">
+      <Item value="Evict" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.ActiveRecord.SessionScope">
+      <Item value="Dispose" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Commons.UnitOfWork.Current">
+      <Item value="Flush" priority="0" />
+      <Item value="TransactionalFlush" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:HibernatingForums.Model.Forum">
+      <Item value="Name" priority="2" />
+      <Item value="Manager" priority="3" />
+      <Item value="Id" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:HibernatingForums.Model.User">
+      <Item value="Id" priority="4" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:HibernatingForums.Model.DiscussionThread">
+      <Item value="Title" priority="1" />
+      <Item value="Id" priority="6" />
+      <Item value="LastUpdated" priority="1" />
+      <Item value="Forum" priority="2" />
+      <Item value="AddPost" priority="0" />
+      <Item value="Posts" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.DateTime.Now">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:HibernatingForums.Model.Post">
+      <Item value="Thread" priority="7" />
+      <Item value="Title" priority="1" />
+      <Item value="Content" priority="1" />
+      <Item value="Author" priority="3" />
+      <Item value="Id" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.DateTime.Today">
+      <Item value="AddDays" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Iesi.Collections.Generic.ISet&lt;HibernatingForums.Model.Post&gt;">
+      <Item value="Add" priority="0" />
+      <Item value="Contains" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HibernatingForums.Web", "Hi
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HibernatingForums.Tests", "HibernatingForums.Tests\HibernatingForums.Tests.csproj", "{FA67A3DE-985D-4FAB-99E4-D992FEFC08B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2E803FF9-D51A-46C7-B093-DB36B0234C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E803FF9-D51A-46C7-B093-DB36B0234C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E803FF9-D51A-46C7-B093-DB36B0234C22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA67A3DE-985D-4FAB-99E4-D992FEFC08B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA67A3DE-985D-4FAB-99E4-D992FEFC08B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA67A3DE-985D-4FAB-99E4-D992FEFC08B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA67A3DE-985D-4FAB-99E4-D992FEFC08B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
