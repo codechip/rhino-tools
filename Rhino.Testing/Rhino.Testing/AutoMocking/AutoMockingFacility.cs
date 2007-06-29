@@ -29,7 +29,7 @@ namespace Rhino.Testing.AutoMocking
 
         private void OnComponentModelCreated(ComponentModel model)
         {
-            _autoMock.MarkNonMocked(model.Service);
+            _autoMock.Mark(model.Service).NotMocked();
         }
     }
 }

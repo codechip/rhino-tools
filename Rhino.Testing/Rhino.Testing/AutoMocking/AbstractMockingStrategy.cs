@@ -13,7 +13,6 @@ namespace Rhino.Testing.AutoMocking
             _autoMock = autoMock;
         }
 
-
         public IAutoMockingRepository AutoMock
         {
             get { return _autoMock; }
@@ -26,10 +25,7 @@ namespace Rhino.Testing.AutoMocking
 
         #region IMockingStrategy Members
 
-        public virtual object Create(CreationContext context, Type type)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract object Create(CreationContext context, Type type);
 
         #endregion
     }

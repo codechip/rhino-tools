@@ -8,20 +8,22 @@ namespace Rhino.Testing.AutoMocking
     {
         MockRepository MockRepository { get; }
         IKernel Kernel { get; }
-        IMockingStrategy GetMockingStrategy(Type type);
-        void AddService(Type type, object service);
-        object Get(Type type);
-        T Get<T>();
-        void MarkStub(Type type);
-        void MarkNonDynamic(Type type);
-        void MarkNonMocked(Type type);
-
-        /// <summary>
-        /// Will not be resolved (used for optional dependencies)
-        /// </summary>
-        /// <param name="type"></param>
-        void MarkMissing(Type type);
-
         bool CanResolve(Type type);
+        object Get(Type type);
+        IMockingStrategy GetMockingStrategy(Type type);
+        void SetMockingStrategy(Type type, IMockingStrategy strategy);
+        void MarkMissing(Type type);
+        void AddService(Type type, object service);
+        TypeMarker Mark(Type type);
+    }
+
+    public interface IGenericMockingRepository
+    {
+        IMockingStrategy GetMockingStrategy<T>();
+        void SetMockingStrategy<T>(IMockingStrategy strategy);
+        void AddService<T>(T service);
+        T Get<T>() where T : class;
+        TypeMarker Mark<T>();
+        void MarkMissing<T>();
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="AutoMocking\IAutoMockingRepository.cs" />
     <Compile Include="AutoMocking\IMockingStrategy.cs" />
     <Compile Include="AutoMocking\NonMockedStrategy.cs" />
+    <Compile Include="AutoMocking\TypeMarker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutoMocking\StandardMockingStrategy.cs" />
     <Compile Include="AutoMocking\StubbedStrategy.cs" />

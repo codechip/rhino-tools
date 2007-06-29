@@ -13,7 +13,7 @@ namespace Rhino.Testing.Tests.AutoMocking
         public virtual void Setup()
         {
             _mocks = new MockRepository();
-            _container = new AutoMockingContainer();
+            _container = new AutoMockingContainer(_mocks);
             _container.Initialize();
         }
     }

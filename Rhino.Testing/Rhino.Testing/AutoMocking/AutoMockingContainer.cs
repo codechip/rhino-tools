@@ -6,35 +6,29 @@ using Rhino.Mocks;
 
 namespace Rhino.Testing.AutoMocking
 {
-    public class AutoMockingContainer : WindsorContainer, IAutoMockingRepository
+    public class AutoMockingContainer : WindsorContainer, IAutoMockingRepository, IGenericMockingRepository
     {
-        private IList<Type> _markMissing = new List<Type>();
-        private MockRepository _mocks;
-        private Dictionary<Type, object> _services = new Dictionary<Type, object>();
-        private Dictionary<Type, IMockingStrategy> _strategies = new Dictionary<Type, IMockingStrategy>();
+        private readonly IList<Type> _markMissing = new List<Type>();
+        private readonly MockRepository _mocks;
+        private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, IMockingStrategy> _strategies = new Dictionary<Type, IMockingStrategy>();
+
+        public AutoMockingContainer(MockRepository mocks)
+        {
+            _mocks = mocks;
+        }
 
         #region IAutoMockingRepository Members
-
         public virtual MockRepository MockRepository
         {
             get { return _mocks; }
         }
 
-        public virtual void AddService(Type type, object service)
-        {
-            _services[type] = service;
-        }
-
-        public virtual object Get(Type type)
+        private object GetService(Type type) 
         {
             if (_services.ContainsKey(type))
                 return _services[type];
             return null;
-        }
-
-        public virtual T Get<T>()
-        {
-            return (T) Get(typeof (T));
         }
 
         public virtual IMockingStrategy GetMockingStrategy(Type type)
@@ -46,32 +40,15 @@ namespace Rhino.Testing.AutoMocking
             return new DynamicMockingStrategy(this);
         }
 
-        public void MarkStub(Type type)
+        public virtual IMockingStrategy GetMockingStrategy<T>()
         {
-            _strategies[type] = new StubbedStrategy(this);
+            return GetMockingStrategy(typeof (T));
         }
-
-        public void MarkNonDynamic(Type type)
-        {
-            _strategies[type] = new StandardMockingStrategy(this);
-        }
-
-        public void MarkNonMocked(Type type)
-        {
-            _strategies[type] = new NonMockedStrategy(this);
-        }
-
-        public void MarkMissing(Type type)
-        {
-            _markMissing.Add(type);
-        }
-
 
         public bool CanResolve(Type type)
         {
             return _markMissing.Contains(type) == false;
         }
-
         #endregion
 
         public void Initialize()
@@ -79,43 +56,67 @@ namespace Rhino.Testing.AutoMocking
             Kernel.AddFacility("AutoMockingFacility", new AutoMockingFacility(this));
         }
 
-        public T Create<T>(MockRepository mocks)
+        public T Create<T>()
         {
-            Type targetType = typeof (T);
-            _mocks = mocks;
+            Type targetType = typeof(T);
             AddComponent(targetType.FullName, targetType);
             return Resolve<T>();
         }
 
-        public T GetMock<T>()
-            where T : class
+        public object Get(Type type)
         {
-            T t = Get<T>();
+            object t = GetService(type);
             if (t != null)
                 return t;
-            object instance = _strategies[typeof (T)].Create(CreationContext.Empty, typeof (T));
-            AddService(typeof (T), instance);
-            return (T) instance;
+
+            object instance = GetMockingStrategy(type).Create(CreationContext.Empty, type);
+            AddService(type, instance);
+            return instance;
         }
 
-        public void MarkStub<T>()
+        public T Get<T>() where T : class
         {
-            MarkStub(typeof (T));
+            return (T) Get(typeof (T));
         }
 
-        public void MarkNonDynamic<T>()
+        public void SetMockingStrategy(Type type, IMockingStrategy strategy)
         {
-            MarkNonDynamic(typeof (T));
+            _strategies[type] = strategy;
         }
 
-        public void MarkNonMocked<T>()
+        public void SetMockingStrategy<T>(IMockingStrategy strategy)
         {
-            MarkNonMocked(typeof (T));
+            SetMockingStrategy(typeof(T), strategy);
+        }
+
+        public void AddService(Type type, object service)
+        {
+            _services[type] = service;
+        }
+        
+        public void AddService<T>(T service)
+        {
+            AddService(typeof (T), service);
+        }
+
+        public TypeMarker Mark(Type type)
+        {
+            return new TypeMarker(type, this);
+        }
+
+        public TypeMarker Mark<T>()
+        {
+            return Mark(typeof (T));
         }
 
         public void MarkMissing<T>()
         {
             MarkMissing(typeof (T));
+        }
+
+        public void MarkMissing(Type type)
+        {
+            _markMissing.Add(type);
         }
     }
 }

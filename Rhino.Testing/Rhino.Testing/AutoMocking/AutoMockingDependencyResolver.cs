@@ -29,16 +29,7 @@ namespace Rhino.Testing.AutoMocking
         public object Resolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model,
                               DependencyModel dependency)
         {
-            object target = AutoMock.Get(dependency.TargetType);
-            if (target != null)
-            {
-                return target;
-            }
-
-            IMockingStrategy strategy = AutoMock.GetMockingStrategy(dependency.TargetType);
-            target = strategy.Create(context, dependency.TargetType);
-            AutoMock.AddService(dependency.TargetType, target);
-            return target;
+            return AutoMock.Get(dependency.TargetType);
         }
 
         #endregion
