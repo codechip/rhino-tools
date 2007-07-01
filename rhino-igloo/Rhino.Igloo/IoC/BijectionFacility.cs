@@ -245,7 +245,7 @@ namespace Rhino.Igloo
                 return null;
             try
             {
-                return ConversionUtil.ConvertTo(typeof(int), key);
+                return ConversionUtil.ConvertTo(kvp.Key.IdType, key);
             }
             catch (Exception e)
             {

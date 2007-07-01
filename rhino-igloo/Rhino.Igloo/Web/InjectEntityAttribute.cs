@@ -43,6 +43,18 @@ namespace Rhino.Igloo
     {
         private string _name;
         private string eagerLoad;
+        private Type idType = typeof (int);
+
+
+        /// <summary>
+        /// Gets or sets the type of the id.
+        /// </summary>
+        /// <value>The type of the id.</value>
+        public Type IdType
+        {
+            get { return idType; }
+            set { idType = value; }
+        }
 
         /// <summary>
         /// The scope variable name. Defaults to the name of
