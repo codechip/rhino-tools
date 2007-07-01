@@ -72,8 +72,16 @@ namespace Rhino.Igloo
 
         protected override void OnPreRender(EventArgs e)
         {
-            Title += " - Query Count: " + EnsureMaxNumberOfQueriesPerRequestModule.QueryCount;
+            if(ShowQueryCountInTitle)
+            {
+                Title += " - Query Count: " + EnsureMaxNumberOfQueriesPerRequestModule.QueryCount;
+            }
             base.OnPreRender(e);
         }
+
+	    protected virtual bool ShowQueryCountInTitle
+	    {
+            get { return true; }
+	    }
     }
 }
