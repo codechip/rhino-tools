@@ -65,7 +65,7 @@ namespace Rhino.Commons.HttpModules
 		public IWindsorContainer Container
 		{
 			get { return windsorContainer; }
-			private set { windsorContainer = value; }
+			protected set { windsorContainer = value; }
 		}
 
 		public virtual void Application_Start(object sender, EventArgs e)

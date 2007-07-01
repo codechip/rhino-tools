@@ -32,65 +32,113 @@ using System.Collections.Generic;
 using System.Text;
 using NHibernate;
 using MbUnit.Framework;
+using NHibernate.Expression;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.NHibernate
 {
-	[TestFixture]
-	public class EmbeddedDBTests : NHibernateEmbeddedDBTestFixtureBase
-	{
-		private ISession session;
+    [TestFixture]
+    public class EmbeddedDBTests : NHibernateInMemoryTestFixtureBase
+    {
+        private ISession session;
+        private SMS sms;
 
-		[TestFixtureSetUp]
-		public void OneTimeTestInitialize()
-		{
-            sessionFactory = null;
+        [TestFixtureSetUp]
+        public void OneTimeTestInitialize()
+        {
+            OneTimeInitalize(typeof(SMS).Assembly);
+        }
 
-			FixtureInitialize(typeof(SMS).Assembly);
-		}
+        [SetUp]
+        public void TestInitialize()
+        {
+            session = this.CreateSession();
+            sms = new SMS();
+            this.sms.Message = "R U There?";
+            session.Save(this.sms);
+            session.Flush();
 
-		[SetUp]
-		public void TestInitialize()
-		{
-			session = this.CreateSession();
-		}
+        }
 
-		[TearDown]
-		public void TestCleanup()
-		{
-			DisposeSession(session);
-		}
+        [TearDown]
+        public void TestCleanup()
+        {
+            DisposeSession(session);
+        }
 
-		[Test]
-		public void CanSaveAndLoadSMS()
-		{
-			SMS sms = new SMS();
-			sms.Message = "R U There?";
-			session.Save(sms);
-			session.Flush();
+        [Test]
+        public void CanSaveAndLoadSMS()
+        {
 
-			session.Evict(sms);//remove from session cache
+            session.Evict(sms);//remove from session cache
 
-			SMS loaded = session.Load<SMS>(sms.Id);
-			Assert.AreEqual(sms.Message, loaded.Message);
-		}
-	}
+            SMS loaded = session.Load<SMS>(sms.Id);
+            Assert.AreEqual(sms.Message, loaded.Message);
+        }
 
-	public class SMS
-	{
-		int id;
-		string message;
+        [Test]
+        public void CanUseCriteriaBatch()
+        {
+            ICollection<SMS> loadedMSGs = null;
+            new CriteriaBatch(session)
+                .Add(DetachedCriteria.For<SMS>(), Order.Asc("id"))
+                .OnRead<SMS>(delegate(ICollection<SMS> msgs) { loadedMSGs = msgs; })
+                .Execute();
+            Assert.IsNotNull(loadedMSGs);
+        }
 
-		public int Id
-		{
-			get { return id; }
-			set { id = value; }
-		}
+        [Test]
+        public void CanUseCriteriaBatchForUniqueResult()
+        {
+            ICollection<SMS> loadedMSGs = null;
+            SMS loadedMsg = null;
+            new CriteriaBatch(session)
+                .Add(DetachedCriteria.For<SMS>(), Order.Asc("id"))
+                    .OnRead<SMS>(delegate(ICollection<SMS> msgs) { loadedMSGs = msgs; })
+                .Add(DetachedCriteria.For<SMS>())
+                    .Paging(0, 1)
+                    .OnRead<SMS>(delegate(SMS msg) { loadedMsg = msg; })
+                .Execute();
+            Assert.IsNotNull(loadedMSGs);
+            Assert.IsNotNull(loadedMsg);
+        }
 
-		public string Message
-		{
-			get { return message; }
-			set { message = value; }
-		}
-	}
+        [Test]
+        public void CanUseCriteriaBatchWithAutomaticCountQuery()
+        {
+            ICollection<SMS> loadedMSGs = null;
+            int msg_count = 0;
+            SMS loadedMsg = null;
+            new CriteriaBatch(session)
+             .Add(DetachedCriteria.For<SMS>(), Order.Asc("id"))
+                 .OnRead<SMS>(delegate(ICollection<SMS> msgs, int count) { loadedMSGs = msgs;
+                                                                             msg_count = count;})
+             .Add(DetachedCriteria.For<SMS>())
+                 .Paging(0, 1)
+                  .OnRead<SMS>(delegate(SMS msg) { loadedMsg = msg; })
+            .Execute();
+            Assert.IsNotNull(loadedMSGs);
+            Assert.AreEqual(1, msg_count);
+            Assert.IsNotNull(loadedMsg);
+
+        }
+    }
+
+    public class SMS
+    {
+        int id;
+        string message;
+
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        public string Message
+        {
+            get { return message; }
+            set { message = value; }
+        }
+    }
 }
