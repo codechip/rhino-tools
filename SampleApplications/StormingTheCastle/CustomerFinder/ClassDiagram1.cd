@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="CustomerFinder.AuditorImpl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>AuditorImpl.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CustomerFinder.AuthorizationImpl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>AuthorizationImpl.cs</FileName>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CustomerFinder.ConsoleLoggerImpl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ConsoleLoggerImpl.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CustomerFinder.Customer" Collapsed="true">
+    <Position X="0.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Customer.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomerFinder.CustomerFinderImpl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>CustomerFinderImpl.cs</FileName>
+      <HashCode>AAAAAAAAAAACAAAAAAAEACAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CustomerFinder.CustomerOperation" Collapsed="true">
+    <Position X="4.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>CustomerOperation.cs</FileName>
+      <HashCode>AAECAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomerFinder.Operation" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>Operation.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomerFinder.RepositoryImpl" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>RepositoryImpl.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="CustomerFinder.IAuditor" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>IAuditor.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CustomerFinder.IAuthorization" Collapsed="true">
+    <Position X="2.5" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>IAuthorization.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CustomerFinder.ICustomerFinder" Collapsed="true">
+    <Position X="4.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ICustomerFinder.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CustomerFinder.ILogger" Collapsed="true">
+    <Position X="2.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>ILogger.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CustomerFinder.IRepository" Collapsed="true">
+    <Position X="4.5" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>IRepository.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+</ClassDiagram>

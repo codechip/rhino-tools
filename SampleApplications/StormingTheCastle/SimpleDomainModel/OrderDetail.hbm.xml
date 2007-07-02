@@ -1,0 +1,13 @@
+﻿<hibernate-mapping default-cascade="none" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SimpleDomainModel.OrderDetail, SimpleDomainModel" table="[Order Details]">
+    <composite-id unsaved-value="none" access="property">
+      <key-many-to-one name="Order" class="SimpleDomainModel.Order, SimpleDomainModel">
+        <column name="OrderID" />
+      </key-many-to-one>
+      <key-property name="ProductID" />
+    </composite-id>
+    <property name="Discount" type="System.Single" column="Discount" not-null="true" />
+    <property name="Quantity" type="System.Int16" column="Quantity" not-null="true" />
+    <property name="UnitPrice" type="System.Decimal" column="UnitPrice" not-null="true" />
+  </class>
+</hibernate-mapping>

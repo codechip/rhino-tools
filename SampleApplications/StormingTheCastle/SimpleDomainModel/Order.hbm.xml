@@ -1,0 +1,26 @@
+﻿<hibernate-mapping default-cascade="none" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SimpleDomainModel.Order, SimpleDomainModel" table="Orders">
+    <id name="OrderID" type="System.Int32" column="OrderID" unsaved-value="0">
+      <generator class="native" />
+    </id>
+    <property name="Freight" type="System.Decimal" column="Freight" not-null="false" />
+    <property name="OrderDate" type="System.DateTime" column="OrderDate" not-null="false" />
+    <property name="RequiredDate" type="System.DateTime" column="RequiredDate" not-null="false" />
+    <property name="ShipAddress" type="System.String" column="ShipAddress" not-null="false" />
+    <property name="ShipCity" type="System.String" column="ShipCity" not-null="false" />
+    <property name="ShipCountry" type="System.String" column="ShipCountry" not-null="false" />
+    <property name="ShipName" type="System.String" column="ShipName" not-null="false" />
+    <property name="ShippedDate" type="System.DateTime" column="ShippedDate" not-null="false" />
+    <property name="ShipPostalCode" type="System.String" column="ShipPostalCode" not-null="false" />
+    <property name="ShipRegion" type="System.String" column="ShipRegion" not-null="false" />
+    <many-to-one name="Customer" class="SimpleDomainModel.Customer, SimpleDomainModel" fetch="select">
+      <column name="CustomerID" not-null="false" />
+    </many-to-one>
+    <bag name="OrderDetails" inverse="true" lazy="true" cascade="none">
+      <key>
+        <column name="OrderID" not-null="true" />
+      </key>
+      <one-to-many class="SimpleDomainModel.OrderDetail, SimpleDomainModel" />
+    </bag>
+  </class>
+</hibernate-mapping>

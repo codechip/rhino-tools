@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="SimpleDomainModel.Customer">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Customer.cs</FileName>
+      <HashCode>AAGAQAABgAAAACAIIAAgCCAAEAIAAAAiAAACIAAAEkA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Orders" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="address" Hidden="true" />
+      <Field Name="city" Hidden="true" />
+      <Field Name="companyName" Hidden="true" />
+      <Field Name="contactName" Hidden="true" />
+      <Field Name="contactTitle" Hidden="true" />
+      <Field Name="country" Hidden="true" />
+      <Field Name="customerID" Hidden="true" />
+      <Field Name="fax" Hidden="true" />
+      <Field Name="orders" Hidden="true" />
+      <Field Name="phone" Hidden="true" />
+      <Field Name="postalCode" Hidden="true" />
+      <Field Name="region" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="SimpleDomainModel.Order" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Order.cs</FileName>
+      <HashCode>CEEAIBBBAAAAEAAgIBEAICQDAEAEAgBAEAAEAAgABCA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimpleDomainModel.OrderDetail" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>OrderDetail.cs</FileName>
+      <HashCode>MAEAABABAAAAAAAAgAAAAAAAAAAAAICAAgAAgCIAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>
