@@ -2,7 +2,7 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Tahoma" Size="8.25" />
   <Class Name="SimpleDomainModel.Customer">
-    <Position X="5.5" Y="0.5" Width="1.5" />
+    <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Customer.cs</FileName>
       <HashCode>AAGAQAABgAAAACAIIAAgCCAAEAIAAAAiAAACIAAAEkA=</HashCode>
@@ -25,18 +25,43 @@
       <Field Name="region" Hidden="true" />
     </Members>
   </Class>
-  <Class Name="SimpleDomainModel.Order" Collapsed="true">
-    <Position X="2.25" Y="0.5" Width="1.5" />
+  <Class Name="SimpleDomainModel.Order">
+    <Position X="3.5" Y="1" Width="1.5" />
     <TypeIdentifier>
       <FileName>Order.cs</FileName>
       <HashCode>CEEAIBBBAAAAEAAgIBEAICQDAEAEAgBAEAAEAAgABCA=</HashCode>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OrderDetails" />
+    </ShowAsCollectionAssociation>
+    <Members>
+      <Field Name="customer" Hidden="true" />
+      <Field Name="freight" Hidden="true" />
+      <Field Name="orderDate" Hidden="true" />
+      <Field Name="orderDetails" Hidden="true" />
+      <Field Name="orderID" Hidden="true" />
+      <Field Name="requiredDate" Hidden="true" />
+      <Field Name="shipAddress" Hidden="true" />
+      <Field Name="shipCity" Hidden="true" />
+      <Field Name="shipCountry" Hidden="true" />
+      <Field Name="shipName" Hidden="true" />
+      <Field Name="shippedDate" Hidden="true" />
+      <Field Name="shipPostalCode" Hidden="true" />
+      <Field Name="shipRegion" Hidden="true" />
+    </Members>
   </Class>
-  <Class Name="SimpleDomainModel.OrderDetail" Collapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
+  <Class Name="SimpleDomainModel.OrderDetail">
+    <Position X="0.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>OrderDetail.cs</FileName>
       <HashCode>MAEAABABAAAAAAAAgAAAAAAAAAAAAICAAgAAgCIAAAA=</HashCode>
     </TypeIdentifier>
+    <Members>
+      <Field Name="discount" Hidden="true" />
+      <Field Name="order" Hidden="true" />
+      <Field Name="productID" Hidden="true" />
+      <Field Name="quantity" Hidden="true" />
+      <Field Name="unitPrice" Hidden="true" />
+    </Members>
   </Class>
 </ClassDiagram>

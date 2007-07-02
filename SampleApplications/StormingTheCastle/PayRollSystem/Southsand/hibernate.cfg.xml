@@ -3,11 +3,12 @@
   <session-factory>
     <property name="hibernate.connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
     <property name="hibernate.connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
-    <property name="hibernate.connection.connection_string">Data Source=localhost\sqlexpress;Initial Catalog=Northwind;Integrated Security=True</property>
+    <property name="hibernate.connection.connection_string_name">Southsand_Database</property>
     <property name="hibernate.dialect">NHibernate.Dialect.MsSql2005Dialect</property>
     <property name="hibernate.use_outer_join">true</property>
-    <property name="hibernate.show_sql">false</property>
+    <!--<property name="hibernate.show_sql">true</property>-->
     <property name="hibernate.query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
-    <mapping assembly="SimpleDomainModel"/>
+    
+    <mapping resource="PayRollSystem.Southsand.Employee.hbm.xml" assembly="PayRollSystem"/>
   </session-factory>
 </hibernate-configuration>

@@ -1,0 +1,20 @@
+﻿<hibernate-mapping default-cascade="none"
+                   xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="PayRollSystem"
+                   namespace="PayRollSystem.Southsand"
+                   >
+  <class name="SouthsandEmployee"
+         table="Employees">
+    <id name="Id">
+      <generator class="native"/>
+    </id>
+    <property name="Name"
+              not-null="true"/>
+    <property name="Title"
+              not-null="true"/>
+    <property name="GlobalSalary"
+              not-null="true"/>
+    <property name="OvertimeHourlySalary"
+              not-null="true"/>
+  </class>
+</hibernate-mapping>

@@ -1,4 +1,5 @@
-﻿namespace SimpleDomainModel
+﻿using System.Collections.Generic;
+namespace SimpleDomainModel
 {
     [System.SerializableAttribute()]
     public class Order
@@ -28,7 +29,7 @@
         private Customer customer;
 
 
-        private System.Collections.IList orderDetails;
+        private IList<OrderDetail> orderDetails = new List<OrderDetail>();
 
 
         public virtual int OrderID
@@ -103,7 +104,7 @@
             set { this.customer = value; }
         }
 
-        public virtual System.Collections.IList OrderDetails
+        public virtual IList<OrderDetail> OrderDetails
         {
             get { return this.orderDetails; }
             set { this.orderDetails = value; }

@@ -20,6 +20,11 @@
             
             </summary>
         </member>
+        <member name="T:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil">
+            <summary>
+            Handles replication of custom attributes
+            </summary>
+        </member>
         <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.InitializeConstructorArgs(System.Type,System.Attribute,System.Object[],System.Reflection.ParameterInfo[])">
             <summary>
             Here we try to match a constructor argument to its value.
@@ -189,13 +194,6 @@
             <param name="method"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.ShouldSkipAttributeReplication(System.Attribute)">
-            <summary>
-            Attributes should be replicated if they are non-inheritable,
-            but there are some special cases where the attributes means
-            something to the CLR, where they should be skipped.
-            </summary>
-        </member>
         <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.ShouldCreateNewSlot(System.Reflection.MethodInfo)">
             <summary>
             Checks if the method has the same signature as a method that was marked as
@@ -229,12 +227,13 @@
             
             </summary>
         </member>
-        <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.FindMethodOnTargetType(System.Reflection.MethodInfo,System.Type)">
+        <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.FindMethodOnTargetType(System.Reflection.MethodInfo,System.Type,System.Boolean)">
             <summary>
             Finds the type of the method on target.
             </summary>
             <param name="methodOnInterface">The method on interface.</param>
             <param name="proxyTargetType">Type of the proxy target.</param>
+            <param name="checkMixins">if set to <c>true</c> will check implementation on mixins.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator.IsTypeEquivalent(System.Type,System.Type)">
@@ -255,11 +254,23 @@
         <member name="T:Castle.DynamicProxy.Serialization.ProxyObjectReference">
             <summary>
             Handles the deserialization of proxies.
+            See here for more details:
+            http://groups.google.com/group/castle-project-devel/msg/fb5ef9656d050ba5
             </summary>
         </member>
         <member name="M:Castle.DynamicProxy.Serialization.ProxyObjectReference.ResetScope">
             <summary>
             Usefull for test cases
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.Serialization.ProxySerializer">
+            <summary>
+            Assists in serializing instances of the generated proxy types so that they can be deserialized via <see cref="T:Castle.DynamicProxy.Serialization.ProxyObjectReference"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.DynamicProxy.Serialization.ProxySerializer.Indirection">
+            <summary>
+            Used to circumvent a serialization bug, where direct self references and directly held delegates are not deserialized correctly.
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.IProxyGenerationHook">
@@ -414,6 +425,17 @@
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.PersistentProxyBuilder"/> class.
             </summary>
         </member>
+        <member name="T:Castle.DynamicProxy.ProxyGenerationOptions">
+            <summary>
+            The proxy generation options, note that this is a statefull class with regard to mixin.
+            </summary>
+        </member>
+        <member name="F:Castle.DynamicProxy.ProxyGenerationOptions.Default">
+            <summary>
+            Gets the default options
+            </summary>
+            <value>The default.</value>
+        </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
@@ -424,6 +446,35 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
             </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.AddMixinInterfaceImplementation(System.Object)">
+            <summary>
+            This is required because a mixin may implement more than a single interface.
+            In order to track that, we register them all here, and when we instansiate the proxy, we pass it the 
+            mixins implementations, where each interface has an object that implements it.
+            Example:
+            FooBar foo implements IFoo and IBar
+            
+            proxy ctor would be:
+            
+            public Proxy(IFoo, IBar, IInterceptor[], object target)
+            
+            And will be invoked with:
+            new Proxy(foo, foo, inteceptors, target);
+            </summary>
+            <param name="mixin">The mixin.</param>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.InspectAndRegisterMixinInterfaces">
+            <summary>
+            Because we need to cache the types based on the mixed in mixins, we do the following here:
+             - Get all the mixin interfaces
+             - Sort them by full name
+             - Return them by position
+            
+            The idea is to have reproducable behavior for the case that mixins are registered in different orders.
+            This method is here because it is required 
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Castle.DynamicProxy.ProxyGenerator.#ctor(Castle.DynamicProxy.IProxyBuilder)">
             <summary>
