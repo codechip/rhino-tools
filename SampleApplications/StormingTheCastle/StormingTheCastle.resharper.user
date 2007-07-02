@@ -30,13 +30,19 @@
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:ConsoleLoggerImpl.cs" caret="56" scrollPosition="0|0" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/d:Properties/f:AssemblyInfo.cs" caret="338" scrollPosition="0|0" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:ICustomerFinder.cs" caret="87" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:Expression.cs" caret="1279" scrollPosition="0|20" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:RepositoryImpl.cs" caret="563" scrollPosition="0|0" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:IAuthorization.cs" caret="86" scrollPosition="0|0" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:CustomerFinderImpl.cs" caret="1205" scrollPosition="0|0" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:AuthorizationImpl.cs" caret="248" scrollPosition="0|12" />
       <File id="843C5FFD-CB39-4DD1-A5A3-B3B917B7C16C/f:Program.cs" caret="884" scrollPosition="0|7" />
-      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Program.cs" caret="0" scrollPosition="0|0" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:OrderDetail.hbm.xml" caret="394" scrollPosition="0|0" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:OrderDetail.cs" caret="304" scrollPosition="0|1" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Order.cs" caret="1955" scrollPosition="0|87" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:hibernate.cfg.xml" caret="436" scrollPosition="35|0" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Customer.cs" caret="591" scrollPosition="0|16" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Order.hbm.xml" caret="0" scrollPosition="0|0" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Customer.hbm.xml" caret="1377" scrollPosition="0|0" />
+      <File id="38D71C39-30D5-485A-978B-F2A5078E3145/f:Program.cs" caret="509" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <CompletionStatisticsManager>
@@ -75,6 +81,9 @@
       <Item value="Operation" priority="0" />
       <Item value="WaitOne" priority="0" />
       <Item value="Set" priority="0" />
+      <Item value="AddAssembly" priority="0" />
+      <Item value="BuildSessionFactory" priority="0" />
+      <Item value="Configure" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Castle.ActiveRecord.ActiveRecordMediator">
       <Item value="Save" priority="0" />
@@ -89,6 +98,16 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.Threading.Thread">
       <Item value="Sleep" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reflection.Assembly">
+      <Item value="GetExecutingAssembly" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SimpleDomainModel.OrderDetail">
+      <Item value="Order" priority="0" />
+      <Item value="ProductID" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SimpleDomainModel.Order">
+      <Item value="GetHashCode" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>
