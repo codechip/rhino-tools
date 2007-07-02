@@ -226,7 +226,7 @@ namespace Rhino.Igloo
         /// <returns></returns>
         public string GetHostName()
         {
-            return context.Request.UserHostAddress;
+            return context.Request.Url.Host;
         }
 
         /// <summary>
