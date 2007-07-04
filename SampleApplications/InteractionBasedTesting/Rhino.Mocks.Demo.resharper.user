@@ -1,0 +1,90 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <StartDirectory />
+    <UseShadowCopy>False</UseShadowCopy>
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>True</OptimizeUsings>
+    <RemoveRedundantThis>True</RemoveRedundantThis>
+    <ShortenReferences>True</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles />
+  </EditorManager>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:@Rhino.Mocks">
+      <Item value="RhinoMocks" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Mocks.RhinoMocks">
+      <Item value="StrongName" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.MockRepository">
+      <Item value="PartialMock" priority="0" />
+      <Item value="DynamicMock" priority="0" />
+      <Item value="CreateMock" priority="0" />
+      <Item value="ReplayAll" priority="0" />
+      <Item value="Stub" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Data.SqlClient.SqlConnection">
+      <Item value="Open" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.User">
+      <Item value="Name" priority="1" />
+      <Item value="Phone" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Interfaces.IRepeat">
+      <Item value="Times" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.LoginController">
+      <Item value="MaxDurationForSendingSMS" priority="0" />
+      <Item value="MaxTimeForSendingSms" priority="0" />
+      <Item value="SmsSendTookTooLong" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList&lt;string&gt;">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.Order">
+      <Item value="GetTotal" priority="0" />
+      <Item value="GetSalesHistory" priority="0" />
+      <Item value="Total" priority="0" />
+      <Item value="ToString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList&lt;System.Exception&gt;">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Interfaces.IEventRaiser">
+      <Item value="Raise" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.ISmsSender">
+      <Item value="SendSms" priority="0" />
+      <Item value="SendSMS" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.IUserRepository">
+      <Item value="GetByUserName" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.Mocks.Demo.IView">
+      <Item value="Load" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.Mocks.Demo.DataAccess.random">
+      <Item value="NextDouble" priority="0" />
+      <Item value="Next" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.DateTime.Now">
+      <Item value="Ticks" priority="2" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
