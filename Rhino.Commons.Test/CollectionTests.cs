@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using MbUnit.Framework;
@@ -101,11 +102,76 @@ namespace Rhino.Commons.Test
             AssertCollectionEquals(expected, odds);
         }
 
-        private void AssertCollectionEquals(ICollection<int> expected, ICollection<int> actual)
+
+        [Test]
+        public void ToUniqueCollection_EmptyCollectionReturnsNewEmptyCollection()
+        {
+            ICollection<int> input = new List<int>();
+            ICollection<int> actual = Collection.ToUniqueCollection(input);
+            Assert.AreNotSame(actual, input);
+            Assert.AreEqual(0, actual.Count);
+        }
+
+
+        [Test]
+        public void ToUniqueCollection_ReturnsGenericListImplementation()
+        {
+            ICollection<int> input = new List<int>();
+            Assert.IsInstanceOfType(typeof(List<int>), Collection.ToUniqueCollection(input));
+        }
+
+
+        [Test]
+        public void ToUniqueCollection_WillRemoveDuplicatePrimatives()
+        {
+            ICollection<int> input = ListContaining(1, 2, 2);
+            AssertCollectionEquals(ListContaining(1, 2), Collection.ToUniqueCollection(input));
+        }
+
+        [Test]
+        public void ToUniqueCollection_WillRemoveDuplicatePrimativesStoredAsObjects()
+        {
+            object o1 = 1;
+            object o2 = 1;
+            ICollection<object> input = ListContaining(o1, o2);
+            AssertCollectionEquals(ListContaining(o1), Collection.ToUniqueCollection(input));
+        }
+
+        [Test]
+        public void ToUniqueCollection_WillRemoveDuplicateStringsStoredAsObjects()
+        {
+            string a = new string(new char[] { 'h', 'e', 'l', 'l', 'o' });
+            string b = new string(new char[] { 'h', 'e', 'l', 'l', 'o' });
+
+            object c = a;
+            object d = b;
+
+            ICollection<object> input = ListContaining(c, d);
+
+            AssertCollectionEquals(ListContaining(c), Collection.ToUniqueCollection(input));
+        }
+
+
+        [Test]
+        public void ToUniqueCollection_WillRemoveDuplicateReferenceTypes()
+        {
+            List<int> obj = new List<int>();
+            ICollection<List<int>> input = ListContaining(obj, obj);
+            AssertCollectionEquals(ListContaining(obj), Collection.ToUniqueCollection(input));
+        }
+
+
+        private ICollection<T> ListContaining<T>(params T[] items)
+        {
+            return new List<T>(items);
+        }
+
+
+        private void AssertCollectionEquals<T>(ICollection<T> expected, ICollection<T> actual)
         {
             Assert.AreEqual(expected.Count, actual.Count);
-            IEnumerator<int> expectedEnum = expected.GetEnumerator();
-            IEnumerator<int> actualEnum = actual.GetEnumerator();
+            IEnumerator<T> expectedEnum = expected.GetEnumerator();
+            IEnumerator<T> actualEnum = actual.GetEnumerator();
             while(expectedEnum.MoveNext())
             {
                 actualEnum.MoveNext();//same size, don't need to check it

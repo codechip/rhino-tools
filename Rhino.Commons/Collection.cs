@@ -153,5 +153,17 @@ namespace Rhino.Commons
             enumerator.MoveNext();
             return enumerator.Current;
         }
+
+
+        public static ICollection<T> ToUniqueCollection<T>(ICollection<T> collection)
+        {
+            List<T> result = new List<T>(collection.Count);
+            foreach (T item in collection)
+            {
+                if (!result.Contains(item))
+                    result.Add(item);
+            }
+            return result;
+        }
     }
 }
