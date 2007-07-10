@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Iesi.Collections.Generic;
 using MbUnit.Framework;
-using NHibernate;
 using NHibernate.Expression;
-using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
@@ -170,7 +167,6 @@ namespace Rhino.Commons.Test.Repository
     }
 
 
-
     public class Child
     {
         private Guid id = Guid.NewGuid();
@@ -202,7 +198,5 @@ namespace Rhino.Commons.Test.Repository
             get { return name; }
             set { name = value; }
         }
-
-
     }
 }
