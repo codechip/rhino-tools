@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,106 +25,145 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web;
 using Castle.Windsor;
-using log4net;
+using NHibernate;
 using Rhino.Commons.Properties;
 
 namespace Rhino.Commons.HttpModules
 {
-	public class UnitOfWorkApplication : HttpApplication, IContainerAccessor
-	{
-		private static IWindsorContainer windsorContainer;
-		private FileSystemWatcher watcher;
+    public class UnitOfWorkApplication : HttpApplication, IContainerAccessor
+    {
+        public const string CurrentLongConversationKey = "CurrentLongConversation.Key";
+        public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 
-		public UnitOfWorkApplication()
-		{
-			BeginRequest += new EventHandler(UnitOfWorkApplication_BeginRequest);
-			EndRequest += new EventHandler(UnitOfWorkApplication_EndRequest);
-		}
+        private static IWindsorContainer windsorContainer;
+        private FileSystemWatcher watcher;
 
-		public virtual void UnitOfWorkApplication_BeginRequest(object sender, EventArgs e)
-		{
-			if (IoC.IsInitialized == false)
-				InitializeContainer(this);
-			UnitOfWork.Start();
-		}
+        public UnitOfWorkApplication()
+        {
+            PreRequestHandlerExecute += UnitOfWorkApplication_BeginRequest;
+            PostRequestHandlerExecute += UnitOfWorkApplication_EndRequest;
+        }
 
-		public virtual void UnitOfWorkApplication_EndRequest(object sender, EventArgs e)
-		{
-			IUnitOfWork unitOfWork = UnitOfWork.Current;
-			if (unitOfWork != null)
-				unitOfWork.Dispose();
-		}
+        public virtual void UnitOfWorkApplication_BeginRequest(object sender, EventArgs e)
+        {
+            if (IoC.IsInitialized == false)
+                InitializeContainer(this);
 
-		public IWindsorContainer Container
-		{
-			get { return windsorContainer; }
-			protected set { windsorContainer = value; }
-		}
+            IUnitOfWork currentUnitOfWork = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            if (currentUnitOfWork == null)
+            {
+                UnitOfWork.Start();
+            }
+            else
+            {
+                UnitOfWork.Current = currentUnitOfWork;
+                if (HttpContext.Current.Session == null)
+                {
+                    throw new InvalidOperationException(
+                        "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
+                }
+                UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
+                UnitOfWork.CurrentLongConversationId =
+                    (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
 
-		public virtual void Application_Start(object sender, EventArgs e)
-		{
-			InitializeContainer(this);
-		}
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		private static void InitializeContainer(UnitOfWorkApplication self)
-		{
-			if (IoC.IsInitialized)
-				return;
-			self.CreateContainer();
-		}
+                UnitOfWork.CurrentSession.Reconnect();
+            }
+        }
 
 
-		public virtual void Application_End(object sender, EventArgs e)
-		{
-			if (Container != null) //can happen if this isn't the first app
-			{
-				IoC.Reset(Container);
-				Container.Dispose();
-			}
-		}
+        public virtual void UnitOfWorkApplication_EndRequest(object sender, EventArgs e)
+        {
+            if (HttpContext.Current.Server.GetLastError() == null && UnitOfWork.InLongConversation)
+            {
+                UnitOfWork.CurrentSession.Disconnect();
+
+                HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+                HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
+                HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
+                    UnitOfWork.CurrentLongConversationId;
+            }
+            else
+            {
+                HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
+                HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
+                HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+
+                IUnitOfWork unitOfWork = UnitOfWork.Current;
+                if (unitOfWork != null)
+                    unitOfWork.Dispose();
+            }
+        }
+
+        public IWindsorContainer Container
+        {
+            get { return windsorContainer; }
+            protected set { windsorContainer = value; }
+        }
+
+        public virtual void Application_Start(object sender, EventArgs e)
+        {
+            InitializeContainer(this);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private static void InitializeContainer(UnitOfWorkApplication self)
+        {
+            if (IoC.IsInitialized)
+                return;
+            self.CreateContainer();
+        }
 
 
-		public override void Dispose()
-		{
-			BeginRequest -= new EventHandler(UnitOfWorkApplication_BeginRequest);
-			EndRequest -= new EventHandler(UnitOfWorkApplication_EndRequest);
-			if(watcher!=null)
-				watcher.Dispose();
-		}
+        public virtual void Application_End(object sender, EventArgs e)
+        {
+            if (Container != null) //can happen if this isn't the first app
+            {
+                IoC.Reset(Container);
+                Container.Dispose();
+            }
+        }
 
-		private void CreateContainer()
-		{
-			string windsorConfig = Settings.Default.WindsorConfig;
-			if (!Path.IsPathRooted(windsorConfig))
-			{
-				//In ASP.Net apps, the current directory and the base path are NOT the same.
-				windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
-			}
-			FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
-			watcher = new FileSystemWatcher(Path.GetDirectoryName(windsorConfig));
-			watcher.Filter = Path.GetFileName(windsorConfig);
-			watcher.Created += resetIoC;
-			watcher.Changed += resetIoC;
-			watcher.Deleted += resetIoC;
 
-			Container = CreateContainer(windsorConfig);
-			IoC.Initialize(Container);
-			
-			watcher.EnableRaisingEvents = true;
-		}
+        public override void Dispose()
+        {
+            BeginRequest -= new EventHandler(UnitOfWorkApplication_BeginRequest);
+            EndRequest -= new EventHandler(UnitOfWorkApplication_EndRequest);
+            if (watcher != null)
+                watcher.Dispose();
+        }
 
-		protected virtual IWindsorContainer CreateContainer(string windsorConfig)
-		{
-			return new RhinoContainer(windsorConfig);
-		}
-	}
+        private void CreateContainer()
+        {
+            string windsorConfig = Settings.Default.WindsorConfig;
+            if (!Path.IsPathRooted(windsorConfig))
+            {
+                //In ASP.Net apps, the current directory and the base path are NOT the same.
+                windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
+            }
+            FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
+            watcher = new FileSystemWatcher(Path.GetDirectoryName(windsorConfig));
+            watcher.Filter = Path.GetFileName(windsorConfig);
+            watcher.Created += resetIoC;
+            watcher.Changed += resetIoC;
+            watcher.Deleted += resetIoC;
+
+            Container = CreateContainer(windsorConfig);
+            IoC.Initialize(Container);
+
+            watcher.EnableRaisingEvents = true;
+        }
+
+        protected virtual IWindsorContainer CreateContainer(string windsorConfig)
+        {
+            return new RhinoContainer(windsorConfig);
+        }
+    }
 }
