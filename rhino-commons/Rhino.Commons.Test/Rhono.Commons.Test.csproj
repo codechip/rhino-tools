@@ -131,6 +131,7 @@
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
     <None Include="Repository\Windsor.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="UoW\Windsor.config" />
   </ItemGroup>
