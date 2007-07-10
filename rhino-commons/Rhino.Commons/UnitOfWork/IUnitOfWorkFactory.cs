@@ -47,6 +47,6 @@ namespace Rhino.Commons
 		/// <returns>A usable unit of work</returns>
 		IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous);
 
-        ISession CurrentSession { get; }
+        ISession CurrentSession { get; set; }
 	}
 }

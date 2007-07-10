@@ -129,6 +129,7 @@ namespace Rhino.Commons
 				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
 				return holder.CreateSession(typeof (ActiveRecordBase));
 			}
+		    set { throw new NotImplementedException("Not sure how to implement the storeage of the session here"); }
 		}
 	}
 }

@@ -49,7 +49,7 @@ namespace Rhino.Commons
             {
                 get
                 {
-                    if(HttpContext.Current==null)
+                    if (!RunningInWeb)
                     {
                         return thread_hashtable ??
                         (
@@ -80,6 +80,11 @@ namespace Rhino.Commons
         public static ILocalData Data
         {
             get { return current; }
+        }
+
+        public static bool RunningInWeb
+        {
+            get { return HttpContext.Current != null; }
         }
     }
 }
