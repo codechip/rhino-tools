@@ -171,6 +171,16 @@ namespace Rhino.Commons.Test.Binsor
 	        throw new NotImplementedException();
 	    }
 
+        /// <summary>
+        /// Saves or update a copy of the entity, based on its usaved-value
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public T SaveOrUpdateCopy(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
 	    /// <summary>
         /// Updates the specified entity.
         /// </summary>

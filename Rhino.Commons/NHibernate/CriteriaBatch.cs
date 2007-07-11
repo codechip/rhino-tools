@@ -69,7 +69,7 @@ namespace Rhino.Commons
             return this;
         }
 
-        public void Execute()
+        public virtual IList Execute()
         {
             if (session == null)
             {
@@ -77,10 +77,10 @@ namespace Rhino.Commons
                     "Session instance variable is null, you must use the Execute(ISession) overload instead");
             }
 
-            Execute(session);
+            return Execute(session);
         }
 
-        public virtual void Execute(ISession theSession)
+        public virtual IList Execute(ISession theSession)
         {
             IMultiCriteria multiCriteria = theSession.CreateMultiCriteria();
             foreach (DetachedCriteria detachedCriteria in criteriaList)
@@ -110,6 +110,8 @@ namespace Rhino.Commons
                     i += 1;//not a best practice, I will admit
                 }
             }
+
+            return list;
         }
 
         public CriteriaBatch Paging(int firstResult, int maxResults)
