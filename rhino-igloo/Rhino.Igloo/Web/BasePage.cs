@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,28 +25,28 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
-
 using System;
-using System.Web;
+using System.IO.Compression;
 using System.Web.UI;
 using Rhino.Commons.HttpModules;
 
 namespace Rhino.Igloo
 {
-	/// <summary>
-	/// Base class for pages
-	/// </summary>
-	[View]
+    /// <summary>
+    /// Base class for pages
+    /// </summary>
+    [View]
     public class BasePage : Page
     {
-		/// <summary>
-		/// Initializes a new instance of the <see cref="BasePage"/> class.
-		/// </summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasePage"/> class.
+        /// </summary>
         public BasePage()
         {
-            Init+=new EventHandler(CommonWebUI.WebUI_InjectComponent);
+            Init += new EventHandler(CommonWebUI.WebUI_InjectComponent);
         }
 
         /// <summary>
@@ -55,33 +56,49 @@ namespace Rhino.Igloo
         public void AddServiceReference(string path)
         {
             ServiceReference reference = new ServiceReference(path);
-            ((BaseMaster)Master).ScriptManager.Services.Add(reference);
+            ((BaseMaster) Master).ScriptManager.Services.Add(reference);
         }
 
         /// <summary>
         /// Gets the services path.
         /// </summary>
         /// <value>The services path.</value>
-	    public string ServicesPath
-	    {
-	        get
-	        {
-	            return Request.ApplicationPath + "/Services";
-	        }
-	    }
+        public string ServicesPath
+        {
+            get { return Request.ApplicationPath + "/Services"; }
+        }
 
         protected override void OnPreRender(EventArgs e)
         {
-            if(ShowQueryCountInTitle)
+            if (ShowQueryCountInTitle)
             {
                 Title += " - Query Count: " + EnsureMaxNumberOfQueriesPerRequestModule.QueryCount;
             }
             base.OnPreRender(e);
         }
 
-	    protected virtual bool ShowQueryCountInTitle
-	    {
+        protected virtual bool ShowQueryCountInTitle
+        {
             get { return true; }
-	    }
+        }
+
+        public void EnableCompression()
+        {
+            string acceptEnconding = Request.Headers["Accept-encoding"];
+            if (acceptEnconding != null &&
+                acceptEnconding.Contains("gzip"))
+            {
+                Response.Filter = new GZipStream(Response.Filter,
+                                                 CompressionMode.Compress, true);
+                Response.AppendHeader("Content-encoding", "gzip");
+            }
+            else if (acceptEnconding != null &&
+                     acceptEnconding.Contains("deflate"))
+            {
+                Response.Filter = new DeflateStream(Response.Filter,
+                                                    CompressionMode.Compress, true);
+                Response.AppendHeader("Content-encoding", "deflate");
+            }
+        }
     }
 }
