@@ -112,6 +112,15 @@ namespace Rhino.Commons
 	        ActiveRecordMediator.Save(entity);
 	    }
 
+        /// <summary>
+        /// Saves or update a copy of the entity, based on its usaved-value
+        /// </summary>
+        /// <param name="entity"></param>
+        public T SaveOrUpdateCopy(T entity)
+        {
+            return (T) ActiveRecordMediator.SaveCopy(entity);
+        }
+
 	    /// <summary>
 	    /// Register the entity for update in the database when the unit of work
 	    /// is completed. (UPDATE)

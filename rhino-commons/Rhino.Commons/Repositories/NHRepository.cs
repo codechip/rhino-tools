@@ -87,6 +87,11 @@ namespace Rhino.Commons
 	        Session.SaveOrUpdate(entity);
 	    }
 
+        public T SaveOrUpdateCopy(T entity)
+        {
+            return (T) Session.SaveOrUpdateCopy(entity);
+        }
+
 	    public void Update(T entity)
 	    {
 	        Session.Update(entity);

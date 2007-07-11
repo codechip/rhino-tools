@@ -44,7 +44,7 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 				 XmlDocumentation="true"
 				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
 				  />
-		<Delete Files="@(MergeAssemblies)" />
+		<!-- <Delete Files="@(MergeAssemblies)" /> -->
 		<CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons\bin\Rhino.Commons.dll"
 			Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;">
 				<Output TaskParameter="Include" ItemName = "ZipFiles"/>

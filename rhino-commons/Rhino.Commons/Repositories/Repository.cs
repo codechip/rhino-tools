@@ -87,7 +87,6 @@ namespace Rhino.Commons
 			InternalRepository.DeleteAll();	
 		}
 
-
         /// <summary>
         /// Registers all entities for deletion that match the supplied
         /// criteria condition when the unit of work is completed.
@@ -112,9 +111,19 @@ namespace Rhino.Commons
         /// Saves or update the entity, based on its usaved-value
         /// </summary>
         /// <param name="entity"></param>
+        /// <returns>The saved entity</returns>
         public static void SaveOrUpdate(T entity)
         {
             InternalRepository.SaveOrUpdate(entity);
+        }
+
+        /// <summary>
+        /// Saves or update the copy of entity, based on its usaved-value
+        /// </summary>
+        /// <param name="entity"></param>
+        public static T SaveOrUpdateCopy(T entity)
+        {
+            return InternalRepository.SaveOrUpdateCopy(entity);
         }
 
         /// <summary>
