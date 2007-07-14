@@ -303,6 +303,21 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual("Query.Where+Query_Address`1", address.GetType().GetGenericTypeDefinition().FullName);
 		}
 
+		[Test]
+		public void GenerateCollectionForComponents()
+		{
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
+			System.Type whereType = asm.GetType("Query.Where");
+			PropertyInfo prop = whereType.GetProperty("Customer");
+			object customer = prop.GetValue(null, null);
+			System.Type customerType = customer.GetType();
+			object contactdata = customerType.GetProperty("ContactData").GetValue(customer, null);
+			System.Type contactdataType = contactdata.GetType();
+			object addresses = contactdataType.GetProperty("Addresses").GetValue(contactdata, null);
+			Assert.AreEqual(typeof(CollectionQueryBuilder<>), addresses.GetType().BaseType.GetGenericTypeDefinition());
+			Assert.AreEqual("Query.Where+Query_Customer`1+Query_ContactData`1+Query_Collection_Addresses", addresses.GetType().GetGenericTypeDefinition().FullName);
+		}
+
 		#region Util Methods
 
 		private void AssertWhereHasPropertyForXPath(string xpathQuery, string property, System.Type expectedPropetyType)

@@ -56,6 +56,14 @@ namespace My.Simple.Model
 	public class CompositeCustomer
 	{
 	}
+
+	public class CustomWithDat
+	{
+	}
+
+	public class CustomerContactData
+	{
+	}
 }
 
 namespace Field.Testing
