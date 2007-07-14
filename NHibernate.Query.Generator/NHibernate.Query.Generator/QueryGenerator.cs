@@ -56,7 +56,7 @@ namespace NHibernate.Query.Generator
         private static readonly string[] orderableProperties = { "nh:property", "nh:key-property", "nh:id" };
 
         private static readonly string[] projectByProperties = { "nh:property", "nh:key-property", "nh:id" };
-        private static readonly string[] groupableProperties = { "nh:property", "nh:key-property", };
+        private static readonly string[] groupableProperties = { "nh:property", "nh:key-property", "nh:id" };
 
         private static readonly string UseTheQueryClass = "UseTheQueryClass";
 
@@ -472,7 +472,7 @@ namespace NHibernate.Query.Generator
             GenerateProperties(null, genericName, associationBehavior, UseTheQueryClass, classNode, innerClass,
                                "nh:many-to-one", "nh:one-to-one");
 
-            GenerateCollections(genericName, associationBehavior, UseTheQueryClass, classNode, innerClass, "nh:set",
+            GenerateCollections(genericName, UseTheQueryClass, classNode, innerClass, "nh:set",
                                 "nh:bag", "nh:list");
 
             // generate reference to component
@@ -481,13 +481,7 @@ namespace NHibernate.Query.Generator
             GenerateCompositeId(genericName, innerClass, associationBehavior, classNode, "nh:composite-id");
         }
 
-        private void GenerateCollections(
-            string genericTypeName,
-            AssociationBehavior associationBehavior,
-            string propertyType,
-            XmlNode classNode,
-            CodeTypeDeclaration innerClass,
-            params string[] props)
+        private void GenerateCollections(string genericTypeName, string propertyType, XmlNode classNode, CodeTypeDeclaration innerClass, params string[] props)
         {
             foreach (string xpathForClass in props)
             {
@@ -695,9 +689,7 @@ namespace NHibernate.Query.Generator
             }
         }
 
-        private void GenerateComponents(
-            string genericParameterName,  CodeTypeDeclaration parent, XmlNode node, string prefix,
-            params string[] componentPath)
+        private void GenerateComponents(string genericParameterName, CodeTypeDeclaration parent, XmlNode node, string prefix, params string[] componentPath)
         {
             foreach (string xpathForClass in componentPath)
             {
@@ -731,6 +723,9 @@ namespace NHibernate.Query.Generator
                                        "nh:one-to-one");
 
                     GenerateComponents(myGenericName, innerClass, classNode, newPrefix, componentPath);
+
+										GenerateCollections(myGenericName, UseTheQueryClass, classNode, innerClass, "nh:set",
+																				"nh:bag", "nh:list");
                 }
             }
         }
