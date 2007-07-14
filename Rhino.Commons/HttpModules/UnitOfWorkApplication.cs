@@ -57,7 +57,12 @@ namespace Rhino.Commons.HttpModules
             if (IoC.IsInitialized == false)
                 InitializeContainer(this);
 
-            IUnitOfWork currentUnitOfWork = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            IUnitOfWork currentUnitOfWork = null;
+            if (IsAspSessionAvailable)
+            {
+                currentUnitOfWork = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            }
+
             if (currentUnitOfWork == null)
             {
                 UnitOfWork.Start();
@@ -65,11 +70,6 @@ namespace Rhino.Commons.HttpModules
             else
             {
                 UnitOfWork.Current = currentUnitOfWork;
-                if (HttpContext.Current.Session == null)
-                {
-                    throw new InvalidOperationException(
-                        "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
-                }
                 UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
                 UnitOfWork.CurrentLongConversationId =
                     (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
@@ -79,11 +79,23 @@ namespace Rhino.Commons.HttpModules
         }
 
 
+        private bool IsAspSessionAvailable
+        {
+            get { return HttpContext.Current.Session != null; }
+        }
+
+
         public virtual void UnitOfWorkApplication_EndRequest(object sender, EventArgs e)
         {
             if (HttpContext.Current.Server.GetLastError() == null && UnitOfWork.InLongConversation)
             {
                 UnitOfWork.CurrentSession.Disconnect();
+
+                if (!IsAspSessionAvailable)
+                {
+                    throw new InvalidOperationException(
+                        "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
+                }
 
                 HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
                 HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
@@ -92,9 +104,12 @@ namespace Rhino.Commons.HttpModules
             }
             else
             {
-                HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-                HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
-                HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+                if (IsAspSessionAvailable)
+                {
+                    HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
+                    HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
+                    HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+                }
 
                 IUnitOfWork unitOfWork = UnitOfWork.Current;
                 if (unitOfWork != null)
