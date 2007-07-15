@@ -66,19 +66,18 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
-        public static Parent CreateExampleParentObject(string parentName, int age)
+        public static Parent CreateExampleParentObject(string parentName, int age, params Child[] children)
         {
             Parent parent = new Parent();
             parent.Name = parentName;
             parent.Age = age;
 
-            Child child1 = new Child();
-            child1.Parent = parent;
-            parent.Children.Add(child1);
+            foreach (Child child in children)
+            {
+                child.Parent = parent;
+                parent.Children.Add(child); 
+            }
 
-            Child child2 = new Child();
-            child2.Parent = parent;
-            parent.Children.Add(child2);
             return parent;
         }
 

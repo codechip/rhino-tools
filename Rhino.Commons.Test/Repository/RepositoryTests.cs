@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using Iesi.Collections.Generic;
 using MbUnit.Framework;
 using NHibernate.Expression;
 
@@ -44,8 +43,8 @@ namespace Rhino.Commons.Test.Repository
 
             parentsInDb = new List<Parent>();
 
-            parentsInDb.Add(CreateExampleParentObject("Parent1", 100));
-            parentsInDb.Add(CreateExampleParentObject("Parent2", 200));
+            parentsInDb.Add(CreateExampleParentObject("Parent1", 100, new Child(), new Child()));
+            parentsInDb.Add(CreateExampleParentObject("Parent2", 200, new Child(), new Child()));
 
             SaveInCurrentSession(parentsInDb);
             FlushAndClearCurrentSession();
@@ -77,7 +76,7 @@ namespace Rhino.Commons.Test.Repository
                             loaded.Count);
 
             //must remove duplicates manually like so:
-            Assert.AreEqual(parentsInDb.Count, new HashedSet<Parent>(loaded).Count);
+            Assert.AreEqual(parentsInDb.Count, Collection.ToUniqueCollection(loaded).Count);
         }
 
 
