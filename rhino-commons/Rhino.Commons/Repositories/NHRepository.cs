@@ -37,7 +37,7 @@ using Rhino.Commons;
 
 namespace Rhino.Commons
 {
-	public class NHRepository<T> : IRepository<T>
+	public class NHRepository<T> : RepositoryImplBase<T>, IRepository<T>
 	{
 		protected virtual ISession Session
 		{
@@ -324,5 +324,10 @@ namespace Rhino.Commons
 		{
 			return Count(null);
 		}
+
+        protected override DisposableAction<ISession> ActionToBePerformedOnSessionUsedForDbFetches
+        {
+            get { return new DisposableAction<ISession>(delegate(ISession s) { ; }, Session); }
+        }
 	}
 }

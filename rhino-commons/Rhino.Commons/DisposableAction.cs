@@ -46,6 +46,13 @@ namespace Rhino.Commons
             _val = val;
         }
 
+
+        public T Value
+        {
+            get { return _val; }
+        }
+
+
         public void Dispose()
         {
             _action(_val);

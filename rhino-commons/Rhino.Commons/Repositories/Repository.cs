@@ -376,5 +376,91 @@ namespace Rhino.Commons
 		{
 			return InternalRepository.Count();
 		}
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportOne{ProjT}(DetachedCriteria,ProjectionList)"/>
+        /// </summary>
+        public static ProjT ReportOne<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
+        {
+            return InternalRepository.ReportOne<ProjT>(criteria, projectionList);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportOne{ProjT}(DetachedCriteria,ProjectionList)"/>
+        /// </summary>
+        public static ProjT ReportOne<ProjT>(ProjectionList projectionList, params ICriterion[] criteria)
+        {
+            return InternalRepository.ReportOne<ProjT>(projectionList, criteria);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList)
+        {
+            return InternalRepository.ReportAll<ProjT>(projectionList);
+        }
+
+
+        public static ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, bool distinctResults)
+        {
+            return InternalRepository.ReportAll<ProjT>(projectionList, true);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
+        {
+            return InternalRepository.ReportAll<ProjT>(criteria, projectionList);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, params ICriterion[] criteria)
+        {
+            return InternalRepository.ReportAll<ProjT>(projectionList, criteria);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, params Order[] orders)
+        {
+            return InternalRepository.ReportAll<ProjT>(projectionList, orders);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList, params Order[] orders)
+        {
+            return InternalRepository.ReportAll<ProjT>(criteria, projectionList, orders);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        public static ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, Order[] orders, ICriterion criteria)
+        {
+            return InternalRepository.ReportAll<ProjT>(projectionList, orders, criteria);
+        }
+
+
+        /// <summary>
+        /// See <see cref="IRepository{T}.ReportAll{ProjT}(string,Parameter[])"/>
+        /// </summary>
+        public static ICollection<ProjJ> ReportAll<ProjJ>(string namedQuery, params Parameter[] parameters)
+        {
+            return InternalRepository.ReportAll<ProjJ>(namedQuery, parameters);
+        }
     }
 }
