@@ -170,6 +170,7 @@
     <Compile Include="NHibernate\PluralizingNamingStrategy.cs" />
     <Compile Include="Repositories\ARRepository.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
+    <Compile Include="Repositories\RepositoryImplBase.cs" />
     <Compile Include="Tasks\ActiveRecord_CreateDatabase.cs" />
     <Compile Include="Tasks\Boo.cs" />
     <Compile Include="Tasks\SqlBatchExecute.cs" />

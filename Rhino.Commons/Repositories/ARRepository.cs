@@ -36,7 +36,7 @@ using NHibernate.Expression;
 
 namespace Rhino.Commons
 {
-	public class ARRepository<T> : IRepository<T>
+    public class ARRepository<T> : RepositoryImplBase<T>, IRepository<T>
 	{
 		/// <summary>
 		/// Get the entity from the persistance store, or return null
@@ -565,5 +565,11 @@ namespace Rhino.Commons
 		{
 			return Count(null);
 		}
+
+        protected override DisposableAction<ISession> ActionToBePerformedOnSessionUsedForDbFetches
+        {
+            //create a new session that is disposed of at the end of a database fetch
+            get { return new DisposableAction<ISession>(delegate(ISession s) { ReleaseSession(s); }, OpenSession()); }
+        }
 	}
 }

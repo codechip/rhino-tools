@@ -280,5 +280,64 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			throw new NotImplementedException();
 		}
+
+        public ProjT ReportOne<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ProjT ReportOne<ProjT>(ProjectionList projectionList, params ICriterion[] criteria)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, params ICriterion[] criteria)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, params Order[] orders)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, bool distinctResults)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjJ> ReportAll<ProjJ>(string namedQuery, params Parameter[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList, params Order[] orders)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, Order[] orders, params ICriterion[] criteria)
+        {
+            throw new NotImplementedException();
+        }
 	}
 }

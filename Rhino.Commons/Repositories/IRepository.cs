@@ -286,5 +286,101 @@ namespace Rhino.Commons
 		/// </summary>
 		/// <returns></returns>
     	long Count();
+
+        /// <summary>
+        /// Create the project of type <typeparamref name="ProjT"/> (ie a
+        /// DataTransferObject) that satisfies the criteria supplied. Throws a
+        /// NHibernate.NonUniqueResultException if there is more than one
+        /// result.
+        /// </summary>
+        /// <param name="criteria">The criteria to look for</param>
+        /// <param name="projectionList">Maps the properties from the object 
+        /// graph satisfiying <paramref name="criteria"/>  to the DTO 
+        /// <typeparamref name="ProjT"/></param>
+        /// <returns>The DTO or null</returns>
+        /// <remarks>
+        /// The intent is for <paramref name="criteria"/> to be based (rooted)
+        /// on <typeparamref name="T"/>. This is not enforced but is a
+        /// convention that should be followed
+        /// </remarks>
+        ProjT ReportOne<ProjT>(DetachedCriteria criteria, ProjectionList projectionList);
+
+
+        /// <summary>
+        /// <seealso cref="ReportOne{ProjT}(DetachedCriteria,ProjectionList)"/>
+        /// </summary>
+        ProjT ReportOne<ProjT>(ProjectionList projectionList, params ICriterion[] criteria);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList);
+
+
+        /// <summary>
+        /// Create the projects of type <typeparamref name="ProjT"/> (ie
+        /// DataTransferObject(s)) that satisfies the criteria supplied.
+        /// </summary>
+        /// <param name="criteria">The criteria to look for</param>
+        /// <param name="projectionList">Maps the properties from the object 
+        /// graph satisfiying <paramref name="criteria"/>  to the DTO 
+        /// <typeparamref name="ProjT"/></param>
+        /// <param name="orders">The fields the repository should order by</param>
+        /// <returns>The projection result (DTO's) built from the object graph 
+        /// satisfying <paramref name="criteria"/></returns>
+        /// <remarks>
+        /// The intent is for <paramref name="criteria"/> to be based (rooted)
+        /// on <typeparamref name="T"/>. This is not enforced but is a
+        /// convention that should be followed
+        /// </remarks>
+        ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria,
+                                            ProjectionList projectionList,
+                                            params Order[] orders);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList,
+                                            params ICriterion[] criterion);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList,
+                                            Order[] orders,
+                                            params ICriterion[] criteria);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, params Order[] orders);
+
+
+        /// <summary>
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        ICollection<ProjT> ReportAll<ProjT>(ProjectionList projectionList, bool distinctResults);
+
+
+        /// <summary>
+        /// Execute the named query and return all the resulting DTO's
+        /// (projection)
+        /// <seealso cref="ReportAll{ProjT}(DetachedCriteria,ProjectionList,Order[])"/>
+        /// </summary>
+        /// <typeparam name="ProjJ">the type returned</typeparam>
+        /// <param name="namedQuery">the query to execute in the *.hbm 
+        /// mapping files</param>
+        /// <param name="parameters">parameters for the query</param>
+        ICollection<ProjJ> ReportAll<ProjJ>(string namedQuery, params Parameter[] parameters);
     }
 }
