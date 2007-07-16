@@ -257,6 +257,9 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
                 if (!basePaths.Contains(assemblyFileName))
                     basePaths.Add(Path.GetDirectoryName(assemblyFileName));
                 cfg.AddAssembly(assembly);
+
+                bool isActiveRecord = false;
+
                 foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
                 {
                     //doing it like this because want to keep it version safe
@@ -267,7 +270,21 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
                             .GetField("pluralizeTableNames", BindingFlags.Static | BindingFlags.NonPublic)
                             .SetValue(null, pluralizeTableNames);
                         AddActiveRecordAssembly(assembly, arAsm);
+                        isActiveRecord = true;
                         break;
+                    }
+                }
+
+                if (!isActiveRecord) {
+                    visited.Clear();
+
+                    foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies()) {
+                        //doing it like this because want to keep it version safe
+                        Assembly maAsm = GetMappingAttributesAssembly(assembly);
+                        if (maAsm != null) {
+                            AddMappingAttributesAssembly(assembly, maAsm);
+                            break;
+                        }
                     }
                 }
             }
@@ -374,6 +391,10 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             return obj.GetType().GetProperty(name).GetValue(obj, null);
         }
 
+        public static void Set(object obj, string name, object value) {
+            obj.GetType().GetProperty(name).SetValue(obj, value, null);
+        }
+
         /// <summary>
         /// This is needed to make sure that we work with different versions of Active Record
         /// </summary>
@@ -395,6 +416,50 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
             return null;
         }
 
+        private static Assembly GetMappingAttributesAssembly(Assembly assembly) {
+            if (visited.Contains(assembly)) {
+                return null;
+            }
+
+            visited.Add(assembly);
+
+            Type type = assembly.GetType("NHibernate.Mapping.Attributes.ClassAttribute", false);
+            if (type != null) {
+                return type.Assembly;
+            }
+
+            foreach (AssemblyName assemblyName in assembly.GetReferencedAssemblies()) {
+                Assembly refAsm = Assembly.Load(assemblyName);
+                Assembly result = GetMappingAttributesAssembly(refAsm);
+
+                if (result != null) {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        private void AddMappingAttributesAssembly(Assembly asm, Assembly mappingAttributesAssembly) {
+            if (mappingAttributesAssembly == null) {
+                throw new InvalidOperationException(
+                    string.Format("Could not find Mapping.Attributes assembly referenced from {0}", asm));
+            }
+
+            object hbmSerializer = Activator.CreateInstance(mappingAttributesAssembly.GetType("NHibernate.Mapping.Attributes.HbmSerializer"));
+            
+            Set(hbmSerializer, "Validate", true);
+
+            MethodInfo serializeMethod = hbmSerializer.GetType().GetMethod("Serialize", new Type[] { typeof(Assembly) });
+
+            Stream stream = serializeMethod.Invoke(hbmSerializer, new object[] { asm }) as Stream;
+
+            if (stream == null) {
+                throw new InvalidOperationException(String.Format("Could not serialize assembly {0}", asm.FullName));
+            }
+
+            cfg.AddInputStream(stream);
+        }
 
         private void LoadMappings(IList mappings)
         {
