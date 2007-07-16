@@ -57,15 +57,25 @@ namespace NHibernate.Query.Generator
             try
             {
                 SetupCodeProvider();
-                string directoryName = Path.GetDirectoryName(inputFilePattern);
-                if (string.IsNullOrEmpty(directoryName))
-                    directoryName = ".";
-                string fileName = Path.GetFileName(inputFilePattern);
-                foreach (string file in Directory.GetFiles(directoryName, fileName))
-                {
-                    OutputFile(file, options.BaseNamespace);
-                }
-                OutputQueryBuilder(options.BaseNamespace);
+
+				string[] inputDirectories = inputFilePattern.Split('|');
+
+            	foreach(string inputDirectory in inputDirectories)
+            	{
+					string directoryName = Path.GetDirectoryName(inputDirectory);
+
+					if (string.IsNullOrEmpty(directoryName))
+						directoryName = ".";
+
+					string fileName = Path.GetFileName(inputFilePattern);
+					
+					foreach (string file in Directory.GetFiles(directoryName, fileName))
+					{
+						OutputFile(file, options.BaseNamespace);
+					}
+            	}
+
+				OutputQueryBuilder(options.BaseNamespace);		
             }
             catch (ReflectionTypeLoadException e)
             {
