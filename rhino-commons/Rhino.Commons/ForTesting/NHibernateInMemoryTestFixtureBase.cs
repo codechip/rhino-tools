@@ -55,25 +55,29 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
 		public static void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
-			if (sessionFactory != null)
-				return;
-			Hashtable properties = new Hashtable();
-			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
-			properties.Add("hibernate.show_sql", "true");
-			properties.Add("hibernate.connection.release_mode", "on_close");
+            if (sessionFactory == null)
+            {
+                Hashtable properties = new Hashtable();
+                properties.Add("hibernate.connection.driver_class",
+                               "NHibernate.Driver.SQLite20Driver");
+                properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
+                properties.Add("hibernate.connection.provider",
+                               "NHibernate.Connection.DriverConnectionProvider");
+                properties.Add("hibernate.connection.connection_string",
+                               "Data Source=:memory:;Version=3;New=True;");
+                properties.Add("hibernate.show_sql", "true");
+                properties.Add("hibernate.connection.release_mode", "on_close");
 
-			configuration = new Configuration();
-			configuration.Properties = properties;
-			foreach (Assembly assembly in assemblies)
-			{
-				configuration = configuration.AddAssembly(assembly);
-			}
-			sessionFactory = configuration.BuildSessionFactory();
+                configuration = new Configuration();
+                configuration.Properties = properties;
+                foreach (Assembly assembly in assemblies)
+                {
+                    configuration = configuration.AddAssembly(assembly);
+                }
+                sessionFactory = configuration.BuildSessionFactory();
+            }
 
-			if (!string.IsNullOrEmpty(rhinoContainerConfig))
+		    if (!string.IsNullOrEmpty(rhinoContainerConfig))
 			{
 				if (!IoC.IsInitialized)
 					IoC.Initialize(new RhinoContainer(rhinoContainerConfig));
