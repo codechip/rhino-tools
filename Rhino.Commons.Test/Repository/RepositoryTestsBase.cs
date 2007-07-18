@@ -44,8 +44,6 @@ namespace Rhino.Commons.Test.Repository
         [TestFixtureSetUp]
         public void OneTimeTestInitialize()
         {
-            sessionFactory = null;
-
             string path =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Repository\Windsor.config"));
             OneTimeInitalize(path, typeof (Parent).Assembly);

@@ -44,8 +44,6 @@ namespace Rhino.Commons.Test.UoW
         [TestFixtureSetUp]
         public void OneTimeTestInitialize()
         {
-            sessionFactory = null;
-
             //turn on log4net logging (and supress output to console)
             BasicConfigurator.Configure(new MemoryAppender());
 
