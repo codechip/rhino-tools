@@ -59,29 +59,6 @@ namespace Rhino.Igloo
             ((BaseMaster) Master).ScriptManager.Services.Add(reference);
         }
 
-        /// <summary>
-        /// Gets the services path.
-        /// </summary>
-        /// <value>The services path.</value>
-        public string ServicesPath
-        {
-            get { return Request.ApplicationPath + "/Services"; }
-        }
-
-        protected override void OnPreRender(EventArgs e)
-        {
-            if (ShowQueryCountInTitle)
-            {
-                Title += " - Query Count: " + EnsureMaxNumberOfQueriesPerRequestModule.QueryCount;
-            }
-            base.OnPreRender(e);
-        }
-
-        protected virtual bool ShowQueryCountInTitle
-        {
-            get { return true; }
-        }
-
         public void EnableCompression()
         {
             string acceptEnconding = Request.Headers["Accept-encoding"];
