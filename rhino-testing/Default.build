@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project
+	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+
+	<PropertyGroup>
+		<ProjectName>Rhino.Testin</ProjectName>
+		<ShortName>rhino-testing</ShortName>
+		<SolutionFile>Rhino.Testing.sln</SolutionFile>
+		<FlattenZipFile>True</FlattenZipFile>
+		<SectionId>-1</SectionId>
+		<Version>1.0</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<AssemblyInfo Include="Item">
+			<File>$(MSBuildProjectDirectory)\Rhino.Testing\Properties\AssemblyInfo.cs</File>
+		</AssemblyInfo>
+		<AssemblyInfo Include="Item">
+			<File>$(MSBuildProjectDirectory)\Rhino.Testing.Tests\Properties\AssemblyInfo.cs</File>
+		</AssemblyInfo>
+	</ItemGroup>
+
+	<ItemGroup>
+		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Testing.Tests\bin\$(Configuration)\Rhino.Testing.Tests.dll"/>
+	</ItemGroup>
+	
+</Project>

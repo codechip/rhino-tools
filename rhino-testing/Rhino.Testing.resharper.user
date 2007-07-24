@@ -1,29 +1,37 @@
 <Configuration>
-  <SharedSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </SharedSolutionDisabledTemplatesManager>
-  <UnitTestRunner>
-    <StartDirectory />
-    <UseShadowCopy>False</UseShadowCopy>
-  </UnitTestRunner>
-  <UserSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </UserSolutionDisabledTemplatesManager>
+  <CompletionStatisticsManager />
+  <EditorManager>
+    <RecentFiles>
+      <File id="7008AEF6-89F9-49A7-8329-A241D3518790/d:AutoMocking/f:AutoMockingTests.cs" caret="459" scrollPosition="0|0" />
+      <File id="7008AEF6-89F9-49A7-8329-A241D3518790/d:AutoMocking/f:AutoMockingContainerTests.cs" caret="0" scrollPosition="0|0" />
+    </RecentFiles>
+  </EditorManager>
   <FileStructureView>
     <AutoScrollToSource>False</AutoScrollToSource>
     <TrackCaretLocation>False</TrackCaretLocation>
   </FileStructureView>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
   <ReFormatCode>
     <ReorderMembers>False</ReorderMembers>
     <OptimizeUsings>False</OptimizeUsings>
     <RemoveRedundantThis>False</RemoveRedundantThis>
     <ShortenReferences>False</ShortenReferences>
   </ReFormatCode>
-  <NAntValidationSettings>
-    <NAntPath value="" />
-  </NAntValidationSettings>
-  <EditorManager>
-    <RecentFiles />
-  </EditorManager>
-  <CompletionStatisticsManager />
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <TrackRunnintTest>True</TrackRunnintTest>
+    <OutputFontSize>8</OutputFontSize>
+    <ViewStyleType>HIERARCHICAL</ViewStyleType>
+    <StartDirectory />
+    <BuildBeforeRun>True</BuildBeforeRun>
+    <DebugType>START_WITH_CURRENT_PROJECT</DebugType>
+    <UseShadowCopy>False</UseShadowCopy>
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
 </Configuration>
