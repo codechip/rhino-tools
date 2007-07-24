@@ -2414,6 +2414,14 @@
             	<c>true</c> if table names should be pluralized by default; otherwise, <c>false</c>.
             </value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.IConfigurationSource.VerifyModelsAgainstDBSchema">
+            <summary>
+            Gets or sets a value indicating whether the models should be verified against the db schema on Initialisation.
+            </summary>
+            <value>
+            	<c>true</c> if models should be verified; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource"/> class.
@@ -2424,6 +2432,32 @@
             Return an <see cref="T:Castle.Core.Configuration.IConfiguration"/> for the specified type.
             </summary>
             <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.BuildForMSSqlServer(System.String,System.String)">
+            <summary>
+            Builds a InPlaceConfigurationSource set up to access a MS SQL server database using integrated security.
+            </summary>
+            <param name="server">The server.</param>
+            <param name="initialCatalog">The initial catalog.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.BuildForMSSqlServer(System.String,System.String,System.String,System.String)">
+            <summary>
+            Builds a InPlaceConfigurationSource set up to access a MS SQL server database using the specified username and password.
+            </summary>
+            <param name="server">The server.</param>
+            <param name="initialCatalog">The initial catalog.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.Build(Castle.ActiveRecord.Framework.Config.DatabaseType,System.String)">
+            <summary>
+            Builds an InPlaceConfiguratioSource for the specified database.
+            </summary>
+            <param name="database">The database.</param>
+            <param name="connectionString">The connection string.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.Add(System.Type,System.Collections.IDictionary)">
@@ -2469,6 +2503,12 @@
             <summary>
             Set whatever entities are lazy by default or not.
             </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetVerifyModelsAgainstDBSchema(System.Boolean)">
+            <summary>
+            Sets the debug flag.
+            </summary>
+            <param name="verifyModelsAgainstDBSchema">if set to <c>true</c> Active Record will verify the models against the db schema on startup.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetPluralizeTableNames(System.Boolean)">
             <summary>
@@ -2525,6 +2565,22 @@
             	<c>true</c> if table names should be pluralized by default; otherwise, <c>false</c>.
             </value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.VerifyModelsAgainstDBSchema">
+            <summary>
+            Gets or Sets a value indicating whether the models should be verified against the db schema on Initialisation.
+            </summary>
+            <value>
+            	<c>true</c> if models should be verified; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.IsRunningInWebApp">
+            <summary>
+            Sets a value indicating whether this instance is running in web app.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is running in web app; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.XmlConfigurationSource.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Config.XmlConfigurationSource"/> class.
@@ -2574,6 +2630,17 @@
             Gets the sole instance.
             </summary>
             <value>The instance.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Config.DatabaseType">
+            <summary>
+            Enum for database types support for configuration construction. 
+            Not to be confused by databases supported by ActiveRecord
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer">
+            <summary>
+            Microsoft SQL Server
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel">
             <summary>
@@ -6380,6 +6447,30 @@
             </summary>
             <param name="instance">The ActiveRecord instance to be saved</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveCopy(System.Object)">
+            <summary>
+            Saves a copy of the instance to the database. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Create"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Update"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The transient instance to be saved</param>
+            <returns>The saved ActiveRecord instance</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveCopyAndFlush(System.Object)">
+            <summary>
+            Saves a copy of the instance to the database and flushes the session. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Create"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Update"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The transient instance to be saved</param>
+            <returns>The saved ActiveRecord instance</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalSave(System.Object,System.Boolean)">
             <summary>
             Saves the instance to the database. If the primary key is unitialized
@@ -6391,6 +6482,19 @@
             </summary>
             <param name="instance">The ActiveRecord instance to be saved</param>
             <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.InternalSaveCopy(System.Object,System.Boolean)">
+            <summary>
+            Saves a copy of the instance to the database. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Create"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase.Update"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The transient instance to be saved</param>
+            <param name="flush">if set to <c>true</c>, the operation will be followed by a session flush.</param>
+            <returns>The saved ActiveRecord instance.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Execute(System.Type,Castle.ActiveRecord.NHibernateDelegate,System.Object)">
             <summary>
@@ -6713,6 +6817,32 @@
             flushing (persisting) others operations that were on hold.
             </remarks>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveCopy">
+            <summary>
+            Saves a copy of the instance information to the database.
+            May Create or Update the instance depending 
+            on whether it has a valid ID.
+            </summary>
+            <returns>An saved ActiveRecord instance</returns>
+            <remarks>
+            If within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be on hold until NHibernate (or you) decides to flush
+            the session.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SaveCopyAndFlush">
+            <summary>
+            Saves a copy of the instance information to the database.
+            May Create or Update the instance depending 
+            on whether it has a valid ID.
+            </summary>
+            <returns>A saved ActiveRecord instance</returns>
+            <remarks>
+            Even within a <see cref="T:Castle.ActiveRecord.SessionScope"/> the operation
+            is going to be flushed immediately. This might have side effects such as
+            flushing (persisting) others operations that were on hold.
+            </remarks>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Create">
             <summary>
             Creates (Saves) a new instance to the database.
@@ -6853,6 +6983,18 @@
             </para>
             </summary>
             <param name="instance">The ActiveRecord instance to be saved</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SaveCopy(`0)">
+            <summary>
+            Saves a copy of the instance to the database. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordBase`1.Create(`0)"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordBase`1.Update(`0)"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The transient instance to be saved</param>
+            <returns>The saved ActiveRecord instance.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Execute(Castle.ActiveRecord.NHibernateDelegate,System.Object)">
             <summary>
@@ -7497,6 +7639,25 @@
             </summary>
             <param name="instance">The ActiveRecord instance to be saved</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SaveCopy(System.Object)">
+            <summary>
+            Saves a copy of instance to the database
+            </summary>
+            <param name="instance">The transient instance to be copied</param>
+            <returns>The saved ActiveRecord instance</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SaveCopyAndFlush(System.Object)">
+            <summary>
+            Saves a copy of the instance to the database and flushes the session. If the primary key is unitialized
+            it creates the instance on the database. Otherwise it updates it.
+            <para>
+            If the primary key is assigned, then you must invoke <see cref="M:Castle.ActiveRecord.ActiveRecordMediator.Create(System.Object)"/>
+            or <see cref="M:Castle.ActiveRecord.ActiveRecordMediator.Update(System.Object)"/> instead.
+            </para>
+            </summary>
+            <param name="instance">The transient instance to be copied</param>
+            <returns>The saved ActiveRecord instance</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Create(System.Object)">
             <summary>
             Creates (Saves) a new instance to the database.
@@ -7690,6 +7851,13 @@
             </summary>
             <param name="instance"></param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SaveCopy(`0)">
+            <summary>
+            Saves a copy of the instance to the database
+            </summary>
+            <param name="instance"></param>
+            <returns>The saved instance</returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Create(`0)">
             <summary>
             Creates (Saves) a new instance to the database.
@@ -7874,7 +8042,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateDropScripts(System.String)">
             <summary>
-            Generates and executes the drop scripts for the database.
+            Generates the drop scripts for the database saving them to the supplied file name. 
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateCreationScripts(System.String)">
