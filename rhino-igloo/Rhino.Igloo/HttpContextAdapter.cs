@@ -210,6 +210,16 @@ namespace Rhino.Igloo
             }
         }
 
+
+        /// <summary>
+        /// Gets the raw URL.
+        /// </summary>
+        /// <value>The raw URL.</value>
+        public string RawUrl
+        {
+            get { return context.Request.RawUrl; }
+        }
+
         /// <summary>
         /// Gets the full path from a relative or ~/ one
         /// </summary>

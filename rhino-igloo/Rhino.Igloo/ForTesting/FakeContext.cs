@@ -48,6 +48,7 @@ namespace Rhino.Igloo.Tests
 		private TimeSpan? refreshWaitTime;
 		private string refreshUrl;
 	    private bool hasEnded;
+	    private string rawUrl;
 
 	    public void Redirect(string destination)
 		{
@@ -128,6 +129,11 @@ namespace Rhino.Igloo.Tests
 	    public IList<UploadedFile> UploadedFiles
 	    {
 	        get { return uploadedFiles; }
+	    }
+
+	    public string RawUrl
+	    {
+	        get { return rawUrl; }
 	    }
 
 	    public string GetFullPath(string directory)

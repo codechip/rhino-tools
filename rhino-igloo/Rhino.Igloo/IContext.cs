@@ -96,7 +96,9 @@ namespace Rhino.Igloo
         /// <value>The uploaded files.</value>
         IList<UploadedFile> UploadedFiles { get; }
 
-        /// <summary>
+	    string RawUrl { get; }
+
+	    /// <summary>
         /// Gets the full path from a relative or ~/ one
         /// </summary>
         /// <param name="directory">The directory.</param>

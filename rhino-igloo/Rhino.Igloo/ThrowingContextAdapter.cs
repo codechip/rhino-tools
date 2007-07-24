@@ -114,7 +114,17 @@ namespace Rhino.Igloo
 			get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); }
 		}
 
-		/// <summary>
+
+        /// <summary>
+        /// Gets the raw URL.
+        /// </summary>
+        /// <value>The raw URL.</value>
+	    public string RawUrl
+	    {
+            get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); }
+	    }
+
+	    /// <summary>
 		/// Gets the full path from a relative or ~/ one
 		/// </summary>
 		/// <param name="directory">The directory.</param>
