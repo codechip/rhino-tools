@@ -15,6 +15,7 @@ namespace Rhino.ETL
 		private string connection;
 		private Connection connectionInstance;
 		protected IDbConnection dbConnection;
+		[CLSCompliant(false)]
 		protected IDictionary<string, ICallable> parameters;
 
 		public BaseDataElement(string name)
@@ -23,6 +24,7 @@ namespace Rhino.ETL
 			parameters = new Dictionary<string, ICallable>(StringComparer.InvariantCultureIgnoreCase);
 		}
 
+		[CLSCompliant(false)]
 		public void AddParameter(string parameterName, ICallable callable)
 		{
 			if (parameters.ContainsKey(parameterName))
@@ -50,6 +52,7 @@ namespace Rhino.ETL
 			set { connection = value; }
 		}
 
+		[CLSCompliant(false)]
 		public ICallable CommandGenerator
 		{
 			get { return commandGenerator; }

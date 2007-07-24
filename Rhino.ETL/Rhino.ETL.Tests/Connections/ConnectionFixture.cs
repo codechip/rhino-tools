@@ -9,14 +9,14 @@ using MbUnit.Framework;
 namespace Rhino.ETL.Tests
 {
 	[TestFixture]
-	public class ConnectionFixture
+	public class ConnectionFixture : BaseTest
 	{
 		private EtlConfigurationContext configurationContext;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Connections\connection_only.retl");
+			configurationContext = BuildContext(@"Connections\connection_only.retl");
 			configurationContext.EnterContext();
 		}
 

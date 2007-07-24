@@ -9,14 +9,14 @@ using Rhino.ETL.Exceptions;
 namespace Rhino.ETL.Tests.Sources
 {
     [TestFixture]
-    public class SourcesFixture
+	public class SourcesFixture : BaseTest
     {
         private EtlConfigurationContext configurationContext;
 
         [SetUp]
         public void TestInitialize()
         {
-            configurationContext = EtlContextBuilder.FromFile(@"Sources\source_only.retl");
+            configurationContext = BuildContext(@"Sources\source_only.retl");
         }
 
         [Test]

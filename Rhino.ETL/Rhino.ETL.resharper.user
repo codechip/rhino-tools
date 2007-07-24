@@ -34,6 +34,9 @@
       <Item value="AddDataSource" priority="1" />
       <Item value="Sources" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Diagnostics">
+      <Item value="Debugger" priority="0" />
+    </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.ClassDefinition">
       <Item value="Name" priority="0" />
       <Item value="BaseTypes" priority="0" />
@@ -80,11 +83,11 @@
       <Item value="Add" priority="3" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Rhino.ETL.QueuesManager">
-      <Item value="PushInto" priority="0" />
       <Item value="Complete" priority="0" />
+      <Item value="PushInto" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Threading.Semaphore">
-      <Item value="WaitOne" priority="2" />
+      <Item value="WaitOne" priority="3" />
       <Item value="Release" priority="2" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Rhino.ETL.ExecutionPackage">
@@ -94,11 +97,11 @@
     <ItemStatistics item="Qualified:System.Data.IDbCommand">
       <Item value="CreateParameter" priority="1" />
       <Item value="ExecuteScalar" priority="0" />
-      <Item value="ExecuteNonQuery" priority="1" />
+      <Item value="CommandText" priority="3" />
       <Item value="Parameters" priority="1" />
       <Item value="Connection" priority="0" />
       <Item value="ExecuteReader" priority="0" />
-      <Item value="CommandText" priority="3" />
+      <Item value="ExecuteNonQuery" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.ExpressionCollection">
       <Item value="Select" priority="0" />
@@ -112,13 +115,6 @@
       <Item value="ToArray" priority="0" />
       <Item value="Count" priority="1" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:Rhino.ETL.PipelineAssociation">
-      <Item value="InputQueue" priority="0" />
-      <Item value="From" priority="2" />
-      <Item value="OutputQueue" priority="1" />
-      <Item value="ToInstance" priority="6" />
-      <Item value="FromInstance" priority="2" />
-    </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.ExpressionStatement">
       <Item value="Expression" priority="3" />
     </ItemStatistics>
@@ -126,15 +122,15 @@
       <Item value="Name" priority="1" />
       <Item value="items" priority="0" />
       <Item value="Connections" priority="1" />
-      <Item value="Sources" priority="1" />
+      <Item value="Transforms" priority="0" />
       <Item value="Destinations" priority="2" />
       <Item value="RegisterForExecution" priority="3" />
       <Item value="ToString" priority="0" />
       <Item value="Execute" priority="2" />
-      <Item value="Associations" priority="0" />
       <Item value="AddTransform" priority="0" />
-      <Item value="Transforms" priority="0" />
       <Item value="PipelineCompleted" priority="0" />
+      <Item value="Sources" priority="1" />
+      <Item value="Associations" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.IDictionary&lt;string,Rhino.ETL.Transform&gt;">
       <Item value="ContainsKey" priority="0" />
@@ -157,7 +153,7 @@
       <Item value="Visit" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.IDictionary&lt;string,Rhino.ETL.Pipeline&gt;">
-      <Item value="Values" priority="1" />
+      <Item value="Values" priority="3" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.MethodInvocationExpression">
       <Item value="Target" priority="0" />
@@ -173,10 +169,10 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:Rhino.ETL.Connection">
       <Item value="ConcurrentConnections" priority="2" />
-      <Item value="ConnectionStringName" priority="0" />
+      <Item value="TryAcquire" priority="2" />
       <Item value="Release" priority="1" />
       <Item value="ConnectionType" priority="0" />
-      <Item value="TryAcquire" priority="2" />
+      <Item value="ConnectionStringName" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerParameters">
       <Item value="Pipeline" priority="1" />
@@ -221,6 +217,11 @@
       <Item value="Value" priority="1" />
       <Item value="ParameterName" priority="1" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.ETL.DataDestination">
+      <Item value="ConnectionInstance" priority="0" />
+      <Item value="PerformSecondStagePass" priority="0" />
+      <Item value="Complete" priority="0" />
+    </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.TypeSystem.TypeSystemServices">
       <Item value="MulticastDelegateType" priority="0" />
       <Item value="Map" priority="1" />
@@ -229,6 +230,7 @@
       <Item value="WarnFormat" priority="1" />
       <Item value="Error" priority="1" />
       <Item value="Info" priority="1" />
+      <Item value="Fatal" priority="0" />
       <Item value="InfoFormat" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Rhino.ETL.IInput">
@@ -248,12 +250,6 @@
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.Ast.Property">
       <Item value="Getter" priority="1" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:Rhino.ETL.Pipeline">
-      <Item value="Start" priority="0" />
-      <Item value="Associations" priority="1" />
-      <Item value="Name" priority="1" />
-      <Item value="PerformSecondStagePass" priority="0" />
-    </ItemStatistics>
     <ItemStatistics item="Qualified:System.Collections.Generic.Dictionary&lt;string,System.Collections.Generic.List&lt;System.Action&lt;Rhino.ETL.Row&gt;&gt;&gt;">
       <Item value="ContainsKey" priority="1" />
     </ItemStatistics>
@@ -272,10 +268,12 @@
       <Item value="Open" priority="0" />
       <Item value="CreateCommand" priority="0" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:Rhino.ETL.Row">
-      <Item value="items" priority="0" />
-      <Item value="Clone" priority="1" />
-      <Item value="Columns" priority="0" />
+    <ItemStatistics item="Qualified:Rhino.ETL.PipelineAssociation">
+      <Item value="InputQueue" priority="0" />
+      <Item value="From" priority="2" />
+      <Item value="OutputQueue" priority="1" />
+      <Item value="ToInstance" priority="6" />
+      <Item value="FromInstance" priority="2" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.String">
       <Item value="Format" priority="1" />
@@ -288,11 +286,11 @@
       <Item value="AddSource" priority="0" />
       <Item value="Destinations" priority="0" />
       <Item value="BuildPackage" priority="1" />
-      <Item value="Sources" priority="0" />
-      <Item value="Validate" priority="0" />
-      <Item value="EnterContext" priority="2" />
-      <Item value="PerformSecondStagePass" priority="0" />
       <Item value="Connections" priority="3" />
+      <Item value="Validate" priority="0" />
+      <Item value="EnterContext" priority="3" />
+      <Item value="PerformSecondStagePass" priority="0" />
+      <Item value="Sources" priority="0" />
       <Item value="Pipelines" priority="2" />
       <Item value="ValidationMessages" priority="2" />
     </ItemStatistics>
@@ -328,18 +326,25 @@
       <Item value="Add" priority="0" />
       <Item value="Count" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.ETL.Row">
+      <Item value="items" priority="0" />
+      <Item value="Clone" priority="1" />
+      <Item value="Columns" priority="0" />
+    </ItemStatistics>
     <ItemStatistics item="Qualified:System.Data.IDbConnection">
-      <Item value="ConnectionString" priority="0" />
-      <Item value="CreateCommand" priority="1" />
       <Item value="ChangeDatabase" priority="0" />
       <Item value="Open" priority="0" />
       <Item value="State" priority="0" />
+      <Item value="ConnectionString" priority="0" />
+      <Item value="CreateCommand" priority="1" />
       <Item value="Dispose" priority="2" />
     </ItemStatistics>
-    <ItemStatistics item="Qualified:Rhino.ETL.DataDestination">
-      <Item value="ConnectionInstance" priority="0" />
+    <ItemStatistics item="Qualified:Rhino.ETL.Pipeline">
+      <Item value="Prepare" priority="0" />
+      <Item value="Start" priority="1" />
+      <Item value="Associations" priority="1" />
+      <Item value="Name" priority="1" />
       <Item value="PerformSecondStagePass" priority="0" />
-      <Item value="Complete" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:TValue">
       <Item value="Call" priority="0" />
@@ -355,10 +360,13 @@
       <Item value="NodeType" priority="0" />
       <Item value="ParentNode" priority="1" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Diagnostics.Debugger">
+      <Item value="Log" priority="0" />
+      <Item value="Launch" priority="0" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
-      <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Connections/f:ConnectionFixture.cs" caret="4722" scrollPosition="0|145" />
       <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:Command.cs" caret="46" scrollPosition="0|0" />
       <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Pipelines/f:PipelineFixture.cs" caret="1824" scrollPosition="0|40" />
       <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Syntax/f:SyntaxFixture.cs" caret="358" scrollPosition="0|6" />
@@ -372,19 +380,19 @@
       <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/d:Impl/f:QuackingDictionary.cs" caret="701" scrollPosition="0|0" />
       <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/f:App.config" caret="0" scrollPosition="0|0" />
       <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:BaseDataElement.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:QueuesManager.cs" caret="0" scrollPosition="0|0" />
       <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:DataSource.cs" caret="0" scrollPosition="0|0" />
       <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Integration/f:Database.sql" caret="0" scrollPosition="0|0" />
       <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Integration/f:basic.retl" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:Transform.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:ExecutionPackage.cs" caret="0" scrollPosition="0|0" />
-      <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Integration/f:IntegrationTests.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:EtlContextBuilder.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:ContextfulObjectBase.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:EtlConfigurationContext.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:DataDestination.cs" caret="0" scrollPosition="0|0" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/d:UnknownPath/f:MethodInvoker.cs" caret="0" scrollPosition="0|0" />
-      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:Pipeline.cs" caret="3430" scrollPosition="0|99" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:Transform.cs" caret="1325" scrollPosition="0|22" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:QueuesManager.cs" caret="1938" scrollPosition="0|42" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:ContextfulObjectBase.cs" caret="1217" scrollPosition="0|29" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:DataDestination.cs" caret="1142" scrollPosition="0|24" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/d:Impl/f:BaseDataElementMacro.cs" caret="595" scrollPosition="0|0" />
+      <File id="3F71149F-9107-4CC3-8684-96FD22372CFF/d:Integration/f:IntegrationTests.cs" caret="221" scrollPosition="0|4" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:Pipeline.cs" caret="2610" scrollPosition="0|90" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:ExecutionPackage.cs" caret="807" scrollPosition="0|20" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:EtlContextBuilder.cs" caret="1252" scrollPosition="0|15" />
+      <File id="C4019C9D-36FE-4E4E-879D-2F9EC8437EB1/f:EtlConfigurationContext.cs" caret="3626" scrollPosition="0|108" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

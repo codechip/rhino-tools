@@ -5,7 +5,7 @@ using MbUnit.Framework;
 namespace Rhino.ETL.Tests.Pipelines
 {
 	[TestFixture]
-	public class PipelineFixture
+	public class PipelineFixture : BaseTest
 	{
 		private EtlConfigurationContext configurationContext;
 		private Pipeline pipeline;
@@ -13,7 +13,7 @@ namespace Rhino.ETL.Tests.Pipelines
 		[SetUp]
 		public void TestInitialize()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Pipelines\Pipeline.retl");
+			configurationContext = BuildContext(@"Pipelines\Pipeline.retl");
 			pipeline = configurationContext.Pipelines["CopyFromNorthwindToSouthSand"];
 		}
 
@@ -59,7 +59,7 @@ namespace Rhino.ETL.Tests.Pipelines
 		[Test]
 		public void IfCannotAquireAllConnection_WillExecuteWhenNextPipelineCompletes()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Syntax\full_package.retl");
+			configurationContext = BuildContext(@"Syntax\full_package.retl");
 			ExecutionPackage package = configurationContext.BuildPackage();
 			using(package.EnterContext())
 			{

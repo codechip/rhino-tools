@@ -4,14 +4,14 @@ using MbUnit.Framework;
 namespace Rhino.ETL.Tests.EndToEnd
 {
 	[TestFixture]
-	public class SyntaxFixture
+	public class SyntaxFixture : BaseTest
 	{
 		private EtlConfigurationContext configurationContext;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Syntax\full_package.retl");
+			configurationContext = BuildContext(@"Syntax\full_package.retl");
 		}
 		
 		[Test]

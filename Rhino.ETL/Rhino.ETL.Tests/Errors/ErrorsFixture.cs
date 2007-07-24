@@ -8,13 +8,13 @@ using System.IO;
 namespace Rhino.ETL.Tests.Errors
 {
 	[TestFixture]
-	public class ErrorsFixture
+	public class ErrorsFixture : BaseTest
 	{
 		public void Evaluate(string file, string exepctedMessage)
 		{
 			try
 			{
-				EtlContextBuilder.FromFile(Path.Combine("Errors", file));
+				BuildContext(Path.Combine("Errors", file));
 				Assert.Fail("Expected exception to occur with message: "+exepctedMessage);
 			}
 			catch (Exception e)

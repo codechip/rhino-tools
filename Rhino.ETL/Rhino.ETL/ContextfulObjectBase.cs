@@ -11,7 +11,7 @@ namespace Rhino.ETL
 		[ThreadStatic] private static T current;
 		[ThreadStatic] private static int nestedCount;
 
-		public IDictionary items = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
+		private IDictionary items = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
 		private ILog logger;
 
 		public abstract string Name

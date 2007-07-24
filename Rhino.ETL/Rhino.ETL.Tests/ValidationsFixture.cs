@@ -4,13 +4,13 @@ using Rhino.ETL.Exceptions;
 namespace Rhino.ETL.Tests
 {
 	[TestFixture]
-	public class ValidationsFixture
+	public class ValidationsFixture : BaseTest
 	{
 		[Test]
 		public void ConnectionDoesNotExists()
 		{
 			EtlConfigurationContext configurationContext
-				= EtlContextBuilder.FromFile(@"Connections\connection_only.retl");
+				= BuildContext(@"Connections\connection_only.retl");
 			using (configurationContext.EnterContext())
 			{
 				DataSource source = new DataSource("test");
@@ -25,7 +25,7 @@ namespace Rhino.ETL.Tests
 		public void UnknownPipelineAssoications()
 		{
 			EtlConfigurationContext configurationContext
-				= EtlContextBuilder.FromFile(@"Pipelines\Pipeline.retl");
+				= BuildContext(@"Pipelines\Pipeline.retl");
 			Assert.IsFalse(configurationContext.Validate());
 			Assert.AreEqual(
 				"Could not find element 'NorthwindSource' on association #0 in pipeline [CopyFromNorthwindToSouthSand]",
@@ -50,7 +50,7 @@ namespace Rhino.ETL.Tests
 		public void AmbigiousPipelineAssociation()
 		{
 			EtlConfigurationContext configurationContext
-				= EtlContextBuilder.FromFile(@"Pipelines\Pipeline.retl");
+				= BuildContext(@"Pipelines\Pipeline.retl");
 			using (configurationContext.EnterContext())
 			{
 				DataSource source = new DataSource("SouthSandDestination");
@@ -69,7 +69,7 @@ namespace Rhino.ETL.Tests
 		public void CanUsePrefixesToAvoidAmbiguty()
 		{
 			EtlConfigurationContext configurationContext
-				= EtlContextBuilder.FromFile(@"Pipelines\Pipeline.retl");
+				= BuildContext(@"Pipelines\Pipeline.retl");
 			using (configurationContext.EnterContext())
 			{
 				DataSource source = new DataSource("NorthwindSource");
@@ -90,7 +90,7 @@ namespace Rhino.ETL.Tests
 		public void WillThrowExceptionIfNotEnoughConnectionsForPipeline()
 		{
 			EtlConfigurationContext configurationContext
-				= EtlContextBuilder.FromFile(@"Syntax\full_package.retl");
+				= BuildContext(@"Syntax\full_package.retl");
 			configurationContext.Connections["NorthwindConnection"].ConcurrentConnections = 1;
 			configurationContext.BuildPackage();
 		}

@@ -7,14 +7,14 @@ using MbUnit.Framework;
 namespace Rhino.ETL.Tests.Transforms
 {
 	[TestFixture]
-	public class TransformFixture
+	public class TransformFixture : BaseTest
 	{
 		private EtlConfigurationContext configurationContext;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Transforms\transforms_only.retl");
+			configurationContext = BuildContext(@"Transforms\transforms_only.retl");
 		}
 
 		[Test]

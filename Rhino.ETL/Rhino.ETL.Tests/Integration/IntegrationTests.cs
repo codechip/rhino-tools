@@ -8,7 +8,7 @@ using System.Data;
 namespace Rhino.ETL.Tests.Integration
 {
 	[TestFixture]
-	public class IntegrationTests
+	public class IntegrationTests : BaseTest
 	{
 
 		[SetUp]
@@ -16,7 +16,10 @@ namespace Rhino.ETL.Tests.Integration
 		{
 			ExecuteCommand(delegate(IDbCommand com)
 			{
-				com.CommandText = File.ReadAllText(@"Integration\Database.sql");
+				com.CommandText = File.ReadAllText(
+					Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+					@"Integration\Database.sql")
+					);
 				com.ExecuteNonQuery();
 			});
 
@@ -71,7 +74,7 @@ namespace Rhino.ETL.Tests.Integration
 
 		private static void ExecutePackage(string name)
 		{
-			EtlConfigurationContext configurationContext = EtlContextBuilder.FromFile(@"Integration\" + name + ".retl");
+			EtlConfigurationContext configurationContext = BuildContext(@"Integration\" + name + ".retl");
 			ExecutionPackage package = configurationContext.BuildPackage();
 			package.Execute();
 		}

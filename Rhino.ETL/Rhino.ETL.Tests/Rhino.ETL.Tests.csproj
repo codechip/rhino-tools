@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseTest.cs" />
     <Compile Include="Connections\ConnectionFixture.cs" />
     <Compile Include="ContextfulObjectFixture.cs" />
     <Compile Include="Destinations\DestinationsFixture.cs" />

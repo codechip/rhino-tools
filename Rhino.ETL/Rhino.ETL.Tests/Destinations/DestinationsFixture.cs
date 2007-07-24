@@ -3,14 +3,14 @@ using MbUnit.Framework;
 namespace Rhino.ETL.Tests.Destinations
 {
 	[TestFixture]
-	public class DestinationsFixture
+	public class DestinationsFixture : BaseTest
 	{
 		private EtlConfigurationContext configurationContext;
 
 		[SetUp]
 		public void TestInitialize()
 		{
-			configurationContext = EtlContextBuilder.FromFile(@"Destinations\destinations_only.retl");
+			configurationContext = BuildContext(@"Destinations\destinations_only.retl");
 		}
 
 		[Test]
