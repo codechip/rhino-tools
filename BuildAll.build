@@ -7,10 +7,8 @@
 		NHibernate.Query.Analyzer\default.build;
 		NHibernate.Query.Generator\default.build;
 		rhino-commons\default.build;
+		rhino-etl\default.build;
+		rhino-testing\default.build;
 		"/>
-		<!--
-		I don't want to make build of this, since it was deprecated for 1.2
-		NHibernate.Generics\Default.build;
-		-->
 	</Target>
 </Project>

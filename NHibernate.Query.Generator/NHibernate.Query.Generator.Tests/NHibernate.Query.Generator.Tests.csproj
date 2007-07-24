@@ -58,28 +58,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveRecord\Cat.cs" />
-    <Compile Include="ActiveRecord\Componnet.cs" />
-    <Compile Include="ActiveRecord\InstalledComponnet.cs" />
-    <Compile Include="ActiveRecord\Project.cs" />
-    <Compile Include="ActiveRecord\Queries\QueryBuilder.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Blog.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Cat.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Comment.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Componnet.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.DerivedBlog.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.DerivedBlog2.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.InstalledComponnet.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Istoric.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.NHibernate.Query.Generator.Tests.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Post.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Project.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.Role.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.User.cs" />
-    <Compile Include="ActiveRecord\Queries\Where.WeirdClass.cs" />
-    <Compile Include="ActiveRecord\Queries\WithTopLevelAssemblySpecification.hbm.cs" />
-    <Compile Include="ActiveRecord\Role.cs" />
-    <Compile Include="ActiveRecord\WierdClass.cs" />
+    <Compile Include="ActiveRecordModel\QueryBuilder.cs" />
+    <Compile Include="ActiveRecordModel\Where.Blog.cs" />
+    <Compile Include="ActiveRecordModel\Where.Cat.cs" />
+    <Compile Include="ActiveRecordModel\Where.Comment.cs" />
+    <Compile Include="ActiveRecordModel\Where.Componnet.cs" />
+    <Compile Include="ActiveRecordModel\Where.DerivedBlog.cs" />
+    <Compile Include="ActiveRecordModel\Where.DerivedBlog2.cs" />
+    <Compile Include="ActiveRecordModel\Where.InstalledComponnet.cs" />
+    <Compile Include="ActiveRecordModel\Where.Istoric.cs" />
+    <Compile Include="ActiveRecordModel\Where.NHibernate.Query.Generator.Model.cs" />
+    <Compile Include="ActiveRecordModel\Where.Post.cs" />
+    <Compile Include="ActiveRecordModel\Where.Project.cs" />
+    <Compile Include="ActiveRecordModel\Where.Role.cs" />
+    <Compile Include="ActiveRecordModel\Where.User.cs" />
+    <Compile Include="ActiveRecordModel\Where.WeirdClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
     <Compile Include="Sample.hbm.cs">
@@ -90,10 +83,6 @@
     <Compile Include="TestEagerFetch.cs" />
     <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
-    <Compile Include="ActiveRecord\Blog.cs" />
-    <Compile Include="ActiveRecord\Comment.cs" />
-    <Compile Include="ActiveRecord\Post.cs" />
-    <Compile Include="ActiveRecord\User.cs" />
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,6 +100,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NHibernate.Query.Generator.Model\NHibernate.Query.Generator.Model.csproj">
+      <Project>{F870E487-DAFD-48C7-A07B-414C13C9007A}</Project>
+      <Name>NHibernate.Query.Generator.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHibernate.Query.Generator\NHibernate.Query.Generator.csproj">
       <Project>{042B9A3D-18DB-4ED7-89F2-EDF68C4E40EA}</Project>
       <Name>NHibernate.Query.Generator</Name>
@@ -134,7 +127,7 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(TargetDir)$(TargetFileName)" /out:"$(ProjectDir)\ActiveRecord\Queries"
-"$(SolutionDir)\NHibernate.Query.Generator\$(OutDir)NHQG.exe" /lang:cs /files:"$(ProjectDir)\*.hbm.xml" /out:"$(ProjectDir) "</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

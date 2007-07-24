@@ -16,9 +16,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Rhino")]
 [assembly: AssemblyCopyright("Oren Eini (c) 2006")]
 [assembly: AssemblyDescription("Rhino.Testin")]
-[assembly: AssemblyInformationalVersion("1.0.730")]
+[assembly: AssemblyInformationalVersion("1.0.736")]
 [assembly: AssemblyTitle("Rhino.Testin")]
 [assembly: CLSCompliant(true)]
-[assembly: AssemblyVersion("1.0.730")]
+[assembly: AssemblyVersion("1.0.736")]
 
 

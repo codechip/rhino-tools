@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator.Tests", "NHibernate.Query.Generator.Tests\NHibernate.Query.Generator.Tests.csproj", "{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator.Model", "NHibernate.Query.Generator.Model\NHibernate.Query.Generator.Model.csproj", "{F870E487-DAFD-48C7-A07B-414C13C9007A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F870E487-DAFD-48C7-A07B-414C13C9007A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F870E487-DAFD-48C7-A07B-414C13C9007A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F870E487-DAFD-48C7-A07B-414C13C9007A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F870E487-DAFD-48C7-A07B-414C13C9007A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

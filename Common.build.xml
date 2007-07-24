@@ -7,6 +7,7 @@
 		<OutputDir>$(MSBuildProjectDirectory)</OutputDir>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
 		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
+		<ClsCompliant>true</ClsCompliant>
 	</PropertyGroup>
 
 	<Target Name="BuildAll"
@@ -32,7 +33,7 @@
 			AssemblyInformationalVersion="$(Version).$(Revision)"
 			 AssemblyTitle ="$(ProjectName)$(ExtraInfo)"
 			 CodeLanguage="CS"
-			 CLSCompliant ="true"
+			 CLSCompliant ="$(ClsCompliant)"
 			 AssemblyVersion ="$(Version).$(Revision)"
 			 OutputFile="%(AssemblyInfo.File)"
 			 />

@@ -102,4 +102,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>"$(TargetPath)" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Model\$(OutDir)\NHibernate.Query.Generator.Model.dll" /out:"$(SolutionDir)NHibernate.Query.Generator.Tests\ActiveRecordModel"
+"$(TargetPath)" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(SolutionDir)NHibernate.Query.Generator.Tests"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
