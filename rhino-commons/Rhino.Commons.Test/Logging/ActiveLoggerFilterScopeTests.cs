@@ -68,7 +68,7 @@ namespace Rhino.Commons.Test.Logging
 
             loggerA.Info("First message");
             loggerB.Info("Second message");
-
+        	Assert.AreEqual(2, appender.Messages.Count,"Failed to log messages to appender" );
             Assert.AreEqual("First message", appender.Messages[0]);
             Assert.AreEqual("Second message", appender.Messages[1]);
         }
