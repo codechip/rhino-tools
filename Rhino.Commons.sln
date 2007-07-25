@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons", "Rhino.Comm
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhono.Commons.Test", "Rhino.Commons.Test\Rhono.Commons.Test.csproj", "{EE98519D-104D-4A31-ADD8-82C5F836018C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Test", "Rhino.Commons.Test\Rhino.Commons.Test.csproj", "{EE98519D-104D-4A31-ADD8-82C5F836018C}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
