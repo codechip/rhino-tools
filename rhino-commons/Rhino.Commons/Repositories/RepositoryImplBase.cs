@@ -194,10 +194,7 @@ namespace Rhino.Commons
         /// </summary>
         /// <typeparam name="T1"></typeparam>
         private class TypedResultTransformer<T1> : IResultTransformer
-        {
-            ///<summary>
-            ///Convert the tuples into a strongly typed object
-            ///</summary>
+        {            
             public object TransformTuple(object[] tuple, string[] aliases)
             {
                 return Activator.CreateInstance(typeof(T1), tuple);
