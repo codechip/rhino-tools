@@ -26,6 +26,8 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using NHibernate;
 using NHibernate.Expression;
@@ -172,14 +174,40 @@ namespace Rhino.Commons
         }
 
 
-        private static void BuildProjectionCriteria<ProjT>(ICriteria criteria, ProjectionList projectionList, bool distinctResults) {
+        private static void BuildProjectionCriteria<ProjT>(ICriteria criteria, IProjection projectionList, bool distinctResults)
+        {
             if (distinctResults)
                 criteria.SetProjection(Projections.Distinct(projectionList));
             else
                 criteria.SetProjection(projectionList);
 
-            criteria.SetResultTransformer(
-                new AliasToBeanConstructorResultTransformer(typeof(ProjT).GetConstructors()[0]));
+            if (typeof(ProjT) != typeof(object[]))
+            //we are not returning a tuple, so we need the result transformer
+            {
+                criteria.SetResultTransformer(new TypedResultTransformer<ProjT>());
+            }
         }
+
+
+        /// <summary>
+        /// This is used to convert the resulting tuples into strongly typed objects.
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        private class TypedResultTransformer<T1> : IResultTransformer
+        {
+            ///<summary>
+            ///Convert the tuples into a strongly typed object
+            ///</summary>
+            public object TransformTuple(object[] tuple, string[] aliases)
+            {
+                return Activator.CreateInstance(typeof(T1), tuple);
+            }
+
+            IList IResultTransformer.TransformList(IList collection)
+            {
+                return collection;
+            }
+        }
+
     }
 }
