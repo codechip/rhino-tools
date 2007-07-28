@@ -87,6 +87,19 @@ namespace Rhino.Commons.ForTesting
             }
         }
 
+        public static bool IsSqlServer2005OrAboveInstalled()
+        {
+            string sqlServerCurrentVsRegKey = @"SOFTWARE\Microsoft\MSSQLServer\MSSQLServer\CurrentVersion";
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(sqlServerCurrentVsRegKey);
+            if (regKey == null)
+                return false;
+
+            string currentVersion = (string)regKey.GetValue("CurrentVersion");
+            string[] versionNumbers = currentVersion.Split('.');
+
+            return Int32.Parse(versionNumbers[0]) >= 9;
+        }
+
 
         private UnitOfWorkTestContext testContext;
         private readonly string databaseName;
