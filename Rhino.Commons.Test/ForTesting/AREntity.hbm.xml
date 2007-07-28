@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping default-lazy='false'
+	assembly='Rhino.Commons.Test'
+	namespace='Rhino.Commons.Test.ForTesting'
+	xmlns='urn:nhibernate-mapping-2.2'>
+	<class name='AREntity'>
+		<id name="Id" column="AREntityId">
+			<generator class="assigned"/>
+		</id>
+		<version name="Version" unsaved-value="-1"/>
+		<property name='Name'/>
+		<property name='Age'/>
+	</class>
+</hibernate-mapping>

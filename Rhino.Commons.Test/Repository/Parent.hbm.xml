@@ -21,4 +21,13 @@
 		</bag>
 		
 	</class>
+
+	<query name="QueryParentInfoByName">
+		<![CDATA[
+			select new ParentDto(p.Name, p.Age)
+				from Parent p
+				where p.Name Like :nameOfPerson
+		]]>
+	</query>
+	
 </hibernate-mapping>

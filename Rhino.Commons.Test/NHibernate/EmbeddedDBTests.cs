@@ -38,7 +38,7 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.NHibernate
 {
     [TestFixture]
-    public class EmbeddedDBTests : NHibernateInMemoryTestFixtureBase
+    public class EmbeddedDBTests : TestFixtureBase
     {
         private ISession session;
         private SMS sms;
@@ -46,13 +46,13 @@ namespace Rhino.Commons.Test.NHibernate
         [TestFixtureSetUp]
         public void OneTimeTestInitialize()
         {
-            OneTimeInitalize(typeof(SMS).Assembly);
+            FixtureInitialize(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());
         }
 
         [SetUp]
         public void TestInitialize()
         {
-            session = this.CreateSession();
+            session = CurrentContext.CreateSession();
             sms = new SMS();
             this.sms.Message = "R U There?";
             session.Save(this.sms);
@@ -63,7 +63,7 @@ namespace Rhino.Commons.Test.NHibernate
         [TearDown]
         public void TestCleanup()
         {
-            DisposeSession(session);
+            CurrentContext.DisposeSession(session);
         }
 
         [Test]

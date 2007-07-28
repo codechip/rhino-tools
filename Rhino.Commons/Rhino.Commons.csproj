@@ -157,8 +157,12 @@
     <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
     <Compile Include="ForTesting\ActiveRecordEmbeddedDBTestFixtureBase.cs" />
     <Compile Include="ForTesting\ActiveRecordInMemoryTestFixtureBase.cs" />
+    <Compile Include="ForTesting\MappingInfo.cs" />
+    <Compile Include="ForTesting\TestFixtureBase.cs" />
+    <Compile Include="ForTesting\UnitOfWorkTestContextDbStrategy.cs" />
     <Compile Include="ForTesting\NHibernateEmbeddedDBTestFixtureBase.cs" />
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
+    <Compile Include="ForTesting\UnitOfWorkTestContext.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScope.cs" />

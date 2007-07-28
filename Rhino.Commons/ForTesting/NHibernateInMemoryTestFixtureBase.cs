@@ -28,24 +28,19 @@
 
 
 using System;
-using System.Collections;
-using System.Data;
 using System.Reflection;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
-using Castle.ActiveRecord.Framework.Config;
 using NHibernate;
-using NHibernate.Cfg;
-using NHibernate.Tool.hbm2ddl;
 
 namespace Rhino.Commons.ForTesting
 {
+    /// <summary>
+    /// DEPRECIATED. Use <see cref="TestFixtureBase"/> instead
+    /// </summary>
 	public class NHibernateInMemoryTestFixtureBase
 	{
-		protected static ISessionFactory sessionFactory;
-		protected static Configuration configuration;
+	    protected static UnitOfWorkTestContext context;
 
-		/// <summary>
+	    /// <summary>
 		/// Initialize NHibernate, build a session factory, and initialize the container.
 		/// If <paramref name="rhinoContainerConfig"/> is <see langword="null" /> or <see cref="string.Empty">string.Empty</see>
 		/// a <see cref="RhinoContainer">RhinoContainer</see> will not be initialized.
@@ -55,38 +50,29 @@ namespace Rhino.Commons.ForTesting
 		/// <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
 		public static void OneTimeInitalize(string rhinoContainerConfig, params Assembly[] assemblies)
 		{
-            if (sessionFactory == null)
+            if (context == null)
             {
-                Hashtable properties = new Hashtable();
-                properties.Add("hibernate.connection.driver_class",
-                               "NHibernate.Driver.SQLite20Driver");
-                properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-                properties.Add("hibernate.connection.provider",
-                               "NHibernate.Connection.DriverConnectionProvider");
-                properties.Add("hibernate.connection.connection_string",
-                               "Data Source=:memory:;Version=3;New=True;");
-                properties.Add("hibernate.show_sql", "true");
-                properties.Add("hibernate.connection.release_mode", "on_close");
-
-                configuration = new Configuration();
-                configuration.Properties = properties;
-                foreach (Assembly assembly in assemblies)
-                {
-                    configuration = configuration.AddAssembly(assembly);
-                }
-                sessionFactory = configuration.BuildSessionFactory();
+                UnitOfWorkTestContextDbStrategy dbStrategy =
+                    UnitOfWorkTestContextDbStrategy.For(DatabaseEngine.SQLite,
+                                                        UnitOfWorkTestContextDbStrategy.SQLiteDbName);
+                context =
+                    UnitOfWorkTestContext.For(PersistenceFramework.NHibernate,
+                                              rhinoContainerConfig,
+                                              dbStrategy,
+                                              MappingInfo.From(assemblies));
             }
 
-		    if (!string.IsNullOrEmpty(rhinoContainerConfig))
+	        if (!string.IsNullOrEmpty(context.RhinoContainerConfigPath))
 			{
-				if (!IoC.IsInitialized)
-					IoC.Initialize(new RhinoContainer(rhinoContainerConfig));
+                if (!IoC.IsInitialized)
+                    IoC.Initialize(context.RhinoContainer);
                 NHibernateUnitOfWorkFactory hibernateUnitOfWorkFactory = (NHibernateUnitOfWorkFactory)IoC.Resolve<IUnitOfWorkFactory>();
-                hibernateUnitOfWorkFactory.RegisterSessionFactory(sessionFactory);
+                hibernateUnitOfWorkFactory.RegisterSessionFactory(context.SessionFactory);
             }
 		}
 
-		/// <summary>
+
+	    /// <summary>
 		/// Initialize NHibernate and builds a session factory
 		/// Note, this is a costly call so it will be executed only one.
 		/// </summary>
@@ -95,17 +81,18 @@ namespace Rhino.Commons.ForTesting
 			OneTimeInitalize(null, assemblies);
 		}
 
-		/// <summary>
-		/// Creates the in memory db schema using the session.
-		/// </summary>
-		/// <param name="session">An open NHibernate session.</param>
-		public void SetupDB(ISession session)
-		{
-			IDbConnection connection = session.Connection;
-			new SchemaExport(configuration).Execute(false, true, false, true, connection, null);
-		}
 
-		/// <summary>
+        /// <summary>
+        /// Creates the in memory db schema using the session.
+        /// </summary>
+        /// <param name="session">An open NHibernate session.</param>
+        public void SetupDB(ISession session)
+        {
+            context.SetupDatabase(session);
+        }
+
+
+	    /// <summary>
 		/// Starts a <see cref="UnitOfWork" /> and creates the in memory db schema.
 		/// </summary>
 		/// <example>Using <see cref="RhinoContainer" />, <see cref="IoC" />, and <see cref="UnitOfWork" /> in your tests.
@@ -167,8 +154,7 @@ namespace Rhino.Commons.ForTesting
 		/// <seealso cref="UnitOfWork" />
 		public void CreateUnitOfWork()
 		{
-			UnitOfWork.Start();
-			SetupDB(IoC.Resolve<IUnitOfWorkFactory>().CurrentSession);
+            context.CreateUnitOfWork();
 		}
 
 		/// <summary>
@@ -177,19 +163,12 @@ namespace Rhino.Commons.ForTesting
 		/// <returns>The open NHibernate session.</returns>
 		public ISession CreateSession()
 		{
-			//need to get our own connection, because NH will try to close it
-			//as soon as possible, and we will lose the changes.
-			IDbConnection dbConnection = sessionFactory.ConnectionProvider.GetConnection();
-			ISession openSession = sessionFactory.OpenSession(dbConnection);
-			SetupDB(openSession);
-			return openSession;
+			return context.CreateSession();
 		}
 
 		public void DisposeSession(ISession sessionToClose)
 		{
-			IDbConnection con = sessionToClose.Connection;
-			sessionToClose.Dispose();
-			con.Dispose();
+			context.DisposeSession(sessionToClose);
 		}
 	}
 }

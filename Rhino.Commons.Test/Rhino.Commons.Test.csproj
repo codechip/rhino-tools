@@ -130,8 +130,14 @@
     <None Include="app.config" />
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
+    <None Include="ForTesting\AnotherWindsor-NH.config" />
+    <None Include="ForTesting\AnotherWindsor-AR.config" />
+    <None Include="ForTesting\Windsor-AR.config">
+    </None>
+    <None Include="ForTesting\Windsor-NH.config">
+    </None>
+    <None Include="Repository\Windsor-AR.config" />
     <None Include="Repository\Windsor.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="UoW\Windsor.config" />
   </ItemGroup>
@@ -139,11 +145,15 @@
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="ForTesting\AREntity.hbm.xml" />
     <EmbeddedResource Include="Repository\Child.hbm.xml" />
     <EmbeddedResource Include="Repository\Parent.hbm.xml" />
     <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
+    <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />

@@ -1,0 +1,305 @@
+#region license
+// Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+// 
+//     * Redistributions of source code must retain the above copyright notice,
+//     this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright notice,
+//     this list of conditions and the following disclaimer in the documentation
+//     and/or other materials provided with the distribution.
+//     * Neither the name of Ayende Rahien nor the names of its
+//     contributors may be used to endorse or promote products derived from this
+//     software without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#endregion
+
+using System;
+using System.IO;
+using System.Reflection;
+using Castle.ActiveRecord;
+using MbUnit.Framework;
+using NHibernate;
+using Rhino.Commons.ForTesting;
+
+namespace Rhino.Commons.Test.ForTesting
+{
+    public abstract class TestFixtureBaseTests : TestFixtureBase 
+    {
+        [SetUp]
+        public void TestInitialize()
+        {
+            CurrentContext = null;
+            Contexts.Clear();
+        }
+
+
+        [TearDown]
+        public void TestCleanup()
+        {
+            CurrentContext = null;
+            Contexts.Clear();
+        }
+
+        [Test]
+        public virtual void EachUnitOfWorkContextConfigurationWillBeCreatedOnlyOnce()
+        {
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+
+            Assert.AreEqual(1, Contexts.Count);
+        }
+
+
+        [Test]
+        public virtual void NewUnitOfWorkContextCreatedForDifferentWindorConfigFiles()
+        {
+            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.SQLite);
+            VerifyCanCreateUnitOfWorkContextFor(AnotherWindsorFilePath, DatabaseEngine.SQLite);
+
+            Assert.AreEqual(2, Contexts.Count);
+        }
+
+
+        [Test]
+        public virtual void CanCreateNestedUnitOfWork()
+        {
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+
+            VerifyCanCreateUseAndDisposeNestedUnitOfWork();
+        }
+
+
+        [Test]
+        public virtual void CallingCreateUnitOfWorkMoreThanOnceIsNotAllowed()
+        {
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+
+            CurrentContext.CreateUnitOfWork();
+            try
+            {
+                CurrentContext.CreateUnitOfWork();
+                Assert.Fail("Exception was expected");
+            }
+            catch (InvalidOperationException e)
+            {
+                string message =
+                    "Cannot create a nested UnitOfWork with this method. Use CreateNestedUnitOfWork() instead";
+                Assert.AreEqual(message, e.Message);
+            }
+            finally
+            {
+                CurrentContext.DisposeUnitOfWork();
+            }
+        }
+
+
+        protected void FixtureInitialize(string rhinoContainerPath,
+                                         DatabaseEngine databaseEngine,
+                                         string databaseName)
+        {
+            FixtureInitialize(FrameworkToTest,
+                              rhinoContainerPath,
+                              databaseEngine,
+                              databaseName,
+                              MappingInfo.FromAssemblyContaining<AREntity>());
+        }
+
+
+        protected void VerifyCanCreateUnitOfWorkContextFor(string rhinoContainerPath,
+                                                           DatabaseEngine databaseEngine)
+        {
+            VerifyCanCreateUnitOfWorkContextFor(FrameworkToTest,
+                                                rhinoContainerPath,
+                                                databaseEngine,
+                                                "");
+        }
+
+
+        protected void VerifyCanCreateUnitOfWorkContextFor(string rhinoContainerPath,
+                                                           DatabaseEngine databaseEngine,
+                                                           string databaseName)
+        {
+            VerifyCanCreateUnitOfWorkContextFor(FrameworkToTest,
+                                                rhinoContainerPath,
+                                                databaseEngine,
+                                                databaseName);
+        }
+
+
+        protected void VerifyCanCreateUnitOfWorkContextFor(PersistenceFramework framework,
+                                                           string rhinoContainerPath,
+                                                           DatabaseEngine databaseEngine,
+                                                           string databaseName)
+        {
+            int nextContextPosition = Contexts.Count;
+
+            //creates the UnitOfWorkContext
+            MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
+            FixtureInitialize(framework,
+                              rhinoContainerPath,
+                              databaseEngine,
+                              databaseName,
+                              mappingInfo);
+
+            UnitOfWorkTestContext context = Contexts[nextContextPosition];
+
+            Assert.AreEqual(framework, context.Framework);
+            if (rhinoContainerPath != null)
+            {
+                Assert.AreEqual(rhinoContainerPath, context.RhinoContainerConfigPath);
+            }
+            else
+            {
+                Assert.IsEmpty(context.RhinoContainerConfigPath);
+            }
+            Assert.AreEqual(databaseEngine, context.DatabaseEngine);
+            if (string.IsNullOrEmpty(databaseName))
+            {
+                Assert.AreEqual(
+                    DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]),
+                    context.DatabaseName);
+            }
+            else
+            {
+                Assert.AreEqual(databaseName, context.DatabaseName);
+            }
+
+            Assert.AreEqual(CurrentContext,
+                            context,
+                            "Context just built has been assigned to CurrentContext");
+        }
+
+
+
+        protected void VerifyCanCreateUseAndDisposeSession()
+        {
+            ISession session = null;
+            try
+            {
+                session = CurrentContext.CreateSession();
+                Assert.IsNotNull(session);
+                session.Save(new AREntity());
+                session.Flush();
+            }
+            finally
+            {
+                CurrentContext.DisposeSession(session);
+            }
+        }
+
+
+        protected void VerifyCanCreateUseAndDisposeUnitOfWork() {
+            try
+            {
+                CurrentContext.CreateUnitOfWork();
+                Console.Write(UnitOfWork.CurrentSession.Connection.ConnectionString);
+                UnitOfWork.CurrentSession.Save(new AREntity());
+                UnitOfWork.CurrentSession.Flush();
+            }
+            finally
+            {
+                CurrentContext.DisposeUnitOfWork();
+            }
+        }
+
+
+        protected void VerifyCanCreateUseAndDisposeNestedUnitOfWork() 
+        {
+            Assert.AreEqual(-1, CurrentContext.UnitOfWorkNestingLevel, "level before starting UoW = -1");
+
+            CurrentContext.CreateUnitOfWork();
+            Assert.AreEqual(0, CurrentContext.UnitOfWorkNestingLevel, "level after starting UoW = 0");
+
+            CurrentContext.CreateNestedUnitOfWork();
+            Assert.AreEqual(1, CurrentContext.UnitOfWorkNestingLevel, "level after starting nested UoW = 1");
+
+            UnitOfWork.CurrentSession.Save(new AREntity());
+            UnitOfWork.CurrentSession.Flush();
+            CurrentContext.DisposeUnitOfWork();
+
+            //this is happening in the original UoW
+            UnitOfWork.CurrentSession.Save(new AREntity());
+            UnitOfWork.CurrentSession.Flush();
+            CurrentContext.DisposeUnitOfWork();
+        }
+
+
+        protected abstract string AnotherWindsorFilePath { get; }
+
+        protected abstract PersistenceFramework FrameworkToTest { get; }
+
+        protected abstract string WindsorFilePath { get; }
+
+        protected string ActiveRecordWindsorFilePath
+        {
+            get
+            {
+                return
+                    Path.GetFullPath(
+                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                     @"..\..\ForTesting\Windsor-AR.config"));
+            }
+        }
+
+        protected string NHibernateWindsorFilePath
+        {
+            get
+            {
+                return
+                    Path.GetFullPath(
+                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                     @"..\..\ForTesting\Windsor-NH.config"));
+            }
+        }
+    }
+
+    [ActiveRecord]
+    public class AREntity
+    {
+        private Guid id = Guid.NewGuid();
+        private int version = -1;
+        private string name;
+        private int age;
+
+        [PrimaryKey(PrimaryKeyType.Assigned)]
+        public virtual Guid Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        [Version(UnsavedValue = "-1")]
+        public virtual int Version
+        {
+            get { return version; }
+            set { version = value; }
+        }
+
+        [Property]
+        public virtual int Age
+        {
+            get { return age; }
+            set { age = value; }
+        }
+
+        [Property]
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+    }
+}
