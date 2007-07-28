@@ -73,26 +73,35 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void CanCreateUnitOfWorkContextFor_MsSql2005()
         {
-            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSql2005);
-            VerifyCanCreateUseAndDisposeSession();
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSql2005);
+                VerifyCanCreateUseAndDisposeSession();
+            }
         }
 
 
         [Test]
         public virtual void CanCreateUnitOfWorkContextFor_MsSql2005_IoC()
         {
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005);
-            VerifyCanCreateUseAndDisposeSession();
-            VerifyCanCreateUseAndDisposeUnitOfWork();
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005);
+                VerifyCanCreateUseAndDisposeSession();
+                VerifyCanCreateUseAndDisposeUnitOfWork();
+            }
         }
 
         [Test]
         public virtual void NewUnitOfWorkContextCreatedForDifferentDatabaseNames()
         {
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb1");
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb2");
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb1");
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb2");
 
-            Assert.AreEqual(2, Contexts.Count);
+                Assert.AreEqual(2, Contexts.Count);
+            }
         }
 
 
