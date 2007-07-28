@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Castle.ActiveRecord;
 using MbUnit.Framework;
 using NHibernate;
 using NHibernate.Expression;
@@ -36,18 +37,9 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
-    public class RepositoryTestsBase : NHibernateInMemoryTestFixtureBase
+    public class RepositoryTestsBase : TestFixtureBase
     {
         protected IList<Parent> parentsInDb;
-
-
-        [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
-        {
-            string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Repository\Windsor.config"));
-            OneTimeInitalize(path, typeof (Parent).Assembly);
-        }
 
 
         protected void SaveInCurrentSession(IList<Parent> toSave)
@@ -85,6 +77,89 @@ namespace Rhino.Commons.Test.Repository
             DetachedCriteria criteria = DetachedCriteria.For<T>();
             criteria.SetResultTransformer(CriteriaUtil.DistinctRootEntity);
             return criteria.GetExecutableCriteria(UnitOfWork.CurrentSession).List<T>();
+        }
+    }
+
+    [ActiveRecord]
+    public class Parent
+    {
+        private Guid id = Guid.NewGuid();
+        private int version = -1;
+        private string name;
+        private int age;
+        private IList<Child> children = new List<Child>();
+
+        [PrimaryKey(PrimaryKeyType.Assigned)]
+        public virtual Guid Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        [Version(UnsavedValue = "-1")]
+        public virtual int Version
+        {
+            get { return version; }
+            set { version = value; }
+        }
+
+        [Property]
+        public virtual int Age
+        {
+            get { return age; }
+            set { age = value; }
+        }
+
+        [Property]
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        [HasMany(Cascade = ManyRelationCascadeEnum.AllDeleteOrphan, Fetch = FetchEnum.Join)]
+        public virtual IList<Child> Children
+        {
+            get { return children; }
+            set { children = value; }
+        }
+    }
+
+    [ActiveRecord]
+    public class Child
+    {
+        private Guid id = Guid.NewGuid();
+        private int version = -1;
+        private string name = "SomeChild";
+        private Parent parent;
+
+
+        [BelongsTo]
+        public virtual Parent Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
+
+        [PrimaryKey(PrimaryKeyType.Assigned)]
+        public virtual Guid Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        [Version(UnsavedValue = "-1")]
+        public virtual int Version
+        {
+            get { return version; }
+            set { version = value; }
+        }
+
+        [Property]
+        public virtual string Name
+        {
+            get { return name; }
+            set { name = value; }
         }
     }
 }

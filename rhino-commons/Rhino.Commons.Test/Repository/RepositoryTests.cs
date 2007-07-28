@@ -28,19 +28,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MbUnit.Framework;
 using NHibernate.Expression;
+using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
-    [TestFixture]
     public class RepositoryTests : RepositoryTestsBase
     {
         [SetUp]
         public void TestInitialize()
         {
-            CreateUnitOfWork();
+            CurrentContext.CreateUnitOfWork();
+            CreateObjectsInDb();
+        }
 
+
+        [TearDown]
+        public void TestCleanup()
+        {
+            CurrentContext.DisposeUnitOfWork();
+        }
+
+
+        protected void CreateObjectsInDb()
+        {
             parentsInDb = new List<Parent>();
 
             parentsInDb.Add(CreateExampleParentObject("Parent1", 100, new Child(), new Child()));
@@ -51,17 +64,10 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
-        [TearDown]
-        public void TestCleanup()
-        {
-            UnitOfWork.Current.Dispose();
-        }
-
-
         [Test]
-        public void CanSaveAndLoad()
+        public void CanSaveAndGet()
         {
-            Parent loaded = Repository<Parent>.Load(parentsInDb[0].Id);
+            Parent loaded = Repository<Parent>.Get(parentsInDb[0].Id);
 
             Assert.AreEqual(parentsInDb[0].Name, loaded.Name);
             Assert.AreEqual(2, parentsInDb[0].Children.Count);
@@ -154,76 +160,31 @@ namespace Rhino.Commons.Test.Repository
         }
     }
 
-    public class Parent
+
+
+    [TestFixture]
+    public class NHibernateRepositoryTests : RepositoryTests
     {
-        private Guid id = Guid.NewGuid();
-        private int version = -1;
-        private string name;
-        private int age;
-        private IList<Child> children = new List<Child>();
-
-        public virtual Guid Id
+        [TestFixtureSetUp]
+        public void OneTimeTestInitialize()
         {
-            get { return id; }
-            set { id = value; }
-        }
-
-        public virtual int Version
-        {
-            get { return version; }
-            set { version = value; }
-        }
-
-        public virtual int Age
-        {
-            get { return age; }
-            set { age = value; }
-        }
-
-        public virtual string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        public virtual IList<Child> Children
-        {
-            get { return children; }
-            set { children = value; }
+            string path =
+                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
+            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfo.FromAssemblyContaining<Parent>());
         }
     }
 
 
-    public class Child
+
+    [TestFixture]
+    public class ActiveRecordRepositoryTests : RepositoryTests
     {
-        private Guid id = Guid.NewGuid();
-        private int version = -1;
-        private string name = "SomeChild";
-        private Parent parent;
-
-
-        public virtual Parent Parent
+        [TestFixtureSetUp]
+        public void OneTimeTestInitialize()
         {
-            get { return parent; }
-            set { parent = value; }
-        }
-
-        public virtual Guid Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
-
-        public virtual int Version
-        {
-            get { return version; }
-            set { version = value; }
-        }
-
-        public virtual string Name
-        {
-            get { return name; }
-            set { name = value; }
+            string path =
+                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
+            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfo.FromAssemblyContaining<Parent>());
         }
     }
 }

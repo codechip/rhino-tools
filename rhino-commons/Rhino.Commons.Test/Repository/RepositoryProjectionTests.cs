@@ -28,20 +28,34 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Castle.ActiveRecord;
 using MbUnit.Framework;
 using NHibernate;
 using NHibernate.Expression;
+using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
-    [TestFixture]
     public class RepositoryProjectionTests : RepositoryTestsBase
     {
         [SetUp]
         public void TestInitialize()
         {
-            CreateUnitOfWork();
+            CurrentContext.CreateUnitOfWork();
+            CreateExampleObjectsInDb();
+        }
 
+
+        [TearDown]
+        public void TestCleanup()
+        {
+            CurrentContext.DisposeUnitOfWork();
+        }
+
+
+        protected void CreateExampleObjectsInDb() 
+        {
             parentsInDb = new List<Parent>();
 
             parentsInDb.Add(CreateExampleParentObject("Parent1", 100, new Child(), new Child()));
@@ -50,12 +64,6 @@ namespace Rhino.Commons.Test.Repository
 
             SaveInCurrentSession(parentsInDb);
             FlushAndClearCurrentSession();
-        }
-
-        [TearDown]
-        public void TestCleanup()
-        {
-            UnitOfWork.Current.Dispose();
         }
 
 
@@ -229,6 +237,43 @@ namespace Rhino.Commons.Test.Repository
         }
     }
 
+    [TestFixture]
+    public class NHibernateRepositoryProjectionTests : RepositoryProjectionTests
+    {
+        [TestFixtureSetUp]
+        public void OneTimeTestInitialize()
+        {
+            string path =
+                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
+
+            MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<Parent>()
+                                                 .AddQueryLanguageImports(typeof(ParentDto));
+            FixtureInitialize(PersistenceFramework.NHibernate, path, mappingInfo);
+        }
+
+        [Test]
+        public void CanReportAllFromNamedQuery()
+        {
+            ICollection<ParentDto> dtos =
+                Repository<Parent>.ReportAll<ParentDto>("QueryParentInfoByName",
+                                                        new Parameter("nameOfPerson", "Parent%"));
+            Assert.AreEqual(parentsInDb.Count, dtos.Count);
+        }
+    }
+
+
+
+    [TestFixture]
+    public class ActiveRecordRepositoryProjectionTests : RepositoryProjectionTests
+    {
+        [TestFixtureSetUp]
+        public void OneTimeTestInitialize()
+        {
+            string path =
+                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
+            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfo.FromAssemblyContaining<Parent>());
+        }
+    }
 
 
     internal class ParentSummaryDto
@@ -264,7 +309,6 @@ namespace Rhino.Commons.Test.Repository
             set { name = value; }
         }
     }
-
 
 
     internal class ParentDto

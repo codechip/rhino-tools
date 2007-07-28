@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using log4net;
 using log4net.Appender;
 using log4net.Config;
 using MbUnit.Framework;
@@ -37,7 +38,7 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.UoW
 {
     [TestFixture]
-    public class TransactionalFlush : NHibernateEmbeddedDBTestFixtureBase
+    public class TransactionalFlush : TestFixtureBase
     {
         const string TransactionLog = "NHibernate.Transaction.AdoTransaction";
 
@@ -48,20 +49,31 @@ namespace Rhino.Commons.Test.UoW
             BasicConfigurator.Configure(new MemoryAppender());
 
             string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\UoW\Windsor.config"));
-            FixtureInitialize(path, typeof(SimpleObject).Assembly);
+            FixtureInitialize(PersistenceFramework.NHibernate,
+                              path,
+                              DatabaseEngine.MsSqlCe,
+                              MappingInfo.FromAssemblyContaining<SimpleObject>());
         }
+
+
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            LogManager.ResetConfiguration();
+        }
+
 
         [SetUp]
         public void TestInitialize()
         {
-            CreateUnitOfWork();
+            CurrentContext.CreateUnitOfWork();
         }
 
         [TearDown]
         public void TestCleanup()
         {
             //Cleanup the top level UnitOfWork
-            UnitOfWork.Current.Dispose();
+            CurrentContext.DisposeUnitOfWork();
         }
 
 
