@@ -145,6 +145,10 @@ namespace Rhino.Commons
                         }
                         if (File.Exists(hibernateConfig))
                             cfg.Configure(new XmlTextReader(hibernateConfig));
+                        if (InitializationAware != null)
+                        {
+                            InitializationAware.Configured(cfg);
+                        }
                         sessionFactory = cfg.BuildSessionFactory();
                     }
                 }

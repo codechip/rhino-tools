@@ -27,17 +27,17 @@
 #endregion
 
 
-using Castle.ActiveRecord.Framework;
 using NHibernate;
 using NHibernate.Cfg;
 
 namespace Rhino.Commons
 {
 	/// <summary>
-	/// Used to handle extra initialization for session factory
+	/// Used to handle extra initialization for configuration and session factory
 	/// </summary>
 	public interface INHibernateInitializationAware
 	{
+		void Configured(Configuration cfg);
 		void Initialized(Configuration cfg, ISessionFactory sessionFactory);
 	}
 }
