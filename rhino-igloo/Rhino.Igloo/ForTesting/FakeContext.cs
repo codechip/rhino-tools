@@ -48,7 +48,7 @@ namespace Rhino.Igloo.Tests
 		private TimeSpan? refreshWaitTime;
 		private string refreshUrl;
 	    private bool hasEnded;
-	    private string rawUrl;
+	    private string rawUrl = null;
 
 	    public void Redirect(string destination)
 		{
