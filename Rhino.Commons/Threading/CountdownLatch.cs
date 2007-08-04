@@ -59,11 +59,12 @@ namespace Rhino.Commons
             return doneWaitingEvent.WaitOne(timeout, false);
         }
 
-        public void Set()
+        public int Set()
         {
             int val = Interlocked.Decrement(ref numberOfConsumers);
-            if (val == 0)
+            if (val <= 0)
                 doneWaitingEvent.Set();
+        	return val;
         }
 
         public void Reset(int numberOfConsumers)
