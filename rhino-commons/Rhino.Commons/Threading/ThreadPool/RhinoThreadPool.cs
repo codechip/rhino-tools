@@ -61,6 +61,11 @@ namespace Rhino.Commons
 
 		private static AutoResetEvent _waitForAllThreadToComplete;
 
+		public static WorkItem QueueUserWorkItem(WaitCallback callback)
+		{
+			return QueueUserWorkItem(callback, null);
+		}
+
 		public static WorkItem QueueUserWorkItem(WaitCallback callback, object state)
 		{
 			if (callback == null) throw new ArgumentNullException("callback");
