@@ -509,97 +509,23 @@
             Constructs a DefaultProxyFactory
             </summary>
         </member>
-        <member name="T:Castle.Windsor.Proxy.ProxyComponentInspector">
+        <member name="M:Castle.Windsor.Proxy.DefaultProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,System.Object[])">
             <summary>
-            Inspects the component configuration looking for information
-            that can influence the generation of a proxy for that component.
+            Creates the proxy for the supplied component.
             </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="target">The target.</param>
+            <param name="model">The model.</param>
+            <param name="constructorArguments">The constructor arguments.</param>
+            <returns>The component proxy.</returns>
         </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+        <member name="M:Castle.Windsor.Proxy.DefaultProxyFactory.RequiresTargetInstance(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
             <summary>
-            Seaches for proxy behavior in the configuration and, if unsuccessful
-            look for the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/> attribute in 
-            the implementation type.
+            Determines if the component requiries a target instance for proxying.
             </summary>
-            <param name="kernel"></param>
-            <param name="model"></param>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ReadProxyBehaviorFromConfiguration(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
-            <summary>
-            Reads the proxy behavior associated with the 
-            component configuration and applies it to the model.
-            </summary>
-            <exception cref="T:System.Configuration.ConfigurationException">
-            If the conversion fails
-            </exception>
-            <param name="kernel"></param>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyComponentInspector.ReadProxyBehaviorFromType(Castle.Core.ComponentModel)">
-            <summary>
-            Check if the type exposes the <see cref="T:Castle.Core.ComponentProxyBehaviorAttribute"/>.
-            </summary>
-            <param name="model"></param>
-        </member>
-        <member name="T:Castle.Windsor.Proxy.ProxyConstants">
-            <summary>
-            Holds the keys used by the proxy factories.
-            </summary>
-        </member>
-        <member name="F:Castle.Windsor.Proxy.ProxyConstants.ProxyOptionsKey">
-            <summary>
-            Key used to supply custom proxy options.
-            </summary>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyOptions.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> class.
-            </summary>
-            <param name="hook">The hook.</param>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyOptions.AddAdditionalInterfaces(System.Type[])">
-            <summary>
-            Adds the additional interfaces to proxy.
-            </summary>
-            <param name="interfaces">The interfaces.</param>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyOptions.Equals(System.Object)">
-            <summary>
-            Equalses the specified obj.
-            </summary>
-            <param name="obj">The obj.</param>
-            <returns>true if equal.</returns>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyOptions.GetHashCode">
-            <summary>
-            Gets the hash code.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.Windsor.Proxy.ProxyOptions.AdditionalInterfaces">
-            <summary>
-            Gets the additional interfaces to proxy.
-            </summary>
-            <value>The interfaces.</value>
-        </member>
-        <member name="T:Castle.Windsor.Proxy.ProxyUtil">
-            <summary>
-            Helper support for proxy configuration.
-            </summary>
-        </member>
-        <member name="M:Castle.Windsor.Proxy.ProxyUtil.ObtainProxyOptions(Castle.Core.ComponentModel,System.Boolean)">
-            <summary>
-            Obtains the <see cref="T:Castle.Windsor.Proxy.ProxyOptions"/> associated with the <see cref="T:Castle.Core.ComponentModel"/>.
-            </summary>
-            <param name="model">The component model.</param>
-            <param name="createOnDemand">true if the options should be created if not present.</param>
-            <returns>The associated proxy options for the component model.</returns>
+            <param name="kernel">The kernel.</param>
+            <param name="model">The model.</param>
+            <returns>true if an instance is required.</returns>
         </member>
         <member name="T:Castle.Windsor.IEnvironmentInfo">
             <summary>
@@ -678,6 +604,110 @@
             <param name="key"></param>
             <param name="serviceType"></param>
             <param name="classType"></param>
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponent``1">
+            <summary>
+            Adds a component to be managed by the container.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponent``1(System.String)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>		
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``1(Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``1(System.String,Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>		
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponent``2">
+            <summary>
+            Adds a component to be managed by the container
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponent``2(System.String)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.String,Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithProperties``1(System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class as a component and specify the extended properties.
+            Used by facilities, mostly.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithProperties``1(System.String,System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class as a component and specify the extended properties.
+            Used by facilities, mostly.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>		
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class and an interface 
+            as a component and specify the extended properties.
+            Used by facilities, mostly.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.String,System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class and an interface 
+            as a component and specify the extended properties.
+            Used by facilities, mostly.
+            </summary>
+            <typeparam name="I"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
             <param name="extendedProperties"></param>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String)">
@@ -943,6 +973,110 @@
             <param name="serviceType">The service <see cref="T:System.Type"/> that the component implements.</param>
             <param name="classType">The <see cref="T:System.Type"/> to manage.</param>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponent``1">
+            <summary>
+            Adds a component to be managed by the container.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponent``1(System.String)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>		
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``1(Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponent``2(System.String)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``1(System.String,Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>		
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponent``2">
+            <summary>
+            Adds a component to be managed by the container
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.String,Castle.Core.LifestyleType)">
+            <summary>
+            Adds a component to be managed by the container
+            </summary>
+            <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
+            <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <param name="key">The key by which the component gets indexed.</param>
+            <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithProperties``1(System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class as a component and specify the extended properties.
+            Used by facilities, mostly.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithProperties``1(System.String,System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class as a component and specify the extended properties.
+            Used by facilities, mostly.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>		
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class and an interface 
+            as a component and specify the extended properties.
+            Used by facilities, mostly.
+            The key to obtain the component will be the FullName of the type.
+            </summary>
+            <typeparam name="I"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="extendedProperties"></param>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.String,System.Collections.IDictionary)">
+            <summary>
+            Adds a concrete class and an interface 
+            as a component and specify the extended properties.
+            Used by facilities, mostly.
+            </summary>
+            <typeparam name="I"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="extendedProperties"></param>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String)">
             <summary>

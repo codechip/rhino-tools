@@ -6167,10 +6167,10 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.ApplyWebValidation(Castle.Components.Validator.WebValidationConfiguration,Castle.Components.Validator.InputElementType,Castle.Components.Validator.IWebValidationGenerator,System.Collections.IDictionary,System.String)">
+        <member name="M:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.ApplyBrowserValidation(Castle.Components.Validator.BrowserValidationConfiguration,Castle.Components.Validator.InputElementType,Castle.Components.Validator.IBrowserValidationGenerator,System.Collections.IDictionary,System.String)">
             <summary>
-            Applies the web validation by setting up one or
-            more input rules on <see cref="T:Castle.Components.Validator.IWebValidationGenerator"/>.
+            Applies the browser validation by setting up one or
+            more input rules on <see cref="T:Castle.Components.Validator.IBrowserValidationGenerator"/>.
             </summary>
             <param name="config">The config.</param>
             <param name="inputType">Type of the input.</param>
@@ -6178,12 +6178,12 @@
             <param name="attributes">The attributes.</param>
             <param name="target">The target.</param>
         </member>
-        <member name="P:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.SupportsWebValidation">
+        <member name="P:Castle.ActiveRecord.Framework.Validators.IsUniqueValidator.SupportsBrowserValidation">
             <summary>
-            Gets a value indicating whether this validator supports web validation.
+            Gets a value indicating whether this validator supports browser validation.
             </summary>
             <value>
-            	<see langword="true"/> if web validation is supported; otherwise, <see langword="false"/>.
+            	<see langword="true"/> if browser validation is supported; otherwise, <see langword="false"/>.
             </value>
         </member>
         <member name="T:Castle.ActiveRecord.NHibernateDelegate">
@@ -8662,6 +8662,16 @@
             <param name="type">The type.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.ISessionFactoryHolder.RegisterSessionFactory(NHibernate.ISessionFactory,System.Type)">
+            <summary>
+             This method allows direct registration
+             of a session factory to a type, bypassing the normal preperation that AR
+             usually does. 
+             The main usage is in testing, so you would be able to switch the session factory
+             for each test.
+             Note that this will override the current session factory for the baseType.
+            </summary>
+        </member>
         <member name="E:Castle.ActiveRecord.Framework.ISessionFactoryHolder.OnRootTypeRegistered">
             <summary>
             Raised when a new root type is registered. 
@@ -8731,6 +8741,16 @@
             </summary>
             <param name="type"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.RegisterSessionFactory(NHibernate.ISessionFactory,System.Type)">
+            <summary>
+             This method allows direct registration
+             of a session factory to a type, bypassing the normal preperation that AR
+             usually does. 
+             The main usage is in testing, so you would be able to switch the session factory
+             for each test.
+             Note that this will override the current session factory for the baseType.
+            </summary>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.CreateSession(System.Type)">
             <summary>

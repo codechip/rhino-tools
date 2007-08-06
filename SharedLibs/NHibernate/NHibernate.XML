@@ -993,6 +993,2242 @@
         <member name="M:NHibernate.Cache.UpdateTimestampsCache.Invalidate(System.Object[])">
             <summary></summary>
         </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.EndsWithHbmXmlFilter">
+            <summary>
+            Responsible for checking that a resource name matches the default pattern of "*.hbm.xml". This is the
+            default filter for <see cref="T:NHibernate.Cfg.MappingSchema.MappingDocumentAggregator"/>.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.IAssemblyResourceFilter">
+            <summary>
+            Responsible for determining whether an embedded resource should be parsed for HBM XML data while
+            iterating through an <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmFilter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilter.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilter.condition">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilter.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCustomSQL">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCustomSQL.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCustomSQL.checkSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCustomSQL.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCustomSQLCheck">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCustomSQLCheck.None">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCustomSQLCheck.Rowcount">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmLoader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLoader.queryref">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmResultset">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultset.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultset.name">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmLoadCollection">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLoadCollection.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLoadCollection.alias">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLoadCollection.role">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLoadCollection.lockmode">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturnProperty">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnProperty.returncolumn">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnProperty.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnProperty.column">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturnColumn">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnColumn.name">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmLockMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLockMode.None">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLockMode.Read">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLockMode.Upgrade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLockMode.UpgradeNowait">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLockMode.Write">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturn">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturn.returndiscriminator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturn.returnproperty">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturn.alias">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturn.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturn.lockmode">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturnDiscriminator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnDiscriminator.column">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturnJoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnJoin.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnJoin.alias">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnJoin.property">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnJoin.lockmode">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmReturnScalar">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnScalar.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmReturnScalar.type">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmMapping">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.import">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.resultset">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.Items1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.filterdef">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.databaseobject">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.defaultcascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.defaultaccess">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.autoimport">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.namespace">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.assembly">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.defaultlazy">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmMeta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMeta.attribute">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMeta.inherit">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMeta.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmImport">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmImport.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmImport.rename">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmClass">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.discriminator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.Item2">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.Items1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.proxy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.dynamicupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.dynamicinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.selectbeforeupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.discriminatorvalue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.mutable">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.polymorphism">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmClass.check">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCacheType">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCacheType.region">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCacheType.usage">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCacheTypeUsage">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCacheTypeUsage.ReadOnly">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCacheTypeUsage.ReadWrite">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCacheTypeUsage.NonstrictReadWrite">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCompositeId">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeId.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeId.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeId.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeId.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeId.unsavedvalue">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.foreignkey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyManyToOne.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmColumn">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.length">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.notnull">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.notnullSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.unique">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.uniqueSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.uniquekey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.sqltype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmColumn.check">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmRestrictedLaziness">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmRestrictedLaziness.False">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmRestrictedLaziness.Proxy">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmKeyProperty">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKeyProperty.length">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmUnsavedValueType">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmUnsavedValueType.Any">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmUnsavedValueType.None">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmId">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.generator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.length">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmId.unsavedvalue">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmGenerator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmGenerator.param">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmGenerator.class">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmParam">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmParam.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmParam.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDiscriminator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.notnull">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.length">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.force">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDiscriminator.formula">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmTimestamp">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmTimestamp.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmTimestamp.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmTimestamp.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmTimestamp.unsavedvalue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmTimestamp.generated">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmVersionGeneration">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersionGeneration.Never">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersionGeneration.Always">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmVersion">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.unsavedvalue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmVersion.generated">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmAny">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.metavalue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.idtype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.metatype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.update">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.updateSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmAny.uniquekey">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmMetaValue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMetaValue.value">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMetaValue.class">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCascadeStyle">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.All">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.AllDeleteOrphan">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.None">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.SaveUpdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.Delete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCascadeStyle.DeleteOrphan">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmArray">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.elementclass">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmArray.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType5">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType5.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType5.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmKey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKey.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKey.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmKey.foreignkey">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmIndex">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndex.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndex.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndex.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndex.length">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCompositeElement">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeElement.parent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeElement.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeElement.class">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmParent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmParent.name">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmManyToOne">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.notnull">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.unique">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.uniquekey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.update">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.updateSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.foreignkey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.propertyref">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.notfound">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.notfoundSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToOne.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmOuterJoinStrategy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOuterJoinStrategy.Auto">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOuterJoinStrategy.True">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOuterJoinStrategy.False">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmFetchMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFetchMode.Select">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFetchMode.Join">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmNotFoundMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNotFoundMode.Ignore">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNotFoundMode.Exception">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmLaziness">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLaziness.False">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmLaziness.Proxy">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement.parent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmNestedCompositeElement.access">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmProperty">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.type1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.length">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.notnull">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.unique">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.update">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.updateSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.formula">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.uniquekey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmProperty.generated">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmType">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmType.param">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmType.name">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmPropertyGeneration">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPropertyGeneration.Never">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPropertyGeneration.Insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPropertyGeneration.Always">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmElement">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.length">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.notnull">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmElement.unique">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmManyToAny">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToAny.metavalue">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToAny.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToAny.idtype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToAny.metatype">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmManyToMany">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.foreignkey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.notfound">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.notfoundSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmManyToMany.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmOneToMany">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToMany.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToMany.notfound">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToMany.notfoundSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmBag">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.sqldeleteall">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.collectiontype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.generic">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.genericSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmBag.orderby">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType4">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType4.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType4.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCollectionFetchMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionFetchMode.Select">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionFetchMode.Join">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionFetchMode.Subselect">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmComponent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.parent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.update">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.updateSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmComponent.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDynamicComponent">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.update">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.updateSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.insert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDynamicComponent.insertSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmList">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.collectiontype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.generic">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmList.genericSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType3">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType3.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType3.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmMap">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.Item2">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.sqldeleteall">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.collectiontype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.generic">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.genericSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.orderby">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmMap.sort">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType1.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType1.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCompositeIndex">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeIndex.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCompositeIndex.class">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmIndexManyToAny">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToAny.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToAny.idtype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToAny.metatype">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmIndexManyToMany">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToMany.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToMany.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToMany.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIndexManyToMany.foreignkey">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmOneToOne">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.class">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.constrained">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.foreignkey">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.propertyref">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOneToOne.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.index">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.element">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPrimitiveArray.where">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType6">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType6.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType6.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmSet">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.sqldeleteall">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.collectiontype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.generic">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.genericSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.orderby">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSet.sort">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType2">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType2.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType2.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmIdbag">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.Item">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.ItemElementName">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.collectionid">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.Item1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.sqldeleteall">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.filter">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.access">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.outerjoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.outerjoinSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.cascade">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.cascadeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.where">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.persister">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.batchsize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.check">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.collectiontype">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.optimisticlock">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.optimisticlockSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.generic">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.genericSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmIdbag.orderby">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmItemChoiceType7">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType7.Cache">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmItemChoiceType7.JcsCache">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCollectionId">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.column">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.generator">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.column1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.type">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCollectionId.length">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmJoin">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.fetch">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.fetchSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.inverse">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoin.optional">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.key">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.joinedsubclass1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.proxy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.dynamicupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.dynamicinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.selectbeforeupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.extends">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.schema">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.table">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmJoinedSubclass.check">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmSubclass">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.meta">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.join">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.subclass1">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.loader">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.sqlinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.sqlupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.sqldelete">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.proxy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.lazy">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.lazySpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.dynamicupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.dynamicinsert">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.selectbeforeupdate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.extends">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSubclass.discriminatorvalue">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmPolymorphismType">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPolymorphismType.Implicit">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmPolymorphismType.Explicit">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmOptimisticLockMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOptimisticLockMode.None">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOptimisticLockMode.Version">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOptimisticLockMode.Dirty">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmOptimisticLockMode.All">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmQuery">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmQuery.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmQuery.flushmode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmQuery.flushmodeSpecified">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmQuery.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmFlushMode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFlushMode.Auto">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFlushMode.Never">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmSqlQuery">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.Text">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.resultsetref">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.flushmode">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSqlQuery.flushmodeSpecified">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmSynchronize">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmSynchronize.table">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmFilterDef">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterDef.filterparam">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterDef.Text">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterDef.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterDef.condition">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmFilterParam">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterParam.name">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmFilterParam.type">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDatabaseObject">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDatabaseObject.Items">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDatabaseObject.dialectscope">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmCreate">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmCreate.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDefinition">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDefinition.param">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDefinition.class">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDrop">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDrop.Text">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmDialectScope">
+            <remarks/>
+        </member>
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmDialectScope.name">
+            <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.IMappingDocumentParser">
+            <summary>
+            Responsible for converting a <see cref="T:System.IO.Stream"/> of HBM XML into an instance of
+            <see cref="T:NHibernate.Cfg.MappingSchema.HbmMapping"/>.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.MappingDocumentAggregator">
+            <summary>
+            Responsible for building a list of <see cref="T:NHibernate.Cfg.MappingSchema.HbmMapping"/> objects from a range of acceptable
+            sources.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.MappingSchema.MappingDocumentAggregator.#ctor">
+            <summary>
+            Calls the greedy constructor, passing it new instances of <see cref="T:NHibernate.Cfg.MappingSchema.MappingDocumentParser"/> and
+            <see cref="T:NHibernate.Cfg.MappingSchema.EndsWithHbmXmlFilter"/>.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.MappingSchema.MappingDocumentAggregator.Add(System.Reflection.Assembly,NHibernate.Cfg.MappingSchema.IAssemblyResourceFilter)">
+            <summary>Adds any embedded resource streams which pass the <paramref name="filter"/>.</summary>
+            <param name="assembly">An assembly containing embedded mapping documents.</param>
+            <param name="filter">A custom filter.</param>
+        </member>
+        <member name="M:NHibernate.Cfg.MappingSchema.MappingDocumentAggregator.Add(System.Reflection.Assembly)">
+            <summary>Adds any embedded resource streams which pass the default filter.</summary>
+            <param name="assembly">An assembly containing embedded mapping documents.</param>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.MappingDocumentParser">
+            <summary>
+            Responsible for converting a <see cref="T:System.IO.Stream"/> of HBM XML into an instance of
+            <see cref="T:NHibernate.Cfg.MappingSchema.HbmMapping"/>.
+            </summary>
+            <remarks>Uses an <see cref="T:System.Xml.Serialization.XmlSerializer"/> to deserialize HBM.</remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)">
+            <summary>
+            Converts a partial class name into a fully qualified one
+            </summary>
+            <param name="className"></param>
+            <param name="mapping"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)">
+            <summary>
+            Attempts to find a type by its full name. Throws a <see cref="T:NHibernate.MappingException"/>
+            using the provided <paramref name="errorMessage"/> in case of failure.
+            </summary>
+            <param name="fullName">name of the class to find</param>
+            <param name="errorMessage">Error message to use for
+            the <see cref="T:NHibernate.MappingException"/> in case of failure. Should contain
+            the <c>{0}</c> formatting placeholder.</param>
+            <returns>A <see cref="T:System.Type"/> instance.</returns>
+            <exception cref="T:NHibernate.MappingException">
+            Thrown when there is an error loading the class.
+            </exception>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.ClassForNameChecked(System.String,NHibernate.Cfg.Mappings,System.String)">
+            <summary>
+            Similar to <see cref="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)"/>, but handles short class names
+            by calling <see cref="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)"/>.
+            </summary>
+            <param name="name"></param>
+            <param name="mappings"></param>
+            <param name="errorMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindCollection(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
+            <remarks>
+            Called for all collections. <paramref name="containingType" /> parameter
+            was added in NH to allow for reflection related to generic types.
+            </remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindArray(System.Xml.XmlNode,NHibernate.Mapping.Array,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
+            <remarks>
+            Called for arrays and primitive arrays
+            </remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindMapSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Map,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass},NHibernate.Cfg.Mappings)">
+            <summary>
+            Called for Maps
+            </summary>
+            <param name="node"></param>
+            <param name="model"></param>
+            <param name="persistentClasses"></param>
+            <param name="mappings"></param>
+        </member>
+        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindCollectionSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass},NHibernate.Cfg.Mappings)">
+            <remarks>
+            Called for all collections
+            </remarks>
+        </member>
         <member name="T:NHibernate.Cfg.AssemblyHbmOrderer">
             <summary>
             Analyzes the contents of the <c>hbm.xml</c> files embedded in the 
@@ -1007,11 +3243,11 @@
         </member>
         <member name="F:NHibernate.Cfg.AssemblyHbmOrderer._hbmResources">
             <summary>
-            An <see cref="T:System.Collections.IList"/> of all the <c>hbm.xml</c> resources found
+            An <see cref="T:System.Collections.Generic.List`1"/> of all the <c>hbm.xml</c> resources found
             in the assembly.
             </summary>
         </member>
-        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.CreateWithResources(System.Reflection.Assembly,System.Collections.IEnumerable)">
+        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.CreateWithResources(System.Reflection.Assembly,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Creates a new instance of AssemblyHbmOrderer with the specified <paramref name="resources" />
             added.
@@ -1031,21 +3267,31 @@
         </member>
         <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.GetHbmFiles">
             <summary>
-            Gets an <see cref="T:System.Collections.IList"/> of <c>hbm.xml</c> resources in the correct order.
+            Gets an <see cref="T:System.Collections.Generic.IList`1"/> of <c>hbm.xml</c> resources in the correct order.
             </summary>
             <returns>
-            An <see cref="T:System.Collections.IList"/> of <c>hbm.xml</c> resources in the correct order.
+            An <see cref="T:System.Collections.Generic.IList`1"/> of <c>hbm.xml</c> resources in the correct order.
             </returns>
         </member>
-        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.OrderedHbmFiles(Iesi.Collections.ISet)">
+        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.GetHbmFiles(Iesi.Collections.Generic.ISet{System.String})">
             <summary>
-            Returns an <see cref="T:System.Collections.IList"/> of <c>hbm.xml</c> files in the order that ensures
+            Gets an <see cref="T:System.Collections.Generic.IList`1"/> of <c>hbm.xml</c> resources in the correct order.
+            </summary>
+            <param name="loadedClasses">Classes loaded by some other process.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IList`1"/> of <c>hbm.xml</c> resources in the correct order.
+            </returns>
+        </member>
+        <member name="M:NHibernate.Cfg.AssemblyHbmOrderer.OrderedHbmFiles(Iesi.Collections.Generic.ISet{NHibernate.Cfg.AssemblyHbmOrderer.ClassEntry},System.Collections.Generic.ICollection{System.String})">
+            <summary>
+            Returns an <see cref="T:System.Collections.Generic.IList`1"/> of <c>hbm.xml</c> files in the order that ensures
             base classes are loaded before their subclass/joined-subclass.
             </summary>
-            <param name="unorderedClasses">An <see cref="T:Iesi.Collections.ISet"/> of <see cref="T:NHibernate.Cfg.AssemblyHbmOrderer.ClassEntry"/> objects.</param>
+            <param name="unorderedClasses">An <see cref="T:Iesi.Collections.Generic.ISet`1"/> of <see cref="T:NHibernate.Cfg.AssemblyHbmOrderer.ClassEntry"/> objects.</param>
             <returns>
-            An <see cref="T:System.Collections.IList"/> of <see cref="T:System.String"/> objects that contain the <c>hbm.xml</c> file names.
+            An <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.String"/> objects that contain the <c>hbm.xml</c> file names.
             </returns>
+            <param name="loadedClasses"></param>
         </member>
         <member name="T:NHibernate.Cfg.AssemblyHbmOrderer.ClassEntry">
             <summary>
@@ -1075,14 +3321,10 @@
             </remarks>
         </member>
         <member name="F:NHibernate.Cfg.Configuration.MappingSchemaXMLNS">
-            <summary>
-            The XML Namespace for the nhibernate-mapping
-            </summary>
+            <summary>The XML Namespace for the nhibernate-mapping</summary>
         </member>
         <member name="F:NHibernate.Cfg.Configuration.CfgSchemaXMLNS">
-            <summary>
-            The XML Namespace for the nhibernate-configuration
-            </summary>
+            <summary>The XML Namespace for the nhibernate-configuration</summary>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.Reset">
             <summary>
@@ -1303,7 +3545,7 @@
             Set the default assembly to use for the mappings added to the configuration
             afterwards.
             </summary>
-            <param name="defaultAssembly">The default assembly name.</param>
+            <param name="newDefaultAssembly">The default assembly name.</param>
             <returns>This configuration instance.</returns>
             <remarks>
             This setting can be overridden for a mapping file by setting <c>default-assembly</c>
@@ -1315,7 +3557,7 @@
             Set the default namespace to use for the mappings added to the configuration
             afterwards.
             </summary>
-            <param name="defaultNamespace">The default namespace.</param>
+            <param name="newDefaultNamespace">The default namespace.</param>
             <returns>This configuration instance.</returns>
             <remarks>
             This setting can be overridden for a mapping file by setting <c>default-namespace</c>
@@ -1326,7 +3568,7 @@
             <summary>
             Sets the default interceptor for use by all sessions.
             </summary>
-            <param name="interceptor">The default interceptor.</param>
+            <param name="newInterceptor">The default interceptor.</param>
             <returns>This configuration instance.</returns>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.SetProperties(System.Collections.IDictionary)">
@@ -1340,7 +3582,7 @@
             Key is the name of the Property and the Value is the <see cref="T:System.String"/>
             value of the Property.
             </summary>
-            <param name="properties">An <see cref="T:System.Collections.IDictionary"/> of configuration properties.</param>
+            <param name="additionalProperties">An <see cref="T:System.Collections.IDictionary"/> of configuration properties.</param>
             <returns>
             This <see cref="T:NHibernate.Cfg.Configuration"/> object.
             </returns>
@@ -1410,7 +3652,7 @@
             <summary>
             Configure NHibernate using the specified XmlTextReader.
             </summary>
-            <param name="reader">The <see cref="T:System.Xml.XmlTextReader"/> that contains the Xml to configure NHibernate.</param>
+            <param name="textReader">The <see cref="T:System.Xml.XmlTextReader"/> that contains the Xml to configure NHibernate.</param>
             <returns>A Configuration object initialized with the file.</returns>
             <remarks>
             Calling Configure(XmlTextReader) will overwrite the values set in app.config or web.config
@@ -1436,7 +3678,7 @@
             <summary>
             Set a custom naming strategy
             </summary>
-            <param name="namingStrategy">the NamingStrategy to set</param>
+            <param name="newNamingStrategy">the NamingStrategy to set</param>
             <returns></returns>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.LoadMappingDocument(System.Xml.XmlTextReader,System.String)">
@@ -1468,14 +3710,6 @@
             <param name="hbmReader">The XmlTextReader that contains the mapping.</param>
             <param name="name">The name of the document to use for error reporting. May be <see langword="null"/>.</param>
             <returns>This Configuration object.</returns>
-        </member>
-        <member name="P:NHibernate.Cfg.Configuration.MappingSchemaCollection">
-            <summary></summary>
-            <remarks>Allocate on first use as we are expensive in time/space</remarks>
-        </member>
-        <member name="P:NHibernate.Cfg.Configuration.CfgSchemaCollection">
-            <summary></summary>
-            <remarks>Allocate on first use as we are expensive in time/space</remarks>
         </member>
         <member name="P:NHibernate.Cfg.Configuration.ClassMappings">
             <summary>
@@ -1725,68 +3959,6 @@
             configuration file, it is also possible to set the property value
             manually. This should only be done before a configuration object
             is created, otherwise the change may not take effect.
-            </remarks>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)">
-            <summary>
-            Converts a partial class name into a fully qualified one
-            </summary>
-            <param name="className"></param>
-            <param name="mapping"></param>
-            <returns></returns>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)">
-            <summary>
-            Attempts to find a type by its full name. Throws a <see cref="T:NHibernate.MappingException"/>
-            using the provided <paramref name="errorMessage"/> in case of failure.
-            </summary>
-            <param name="fullName">name of the class to find</param>
-            <param name="errorMessage">Error message to use for
-            the <see cref="T:NHibernate.MappingException"/> in case of failure. Should contain
-            the <c>{0}</c> formatting placeholder.</param>
-            <returns>A <see cref="T:System.Type"/> instance.</returns>
-            <exception cref="T:NHibernate.MappingException">
-            Thrown when there is an error loading the class.
-            </exception>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.ClassForNameChecked(System.String,NHibernate.Cfg.Mappings,System.String)">
-            <summary>
-            Similar to <see cref="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)"/>, but handles short class names
-            by calling <see cref="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)"/>.
-            </summary>
-            <param name="name"></param>
-            <param name="mappings"></param>
-            <param name="errorMessage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.BindCollection(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
-            <remarks>
-            Called for all collections. <paramref name="containingType" /> parameter
-            was added in NH to allow for reflection related to generic types.
-            </remarks>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.BindArray(System.Xml.XmlNode,NHibernate.Mapping.Array,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
-            <remarks>
-            Called for arrays and primitive arrays
-            </remarks>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.BindListSecondPass(System.Xml.XmlNode,NHibernate.Mapping.List,System.Collections.IDictionary,NHibernate.Cfg.Mappings)">
-            <remarks>
-            Called for Lists, arrays, primitive arrays
-            </remarks>>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.BindMapSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Map,System.Collections.IDictionary,NHibernate.Cfg.Mappings)">
-            <summary>
-            Called for Maps
-            </summary>
-            <param name="node"></param>
-            <param name="model"></param>
-            <param name="classes"></param>
-            <param name="mappings"></param>
-        </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.BindCollectionSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.Collections.IDictionary,NHibernate.Cfg.Mappings)">
-            <remarks>
-            Called for all collections
             </remarks>
         </member>
         <member name="T:NHibernate.Cfg.ImprovedNamingStrategy">
@@ -3917,6 +6089,7 @@
             </summary>
             <param name="name">SQL function name.</param>
             <param name="typeValue">Return type for the fuction.</param>
+            <param name="allowedArgsCount">Exact number of arguments expected.</param>
         </member>
         <member name="T:NHibernate.Dialect.Function.VarArgsSQLFunction">
             <summary>
@@ -4048,6 +6221,7 @@
             <summary>
             
             </summary>
+            <param name="parentTable"></param>
             <param name="constraintName"></param>
             <param name="foreignKey"></param>
             <param name="referencedTable"></param>
@@ -4794,11 +6968,6 @@
             </summary>
             <returns>false, unless overridden</returns>
         </member>
-        <member name="T:NHibernate.Dialect.MsSql2005Dialect">
-            <summary>
-            A <see cref="T:NHibernate.Dialect.Dialect"/> for <c>Microsoft Sql Server 2005</c>.
-            </summary>
-        </member>
         <member name="M:NHibernate.Dialect.MsSql2005Dialect.GetLimitString(NHibernate.SqlCommand.SqlString,System.Int32,System.Int32)">
             <summary>
             Add a <c>LIMIT</c> clause to the given SQL <c>SELECT</c>
@@ -4810,28 +6979,37 @@
             <remarks>
             The <c>LIMIT</c> SQL will look like
             <code>
-            WITH query AS
-                (SELECT TOP last ROW_NUMBER() OVER (ORDER BY orderby) as __hibernate_row_nr__, ... original_query)
-             SELECT * 
-               FROM query
-               WHERE __hibernate_row_nr__ &gt; offset
-               ORDER BY __hibernate_row_nr__
+            
+            SELECT TOP last * FROM (
+            SELECT ROW_NUMBER() OVER(ORDER BY __hibernate_sort_expr_1__ {sort direction 1} [, __hibernate_sort_expr_2__ {sort direction 2}, ...]) as row, query.* FROM (
+            	{original select query part}, {sort field 1} as __hibernate_sort_expr_1__ [, {sort field 2} as __hibernate_sort_expr_2__, ...]
+            	{remainder of original query minus the order by clause}
+            ) query
+            ) page WHERE page.row &gt; offset
+            
             </code>
             </remarks>
         </member>
         <member name="P:NHibernate.Dialect.MsSql2005Dialect.SupportsLimit">
             <summary>
             Sql Server 2005 supports a query statement that provides <c>LIMIT</c>
-            functionallity.
+            functionality.
             </summary>
-            <value><see langword="true" /></value>
+            <value><c>true</c></value>
         </member>
         <member name="P:NHibernate.Dialect.MsSql2005Dialect.SupportsLimitOffset">
             <summary>
             Sql Server 2005 supports a query statement that provides <c>LIMIT</c>
-            functionallity with an offset.
+            functionality with an offset.
             </summary>
-            <value><see langword="true" /></value>
+            <value><c>true</c></value>
+        </member>
+        <member name="P:NHibernate.Dialect.MsSql2005Dialect.UseMaxForLimit">
+            <summary>
+            Sql Server 2005 supports a query statement that provides <c>LIMIT</c>
+            functionality with an offset.
+            </summary>
+            <value><c>false</c></value>
         </member>
         <member name="T:NHibernate.Dialect.MsSql7Dialect">
             <summary>
@@ -6325,6 +8503,16 @@
             <exception cref="T:NHibernate.HibernateException">
             Thrown when the <c>Oracle.DataAccess</c> assembly can not be loaded.
             </exception>
+        </member>
+        <member name="M:NHibernate.Driver.OracleDataClientDriver.CreateBatcher(NHibernate.Impl.ConnectionManager)">
+            <summary>
+            Create an instance of <see cref="T:NHibernate.Engine.IBatcher"/> according to the configuration 
+            and the capabilities of the driver
+            </summary>
+            <remarks>
+            By default, .Net doesn't have any batching capabilities, drivers that does have
+            batching support need to override this method and return their own batcher.
+            </remarks>
         </member>
         <member name="M:NHibernate.Driver.OracleDataClientDriver.InitializeParameter(System.Data.IDbDataParameter,System.String,NHibernate.SqlTypes.SqlType)">
             <remarks>
@@ -9129,12 +11317,6 @@
             <summary>
             Get an executable instance of <c>Criteria</c>,
             to actually run the query.</summary>
-        </member>
-        <member name="M:NHibernate.Expression.DetachedCriteria.Clone">
-            <summary>
-            Clones this instance.
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:NHibernate.Expression.Disjunction">
             <summary>
@@ -13213,12 +15395,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:NHibernate.ICriteria.Clone">
-            <summary>
-            Clones this instance.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:NHibernate.ICriteria.GetCriteriaByPath(System.String)">
             <summary>
             Allows to get a sub criteria by path.
@@ -13240,11 +15416,10 @@
             </summary>
             <value>The alias for the encapsulated entity.</value>
         </member>
-        <member name="M:NHibernate.Impl.CriteriaImpl.Clone">
+        <member name="F:NHibernate.Impl.CriteriaImpl.ProjectionTransformer">
             <summary>
-            Clones this instance.
+            This result transformer is selected implicitly by calling <c>SetProjection()</c>
             </summary>
-            <returns></returns>
         </member>
         <member name="T:NHibernate.Impl.DirtyCollectionSearchVisitor">
             <summary>
@@ -13686,6 +15861,20 @@
             </summary>
             <param name="cachable">if set to <c>true</c> [cachable].</param>
         </member>
+        <member name="M:NHibernate.IMultiCriteria.SetCacheRegion(System.String)">
+            <summary>
+             Set the cache region for thie criteria
+            </summary>
+            <param name="region">The region</param>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.IMultiCriteria.ForceCacheRefresh(System.Boolean)">
+            <summary>
+             Force a cache refresh
+            </summary>
+            <param name="forceRefresh"></param>
+            <returns></returns>
+        </member>
         <member name="M:NHibernate.Impl.MultiCriteriaImpl.#ctor(NHibernate.Impl.SessionImpl,NHibernate.Impl.SessionFactoryImpl)">
             <summary>
             Initializes a new instance of the <see cref="T:NHibernate.Impl.MultiCriteriaImpl"/> class.
@@ -14026,6 +16215,12 @@
             </list>
             </summary>
         </member>
+        <member name="T:NHibernate.Impl.OracleDataClientBatchingBatcher">
+            <summary>
+            Summary description for OracleDataClientBatchingBatcher.
+            By Tomer Avissar
+            </summary>
+        </member>
         <member name="M:NHibernate.Impl.Printer.ToString(System.Object)">
             <summary>
             
@@ -14356,7 +16551,7 @@
             <summary>
             Gets the <c>hql</c> query identified by the <c>name</c>.
             </summary>
-            <param name="name">The name of that identifies the query.</param>
+            <param name="queryName">The name of that identifies the query.</param>
             <returns>
             A <c>hql</c> query or <see langword="null" /> if the named
             query does not exist.
@@ -16537,6 +18732,7 @@
             
             </summary>
             <param name="dialect"></param>
+            <param name="functionRegistry"></param>
             <returns></returns>
         </member>
         <member name="P:NHibernate.Mapping.Formula.FormulaString">
@@ -19518,6 +21714,7 @@
             </summary>
             <param name="alias"></param>
             <param name="suffix"></param>
+            <param name="allProperties"></param>
             <returns></returns>
         </member>
         <member name="P:NHibernate.Persister.Entity.IQueryable.IsInherited">
@@ -19701,9 +21898,9 @@
             <param name="rs"></param>
             <param name="id"></param>
             <param name="obj"></param>
-            <param name="persister"></param>
-            <param name="session"></param>
+            <param name="rootLoadable"></param>
             <param name="suffixedPropertyColumns"></param>
+            <param name="session"></param>
             <returns></returns>
         </member>
         <member name="M:NHibernate.Persister.Entity.AbstractEntityPersister.Insert(System.Object[],System.Boolean[],NHibernate.SqlCommand.SqlCommandInfo,System.Object,NHibernate.Engine.ISessionImplementor)">
@@ -27758,33 +29955,6 @@
             Contains a copy (not that actual instance stored) of the DictionaryEntries in a List.
             </summary>
         </member>
-        <member name="T:NHibernate.Util.IdentityMap.IdentityComparer">
-            <summary>
-            Compares two objects for Equality using "==" instead of Object.Equals
-            </summary>
-            <remarks>
-            Only for use in IdentityMap.
-            </remarks>
-        </member>
-        <member name="M:NHibernate.Util.IdentityMap.IdentityComparer.Compare(System.Object,System.Object)">
-            <summary>
-            Performs a null safe comparison using "==" instead of Object.Equals()
-            </summary>
-            <param name="x">First object to compare.</param>
-            <param name="y">Second object to compare.</param>
-            <remarks>
-            This is Lazy collection safe since it uses <c>==</c>, unlike <c>Object.Equals()</c> 
-            which currently causes NHibernate to load up the collection.  This behaivior of 
-            Collections is likely to change because Java's collections override Equals() and 
-            .net's collections don't.  So in .net there is no need to override Equals() and 
-            GetHashCode() on the NHibernate Collection implementations.
-            </remarks>
-            <returns>
-            Unlike the standard IComparer interface this will not return a <c>1</c> or <c>-1</c>
-            to indicate which is Greater Than or Less Than.  It always returns <c>-1</c> to 
-            indicate the two are not Equal.
-            </returns>
-        </member>
         <member name="T:NHibernate.Util.JoinedEnumerable">
             <summary>
             Combines multiple objects implementing <see cref="T:System.Collections.IEnumerable"/> into one.
@@ -28127,32 +30297,29 @@
             <param name="capacity">the initial size for the hashtable</param>
             <param name="loadFactor">the load factor for the hash table</param>
         </member>
-        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Int32,System.Collections.IHashCodeProvider,System.Collections.IComparer)">
+        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Int32,System.Collections.IEqualityComparer)">
             <summary>
             Construct a new sequenced hash map with the specified initial size, hash code provider
             and comparer
             </summary>
             <param name="capacity">the initial size for the hashtable</param>
-            <param name="hcp"></param>
-            <param name="comparer"></param>
+            <param name="equalityComparer"></param>
         </member>
-        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Collections.IHashCodeProvider,System.Collections.IComparer)">
+        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Collections.IEqualityComparer)">
             <summary>
             Creates an empty Hashtable with the default initial capacity and using the default load factor, 
             the specified hash code provider and the specified comparer
             </summary>
-            <param name="hcp"></param>
-            <param name="comparer"></param>
+            <param name="equalityComparer"></param>
         </member>
-        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Int32,System.Single,System.Collections.IHashCodeProvider,System.Collections.IComparer)">
+        <member name="M:NHibernate.Util.SequencedHashMap.#ctor(System.Int32,System.Single,System.Collections.IEqualityComparer)">
             <summary>
             Creates an empty Hashtable with the default initial capacity and using the default load factor, 
             the specified hash code provider and the specified comparer
             </summary>
             <param name="capacity">the initial size for the hashtable</param>
             <param name="loadFactor">the load factor for the hash table</param>
-            <param name="hcp"></param>
-            <param name="comparer"></param>
+            <param name="equalityComparer"></param>
         </member>
         <member name="M:NHibernate.Util.SequencedHashMap.RemoveEntry(NHibernate.Util.SequencedHashMap.Entry)">
             <summary>
@@ -28642,6 +30809,35 @@
             The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
             </param>
         </member>
+        <member name="T:NHibernate.CriteriaTransformer">
+            <summary>
+            Transforms Criteria queries
+            </summary>
+        </member>
+        <member name="M:NHibernate.CriteriaTransformer.TransformToRowCount(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+             Returns a clone of the original criteria, which will return the count 
+             of rows that are returned by the original criteria query.
+            </summary>
+        </member>
+        <member name="M:NHibernate.CriteriaTransformer.TransformToRowCount(NHibernate.ICriteria)">
+            <summary>
+             Returns a clone of the original criteria, which will return the count 
+             of rows that are returned by the original criteria query.
+            </summary>
+        </member>
+        <member name="M:NHibernate.CriteriaTransformer.Clone(NHibernate.Expression.DetachedCriteria)">
+            <summary>
+            Creates an exact clone of the criteria
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NHibernate.CriteriaTransformer.Clone(NHibernate.ICriteria)">
+            <summary>
+            Creates an exact clone of the criteria
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:NHibernate.CriteriaUtil">
             <summary>
             Contains static declarations from Criteria interface in Hibernate.
@@ -29038,6 +31234,23 @@
             are explicityl initialized or left as they are
             </summary>
             <value>True to explicitly initilize lazy objects, false to leave them in the state they are in</value>
+        </member>
+        <member name="M:NHibernate.IdentityEqualityComparer.Equals(System.Object,System.Object)">
+             <summary>
+             Performs a null safe comparison using "==" instead of Object.Equals()
+             </summary>
+             <param name="x">First object to compare.</param>
+             <param name="y">Second object to compare.</param>
+             <returns>
+             true if x is the same instance as y or if both are null references; otherwise, false.
+            </returns>
+             <remarks>
+             This is Lazy collection safe since it uses <see cref="M:Object.ReferenceEquals"/>, 
+             unlike <c>Object.Equals()</c> which currently causes NHibernate to load up the collection.
+             This behaivior of Collections is likely to change because Java's collections override Equals() and 
+             .net's collections don't. So in .net there is no need to override Equals() and 
+             GetHashCode() on the NHibernate Collection implementations.
+             </remarks>
         </member>
         <member name="T:NHibernate.InstantiationException">
             <summary>
