@@ -49,6 +49,7 @@ namespace Rhino.Igloo.Tests
 		private string refreshUrl;
 	    private bool hasEnded;
 	    private string rawUrl = null;
+	    public bool isIE7;
 
 	    public void Redirect(string destination)
 		{
@@ -239,6 +240,17 @@ namespace Rhino.Igloo.Tests
 	    public string UrlDecode(string s)
 	    {
 	        return s;
+	    }
+
+
+	    public bool BrowserIsIE7()
+	    {
+	        return this.isIE7;
+	    }
+
+	    public string ResolveUrl(string url)
+	    {
+	        return url;
 	    }
 
 	    /// <summary>

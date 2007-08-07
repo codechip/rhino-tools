@@ -340,5 +340,25 @@ namespace Rhino.Igloo
             return context.Server.UrlDecode(s);
         }
 
+        /// <summary>
+        /// Determines whether the browser is IE 7
+        /// </summary>
+        /// <returns></returns>
+        public bool BrowserIsIE7()
+        {
+            return context.Request.Browser.Browser == "IE" &&
+                   context.Request.Browser.MajorVersion == 7;
+        }
+
+
+        /// <summary>
+        /// Resolves the URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns></returns>
+        public string ResolveUrl(string url)
+        {
+            return context.Response.ApplyAppPathModifier(url);
+        }
     }
 }

@@ -176,5 +176,17 @@ namespace Rhino.Igloo
 	    /// <param name="s">The encoded url</param>
 	    /// <returns>The unencoded url</returns>
 	    string UrlDecode(string s);
+
+        /// <summary>
+        /// Determines whether the browser is IE 7
+        /// </summary>
+	    bool BrowserIsIE7();
+
+        /// <summary>
+        /// Resolves the URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns></returns>
+	    string ResolveUrl(string url);
 	}
 }

@@ -227,5 +227,16 @@ namespace Rhino.Igloo
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
+
+
+	    public string ResolveUrl(string url)
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+	    }
+
+	    public bool BrowserIsIE7()
+	    {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
 	}
 }
