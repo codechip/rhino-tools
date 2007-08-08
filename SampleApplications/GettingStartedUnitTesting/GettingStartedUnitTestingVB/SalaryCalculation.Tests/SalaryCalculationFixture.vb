@@ -13,16 +13,23 @@ Public Class SalaryCalculationFixture
 
     End Sub
 
-    <Test()> _
-    Public Sub CalculateSalary_HourWorkedButNoHourlySalarySet_WillReturnZero()
-        Dim calculator As New SalaryCalculator
-        Dim result As Decimal
+	<Test()> _
+	Public Sub Calculate_CanAddHoursWorked_WillRetainHoursWorked()
+		Dim calculator As New SalaryCalculator
 
-        calculator.AddHoursWorked(New DateTime(2007, 7, 1), 8.5)
+		calculator.AddHoursWorked(DateTime.Today, 8)
 
-        result = calculator.Calculate()
+		Assert.AreEqual(8, calculator.TotalHoursWorked)
+	End Sub
 
-        Assert.AreEqual(0, result)
-    End Sub
+	<Test()> _
+	Public Sub Calculate_CanAddHoursWorked_CanGetHoursWorkedOnSpecificDay()
+		Dim calculator As New SalaryCalculator
+
+		calculator.AddHoursWorked(DateTime.Today, 8)
+
+		Assert.AreEqual(8, calculator.GetHoursWorkedAt(DateTime.Today))
+	End Sub
+
 
 End Class

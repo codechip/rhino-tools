@@ -2,6 +2,10 @@
   <SharedSolutionDisabledTemplatesManager>
     <DisabledTemplates />
   </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <StartDirectory />
+    <UseShadowCopy>False</UseShadowCopy>
+  </UnitTestRunner>
   <UserSolutionDisabledTemplatesManager>
     <DisabledTemplates />
   </UserSolutionDisabledTemplatesManager>
@@ -20,8 +24,8 @@
   </NAntValidationSettings>
   <EditorManager>
     <RecentFiles>
-      <File id="0048879B-6DE3-41A5-9330-BAE478019DE9/f:SalaryCalculator.vb" caret="135" scrollPosition="0|0" />
-      <File id="77B30723-CA72-4B72-AA85-24558713E25A/f:SalaryCalculationFixture.vb" caret="679" scrollPosition="0|0" />
+      <File id="0048879B-6DE3-41A5-9330-BAE478019DE9/f:SalaryCalculator.vb" caret="625" scrollPosition="0|13" />
+      <File id="77B30723-CA72-4B72-AA85-24558713E25A/f:SalaryCalculationFixture.vb" caret="619" scrollPosition="0|20" />
     </RecentFiles>
   </EditorManager>
   <CompletionStatisticsManager />

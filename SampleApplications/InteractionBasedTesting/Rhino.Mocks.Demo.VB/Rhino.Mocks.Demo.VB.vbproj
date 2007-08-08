@@ -42,12 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IPeopleFinder.vb" />
     <Compile Include="ISmsSender.vb" />
     <Compile Include="IUserRepository.vb" />
     <Compile Include="LoginController.vb" />
+    <Compile Include="MeetingNotifier.vb" />
     <Compile Include="Order.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
     <Compile Include="RhinoMocks101.vb" />
     <Compile Include="User.vb" />
+    <Compile Include="VBUG_Tests.vb" />
   </ItemGroup>
 </Project>
