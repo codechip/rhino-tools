@@ -360,5 +360,14 @@ namespace Rhino.Igloo
         {
             return context.Response.ApplyAppPathModifier(url);
         }
+
+
+        /// <summary>
+        /// Clears the session.
+        /// </summary>
+        public void ClearSession()
+        {
+            context.Session.Clear();
+        }
     }
 }

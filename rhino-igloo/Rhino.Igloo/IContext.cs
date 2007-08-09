@@ -188,5 +188,10 @@ namespace Rhino.Igloo
         /// <param name="url">The URL.</param>
         /// <returns></returns>
 	    string ResolveUrl(string url);
+
+        /// <summary>
+        /// Clears the session.
+        /// </summary>
+	    void ClearSession();
 	}
 }

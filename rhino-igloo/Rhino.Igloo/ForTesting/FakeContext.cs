@@ -253,6 +253,11 @@ namespace Rhino.Igloo.Tests
 	        return url;
 	    }
 
+	    public void ClearSession()
+	    {
+	        throw new NotImplementedException();
+	    }
+
 	    /// <summary>
         /// Gets or sets a value indicating whether this instance has ended.
         /// </summary>
