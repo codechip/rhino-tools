@@ -473,7 +473,7 @@ namespace NHibernate.Query.Generator
                                "nh:many-to-one", "nh:one-to-one");
 
             GenerateCollections(genericName, UseTheQueryClass, classNode, innerClass, "nh:set",
-                                "nh:bag", "nh:list");
+                                "nh:bag", "nh:list", "nh:idbag");
 
             // generate reference to component
             GenerateComponents(genericName, innerClass, classNode, "", "nh:component", "nh:dynamic-component");
@@ -725,7 +725,7 @@ namespace NHibernate.Query.Generator
                     GenerateComponents(myGenericName, innerClass, classNode, newPrefix, componentPath);
 
 										GenerateCollections(myGenericName, UseTheQueryClass, classNode, innerClass, "nh:set",
-																				"nh:bag", "nh:list");
+																				"nh:bag", "nh:list", "nh:idbag");
                 }
             }
         }
