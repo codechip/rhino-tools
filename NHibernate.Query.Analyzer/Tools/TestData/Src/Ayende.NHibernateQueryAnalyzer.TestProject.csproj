@@ -18,7 +18,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>TestProject</RootNamespace>
+    <RootNamespace>Ayende.NHibernateQueryAnalyzer.TestProject</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -91,7 +91,7 @@
     <Compile Include="TestProject.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Ayende.NHibernateQueryAnalyzer.TestProject.hbm.xml" />
+    <EmbeddedResource Include="TestProject.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

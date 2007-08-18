@@ -546,9 +546,9 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 			{
 				int index = Array.IndexOf(dockingZone.Documents, dockingZone.ActiveDocument);
 				if (index + 1 < dockingZone.Documents.Length)
-					dockingZone.Documents[index + 1].Activate();
+					dockingZone.Documents[index + 1].DockHandler.Activate();
 				else
-					dockingZone.Documents[0].Activate();
+					dockingZone.Documents[0].DockHandler.Activate();
 			}
 		}
 
@@ -558,9 +558,9 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 			{
 				int index = Array.IndexOf(dockingZone.Documents, dockingZone.ActiveDocument);
 				if (index - 1 >= 0)
-					dockingZone.Documents[index - 1].Activate();
+					dockingZone.Documents[index - 1].DockHandler.Activate();
 				else
-					dockingZone.Documents[dockingZone.Documents.Length - 1].Activate();
+					dockingZone.Documents[dockingZone.Documents.Length - 1].DockHandler.Activate();
 			}
 		}
 
