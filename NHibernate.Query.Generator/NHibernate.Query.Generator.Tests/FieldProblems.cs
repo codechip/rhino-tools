@@ -29,9 +29,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using MbUnit.Framework;
+using NHibernate.Query.Generator.Model;
+using Query;
 
 namespace NHibernate.Query.Generator.Tests
 {
@@ -74,5 +78,20 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(orderByType.GetProperty("DisplayName"), "Should have a DisplayName");
 		}
 
+		[Test]
+		public void ShouldGenerate_OrQuery_WithTwoPredicates()
+		{
+			//needed because we are doing a date.ToString()
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InstalledUICulture;
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.InstalledUICulture;
+
+			QueryBuilder<Canistar> builder = (Where.Canistar.State == CanistarState.Packager &&
+			                        Where.Canistar.Lot.Expiration < new DateTime(2007,12,20)) ||
+			                       (Where.Canistar.State == CanistarState.Packager &&
+									Where.Canistar.DateOffset < new DateTime(2007, 12, 20)
+			                       );
+			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration<12/20/2007 12:00:00 AM) or (State = Packager and DateOffset<12/20/2007 12:00:00 AM)))";
+			Assert.AreEqual(expected, builder.ToDetachedCriteria().ToString());
+		}
 	}
 }

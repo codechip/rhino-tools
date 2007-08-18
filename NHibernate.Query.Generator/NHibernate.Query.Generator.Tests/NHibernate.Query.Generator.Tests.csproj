@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ActiveRecordModel\QueryBuilder.cs" />
     <Compile Include="ActiveRecordModel\Where.Blog.cs" />
+    <Compile Include="ActiveRecordModel\Where.Canistar.cs" />
     <Compile Include="ActiveRecordModel\Where.Cat.cs" />
     <Compile Include="ActiveRecordModel\Where.Comment.cs" />
     <Compile Include="ActiveRecordModel\Where.Componnet.cs" />
