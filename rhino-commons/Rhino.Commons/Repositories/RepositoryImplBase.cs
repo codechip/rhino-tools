@@ -36,6 +36,11 @@ using NHibernate.Transform;
 namespace Rhino.Commons
 {
     public abstract class RepositoryImplBase<T> {
+		public DetachedCriteria CreateDetachedCriteria()
+		{
+			return DetachedCriteria.For<T>();
+		}
+
         public ProjT ReportOne<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
         {
             using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
