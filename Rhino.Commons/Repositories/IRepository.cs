@@ -382,5 +382,11 @@ namespace Rhino.Commons
         /// mapping files</param>
         /// <param name="parameters">parameters for the query</param>
         ICollection<ProjJ> ReportAll<ProjJ>(string namedQuery, params Parameter[] parameters);
+
+		/// <summary>
+		/// Creates a <see cref="DetachedCriteria"/> compatible with this Repository
+		/// </summary>
+		/// <returns>The <see cref="DetachedCriteria"/></returns>
+    	DetachedCriteria CreateDetachedCriteria();
     }
 }

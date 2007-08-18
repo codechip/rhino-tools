@@ -462,5 +462,14 @@ namespace Rhino.Commons
         {
             return InternalRepository.ReportAll<ProjJ>(namedQuery, parameters);
         }
+
+		/// <summary>
+		/// See <see cref="IRepository{T}.CreateDetachedCriteria()"/>
+		/// </summary>
+		/// <returns></returns>
+		public static DetachedCriteria CreateDetachedCriteria()
+		{
+			return InternalRepository.CreateDetachedCriteria();
+		}
     }
 }
