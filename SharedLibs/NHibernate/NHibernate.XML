@@ -503,7 +503,7 @@
         <member name="T:NHibernate.Cache.HashtableCacheProvider">
             <summary>
             Cache Provider plugin for NHibernate that is configured by using
-            <c>hibernate.cache.provider_class="NHibernate.Cache.HashtableCacheProvider"</c>
+            <c>cache.provider_class="NHibernate.Cache.HashtableCacheProvider"</c>
             </summary>
         </member>
         <member name="T:NHibernate.Cache.ICacheProvider">
@@ -993,6 +993,479 @@
         <member name="M:NHibernate.Cache.UpdateTimestampsCache.Invalidate(System.Object[])">
             <summary></summary>
         </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper">
+            <summary>
+            Helper to parse hibernate-configuration XmlNode.
+            </summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.CfgSectionName">
+            <summary>
+            The XML node name for hibernate configuration section in the App.config/Web.config and
+            for the hibernate.cfg.xml .
+            </summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.CfgSchemaXMLNS">
+            <summary>The XML Namespace for the nhibernate-configuration</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ByteCodeProviderExpression">
+            <summary>XPath expression for bytecode-provider property.</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ReflectionOptimizerExpression">
+            <summary>XPath expression for reflection-optimizer property.</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryExpression">
+            <summary>XPath expression for session-factory whole node.</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryPropertiesExpression">
+            <summary>XPath expression for session-factory.property nodes</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryMappingsExpression">
+            <summary>XPath expression for session-factory.mapping nodes</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryClassesCacheExpression">
+            <summary>XPath expression for session-factory.class-cache nodes</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryCollectionsCacheExpression">
+            <summary>XPath expression for session-factory.collection-cache nodes</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryEventsExpression">
+            <summary>XPath expression for session-factory.event nodes</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.SessionFactoryListenersExpression">
+            <summary>XPath expression for session-factory.listener nodes</summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ByteCodeProviderConvertFrom(System.String)">
+            <summary>
+            Convert a string to <see cref="T:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType"/>.
+            </summary>
+            <param name="byteCodeProvider">The string that represent <see cref="T:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType"/>.</param>
+            <returns>
+            The <paramref name="byteCodeProvider"/> converted to <see cref="T:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType"/>.
+            <see cref="F:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType.Null"/> for invalid values.
+            </returns>
+            <remarks>
+            See <see cref="T:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType"/> for allowed values.
+            </remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ClassCacheUsageConvertFrom(System.String)">
+            <summary>
+            Convert a string to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage"/>.
+            </summary>
+            <param name="usage">The string that represent <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage"/>.</param>
+            <returns>
+            The <paramref name="usage"/> converted to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage"/>.
+            </returns>
+            <exception cref="T:NHibernate.Cfg.HibernateConfigException">If the values is invalid.</exception>
+            <remarks>
+            See <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage"/> for allowed values.
+            </remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ClassCacheIncludeConvertFrom(System.String)">
+            <summary>
+            Convert a string to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude"/>.
+            </summary>
+            <param name="include">The string that represent <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude"/>.</param>
+            <returns>
+            The <paramref name="include"/> converted to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude"/>.
+            </returns>
+            <exception cref="T:NHibernate.Cfg.HibernateConfigException">If the values is invalid.</exception>
+            <remarks>
+            See <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude"/> for allowed values.
+            </remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.CfgXmlHelper.ListenerTypeConvertFrom(System.String)">
+            <summary>
+            Convert a string to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerType"/>.
+            </summary>
+            <param name="listenerType">The string that represent <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerType"/>.</param>
+            <returns>
+            The <paramref name="listenerType"/> converted to <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerType"/>.
+            </returns>
+            <exception cref="T:NHibernate.Cfg.HibernateConfigException">If the values is invalid.</exception>
+            <remarks>
+            See <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerType"/> for allowed values.
+            </remarks>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage">
+            <summary>
+            Values for class-cache and collection-cache strategy.
+            </summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage.Readonly">
+            <summary>Xml value: read-only</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage.ReadWrite">
+            <summary>Xml value: read-write</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage.NonStrictReadWrite">
+            <summary>Xml value: nonstrict-read-write</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage.Transactional">
+            <summary>Xml value: transactional</summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude">
+            <summary>
+            Values for class-cache include.
+            </summary>
+            <remarks>Not implemented in Cache.</remarks>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude.All">
+            <summary>Xml value: all</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude.NonLazy">
+            <summary>Xml value: non-lazy</summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration">
+            <summary>
+            Configuration parsed values for a class-cache XML node.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <param name="usage">Cache strategy.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage,NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <param name="usage">Cache strategy.</param>
+            <param name="include">Values for class-cache include.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <param name="usage">Cache strategy.</param>
+            <param name="region">The cache region.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage,NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <param name="usage">Cache strategy.</param>
+            <param name="include">Values for class-cache include.</param>
+            <param name="region">The cache region.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.Class">
+            <summary>
+            The class full name.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.Region">
+            <summary>
+            The cache region.
+            </summary>
+            <remarks>If null or empty the <see cref="P:ClassCacheConfiguration.Class"/> is used during configuration.</remarks>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.Usage">
+            <summary>
+            Cache strategy.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ClassCacheConfiguration.Include">
+            <summary>
+            class-cache include.
+            </summary>
+            <remarks>
+            Not implemented in Cache.
+            Defaul value <see cref="F:NHibernate.Cfg.ConfigurationSchema.ClassCacheInclude.All"/>.
+            </remarks>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration">
+            <summary>
+            Configuration parsed values for a collection-cache XML node.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration"/> class.
+            </summary>
+            <param name="collection">The cache role.</param>
+            <param name="usage">Cache strategy.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="collection"/> is null or empty.</exception>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ClassCacheUsage,System.String)" -->
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration.Collection">
+            <summary>
+            The role.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration.Region">
+            <summary>
+            The cache region.
+            </summary>
+            <remarks>If null or empty the <see cref="P:CollectionCacheConfiguration.Collection"/> is used during configuration.</remarks>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.CollectionCacheConfiguration.Usage">
+            <summary>
+            Cache strategy.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.EventConfiguration">
+            <summary>
+            Configuration parsed values for a event XML node.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.EventConfiguration.#ctor(NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration,NHibernate.Cfg.ConfigurationSchema.ListenerType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.EventConfiguration"/> class.
+            </summary>
+            <param name="listener">The listener.</param>
+            <param name="type">The type.</param>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.EventConfiguration.Type">
+            <summary>
+            The default type of listeners.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.EventConfiguration.Listeners">
+            <summary>
+            Listeners for this event.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType">
+            <summary>
+            Values for bytecode-provider system property.
+            </summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType.Codedom">
+            <summary>Xml value: codedom</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType.Lcg">
+            <summary>Xml value: lcg</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType.Null">
+            <summary>Xml value: null</summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration">
+            <summary>
+            Configuration parsed values for hibernate-configuration section.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration"/> class.
+            </summary>
+            <param name="hbConfigurationReader">The XML reader to parse.</param>
+            <remarks>
+            The nhibernate-configuration.xsd is applied to the XML.
+            </remarks>
+            <exception cref="T:NHibernate.Cfg.HibernateConfigException">When nhibernate-configuration.xsd can't be applied.</exception>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration.ByteCodeProviderType">
+            <summary>
+            Value for bytecode-provider system property.
+            </summary>
+            <remarks>Default value <see cref="F:NHibernate.Cfg.ConfigurationSchema.BytecodeProviderType.Lcg"/>.</remarks>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration.UseReflectionOptimizer">
+            <summary>
+            Value for reflection-optimizer system property.
+            </summary>
+            <remarks>Default value true.</remarks>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.HibernateConfiguration.SessionFactory">
+            <summary>
+            The <see cref="T:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration"/> if the session-factory exists in hibernate-configuration;
+            Otherwise null.
+            </summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.ListenerType">
+            <summary>
+            Values for listener type property.
+            </summary>
+            <remarks>Unused</remarks>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.NotValidType">
+            <summary>Not allowed in Xml. It represente de default value when an explicit type is assigned.</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Autoflush">
+            <summary>Xml value: auto-flush</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Merge">
+            <summary>Xml value: merge</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Create">
+            <summary>Xml value: create</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.CreateOnFlush">
+            <summary>Xml value: create-onflush</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Delete">
+            <summary>Xml value: delete</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.DirtyCheck">
+            <summary>Xml value: dirty-check</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Evict">
+            <summary>Xml value: evict</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Flush">
+            <summary>Xml value: flush</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.FlushEntity">
+            <summary>Xml value: flush-entity</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Load">
+            <summary>Xml value: load</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.LoadCollection">
+            <summary>Xml value: load-collection</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Lock">
+            <summary>Xml value: lock</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Refresh">
+            <summary>Xml value: refresh</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Replicate">
+            <summary>Xml value: replicate</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.SaveUpdate">
+            <summary>Xml value: save-update</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Save">
+            <summary>Xml value: save</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PreUpdate">
+            <summary>Xml value: pre-update</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.Update">
+            <summary>Xml value: update</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PreLoad">
+            <summary>Xml value: pre-load</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PreDelete">
+            <summary>Xml value: pre-delete</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PreInsert">
+            <summary>Xml value: pre-insert</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostLoad">
+            <summary>Xml value: post-load</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostInsert">
+            <summary>Xml value: post-insert</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostUpdate">
+            <summary>Xml value: post-update</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostDelete">
+            <summary>Xml value: post-delete</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostCommitUpdate">
+            <summary>Xml value: post-commit-update</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostCommitInsert">
+            <summary>Xml value: post-commit-insert</summary>
+        </member>
+        <member name="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.PostCommitDelete">
+            <summary>Xml value: post-commit-delete</summary>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration">
+            <summary>
+            Configuration parsed values for a listener XML node
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration.#ctor(System.String,NHibernate.Cfg.ConfigurationSchema.ListenerType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration"/> class.
+            </summary>
+            <param name="clazz">The class full name.</param>
+            <param name="type">The listener type.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="clazz"/> is null or empty.</exception>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration.Class">
+            <summary>
+            The class full name.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.ListenerConfiguration.Type">
+            <summary>
+            The listener type.
+            </summary>
+            <remarks>Default value <see cref="F:NHibernate.Cfg.ConfigurationSchema.ListenerType.NotValidType"/> mean that the value is ignored.</remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:NHibernate.Cfg.ConfigurationSchema.MappingConfiguration" -->
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.MappingConfiguration.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.MappingConfiguration"/> class.
+            </summary>
+            <param name="file">Mapped file.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="file"/> is null or empty.</exception>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.MappingConfiguration.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.MappingConfiguration"/> class.
+            </summary>
+            <param name="assembly">The assembly name.</param>
+            <param name="resource">The mapped embedded resource.</param>
+            <exception cref="T:System.ArgumentException">When <paramref name="assembly"/> is null or empty.</exception>
+        </member>
+        <member name="T:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration">
+            <summary>
+            Configuration parsed values for a session-factory XML node.
+            </summary>
+        </member>
+        <member name="M:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration"/> class.
+            </summary>
+            <param name="name">The session factory name. Null or empty string are allowed.</param>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.Name">
+            <summary>
+            The session factory name.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.Properties">
+            <summary>
+            Session factory propeties bag.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.Mappings">
+            <summary>
+            Session factory mapping configuration.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.ClassesCache">
+            <summary>
+            Session factory class-cache configurations.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.CollectionsCache">
+            <summary>
+            Session factory collection-cache configurations.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.Events">
+            <summary>
+            Session factory event configurations.
+            </summary>
+        </member>
+        <member name="P:NHibernate.Cfg.ConfigurationSchema.SessionFactoryConfiguration.Listeners">
+            <summary>
+            Session factory listener configurations.
+            </summary>
+        </member>
         <member name="T:NHibernate.Cfg.MappingSchema.EndsWithHbmXmlFilter">
             <summary>
             Responsible for checking that a resource name matches the default pattern of "*.hbm.xml". This is the
@@ -1044,13 +1517,13 @@
         <member name="F:NHibernate.Cfg.MappingSchema.HbmLoader.queryref">
             <remarks/>
         </member>
-        <member name="T:NHibernate.Cfg.MappingSchema.HbmResultset">
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmResultSet">
             <remarks/>
         </member>
-        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultset.Items">
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultSet.Items">
             <remarks/>
         </member>
-        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultset.name">
+        <member name="F:NHibernate.Cfg.MappingSchema.HbmResultSet.name">
             <remarks/>
         </member>
         <member name="T:NHibernate.Cfg.MappingSchema.HbmLoadCollection">
@@ -1154,6 +1627,9 @@
         </member>
         <member name="T:NHibernate.Cfg.MappingSchema.HbmMapping">
             <remarks/>
+        </member>
+        <member name="T:NHibernate.Cfg.MappingSchema.HbmBase">
+            <summary>A base class for HBM schema classes that provides helper methods.</summary>
         </member>
         <member name="F:NHibernate.Cfg.MappingSchema.HbmMapping.meta">
             <remarks/>
@@ -3172,15 +3648,15 @@
             </summary>
             <remarks>Uses an <see cref="T:System.Xml.Serialization.XmlSerializer"/> to deserialize HBM.</remarks>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.Binder.FullClassName(System.String,NHibernate.Cfg.Mappings)">
             <summary>
             Converts a partial class name into a fully qualified one
             </summary>
             <param name="className"></param>
-            <param name="mapping"></param>
+            <param name="mappings"></param>
             <returns></returns>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.Binder.ClassForFullNameChecked(System.String,System.String)">
             <summary>
             Attempts to find a type by its full name. Throws a <see cref="T:NHibernate.MappingException"/>
             using the provided <paramref name="errorMessage"/> in case of failure.
@@ -3194,37 +3670,36 @@
             Thrown when there is an error loading the class.
             </exception>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.ClassForNameChecked(System.String,NHibernate.Cfg.Mappings,System.String)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.Binder.ClassForNameChecked(System.String,NHibernate.Cfg.Mappings,System.String)">
             <summary>
-            Similar to <see cref="M:NHibernate.Cfg.HbmBinder.ClassForFullNameChecked(System.String,System.String)"/>, but handles short class names
-            by calling <see cref="M:NHibernate.Cfg.HbmBinder.FullClassName(System.String,NHibernate.Cfg.Mappings)"/>.
+            Similar to <see cref="M:NHibernate.Cfg.XmlHbmBinding.Binder.ClassForFullNameChecked(System.String,System.String)"/>, but handles short class names
+            by calling <see cref="M:NHibernate.Cfg.XmlHbmBinding.Binder.FullClassName(System.String,NHibernate.Cfg.Mappings)"/>.
             </summary>
             <param name="name"></param>
             <param name="mappings"></param>
             <param name="errorMessage"></param>
             <returns></returns>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindCollection(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.CollectionBinder.BindCollection(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.String,System.String,System.Type)">
             <remarks>
             Called for all collections. <paramref name="containingType" /> parameter
             was added in NH to allow for reflection related to generic types.
             </remarks>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindArray(System.Xml.XmlNode,NHibernate.Mapping.Array,System.String,System.String,System.Type,NHibernate.Cfg.Mappings)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.CollectionBinder.BindArray(System.Xml.XmlNode,NHibernate.Mapping.Array,System.String,System.String,System.Type)">
             <remarks>
             Called for arrays and primitive arrays
             </remarks>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindMapSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Map,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass},NHibernate.Cfg.Mappings)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.CollectionBinder.BindMapSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Map,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass})">
             <summary>
             Called for Maps
             </summary>
             <param name="node"></param>
             <param name="model"></param>
             <param name="persistentClasses"></param>
-            <param name="mappings"></param>
         </member>
-        <member name="M:NHibernate.Cfg.HbmBinder.CollectionBinder.BindCollectionSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass},NHibernate.Cfg.Mappings)">
+        <member name="M:NHibernate.Cfg.XmlHbmBinding.CollectionBinder.BindCollectionSecondPass(System.Xml.XmlNode,NHibernate.Mapping.Collection,System.Collections.Generic.IDictionary{System.Type,NHibernate.Mapping.PersistentClass})">
             <remarks>
             Called for all collections
             </remarks>
@@ -3323,8 +3798,8 @@
         <member name="F:NHibernate.Cfg.Configuration.MappingSchemaXMLNS">
             <summary>The XML Namespace for the nhibernate-mapping</summary>
         </member>
-        <member name="F:NHibernate.Cfg.Configuration.CfgSchemaXMLNS">
-            <summary>The XML Namespace for the nhibernate-configuration</summary>
+        <member name="F:NHibernate.Cfg.Configuration.DefaultHibernateCfgFileName">
+            <summary>Default name for hibernate configuration file.</summary>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.Reset">
             <summary>
@@ -3503,7 +3978,7 @@
             The order of <c>hbm.xml</c> files only matters if the attribute "extends" is used.
             The ordering should only be done when needed because it takes extra time 
             to read the XML files to find out the order the files should be passed to
-            the <see cref="T:NHibernate.Cfg.HbmBinder"/>. If you don't use the "extends" attribute then it is
+            the <see cref="T:NHibernate.Cfg.XmlHbmBinding.Binder"/>. If you don't use the "extends" attribute then it is
             reccommended to call this with <c>skipOrdering=true</c>.
             </para>
             </remarks>
@@ -3607,25 +4082,17 @@
         <member name="M:NHibernate.Cfg.Configuration.Configure">
             <summary>
             Configure NHibernate using the <c>&lt;hibernate-configuration&gt;</c> section
-            from the application config file, if found, or the file <c>hibernate.cfg.xml</c>
-            otherwise.
+            from the application config file, if found, or the file <c>hibernate.cfg.xml</c> if the
+            <c>&lt;hibernate-configuration&gt;</c> section not include the session-factory configuration.
             </summary>
             <returns>A configuration object initialized with the file.</returns>
             <remarks>
-            To configure NHibernate explicitly using <c>hibernate.cfg.xml</c>, ignoring
-            the application configuration file, use this code:
+            To configure NHibernate explicitly using <c>hibernate.cfg.xml</c>, appling merge/override
+            of the application configuration file, use this code:
             <code>
             	configuration.Configure("path/to/hibernate.cfg.xml");
             </code>
             </remarks>
-        </member>
-        <member name="M:NHibernate.Cfg.Configuration.Configure(System.Xml.XmlNode)">
-            <summary>
-            Configure NHibernate from an <see cref="T:System.Xml.XmlNode"/> representing the root
-            <c>&lt;hibernate-configuration&gt;</c> element.
-            </summary>
-            <param name="node">Configuration node</param>
-            <returns>This Configuration object</returns>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.Configure(System.String)">
             <summary>
@@ -3634,7 +4101,7 @@
             <param name="fileName">The location of the XML file to use to configure NHibernate.</param>
             <returns>A Configuration object initialized with the file.</returns>
             <remarks>
-            Calling Configure(string) will overwrite the values set in app.config or web.config
+            Calling Configure(string) will override/merge the values set in app.config or web.config
             </remarks>
         </member>
         <member name="M:NHibernate.Cfg.Configuration.Configure(System.Reflection.Assembly,System.String)">
@@ -3902,11 +4369,14 @@
             	 by the <see cref="T:NHibernate.Cfg.Environment"/> properties
             	</description></item>
             </list>
-            In NHibernate, <c>&lt;nhibernate&gt;</c> section in the application configuration file
-            corresponds to Java system-level properties; <c>&lt;hibernate-configuration&gt;</c>
-            section is considered to be the session-factory-level configuration. It is possible
-            to use the applicatoin configuration file (App.config) together with the NHibernate configuration
-            file (hibernate.cfg.xml) at the same time.
+            In NHibernate, <c>&lt;hibernate-configuration&gt;</c> section in the application configuration file
+            corresponds to Java system-level properties; <c>&lt;session-factory&gt;</c>
+            section is the session-factory-level configuration. 
+            
+            It is possible to use the applicatoin configuration file (App.config) together with the NHibernate 
+            configuration file (hibernate.cfg.xml) at the same time.
+            Properties in hibernate.cfg.xml override/merge properties in applicatoin configuration file where same
+            property is found. For others configuration a merge is applied.
             </remarks>
         </member>
         <member name="F:NHibernate.Cfg.Environment.ConnectionStringName">
@@ -3928,7 +4398,7 @@
         </member>
         <member name="P:NHibernate.Cfg.Environment.Properties">
             <summary>
-            Gets a copy of the configuration found in <c>&lt;nhibernate&gt;</c> section
+            Gets a copy of the configuration found in <c>&lt;hibernate-configuration&gt;</c> section
             of app.config/web.config.
             </summary>
             <remarks>
@@ -3960,6 +4430,104 @@
             manually. This should only be done before a configuration object
             is created, otherwise the change may not take effect.
             </remarks>
+        </member>
+        <member name="T:NHibernate.Cfg.HibernateConfigException">
+            <summary>
+            An exception that occurs at configuration time, rather than runtime, as a result of
+            something screwy in the hibernate.cfg.xml.
+            </summary>
+        </member>
+        <member name="T:NHibernate.MappingException">
+            <summary>
+            An exception that usually occurs at configuration time, rather than runtime, as a result of
+            something screwy in the O-R mappings
+            </summary>
+        </member>
+        <member name="M:NHibernate.MappingException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
+            </summary>
+            <param name="message">The message that describes the error. </param>
+        </member>
+        <member name="M:NHibernate.MappingException.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
+            </summary>
+            <param name="innerException">
+            The exception that is the cause of the current exception. If the innerException parameter 
+            is not a null reference, the current exception is raised in a catch block that handles 
+            the inner exception.
+            </param>
+        </member>
+        <member name="M:NHibernate.MappingException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
+            </summary>
+            <param name="message">The message that describes the error. </param>
+            <param name="innerException">
+            The exception that is the cause of the current exception. If the innerException parameter 
+            is not a null reference, the current exception is raised in a catch block that handles 
+            the inner exception.
+            </param>
+        </member>
+        <member name="M:NHibernate.MappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class
+            with serialized data.
+            </summary>
+            <param name="info">
+            The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object 
+            data about the exception being thrown.
+            </param>
+            <param name="context">
+            The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
+            </param>
+        </member>
+        <member name="M:NHibernate.Cfg.HibernateConfigException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.HibernateConfigException"/> class.
+            </summary>
+            <remarks>Default message is used.</remarks>
+        </member>
+        <member name="M:NHibernate.Cfg.HibernateConfigException.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.HibernateConfigException"/> class.
+            </summary>
+            <param name="innerException">
+            The exception that is the cause of the current exception. If the innerException parameter 
+            is not a null reference, the current exception is raised in a catch block that handles 
+            the inner exception.
+            </param>
+        </member>
+        <member name="M:NHibernate.Cfg.HibernateConfigException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.HibernateConfigException"/> class.
+            </summary>
+            <param name="message">The message that describes the error. </param>
+        </member>
+        <member name="M:NHibernate.Cfg.HibernateConfigException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.HibernateConfigException"/> class.
+            </summary>
+            <param name="message">The message that describes the error. </param>
+            <param name="innerException">
+            The exception that is the cause of the current exception. If the innerException parameter 
+            is not a null reference, the current exception is raised in a catch block that handles 
+            the inner exception.
+            </param>
+        </member>
+        <member name="M:NHibernate.Cfg.HibernateConfigException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NHibernate.Cfg.HibernateConfigException"/> class
+            with serialized data.
+            </summary>
+            <param name="info">
+            The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object 
+            data about the exception being thrown.
+            </param>
+            <param name="context">
+            The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
+            </param>
         </member>
         <member name="T:NHibernate.Cfg.ImprovedNamingStrategy">
             <summary>
@@ -6109,7 +6677,7 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.DB2400Driver"/></description>
             	</item>
             </list>
@@ -6127,7 +6695,7 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.DB2Driver"/></description>
             	</item>
             </list>
@@ -6340,18 +6908,14 @@
             <param name="sequenceName"></param>
             <returns></returns>
         </member>
-        <member name="M:NHibernate.Dialect.Dialect.GetDialect">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:NHibernate.Dialect.Dialect.GetDialect(System.Collections.IDictionary)">
             <summary>
-            
+            Get de <see cref="T:NHibernate.Dialect.Dialect"/> from a property bag (prop name <see cref="F:Environment.Dialect"/>)
             </summary>
-            <param name="props"></param>
-            <returns></returns>
+            <param name="props">The property bag.</param>
+            <returns>An instance of <see cref="T:NHibernate.Dialect.Dialect"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">When <paramref name="props"/> is null.</exception>
+            <exception cref="T:NHibernate.HibernateException">When the property bag don't contains de property <see cref="F:Environment.Dialect"/>.</exception>
         </member>
         <member name="M:NHibernate.Dialect.Dialect.CreateOuterJoinFragment">
             <summary>
@@ -6763,7 +7327,7 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.FirebirdDriver"/></description>
             	</item>
             </list>
@@ -6804,7 +7368,7 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.OdbcDriver"/></description>
             	</item>
             </list>
@@ -6845,11 +7409,11 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.IngresDriver"/></description>
             	</item>
             </list>
@@ -6867,15 +7431,15 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.SqlClientDriver"/></description>
             	</item>
             	<item>
-            		<term>hibernate.prepare_sql</term>
+            		<term>prepare_sql</term>
             		<description><see langword="false"/></description>
             	</item>
             </list>
@@ -7049,11 +7613,11 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.MySqlDataDriver"/></description>
             	</item>
             </list>
@@ -7138,11 +7702,11 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.OracleClientDriver"/></description>
             	</item>
             </list>
@@ -7234,11 +7798,11 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.NpgsqlDriver"/></description>
             	</item>
             </list>
@@ -7346,15 +7910,15 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.SybaseClientDriver"/></description>
             	</item>
             	<item>
-            		<term>hibernate.prepare_sql</term>
+            		<term>prepare_sql</term>
             		<description><see langword="false"/></description>
             	</item>
             </list>
@@ -7395,15 +7959,15 @@
             		<description>Default Value</description>
             	</listheader>
             	<item>
-            		<term>hibernate.use_outer_join</term>
+            		<term>use_outer_join</term>
             		<description><see langword="true"/></description>
             	</item>
             	<item>
-            		<term>hibernate.connection.driver_class</term>
+            		<term>connection.driver_class</term>
             		<description><see cref="T:NHibernate.Driver.SybaseClientDriver"/></description>
             	</item>
             	<item>
-            		<term>hibernate.prepare_sql</term>
+            		<term>prepare_sql</term>
             		<description><see langword="false"/></description>
             	</item>
             </list>
@@ -7541,11 +8105,11 @@
             <para>
             This is the interface to implement, or you can inherit from <see cref="T:NHibernate.Driver.DriverBase"/> 
             if you have an ADO.NET data provider that NHibernate does not have built in support for.
-            To use the driver, NHibernate property <c>hibernate.connection.driver_class</c> should be
+            To use the driver, NHibernate property <c>connection.driver_class</c> should be
             set to the assembly-qualified name of the driver class.
             </para>
             <code>
-            key="hibernate.connection.driver_class"
+            key="connection.driver_class"
             value="FullyQualifiedClassName, AssemblyName"
             </code>
             </remarks>
@@ -9644,7 +10208,7 @@
         </member>
         <member name="P:NHibernate.Engine.ISessionFactoryImplementor.DefaultSchema">
             <summary>
-            Get the database schema specified in <c>hibernate.default_schema</c>
+            Get the database schema specified in <c>default_schema</c>
             </summary>
         </member>
         <member name="P:NHibernate.Engine.ISessionFactoryImplementor.BatchSize">
@@ -9688,7 +10252,7 @@
         <member name="P:NHibernate.Engine.ISessionFactoryImplementor.IsBatchUpdateEnabled">
             <summary>
             Gets a boolean indicating if the sql statement should be prepared.  The value
-            is calculated from <c>hibernate.adonet.batch_size</c> if the value exists and greater than 0.
+            is calculated from <c>adonet.batch_size</c> if the value exists and greater than 0.
             </summary>
         </member>
         <member name="P:NHibernate.Engine.ISessionFactoryImplementor.CurrentSessionContext">
@@ -10215,7 +10779,7 @@
             If a new underlying transaction is required, begin the transaction. Otherwise
             continue the new work in the context of the existing underlying transaction.
             The class of the returned <see cref="T:NHibernate.ITransaction"/> object is determined by
-            the property <c>hibernate.transaction_factory</c>
+            the property <c>transaction_factory</c>
             </remarks>
             <returns>A transaction instance</returns>
         </member>
@@ -10757,7 +11321,7 @@
         <member name="P:NHibernate.Engine.ISessionImplementor.EnabledFilters">
             <summary>
             Return the currently enabled filters.  The filter map is keyed by filter
-            name, with values corresponding to the {@link org.hibernate.impl.FilterImpl}
+            name, with values corresponding to the <see cref="T:NHibernate.Impl.FilterImpl"/>
             instance.
             </summary>
             <returns>The currently enabled filters.</returns>
@@ -20842,6 +21406,11 @@
             Get the names of the collection element columns (or the primary key columns in the case of a one-to-many association)
             </summary>
         </member>
+        <member name="P:NHibernate.Persister.Collection.IQueryableCollection.ElementForumlas">
+            <summary>
+            Get the formulas of the collection elements
+            </summary>
+        </member>
         <member name="P:NHibernate.Persister.Collection.IQueryableCollection.HasWhere">
             <summary>
             Does this collection role have a where clause filter?
@@ -21483,6 +22052,11 @@
         <member name="P:NHibernate.Persister.Entity.IEntityPersister.IsCacheInvalidationRequired">
             <summary>
             Should we always invalidate the cache instead of recaching updated state
+            </summary>
+        </member>
+        <member name="P:NHibernate.Persister.Entity.IEntityPersister.IsLazyPropertiesCacheable">
+            <summary>
+            Should lazy properties of this entity be cached?
             </summary>
         </member>
         <member name="P:NHibernate.Persister.Entity.IEntityPersister.HasCache">
@@ -30686,9 +31260,6 @@
             <param name="delim"></param>
             <param name="returnDelims"></param>
         </member>
-        <member name="M:NHibernate.Util.StringTokenizer.GetEnumerator">
-            <summary></summary>
-        </member>
         <member name="P:NHibernate.Util.WeakHashtable.Count">
             <summary>
             Count of elements in the collection. Unreliable!
@@ -30862,52 +31433,6 @@
             <summary>
             Each row of results is a distinct instance of the root entity
             </summary>
-        </member>
-        <member name="T:NHibernate.MappingException">
-            <summary>
-            An exception that usually occurs at configuration time, rather than runtime, as a result of
-            something screwy in the O-R mappings
-            </summary>
-        </member>
-        <member name="M:NHibernate.MappingException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
-            </summary>
-            <param name="message">The message that describes the error. </param>
-        </member>
-        <member name="M:NHibernate.MappingException.#ctor(System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
-            </summary>
-            <param name="innerException">
-            The exception that is the cause of the current exception. If the innerException parameter 
-            is not a null reference, the current exception is raised in a catch block that handles 
-            the inner exception.
-            </param>
-        </member>
-        <member name="M:NHibernate.MappingException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class.
-            </summary>
-            <param name="message">The message that describes the error. </param>
-            <param name="innerException">
-            The exception that is the cause of the current exception. If the innerException parameter 
-            is not a null reference, the current exception is raised in a catch block that handles 
-            the inner exception.
-            </param>
-        </member>
-        <member name="M:NHibernate.MappingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NHibernate.MappingException"/> class
-            with serialized data.
-            </summary>
-            <param name="info">
-            The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object 
-            data about the exception being thrown.
-            </param>
-            <param name="context">
-            The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
-            </param>
         </member>
         <member name="M:NHibernate.DuplicateMappingException.#ctor(System.String,System.String,System.String)">
             <summary>
@@ -31179,7 +31704,7 @@
             readable format.
             </para>
             <para>
-            The property <c>hibernate.xml.output_stylesheet</c> specifies a user-written stylesheet.
+            The property <c>xml.output_stylesheet</c> specifies a user-written stylesheet.
             Hibernate will attempt to load the stylesheet from the classpath first and if not found,
             will attempt to load it as a file
             </para>

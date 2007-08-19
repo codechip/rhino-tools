@@ -356,6 +356,12 @@
             <param name="options"></param>
             <returns></returns>
         </member>
+        <member name="P:Castle.DynamicProxy.IProxyBuilder.ModuleScope">
+            <summary>
+            Gets the module scope used by this builder for generating code.
+            </summary>
+            <value>The module scope used by this builder.</value>
+        </member>
         <member name="M:Castle.DynamicProxy.InternalsHelper.IsInternalToDynamicProxy(System.Reflection.Assembly)">
             <summary>
             Determines whether this assembly has internals visisble to dynamic proxy.

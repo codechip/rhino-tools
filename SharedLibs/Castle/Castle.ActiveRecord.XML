@@ -1034,7 +1034,7 @@
             <summary>
             Gets or sets the schema for this relation (dbo., etc)
             </summary>
-            <value>The schema.</value>
+            <value>The schema name.</value>
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.Lazy">
             <summary>
@@ -1056,7 +1056,7 @@
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.OrderBy">
             <summary>
-            Gets or sets the order by clause for this relation
+            Gets or sets the order by clause for this relation. This is a SQL order, not HQL.
             </summary>
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.Where">
@@ -1066,12 +1066,12 @@
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.Sort">
             <summary>
-            Only used with sets
+            Only used with sets. The value can be <c>unsorted</c>, <c>natural</c> and the name of a class implementing <c>System.Collections.IComparer</c>
             </summary>
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.Index">
             <summary>
-            Only used with maps or list
+            Only used with maps or lists
             </summary>
         </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.IndexType">
@@ -1144,6 +1144,11 @@
             or sequential select fetching.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.HasAndBelongsToManyAttribute.CollectionType">
+            <summary>
+            Provides a custom collection type.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.HasManyAttribute">
             <summary>
             Maps a one to many association.
@@ -1181,6 +1186,11 @@
         <member name="F:Castle.ActiveRecord.HasManyAttribute.fetchMethod">
             <summary>
             Whether we do outer join fetching for this collection
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.HasManyAttribute.customCollectionType">
+            <summary>
+            Provides a custom collection type.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.HasManyAttribute.#ctor">
@@ -1224,6 +1234,11 @@
             <summary>
             Chooses between outer-join fetching
             or sequential select fetching.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.HasManyAttribute.CollectionType">
+            <summary>
+            Provides a custom collection type.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.HasManyToAnyAttribute">
@@ -3921,7 +3936,7 @@
             association. The goal is to raise clear exceptions with tips of how 
             to fix any error.
             It also tries to infer as much information from the class / attribute model as possible so it can
-            complete the missing infomration without the user needing to specify it.
+            complete the missing information without the user needing to specify it.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.#ctor(Castle.ActiveRecord.Framework.Internal.ActiveRecordModelCollection)">
@@ -4267,7 +4282,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.GetSafeName(System.String)">
             <summary>
-            Remove the generic part from the typename.
+            Remove the generic part from the type name.
             </summary>
             <param name="name"></param>
             <returns></returns>
@@ -5543,13 +5558,13 @@
             </summary>
             <param name="session">The session.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.PerformDisposal(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.PerformDisposal(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Performs the disposal.
             </summary>
             <param name="sessions">The sessions.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.PerformDisposal(System.Collections.ICollection,System.Boolean,System.Boolean)">
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.PerformDisposal(System.Collections.Generic.ICollection{NHibernate.ISession},System.Boolean,System.Boolean)">
             <summary>
             Performs the disposal.
             </summary>
@@ -5557,7 +5572,7 @@
             <param name="flush">if set to <c>true</c> [flush].</param>
             <param name="close">if set to <c>true</c> [close].</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.DiscardSessions(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.DiscardSessions(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Discards the sessions.
             </summary>
@@ -5739,7 +5754,7 @@
             the session instance or null if none was found
             </returns>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Scopes.DifferentDatabaseScope.PerformDisposal(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.DifferentDatabaseScope.PerformDisposal(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Performs the disposal.
             </summary>
@@ -5882,7 +5897,7 @@
             </summary>
             <param name="discardChanges">if set to <c>true</c> [discard changes].</param>
         </member>
-        <member name="M:Castle.ActiveRecord.SessionScope.PerformDisposal(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.SessionScope.PerformDisposal(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Performs the disposal.
             </summary>
@@ -6103,7 +6118,7 @@
             </summary>
             <param name="session">The session.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.TransactionScope.PerformDisposal(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.TransactionScope.PerformDisposal(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Dispose of this scope
             </summary>
@@ -6115,7 +6130,7 @@
             </summary>
             <param name="session">the session</param>
         </member>
-        <member name="M:Castle.ActiveRecord.TransactionScope.DiscardSessions(System.Collections.ICollection)">
+        <member name="M:Castle.ActiveRecord.TransactionScope.DiscardSessions(System.Collections.Generic.ICollection{NHibernate.ISession})">
             <summary>
             Discards the sessions.
             </summary>
@@ -8024,6 +8039,12 @@
             Generates and executes the creation scripts for the database.
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.CreateSchema(System.Type)">
+            <summary>
+            Generates and executes the creation scripts for the database using 
+            the specified baseClass to know which database it should create the schema for.
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.CreateSchemaFromFile(System.String)">
             <summary>
             Executes the specified script to create/drop/change the database schema
@@ -8040,14 +8061,40 @@
             Generates and executes the Drop scripts for the database.
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.DropSchema(System.Type)">
+            <summary>
+            Generates and executes the Drop scripts for the database using 
+            the specified baseClass to know which database it should create the scripts for.
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateDropScripts(System.String)">
             <summary>
             Generates the drop scripts for the database saving them to the supplied file name. 
+            </summary>
+            <remarks>
+            If ActiveRecord was configured to access more than one database, a file is going
+            to be generate for each, based on the path and the <c>fileName</c> specified.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateDropScripts(System.Type,System.String)">
+            <summary>
+            Generates the drop scripts for the database saving them to the supplied file name. 
+            The baseType is used to identify which database should we act upon.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateCreationScripts(System.String)">
             <summary>
             Generates the creation scripts for the database
+            </summary>
+            <remarks>
+            If ActiveRecord was configured to access more than one database, a file is going
+            to be generate for each, based on the path and the <c>fileName</c> specified.
+            </remarks>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GenerateCreationScripts(System.Type,System.String)">
+            <summary>
+            Generates the creation scripts for the database
+            The baseType is used to identify which database should we act upon.
             </summary>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.ResetInitializationFlag">
@@ -8055,19 +8102,28 @@
             Intended to be used only by test cases
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.IsActiveRecordType(System.Type)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.IsActiveRecordType(System.Reflection.ICustomAttributeProvider)">
             <summary>
             Return true if the type has a [ActiveRecord] attribute
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.CollectValidActiveRecordTypesFromAssembly(System.Reflection.Assembly,System.Collections.ArrayList,Castle.ActiveRecord.Framework.IConfigurationSource)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.CollectValidActiveRecordTypesFromAssembly(System.Reflection.Assembly,System.Collections.Generic.ICollection{System.Type},Castle.ActiveRecord.Framework.IConfigurationSource)">
             <summary>
-            Retrive all classies decorated with ActiveRecordAttribute or have been configured
+            Retrieve all classes decorated with ActiveRecordAttribute or that have been configured
             as a AR base class.
             </summary>
-            <param name="assembly">Assembly to retrive types from</param>
-            <param name="list">Array to store retrived types in</param>
-            <param name="source">IConfigurationSource to inspect AR base declerations from</param>
+            <param name="assembly">Assembly to retrieve types from</param>
+            <param name="list">Array to store retrieved types in</param>
+            <param name="source">IConfigurationSource to inspect AR base declarations from</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.CreateAnotherFile(System.String,System.Int32)">
+            <summary>
+            Generate a file name based on the original file name specified, using the 
+            count to give it some order.
+            </summary>
+            <param name="originalFileName"></param>
+            <param name="fileCount"></param>
+            <returns></returns>
         </member>
         <member name="E:Castle.ActiveRecord.ActiveRecordStarter.SessionFactoryHolderCreated">
             <summary>
@@ -8092,18 +8148,20 @@
             </summary>
             <example>
             <code>
+            using Castle.Components.Validator;
+            
             public class Customer : ActiveRecordBase
             {
             	...
             	
-            	[Property, ValidateNotEmpty]
+            	[Property, ValidateNonEmpty]
             	public int Name
             	{
             		get { return _name; }
             		set { _name = value; }
             	}
             	
-            	[Property, ValidateNotEmpty, ValidateEmail]
+            	[Property, ValidateNonEmpty, ValidateEmail]
             	public int Email
             	{
             		get { return _email; }
@@ -8976,73 +9034,6 @@
             <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
             <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
             <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.ValidationHookDispatcher">
-            <summary>
-            This class processes the events generated by NHibernate and validates objects
-            where the object is not derived from ActiveRecordBase. If you want to use it
-            you could create a facility that replaces the default HookDispatcher along
-            the lines of the following:
-            <code>
-            public class ValidateFacility : IFacility
-            {
-                public void Init(IKernel kernel, Castle.Core.Configuration.IConfiguration facilityConfig)
-                {
-                    InterceptorFactory.Create = new InterceptorFactory.CreateInterceptor(CreateValidationInterceptor);
-                }
-            
-                private IInterceptor CreateValidationInterceptor()
-                {
-                    return ValidationHookDispatcher.Instance;
-                }
-            }
-            </code>
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.#ctor">
-            <summary>
-            Initializes a new instance of the ValidationHookDispatcher class.
-            </summary>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.OnFlushDirty(System.Object,System.Object,System.Object[],System.Object[],System.String[],NHibernate.Type.IType[])">
-            <summary>
-            Called when an object is detected to be dirty, during a flush.
-            </summary>
-            <param name="currentState"></param>
-            <param name="entity"></param>
-            <param name="id"></param>
-            <param name="previousState"></param>
-            <param name="propertyNames"></param>
-            <param name="types"></param>
-            <remarks>
-            The interceptor may modify the detected <c>currentState</c>, which will be propagated to
-            both the database and the persistent object. Note that all flushes end in an actual
-            synchronization with the database, in which as the new <c>currentState</c> will be propagated
-            to the object, but not necessarily (immediately) to the database. It is strongly recommended
-            that the interceptor <b>not</b> modify the <c>previousState</c>.
-            </remarks>
-            <returns><c>true</c> if the user modified the <c>currentState</c> in any way</returns>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.ValidationHookDispatcher.OnSave(System.Object,System.Object,System.Object[],System.String[],NHibernate.Type.IType[])">
-            <summary>
-            Called before an object is saved
-            </summary>
-            <param name="entity"></param>
-            <param name="id"></param>
-            <param name="propertyNames"></param>
-            <param name="state"></param>
-            <param name="types"></param>
-            <remarks>
-            The interceptor may modify the <c>state</c>, which will be used for the SQL <c>INSERT</c>
-            and propagated to the persistent object
-            </remarks>
-            <returns><c>true</c> if the user modified the <c>state</c> in any way</returns>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.ValidationHookDispatcher.Instance">
-            <summary>
-            Gets the sole instance.
-            </summary>
-            <value>The instance.</value>
         </member>
     </members>
 </doc>
