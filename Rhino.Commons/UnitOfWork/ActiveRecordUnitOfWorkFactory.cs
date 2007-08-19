@@ -55,6 +55,12 @@ namespace Rhino.Commons
 			set { initializationAware = value; }
 		}
 
+        public ActiveRecordUnitOfWorkFactory()
+        {
+            //assumes that another class will have taken on the responsibility of initializing the ActiveRecord framework
+            initialized = true;
+        }
+
 		public ActiveRecordUnitOfWorkFactory(Assembly[] assemblies)
 		{
 			this.assemblies = assemblies;

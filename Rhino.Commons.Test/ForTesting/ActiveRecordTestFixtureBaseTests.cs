@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using MbUnit.Framework;
 using Rhino.Commons.ForTesting;
 
@@ -37,67 +36,6 @@ namespace Rhino.Commons.Test.ForTesting
     [TestFixture]
     public class ActiveRecordTestFixtureBaseTests : TestFixtureBaseTests
     {
-
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_SQLite_IoC()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.SQLite);
-
-            //not sure why we can't do this - my lack of ActiveRecord knowledge (Christian Crowhurst)
-//            VerifyCanCreateUseAndDisposeSession();
-
-            VerifyCanCreateUseAndDisposeUnitOfWork();
-        }
-
-
-        [Test]
-        public void Limitation_MustUseTheSameDatabaseEngineWithinSolutionTests()
-        {
-            FixtureInitialize(PersistenceFramework.ActiveRecord,
-                              WindsorFilePath,
-                              DatabaseEngine.SQLite,
-                              "",
-                              MappingInfo.FromAssemblyContaining<AREntity>());
-
-            try
-            {
-                FixtureInitialize(PersistenceFramework.ActiveRecord,
-                                  WindsorFilePath,
-                                  DatabaseEngine.MsSqlCe,
-                                  "",
-                                  MappingInfo.FromAssemblyContaining<AREntity>());
-                Assert.Fail("Exception expected");
-            }
-            catch (InvalidOperationException e)
-            {
-                string messgae =
-                    "ActiveRecord implementation of UnitOfWorkContext has been throttled so that every " +
-                    "context created within a running application must use the same database engine. " +
-                    "This limitation is a consequence of not being able to register an existing " +
-                    "SessionFactory with the ActiveRecord framework.";
-                Assert.AreEqual(messgae, e.Message);
-            }
-        }
-
-        [Test]
-        public void CreateSessionFailsUnexpectedly()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.SQLite);
-
-            try
-            {
-                //this will fail - which is probably not expected
-                CurrentContext.CreateSession();
-                Assert.Fail("Exception was expected");
-            }
-            catch (InvalidOperationException e)
-            {
-                Assert.AreEqual("Must be inside a scope for InMemory tests to work", e.Message);
-            }
-        }
-
-
-
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
         {
