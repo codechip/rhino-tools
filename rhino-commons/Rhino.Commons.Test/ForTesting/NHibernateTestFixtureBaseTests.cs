@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using MbUnit.Framework;
 using Rhino.Commons.ForTesting;
 
@@ -37,74 +36,6 @@ namespace Rhino.Commons.Test.ForTesting
     [TestFixture]
     public class NHibernateTestFixtureBaseTests : TestFixtureBaseTests
     {
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_MsSqlCe()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSqlCe);
-            VerifyCanCreateUseAndDisposeSession();
-        }
-
-
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_MsSqlCe_IoC()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSqlCe);
-            VerifyCanCreateUseAndDisposeSession();
-            VerifyCanCreateUseAndDisposeUnitOfWork();
-        }
-
-
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_SQLite()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.SQLite);
-            VerifyCanCreateUseAndDisposeSession();
-        }
-
-
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_SQLite_IoC()
-        {
-            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.SQLite);
-            VerifyCanCreateUseAndDisposeSession();
-            VerifyCanCreateUseAndDisposeUnitOfWork();
-        }
-        
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_MsSql2005()
-        {
-            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
-            {
-                VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSql2005);
-                VerifyCanCreateUseAndDisposeSession();
-            }
-        }
-
-
-        [Test]
-        public virtual void CanCreateUnitOfWorkContextFor_MsSql2005_IoC()
-        {
-            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
-            {
-                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005);
-                VerifyCanCreateUseAndDisposeSession();
-                VerifyCanCreateUseAndDisposeUnitOfWork();
-            }
-        }
-
-        [Test]
-        public virtual void NewUnitOfWorkContextCreatedForDifferentDatabaseNames()
-        {
-            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
-            {
-                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb1");
-                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb2");
-
-                Assert.AreEqual(2, Contexts.Count);
-            }
-        }
-
-
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
         {

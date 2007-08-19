@@ -80,9 +80,6 @@ namespace Rhino.Commons.ForTesting
                                              string databaseName,
                                              MappingInfo mappingInfo)
         {
-            if (framework == PersistenceFramework.ActiveRecord)
-                EnsureExistingActiveRecordUnitOfWorkUses(databaseEngine);
-
             if (string.IsNullOrEmpty(databaseName))
             {
                 databaseName = DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]);
@@ -104,27 +101,6 @@ namespace Rhino.Commons.ForTesting
             }
 
             CurrentContext = context;
-        }
-
-
-        private static void EnsureExistingActiveRecordUnitOfWorkUses(DatabaseEngine databaseEngine)
-        {
-            ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-            if (holder == null || holder.GetAllConfigurations().Length == 0)
-                return;
-            
-            Configuration configuration = Collection.First(holder.GetAllConfigurations());
-        	string dialectInUse = (string) (configuration.Properties["dialect"] ?? configuration.Properties["hibernate.dialect"]);
-            if (!dialectInUse.StartsWith("NHibernate.Dialect." + databaseEngine))
-            {
-                string messgae =
-                    "ActiveRecord implementation of UnitOfWorkContext has been throttled so that every " +
-                    "context created within a running application must use the same database engine. " +
-                    "This limitation is a consequence of not being able to register an existing " +
-                    "SessionFactory with the ActiveRecord framework.";
-                throw new InvalidOperationException(messgae);
-            }
-            
         }
 
 

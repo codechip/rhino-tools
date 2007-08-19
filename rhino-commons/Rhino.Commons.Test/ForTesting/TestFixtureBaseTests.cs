@@ -53,6 +53,64 @@ namespace Rhino.Commons.Test.ForTesting
             Contexts.Clear();
         }
 
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_MsSqlCe()
+        {
+            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSqlCe);
+            VerifyCanCreateUseAndDisposeSession();
+        }
+
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_MsSqlCe_IoC()
+        {
+            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSqlCe);
+            VerifyCanCreateUseAndDisposeSession();
+            VerifyCanCreateUseAndDisposeUnitOfWork();
+        }
+
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_SQLite()
+        {
+            VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.SQLite);
+            VerifyCanCreateUseAndDisposeSession();
+        }
+
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_SQLite_IoC()
+        {
+            VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.SQLite);
+            VerifyCanCreateUseAndDisposeSession();
+            VerifyCanCreateUseAndDisposeUnitOfWork();
+        }
+
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_MsSql2005()
+        {
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(null, DatabaseEngine.MsSql2005);
+                VerifyCanCreateUseAndDisposeSession();
+            }
+        }
+
+
+        [Test]
+        public virtual void CanCreateUnitOfWorkContextFor_MsSql2005_IoC()
+        {
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005);
+                VerifyCanCreateUseAndDisposeSession();
+                VerifyCanCreateUseAndDisposeUnitOfWork();
+            }
+        }
+
+
         [Test]
         public virtual void EachUnitOfWorkContextConfigurationWillBeCreatedOnlyOnce()
         {
@@ -64,12 +122,48 @@ namespace Rhino.Commons.Test.ForTesting
 
 
         [Test]
+        public virtual void NewUnitOfWorkContextCreatedForDifferentDatabaseNames()
+        {
+            if (UnitOfWorkTestContextDbStrategy.IsSqlServer2005OrAboveInstalled())
+            {
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb1");
+                VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.MsSql2005, "TestDb2");
+
+                Assert.AreEqual(2, Contexts.Count);
+            }
+        }
+
+
+        [Test]
         public virtual void NewUnitOfWorkContextCreatedForDifferentWindorConfigFiles()
         {
             VerifyCanCreateUnitOfWorkContextFor(WindsorFilePath, DatabaseEngine.SQLite);
             VerifyCanCreateUnitOfWorkContextFor(AnotherWindsorFilePath, DatabaseEngine.SQLite);
 
             Assert.AreEqual(2, Contexts.Count);
+        }
+
+
+        [Test]
+        public virtual void SwitchingBetweenExistingContextsHasAcceptablePerformace()
+        {
+            //Creates SQLite context for the first time. Use context to touch all moving parts
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            VerifyCanCreateUseAndDisposeUnitOfWork();
+
+            //Create another context and ensure all its component parts are used
+            //We're doing this so that the SQLite context created above is no longer current
+            FixtureInitialize(WindsorFilePath, DatabaseEngine.MsSqlCe, "");
+            VerifyCanCreateUseAndDisposeUnitOfWork();
+
+            //Reinstate and use existing SQLite context.
+            double timing = With.PerformanceCounter(delegate
+            {
+                FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+                VerifyCanCreateUseAndDisposeUnitOfWork();
+            });
+
+            Assert.Less(timing, 0.1, "reinstating then using existing context sufficiently performant");
         }
 
 

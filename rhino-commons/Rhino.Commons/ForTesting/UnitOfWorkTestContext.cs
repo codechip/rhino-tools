@@ -338,15 +338,23 @@ namespace Rhino.Commons.ForTesting
 
         private class ARUnitOfWorkTestContext : UnitOfWorkTestContext
         {
+            private IConfigurationSource activeRecordConfigs;
+            private ISessionFactory sessionFactory;
+
             public ARUnitOfWorkTestContext(UnitOfWorkTestContextDbStrategy dbStrategy,
                                            string rhinoContainerConfigPath,
                                            MappingInfo assemblies)
                 : base(dbStrategy, rhinoContainerConfigPath, assemblies) {}
 
 
+            private IConfigurationSource ActiveRecordConfigs
+            {
+                get { return activeRecordConfigs = activeRecordConfigs ?? CreateActiveRecordConfigs(); }
+            }
+
             internal override Configuration Configuration
             {
-                get { return SessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase)); }
+                get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
             }
 
 
@@ -358,7 +366,7 @@ namespace Rhino.Commons.ForTesting
 
             public override ISessionFactory SessionFactory
             {
-                get { return SessionFactoryHolder.GetSessionFactory(typeof(ActiveRecordBase)); }
+                get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
             }
 
 
@@ -366,40 +374,22 @@ namespace Rhino.Commons.ForTesting
             {
                 if (IoC.IsInitialized) IoC.Reset();
                 ActiveRecordStarter.ResetInitializationFlag();
-                
 
-                InPlaceConfigurationSource_AlwaysLazy_AndPluralized cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
-                cfg.Add(typeof(ActiveRecordBase), DbStrategy.NHibernateProperties);
+                ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
+                ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
 
                 if (RhinoContainer != null)
                 {
                     IoC.Initialize(RhinoContainer);
-                    IHandler unitOfWorkFactoryHandler = IoC.Container.Kernel
-                        .GetHandler(typeof(IUnitOfWorkFactory));
-                    unitOfWorkFactoryHandler
-                        .AddCustomDependencyValue("configurationSource", cfg);
-                    unitOfWorkFactoryHandler
-                        .AddCustomDependencyValue("assemblies", MappingInfo.MappingAssemblies);
-                    IoC.Resolve<IUnitOfWorkFactory>().Init();
-                }
-                else
-                {
-                    ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, cfg);
                 }
             }
 
 
-            private ISessionFactoryHolder SessionFactoryHolder
+            private InPlaceConfigurationSource_AlwaysLazy_AndPluralized CreateActiveRecordConfigs() 
             {
-                get
-                {
-                    ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
-                    if (sessionFactoryHolder.ThreadScopeInfo.HasInitializedScope == false)
-                    {
-                        throw new InvalidOperationException("Must be inside a scope for InMemory tests to work");
-                    }
-                    return sessionFactoryHolder;
-                }
+                InPlaceConfigurationSource_AlwaysLazy_AndPluralized cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
+                cfg.Add(typeof(ActiveRecordBase), DbStrategy.NHibernateProperties);
+                return cfg;
             }
 
 
