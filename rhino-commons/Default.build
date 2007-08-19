@@ -24,7 +24,7 @@
 	<ItemGroup>
 		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Commons.Test\bin\$(Configuration)\Rhino.Commons.Test.dll"/>
 	</ItemGroup>
-	<Target Name="BeforeTest" Condition="$(MergeAssemblies)>
+	<Target Name="BeforeTest" Condition="$(MergeAssemblies)">
 	 <CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll"
 						 Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;
 $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\NHibernate.dll;
