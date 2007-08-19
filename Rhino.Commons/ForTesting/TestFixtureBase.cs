@@ -114,7 +114,7 @@ namespace Rhino.Commons.ForTesting
                 return;
             
             Configuration configuration = Collection.First(holder.GetAllConfigurations());
-            string dialectInUse = configuration.Properties["hibernate.dialect"].ToString();
+        	string dialectInUse = (string) (configuration.Properties["dialect"] ?? configuration.Properties["hibernate.dialect"]);
             if (!dialectInUse.StartsWith("NHibernate.Dialect." + databaseEngine))
             {
                 string messgae =
