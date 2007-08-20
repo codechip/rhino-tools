@@ -62,8 +62,7 @@ namespace Rhino.Commons.Test.Repository
             parentsInDb.Add(CreateExampleParentObject("Parent2", 200, new Child(), new Child()));
             parentsInDb.Add(CreateExampleParentObject("Parent3", 300, new Child(), new Child()));
 
-            SaveInCurrentSession(parentsInDb);
-            FlushAndClearCurrentSession();
+            SaveAndFlushToDatabase(parentsInDb);
         }
 
 
@@ -115,7 +114,7 @@ namespace Rhino.Commons.Test.Repository
             IList<Parent> parents = LoadAll<Parent>();
             parents[0].Age = parents[1].Age;
             parents[0].Name = parents[1].Name;
-            FlushAndClearCurrentSession();
+            UnitOfWork.Current.Flush();
 
             ICollection<ParentDto> dtos =
                 Repository<Parent>.ReportAll<ParentDto>(ProjectByNameAndAge, true);
@@ -214,15 +213,10 @@ namespace Rhino.Commons.Test.Repository
 
         private void AssertDtosSortedByName(ICollection<ParentDto> dtos, string sortOrder)
         {
-            List<ParentDto> actual = new List<ParentDto>(dtos);
-            List<ParentDto> sorted = new List<ParentDto>(dtos);
-            sorted.Sort(delegate(ParentDto x, ParentDto y) { return x.Name.CompareTo(y.Name); });
-            if (sortOrder == "Desc") sorted.Reverse();
-
-            for (int i = 0; i < sorted.Count; i++)
-            {
-                Assert.AreEqual(sorted[i], actual[i], "element not in expected position");
-            }
+            Comparison<ParentDto> sortedByName = delegate(ParentDto x, ParentDto y) {
+                                                     return x.Name.CompareTo(y.Name);
+                                                 };
+            AssertSorted(dtos, sortOrder, sortedByName);
         }
 
 

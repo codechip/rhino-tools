@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using MbUnit.Framework;
+using NHibernate;
 using NHibernate.Expression;
 using Rhino.Commons.ForTesting;
 
@@ -58,15 +59,33 @@ namespace Rhino.Commons.Test.Repository
 
             parentsInDb.Add(CreateExampleParentObject("Parent1", 100, new Child(), new Child()));
             parentsInDb.Add(CreateExampleParentObject("Parent2", 200, new Child(), new Child()));
+            parentsInDb.Add(CreateExampleParentObject("Parent4", 800, new Child()));
 
-            SaveInCurrentSession(parentsInDb);
-            FlushAndClearCurrentSession();
+            //verifying that the test objects above satisfy assumptions made in tests
+            AssumedParentObjectNamesAreUnique(parentsInDb);
+
+            SaveAndFlushToDatabase(parentsInDb);
+        }
+
+
+        private void AssumedParentObjectNamesAreUnique(List<Parent> list)
+        {
+            foreach (Parent parent in list)
+            {
+                List<Parent> match = list.FindAll(delegate(Parent x) {
+                                                      return x.Name == parent.Name;
+                                                  });
+                if (match.Count > 1) 
+                    Assert.Fail("Assumed that parent names are unique");
+            }
         }
 
 
         [Test]
         public void CanSaveAndGet()
         {
+            UnitOfWork.CurrentSession.Clear();
+
             Parent loaded = Repository<Parent>.Get(parentsInDb[0].Id);
 
             Assert.AreEqual(parentsInDb[0].Name, loaded.Name);
@@ -74,16 +93,116 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
+        #region FindAll tests
+
+
         [Test]
         public void FindAllWillNotRemoveDuplicates()
         {
             ICollection<Parent> loaded = Repository<Parent>.FindAll(DetachedCriteria.For<Parent>());
-            Assert.AreEqual(parentsInDb[0].Children.Count + parentsInDb[1].Children.Count,
-                            loaded.Count);
+            Assert.AreNotEqual(parentsInDb.Count, loaded.Count, "reference to a parent object for each child returned");
 
             //must remove duplicates manually like so:
             Assert.AreEqual(parentsInDb.Count, Collection.ToUniqueCollection(loaded).Count);
         }
+
+
+        [Test]
+        public void CanFindAllMatchingCriterion()
+        {
+            //create another object named Parent4
+            CreateExampleParentObjectInDb("Parent4", 1);
+
+            AbstractCriterion whereName = Expression.Eq("Name", "Parent4");
+            ICollection<Parent> loaded = Repository<Parent>.FindAll(whereName);
+
+            Assert.AreEqual(2, Collection.ToUniqueCollection(loaded).Count);
+        }
+
+
+        [Test]
+        public void CanFindAllMatchingCriterionWithMultipleSortOrders()
+        {
+            Parent secondPosition = CreateExampleParentObjectInDb("ThisTestOnly", 3);
+            Parent firstPosition = CreateExampleParentObjectInDb("ThisTestOnly", 9999);
+            CreateExampleParentObjectInDb("NoMatch", 5);
+
+            AbstractCriterion whereName = Expression.Eq("Name", "ThisTestOnly");
+            ICollection<Parent> loaded = Repository<Parent>.FindAll(OrderByNameAndAgeDescending, whereName);
+
+            AssertCollectionsEqual(ExpectedList(firstPosition, secondPosition), loaded);
+        }
+
+
+        [Test]
+        public void CanFindAllMatchingCriteriaWithMultipleSortOrders()
+        {
+            Parent secondPosition = CreateExampleParentObjectInDb("ThisTestOnly", 3);
+            Parent firstPosition = CreateExampleParentObjectInDb("ThisTestOnly", 9999);
+            CreateExampleParentObjectInDb("NoMatch", 5);
+
+            ICollection<Parent> loaded
+                = Repository<Parent>.FindAll(WhereNameEquals("ThisTestOnly"), OrderByNameAndAgeDescending);
+
+            AssertCollectionsEqual(ExpectedList(firstPosition, secondPosition), loaded);
+        }
+
+        [Test]
+        public void CanFindAllMatchingCriteriaWithMultipleSortOrders_Paginated()
+        {
+            CreateExampleParentObjectInDb("ThisTestOnly", 2);
+            CreateExampleParentObjectInDb("ThisTestOnly", 1);
+            Parent secondPosition = CreateExampleParentObjectInDb("ThisTestOnly", 4);
+            Parent thirdPosition = CreateExampleParentObjectInDb("ThisTestOnly", 3);
+            Parent firstPosition = CreateExampleParentObjectInDb("ThisTestOnly_First", 1);
+            CreateExampleParentObjectInDb("X", 1);
+
+            DetachedCriteria whereName = WhereNameIn("ThisTestOnly", "ThisTestOnly_First");
+            ICollection<Parent> loaded
+                = Repository<Parent>.FindAll(whereName, 0, 3, OrderByNameAndAgeDescending);
+
+            AssertCollectionsEqual(ExpectedList(firstPosition, secondPosition, thirdPosition), loaded);
+        }
+
+
+        [Test]
+        public void CanFindAllMatchingCriterionWithMultipleSortOrders_Paginated()
+        {
+            CreateExampleParentObjectInDb("ThisTestOnly", 2);
+            CreateExampleParentObjectInDb("ThisTestOnly", 1);
+            Parent secondPosition = CreateExampleParentObjectInDb("ThisTestOnly", 4);
+            Parent thirdPosition = CreateExampleParentObjectInDb("ThisTestOnly", 3);
+            Parent firstPosition = CreateExampleParentObjectInDb("ThisTestOnly_First", 1);
+            CreateExampleParentObjectInDb("X", 1);
+            
+            AbstractCriterion whereName = Expression.In("Name", new object[] { "ThisTestOnly", "ThisTestOnly_First" });
+            ICollection<Parent> loaded
+                = Repository<Parent>.FindAll(0, 3, OrderByNameAndAgeDescending, whereName);
+
+            AssertCollectionsEqual(ExpectedList(firstPosition, secondPosition, thirdPosition), loaded);
+        }
+
+        [Test]
+        public void CanFindAllMatchingCriterion_Paginated()
+        {
+            CreateExampleParentObjectInDb("X", 1);
+            CreateExampleParentObjectInDb("ThisTestOnly", 1);
+            CreateExampleParentObjectInDb("ThisTestOnly", 2);
+            CreateExampleParentObjectInDb("ThisTestOnly", 3);
+
+
+            AbstractCriterion whereName = Expression.Eq("Name", "ThisTestOnly");
+            ICollection<Parent> loaded
+                = Repository<Parent>.FindAll(0, 2, whereName);
+
+            Assert.AreEqual(2, loaded.Count, "2 objects returned");
+            Assert.AreEqual("ThisTestOnly", Collection.First(loaded).Name, "first expected object returned");
+            Assert.AreEqual("ThisTestOnly", Collection.Last(loaded).Name, "second expected object returned");
+        }
+
+
+
+        #endregion
 
 
         [Test]
@@ -95,7 +214,7 @@ namespace Rhino.Commons.Test.Repository
             parents[0].Children[1].Name = "A";
             parents[1].Children[0].Name = "B";
             parents[1].Children[1].Name = "C";
-            FlushAndClearCurrentSession();
+            UnitOfWork.Current.Flush();
 
             //run test
             DetachedCriteria whereChildNameEquals_A = DetachedCriteria.For<Parent>()
@@ -103,9 +222,56 @@ namespace Rhino.Commons.Test.Repository
                 .Add(Expression.Eq("c.Name", "A"));
 
             Parent match = Repository<Parent>.FindOne(whereChildNameEquals_A);
-            Assert.AreEqual(parents[0].Id, match.Id);
+            Assert.AreEqual(parents[0], match);
         }
 
+
+        #region FindFirst tests
+
+
+        [Test]
+        public void CanFindFirstMatchingCriteria()
+        {
+            Parent match = Repository<Parent>.FindOne(WhereNameEquals("Parent1"));
+            Assert.AreEqual(parentsInDb[0], match);
+        }
+
+
+        [Test]
+        public void CanFindFirstMatchingCriterion()
+        {
+            Parent match = Repository<Parent>.FindOne(Expression.Eq("Name", "Parent1"));
+            Assert.AreEqual(parentsInDb[0], match);
+        }
+
+
+        [Test]
+        public void FindFirstWillReturnFirstInstanceInAnOrderedListMatchingWhereClause()
+        {
+            Parent match = Repository<Parent>.FindFirst(WhereNameIn("Parent1", "Parent4"), OrderByNameDecending);
+            Assert.AreEqual(parentsInDb[2], match);
+        }
+
+        [Test]
+        public void FindFirstWillReturnFirstInstanceInAnOrderedList()
+        {
+            Parent match = Repository<Parent>.FindFirst(Order.Asc("Name"));
+            Assert.AreEqual(parentsInDb[0], match);
+        }
+
+
+        [Test, ExpectedException(typeof(NonUniqueResultException))]
+        public void FindFirstWillThrowExceptionWhereMoreThanOneMatch()
+        {
+            //create another object named Parent1
+            CreateExampleParentObjectInDb("Parent1", 1);
+
+            Repository<Parent>.FindOne(WhereNameEquals("Parent1"));
+        }
+
+
+
+        #endregion
 
         [Test]
         public void CanCountNumberOfObjectsPersistedInDb()
@@ -119,6 +285,7 @@ namespace Rhino.Commons.Test.Repository
         {
             Assert.AreEqual(1, Repository<Parent>.Count(WhereNameEquals(parentsInDb[0].Name)));
         }
+
 
         [Test]
         public void CanDeleteAllObjectsPersistedInDb()
@@ -154,9 +321,27 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
+        private Order OrderByNameDecending
+        {
+            get { return Order.Desc("Name"); }
+        }
+
+
+        private static Order[] OrderByNameAndAgeDescending
+        {
+            get { return new Order[] {Order.Desc("Name"), Order.Desc("Age")}; }
+        }
+
+
         private DetachedCriteria WhereNameEquals(string nameToMatch)
         {
             return DetachedCriteria.For<Parent>().Add(Expression.Eq("Name", nameToMatch));
+        }
+
+
+        private DetachedCriteria WhereNameIn(params string[] names)
+        {
+            return DetachedCriteria.For<Parent>().Add(Expression.In("Name", names));
         }
     }
 
