@@ -175,7 +175,7 @@ namespace Rhino.Commons
         /// <summary>
         /// Called internally to clear the current UoW and move to the previous one.
         /// </summary>
-        internal static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
+        public static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
         {
             IUnitOfWorkImplementor previous = unitOfWork.Previous;
             Local.Data[CurrentUnitOfWorkKey] = previous;

@@ -30,10 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
-using Castle.ActiveRecord.Framework.Config;
-using Castle.MicroKernel;
 using Castle.Windsor;
 using NHibernate;
 using NHibernate.Cfg;
@@ -60,6 +56,9 @@ namespace Rhino.Commons.ForTesting
     /// </summary>
     public abstract class UnitOfWorkTestContext 
     {
+        private const string activeRecordTestContextType = "Rhino.Commons.ForTesting.ARUnitOfWorkTestContext, Rhino.Commons.ActiveRecord";
+        private static Type activeRecordType;
+
         public static UnitOfWorkTestContext For(PersistenceFramework framwork,
                                                 string rhinoContainerConfig,
                                                 UnitOfWorkTestContextDbStrategy dbStrategy,
@@ -68,12 +67,26 @@ namespace Rhino.Commons.ForTesting
             switch (framwork)
             {
                 case PersistenceFramework.ActiveRecord:
-                    return new ARUnitOfWorkTestContext(dbStrategy, rhinoContainerConfig, mappingInfo);
+                    return CreateActiveRecordImplementation(dbStrategy, mappingInfo, rhinoContainerConfig);
                 case PersistenceFramework.NHibernate:
                     return new NHibernateUnitOfWorkTestContext(dbStrategy, rhinoContainerConfig, mappingInfo);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+
+        private static UnitOfWorkTestContext CreateActiveRecordImplementation(UnitOfWorkTestContextDbStrategy dbStrategy,
+                                                                                MappingInfo mappingInfo,
+                                                                                string rhinoContainerConfig)
+        {
+            if (activeRecordType == null)
+                activeRecordType = Type.GetType(activeRecordTestContextType);
+
+            return
+                (UnitOfWorkTestContext)
+                Activator.CreateInstance(activeRecordType,
+                                         new object[] {dbStrategy, rhinoContainerConfig, mappingInfo});
         }
 
 
@@ -100,7 +113,7 @@ namespace Rhino.Commons.ForTesting
             get { return mappingInfo; }
         }
 
-        internal abstract Configuration Configuration
+        public abstract Configuration Configuration
         {
             get;
         }
@@ -289,7 +302,7 @@ namespace Rhino.Commons.ForTesting
                 : base(dbStrategy, rhinoContainerConfigPath, assemblies) {}
 
 
-            internal override Configuration Configuration
+            public override Configuration Configuration
             {
                 get { return configs = configs ?? CreateConfigs(); }
             }
@@ -332,77 +345,6 @@ namespace Rhino.Commons.ForTesting
                     hibernateUnitOfWorkFactory.RegisterSessionFactory(SessionFactory);
                 }
             }
-        }
-
-
-
-        private class ARUnitOfWorkTestContext : UnitOfWorkTestContext
-        {
-            private IConfigurationSource activeRecordConfigs;
-            private ISessionFactory sessionFactory;
-
-            public ARUnitOfWorkTestContext(UnitOfWorkTestContextDbStrategy dbStrategy,
-                                           string rhinoContainerConfigPath,
-                                           MappingInfo assemblies)
-                : base(dbStrategy, rhinoContainerConfigPath, assemblies) {}
-
-
-            private IConfigurationSource ActiveRecordConfigs
-            {
-                get { return activeRecordConfigs = activeRecordConfigs ?? CreateActiveRecordConfigs(); }
-            }
-
-            internal override Configuration Configuration
-            {
-                get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
-            }
-
-
-            public override PersistenceFramework Framework
-            {
-                get { return PersistenceFramework.ActiveRecord; }
-            }
-
-
-            public override ISessionFactory SessionFactory
-            {
-                get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
-            }
-
-
-            public override void IntialiseContainerAndUowFactory()
-            {
-                if (IoC.IsInitialized) IoC.Reset();
-                ActiveRecordStarter.ResetInitializationFlag();
-
-                ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
-                ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
-
-                if (RhinoContainer != null)
-                {
-                    IoC.Initialize(RhinoContainer);
-                }
-            }
-
-
-            private InPlaceConfigurationSource_AlwaysLazy_AndPluralized CreateActiveRecordConfigs() 
-            {
-                InPlaceConfigurationSource_AlwaysLazy_AndPluralized cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
-                cfg.Add(typeof(ActiveRecordBase), DbStrategy.NHibernateProperties);
-                return cfg;
-            }
-
-
-
-            private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized : InPlaceConfigurationSource
-            {
-                public InPlaceConfigurationSource_AlwaysLazy_AndPluralized()
-                {
-                    SetIsLazyByDefault(true);
-                    SetPluralizeTableNames(true);
-                }
-            }
-
         }
     }
 }
