@@ -29,17 +29,266 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using NHibernate;
 using NHibernate.Expression;
 using NHibernate.Transform;
 
 namespace Rhino.Commons
 {
-    public abstract class RepositoryImplBase<T> {
-		public DetachedCriteria CreateDetachedCriteria()
+    public abstract class RepositoryImplBase<T> 
+    {
+        private static Order[] NullOrderArray = null;
+
+
+        public DetachedCriteria CreateDetachedCriteria()
 		{
 			return DetachedCriteria.For<T>();
 		}
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public ICollection<T> FindAll(params ICriterion[] criteria)
+        {
+            return FindAll(NullOrderArray, criteria);
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="order">the order in which to bring the data</param>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
+        {
+            return FindAll(new Order[] {order}, criteria);
+        }
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="orders">the order in which to bring the data</param>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, orders);
+                return crit.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <param name="orders"> the order to load the entities</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public ICollection<T> FindAll(DetachedCriteria criteria, params Order[] orders)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+                return crit.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria
+        /// by order
+        /// </summary>
+        /// <param name="criteria">the criteria to look for</param>
+        /// <param name="orders"> the order to load the entities</param>
+        /// <param name="firstResult">the first result to load</param>
+        /// <param name="maxResults">the number of result to load</param>
+        /// <returns>All the entities that match the criteria</returns>
+        public ICollection<T> FindAll(DetachedCriteria criteria, int firstResult, int maxResults, params Order[] orders)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+                crit.SetFirstResult(firstResult)
+                    .SetMaxResults(maxResults);
+                return crit.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria, and allow paging.
+        /// </summary>
+        /// <param name="firstResult">The first result to load</param>
+        /// <param name="numberOfResults">Total number of results to load</param>
+        /// <param name="criteria">the cirteria to look for</param>
+        /// <returns>number of Results of entities that match the criteria</returns>
+        public ICollection<T> FindAll(int firstResult, int numberOfResults, params ICriterion[] criteria)
+        {
+            return FindAll(firstResult, numberOfResults, NullOrderArray, criteria);
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria, with paging 
+        /// and orderring by a single field.
+        /// <param name="firstResult">The first result to load</param>
+        /// <param name="numberOfResults">Total number of results to load</param>
+        /// <param name="criteria">the cirteria to look for</param>
+        /// <returns>number of Results of entities that match the criteria</returns>
+        /// <param name="selectionOrder">The field the repository should order by</param>
+        /// <returns>number of Results of entities that match the criteria</returns>
+        public ICollection<T> FindAll(int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
+        {
+            return FindAll(firstResult, numberOfResults, new Order[] { selectionOrder }, criteria);
+        }
+
+
+        /// <summary>
+        /// Loads all the entities that match the criteria, with paging 
+        /// and orderring by a multiply fields.
+        /// </summary>
+        /// <param name="firstResult">The first result to load</param>
+        /// <param name="numberOfResults">Total number of results to load</param>
+        /// <param name="criteria">the cirteria to look for</param>
+        /// <returns>number of Results of entities that match the criteria</returns>
+        /// <param name="selectionOrder">The fields the repository should order by</param>
+        public ICollection<T> FindAll(int firstResult, int numberOfResults, Order[] selectionOrder, params ICriterion[] criteria)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, selectionOrder);
+                crit.SetFirstResult(firstResult)
+                    .SetMaxResults(numberOfResults);
+                return crit.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the named query and return all the results
+        /// </summary>
+        /// <param name="namedQuery">The named query to execute</param>
+        /// <param name="parameters">Parameters for the query</param>
+        /// <returns>The results of the query</returns>
+        public ICollection<T> FindAll(string namedQuery, params Parameter[] parameters)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                IQuery query = RepositoryHelper<T>.CreateQuery(action.Value, namedQuery, parameters);
+                return query.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the named query and return paged results
+        /// </summary>
+        /// <param name="parameters">Parameters for the query</param>
+        /// <param name="namedQuery">the query to execute</param>
+        /// <param name="firstResult">The first result to return</param>
+        /// <param name="numberOfResults">number of records to return</param>
+        /// <returns>Paged results of the query</returns>
+        public ICollection<T> FindAll(int firstResult, int numberOfResults, string namedQuery, params Parameter[] parameters)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                IQuery query = RepositoryHelper<T>.CreateQuery(action.Value, namedQuery, parameters);
+                query.SetFirstResult(firstResult)
+                    .SetMaxResults(numberOfResults);
+                return query.List<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Find a single entity based on a criteria.
+        /// Thorws is there is more than one result.
+        /// </summary>
+        /// <param name="criteria">The criteria to look for</param>
+        /// <returns>The entity or null</returns>
+        public T FindOne(params ICriterion[] criteria)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit =
+                    RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
+                return crit.UniqueResult<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Find a single entity based on a criteria.
+        /// Thorws is there is more than one result.
+        /// </summary>
+        /// <param name="criteria">The criteria to look for</param>
+        /// <returns>The entity or null</returns>
+        public T FindOne(DetachedCriteria criteria)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit =
+                    RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+                return crit.UniqueResult<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Find a single entity based on a named query.
+        /// Thorws is there is more than one result.
+        /// </summary>
+        /// <param name="parameters">parameters for the query</param>
+        /// <param name="namedQuery">the query to executre</param>
+        /// <returns>The entity or null</returns>
+        public T FindOne(string namedQuery, params Parameter[] parameters)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                IQuery query = RepositoryHelper<T>.CreateQuery(action.Value, namedQuery, parameters);
+                return query.UniqueResult<T>();
+            }
+        }
+
+
+        /// <summary>
+        /// Find the first entity of type
+        /// </summary>
+        /// <param name="orders">Optional ordering</param>
+        /// <returns>The entity or null</returns>
+        public T FindFirst(params Order[] orders)
+        {
+            return FindFirst(null, orders);
+        }
+
+
+        /// <summary>
+        /// Find the entity based on a criteria.
+        /// </summary>
+        /// <param name="criteria">The criteria to look for</param>
+        /// <param name="orders">Optional orderring</param>
+        /// <returns>The entity or null</returns>
+        public T FindFirst(DetachedCriteria criteria, params Order[] orders)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+                crit.SetFirstResult(0);
+                crit.SetMaxResults(1);
+                return (T)crit.UniqueResult();
+            }
+        }
+
 
         public ProjT ReportOne<ProjT>(DetachedCriteria criteria, ProjectionList projectionList)
         {
@@ -55,7 +304,7 @@ namespace Rhino.Commons
         {
             using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
             {
-                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria);
+                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
                 return DoReportOne<ProjT>(crit, projectionList);
             }
         }
@@ -123,6 +372,8 @@ namespace Rhino.Commons
             get;
         }
 
+        protected abstract ISessionFactory SessionFactory { get; }
+
 
         public ICollection<ProjT> ReportAll<ProjT>(DetachedCriteria criteria, ProjectionList projectionList, params Order[] orders)
         {
@@ -138,7 +389,7 @@ namespace Rhino.Commons
         {
             using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
             {
-                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria);
+                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
                 return DoReportAll<ProjT>(crit, projectionList);
             }
         }
@@ -148,11 +399,7 @@ namespace Rhino.Commons
         {
             using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
             {
-                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria);
-                foreach (Order order in orders)
-                {
-                    crit.AddOrder(order);
-                }
+                ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, orders);
                 return DoReportAll<ProjT>(crit, projectionList);
             }
         }
@@ -165,6 +412,50 @@ namespace Rhino.Commons
                 IQuery query = RepositoryHelper<T>.CreateQuery(action.Value, namedQuery, parameters);
                 return query.List<ProjJ>();
             }
+        }
+
+
+        /// <summary>
+        /// Counts the number of instances matching the criteria.
+        /// </summary>
+        public long Count(DetachedCriteria criteria)
+        {
+            using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
+            {
+                ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+                crit.SetProjection(Projections.RowCount());
+                object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
+                return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
+            }
+        }
+
+
+        /// <summary>
+        /// Counts the overall number of instances.
+        /// </summary>
+        public long Count()
+        {
+            return Count(null);
+        }
+
+
+        /// <summary>
+        /// Check if any instance matches the criteria.
+        /// </summary>
+        /// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        public bool Exists(DetachedCriteria criteria)
+        {
+            return 0 != Count(criteria);
+        }
+
+
+        /// <summary>
+        /// Check if any instance of the type exists
+        /// </summary>
+        /// <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        public bool Exists()
+        {
+            return Exists(null);
         }
 
 
@@ -194,6 +485,7 @@ namespace Rhino.Commons
         }
 
 
+
         /// <summary>
         /// This is used to convert the resulting tuples into strongly typed objects.
         /// </summary>
@@ -211,5 +503,67 @@ namespace Rhino.Commons
             }
         }
 
+
+
+        public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
+        {
+            IDbConnection connection = SessionFactory.ConnectionProvider.GetConnection();
+            try
+            {
+                using (IDbCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = sp_name;
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+
+                    return command.ExecuteScalar();
+                }
+            }
+            finally
+            {
+                SessionFactory.ConnectionProvider.CloseConnection(connection);
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the specified stored procedure with the given parameters and then converts
+        /// the results using the supplied delegate.
+        /// </summary>
+        /// <typeparam name="T2">The collection type to return.</typeparam>
+        /// <param name="converter">The delegate which converts the raw results.</param>
+        /// <param name="sp_name">The name of the stored procedure.</param>
+        /// <param name="parameters">Parameters for the stored procedure.</param>
+        /// <returns></returns>
+        public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
+                                                          params Parameter[] parameters)
+        {
+            IDbConnection connection = SessionFactory.ConnectionProvider.GetConnection();
+
+            try
+            {
+                using (IDbCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = sp_name;
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    RepositoryHelper<T>.CreateDbDataParameters(command, parameters);
+                    IDataReader reader = command.ExecuteReader();
+                    ICollection<T2> results = new List<T2>();
+
+                    while (reader.Read())
+                        results.Add(converter(reader));
+
+                    reader.Close();
+
+                    return results;
+                }
+            }
+            finally
+            {
+                SessionFactory.ConnectionProvider.CloseConnection(connection);
+            }
+        }
     }
 }

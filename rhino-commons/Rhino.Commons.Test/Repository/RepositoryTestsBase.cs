@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Castle.ActiveRecord;
 using MbUnit.Framework;
 using NHibernate;
@@ -39,20 +40,32 @@ namespace Rhino.Commons.Test.Repository
 {
     public class RepositoryTestsBase : TestFixtureBase
     {
-        protected IList<Parent> parentsInDb;
+        protected List<Parent> parentsInDb;
 
 
-        protected void SaveInCurrentSession(IList<Parent> toSave)
+        protected void SaveInCurrentSession(object toSave)
         {
-            foreach (Parent parent in toSave)
-                UnitOfWork.CurrentSession.Save(parent);
+            SaveInCurrentSession(new object[] { toSave });
         }
 
 
-        protected static void FlushAndClearCurrentSession()
+        protected void SaveInCurrentSession<T>(IEnumerable<T> objectToSave) where T : class
         {
+            foreach (T obj in objectToSave)
+                UnitOfWork.CurrentSession.Save(obj);
+        }
+
+
+        protected void SaveAndFlushToDatabase(object toSave) 
+        {
+            SaveInCurrentSession(toSave);
             UnitOfWork.Current.Flush();
-            UnitOfWork.CurrentSession.Clear();
+        }
+
+        protected void SaveAndFlushToDatabase<T>(IEnumerable<T> objectToSave) where T: class
+        {
+            SaveInCurrentSession(objectToSave);
+            UnitOfWork.Current.Flush();
         }
 
 
@@ -72,11 +85,52 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
+        protected Parent CreateExampleParentObjectInDb(string name, int age)
+        {
+            Parent parent = CreateExampleParentObject(name, age);
+            SaveAndFlushToDatabase(parent);
+            return parent;
+        }
+
+
+        protected static List<T> ExpectedList<T>(params T[] items) 
+        {
+            List<T> expected = new List<T>();
+            expected.AddRange(items);
+            return expected;
+        }
+
+
         protected static IList<T> LoadAll<T>()
         {
             DetachedCriteria criteria = DetachedCriteria.For<T>();
             criteria.SetResultTransformer(CriteriaUtil.DistinctRootEntity);
             return criteria.GetExecutableCriteria(UnitOfWork.CurrentSession).List<T>();
+        }
+
+
+        protected static void AssertCollectionsEqual<T>(ICollection<T> expected, ICollection<T> actual) 
+        {
+            Assert.AreEqual(expected.Count, actual.Count, "collections do not contain same number of elements");
+
+            foreach (T obj in expected)
+            {
+                if (Collection.SelectAll(actual, delegate(T x) { return x.Equals(obj);}).Count != 1)
+                    Assert.Fail("collections do not contain the same items");
+
+            }
+        }
+
+
+        protected void AssertSorted<T>(ICollection<T> parents, string sortOrder, Comparison<T> sortBy)
+        {
+            List<T> actual = new List<T>(parents);
+            List<T> sorted = new List<T>(parents);
+            sorted.Sort(sortBy);
+            if (sortOrder == "Desc") sorted.Reverse();
+
+            for (int i = 0; i < sorted.Count; i++)
+                Assert.AreEqual(sorted[i], actual[i], "element not in expected position");
         }
     }
 
@@ -123,6 +177,17 @@ namespace Rhino.Commons.Test.Repository
             get { return children; }
             set { children = value; }
         }
+
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("id = " + id);
+            builder.AppendLine("version = " + version);
+            builder.AppendLine("name = " + (name == null ? "null" : name));
+            builder.AppendLine("age = " + age);
+            return builder.ToString();
+        }
     }
 
     [ActiveRecord]
@@ -160,6 +225,16 @@ namespace Rhino.Commons.Test.Repository
         {
             get { return name; }
             set { name = value; }
+        }
+
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("id = " + id);
+            builder.AppendLine("version = " + version);
+            builder.AppendLine("name = " + (name == null ? "null" : name));
+            return builder.ToString();
         }
     }
 }

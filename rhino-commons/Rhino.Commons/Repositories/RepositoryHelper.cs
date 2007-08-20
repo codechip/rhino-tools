@@ -97,7 +97,7 @@ namespace Rhino.Commons
 			}
 		}
 
-		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria)
+		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria, Order[] orders)
 		{
 			ICriteria crit = session.CreateCriteria(typeof (T));
 			foreach (ICriterion criterion in criteria)
@@ -109,6 +109,13 @@ namespace Rhino.Commons
 				crit.Add(criterion);
 			}
 			AddCaching(crit);
+            if (orders != null)
+            {
+                foreach (Order order in orders)
+                {
+                    crit.AddOrder(order);
+                }
+            }
 			return crit;
 		}
 
