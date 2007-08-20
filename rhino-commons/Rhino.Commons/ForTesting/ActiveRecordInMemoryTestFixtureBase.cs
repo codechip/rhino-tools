@@ -41,6 +41,7 @@ using NHibernate.Tool.hbm2ddl;
 
 namespace Rhino.Commons.ForTesting
 {
+    [Obsolete("Use TestFixtureBase instead")]
 	public class ActiveRecordInMemoryTestFixtureBase
 	{
 		private static bool init = false;

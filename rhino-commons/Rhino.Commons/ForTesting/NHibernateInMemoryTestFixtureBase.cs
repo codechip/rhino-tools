@@ -33,9 +33,7 @@ using NHibernate;
 
 namespace Rhino.Commons.ForTesting
 {
-    /// <summary>
-    /// DEPRECIATED. Use <see cref="TestFixtureBase"/> instead
-    /// </summary>
+    [Obsolete("Use TestFixtureBase instead")]
 	public class NHibernateInMemoryTestFixtureBase
 	{
 	    protected static UnitOfWorkTestContext context;
