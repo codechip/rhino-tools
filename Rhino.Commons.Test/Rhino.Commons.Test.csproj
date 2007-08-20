@@ -168,6 +168,10 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
+      <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
+      <Name>Rhino.Commons.ActiveRecord</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons\Rhino.Commons.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>

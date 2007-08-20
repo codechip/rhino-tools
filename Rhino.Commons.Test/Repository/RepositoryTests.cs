@@ -355,7 +355,7 @@ namespace Rhino.Commons.Test.Repository
         {
             string path =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
-            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfo.FromAssemblyContaining<Parent>());
+            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
     }
 
@@ -369,7 +369,7 @@ namespace Rhino.Commons.Test.Repository
         {
             string path =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
-            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfo.FromAssemblyContaining<Parent>());
+            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
         }
     }
 }

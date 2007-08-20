@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -38,14 +38,15 @@ namespace Rhino.Commons.Helpers
 	/// <summary>
 	/// this class is here so I can avoid having a reference to the System.Data.SqlServerCe.dll if I don't need it.
 	/// </summary>
-	internal static class SqlCEDbHelper
+	public static class SqlCEDbHelper
 	{
 		private static string engineTypeName = "System.Data.SqlServerCe.SqlCeEngine, System.Data.SqlServerCe";
 		private static Type type;
 		private static PropertyInfo localConnectionString;
 		private static MethodInfo createDatabase;
 
-		internal static void CreateDatabaseFile(string filename)
+
+	    public static void CreateDatabaseFile(string filename)
 		{
 			if (File.Exists(filename))
 				File.Delete(filename);

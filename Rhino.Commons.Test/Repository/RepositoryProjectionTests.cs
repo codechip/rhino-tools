@@ -240,10 +240,9 @@ namespace Rhino.Commons.Test.Repository
             string path =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
 
-            MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<Parent>()
-                                                 .AddQueryLanguageImports(typeof(ParentDto));
-            FixtureInitialize(PersistenceFramework.NHibernate, path, mappingInfo);
+            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
+
 
         [Test]
         public void CanReportAllFromNamedQuery()
@@ -265,7 +264,7 @@ namespace Rhino.Commons.Test.Repository
         {
             string path =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
-            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfo.FromAssemblyContaining<Parent>());
+            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
         }
     }
 

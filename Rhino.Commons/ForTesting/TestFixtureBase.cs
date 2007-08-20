@@ -27,12 +27,8 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
-using NHibernate.Cfg;
 
 namespace Rhino.Commons.ForTesting
 {

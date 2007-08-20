@@ -42,6 +42,15 @@ namespace Rhino.Commons.Test.Repository
     {
         protected List<Parent> parentsInDb;
 
+        protected static MappingInfo MappingInfoForRepositoryTests
+        {
+            get
+            {
+                return MappingInfo.FromAssemblyContaining<Parent>()
+                    .AddQueryLanguageImports(typeof (ParentDto));
+            }
+        }
+
 
         protected void SaveInCurrentSession(object toSave)
         {
