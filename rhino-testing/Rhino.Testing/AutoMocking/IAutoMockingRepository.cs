@@ -15,6 +15,7 @@ namespace Rhino.Testing.AutoMocking
         void MarkMissing(Type type);
         void AddService(Type type, object service);
         TypeMarker Mark(Type type);
+    	bool CanResolveFromMockRepository(Type service);
     }
 
     public interface IGenericMockingRepository

@@ -4,7 +4,7 @@
 	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 
 	<PropertyGroup>
-		<ProjectName>Rhino.Testin</ProjectName>
+		<ProjectName>Rhino.Testing</ProjectName>
 		<ShortName>rhino-testing</ShortName>
 		<SolutionFile>Rhino.Testing.sln</SolutionFile>
 		<FlattenZipFile>True</FlattenZipFile>

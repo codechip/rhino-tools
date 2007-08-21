@@ -1,4 +1,5 @@
 using System;
+using Castle.MicroKernel;
 
 namespace Rhino.Testing.Tests.AutoMocking
 {
@@ -9,6 +10,7 @@ namespace Rhino.Testing.Tests.AutoMocking
         public IDisposable SomethingToDispose
         {
             get { return null; }
+			set { }
         }
 
         #endregion

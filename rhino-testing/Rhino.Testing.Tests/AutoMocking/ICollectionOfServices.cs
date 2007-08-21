@@ -4,6 +4,6 @@ namespace Rhino.Testing.Tests.AutoMocking
 {
     public interface ICollectionOfServices
     {
-        IDisposable SomethingToDispose { get; }
+		IDisposable SomethingToDispose { get; set;  }
     }
 }

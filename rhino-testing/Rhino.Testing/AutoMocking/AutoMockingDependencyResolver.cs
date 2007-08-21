@@ -1,5 +1,6 @@
 using Castle.Core;
 using Castle.MicroKernel;
+using Castle.MicroKernel.SubSystems.Naming;
 
 namespace Rhino.Testing.AutoMocking
 {

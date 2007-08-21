@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Castle.MicroKernel;
+using Castle.MicroKernel.SubSystems.Naming;
 using Castle.Windsor;
 using Rhino.Mocks;
 
@@ -53,6 +55,7 @@ namespace Rhino.Testing.AutoMocking
 
         public void Initialize()
         {
+			Kernel.AddSubSystem(SubSystemConstants.NamingKey,new AutoMockingNamingSubSystem(this));
             Kernel.AddFacility("AutoMockingFacility", new AutoMockingFacility(this));
         }
 
@@ -63,8 +66,17 @@ namespace Rhino.Testing.AutoMocking
             return Resolve<T>();
         }
 
+		public T Create<T>(IDictionary parameters)
+        {
+            Type targetType = typeof(T);
+            AddComponent(targetType.FullName, targetType);
+            return Resolve<T>(parameters);
+        }
+
         public object Get(Type type)
         {
+			if (type == typeof(IKernel))
+				return Kernel;
             object t = GetService(type);
             if (t != null)
                 return t;
@@ -104,7 +116,13 @@ namespace Rhino.Testing.AutoMocking
             return new TypeMarker(type, this);
         }
 
-        public TypeMarker Mark<T>()
+    	public bool CanResolveFromMockRepository(Type service)
+    	{
+    		return _markMissing.Contains(service) == false && 
+				GetMockingStrategy(service).GetType() != typeof (NonMockedStrategy);
+    	}
+
+    	public TypeMarker Mark<T>()
         {
             return Mark(typeof (T));
         }

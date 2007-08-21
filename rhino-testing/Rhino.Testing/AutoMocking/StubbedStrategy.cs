@@ -25,14 +25,8 @@ namespace Rhino.Testing.AutoMocking
 
         public override object Create(CreationContext context, Type type)
         {
-            object target = Mocks.CreateMock(type);
+            object target = Mocks.Stub(type);
             AutoMock.AddService(type, target);
-            foreach (PropertyInfo property in type.GetProperties())
-            {
-                IMockingStrategy strategy = AutoMock.GetMockingStrategy(property.PropertyType);
-                object value = strategy.Create(context, property.PropertyType);
-                Expect.Call(property.GetValue(target, null)).Repeat.Any().Return(value);
-            }
             Mocks.Replay(target);
             return target;
         }
