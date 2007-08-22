@@ -188,11 +188,68 @@ namespace NHibernate.Query.Generator.Tests
             weird2.Create();
 
 
-            WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
-            Assert.AreEqual("Bar", weirds[0].Key.Department);
+            WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department); 
+			//WeirdClass[] weirds = WeirdClass.FindAll(new OrderByClause("this.Key.Department")); 
+			Assert.AreEqual("Bar", weirds[0].Key.Department);
             Assert.AreEqual("Foo", weirds[1].Key.Department);
         }
 
+		[Test]
+		public void CanUseOrderringOnComponentPropertiesByDetachedCriteria()
+		{
+			WeirdPropertyClass property =  new WeirdPropertyClass();
+			property.IntegerProperty = 10;
+			property.StringProperty = "cdef";
+			property.Create();
+
+			OtherWeirdClass weird = new OtherWeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+			weird.Address.Street = "Active Record == Easy Fun";
+			weird.Property = property;
+
+			weird.Create();
+
+			WeirdPropertyClass property2 = new WeirdPropertyClass();
+			property2.IntegerProperty = 5;
+			property2.StringProperty = "abcd";
+			property2.Create();
+
+			OtherWeirdClass weird2 = new OtherWeirdClass();
+			weird2.Key.Department = "Bar";
+			weird2.Key.Level = 5;
+			weird2.Address.Street = "Active Record == Easy Fun";
+			weird2.Property = property2;
+
+			weird2.Create();
+
+			// normally we'do it this way:
+			//WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
+
+			// but if we want to dynamically build our queries:
+			QueryBuilder<OtherWeirdClass> qb = new QueryBuilder<OtherWeirdClass>();
+			// create a query 
+			qb &= (Where.OtherWeirdClass.Address.Street.Eq("Active Record == Easy Fun"));
+
+			// need the session
+			ISessionFactory sf = ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof(OtherWeirdClass));
+			ISession currentSession = SessionScope.Current.GetSession(sf);
+
+			// set the property to order by
+			List<OrderByClause> orders = new List<OrderByClause>();
+			orders.Add(new OrderByClause("StringProperty","this.Property").Asc);
+
+			DetachedCriteria detachedCriteria = qb.ToDetachedCriteria("",orders.ToArray());
+
+			ICriteria critMain = detachedCriteria.GetExecutableCriteria(currentSession);
+
+
+			ICollection<OtherWeirdClass> list = critMain.List<OtherWeirdClass>();
+			OtherWeirdClass[] weirds = new OtherWeirdClass[2];
+			list.CopyTo(weirds,0);
+			Assert.AreEqual("Bar", weirds[0].Key.Department);
+			Assert.AreEqual("Foo", weirds[1].Key.Department);
+		}
 
         [Test]
         public void CanUseOrderringOnSimpleProperties()
@@ -312,7 +369,9 @@ namespace NHibernate.Query.Generator.Tests
             source.Add(typeof(ActiveRecordBase), properties);
             ActiveRecordStarter.Initialize(source,
                                            typeof(WeirdClass),
-                                           typeof(Post),
+										   typeof(WeirdPropertyClass),
+										   typeof(OtherWeirdClass),
+										   typeof(Post),
                                            typeof(Blog),
                                            typeof(User),
                                            typeof(Role),

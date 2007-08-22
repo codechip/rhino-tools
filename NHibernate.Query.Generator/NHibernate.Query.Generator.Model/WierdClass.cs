@@ -37,7 +37,7 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
     public class WeirdClass : ActiveRecordBase<WeirdClass>
     {
         private WeirdKey key = new WeirdKey();
-        private Address address = new Address();
+		private Address address = new Address();
 
         [CompositeKey]
         public virtual WeirdKey Key
@@ -52,7 +52,67 @@ namespace NHibernate.Query.Generator.Tests.ActiveRecord
             get { return address; }
             set { address = value; }
         }
+
+
     }
+
+	[ActiveRecord]
+	public class OtherWeirdClass : ActiveRecordBase<OtherWeirdClass>
+	{
+		private WeirdKey key = new WeirdKey();
+		private Address address = new Address();
+		private WeirdPropertyClass property;
+
+		[CompositeKey]
+		public virtual WeirdKey Key
+		{
+			get { return key; }
+			set { key = value; }
+		}
+
+		[Nested]
+		public virtual Address Address
+		{
+			get { return address; }
+			set { address = value; }
+		}
+
+		[BelongsTo]
+		public virtual WeirdPropertyClass Property
+		{
+			get { return property; }
+			set { property = value; }
+		}
+	}
+
+	[ActiveRecord]
+	public class WeirdPropertyClass : ActiveRecordBase<WeirdPropertyClass>
+	{
+		private int id;
+		private int integerProperty;
+		private string stringProperty;
+
+		[PrimaryKey]
+		public virtual int Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
+		[Property]
+		public virtual int IntegerProperty
+		{
+			get { return integerProperty; }
+			set { integerProperty = value; }
+		}
+
+		[Property]
+		public virtual string StringProperty
+		{
+			get { return stringProperty; }
+			set { stringProperty = value; }
+		}
+	}
 
     public  class Address
     {

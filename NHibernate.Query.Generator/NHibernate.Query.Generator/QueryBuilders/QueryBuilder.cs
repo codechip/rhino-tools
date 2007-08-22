@@ -34,7 +34,7 @@
 using System.Collections.Generic;
 using NHibernate.Expression;
 
-namespace Query
+namespace QueryNamespace
 {
 	public partial class QueryBuilder<T>
 	{
@@ -55,6 +55,16 @@ namespace Query
 		public NHibernate.FetchMode fetchMode = NHibernate.FetchMode.Default;
 		protected QueryBuilder<T> parent;
 
+		public QueryBuilder()
+			: this(null, typeof(T).Name, null)
+		{
+		}
+
+		public QueryBuilder(string name)
+			: this(null, name, null)
+		{
+		}
+		
 		public QueryBuilder(QueryBuilder<T> parent, string name, string associationPath, bool backTrackAssociationsOnEquality)
 			: this(parent, name, associationPath)
 		{
@@ -315,8 +325,13 @@ Use HQL for this functionality...",
 
 		public NHibernate.Expression.DetachedCriteria ToDetachedCriteria(string alias)
 		{
-			if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
-			{
+            return ToDetachedCriteria(alias, null);
+        }
+
+        public DetachedCriteria ToDetachedCriteria(string alias, params OrderByClause[] sortOrders)
+        {
+            if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
+            {
 				return parent.ToDetachedCriteria(alias);
 			}
 			NHibernate.Expression.DetachedCriteria detachedCriteria;
@@ -330,10 +345,6 @@ Use HQL for this functionality...",
 				NHibernate.Expression.ProjectionList projectionList = this.propertyProjection;
 				detachedCriteria.SetProjection(projectionList);
 			}
-			foreach (OrderByClause orderByClause in orderByClauses)
-			{
-				detachedCriteria.AddOrder(orderByClause);
-			}
 
 			System.Collections.Generic.Dictionary<string, System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>> criterionsByJoinTypeAndFetchMode =
 				new System.Collections.Generic.Dictionary<string, System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>>();
@@ -341,22 +352,68 @@ Use HQL for this functionality...",
 				new System.Collections.Generic.Dictionary<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>>();
 			AddByAssociationPath(criterionsByAssociation, criterionsByJoinTypeAndFetchMode);
 
-			foreach (System.Collections.Generic.KeyValuePair<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> pair in criterionsByAssociation)
+			System.Collections.Hashtable critTable = new System.Collections.Hashtable();
+			critTable.Add("this", detachedCriteria);
+			foreach (KeyValuePair<string, ICollection<ICriterion>> pair in criterionsByAssociation)
 			{
-				NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
-				System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = criterionsByJoinTypeAndFetchMode[pair.Key];
-				if (pair.Key != "this")
+				if (pair.Value.Count > 0)
 				{
-					temp = detachedCriteria.SetFetchMode(pair.Key, val.Value)
-							.CreateCriteria(pair.Key, val.Key);
+					NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
+					if (pair.Key != "this")
+					{
+						temp = CreateCriteriaByPath(pair.Key, critTable, detachedCriteria);
+					}
+					foreach (ICriterion criterion in pair.Value)
+					{
+						temp.Add(criterion);
+					}
 				}
-				foreach (NHibernate.Expression.ICriterion criterion in pair.Value)
+			}
+			if (sortOrders != null)
+			{
+				foreach (OrderByClause sortOrder in sortOrders)
 				{
-					temp.Add(criterion);
+					if (!string.IsNullOrEmpty(sortOrder.AssociationPath))
+					{
+						NHibernate.Expression.DetachedCriteria tempOrder = CreateCriteriaByPath(sortOrder.AssociationPath, critTable, detachedCriteria);
+						tempOrder.AddOrder(sortOrder);
+					}
 				}
 			}
 			return detachedCriteria;
 		}
+
+		private static NHibernate.Expression.DetachedCriteria CreateCriteriaByPath(string keyPath, System.Collections.Hashtable critTable, DetachedCriteria currentCriteria)
+        {
+            string assPath = keyPath;
+            string[] split = assPath.Split('.');
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (critTable.ContainsKey(assPath))
+					currentCriteria = (NHibernate.Expression.DetachedCriteria)critTable[assPath];
+                else
+                    assPath = BackTrackAssociationPath(assPath);
+            }
+            if (currentCriteria != null)
+            {
+                string remainingPath = keyPath.Replace(assPath + ".", "");
+                // create missing criteria
+                string[] allPaths = remainingPath.Split('.');
+				//if (allPaths.Length > 1)
+				//    allPaths[allPaths.Length - 1] = ""; // remove property from association
+				foreach (string s in allPaths)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        assPath = assPath + "." + s;
+						currentCriteria = currentCriteria.CreateCriteria(s, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
+                        critTable.Add(assPath, currentCriteria);
+                    }
+                }
+            }
+            return currentCriteria;
+        }
+
 
 		[System.ComponentModel.Browsable(false)]
 		[System.ComponentModel.Localizable(false)]
@@ -562,10 +619,18 @@ Use HQL for this functionality...",
 	{
 		bool ascending = true;
 		string name;
+		string associationPath;
 
 		public OrderByClause(string name)
 		{
 			this.name = name;
+			this.associationPath = "this";
+		}
+
+		public OrderByClause(string name, string path)
+		{
+			this.name = name;
+			this.associationPath = path;
 		}
 
 		public OrderByClause Asc
@@ -586,9 +651,16 @@ Use HQL for this functionality...",
 			}
 		}
 
-		public static implicit operator NHibernate.Expression.Order(OrderByClause order)
+
+		public string AssociationPath
 		{
-			return new NHibernate.Expression.Order(order.name, order.ascending);
+			get { return associationPath; }
+			set { associationPath = value; }
+		}
+
+		public static implicit operator Order(OrderByClause order)
+		{
+			return new Order(order.name, order.ascending);
 		}
 	}
 

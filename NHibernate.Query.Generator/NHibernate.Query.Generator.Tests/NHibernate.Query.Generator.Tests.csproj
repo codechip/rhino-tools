@@ -69,11 +69,13 @@
     <Compile Include="ActiveRecordModel\Where.InstalledComponnet.cs" />
     <Compile Include="ActiveRecordModel\Where.Istoric.cs" />
     <Compile Include="ActiveRecordModel\Where.NHibernate.Query.Generator.Model.cs" />
+    <Compile Include="ActiveRecordModel\Where.OtherWeirdClass.cs" />
     <Compile Include="ActiveRecordModel\Where.Post.cs" />
     <Compile Include="ActiveRecordModel\Where.Project.cs" />
     <Compile Include="ActiveRecordModel\Where.Role.cs" />
     <Compile Include="ActiveRecordModel\Where.User.cs" />
     <Compile Include="ActiveRecordModel\Where.WeirdClass.cs" />
+    <Compile Include="ActiveRecordModel\Where.WeirdPropertyClass.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
     <Compile Include="Sample.hbm.cs">
