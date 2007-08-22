@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -137,7 +137,7 @@ namespace Rhino.Commons
             if (nestingOptions == UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork &&
                 existing != null)
             {
-                existing.IncremementUsages();
+                existing.IncrementUsages();
                 return existing;
             }
             IUnitOfWorkImplementor unitOfWorkImplementor =

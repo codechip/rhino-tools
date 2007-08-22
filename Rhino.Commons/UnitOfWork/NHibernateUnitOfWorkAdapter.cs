@@ -104,7 +104,7 @@ namespace Rhino.Commons
 		/// Will increase the dispose count
 		/// NOT THREAD SAFE
 		/// </summary>
-		public void IncremementUsages()
+		public void IncrementUsages()
 		{
 			usageCount += 1;
 		}

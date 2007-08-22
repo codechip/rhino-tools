@@ -54,7 +54,7 @@ namespace Rhino.Commons
 			}
 		}
 
-		public void IncremementUsages()
+		public void IncrementUsages()
 		{
 			usageCount++;
 		}
