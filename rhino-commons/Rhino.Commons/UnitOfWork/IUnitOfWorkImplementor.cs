@@ -31,7 +31,7 @@ namespace Rhino.Commons
 {
 	public interface IUnitOfWorkImplementor : IUnitOfWork
 	{
-		void IncremementUsages();
+		void IncrementUsages();
 		IUnitOfWorkImplementor Previous { get; }
 	}
 }
