@@ -38,14 +38,26 @@ namespace Rhino.Commons
 {
     public abstract class RepositoryImplBase<T> 
     {
-        private static Order[] NullOrderArray = null;
+        private static readonly Order[] NullOrderArray = null;
 
-
+		/// <summary>
+		/// Creates a <see cref="DetachedCriteria"/> compatible with this Repository
+		/// </summary>
+		/// <returns>The <see cref="DetachedCriteria"/></returns>
         public DetachedCriteria CreateDetachedCriteria()
 		{
 			return DetachedCriteria.For<T>();
 		}
 
+		/// <summary>
+		/// Creates an aliases <see cref="DetachedCriteria"/> compatible with this Repository
+		/// </summary>
+		/// <param name="alias">the alias</param>
+		/// <returns>The <see cref="DetachedCriteria"/></returns>
+		public DetachedCriteria CreateDetachedCriteria(string alias)
+		{
+			return DetachedCriteria.For<T>(alias);
+		}
 
         /// <summary>
         /// Loads all the entities that match the criteria
@@ -485,25 +497,29 @@ namespace Rhino.Commons
         }
 
 
-
         /// <summary>
         /// This is used to convert the resulting tuples into strongly typed objects.
         /// </summary>
         /// <typeparam name="T1"></typeparam>
-        private class TypedResultTransformer<T1> : IResultTransformer
-        {            
-            public object TransformTuple(object[] tuple, string[] aliases)
-            {
-                return Activator.CreateInstance(typeof(T1), tuple);
-            }
+		private class TypedResultTransformer<T1> : IResultTransformer
+		{
+        	public object TransformTuple(object[] tuple, string[] aliases)
+        	{
+        		if (tuple.Length == 1)
+        		{
+        			return tuple[0];
+        		}
+        		else
+        		{
+        			return Activator.CreateInstance(typeof(T1), tuple);
+        		}
+        	}
 
-            IList IResultTransformer.TransformList(IList collection)
-            {
-                return collection;
-            }
-        }
-
-
+			IList IResultTransformer.TransformList(IList collection)
+			{
+				return collection;
+			}
+		}
 
         public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
         {

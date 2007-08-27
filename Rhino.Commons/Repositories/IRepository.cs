@@ -388,5 +388,12 @@ namespace Rhino.Commons
 		/// </summary>
 		/// <returns>The <see cref="DetachedCriteria"/></returns>
     	DetachedCriteria CreateDetachedCriteria();
+
+		/// <summary>
+		/// Creates an aliases <see cref="DetachedCriteria"/> compatible with this Repository
+		/// </summary>
+		/// <param name="alias">the alias</param>
+		/// <returns>The <see cref="DetachedCriteria"/></returns>
+		DetachedCriteria CreateDetachedCriteria(string alias);
     }
 }
