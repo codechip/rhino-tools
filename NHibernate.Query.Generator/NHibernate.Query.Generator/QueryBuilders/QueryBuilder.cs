@@ -55,6 +55,9 @@ namespace QueryNamespace
 		public NHibernate.FetchMode fetchMode = NHibernate.FetchMode.Default;
 		protected QueryBuilder<T> parent;
 
+		public delegate DetachedCriteria CreateDetachedCriteriaDelegate(string alias);
+		public static CreateDetachedCriteriaDelegate CreateDetachedCriteria = DefaultCreateDetachedCriteria;
+
 		public QueryBuilder()
 			: this(null, typeof(T).Name, null)
 		{
@@ -334,11 +337,8 @@ Use HQL for this functionality...",
             {
 				return parent.ToDetachedCriteria(alias);
 			}
-			NHibernate.Expression.DetachedCriteria detachedCriteria;
-			if (string.IsNullOrEmpty(alias))
-				detachedCriteria = NHibernate.Expression.DetachedCriteria.For(typeof(T));
-			else
-				detachedCriteria = NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);
+
+			NHibernate.Expression.DetachedCriteria detachedCriteria = CreateDetachedCriteria(alias);
 
 			if (this.propertyProjection != null)
 			{
@@ -381,6 +381,14 @@ Use HQL for this functionality...",
 				}
 			}
 			return detachedCriteria;
+		}
+
+		private static DetachedCriteria DefaultCreateDetachedCriteria(string alias)
+		{
+			if (string.IsNullOrEmpty(alias))
+				return NHibernate.Expression.DetachedCriteria.For(typeof(T));
+			else
+				return NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);	
 		}
 
 		private static NHibernate.Expression.DetachedCriteria CreateCriteriaByPath(string keyPath, System.Collections.Hashtable critTable, DetachedCriteria currentCriteria)

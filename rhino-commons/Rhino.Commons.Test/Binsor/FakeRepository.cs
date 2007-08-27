@@ -344,5 +344,10 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			return DetachedCriteria.For<T>();
 		}
+
+		public DetachedCriteria CreateDetachedCriteria(string alias)
+		{
+			return DetachedCriteria.For<T>(alias);
+		}
 	}
 }

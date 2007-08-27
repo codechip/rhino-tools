@@ -939,7 +939,7 @@ namespace NHibernate.Query.Generator
             prop.Type = new CodeTypeReference(propertyType, new CodeTypeReference(genericTypeName));
             string propertyNameInGeneratedCode = GetPath(prefix, prop.Name);
             CodeObjectCreateExpression newExpr = new CodeObjectCreateExpression(prop.Type);
-            newExpr.Parameters.Add(new CodeThisReferenceExpression());
+            newExpr.Parameters.Add(new CodePrimitiveExpression(null));
 
             CodeVariableDeclarationStatement var =
                 new CodeVariableDeclarationStatement(typeof(string), "temp",
