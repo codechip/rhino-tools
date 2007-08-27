@@ -471,5 +471,14 @@ namespace Rhino.Commons
 		{
 			return InternalRepository.CreateDetachedCriteria();
 		}
+
+		/// <summary>
+		/// See <see cref="IRepository{T}.CreateDetachedCriteria(string)"/>
+		/// </summary>
+		/// <returns></returns>
+		public static DetachedCriteria CreateDetachedCriteria(string alias)
+		{
+			return InternalRepository.CreateDetachedCriteria(alias);
+		}
     }
 }
