@@ -53,7 +53,8 @@ namespace NHibernate.Query.Generator.Tests
         private SessionScope sessionScope;
 
         [Test]
-        public void QueryWithJoinOverSamePropertyName()
+		[Ignore("reverted the patch that supported it")]
+		public void QueryWithJoinOverSamePropertyName()
         {
             Project[] projects = Project.FindAll(Where.Project.Componnet.Component.Version == "v1.0");
             Assert.AreEqual(1, projects.Length);
@@ -195,6 +196,7 @@ namespace NHibernate.Query.Generator.Tests
         }
 
 		[Test]
+		[Ignore("reverted the patch that supported it")]
 		public void CanUseOrderringOnComponentPropertiesByDetachedCriteria()
 		{
 			WeirdPropertyClass property =  new WeirdPropertyClass();
@@ -250,6 +252,39 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.AreEqual("Bar", weirds[0].Key.Department);
 			Assert.AreEqual("Foo", weirds[1].Key.Department);
 		}
+
+		[Test]
+		public void CanUseOrderringOnOSimplePropertiesByDetachedCriteria()
+		{
+			User user = new User();
+			user.Name = "zzz";
+			user.Email = "Ayende at ayende dot com";
+			user.Save();
+
+			QueryBuilder<User> qb = new QueryBuilder<User>();
+			// create a query 
+			qb &= (Where.User.Email.Eq("Ayende at ayende dot com"));
+
+			// need the session
+			ISessionFactory sf = ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof(OtherWeirdClass));
+			ISession currentSession = SessionScope.Current.GetSession(sf);
+
+			// set the property to order by
+			List<OrderByClause> orders = new List<OrderByClause>();
+			orders.Add(new OrderByClause("Name", "this").Desc);
+
+			DetachedCriteria detachedCriteria = qb.ToDetachedCriteria("", orders.ToArray());
+
+			ICriteria critMain = detachedCriteria.GetExecutableCriteria(currentSession);
+
+			ICollection<User> list = critMain.List<User>();
+			User[] users = new User[2];
+			list.CopyTo(users, 0);
+			Assert.AreEqual(2, users.Length);
+			Assert.AreEqual("zzz", users[0].Name);
+			Assert.AreEqual("Ayende", users[1].Name);
+		}
+
 
         [Test]
         public void CanUseOrderringOnSimpleProperties()
