@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -361,6 +362,41 @@ namespace Rhino.Igloo
             return context.Response.ApplyAppPathModifier(url);
         }
 
+
+        /// <summary>
+        /// Check that the client ip address is in the given list.
+        /// </summary>
+        /// <param name="listOfIps"></param>
+        /// <returns></returns>
+        public bool ClientIpIsIn(ICollection listOfIps)
+        {
+            string clientIp = context.Request.UserHostAddress;
+            foreach (string ip in listOfIps)
+            {
+                if(clientIp.StartsWith(ip))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the logon user server variable
+        /// </summary>
+        /// <returns></returns>
+        public string GetLogonUser()
+        {
+            return context.Request.ServerVariables["LOGON_USER"];
+        }
+
+        /// <summary>
+        /// Sets the context varaible with the specified value
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetContextVaraible(string name, object value)
+        {
+            context.Items[name] = value;    
+        }
 
         /// <summary>
         /// Clears the session.

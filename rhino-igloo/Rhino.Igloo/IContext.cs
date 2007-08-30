@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -193,5 +194,20 @@ namespace Rhino.Igloo
         /// Clears the session.
         /// </summary>
 	    void ClearSession();
+
+        /// <summary>
+        /// Check that the client ip address is in the given list.
+        /// </summary>
+	    bool ClientIpIsIn(ICollection listOfIps);
+
+        /// <summary>
+        /// Gets the logon user server variable
+        /// </summary>
+	    string GetLogonUser();
+
+        /// <summary>
+        /// Sets the context varaible with the specified value
+        /// </summary>
+	    void SetContextVaraible(string name, object value);
 	}
 }

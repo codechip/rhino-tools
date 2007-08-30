@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Principal;
@@ -251,6 +252,21 @@ namespace Rhino.Igloo.Tests
 	    public string ResolveUrl(string url)
 	    {
 	        return url;
+	    }
+
+	    public void SetContextVaraible(string name, object value)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public string GetLogonUser()
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public bool ClientIpIsIn(ICollection listOfIps)
+	    {
+	        throw new NotImplementedException();
 	    }
 
 	    public void ClearSession()
