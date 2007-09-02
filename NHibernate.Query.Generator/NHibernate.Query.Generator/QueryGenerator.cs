@@ -778,14 +778,6 @@ namespace NHibernate.Query.Generator
             AddToMembersWithSimpleXmlComment(parent, innerClass);
             AddToMembersWithSimpleXmlComment(parent, prop);
 
-            //ctor
-            CodeConstructor ctor = new CodeConstructor();
-            ctor.Attributes = MemberAttributes.Public;
-
-            ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression(null));
-            ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression("this"));
-            ctor.BaseConstructorArgs.Add(new CodePrimitiveExpression(null));
-            AddToMembersWithSimpleXmlComment(innerClass, ctor);
             return innerClass;
         }
 
@@ -813,30 +805,38 @@ namespace NHibernate.Query.Generator
             CodeTypeReference parentClass = new CodeTypeReference(classname, new CodeTypeReference(genericParameterName));
             innerClass.BaseTypes.Add(parentClass);
 
-            // Query_Blog(string name, string associationPath) : QueryBuilder<T1>(name, associationPath);
-            CodeConstructor ctor = new CodeConstructor();
-            ctor.Attributes = MemberAttributes.Public;
-            CodeTypeReference queryBuilderClass = new CodeTypeReference("QueryBuilder", new CodeTypeReference(genericParameterName));
-            ctor.Parameters.Add(new CodeParameterDeclarationExpression(queryBuilderClass, "parent"));
-            ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
-            ctor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "associationPath"));
-            ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("parent"));
-            ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
-            ctor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
-            AddToMembersWithSimpleXmlComment(innerClass, ctor);
+			// Query_Blog() : this(null, this, null)
+			CodeConstructor ctor = new CodeConstructor();
+        	ctor.Attributes = MemberAttributes.Public;
+			ctor.ChainedConstructorArgs.Add(new CodePrimitiveExpression(null));
+        	ctor.ChainedConstructorArgs.Add(new CodePrimitiveExpression("this"));
+			ctor.ChainedConstructorArgs.Add(new CodePrimitiveExpression(null));
+			AddToMembersWithSimpleXmlComment(innerClass, ctor);
 
-            // ctor for backtracking
+            // Query_Blog(string name, string associationPath) : QueryBuilder<T1>(name, associationPath);
             CodeConstructor ctor2 = new CodeConstructor();
             ctor2.Attributes = MemberAttributes.Public;
+            CodeTypeReference queryBuilderClass = new CodeTypeReference("QueryBuilder", new CodeTypeReference(genericParameterName));
             ctor2.Parameters.Add(new CodeParameterDeclarationExpression(queryBuilderClass, "parent"));
             ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
             ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "associationPath"));
-            ctor2.Parameters.Add(new CodeParameterDeclarationExpression(typeof(bool), "backTrackAssociationOnEquality"));
             ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("parent"));
             ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
             ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
-            ctor2.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("backTrackAssociationOnEquality"));
             AddToMembersWithSimpleXmlComment(innerClass, ctor2);
+
+            // ctor for backtracking
+            CodeConstructor ctor3 = new CodeConstructor();
+            ctor3.Attributes = MemberAttributes.Public;
+            ctor3.Parameters.Add(new CodeParameterDeclarationExpression(queryBuilderClass, "parent"));
+            ctor3.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "name"));
+            ctor3.Parameters.Add(new CodeParameterDeclarationExpression(typeof(string), "associationPath"));
+            ctor3.Parameters.Add(new CodeParameterDeclarationExpression(typeof(bool), "backTrackAssociationOnEquality"));
+            ctor3.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("parent"));
+            ctor3.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("name"));
+            ctor3.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("associationPath"));
+            ctor3.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("backTrackAssociationOnEquality"));
+            AddToMembersWithSimpleXmlComment(innerClass, ctor3);
 
             AddToMembersWithSimpleXmlComment(parent, innerClass);
             return innerClass;
