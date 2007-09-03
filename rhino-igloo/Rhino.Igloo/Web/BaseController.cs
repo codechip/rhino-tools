@@ -96,7 +96,7 @@ namespace Rhino.Igloo
 
 
 		/// <summary>
-		/// Tries to parse the inputName as int.
+		/// Tries to parse the inputName as boolean from the user input
 		/// </summary>
 		/// <param name="inputName">The inputName.</param>
 		/// <returns></returns>
@@ -110,7 +110,7 @@ namespace Rhino.Igloo
 		}
 
 		/// <summary>
-		/// Tries to parse the inputName as int.
+		/// Tries to parse the inputName as a checkbox.
 		/// </summary>
 		/// <param name="inputName">The inputName.</param>
 		/// <returns></returns>
@@ -123,7 +123,7 @@ namespace Rhino.Igloo
 		}
 
 		/// <summary>
-		/// Tries to parse the inputName as int.
+		/// Tries to parse the inputName as int from user input
 		/// </summary>
 		/// <param name="inputName">The inputName.</param>
 		/// <returns></returns>
