@@ -83,9 +83,10 @@ namespace QueryNamespace
 				parent.children.Add(this);
 		}
 
-		protected void AddCriterion(NHibernate.Expression.ICriterion criterion)
+		public QueryBuilder<T> AddCriterion(NHibernate.Expression.ICriterion criterion)
 		{
 			criterions.Add(criterion);
+			return this;
 		}
 
 		public QueryBuilder<T> SetProjection(PropertyProjectionBuilder propertyProjection)
