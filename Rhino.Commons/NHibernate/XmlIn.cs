@@ -75,7 +75,7 @@ namespace Rhino.Commons
 		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery, IDictionary enabledFilters)
 		{
 			//we only need this for SQL Server, and or large amount of values
-            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 10)
+            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
 			{
 				return expr.ToSqlString(criteria, criteriaQuery, enabledFilters);
 			}

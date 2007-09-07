@@ -212,7 +212,7 @@ namespace Rhino.Commons
 
 		public virtual long Count(DetachedCriteria criteria)
 		{
-			return inner.Count();
+			return inner.Count(criteria);
 		}
 
 		public virtual long Count()
