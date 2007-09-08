@@ -78,13 +78,15 @@ namespace Rhino.Commons
         /// is completed. (INSERT)
         /// </summary>
         /// <param name="entity">the entity to save</param>
-        void Save(T entity);
+        /// <returns>The saved entity</returns>
+        T Save(T entity);
 
         /// <summary>
         /// Saves or update the entity, based on its usaved-value
         /// </summary>
         /// <param name="entity"></param>
-        void SaveOrUpdate(T entity);
+        /// <returns>The saved or updated entity</returns>
+        T SaveOrUpdate(T entity);
 
         /// <summary>
         /// Saves or update the copy of entity, based on its usaved-value
