@@ -96,18 +96,22 @@ namespace Rhino.Commons
 		/// is completed.
 		/// </summary>
 		/// <param name="entity">the entity to save</param>
-		public virtual void Save(T entity)
+		/// <returns>The saved entity</returns>
+		public virtual T Save(T entity)
 		{
 			ActiveRecordMediator.Create(entity);
+			return entity;
 		}
 
         /// <summary>
         /// Saves or update the entity, based on its usaved-value
         /// </summary>
         /// <param name="entity"></param>
-	    public void SaveOrUpdate(T entity)
+        /// <returns>The saved or updated entity</returns>
+	    public T SaveOrUpdate(T entity)
 	    {
 	        ActiveRecordMediator.Save(entity);
+        	return entity;
 	    }
 
         /// <summary>

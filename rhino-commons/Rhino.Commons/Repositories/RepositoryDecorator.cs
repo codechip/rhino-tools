@@ -87,14 +87,14 @@ namespace Rhino.Commons
 			inner.DeleteAll(criteria);
 		}
 
-		public virtual void Save(T entity)
+		public virtual T Save(T entity)
 		{
-			inner.Save(entity);
+			return inner.Save(entity);
 		}
 
-		public virtual void SaveOrUpdate(T entity)
+		public virtual T SaveOrUpdate(T entity)
 		{
-			inner.SaveOrUpdate(entity);
+			return inner.SaveOrUpdate(entity);
 		}
 
 		public virtual T SaveOrUpdateCopy(T entity)

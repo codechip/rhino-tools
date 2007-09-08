@@ -157,7 +157,7 @@ namespace Rhino.Commons.Test.Binsor
 		/// is completed.
 		/// </summary>
 		/// <param name="entity">the entity to save</param>
-		public void Save(T entity)
+		public T Save(T entity)
 		{
 			throw new NotImplementedException();
 		}
@@ -166,7 +166,7 @@ namespace Rhino.Commons.Test.Binsor
 	    /// Saves or update the entity, based on its usaved-value
 	    /// </summary>
 	    /// <param name="entity"></param>
-	    public void SaveOrUpdate(T entity)
+	    public T SaveOrUpdate(T entity)
 	    {
 	        throw new NotImplementedException();
 	    }

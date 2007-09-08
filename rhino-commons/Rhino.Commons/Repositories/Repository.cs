@@ -102,19 +102,20 @@ namespace Rhino.Commons
     	/// is completed. (INSERT)
     	/// </summary>
     	/// <param name="entity">the entity to save</param>
-    	public static void Save(T entity)
+    	/// <returns>The saved entity</returns>
+    	public static T Save(T entity)
     	{
-    		InternalRepository.Save(entity);
+    		return InternalRepository.Save(entity);
     	}
 
         /// <summary>
         /// Saves or update the entity, based on its usaved-value
         /// </summary>
         /// <param name="entity"></param>
-        /// <returns>The saved entity</returns>
-        public static void SaveOrUpdate(T entity)
+        /// <returns>The saved or updated entity</returns>
+        public static T SaveOrUpdate(T entity)
         {
-            InternalRepository.SaveOrUpdate(entity);
+            return InternalRepository.SaveOrUpdate(entity);
         }
 
         /// <summary>
