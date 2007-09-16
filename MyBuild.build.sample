@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="DoAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<Target Name="Copy-Projects">
+		<CallTarget Targets="Copy-ProjectX" />
+	</Target>
+
+	<Target Name="Copy-ProjectX">
+		<MSBuild Projects="BuildFromTrunk.build" Targets="CopyTo"
+		 Properties="Configuration=release
+		 ;Dest-Dir=C:\export\code\ProjectX\trunk
+		 ;With-NH=true;With-Nhqg=true;With-Rhino-Commons=true;With-SqlLite=true" />
+		<MSBuild Projects="BuildFromTrunk.build" Targets="CopyTo"
+		 Properties="Configuration=debug
+		 ;Dest-Dir=C:\export\code\ProjectX\trunk
+		 ;With-NH=true;With-Nhqg=true;With-Rhino-Commons=true;With-SqlLite=true" />		
+	</Target>
+
+	<Target Name="DoAll">
+		<CallTarget Targets="Rebuild-Trunks" />
+		<CallTarget Targets="Copy-Projects" />
+	</Target>
+
+	<Target Name="Rebuild-Trunks">
+		<CallTarget Targets="Update-Trunks" />
+		<CallTarget Targets="Build-Trunks" />
+		<CallTarget Targets="Copy-Trunks" />
+	</Target>
+	
+	<Target Name="Update-Trunks">
+		<MSBuild Projects="BuildFromTrunk.build" Targets="Update-All" />
+	</Target>
+
+	<Target Name="Build-Trunks">
+		<MSBuild Projects="BuildFromTrunk.build" Targets="Build-All" Properties="Configuration=debug" />
+		<MSBuild Projects="BuildFromTrunk.build" Targets="Build-All" Properties="Configuration=release" />
+	</Target>
+
+	<Target Name="Copy-Trunks">
+		<MSBuild Projects="BuildFromTrunk.build" Targets="Copy-To-Artifact-Dir" Properties="Configuration=debug" />
+		<MSBuild Projects="BuildFromTrunk.build" Targets="Copy-To-Artifact-Dir" Properties="Configuration=release" />
+	</Target>
+</Project>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Update-All;Build-All;Copy-To-Artifact-Dir" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- Configuration -->
+	<PropertyGroup>
+		<Configuration>debug</Configuration>
+		<Enable-Tests>false</Enable-Tests>
+
+		<!-- User Settings -->
+		<Dest-Dir></Dest-Dir>
+		<Dest-Lib-Dir>$(Dest-Dir)\lib\$(Configuration)</Dest-Lib-Dir>
+		<Dest-Tool-Dir>$(Dest-Dir)\tools</Dest-Tool-Dir>
+
+		<Tools-Dir>$(MSBuildProjectDirectory)\SharedLibs\Tools</Tools-Dir>
+		<NH-Dir>$(MSBuildProjectDirectory)..\NHibernate-Trunk\nhibernate</NH-Dir>
+		<Castle-Dir>$(MSBuildProjectDirectory)..\Castle-Trunk</Castle-Dir>
+		<Rhino-Dir>$(MSBuildProjectDirectory)</Rhino-Dir>
+		<Artifact-Dir>$(MSBuildProjectDirectory)\Trunk-Artifacts</Artifact-Dir>
+
+		<MSBuildCommunityTasksPath>$(Tools-Dir)</MSBuildCommunityTasksPath>
+		<Svn-Dir>$(Tools-Dir)\Subversion</Svn-Dir>
+	</PropertyGroup>
+</Project>
