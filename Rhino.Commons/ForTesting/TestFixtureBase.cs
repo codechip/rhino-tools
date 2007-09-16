@@ -58,9 +58,9 @@ namespace Rhino.Commons.ForTesting
         /// <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
         /// <remarks>
         /// If <paramref name="databaseName"/> is <see langword="null" /> or
-        /// <see cref="string.Empty">string.Empty</see> a database with a name
+        /// <see cref="string.Empty"/> a database with a name
         /// derived from the other parameters supplied will be created. See
-        /// <see cref="DeriveDatabaseNameFrom"/>
+        /// <see cref="DeriveDatabaseNameFrom(Assembly)"/> and <see cref="DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
         /// <para>
         /// Currently every UnitOfWorkContext created for the ActiveRecord
         /// framework within the scope of a running application must use the

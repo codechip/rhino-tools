@@ -159,6 +159,7 @@ namespace Rhino.Commons
         /// <returns>number of Results of entities that match the criteria</returns>
         /// <param name="selectionOrder">The field the repository should order by</param>
         /// <returns>number of Results of entities that match the criteria</returns>
+        /// </summary>
         public ICollection<T> FindAll(int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
         {
             return FindAll(firstResult, numberOfResults, new Order[] { selectionOrder }, criteria);
