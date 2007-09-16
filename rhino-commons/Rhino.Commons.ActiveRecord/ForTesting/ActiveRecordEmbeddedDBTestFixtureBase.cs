@@ -183,13 +183,13 @@ namespace Rhino.Commons.ForTesting
 		/// 
 		///			With.Transaction(delegate
 		///			{
-		///				IoC.Resolve<IRepository<Foo>>.Save(f);
+		///				IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Save(f);
 		///			});
 		///			
 		///			Assert.AreNotEqual(Guid.Empty, f.Id);
 		/// 
 		///			using(UnitOfWork.Start())
-		///				res = IoC.Resolve<IRepository<Foo>>.Load(f.Id);
+		///				res = IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Load(f.Id);
 		/// 
 		///			Assert.IsNotNull(res);
 		///			Assert.AreEqual("Bar", res.Name);

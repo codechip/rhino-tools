@@ -106,6 +106,7 @@ namespace Rhino.Commons
         /// Loads all the entities that match the criteria
         /// by order
         /// </summary>
+        /// <param name="order"></param>
         /// <param name="criteria">the criteria to look for</param>
         /// <returns>All the entities that match the criteria</returns>
         ICollection<T> FindAll(Order order, params ICriterion[] criteria);
@@ -137,6 +138,7 @@ namespace Rhino.Commons
         /// Loads all the entities that match the criteria
         /// by order
         /// </summary>
+        /// <param name="orders"></param>
         /// <param name="criteria">the criteria to look for</param>
         /// <returns>All the entities that match the criteria</returns>
         ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria);
@@ -166,6 +168,7 @@ namespace Rhino.Commons
         /// <returns>number of Results of entities that match the criteria</returns>
         /// <param name="selectionOrder">The field the repository should order by</param>
         /// <returns>number of Results of entities that match the criteria</returns>
+        /// </summary>
         ICollection<T> FindAll(int firstResult, int numberOfResults, 
                                Order selectionOrder,
                                params ICriterion[] criteria);
