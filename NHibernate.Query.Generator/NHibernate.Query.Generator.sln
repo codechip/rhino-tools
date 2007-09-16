@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator", "NHibernate.Query.Generator\NHibernate.Query.Generator.csproj", "{042B9A3D-18DB-4ED7-89F2-EDF68C4E40EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F870E487-DAFD-48C7-A07B-414C13C9007A} = {F870E487-DAFD-48C7-A07B-414C13C9007A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.Query.Generator.Tests", "NHibernate.Query.Generator.Tests\NHibernate.Query.Generator.Tests.csproj", "{8E4B87FD-4EC2-4CBC-B709-E8614A714B78}"
 EndProject
