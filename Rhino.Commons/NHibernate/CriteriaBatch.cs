@@ -25,12 +25,12 @@ namespace Rhino.Commons
         {
         }
 
-        public CriteriaBatch Add(DetachedCriteria criteria, Order order)
+        public virtual CriteriaBatch Add(DetachedCriteria criteria, Order order)
         {
             return Add(criteria.AddOrder(order));
         }
 
-        public CriteriaBatch Add(DetachedCriteria criteria)
+        public virtual CriteriaBatch Add(DetachedCriteria criteria)
         {
             currentIndex += 1;
             criteriaList.Add(criteria);
@@ -82,13 +82,17 @@ namespace Rhino.Commons
 
         public virtual IList Execute(ISession theSession)
         {
+            if (criteriaList.Count == 0) return new ArrayList();
+
             IMultiCriteria multiCriteria = theSession.CreateMultiCriteria();
             foreach (DetachedCriteria detachedCriteria in criteriaList)
             {
                 multiCriteria.Add(detachedCriteria);
             }
+
             IList list = multiCriteria.List();
             int results = list.Count;
+
             for (int i = 0; i < results; i++)
             {
                 if (collectionDelegates[i] != null)
