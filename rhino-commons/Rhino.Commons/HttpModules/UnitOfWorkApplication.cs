@@ -69,13 +69,23 @@ namespace Rhino.Commons.HttpModules
             }
             else
             {
-                UnitOfWork.Current = currentUnitOfWork;
-                UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
-                UnitOfWork.CurrentLongConversationId =
-                    (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
-
+                MoveUnitOfWorkFromAspSessionIntoRequestContext();
                 UnitOfWork.CurrentSession.Reconnect();
             }
+        }
+
+
+        private void MoveUnitOfWorkFromAspSessionIntoRequestContext()
+        {
+            UnitOfWork.Current = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
+            UnitOfWork.CurrentLongConversationId =
+                (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
+
+            //avoids the temptation to access UnitOfWork from the HttpSession!
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
+            HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
         }
 
 
@@ -90,32 +100,30 @@ namespace Rhino.Commons.HttpModules
             if (HttpContext.Current.Server.GetLastError() == null && UnitOfWork.InLongConversation)
             {
                 UnitOfWork.CurrentSession.Disconnect();
-
                 if (!IsAspSessionAvailable)
                 {
                     throw new InvalidOperationException(
                         "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
                 }
-
-                HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-                HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
-                HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
-                    UnitOfWork.CurrentLongConversationId;
+                SaveUnitOfWorkToAspSession();
             }
             else
             {
-                if (IsAspSessionAvailable)
-                {
-                    HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-                    HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
-                    HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
-                }
-
                 IUnitOfWork unitOfWork = UnitOfWork.Current;
                 if (unitOfWork != null)
                     unitOfWork.Dispose();
             }
         }
+
+
+        private void SaveUnitOfWorkToAspSession() 
+        {
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+            HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
+                UnitOfWork.CurrentLongConversationId;
+        }
+
 
         public IWindsorContainer Container
         {
@@ -149,8 +157,8 @@ namespace Rhino.Commons.HttpModules
 
         public override void Dispose()
         {
-            BeginRequest -= new EventHandler(UnitOfWorkApplication_BeginRequest);
-            EndRequest -= new EventHandler(UnitOfWorkApplication_EndRequest);
+            BeginRequest -= UnitOfWorkApplication_BeginRequest;
+            EndRequest -= UnitOfWorkApplication_EndRequest;
             if (watcher != null)
                 watcher.Dispose();
         }
