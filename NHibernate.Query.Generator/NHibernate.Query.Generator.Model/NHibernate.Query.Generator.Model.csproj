@@ -45,6 +45,7 @@
     <Compile Include="Cat.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Componnet.cs" />
+    <Compile Include="GenericClass.cs" />
     <Compile Include="InstalledComponnet.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Project.cs" />
@@ -53,6 +54,9 @@
     <Compile Include="Shipping.cs" />
     <Compile Include="User.cs" />
     <Compile Include="WierdClass.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -426,7 +426,8 @@ namespace NHibernate.Query.Generator
             {
                 foreach (XmlNode classNode in node.SelectNodes(xpathForClass, nsMgr))
                 {
-                    string genericTypeName = GetTypeNameForCode(GetName(classNode));
+                		string typeName = GetName(classNode);
+										string genericTypeName = GetTypeNameForCode(typeName);
                     string typeNameForDisplay = GetTypeNameForDisplay(classNode);
                     string typeExtendsForDisplay = GetBaseTypeForDiplay(classNode);
 
@@ -438,11 +439,19 @@ namespace NHibernate.Query.Generator
                                           AssociationBehavior.AddAssociationFromName,
                                           innerClass.TypeParameters[0].Name);
 
-                    //This creates the root query class, Where.Blog
-                    CreateRootClassAndPropertyInParentClass(parent, typeNameForDisplay, genericTypeName);
+										if (!IsGenericType(typeName))
+										{
+											//This creates the root query class, Where.Blog
+											CreateRootClassAndPropertyInParentClass(parent, typeNameForDisplay, genericTypeName);
+										}
                 }
             }
         }
+
+				private static bool IsGenericType(string typeName)
+				{
+					return typeName.IndexOf('`') >= 0;
+				}
 
         /// <summary>
         /// This generate the properties of a query class (or the root class)
@@ -1004,6 +1013,7 @@ namespace NHibernate.Query.Generator
             {
                 throw new ArgumentNullException("typeName", "Typename is empty! you must pass non empty string");
             }
+						typeName = typeName.Split('`')[0]; // Handle generic type names
             int firstIndexOfComma = typeName.IndexOf(',');
             if (firstIndexOfComma == -1)
                 firstIndexOfComma = typeName.Length;

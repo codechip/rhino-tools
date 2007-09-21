@@ -66,6 +66,7 @@
     <Compile Include="ActiveRecordModel\Where.Componnet.cs" />
     <Compile Include="ActiveRecordModel\Where.DerivedBlog.cs" />
     <Compile Include="ActiveRecordModel\Where.DerivedBlog2.cs" />
+    <Compile Include="ActiveRecordModel\Where.GenericClass.cs" />
     <Compile Include="ActiveRecordModel\Where.InstalledComponnet.cs" />
     <Compile Include="ActiveRecordModel\Where.Istoric.cs" />
     <Compile Include="ActiveRecordModel\Where.NHibernate.Query.Generator.Model.cs" />
@@ -118,6 +119,9 @@
   <ItemGroup>
     <EmbeddedResource Include="WithEagerFetch\Action.hbm.xml" />
     <EmbeddedResource Include="WithEagerFetch\Application.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

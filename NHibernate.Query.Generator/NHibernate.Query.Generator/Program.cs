@@ -180,7 +180,8 @@ namespace NHibernate.Query.Generator
                     Invoke(xmlVisitor, "CreateXml", model);
 
                     System.Type type = (System.Type)Get(model, "Type");
-                    string genFile = Path.Combine(outputDir, "Where." + type.Name + "." + targetExtention);
+                		string typeName = type.Name.Split('`')[0]; // Handle generic types
+                    string genFile = Path.Combine(outputDir, "Where." + typeName + "." + targetExtention);
                     GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile, baseNamespace);
                 }
             }
