@@ -37,8 +37,8 @@ namespace NHibernate.Query.Generator.Tests
 //                .SetProperty("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;")
                 .SetProperty("hibernate.connection.release_mode", "on_close")
                 .SetProperty("hibernate.max_fetch_deptch", "2")
-                .AddClass(typeof (Application))
-                .AddClass(typeof (Action));
+				.AddClass(typeof(WithEagerFetch.Application))
+				.AddClass(typeof(WithEagerFetch.Action));
 
             sf = cfg.BuildSessionFactory();
         }
