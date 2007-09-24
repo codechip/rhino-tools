@@ -34,6 +34,7 @@ namespace Rhino.Commons.Facilities
 
 	public class RhinoTransactionResourceAdapter : IResource
 	{
+		private IUnitOfWork unitOfWork;
 		private RhinoTransaction rhinoTransaction;
 
 		public RhinoTransactionResourceAdapter(TransactionMode transactionMode)
@@ -42,7 +43,8 @@ namespace Rhino.Commons.Facilities
 
 		public void Start()
 		{
-			rhinoTransaction = UnitOfWork.Current.BeginTransaction();
+			unitOfWork = UnitOfWork.Start();
+			rhinoTransaction = unitOfWork.BeginTransaction();
 		}
 
 		public void Commit()
@@ -60,6 +62,11 @@ namespace Rhino.Commons.Facilities
 		protected void Dispose()
 		{
 			rhinoTransaction.Dispose();
+
+			if (unitOfWork != null)
+			{
+				unitOfWork.Dispose();
+			}
 		}
 	}
 }
