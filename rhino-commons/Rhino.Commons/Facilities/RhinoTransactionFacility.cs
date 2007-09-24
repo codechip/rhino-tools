@@ -54,7 +54,10 @@ namespace Rhino.Commons
 
 		private void OnNewTransaction(ITransaction transaction, TransactionMode transactionMode, IsolationMode isolationMode, bool distributedTransaction)
 		{
-			transaction.Enlist(new RhinoTransactionResourceAdapter(transactionMode));
+			if (!transaction.DistributedTransaction)
+			{
+				transaction.Enlist(new RhinoTransactionResourceAdapter(transactionMode));
+			}
 		}
 
 		private void Kernel_ComponentCreated(ComponentModel model, object instance)
