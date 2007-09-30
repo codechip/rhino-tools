@@ -123,7 +123,7 @@ namespace Rhino.Commons
 		public override TypedValue[] GetTypedValues(ICriteria criteria, ICriteriaQuery criteriaQuery)
 		{
 			//we only need this for SQL Server, and or large amount of values
-			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 10)
+			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
 			{
 				return expr.GetTypedValues(criteria, criteriaQuery);
 			}
