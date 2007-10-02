@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -102,7 +102,7 @@ namespace Rhino.Commons
 					if (item != null)
 					{
 						_threads.Remove(item);
-						if (_threads.Count == 0 && _waitForAllThreadToComplete != null)
+						if (_callbacks.Count == 0 && _threads.Count == 0 && _waitForAllThreadToComplete != null)
 						{
 							_waitForAllThreadToComplete.Set();
 						}
@@ -179,7 +179,7 @@ namespace Rhino.Commons
 		{
 			lock (_callbacks)
 			{
-				if (_threads.Count == 0)
+				if (_callbacks.Count == 0 && _threads.Count == 0)
 					return;
 			}
 			_waitForAllThreadToComplete = new AutoResetEvent(true);
