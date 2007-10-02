@@ -43,7 +43,6 @@ namespace Rhino.Commons.HttpModules
         public const string CurrentLongConversationKey = "CurrentLongConversation.Key";
         public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
 
-        private static IWindsorContainer windsorContainer;
         private FileSystemWatcher watcher;
 
         public UnitOfWorkApplication()
@@ -75,7 +74,7 @@ namespace Rhino.Commons.HttpModules
         }
 
 
-        private void MoveUnitOfWorkFromAspSessionIntoRequestContext()
+        private static void MoveUnitOfWorkFromAspSessionIntoRequestContext()
         {
             UnitOfWork.Current = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
             UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
@@ -89,7 +88,7 @@ namespace Rhino.Commons.HttpModules
         }
 
 
-        private bool IsAspSessionAvailable
+        private static bool IsAspSessionAvailable
         {
             get { return HttpContext.Current.Session != null; }
         }
@@ -116,7 +115,7 @@ namespace Rhino.Commons.HttpModules
         }
 
 
-        private void SaveUnitOfWorkToAspSession() 
+        private static void SaveUnitOfWorkToAspSession() 
         {
             HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
             HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
@@ -127,8 +126,12 @@ namespace Rhino.Commons.HttpModules
 
         public IWindsorContainer Container
         {
-            get { return windsorContainer; }
-            protected set { windsorContainer = value; }
+            get
+            {
+				if (IoC.IsInitialized == false)
+					InitializeContainer(this);
+				return IoC.Container;
+            }
         }
 
         public virtual void Application_Start(object sender, EventArgs e)
@@ -178,8 +181,8 @@ namespace Rhino.Commons.HttpModules
             watcher.Changed += resetIoC;
             watcher.Deleted += resetIoC;
 
-            Container = CreateContainer(windsorConfig);
-            IoC.Initialize(Container);
+        	IWindsorContainer container = CreateContainer(windsorConfig);
+        	IoC.Initialize(container);
 
             watcher.EnableRaisingEvents = true;
         }
