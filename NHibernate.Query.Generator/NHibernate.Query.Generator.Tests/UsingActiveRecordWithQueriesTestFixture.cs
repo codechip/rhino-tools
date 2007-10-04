@@ -196,7 +196,6 @@ namespace NHibernate.Query.Generator.Tests
         }
 
 		[Test]
-		[Ignore("reverted the patch that supported it")]
 		public void CanUseOrderringOnComponentPropertiesByDetachedCriteria()
 		{
 			WeirdPropertyClass property =  new WeirdPropertyClass();
@@ -393,13 +392,13 @@ namespace NHibernate.Query.Generator.Tests
 
             Hashtable properties = new Hashtable();
 
-            properties.Add("hibernate.show_sql", "true");
+            properties.Add("show_sql", "true");
 
-            properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-            properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-            properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-            properties.Add("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
-            properties.Add("hibernate.connection.release_mode", "on_close");
+            properties.Add("connection.driver_class", "NHibernate.Driver.SQLite20Driver");
+            properties.Add("dialect", "NHibernate.Dialect.SQLiteDialect");
+            properties.Add("connection.provider", "NHibernate.Connection.DriverConnectionProvider");
+            properties.Add("connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+            properties.Add("connection.release_mode", "on_close");
 
             source.Add(typeof(ActiveRecordBase), properties);
             ActiveRecordStarter.Initialize(source,

@@ -29,14 +29,14 @@ namespace NHibernate.Query.Generator.Tests
         public void TestFixtureSetup()
         {
             cfg = new Configuration()
-                .SetProperty("hibernate.show_sql", "true")
-                .SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect")
-                .SetProperty("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver")
-                .SetProperty("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider")
-                .SetProperty("hibernate.connection.connection_string", "Data Source=test.db3;Version=3;New=True;")
+                .SetProperty("show_sql", "true")
+                .SetProperty("dialect", "NHibernate.Dialect.SQLiteDialect")
+                .SetProperty("connection.driver_class", "NHibernate.Driver.SQLite20Driver")
+                .SetProperty("connection.provider", "NHibernate.Connection.DriverConnectionProvider")
+                .SetProperty("connection.connection_string", "Data Source=test.db3;Version=3;New=True;")
 //                .SetProperty("hibernate.connection.connection_string", "Data Source=:memory:;Version=3;New=True;")
-                .SetProperty("hibernate.connection.release_mode", "on_close")
-                .SetProperty("hibernate.max_fetch_deptch", "2")
+                .SetProperty("connection.release_mode", "on_close")
+                .SetProperty("max_fetch_deptch", "2")
 				.AddClass(typeof(WithEagerFetch.Application))
 				.AddClass(typeof(WithEagerFetch.Action));
 
