@@ -160,6 +160,7 @@
     <Compile Include="Repository\RepositoryProjectionTests.cs" />
     <Compile Include="Repository\RepositoryTests.cs" />
     <Compile Include="Repository\RepositoryTestsBase.cs" />
+    <Compile Include="RhinoThreadPoolFixture.cs" />
     <Compile Include="UoW\TransactionalFlush.cs" />
     <Compile Include="With\With.Log.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />

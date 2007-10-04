@@ -182,7 +182,7 @@ namespace Rhino.Commons
 				if (_callbacks.Count == 0 && _threads.Count == 0)
 					return;
 			}
-			_waitForAllThreadToComplete = new AutoResetEvent(true);
+			_waitForAllThreadToComplete = new AutoResetEvent(false);
 			try
 			{
 				_waitForAllThreadToComplete.WaitOne();
