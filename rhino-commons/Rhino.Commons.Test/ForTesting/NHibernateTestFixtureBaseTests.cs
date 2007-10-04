@@ -30,6 +30,8 @@ using System;
 using System.IO;
 using MbUnit.Framework;
 using Rhino.Commons.ForTesting;
+using NHibernate;
+using NHibernate.Cfg;
 
 namespace Rhino.Commons.Test.ForTesting
 {
@@ -85,5 +87,34 @@ namespace Rhino.Commons.Test.ForTesting
                                      @"..\..\ForTesting\Windsor-NH.config"));
             }
         }
+
+		[Test]
+		public void TestThatNHibernateInitializationAwareIsCalled()
+		{
+			NHInitAwareMock mock = new NHInitAwareMock();
+			mock.ConfiguredWasCalled = 0;
+			FixtureInitialize(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
+				MappingInfo.From().SetNHInitializationAware(mock));
+			Assert.AreEqual(1, mock.ConfiguredWasCalled);
+		}
+
+		private class NHInitAwareMock : INHibernateInitializationAware
+		{
+			public int ConfiguredWasCalled = 0;
+
+			#region INHibernateInitializationAware Members
+
+			public void Configured(Configuration cfg)
+			{
+				ConfiguredWasCalled++;
+			}
+
+			public void Initialized(Configuration cfg, ISessionFactory sessionFactory)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+		}
     }
 }

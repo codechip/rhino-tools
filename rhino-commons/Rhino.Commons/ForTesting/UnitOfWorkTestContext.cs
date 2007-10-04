@@ -329,7 +329,10 @@ namespace Rhino.Commons.ForTesting
                 foreach (Assembly assembly in MappingInfo.MappingAssemblies)
                     cfg.AddAssembly(assembly);
 
-                return cfg;
+				if (MappingInfo.NHInitializationAware != null)
+					MappingInfo.NHInitializationAware.Configured(cfg);
+
+				return cfg;
             }
 
 

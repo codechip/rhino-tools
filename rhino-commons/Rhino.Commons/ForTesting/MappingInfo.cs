@@ -94,5 +94,20 @@ namespace Rhino.Commons.ForTesting
 
             return this;
         }
+
+    	private INHibernateInitializationAware nHInitializationAware;
+
+    	public INHibernateInitializationAware NHInitializationAware
+    	{
+    		get { return nHInitializationAware; }
+    		set { nHInitializationAware = value; }
+    	}
+
+		public MappingInfo SetNHInitializationAware(INHibernateInitializationAware value)
+		{
+			nHInitializationAware = value;
+			return this;
+		}
+
     }
 }
