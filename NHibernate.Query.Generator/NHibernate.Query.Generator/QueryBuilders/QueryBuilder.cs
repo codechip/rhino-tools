@@ -48,7 +48,7 @@ namespace QueryNamespace
 		protected string associationPath;
 		private readonly bool backTrackAssociationsOnEquality;
 		private readonly System.Collections.Generic.IList<OrderByClause> orderByClauses = new System.Collections.Generic.List<OrderByClause>();
-		private readonly System.Collections.Generic.ICollection<QueryBuilder<T>> children = new System.Collections.Generic.List<QueryBuilder<T>>();
+		private readonly System.Collections.Generic.ICollection<QueryBuilder<T>> children = new Iesi.Collections.Generic.HashedSet<QueryBuilder<T>>();
 		private readonly System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion> criterions = new System.Collections.Generic.List<NHibernate.Expression.ICriterion>();
 		private PropertyProjectionBuilder propertyProjection = null;
 		public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
@@ -67,7 +67,7 @@ namespace QueryNamespace
 			: this(null, name, null)
 		{
 		}
-		
+
 		public QueryBuilder(QueryBuilder<T> parent, string name, string associationPath, bool backTrackAssociationsOnEquality)
 			: this(parent, name, associationPath)
 		{
@@ -142,7 +142,6 @@ namespace QueryNamespace
 			if (backTrackAssociationsOnEquality)
 			{
 				self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
-				children.Add(self);
 			}
 			self.AddCriterion(eq);
 			return this;
@@ -160,7 +159,6 @@ namespace QueryNamespace
 			if (backTrackAssociationsOnEquality)
 			{
 				self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
-				children.Add(self);
 			}
 			self.AddCriterion(eq);
 			return this;
@@ -173,7 +171,6 @@ namespace QueryNamespace
 			if (backTrackAssociationsOnEquality)
 			{
 				self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
-				children.Add(self);
 			}
 			self.AddCriterion(inExpression);
 			return this;
@@ -206,7 +203,6 @@ namespace QueryNamespace
 				if (backTrackAssociationsOnEquality)
 				{
 					self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
-					children.Add(self);
 				}
 				self.AddCriterion(notNullExpression);
 				return this;
@@ -222,7 +218,6 @@ namespace QueryNamespace
 				if (backTrackAssociationsOnEquality)
 				{
 					self = new QueryBuilder<T>(this, myName, BackTrackAssociationPath(associationPath));
-					children.Add(self);
 				}
 				self.AddCriterion(nullExpression);
 				return this;
@@ -329,13 +324,13 @@ Use HQL for this functionality...",
 
 		public NHibernate.Expression.DetachedCriteria ToDetachedCriteria(string alias)
 		{
-            return ToDetachedCriteria(alias, null);
-        }
+			return ToDetachedCriteria(alias, null);
+		}
 
-        public DetachedCriteria ToDetachedCriteria(string alias, params OrderByClause[] sortOrders)
-        {
-            if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
-            {
+		public DetachedCriteria ToDetachedCriteria(string alias, params OrderByClause[] sortOrders)
+		{
+			if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
+			{
 				return parent.ToDetachedCriteria(alias);
 			}
 
@@ -356,17 +351,17 @@ Use HQL for this functionality...",
 			critTable.Add("this", detachedCriteria);
 			foreach (System.Collections.Generic.KeyValuePair<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> pair in criterionsByAssociation)
 			{
-					NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
+				NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
 				System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = criterionsByJoinTypeAndFetchMode[pair.Key];
-					if (pair.Key != "this")
-					{
+				if (pair.Key != "this")
+				{
 					temp = detachedCriteria.SetFetchMode(pair.Key, val.Value)
 							.CreateCriteria(pair.Key, val.Key);
-					}
+				}
 				foreach (NHibernate.Expression.ICriterion criterion in pair.Value)
-					{
-						temp.Add(criterion);
-					}
+				{
+					temp.Add(criterion);
+				}
 			}
 			if (sortOrders != null)
 			{
@@ -387,41 +382,41 @@ Use HQL for this functionality...",
 			if (string.IsNullOrEmpty(alias))
 				return NHibernate.Expression.DetachedCriteria.For(typeof(T));
 			else
-				return NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);	
+				return NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);
 		}
 
 		private static NHibernate.Expression.DetachedCriteria CreateCriteriaByPath(string keyPath, System.Collections.Hashtable critTable, DetachedCriteria currentCriteria)
-        {
-            string assPath = keyPath;
-            string[] split = assPath.Split('.');
-            for (int i = 0; i < split.Length; i++)
-            {
-                if (critTable.ContainsKey(assPath))
+		{
+			string assPath = keyPath;
+			string[] split = assPath.Split('.');
+			for (int i = 0; i < split.Length; i++)
+			{
+				if (critTable.ContainsKey(assPath))
 					currentCriteria = (NHibernate.Expression.DetachedCriteria)critTable[assPath];
-                else
-                    assPath = BackTrackAssociationPath(assPath);
-            }
-            if (currentCriteria != null)
-            {
+				else
+					assPath = BackTrackAssociationPath(assPath);
+			}
+			if (currentCriteria != null)
+			{
 				string remainingPath = keyPath.Replace(assPath, "");
 				if (remainingPath.StartsWith("."))
 					remainingPath = remainingPath.Substring(1);
 				// create missing criteria
-                string[] allPaths = remainingPath.Split('.');
+				string[] allPaths = remainingPath.Split('.');
 				//if (allPaths.Length > 1)
 				//    allPaths[allPaths.Length - 1] = ""; // remove property from association
 				foreach (string s in allPaths)
-                {
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        assPath = assPath + "." + s;
+				{
+					if (!string.IsNullOrEmpty(s))
+					{
+						assPath = assPath + "." + s;
 						currentCriteria = currentCriteria.CreateCriteria(s, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
-                        critTable.Add(assPath, currentCriteria);
-                    }
-                }
-            }
-            return currentCriteria;
-        }
+						critTable.Add(assPath, currentCriteria);
+					}
+				}
+			}
+			return currentCriteria;
+		}
 
 		[System.ComponentModel.Browsable(false)]
 		[System.ComponentModel.Localizable(false)]

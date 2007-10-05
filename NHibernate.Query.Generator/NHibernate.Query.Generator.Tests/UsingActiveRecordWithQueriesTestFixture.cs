@@ -43,7 +43,10 @@ using Query;
 
 namespace NHibernate.Query.Generator.Tests
 {
-    /// <summary>
+	using System;
+	using System.IO;
+
+	/// <summary>
     /// Here are the tests that shows usage of NQG generated code.
     /// We are using Active Record because it is so much fun to do so.
     /// </summary>
@@ -105,7 +108,23 @@ namespace NHibernate.Query.Generator.Tests
             Assert.IsNull(findOne);
         }
 
-        [Test]
+    	[Test]
+    	public void ShouldNotDuplicateEntityCheck()
+    	{
+    		TextWriter old = Console.Out;
+    		StringWriter sw = new StringWriter();
+			Console.SetOut(sw);
+    		Blog first = Blog.FindFirst();
+    		Post.FindAll(Where.Post.Blog == first);
+
+    		string log = sw.GetStringBuilder().ToString();
+
+			Assert.IsFalse(log.Contains("Blog = @p1"), "Should only have single parameters");
+
+			Console.SetOut(old);
+    	}
+
+    	[Test]
         public void CanQueryOverCollectionsExistance()
         {
             User one = User.FindOne(Where.User.Blogs.Exists(
@@ -124,6 +143,7 @@ namespace NHibernate.Query.Generator.Tests
             User one = User.FindOne(Where.User.Blogs
                                         .With(JoinType.LeftOuterJoin)
                                             .Name == "Ayende @ Blog");
+
             Assert.IsNotNull(one);
         }
 
