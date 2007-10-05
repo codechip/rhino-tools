@@ -47,6 +47,7 @@
     <Compile Include="Componnet.cs" />
     <Compile Include="GenericClass.cs" />
     <Compile Include="InstalledComponnet.cs" />
+    <Compile Include="Patient.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -710,7 +710,7 @@ namespace NHibernate.Query.Generator
 
                     string newPrefix = GetPath(prefix, name);
                     CreatePropertyInParentClass(genericParameterName, innerClass, name, newPrefix, parent,
-                                                new CodePrimitiveExpression(null));
+												new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "associationPath"));
 
                     //create full object query object
                     string myGenericName = innerClass.TypeParameters[0].Name;
