@@ -134,7 +134,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void NestedTypeOnWhereHasPropertiesForPrimaryKey()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(IdQueryBuilder<>));
 		}
 
 		[Test]
@@ -163,7 +163,7 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void NestedTypeSupportIDProperty()
 		{
-			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(QueryBuilder<>));
+			AssertWhereHasPropertyForXPath("/nh:hibernate-mapping/nh:class/nh:id[@name='Id']", "Customer", typeof(IdQueryBuilder<>));
 		}
 
 

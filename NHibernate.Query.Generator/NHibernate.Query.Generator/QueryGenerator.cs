@@ -473,10 +473,11 @@ namespace NHibernate.Query.Generator
             GenerateProperties(null,
                                genericName,
                                AssociationBehavior.DoNotAdd,
-                               "QueryBuilder",
+                               "IdQueryBuilder",
                                classNode,
                                innerClass,
                                "nh:id");
+
             // generate reference to related query obj
             GenerateProperties(null, genericName, associationBehavior, UseTheQueryClass, classNode, innerClass,
                                "nh:many-to-one", "nh:one-to-one");

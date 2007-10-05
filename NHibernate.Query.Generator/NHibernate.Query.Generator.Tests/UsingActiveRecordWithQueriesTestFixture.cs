@@ -44,181 +44,204 @@ using Query;
 namespace NHibernate.Query.Generator.Tests
 {
 	using System;
+	using System.Diagnostics;
 	using System.IO;
 
 	/// <summary>
-    /// Here are the tests that shows usage of NQG generated code.
-    /// We are using Active Record because it is so much fun to do so.
-    /// </summary>
-    [TestFixture]
-    public class UsingActiveRecordWithQueriesTestFixture
-    {
-        private SessionScope sessionScope;
+	/// Here are the tests that shows usage of NQG generated code.
+	/// We are using Active Record because it is so much fun to do so.
+	/// </summary>
+	[TestFixture]
+	public class UsingActiveRecordWithQueriesTestFixture
+	{
+		private SessionScope sessionScope;
 
-        [Test]
+		[Test]
 		[Ignore("reverted the patch that supported it")]
 		public void QueryWithJoinOverSamePropertyName()
-        {
-            Project[] projects = Project.FindAll(Where.Project.Componnet.Component.Version == "v1.0");
-            Assert.AreEqual(1, projects.Length);
-            Assert.AreEqual("v1.0", projects[0].Componnet.Component.Version);
-        }
+		{
+			Project[] projects = Project.FindAll(Where.Project.Componnet.Component.Version == "v1.0");
+			Assert.AreEqual(1, projects.Length);
+			Assert.AreEqual("v1.0", projects[0].Componnet.Component.Version);
+		}
 
-        [Test]
-        public void CanProjectProperties()
-        {
-            ProjectionQuery<User> query = new ProjectionQuery<User>(
-                Where.User.Name == "Ayende",
-                ProjectBy.User.Name && ProjectBy.User.Email);
-            object[] execute = query.Execute()[0];
-            Assert.AreEqual("Ayende", execute[0]);
-            Assert.AreEqual("Ayende at ayende dot com", execute[1]);
-        }
+		[Test]
+		public void CanProjectProperties()
+		{
+			ProjectionQuery<User> query = new ProjectionQuery<User>(
+				Where.User.Name == "Ayende",
+				ProjectBy.User.Name && ProjectBy.User.Email);
+			object[] execute = query.Execute()[0];
+			Assert.AreEqual("Ayende", execute[0]);
+			Assert.AreEqual("Ayende at ayende dot com", execute[1]);
+		}
 
-        [Test]
-        public void CanProjectStronglyTyped()
-        {
-            ProjectionQuery<User, UserDetails> query = new ProjectionQuery<User, UserDetails>(
-                Where.User.Name == "Ayende",
-                ProjectBy.User.Name && ProjectBy.User.Email);
-            UserDetails execute = query.Execute()[0];
-            Assert.AreEqual("Ayende", execute.Name);
-            Assert.AreEqual("Ayende at ayende dot com", execute.Email);
+		[Test]
+		public void CanProjectStronglyTyped()
+		{
+			ProjectionQuery<User, UserDetails> query = new ProjectionQuery<User, UserDetails>(
+				Where.User.Name == "Ayende",
+				ProjectBy.User.Name && ProjectBy.User.Email);
+			UserDetails execute = query.Execute()[0];
+			Assert.AreEqual("Ayende", execute.Name);
+			Assert.AreEqual("Ayende at ayende dot com", execute.Email);
 
-        }
+		}
 
-        class UserDetails
-        {
-            public string Name;
-            public string Email;
+		class UserDetails
+		{
+			public string Name;
+			public string Email;
 
-            public UserDetails(string name, string email)
-            {
-                Name = name;
-                Email = email;
-            }
-        }
-        [Test]
-        public void CanExtendWhere()
-        {
-            User findOne = User.FindOne(Where.User.IsInGroup("Administrators"));
-            Assert.IsNotNull(findOne);
+			public UserDetails(string name, string email)
+			{
+				Name = name;
+				Email = email;
+			}
+		}
+		[Test]
+		public void CanExtendWhere()
+		{
+			User findOne = User.FindOne(Where.User.IsInGroup("Administrators"));
+			Assert.IsNotNull(findOne);
 
-            findOne = User.FindOne(Where.User.IsInGroup("Users"));
-            Assert.IsNull(findOne);
-        }
+			findOne = User.FindOne(Where.User.IsInGroup("Users"));
+			Assert.IsNull(findOne);
+		}
 
-    	[Test]
-    	public void ShouldNotDuplicateEntityCheck()
-    	{
-    		TextWriter old = Console.Out;
-    		StringWriter sw = new StringWriter();
-			Console.SetOut(sw);
-    		Blog first = Blog.FindFirst();
-    		Post.FindAll(Where.Post.Blog == first);
+		[Test]
+		public void ShouldNotDuplicateEntityCheck()
+		{
+			using (ReplaceConsole)
+			{
+				Blog first = Blog.FindFirst();
+				Post.FindAll(Where.Post.Blog == first);
 
-    		string log = sw.GetStringBuilder().ToString();
+				string log = TrackConsole.CurrentOutput;
 
-			Assert.IsFalse(log.Contains("Blog = @p1"), "Should only have single parameters");
+				Assert.IsFalse(log.Contains("Blog = @p1"), "Should only have single parameters");
 
-			Console.SetOut(old);
-    	}
+			}
+		}
 
-    	[Test]
-        public void CanQueryOverCollectionsExistance()
-        {
-            User one = User.FindOne(Where.User.Blogs.Exists(
-                                        Where.Blog.Name == "Ayende @ Blog"
-                                        ));
-            Assert.IsNotNull(one);
-        }
+		[Test]
+		public void WillNotJoinWhenQueryingForIdOfManyToOne()
+		{
+			using (ReplaceConsole)
+			{
+				Blog first = Blog.FindFirst();
+				Post.FindAll(Where.Post.Blog.Id == first.Id);
 
-        [Test]
-        public void CanQueryOverCollections()
-        {
-            /* Equals to: 
-             * DetachedCriteria f = DetachedCriteria.For(typeof(User))
-                  .CreateCriteria("Blogs", JoinType.LeftOuterJoin)
-                      .Add(Expression.Expression.Eq("Name", "Ayende @ Blog"));*/
-            User one = User.FindOne(Where.User.Blogs
-                                        .With(JoinType.LeftOuterJoin)
-                                            .Name == "Ayende @ Blog");
+				string log = TrackConsole.CurrentOutput;
+				Debug.WriteLine(log);
+				Assert.IsFalse(log.Contains("inner join"), "Should not use a join");
 
-            Assert.IsNotNull(one);
-        }
+			}
+		}
 
-        [Test]
-        public void CanQueryOverCollections_Many_To_Many()
-        {
-             User one = User.FindOne(Where.User.Name == "Ayende" &&
-                    Where.User.Roles.With().Name == "Administrator");
-            Assert.IsNotNull(one);
-        }
+		private IDisposable ReplaceConsole
+		{
+			get
+			{
+				return new TrackConsole();
+			}
+		}
 
-        [Test]
-        public void CanUseOrderringOnCompositeProperties()
-        {
-            WeirdClass weird = new WeirdClass();
-            weird.Key.Department = "Foo";
-            weird.Key.Level = 3;
-            weird.Address.Street = "NHibernate == Fun";
-            weird.Create();
+		[Test]
+		public void CanQueryOverCollectionsExistance()
+		{
+			User one = User.FindOne(Where.User.Blogs.Exists(
+										Where.Blog.Name == "Ayende @ Blog"
+										));
+			Assert.IsNotNull(one);
+		}
 
-            WeirdClass weird2 = new WeirdClass();
-            weird2.Key.Department = "XYZ";
-            weird2.Key.Level = 5;
-            weird2.Address.Street = "Active Record == Easy Fun";
-            weird2.Create();
+		[Test]
+		public void CanQueryOverCollections()
+		{
+			/* Equals to: 
+			 * DetachedCriteria f = DetachedCriteria.For(typeof(User))
+				  .CreateCriteria("Blogs", JoinType.LeftOuterJoin)
+					  .Add(Expression.Expression.Eq("Name", "Ayende @ Blog"));*/
+			User one = User.FindOne(Where.User.Blogs
+										.With(JoinType.LeftOuterJoin)
+											.Name == "Ayende @ Blog");
 
-            WeirdClass[] findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street);
-            Assert.AreEqual(weird2.Address.Street, findAll[0].Address.Street);
-            Assert.AreEqual(weird.Address.Street, findAll[1].Address.Street);
+			Assert.IsNotNull(one);
+		}
 
-            findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street.Desc);
-            Assert.AreEqual(weird.Address.Street, findAll[0].Address.Street);
-            Assert.AreEqual(weird2.Address.Street, findAll[1].Address.Street);
-        }
+		[Test]
+		public void CanQueryOverCollections_Many_To_Many()
+		{
+			User one = User.FindOne(Where.User.Name == "Ayende" &&
+				   Where.User.Roles.With().Name == "Administrator");
+			Assert.IsNotNull(one);
+		}
 
-        [Test]
-        public void CanQueryByCompositeIdNestedType()
-        {
-            WeirdClass weird = new WeirdClass();
-            weird.Key.Department = "Foo";
-            weird.Key.Level = 3;
+		[Test]
+		public void CanUseOrderringOnCompositeProperties()
+		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+			weird.Address.Street = "NHibernate == Fun";
+			weird.Create();
 
-            weird.Create();
+			WeirdClass weird2 = new WeirdClass();
+			weird2.Key.Department = "XYZ";
+			weird2.Key.Level = 5;
+			weird2.Address.Street = "Active Record == Easy Fun";
+			weird2.Create();
 
-            WeirdClass item = WeirdClass.FindOne(Where.WeirdClass.Key.Department == "Foo");
+			WeirdClass[] findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street);
+			Assert.AreEqual(weird2.Address.Street, findAll[0].Address.Street);
+			Assert.AreEqual(weird.Address.Street, findAll[1].Address.Street);
 
-            Assert.IsNotNull(item);
-        }
+			findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street.Desc);
+			Assert.AreEqual(weird.Address.Street, findAll[0].Address.Street);
+			Assert.AreEqual(weird2.Address.Street, findAll[1].Address.Street);
+		}
 
-        [Test]
-        public void CanUseOrderringOnComponentProperties()
-        {
-            WeirdClass weird = new WeirdClass();
-            weird.Key.Department = "Foo";
-            weird.Key.Level = 3;
+		[Test]
+		public void CanQueryByCompositeIdNestedType()
+		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
 
-            weird.Create();
+			weird.Create();
 
-            WeirdClass weird2 = new WeirdClass();
-            weird2.Key.Department = "Bar";
-            weird2.Key.Level = 5;
+			WeirdClass item = WeirdClass.FindOne(Where.WeirdClass.Key.Department == "Foo");
 
-            weird2.Create();
+			Assert.IsNotNull(item);
+		}
+
+		[Test]
+		public void CanUseOrderringOnComponentProperties()
+		{
+			WeirdClass weird = new WeirdClass();
+			weird.Key.Department = "Foo";
+			weird.Key.Level = 3;
+
+			weird.Create();
+
+			WeirdClass weird2 = new WeirdClass();
+			weird2.Key.Department = "Bar";
+			weird2.Key.Level = 5;
+
+			weird2.Create();
 
 
-            WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department); 
+			WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
 			//WeirdClass[] weirds = WeirdClass.FindAll(new OrderByClause("this.Key.Department")); 
 			Assert.AreEqual("Bar", weirds[0].Key.Department);
-            Assert.AreEqual("Foo", weirds[1].Key.Department);
-        }
+			Assert.AreEqual("Foo", weirds[1].Key.Department);
+		}
 
 		[Test]
 		public void CanUseOrderringOnComponentPropertiesByDetachedCriteria()
 		{
-			WeirdPropertyClass property =  new WeirdPropertyClass();
+			WeirdPropertyClass property = new WeirdPropertyClass();
 			property.IntegerProperty = 10;
 			property.StringProperty = "cdef";
 			property.Create();
@@ -258,16 +281,16 @@ namespace NHibernate.Query.Generator.Tests
 
 			// set the property to order by
 			List<OrderByClause> orders = new List<OrderByClause>();
-			orders.Add(new OrderByClause("StringProperty","this.Property").Asc);
+			orders.Add(new OrderByClause("StringProperty", "this.Property").Asc);
 
-			DetachedCriteria detachedCriteria = qb.ToDetachedCriteria("",orders.ToArray());
+			DetachedCriteria detachedCriteria = qb.ToDetachedCriteria("", orders.ToArray());
 
 			ICriteria critMain = detachedCriteria.GetExecutableCriteria(currentSession);
 
 
 			ICollection<OtherWeirdClass> list = critMain.List<OtherWeirdClass>();
 			OtherWeirdClass[] weirds = new OtherWeirdClass[2];
-			list.CopyTo(weirds,0);
+			list.CopyTo(weirds, 0);
 			Assert.AreEqual("Bar", weirds[0].Key.Department);
 			Assert.AreEqual("Foo", weirds[1].Key.Department);
 		}
@@ -305,200 +328,224 @@ namespace NHibernate.Query.Generator.Tests
 		}
 
 
-        [Test]
-        public void CanUseOrderringOnSimpleProperties()
-        {
-            User user = new User();
-            user.Name = "zzz";
-            user.Email = "f@f.com";
-            user.Save();
+		[Test]
+		public void CanUseOrderringOnSimpleProperties()
+		{
+			User user = new User();
+			user.Name = "zzz";
+			user.Email = "f@f.com";
+			user.Save();
 
-            User[] users = User.FindAll(OrderBy.User.Name.Desc);
-            Assert.AreEqual(2, users.Length);
-            Assert.AreEqual("zzz", users[0].Name);
-            Assert.AreEqual("Ayende", users[1].Name);
+			User[] users = User.FindAll(OrderBy.User.Name.Desc);
+			Assert.AreEqual(2, users.Length);
+			Assert.AreEqual("zzz", users[0].Name);
+			Assert.AreEqual("Ayende", users[1].Name);
 
-            users = User.FindAll(OrderBy.User.Name); //desfault ascending
-            Assert.AreEqual(2, users.Length);
-            Assert.AreEqual("Ayende", users[0].Name);
-            Assert.AreEqual("zzz", users[1].Name);
-        }
+			users = User.FindAll(OrderBy.User.Name); //desfault ascending
+			Assert.AreEqual(2, users.Length);
+			Assert.AreEqual("Ayende", users[0].Name);
+			Assert.AreEqual("zzz", users[1].Name);
+		}
 
-        [Test]
-        public void HaveObjectOrientedQueryingSyntax()
-        {
-            Post post = Post.FindOne();
-            Comment[] commentFromDb =
-                Comment.FindAll(Where.Comment.Content == "Active Record Rocks!" || Where.Comment.Content.Like("NHibernate", MatchMode.Anywhere)
-                                && Where.Comment.Post == post);
-            Assert.AreEqual(1, commentFromDb.Length);
-        }
+		[Test]
+		public void HaveObjectOrientedQueryingSyntax()
+		{
+			Post post = Post.FindOne();
+			Comment[] commentFromDb =
+				Comment.FindAll(Where.Comment.Content == "Active Record Rocks!" || Where.Comment.Content.Like("NHibernate", MatchMode.Anywhere)
+								&& Where.Comment.Post == post);
+			Assert.AreEqual(1, commentFromDb.Length);
+		}
 
-        [Test]
-        public void CanQueryNormallyForNullAssoications()
-        {
-            Post findOne = Post.FindOne(Where.Post.Blog != null);
-            Assert.IsNotNull(findOne);
+		[Test]
+		public void CanQueryNormallyForNullAssoications()
+		{
+			Post findOne = Post.FindOne(Where.Post.Blog != null);
+			Assert.IsNotNull(findOne);
 
-            findOne = Post.FindOne(Where.Post.Blog == null);
-            Assert.IsNull(findOne);
-        }
+			findOne = Post.FindOne(Where.Post.Blog == null);
+			Assert.IsNull(findOne);
+		}
 
-        [Test]
-        public void CanQueryWithAutoJoins()
-        {
-            User ayende = User.FindOne(Where.User.Name == "Ayende");
+		[Test]
+		public void CanQueryWithAutoJoins()
+		{
+			User ayende = User.FindOne(Where.User.Name == "Ayende");
 
-            Post[] findAll =
-                Post.FindAll(Where.Post.Blog.Author == ayende && Where.Post.Blog.Name == "Ayende @ Blog" &&
-                             Where.Post.Title == "I love Active Record");
+			Post[] findAll =
+				Post.FindAll(Where.Post.Blog.Author == ayende && Where.Post.Blog.Name == "Ayende @ Blog" &&
+							 Where.Post.Title == "I love Active Record");
 
-            Assert.AreEqual(1, findAll.Length);
-        }
+			Assert.AreEqual(1, findAll.Length);
+		}
 
 
-        [Test]
-        public void CanQueryUsingAllInOverloads()
-        {
-            Post post = Post.FindOne(Where.Post.Title == "I love Active Record");
+		[Test]
+		public void CanQueryUsingAllInOverloads()
+		{
+			Post post = Post.FindOne(Where.Post.Title == "I love Active Record");
 
-            Comment[] c = Comment.FindAll(Where.Comment.Post.In(post));
-            Assert.AreEqual(1, c.Length);
+			Comment[] c = Comment.FindAll(Where.Comment.Post.In(post));
+			Assert.AreEqual(1, c.Length);
 
-            c = Comment.FindAll(Where.Comment.Post.In(post));
-            Assert.AreEqual(1, c.Length);
+			c = Comment.FindAll(Where.Comment.Post.In(post));
+			Assert.AreEqual(1, c.Length);
 
-            List<Post> list = new List<Post>();
-            list.Add(post);
-            c = Comment.FindAll(Where.Comment.Post.In((ICollection<Post>)list));
-            Assert.AreEqual(1, c.Length);
-        }
+			List<Post> list = new List<Post>();
+			list.Add(post);
+			c = Comment.FindAll(Where.Comment.Post.In((ICollection<Post>)list));
+			Assert.AreEqual(1, c.Length);
+		}
 
-        [Test]
-        public void CanQueryUsingIsNullOrIsNotNull()
-        {
-            Comment[] c = Comment.FindAll(Where.Comment.Post.IsNull);
-            Assert.AreEqual(0, c.Length);
+		[Test]
+		public void CanQueryUsingIsNullOrIsNotNull()
+		{
+			Comment[] c = Comment.FindAll(Where.Comment.Post.IsNull);
+			Assert.AreEqual(0, c.Length);
 
-            c = Comment.FindAll(Where.Comment.Post.IsNotNull);
-            Assert.AreEqual(1, c.Length);
+			c = Comment.FindAll(Where.Comment.Post.IsNotNull);
+			Assert.AreEqual(1, c.Length);
 
-        }
+		}
 
-        [Test]
-        public void CanQueryOnSubclasses()
-        {
-            Cat[] cats = Cat.FindAll();
-            Assert.AreEqual(2, cats.Length);
+		[Test]
+		public void CanQueryOnSubclasses()
+		{
+			Cat[] cats = Cat.FindAll();
+			Assert.AreEqual(2, cats.Length);
 
-            cats = DomesticCat.FindAll(Where.DomesticCat);
-            Assert.AreEqual(1, cats.Length);
+			cats = DomesticCat.FindAll(Where.DomesticCat);
+			Assert.AreEqual(1, cats.Length);
 
-            Assert.IsTrue(cats[0] is DomesticCat);
-        }
+			Assert.IsTrue(cats[0] is DomesticCat);
+		}
 
-        public class LazyInPlaceConfigurationSource : InPlaceConfigurationSource
-        {
-            public LazyInPlaceConfigurationSource()
-            {
-                SetIsLazyByDefault(true);
-            }
-        }
+		public class LazyInPlaceConfigurationSource : InPlaceConfigurationSource
+		{
+			public LazyInPlaceConfigurationSource()
+			{
+				SetIsLazyByDefault(true);
+			}
+		}
 
-        [TestFixtureSetUp]
-        public void OneTimeSetup()
-        {
-            InPlaceConfigurationSource source = new LazyInPlaceConfigurationSource();
+		[TestFixtureSetUp]
+		public void OneTimeSetup()
+		{
+			InPlaceConfigurationSource source = new LazyInPlaceConfigurationSource();
 
-            Hashtable properties = new Hashtable();
+			Hashtable properties = new Hashtable();
 
-            properties.Add("show_sql", "true");
+			properties.Add("show_sql", "true");
 
-            properties.Add("connection.driver_class", "NHibernate.Driver.SQLite20Driver");
-            properties.Add("dialect", "NHibernate.Dialect.SQLiteDialect");
-            properties.Add("connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-            properties.Add("connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
-            properties.Add("connection.release_mode", "on_close");
+			properties.Add("connection.driver_class", "NHibernate.Driver.SQLite20Driver");
+			properties.Add("dialect", "NHibernate.Dialect.SQLiteDialect");
+			properties.Add("connection.provider", "NHibernate.Connection.DriverConnectionProvider");
+			properties.Add("connection.connection_string", "Data Source=:memory:;Version=3;New=True;");
+			properties.Add("connection.release_mode", "on_close");
 
-            source.Add(typeof(ActiveRecordBase), properties);
-            ActiveRecordStarter.Initialize(source,
-                                           typeof(WeirdClass),
+			source.Add(typeof(ActiveRecordBase), properties);
+			ActiveRecordStarter.Initialize(source,
+										   typeof(WeirdClass),
 										   typeof(WeirdPropertyClass),
 										   typeof(OtherWeirdClass),
 										   typeof(Post),
-                                           typeof(Blog),
-                                           typeof(User),
-                                           typeof(Role),
-                                           typeof(Comment),
-                                           typeof(Cat),
-                                           typeof(DomesticCat),
-                                           typeof(Project),
-                                           typeof(InstalledComponnet),
-                                           typeof(Componnet));
-        }
+										   typeof(Blog),
+										   typeof(User),
+										   typeof(Role),
+										   typeof(Comment),
+										   typeof(Cat),
+										   typeof(DomesticCat),
+										   typeof(Project),
+										   typeof(InstalledComponnet),
+										   typeof(Componnet));
+		}
 
-        [SetUp]
-        public void TestInitialize()
-        {
-            sessionScope = new SessionScope();
-            ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
-            Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase));
-            ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
-            SchemaExport export = new SchemaExport(configuration);
-            export.Execute(false, true, false, false, session.Connection, null);
+		[SetUp]
+		public void TestInitialize()
+		{
+			sessionScope = new SessionScope();
+			ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
+			Configuration configuration = sessionFactoryHolder.GetConfiguration(typeof(ActiveRecordBase));
+			ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
+			SchemaExport export = new SchemaExport(configuration);
+			export.Execute(false, true, false, false, session.Connection, null);
 
-            User ayende = new User();
-            ayende.Name = "Ayende";
-            ayende.Email = "Ayende at ayende dot com";
-            ayende.Save();
+			User ayende = new User();
+			ayende.Name = "Ayende";
+			ayende.Email = "Ayende at ayende dot com";
+			ayende.Save();
 
-            Role role = new Role();
-            role.Name = "Administrator";
-            role.Users.Add(ayende);
-            role.Save();
+			Role role = new Role();
+			role.Name = "Administrator";
+			role.Users.Add(ayende);
+			role.Save();
 
-            Blog blog = new Blog();
-            blog.Name = "Ayende @ Blog";
-            blog.Author = ayende;
-            blog.Save();
+			Blog blog = new Blog();
+			blog.Name = "Ayende @ Blog";
+			blog.Author = ayende;
+			blog.Save();
 
-            Post post = new Post();
-            post.Title = "I love Active Record";
-            post.Contnet = "Indeed I do!";
-            post.Blog = blog;
-            post.Save();
+			Post post = new Post();
+			post.Title = "I love Active Record";
+			post.Contnet = "Indeed I do!";
+			post.Blog = blog;
+			post.Save();
 
-            Comment comment = new Comment();
-            comment.Author = "Stranger";
-            comment.Content = "Active Record Rocks!";
-            comment.Post = post;
-            comment.Save();
+			Comment comment = new Comment();
+			comment.Author = "Stranger";
+			comment.Content = "Active Record Rocks!";
+			comment.Post = post;
+			comment.Save();
 
-            Cat cat = new Cat();
-            cat.Save();
+			Cat cat = new Cat();
+			cat.Save();
 
-            DomesticCat domesticCat = new DomesticCat();
-            domesticCat.Name = "Domestic Cat";
-            domesticCat.Save();
+			DomesticCat domesticCat = new DomesticCat();
+			domesticCat.Name = "Domestic Cat";
+			domesticCat.Save();
 
-            Componnet componnet = new Componnet("v1.0");
-            componnet.Save();
-            InstalledComponnet ic = new InstalledComponnet(componnet);
-            ic.Save();
+			Componnet componnet = new Componnet("v1.0");
+			componnet.Save();
+			InstalledComponnet ic = new InstalledComponnet(componnet);
+			ic.Save();
 
-            new Project(ic).Save();
-        }
+			new Project(ic).Save();
+		}
 
-        [Test]
-        public void CanUseJoinedBaseClass()
-        {
-            PropertyQueryBuilder<MesajIst> email = Where.MesajIst.Email;
-        }
+		[Test]
+		public void CanUseJoinedBaseClass()
+		{
+			PropertyQueryBuilder<MesajIst> email = Where.MesajIst.Email;
+		}
 
-        [TearDown]
-        public void TestCleanup()
-        {
-            sessionScope.Dispose();
-        }
-    }
+		[TearDown]
+		public void TestCleanup()
+		{
+			sessionScope.Dispose();
+		}
+	}
+
+	internal class TrackConsole : IDisposable
+	{
+		private readonly TextWriter old;
+		private static StringWriter current;
+
+		public static string CurrentOutput
+		{
+			get { return current.GetStringBuilder().ToString(); }
+		}
+
+		public TrackConsole()
+		{
+			old = Console.Out;
+			current = new StringWriter();
+			Console.SetOut(current);
+		}
+
+		public void Dispose()
+		{
+			current = null;
+			Console.SetOut(old);
+		}
+	}
 }

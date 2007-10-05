@@ -46,13 +46,13 @@ namespace QueryNamespace
 		/// criteria
 		/// </summary>
 		protected string associationPath;
-		private readonly bool backTrackAssociationsOnEquality;
+		protected bool backTrackAssociationsOnEquality;
 		private readonly System.Collections.Generic.IList<OrderByClause> orderByClauses = new System.Collections.Generic.List<OrderByClause>();
 		private readonly System.Collections.Generic.ICollection<QueryBuilder<T>> children = new Iesi.Collections.Generic.HashedSet<QueryBuilder<T>>();
 		private readonly System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion> criterions = new System.Collections.Generic.List<NHibernate.Expression.ICriterion>();
 		private PropertyProjectionBuilder propertyProjection = null;
 		public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
-		public NHibernate.FetchMode fetchMode = NHibernate.FetchMode.Default;
+		public NHibernate.FetchMode? fetchMode;
 		protected QueryBuilder<T> parent;
 
 		public delegate DetachedCriteria CreateDetachedCriteriaDelegate(string alias);
@@ -352,7 +352,9 @@ Use HQL for this functionality...",
 			foreach (System.Collections.Generic.KeyValuePair<string, System.Collections.Generic.ICollection<NHibernate.Expression.ICriterion>> pair in criterionsByAssociation)
 			{
 				NHibernate.Expression.DetachedCriteria temp = detachedCriteria;
-				System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = criterionsByJoinTypeAndFetchMode[pair.Key];
+				System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val;
+				if (criterionsByJoinTypeAndFetchMode.TryGetValue(pair.Key, out val) == false)
+					continue;
 				if (pair.Key != "this")
 				{
 					temp = detachedCriteria.SetFetchMode(pair.Key, val.Value)
@@ -460,9 +462,15 @@ Use HQL for this functionality...",
 			if (criterionsByJoinTypeAndFetchMode.ContainsKey(associationPath) == false ||
 				this.parent is CollectionQueryBuilder<T>)
 			{
-				System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = new System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>(
-					this.joinType, this.fetchMode);
-				criterionsByJoinTypeAndFetchMode[associationPath] = val;
+				//avoid adding temporary query builders if they are just there
+				//to build the query, frex: Where.Post.Blog.Id, the Blog should not 
+				//be counted.
+				if (criterions.Count != 0 || this.fetchMode != null)
+				{
+					System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode> val = new System.Collections.Generic.KeyValuePair<NHibernate.SqlCommand.JoinType, NHibernate.FetchMode>(
+						this.joinType, this.fetchMode ?? NHibernate.FetchMode.Default);
+					criterionsByJoinTypeAndFetchMode[associationPath] = val;
+				}
 			}
 
 			foreach (NHibernate.Expression.ICriterion criterion in criterions)
@@ -473,6 +481,16 @@ Use HQL for this functionality...",
 			{
 				child.AddByAssociationPath(criterionsByAssociation, criterionsByJoinTypeAndFetchMode);
 			}
+		}
+	}
+
+	public partial class IdQueryBuilder<T> : QueryBuilder<T>
+	{
+		public IdQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
+			: base(parent, name, associationPath)
+		{
+			this.myName = associationPath + "." + name;
+			backTrackAssociationsOnEquality = true;
 		}
 	}
 
