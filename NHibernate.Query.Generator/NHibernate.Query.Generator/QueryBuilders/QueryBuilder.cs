@@ -489,8 +489,17 @@ Use HQL for this functionality...",
 		public IdQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
 			: base(parent, name, associationPath)
 		{
+			associationPath = BackTrackParentPath(associationPath);
 			this.myName = associationPath + "." + name;
 			backTrackAssociationsOnEquality = true;
+		}
+
+		private static string BackTrackParentPath(string associationPath)
+		{
+			int lastIndexOfPeriod = associationPath.LastIndexOf('.');
+			if (lastIndexOfPeriod == -1)//this mean we are on "this", no need to do anything
+				return associationPath;
+			return associationPath.Substring(lastIndexOfPeriod + 1);
 		}
 	}
 

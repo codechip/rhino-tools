@@ -139,6 +139,24 @@ namespace NHibernate.Query.Generator.Tests
 			}
 		}
 
+
+		[Test]
+		public void WillNotJoinWhenDeepQueryingForIdOfManyToOne()
+		{
+			using (ReplaceConsole)
+			{
+				User first = User.FindFirst();
+				Post.FindAll(Where.Post.Blog.Author.Id == first.Id);
+
+				string log = TrackConsole.CurrentOutput;
+				Debug.WriteLine(log);
+				int joinIndex = log.IndexOf("inner join");
+				Assert.GreaterEqualThan(joinIndex, 0, "Should have one join");
+				joinIndex = log.IndexOf("inner join", joinIndex + 10);
+				Assert.LowerThan(0, joinIndex, "Should not have more than one join");
+			}
+		}
+
 		private IDisposable ReplaceConsole
 		{
 			get
