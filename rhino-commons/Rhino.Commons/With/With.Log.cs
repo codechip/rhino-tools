@@ -69,5 +69,13 @@ namespace Rhino.Commons
         {
             return Log(loggerType.FullName, operation);
         }
+
+		/// <summary>
+		/// overload for <see cref="Log(string, Proc)"/>
+		/// </summary>
+		public static IList<string> Log<T>(Proc operation)
+		{
+			return Log(typeof(T), operation);
+		}
     }
 }
