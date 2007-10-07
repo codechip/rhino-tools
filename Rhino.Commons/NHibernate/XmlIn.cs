@@ -37,12 +37,12 @@ namespace Rhino.Commons
 	using global::NHibernate.Dialect;
 	using global::NHibernate.Engine;
 	using global::NHibernate.Expression;
-	using global::NHibernate.Impl;
 	using global::NHibernate.SqlCommand;
 	using global::NHibernate.SqlTypes;
 	using global::NHibernate.Type;
 	using global::NHibernate.UserTypes;
 	using global::NHibernate.Util;
+	using NHibernate.Persister.Entity;
 
 	public class XmlIn : AbstractCriterion
 	{
@@ -50,9 +50,9 @@ namespace Rhino.Commons
 		private readonly string propertyName;
 		private readonly object[] values;
 
-		public static AbstractCriterion Create(string propery, IEnumerable values)
+		public static AbstractCriterion Create(string property, IEnumerable values)
 		{
-			return new XmlIn(propery, values);
+			return new XmlIn(property, values);
 		}
 
 		public XmlIn(string propertyName, IEnumerable values)
@@ -128,13 +128,13 @@ namespace Rhino.Commons
 				return expr.GetTypedValues(criteria, criteriaQuery);
 			}
 
+			IEntityPersister persister = null;
 			IType type = criteriaQuery.GetTypeUsingProjection(criteria, propertyName);
-			EntityType entityType = null;
+			
 			if (type.IsEntityType)
 			{
-				entityType = (EntityType)type;
+				persister = criteriaQuery.Factory.GetEntityPersister(type.ReturnedClass);
 			}
-			CriteriaImpl crit = GetCriteriaImpl(criteria);
 			StringWriter sw = new StringWriter();
 			XmlWriter writer = XmlWriter.Create(sw);
 			writer.WriteStartElement("items");
@@ -143,8 +143,8 @@ namespace Rhino.Commons
 				if (value == null)
 					continue;
 				object valToWrite;
-				if (entityType != null)
-					valToWrite = entityType.GetIdentifier(value, crit.Session);
+				if (persister != null)
+					valToWrite = persister.GetIdentifier(value);
 				else
 					valToWrite = value;
 				writer.WriteElementString("val", valToWrite.ToString());
@@ -219,14 +219,5 @@ namespace Rhino.Commons
 				return value;
 			}
 		}
-
-	    private static CriteriaImpl GetCriteriaImpl(ICriteria criteria)
-	    {
-	        CriteriaImpl result = criteria as CriteriaImpl;
-            if(result!=null)
-                return result;
-	        return GetCriteriaImpl(((CriteriaImpl.Subcriteria) criteria).Parent);
-	    }
 	}
-
 }

@@ -35,27 +35,30 @@ namespace Rhino.Commons
 	{
 		public static void Transaction(IsolationLevel level, Proc transactional)
 		{
-			// If we are already in a transaction, don't start a new one
-			if (UnitOfWork.Current.IsInActiveTransaction)
+			using (UnitOfWork.Start())
 			{
-				transactional();
-			}
-			else
-			{
-				RhinoTransaction tx = UnitOfWork.Current.BeginTransaction(level);
-				try
+				// If we are already in a transaction, don't start a new one
+				if (UnitOfWork.Current.IsInActiveTransaction)
 				{
 					transactional();
-					tx.Commit();
 				}
-				catch
+				else
 				{
-					tx.Rollback();
-					throw;
-				}
-				finally
-				{
-					tx.Dispose();
+					RhinoTransaction tx = UnitOfWork.Current.BeginTransaction(level);
+					try
+					{
+						transactional();
+						tx.Commit();
+					}
+					catch
+					{
+						tx.Rollback();
+						throw;
+					}
+					finally
+					{
+						tx.Dispose();
+					}
 				}
 			}
 		}
