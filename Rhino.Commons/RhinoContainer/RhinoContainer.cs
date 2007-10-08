@@ -57,19 +57,30 @@ namespace Rhino.Commons
             if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
                 BooReader.Read(this, fileName);
             else
-                InitalizeFromConfigurationSource(new XmlInterpreter(fileName));
+                InitalizeFromConfigurationSource(new XmlInterpreter(fileName), null);
         }
 
         public RhinoContainer(IConfigurationInterpreter interpreter)
-            : base()
+            : this(interpreter, null)
         {
-            InitalizeFromConfigurationSource(interpreter);
         }
 
-        private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter)
-        {
+		public RhinoContainer(IConfigurationInterpreter interpreter, IEnvironmentInfo env)
+			: base()
+		{
+			InitalizeFromConfigurationSource(interpreter, env);
+		}
+
+    	private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter,
+    	                                              IEnvironmentInfo env)
+    	{
             DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
             conversionManager.Add(new ConfigurationObjectConverter());
+
+			if (env != null)
+			{
+				interpreter.EnvironmentName = env.GetEnvironmentName();
+			}
 
             interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
             RunInstaller();
