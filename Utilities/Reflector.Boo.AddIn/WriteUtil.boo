@@ -32,6 +32,7 @@ namespace Reflector.Boo
 import System
 import System.IO
 import System.Collections
+import System.Collections.Generic as SCG
 import System.Globalization
 import Reflector
 import Reflector.CodeModel
@@ -328,16 +329,16 @@ class WriteUtil:
 		self.WriteMethodVisibility(value, formatter)
 		self.WriteMethodAttributes(value, formatter)
 		if (boo.IsDllImport(value)) or (boo.IsInternalCall(value)):
-			if (boo.GetCustomAttribute(value, "System.Runtime.InteropServices", "DllImportAttribute") != null):
+#			if (boo.GetCustomAttribute(value, "System.Runtime.InteropServices", "DllImportAttribute") != null):
 				formatter.WriteKeyword('extern')
 				formatter.Write(' ')
 		
-		formatter.Write(' ')
+#		formatter.Write(' ')
 		formatter.WriteKeyword('def')
 		formatter.Write(' ')
 		methodName  = value.Name
 		if boo.IsConstructor(value):
-			formatter.WriteKeyword("contructor")
+			formatter.WriteKeyword("constructor")
 		else:
 			if boo.IsInterfaceImplementation(value):
 				index as int = methodName.LastIndexOf(Char.Parse('.'))
@@ -434,7 +435,7 @@ class WriteUtil:
 		
 		if (boo.Configuration["ShowCustomAttributes"] == "true"):
 			boo.WriteCustomAttributes(value, formatter, null)
-			formatter.WriteLine()
+#			formatter.WriteLine()
 		
 		getMethod as IMethodDeclaration = null
 		if value.GetMethod != null:
@@ -501,6 +502,7 @@ class WriteUtil:
 		
 		hasBody as bool = (((getMethod != null) and (getMethod.Body != null)) or ((setMethod != null) and (setMethod.Body != null)))
 		
+		formatter.Write(':')
 		formatter.WriteLine()
 		formatter.WriteIndent()
 				
@@ -522,7 +524,7 @@ class WriteUtil:
 			
 			if (boo.Configuration["ShowCustomAttributes"] == "true") and (getMethod.Attributes.Count != 0):
 				boo.WriteCustomAttributes(getMethod, formatter, null)
-				formatter.WriteLine()
+#				formatter.WriteLine()
 			
 			formatter.WriteKeyword('get')
 			formatter.Write(':')
@@ -532,9 +534,10 @@ class WriteUtil:
 				statementUtil.WriteBlockStatement(getMethod.Body, formatter)
 				formatter.WriteOutdent()
 				formatter.WriteLine()
-			else:
+			elif boo.Configuration['ShowMethodDeclarationBody'] == 'true':
 				boo.WritePass(formatter)
-			
+		
+			formatter.WriteLine() unless boo.Configuration['ShowMethodDeclarationBody'] == 'true'
 		
 		if setMethod != null:
 			lastValueParameter as IParameterDeclaration = self.valueParameterDeclaration
@@ -548,32 +551,30 @@ class WriteUtil:
 			
 			if (boo.Configuration["ShowCustomAttributes"] == "true") and (setMethod.ReturnType.Attributes.Count != 0):
 				boo.WriteCustomAttributes(setMethod.ReturnType, formatter, 'return:')
-				formatter.WriteLine()		
 			
 			if (boo.Configuration["ShowCustomAttributes"] == "true") and (self.valueParameterDeclaration.Attributes.Count != 0):
 				boo.WriteCustomAttributes(self.valueParameterDeclaration, formatter, 'param:')
-				formatter.WriteLine()
 				
 			
 			if (boo.Configuration["ShowCustomAttributes"] == "true") and (setMethod.Attributes.Count != 0):
 				boo.WriteCustomAttributes(setMethod, formatter, null)
-				formatter.WriteLine()
 			
-			formatter.WriteLine()
+			formatter.WriteLine() unless setMethod.Attributes.Count > 0 or valueParameterDeclaration.Attributes.Count > 0 or setMethod.ReturnType.Attributes.Count > 0
 			formatter.WriteKeyword('set')
 			formatter.Write(':')
-			if setMethod.Body != null and setMethod.Body isa IBlockStatement:
+			if setMethod.Body is not null and setMethod.Body isa IBlockStatement:
 				formatter.WriteLine()
 				formatter.WriteIndent()
 				statementUtil.WriteBlockStatement(setMethod.Body, formatter)
 				formatter.WriteOutdent()
 				formatter.WriteLine()
-			else:
+			elif boo.Configuration['ShowMethodDeclarationBody'] == 'true':
 				boo.WritePass(formatter)
 			
 			self.valueParameterDeclaration = lastValueParameter
 		
 		formatter.WriteOutdent()
+		formatter.WriteLine() unless boo.Configuration['ShowMethodDeclarationBody'] == 'true'
 		self.WriteDeclaringType(value.DeclaringType as ITypeReference, formatter)
 	
 
@@ -681,6 +682,7 @@ class WriteUtil:
 			for propertyDeclaration as IPropertyDeclaration in properties:
 				WritePropertyDeclaration(propertyDeclaration, formatter)
 				formatter.WriteLine() if boo.Configuration["ShowMethodDeclarationBody"] == "true"
+			formatter.WriteLine() unless boo.Configuration["ShowMethodDeclarationBody"] == "true"
 				
 	def WriteFields(information as TypeInformation, value as ITypeDeclaration, formatter as IFormatter):
 		excludeFieldList as ArrayList = ArrayList()
@@ -689,21 +691,24 @@ class WriteUtil:
 			if fieldReference != null:
 				excludeFieldList.Add(fieldReference)
 			
-		fields as ArrayList = ArrayList()
+		fields = SCG.List of IFieldDeclaration()
 		for fieldDeclaration as IFieldDeclaration in information.GetFields(boo.Configuration.Visibility, boo.Configuration):
 			if (not fieldDeclaration.SpecialName) or (not fieldDeclaration.RuntimeSpecialName) or (fieldDeclaration.FieldType.Equals(value)):
 				if not excludeFieldList.Contains(fieldDeclaration):
 					fields.Add(fieldDeclaration)
 
 		if fields.Count > 0:
+			if information.IsEnumeration:
+				fields.Sort() do(lhs as IFieldDeclaration, rhs as FieldDeclaration):
+					return ((lhs.Initializer as ILiteralExpression).Value as IComparable).CompareTo((rhs.Initializer as ILiteralExpression).Value)
 			formatter.WriteLine()
 			formatter.WriteComment('# Fields')
 			formatter.WriteLine()
-			formatter.WriteIndent() if information.IsEnumeration
-			for fieldDeclaration as IFieldDeclaration in fields:
+#			formatter.WriteIndent() if information.IsEnumeration
+			for fieldDeclaration in fields:
 				boo.WriteFieldDeclaration(fieldDeclaration)
-				formatter.WriteLine()
-			formatter.WriteOutdent() if information.IsEnumeration		
+#				formatter.WriteLine()
+#			formatter.WriteOutdent() if information.IsEnumeration		
 	
 	def WriteNestedTypes(information as TypeInformation,  value as ITypeDeclaration, formatter as IFormatter):		
 		nestedTypes as ICollection = information.GetNestedTypes(boo.Configuration.Visibility, boo.Configuration)
@@ -795,11 +800,12 @@ class WriteUtil:
 		return false				
 	
 	def WriteBaseClassStart(type as ITypeReference, formatter as IFormatter):
-		formatter.Write(' (')
+		formatter.Write('(')
 		boo.WriteType(type, formatter)
 	
-	def WriteBaseClassEnd(formatter as IFormatter):
-		formatter.Write('):')
+	def WriteBaseClassEnd(formatter as IFormatter, isDerived as bool):
+		formatter.Write(')') if isDerived
+		formatter.Write(':')
 		formatter.WriteLine()
 			
 	def WriteDelegateDeclaration(value as ITypeDeclaration, formatter as IFormatter):
@@ -947,7 +953,7 @@ class WriteUtil:
 		return false
 	
 	keywords = [	# Reserved Words
-						"abstract", "and", "as", "break", "callable", "cast", "class", "const", "constructor", "destructor", "continue", "def", "do", "elif", "else", "enum", "ensure", "event", "except", "final", "for", "from", "given", "get", "goto", "if", "interface", "in", "include", "import", "is", "isa", "mixin", "namespace", "not", "or", "otherwise", "override", "pass", "raise", "retry", "self", "struct", "return", "set", "success", "try", "transient", "virtual", "while", "when", "unless", "yield", "public", "protected", "private", "internal", "static", "bool", "string", "object", "byte", "sbyte", "short", "ushort", "char", "int", "uint", "long", "ulong", "single", "double", "decimal", "date", "timespan", "void", 
+						"abstract", "and", "as", "break", "callable", "cast", "class", "const", "constructor", "destructor", "continue", "def", "do", "elif", "else", "enum", "ensure", "event", "except", "failure", "final", "for", "from", "given", "get", "goto", "if", "interface", "in", "include", "import", "is", "isa", "mixin", "namespace", "not", "or", "otherwise", "override", "pass", "raise", "retry", "self", "struct", "return", "set", "success", "try", "transient", "virtual", "while", "when", "unless", "yield", "public", "protected", "private", "internal", "static", "bool", "string", "object", "byte", "sbyte", "short", "ushort", "char", "int", "uint", "long", "ulong", "single", "double", "decimal", "date", "timespan", "void", 
 						# builtins
 						"len", "__addressof__", "__eval__", "__switch__", "array", "matrix", "typeof", "assert", "print", "gets", "prompt", "enumerate", "zip", "filter", "map", "join", "cat", "iterator", "shell", "abs", 
 						# standard macros and attributes

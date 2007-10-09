@@ -96,12 +96,21 @@ class StatementUtil:
 		statementWriters.Add(	ILockStatement,					WriteLockStatement)
 		statementWriters.Add(	IMemoryCopyStatement,			WriteMemoryCopyStatement)
 		statementWriters.Add(	IMemoryInitializeStatement,		WriteMemoryInitializeStatement)
+		statementWriters.Add(	IDebugBreakStatement,			WriteDebugStatement)
 	
+	def WriteDebugStatement(statement as IDebugBreakStatement, formatter as IFormatter):
+		formatter.WriteComment('/* ')
+		formatter.WriteKeyword('breakpoint')
+		formatter.WriteComment(' */')
+		formatter.WriteLine()
+		
 	
 	def WriteBlockStatement(statement as IBlockStatement, formatter as IFormatter):
 		if statement.Statements.Count > 0:
-			for statment as IStatement in statement.Statements:
-				self.WriteStatement(statment, formatter)	
+			for i in range(statement.Statements.Count):
+				stmt = statement.Statements[i]
+				self.WriteStatement(stmt, formatter)
+				formatter.WriteLine() if i+1 < statement.Statements.Count and (stmt isa ITryCatchFinallyStatement or stmt isa IForEachStatement or stmt isa IConditionStatement or stmt isa IWhileStatement or stmt isa IDoStatement or stmt isa IForStatement or stmt isa ILockStatement or stmt isa ISwitchStatement or stmt isa IUsingStatement)
 	
 	def WriteExpressionStatement(statement as IExpressionStatement, formatter as IFormatter):
 		expressionWriter.WriteExpression(statement.Expression, formatter)
@@ -111,13 +120,13 @@ class StatementUtil:
 	def WriteGotoStatement(statement as IGotoStatement, formatter as IFormatter):
 		formatter.WriteKeyword('goto ')
 		formatter.Write(statement.Name)
-		formatter.WriteComment('# goto is considered harmful :-)')
+#		formatter.WriteComment('# goto is considered harmful :-)')
 		formatter.WriteLine()
 	
 	def WriteLabeledStatement(statement as ILabeledStatement, formatter as IFormatter):
 		formatter.WriteOutdent()
-		writeUtil.WriteDeclaration(statement.Name, formatter)
 		formatter.Write(':')
+		writeUtil.WriteDeclaration(statement.Name, formatter)
 		if statement.Statement != null:
 			formatter.WriteLine()
 			formatter.WriteIndent()
@@ -144,7 +153,7 @@ class StatementUtil:
 			self.WriteStatement(statement.Then, formatter)
 		
 		formatter.WriteOutdent()
-		formatter.WriteLine()
+#		formatter.WriteLine()
 		while (statement.Else != null) and (statement.Else.Statements.Count > 0):
 			elseStatement as IConditionStatement = statement.Else.Statements[0] as IConditionStatement
 			if (elseStatement != null) and (statement.Else.Statements.Count == 1):
@@ -154,7 +163,7 @@ class StatementUtil:
 				formatter.WriteIndent()
 				self.WriteStatement(elseStatement.Then, formatter)
 				formatter.WriteOutdent()
-				formatter.WriteLine()
+#				formatter.WriteLine()
 				statement = elseStatement
 			else:
 				formatter.WriteKeyword('else')
@@ -164,7 +173,7 @@ class StatementUtil:
 				if statement.Else != null:
 					self.WriteStatement(statement.Else, formatter)
 				formatter.WriteOutdent()
-				formatter.WriteLine()
+#				formatter.WriteLine()
 				break
 	
 	def WriteMethodReturnStatement(statement as IMethodReturnStatement, formatter as IFormatter):
@@ -333,7 +342,7 @@ class StatementUtil:
 			self.WriteStatement(statement.Try, formatter)
 		
 		formatter.WriteOutdent()
-		formatter.WriteLine()
+#		formatter.WriteLine()
 		for catchClause as ICatchClause in statement.CatchClauses:
 			needFinally = false
 			formatter.WriteKeyword('except')
@@ -348,8 +357,18 @@ class StatementUtil:
 					boo.WriteAs(formatter)
 					boo.WriteType(catchType, formatter)
 			
+			if catchClause.Condition is not null and catchClause.Body is not null and catchClause.Body.Statements.Count >= 1 and catchClause.Body.Statements[0] isa IExpressionStatement:
+				filterFirstExpression = (catchClause.Body.Statements[0] as IExpressionStatement).Expression as IVariableDeclarationExpression
+				if filterFirstExpression is not null:
+					writeUtil.WriteDeclaration(filterFirstExpression.Variable.Name, formatter) if hiddenName
+					unless (boo.IsType(filterFirstExpression.Variable.VariableType, "System", "Object")
+						or boo.IsType(filterFirstExpression.Variable.VariableType, "System", "Exception")):
+						boo.WriteAs(formatter)
+						boo.WriteType(filterFirstExpression.Variable.VariableType, formatter) 
+					catchClause.Body.Statements.RemoveAt(0)
 			
-			if catchClause.Condition != null:
+			
+			if catchClause.Condition is not null:
 				formatter.Write(' ')
 				formatter.WriteKeyword('when')
 				formatter.Write(' ')
@@ -358,15 +377,15 @@ class StatementUtil:
 			formatter.Write(':')
 			formatter.WriteLine()
 			formatter.WriteIndent()
-			if catchClause.Body != null:
+			if catchClause.Body is not null:
 				self.WriteStatement(catchClause.Body, formatter)
 			
 			formatter.WriteOutdent()
-			formatter.WriteLine()
+#			formatter.WriteLine()
 		
-		if (statement.Fault != null) and (statement.Fault.Statements.Count > 0):
+		if (statement.Fault is not null) and (statement.Fault.Statements.Count > 0):
 			needFinally = false
-			formatter.WriteKeyword('fault')
+			formatter.WriteKeyword('failure')
 			formatter.Write(':')
 			formatter.WriteLine()
 			formatter.WriteIndent()
@@ -374,7 +393,7 @@ class StatementUtil:
 				self.WriteStatement(statement.Fault, formatter)
 			
 			formatter.WriteOutdent()
-			formatter.WriteLine()
+#			formatter.WriteLine()
 		
 		if (needFinally) or ((statement.Finally != null) and (statement.Finally.Statements.Count > 0)):
 			formatter.WriteKeyword('ensure')
@@ -385,12 +404,12 @@ class StatementUtil:
 				self.WriteStatement(statement.Finally, formatter)
 			
 			formatter.WriteOutdent()
-			formatter.WriteLine()
+#			formatter.WriteLine()
 		
 	def WriteThrowExceptionStatement(statement as IThrowExceptionStatement, formatter as IFormatter):
 		formatter.WriteKeyword('raise')
 		if statement.Expression != null:
-			formatter.Write(' ')
+#			formatter.Write(' ')
 			expressionWriter.WriteExpression(statement.Expression, formatter)
 		
 		formatter.WriteLine()
@@ -453,7 +472,7 @@ class StatementUtil:
 			
 			defaultCase as IDefaultCase = switchCase as IDefaultCase
 			if defaultCase != null:
-				formatter.WriteKeyword('default')
+				formatter.WriteKeyword('otherwise')
 				formatter.Write(':')
 				formatter.WriteLine()
 				formatter.WriteIndent()
@@ -473,7 +492,7 @@ class StatementUtil:
 			self.WriteSwitchCaseCondition(binaryExpression.Left, formatter)
 			self.WriteSwitchCaseCondition(binaryExpression.Right, formatter)
 		else:
-			formatter.WriteKeyword('given')
+			formatter.WriteKeyword('when')
 			formatter.Write(' ')
 			expressionWriter.WriteExpression(condition, formatter)
 			formatter.Write(':')

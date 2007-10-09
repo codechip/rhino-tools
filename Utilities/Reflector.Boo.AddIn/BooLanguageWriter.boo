@@ -32,6 +32,7 @@ namespace Reflector.Boo
 import System
 import System.IO
 import System.Collections
+import System.Collections.Generic as SCG
 import System.Globalization
 import Reflector
 import Reflector.CodeModel
@@ -164,7 +165,7 @@ class BooLanguageWriter(ILanguageWriter):
 		
 		if configuration["ShowNamespaceBody"] == "true":
 		
-			types = ArrayList(0)
+			types = SCG.List of ITypeDeclaration()
 			for typeDeclaration as ITypeDeclaration in namespaceDeclaration.Types:
 				information = TypeInformation(typeDeclaration)
 				if information.IsVisible(self.configuration.Visibility):
@@ -172,9 +173,12 @@ class BooLanguageWriter(ILanguageWriter):
 				
 			types.Sort() if configuration["SortAlphabetically"] == "true"
 			
-			for i as int in range(types.Count):
-				formatter.WriteLine() if i != 0
-				self.WriteTypeDeclaration(cast(ITypeDeclaration, types[i]))
+			firstline = true;
+			for type in types:
+				unless firstline:
+					formatter.WriteLine()
+					firstline = false
+				self.WriteTypeDeclaration(type)
 				formatter.WriteLine()
 				
 			self.formatter.WriteLine()
@@ -182,17 +186,17 @@ class BooLanguageWriter(ILanguageWriter):
 	def WriteTypeDeclaration(value as ITypeDeclaration):
 		raise ArgumentNullException('value') if value is null
 		
-		if (value.Namespace.Length == 0) and (value.Name == '<Module>'):
-			return
+		return if (value.Namespace.Length == 0) and (value.Name == '<Module>')
 		
 		if (self.configuration["ShowCustomAttributes"] == "true") and (value.Attributes.Count != 0):
-			attributes as ArrayList = ArrayList()
-			attributes.AddRange(value.Attributes)
+			attributes = SCG.List[of ICustomAttribute]()
+			for attribute in value.Attributes:
+				attributes.Add(attribute)
 			
 			writeUtil.RemoveIndexerAttribute(value, attributes)			
 			
 			if attributes.Count > 0:
-				for attribute as ICustomAttribute in attributes:
+				for attribute in attributes:
 					formatter.Write('[')
 					self.WriteCustomAttribute(attribute, formatter)	
 					formatter.Write(']')
@@ -201,14 +205,14 @@ class BooLanguageWriter(ILanguageWriter):
 		writeUtil.WriteVisibility(value.Visibility, formatter)
 		
 		formatter.Write(' ')
-		baseClassStartPrinted as bool = false
-		information as TypeInformation = TypeInformation(value)
+		baseClassStartPrinted = false
+		information = TypeInformation(value)
 		if information.IsDelegate:
 			writeUtil.WriteDelegateDeclaration(value, formatter)
-		elif information.IsEnumeration:
-			baseClassStartPrinted = writeUtil.WriteEnumDeclaration(value, formatter)
 		else:
-			if (information.IsValueType) and (not value.Abstract):
+			if information.IsEnumeration:
+				baseClassStartPrinted = writeUtil.WriteEnumDeclaration(value, formatter)
+			elif (information.IsValueType) and (not value.Abstract):
 				writeUtil.WriteStructDeclaration(value, formatter)
 			elif value.Interface:
 				writeUtil.WriteInterfaceDeclaration(value, formatter)
@@ -223,7 +227,7 @@ class BooLanguageWriter(ILanguageWriter):
 					self.WriteType(interfaceType, formatter)
 				baseClassStartPrinted = true
 			
-			writeUtil.WriteBaseClassEnd(formatter) if baseClassStartPrinted			
+			writeUtil.WriteBaseClassEnd(formatter, baseClassStartPrinted)
 				
 			self.WriteGenericParameterConstraintList(self.GetNestedGenericArgumentList(value), formatter)
 			
@@ -322,12 +326,12 @@ class BooLanguageWriter(ILanguageWriter):
 		return false
 	
 	def WriteAs(text as IFormatter):
-		text.Write(" ")
-		text.WriteKeyword("as")
-		text.Write(" ")
+		text.Write(' ')
+		text.WriteKeyword('as')
+		text.Write(' ')
 		
 	def WritePass(text as IFormatter):
-		text.WriteKeyword('pass')
+		text.WriteComment('pass')
 		
 	def WriteArrayType(arrayType as IArrayType, formatter as IFormatter):
 		formatter.Write("(")
@@ -340,7 +344,7 @@ class BooLanguageWriter(ILanguageWriter):
 			i = 0
 			for type as IType in value:
 				formatter.Write(", ") if i++ > 0
-				formatter.WriteKeyword("Of")
+				formatter.WriteKeyword("of")
 				formatter.Write(" ")
 				WriteType(type,formatter)
 			formatter.Write("]")
@@ -426,16 +430,16 @@ class BooLanguageWriter(ILanguageWriter):
 		outAttribute  = GetCustomAttribute(value, 'System.Runtime.InteropServices', 'OutAttribute')
 		paramArrayAttribute = GetCustomAttribute(value, 'System', 'ParamArrayAttribute')
 		renderOutAttribute  = false
-		if inAttribute == null:
-			if outAttribute != null:
+		if inAttribute is null:
+			if outAttribute is not null:
 				referenceType = value.ParameterType as IReferenceType
-				if referenceType != null:
+				if referenceType is not null:
 					attributes.Remove(outAttribute)
 					renderOutAttribute = true
-			if paramArrayAttribute != null:
+			if paramArrayAttribute is not null:
 				attributes.Remove(paramArrayAttribute)
 			
-		if (configuration != null) and (configuration["ShowCustomAttributes"] == "true") and (attributes.Count != 0):
+		if (configuration is not null) and (configuration["ShowCustomAttributes"] == "true") and (attributes.Count != 0):
 			formatter.Write('[')
 			for i as int in range(attributes.Count):
 				formatter.Write(', ') if i > 0
@@ -443,32 +447,37 @@ class BooLanguageWriter(ILanguageWriter):
 			formatter.Write(']')
 			formatter.Write(' ')
 		
-		if paramArrayAttribute != null:
+		if paramArrayAttribute is not null:
 			formatter.Write('*')
 		
 		if renderOutAttribute:
 			formatter.WriteComment('/*')
 			formatter.WriteKeyword('out')
 			formatter.WriteComment('*/')
+			formatter.Write(' ')
+		
+		referenceType = value.ParameterType as IReferenceType
+		if referenceType is not null and not renderOutAttribute:
+			formatter.WriteKeyword('ref')
+			formatter.Write(' ')
 		
 		parameterName = value.Name
-		defaultValue as IExpression = value.DefaultValue
+#		defaultValue as IExpression = value.DefaultValue
 		if (parameterName != null) and parameterName.Length > 0:
 			writeUtil.WriteIdentifier(parameterName, formatter)
-			formatter.Write(' ')
+			#formatter.Write(' ')
 		
 		WriteAs(formatter) if configuration is not null
 		
-		if renderOutAttribute:
-			referenceType = value.ParameterType as IReferenceType
+		if referenceType is not null:
 			WriteType(referenceType.ElementType, formatter)
 		else:
 			WriteType(value.ParameterType, formatter)
 			
-		if defaultValue != null:
-			formatter.WriteComment(' /* = ')
-			expressionUtil.WriteExpression(defaultValue, formatter)
-			formatter.WriteComment(' */')
+#		if defaultValue != null:
+#			formatter.WriteComment(' /* = ')
+#			expressionUtil.WriteExpression(defaultValue, formatter)
+#			formatter.WriteComment(' */')
 			
 		
 	def GetCustomAttribute(value as ICustomAttributeProvider, namespaceName as string, 
@@ -498,7 +507,8 @@ class BooLanguageWriter(ILanguageWriter):
 		
 		reference = type as IReferenceType
 		if reference:
-			formatter.WriteComment("/* ref */ ")
+#			formatter.WriteComment("/* ref */ ")
+			formatter.WriteKeyword('ref ')
 			WriteType(reference.ElementType,formatter)
 			return
 		
@@ -815,11 +825,11 @@ class BooLanguageWriter(ILanguageWriter):
 
 	def GetMethodImplAttributeMethodCodeType(customAttribute as ICustomAttribute) as int:
 		for i as int in range(customAttribute.Arguments.Count):
-			methodCodeTypeExpression as INamedArgumentExpression = customAttribute.Arguments[i] as INamedArgumentExpression
+			methodCodeTypeExpression = customAttribute.Arguments[i] as IMemberInitializerExpression
 			if methodCodeTypeExpression != null:
-				fieldReference as IFieldReference = methodCodeTypeExpression.Member as IFieldReference
+				fieldReference = methodCodeTypeExpression.Member as IPropertyReference
 				if (fieldReference != null) and (fieldReference.Name == 'MethodCodeType'):
-					valueExpression as IFieldReferenceExpression = methodCodeTypeExpression.Value as IFieldReferenceExpression
+					valueExpression = methodCodeTypeExpression.Value as IFieldReferenceExpression
 					if valueExpression != null:
 						selector = valueExpression.Field.Name
 						if selector == 'Runtime':

@@ -32,6 +32,7 @@ namespace Reflector.Boo
 import System
 import System.ComponentModel
 import Reflector
+import Reflector.CodeModel
 
 class BooLanguagePackage(IPackage):
 	private languageManager as ILanguageManager
@@ -40,10 +41,10 @@ class BooLanguagePackage(IPackage):
 	
 	def Load(serviceProvider as IServiceProvider):
 		boo = BooLanguage()
-		languageManager = cast(ILanguageManager, serviceProvider.GetService(typeof(ILanguageManager)))
-		for i in range(languageManager.Languages.Count - 1):
-			if languageManager.Languages[i].Name == 'Boo':
-				languageManager.UnregisterLanguage(languageManager.Languages[i])
+		languageManager = cast(ILanguageManager, serviceProvider.GetService(ILanguageManager))
+		for language as ILanguage in languageManager.Languages:
+			if language.Name == 'Boo':
+				languageManager.UnregisterLanguage(language)
 		languageManager.RegisterLanguage(boo)
 	
 	def Unload():

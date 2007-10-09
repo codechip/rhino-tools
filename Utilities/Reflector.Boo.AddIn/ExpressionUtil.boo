@@ -54,11 +54,8 @@ class ExpressionUtil:
 		self.statementUtil = boo.StatementWriter
 		RegisterWriters()
 		
-	def WriteExpression(expression as IExpression, formatter as IFormatter):
-		raise ArgumentNullException('expression') if expression is null
-		raise ArgumentNullException('formatter') if formatter is null
-		
-		writer as callable = GetWriter(expression)
+	def WriteExpression([required] expression as IExpression, [required] formatter as IFormatter):
+		writer = GetWriter(expression)
 		raise ArgumentException("Invalid expression ${expression.GetType().Name}",'expression') if writer is null
 		writer(expression, formatter)
 
@@ -67,7 +64,7 @@ class ExpressionUtil:
 		expressionWriters.Add(	IAssignExpression,					WriteAssignExpression)
 		expressionWriters.Add(	ILiteralExpression,					WriteLiteralExpression)
 		expressionWriters.Add(	ITypeOfExpression,					WriteTypeOfExpression)
-		expressionWriters.Add(	INamedArgumentExpression,			WriteNamedArgumentExpression)
+		expressionWriters.Add(	IMemberInitializerExpression,		WriteMemberInitializerExpression)
 		expressionWriters.Add(	IFieldReferenceExpression, 			WriteFieldReferenceExpression)
 		expressionWriters.Add(	ITypeReferenceExpression, 			WriteTypeReferenceExpression)
 		expressionWriters.Add(	IEventReferenceExpression,			WriteEventReferenceExpression)
@@ -76,7 +73,7 @@ class ExpressionUtil:
 		expressionWriters.Add(	IStackAllocateExpression, 			WriteStackAllocateExpression)
 		expressionWriters.Add(	IPropertyReferenceExpression,		WritePropertyReferenceExpression)
 		expressionWriters.Add(	IArrayCreateExpression,	 			WriteArrayCreateExpression)
-		expressionWriters.Add(	IArrayInitializerExpression,	 	WriteArrayInitializerExpression)
+#		expressionWriters.Add(	IArrayCreateExpression,	 	WriteArrayInitializerExpression)
 		expressionWriters.Add(	IBaseReferenceExpression,	 		WriteBaseReferenceExpression)
 		expressionWriters.Add(	IUnaryExpression,	 				WriteUnaryExpression)
 		expressionWriters.Add(	IBinaryExpression,			 		WriteBinaryExpression)
@@ -105,7 +102,7 @@ class ExpressionUtil:
 		expressionWriters.Add(	ITypeOfTypedReferenceExpression, 	WriteTypeOfTypedReferenceExpression)
 		expressionWriters.Add(	IValueOfTypedReferenceExpression, 	WriteValueOfTypedReferenceExpression)
 		expressionWriters.Add(	ITypedReferenceCreateExpression, 	WriteTypedReferenceCreateExpression)
-		expressionWriters.Add(	IObjectInitializeExpression, 		WriteObjectInitializeExpression)
+#		expressionWriters.Add(	IObjectCreateExpression, 		WriteObjectInitializeExpression)
 		expressionWriters.Add(	ISnippetExpression, 				WriteSnippetExpression)
 		
 	def GetWriter(expression as IExpression) as callable:
@@ -245,8 +242,8 @@ class ExpressionUtil:
 		
 		formatter.Write(')')
 	
-	def WriteNamedArgumentExpression(expression as INamedArgumentExpression, formatter as IFormatter):
-		referenceUtil.WriteMemberReference(expression.Member, formatter)
+	def WriteMemberInitializerExpression(expression as IMemberInitializerExpression, formatter as IFormatter):
+		referenceUtil.WriteMemberReference(expression.Member as IMemberReference, formatter)
 		formatter.Write(': ')
 		self.WriteExpression(expression.Value, formatter)
 
@@ -316,7 +313,7 @@ class ExpressionUtil:
 
 	def WriteArrayCreateExpression(expression as IArrayCreateExpression, formatter as IFormatter):
 		if expression.Initializer is not null:
-			self.WriteExpression(expression.Initializer, formatter)
+			self.WriteArrayInitializerExpression(expression.Initializer, formatter)
 			return
 		if expression.Dimensions.Count==1:
 			formatter.WriteKeyword('array')
@@ -337,7 +334,7 @@ class ExpressionUtil:
 		else:
 			boo.WriteType(type, formatter)
 
-	def WriteArrayInitializerExpression(expression as IArrayInitializerExpression, formatter as IFormatter):
+	def WriteArrayInitializerExpression(expression as IBlockExpression, formatter as IFormatter):
 		formatter.Write(' ( ')
 		if expression.Expressions.Count > 16:
 			formatter.WriteLine()
@@ -577,8 +574,8 @@ class ExpressionUtil:
 	
 	def WriteVariableReference(variableReference as IVariableReference, formatter as IFormatter):
 		textFormatter as TextFormatter = TextFormatter()
-		self.WriteVariableDeclaration(variableReference.Variable, textFormatter)
-		writeUtil.WriteIdentifier(variableReference.Name, textFormatter.ToString(), null, formatter)
+		self.WriteVariableDeclaration(variableReference.Resolve(), textFormatter)
+		writeUtil.WriteIdentifier(variableReference.Resolve().Name, textFormatter.ToString(), null, formatter)
 	
 	def WritePropertyIndexerExpression(expression as IPropertyIndexerExpression, formatter as IFormatter):
 		self.WriteTargetExpression(expression.Target.Target, formatter)
@@ -757,7 +754,7 @@ class ExpressionUtil:
 		self.WriteExpression(expression.Expression, formatter)
 		formatter.Write(')')
 
-	def WriteObjectInitializeExpression(value as IObjectInitializeExpression, formatter as IFormatter):
+	def WriteObjectInitializeExpression(value as IObjectCreateExpression, formatter as IFormatter):
 		genericArgument as IGenericArgument = value.Type as IGenericArgument
 		if genericArgument != null:
 			formatter.WriteComment('/* not implemented */')
