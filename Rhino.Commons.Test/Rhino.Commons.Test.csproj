@@ -128,8 +128,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Binsor\disposable.boo" />
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
+    <Content Include="Boo\anotherFile.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Boo\hasReferenceToAnotherFile.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="ForTesting\AnotherWindsor-NH.config" />
     <None Include="ForTesting\AnotherWindsor-AR.config" />
     <None Include="ForTesting\Windsor-AR.config">
@@ -151,6 +158,7 @@
     <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
+    <Compile Include="Boo\AutoReferenceFilesCompilerStepFixure.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />

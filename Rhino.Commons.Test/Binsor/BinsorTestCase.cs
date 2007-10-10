@@ -59,6 +59,13 @@ namespace Rhino.Commons.Test.Binsor
 		}
 
 		[Test]
+		public void CanUseMoreThanSingleFile()
+		{
+			bool has_repos = _container.Kernel.HasComponent(typeof(IDisposable));
+			Assert.IsTrue(has_repos, "should have generic repository!");
+		}
+
+		[Test]
 		public void CanUseSpecilaizedGenerics()
 		{
 			IRepository<Fubar> resolve = _container.Resolve<IRepository<Fubar>>();

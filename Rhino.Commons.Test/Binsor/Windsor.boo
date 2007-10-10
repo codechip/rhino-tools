@@ -26,6 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+import file from "disposable.boo"
 
 import Rhino.Commons
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
@@ -33,6 +34,9 @@ import Rhino.Commons.Test.Binsor
 
 # generic type registration
 Component(defualt_repository, IRepository, NHRepository, LifestyleType.Transient)
+
+Component("disposable", System.IDisposable, MyDisposable.Impl)
+
 
 customer_repository = Component("customer_repository", 
 	IRepository of Fubar,  FakeRepository of Fubar,
