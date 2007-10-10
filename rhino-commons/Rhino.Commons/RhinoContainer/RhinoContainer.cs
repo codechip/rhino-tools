@@ -52,12 +52,17 @@ namespace Rhino.Commons
         {
         }
 
-        public RhinoContainer(string fileName)
+		public RhinoContainer(string fileName)
+			: this(fileName, null)
+		{
+		}
+
+    	public RhinoContainer(string fileName, IEnvironmentInfo env)
         {
             if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
                 BooReader.Read(this, fileName);
             else
-                InitalizeFromConfigurationSource(new XmlInterpreter(fileName), null);
+                InitalizeFromConfigurationSource(new XmlInterpreter(fileName), env);
         }
 
         public RhinoContainer(IConfigurationInterpreter interpreter)
