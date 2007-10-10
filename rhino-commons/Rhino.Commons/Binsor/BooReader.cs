@@ -40,7 +40,9 @@ using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-    public static class BooReader
+	using Boo;
+
+	public static class BooReader
     {
         private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
 
@@ -96,6 +98,7 @@ namespace Rhino.Commons.Binsor
                 compiler.Parameters.Pipeline = new CompileToMemory();
             else
                 compiler.Parameters.Pipeline = new CompileToFile();
+        	compiler.Parameters.Pipeline.Insert(1, new AutoReferenceFilesCompilerStep(Path.GetDirectoryName(fileName)));
             compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
             compiler.Parameters.Pipeline.Replace(
                 typeof(ProcessMethodBodiesWithDuckTyping),
