@@ -396,39 +396,40 @@ class WriteUtil:
 						return true
 					
 		return false
+	
+	def WriteConstructorInitializer(value as IConstructorDeclaration, formatter as IFormatter):
+		return false if value is null or value.Initializer.Arguments.Count == 0
 		
-	def WriteMethodBody(value as IMethodDeclaration, statement as IBlockStatement, formatter as IFormatter):
-		if (boo.Configuration["ShowMethodDeclarationBody"] == "true") and (statement != null) and statement.Statements.Count:
-			formatter.WriteLine()
-			formatter.WriteIndent()
-			constructorDeclaration as IConstructorDeclaration = value as IConstructorDeclaration
-			if (constructorDeclaration != null) and (constructorDeclaration.Initializer != null):
-				methodReferenceExpression as IMethodReferenceExpression = constructorDeclaration.Initializer.Method as IMethodReferenceExpression
-				if methodReferenceExpression != null:
-					baseReferenceExpression as IBaseReferenceExpression = methodReferenceExpression.Target as IBaseReferenceExpression
-					if (baseReferenceExpression == null) or (constructorDeclaration.Initializer.Arguments.Count != 0):
-						keyword = '?'
-						if methodReferenceExpression.Target isa IBaseReferenceExpression:
-							keyword = 'super'
-						
-						if methodReferenceExpression.Target isa IThisReferenceExpression:
-							keyword = 'constructor'
-						
-						formatter.WriteReference(keyword, referenceUtil.ReferenceDescription.Get(methodReferenceExpression.Method), methodReferenceExpression.Method)
-						formatter.Write('(')
-						boo.WriteExpressionList(constructorDeclaration.Initializer.Arguments, formatter)
-						formatter.Write(')')
-						
-			statementUtil.WriteBlockStatement(statement, formatter)
-			formatter.WriteOutdent()
-			formatter.WriteLine()
+		initMethod = value.Initializer.Method as IMethodReferenceExpression
+		
+		return false if initMethod is null
+		
+		if initMethod.Target isa IBaseReferenceExpression:
+			method = 'super'
+		elif initMethod.Target isa IThisReferenceExpression:
+			method = 'constructor'
 		else:
+			method = '?'
+		
+		formatter.WriteReference(method, referenceUtil.ReferenceDescription.Get(initMethod.Method), initMethod)
+		formatter.Write('(')
+		boo.WriteExpressionList(value.Initializer.Arguments, formatter)
+		formatter.Write(')')
+		formatter.WriteLine()
+		
+		return true
+				
+	def WriteMethodBody(value as IMethodDeclaration, statement as IBlockStatement, formatter as IFormatter):
+		if boo.Configuration["ShowMethodDeclarationBody"] == "true":
+			formatter.WriteLine()
 			formatter.WriteIndent()
-			formatter.WriteLine()
-			boo.WritePass(formatter)
+			wroteLine = WriteConstructorInitializer(value as IConstructorDeclaration, formatter)
+			if statement is not null and statement.Statements.Count > 0:
+				statementUtil.WriteBlockStatement(statement, formatter)
+			elif not wroteLine:
+				boo.WritePass(formatter)
 			formatter.WriteOutdent()
-			formatter.WriteLine()
-			
+			formatter.WriteLine()			
 		
 	def WritePropertyDeclaration(value as IPropertyDeclaration, formatter as IFormatter):
 		raise ArgumentNullException('value') if value is null

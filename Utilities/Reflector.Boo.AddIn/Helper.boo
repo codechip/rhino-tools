@@ -70,11 +70,15 @@ internal class TextFormatter(IFormatter):
 
 	public def WriteDeclaration(text as string):
 		self.WriteBold(text)
+		
+	public def WriteDeclaration(value as string, target as object):
+		pass
 
 	public def WriteIndent():
 		self.indent += 1
 
 	public def WriteKeyword(text as string):
+		self.WriteColor(text, 8421504) if text == 'pass'
 		self.WriteColor(text, 128)
 
 	public def WriteLine():
@@ -108,7 +112,7 @@ internal class TextFormatter(IFormatter):
 	private newLine as bool
 
 	private writer as StringWriter
-
+	
 		
 internal class TypeInformation:
 	typeDec
