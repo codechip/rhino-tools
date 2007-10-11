@@ -556,8 +556,6 @@ namespace NHibernate.Query.Generator
         private void GenerateWithMethods(CodeTypeDeclaration collectionDerived, CodeTypeDeclaration innerClass, string collectionClassName)
         {
             //With(JoinType joinType)
-
-            CodeMemberMethod with =
               BuildWithMethod(collectionDerived, innerClass, collectionClassName,
                                new CodeFieldReferenceExpression(
                                     new CodeTypeReferenceExpression(typeof(JoinType)), "InnerJoin"),
@@ -589,7 +587,7 @@ namespace NHibernate.Query.Generator
                 new CodeParameterDeclarationExpression(typeof(FetchMode), "fetchMode"));
         }
 
-        private CodeMemberMethod BuildWithMethod(CodeTypeDeclaration collectionDerived, CodeTypeDeclaration innerClass, string collectionClassName,
+        private static CodeMemberMethod BuildWithMethod(CodeTypeDeclaration collectionDerived, CodeTypeDeclaration innerClass, string collectionClassName,
                                                  CodeExpression joinType, CodeExpression fetchMode)
         {
             CodeMemberMethod withJoin = new CodeMemberMethod();
@@ -627,6 +625,13 @@ namespace NHibernate.Query.Generator
                        "fetchMode"),
                        fetchMode)
                );
+
+        	withJoin.Statements.Add(
+        		new CodeAssignStatement(new CodeFieldReferenceExpression(
+                    new CodeVariableReferenceExpression("query"),
+					   "ShouldSkipJoinOnIdEquality"),
+					   new CodePrimitiveExpression(true))
+					   );
 
             withJoin.Statements.Add(
                 new CodeMethodReturnStatement(new CodeVariableReferenceExpression("query"))
@@ -954,6 +959,8 @@ namespace NHibernate.Query.Generator
             CodeVariableDeclarationStatement var =
                 new CodeVariableDeclarationStatement(typeof(string), "temp",
                                                      new CodeVariableReferenceExpression("associationPath"));
+
+			
             prop.GetStatements.Add(var);
             switch (associationBehavior)
             {
@@ -972,7 +979,18 @@ namespace NHibernate.Query.Generator
             newExpr.Parameters.Add(new CodeVariableReferenceExpression("temp"));
             if (associationBehavior != AssociationBehavior.DoNotAdd)
                 newExpr.Parameters.Add(new CodePrimitiveExpression(true));
-            prop.GetStatements.Add(new CodeMethodReturnStatement(newExpr));
+			CodeVariableDeclarationStatement child =
+			  new CodeVariableDeclarationStatement(newExpr.CreateType, "child", newExpr);
+
+        	prop.GetStatements.Add(child);
+
+        	prop.GetStatements.Add(new CodeAssignStatement(
+        	                       	new CodeFieldReferenceExpression(new CodeVariableReferenceExpression("child"),
+        	                       	                                 "ShouldSkipJoinOnIdEquality"), 
+																	 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),"ShouldSkipJoinOnIdEquality")
+        	                       	));
+          
+            prop.GetStatements.Add(new CodeMethodReturnStatement(new CodeVariableReferenceExpression("child")));
         }
 
         /// <summary>

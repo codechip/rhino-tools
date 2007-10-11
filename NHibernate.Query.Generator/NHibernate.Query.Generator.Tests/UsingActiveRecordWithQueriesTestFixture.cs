@@ -55,8 +55,10 @@ namespace NHibernate.Query.Generator.Tests
 	public class UsingActiveRecordWithQueriesTestFixture
 	{
 		private SessionScope sessionScope;
+	    private long patientRecordId1;
+	    private long patientRecordId2;
 
-		[Test]
+	    [Test]
 		[Ignore("reverted the patch that supported it")]
 		public void QueryWithJoinOverSamePropertyName()
 		{
@@ -461,6 +463,13 @@ namespace NHibernate.Query.Generator.Tests
             Assert.AreEqual(1, patients.Length);
         }
 
+        [Test]
+        public void CanQueryOnPrimaryKeyWithJoin()
+        {
+            Patient[] patients = Patient.FindAll(Where.Patient.PatientRecords.With().Id == patientRecordId1);
+            Assert.AreEqual(1, patients.Length);
+        }
+
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
 		{
@@ -550,6 +559,9 @@ namespace NHibernate.Query.Generator.Tests
             PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
             Patient patient = new Patient(new PatientRecord[] {record1, record2});
             patient.Save();
+
+		    patientRecordId1 = record1.Id;
+            patientRecordId2 = record2.Id;
         }
 
 		[Test]

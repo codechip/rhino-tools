@@ -54,9 +54,16 @@ namespace QueryNamespace
 		public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
 		public NHibernate.FetchMode? fetchMode;
 		protected QueryBuilder<T> parent;
+		protected bool shouldSkipJoinOnIdEquality = false;
 
 		public delegate DetachedCriteria CreateDetachedCriteriaDelegate(string alias);
 		public static CreateDetachedCriteriaDelegate CreateDetachedCriteria = DefaultCreateDetachedCriteria;
+
+		public virtual bool ShouldSkipJoinOnIdEquality
+		{
+			get { return shouldSkipJoinOnIdEquality; }
+			set { shouldSkipJoinOnIdEquality = value; }
+		}
 
 		public QueryBuilder()
 			: this(null, typeof(T).Name, null)
@@ -486,12 +493,28 @@ Use HQL for this functionality...",
 
 	public partial class IdQueryBuilder<T> : QueryBuilder<T>
 	{
+		private string oldName;
 		public IdQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
 			: base(parent, name, associationPath)
 		{
+			this.oldName = name;
 			associationPath = BackTrackParentPath(associationPath);
 			this.myName = associationPath + "." + name;
 			backTrackAssociationsOnEquality = true;
+		}
+
+		public override bool ShouldSkipJoinOnIdEquality
+		{
+			get { return base.ShouldSkipJoinOnIdEquality; }
+			set 
+			{ 
+				base.ShouldSkipJoinOnIdEquality = value;
+				if (ShouldSkipJoinOnIdEquality)
+				{
+					backTrackAssociationsOnEquality = false;
+					this.myName = oldName;
+				}
+			}
 		}
 
 		private static string BackTrackParentPath(string associationPath)
