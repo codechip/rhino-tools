@@ -35,9 +35,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Reflector.Boo.AddIn\Reflector.Boo.AddIn.booproj">
+    <ProjectReference Include="..\Reflector.Boo\Reflector.Boo.booproj">
       <Project>{1E81ECAA-66F2-4075-BAFA-EB68B03A7316}</Project>
-      <Name>Reflector.Boo.AddIn</Name>
+      <Name>Reflector.Boo</Name>
     </ProjectReference>
     <Compile Include="ExpressionsFixture.boo" />
     <Compile Include="TestFormatter.boo" />
