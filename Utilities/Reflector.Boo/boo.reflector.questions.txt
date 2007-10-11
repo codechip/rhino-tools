@@ -25,3 +25,13 @@
 * Deteministic Destruction
 * ISmartDisposable
 * lint pipline
+
+
+-- Marcus --
+* Heuristics to detect some AST macros, attributes.
+** :Console.WriteLine("Blah") => print "Blah"
+** Name as string: get: return name set: name = value private name as string => [property(Name)] private name as string
+** raise ArgumentNullException("argument") if argument is null { at beginning of method } => [required] argument {in parameter list}
+* Statement modifiers for short lines, conditionals with only one statement
+** How short is short enough?
+* Don't need typeof around types in Boo

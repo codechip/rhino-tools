@@ -1,0 +1,46 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{0F2B6F66-EA63-4D1B-8B4C-45BDE7E0E86B}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Reflector.Boo.Tests</RootNamespace>
+    <AssemblyName>Reflector.Boo.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Boo.Lang.Useful" />
+    <Reference Include="MbUnit.Framework">
+      <HintPath>..\..\..\SharedLibs\Tools\MbUnit\MbUnit.Framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Reflector">
+      <HintPath>C:\utils\Reflector.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\..\rhino-mocks\Rhino.Mocks\bin\debug\Rhino.Mocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Reflector.Boo.AddIn\Reflector.Boo.AddIn.booproj">
+      <Project>{1E81ECAA-66F2-4075-BAFA-EB68B03A7316}</Project>
+      <Name>Reflector.Boo.AddIn</Name>
+    </ProjectReference>
+    <Compile Include="ExpressionsFixture.boo" />
+    <Compile Include="TestFormatter.boo" />
+  </ItemGroup>
+  <Import Project="$(BooBinPath)\Boo.Microsoft.Build.targets" />
+</Project>
