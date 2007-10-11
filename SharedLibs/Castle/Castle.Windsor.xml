@@ -31,11 +31,11 @@
             This interface should be implemented by classes
             that are available in a bigger context, exposing
             the container to different areas in the same application.
-            <para>
+            <p>
             For example, in Web application, the (global) HttpApplication
             subclasses should implement this interface to expose 
             the configured container
-            </para>
+            </p>
             </summary>
         </member>
         <member name="M:Castle.Windsor.Adapters.ComponentModel.ContainerWrapper.#ctor(Castle.Windsor.IWindsorContainer)">
@@ -1181,23 +1181,6 @@
             </summary>
             <param name="name">The container's name.</param>
             <returns>The child container instance or null</returns>
-        </member>
-        <member name="M:Castle.Windsor.WindsorContainer.GetService(System.Type)">
-            <summary>
-            Gets the service object of the specified type.
-            </summary>
-            <returns>
-            A service object of type serviceType.
-            </returns>
-            <param name="serviceType">An object that specifies the type of service object to get. </param>
-        </member>
-        <member name="M:Castle.Windsor.WindsorContainer.GetService``1">
-            <summary>
-            Gets the service object of the specified type.
-            </summary>
-            <returns>
-            A service object of type serviceType.
-            </returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Dispose">
             <summary>

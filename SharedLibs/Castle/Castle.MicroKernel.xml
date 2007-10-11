@@ -1375,19 +1375,27 @@
             Seaches for the lifestyle in the configuration and, if unsuccessful
             look for the lifestyle attribute in the implementation type.
             </summary>
+            <param name="kernel"></param>
+            <param name="model"></param>
         </member>
         <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.LifestyleModelInspector.ReadLifestyleFromConfiguration(Castle.Core.ComponentModel)">
             <summary>
             Reads the attribute "lifestyle" associated with the 
-            component configuration and tries to convert to <see cref="T:Castle.Core.LifestyleType"/>  
+            component configuration and tries to convert to <see cref="T:Castle.Core.LifestyleType"/> 
             enum type. 
             </summary>
+            <exception cref="T:System.Configuration.ConfigurationException">
+            If the conversion fails
+            </exception>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.LifestyleModelInspector.ReadLifestyleFromType(Castle.Core.ComponentModel)">
             <summary>
             Check if the type expose one of the lifestyle attributes
             defined in Castle.Model namespace.
             </summary>
+            <param name="model"></param>
         </member>
         <member name="T:Castle.MicroKernel.ModelBuilder.Inspectors.MethodMetaInspector">
             <summary>
@@ -1399,11 +1407,11 @@
             Implementors should override the <see cref="M:Castle.MicroKernel.ModelBuilder.Inspectors.MethodMetaInspector.ObtainNodeName"/> return
             the name of the node to be inspected. For example:
             <code>
-            <![CDATA[
+            <pre>
               <transactions>
-                <method name="Save" transaction="requires" />
+                <method name="Save" transaction="requires"/>
               </transactions>
-            ]]>
+            </pre>
             </code>
             </remarks>
         </member>
@@ -2135,11 +2143,6 @@
             Marker interface that signals that a converter
             depends on IKernel to be able to perform 
             the conversion.
-            </summary>
-        </member>
-        <member name="T:Castle.MicroKernel.SubSystems.Conversion.ComponentModelConverter">
-            <summary>
-            Attempts to utilize an existing <see cref="T:System.ComponentModel.TypeConverter"/> for conversion
             </summary>
         </member>
         <member name="M:Castle.MicroKernel.SubSystems.Conversion.DefaultComplexConverter.CreateInstance(System.Type,Castle.Core.Configuration.IConfiguration)">
@@ -3171,14 +3174,6 @@
             </summary>
             <param name="kernel"></param>
         </member>
-        <member name="M:Castle.MicroKernel.IKernel.RaiseHandlerRegistered(Castle.MicroKernel.IHandler)">
-            <summary>
-            Raise the hanlder registered event, required so
-            dependant handlers will be notified about their dependant moving
-            to valid state.
-            </summary>
-            <param name="handler"></param>
-        </member>
         <member name="P:Castle.MicroKernel.IKernel.Item(System.String)">
             <summary>
             Returns the component instance by the key
@@ -3614,26 +3609,6 @@
             Returns the facilities registered on the kernel.
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Castle.MicroKernel.DefaultKernel.GetService(System.Type)">
-             <summary>
-             Gets the service object of the specified type.
-             </summary>
-            
-             <returns>
-             A service object of type serviceType.
-             </returns>
-            
-             <param name="serviceType">An object that specifies the type of service object to get. </param>
-        </member>
-        <member name="M:Castle.MicroKernel.DefaultKernel.GetService``1">
-             <summary>
-             Gets the service object of the specified type.
-             </summary>
-            
-             <returns>
-             A service object of type serviceType.
-             </returns>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Dispose">
             <summary>

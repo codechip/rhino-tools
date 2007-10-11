@@ -3014,23 +3014,6 @@
             gather logging factories
             </remarks>
         </member>
-        <member name="T:Castle.Core.IServiceProviderEx">
-            <summary>
-            Increments <c>IServiceProvider</c> with a generic service resolution operation.
-            </summary>
-        </member>
-        <member name="T:Castle.Core.IServiceProviderExAccessor">
-            <summary>
-            This interface should be implemented by classes
-            that are available in a bigger context, exposing
-            the container to different areas in the same application.
-            <para>
-            For example, in Web application, the (global) HttpApplication
-            subclasses should implement this interface to expose 
-            the configured container
-            </para>
-            </summary>
-        </member>
         <member name="T:Castle.Core.Pair`2">
             <summary>
             General purpose class to represent a standard pair of values. 
