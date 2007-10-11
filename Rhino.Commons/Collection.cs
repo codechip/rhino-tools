@@ -36,6 +36,13 @@ namespace Rhino.Commons
 {
     public static class Collection
     {
+        public static ICollection<T> Containing<T>(params T[] items)
+        {
+            if (items == null) return null;
+            return new List<T>(items);
+        }
+
+
         public static T First<T>(ICollection<T> collection)
         {
             IList<T> list = collection as IList<T>;
@@ -157,6 +164,8 @@ namespace Rhino.Commons
 
         public static ICollection<T> ToUniqueCollection<T>(ICollection<T> collection)
         {
+            if (collection == null) return null;
+
             List<T> result = new List<T>(collection.Count);
             foreach (T item in collection)
             {
