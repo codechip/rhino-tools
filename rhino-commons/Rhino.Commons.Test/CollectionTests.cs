@@ -114,6 +114,14 @@ namespace Rhino.Commons.Test
 
 
         [Test]
+        public void ToUniqueCollection_NullCollectionReturnsNullCollection()
+        {
+            ICollection<int> actual = Collection.ToUniqueCollection<int>(null);
+            Assert.IsNull(actual);
+        }
+
+
+        [Test]
         public void ToUniqueCollection_ReturnsGenericListImplementation()
         {
             ICollection<int> input = new List<int>();
@@ -158,6 +166,29 @@ namespace Rhino.Commons.Test
             List<int> obj = new List<int>();
             ICollection<List<int>> input = ListContaining(obj, obj);
             AssertCollectionEquals(ListContaining(obj), Collection.ToUniqueCollection(input));
+        }
+
+
+        [Test]
+        public void Containing_WillRetunNullWhenPassedNull()
+        {
+            ICollection<object> actual = Collection.Containing<object>(null);
+            Assert.IsNull(actual);
+        }
+
+
+        [Test]
+        public void Containing_WillRetunEmptyCollectionWhenPassedNothing()
+        {
+            ICollection<int> actual = Collection.Containing<int>();
+            Assert.IsEmpty((ICollection) actual);
+        }
+
+
+        [Test]
+        public void Containing_WillRetunCollectionContainingArgumentsSupplied()
+        {
+            AssertCollectionEquals(ListContaining(1, 2, 3), Collection.Containing(1, 2, 3));
         }
 
 
