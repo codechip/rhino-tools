@@ -54,7 +54,6 @@ namespace Rhino.Commons
         /// </remarks>
         public static void StartLongConversation()
         {
-            CheckRunningInWeb();
             if (InLongConversation)
                 throw new InvalidOperationException("You are already in a long conversation");
 
@@ -69,7 +68,6 @@ namespace Rhino.Commons
         /// </remarks>
         public static void EndLongConversation()
         {
-            CheckRunningInWeb();
             Local.Data[CurrentLongConversationIdKey] = null;
         }
 
@@ -83,18 +81,6 @@ namespace Rhino.Commons
         {
             get { return (Guid?) Local.Data[CurrentLongConversationIdKey]; }
             set { Local.Data[CurrentLongConversationIdKey] = value; }
-        }
-
-
-        private static void CheckRunningInWeb()
-        {
-            if (!Local.RunningInWeb)
-            {
-                string msg = "StartLongConversation and EndLongConversation are only relevant in a web environment."
-                             +
-                             " Use UnitOfWork.Start and UnitOfWork.Current.Dispose instead to delimit the start and end of a unit of work";
-                throw new InvalidOperationException(msg);
-            }
         }
 
 
