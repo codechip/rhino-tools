@@ -14,9 +14,9 @@ namespace Rhino.Commons.Boo
 	[CLSCompliant(false)]
 	public class AutoReferenceFilesCompilerStep : AbstractTransformerCompilerStep
 	{
-		Dictionary<string, Assembly> assemblyCache = new Dictionary<string, Assembly>();
+		private Dictionary<string, Assembly> assemblyCache = new Dictionary<string, Assembly>();
 
-		private string baseDirectory;
+		private readonly string baseDirectory;
 
 		public AutoReferenceFilesCompilerStep(string baseDirectory)
 		{
@@ -25,7 +25,7 @@ namespace Rhino.Commons.Boo
 
 		public override void OnImport(Import node)
 		{
-			if(node.Namespace != "file")
+			if (node.Namespace != "file")
 				return;
 
 			RemoveCurrentNode();
@@ -35,20 +35,29 @@ namespace Rhino.Commons.Boo
 			CompilerErrorCollection errors = this.Errors;
 			AssemblyCollection references = this.Parameters.References;
 			string path = node.AssemblyReference.Name
-				.Replace("~",AppDomain.CurrentDomain.BaseDirectory);
+				.Replace("~", AppDomain.CurrentDomain.BaseDirectory);
 			path = Path.Combine(baseDirectory, path);
+
+			Assembly assembly;
+			if (assemblyCache.TryGetValue(path, out assembly) == false)
+				assembly = CompileAssembly(node, path, errors);
+
+			references.Add(assembly);
+		}
+
+		private Assembly CompileAssembly(Node node, string path, CompilerErrorCollection errors)
+		{
 			CompilerContext result = Compile(path);
-			if(result.Errors.Count>0)
+			if (result.Errors.Count > 0)
 			{
 				errors.Add(new CompilerError(node.LexicalInfo, "Failed to add a file reference"));
 				foreach (CompilerError err in result.Errors)
 				{
 					errors.Add(err);
 				}
-				return;
+				return null;
 			}
-
-			references.Add(result.GeneratedAssembly);
+			return result.GeneratedAssembly;
 		}
 
 		private CompilerContext Compile(string input)
