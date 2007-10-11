@@ -155,7 +155,7 @@ namespace NHibernate.Query.Generator.Tests
 				int joinIndex = log.IndexOf("inner join");
 				Assert.GreaterEqualThan(joinIndex, 0, "Should have one join");
 				joinIndex = log.IndexOf("inner join", joinIndex + 10);
-				Assert.LowerThan(0, joinIndex, "Should not have more than one join");
+				Assert.LowerThan(joinIndex, 0, "Should not have more than one join");
 			}
 		}
 
@@ -486,6 +486,7 @@ namespace NHibernate.Query.Generator.Tests
 			properties.Add("connection.release_mode", "on_close");
 
 			source.Add(typeof(ActiveRecordBase), properties);
+			ActiveRecordStarter.ResetInitializationFlag();
 			ActiveRecordStarter.Initialize(source,
 										   typeof(WeirdClass),
 										   typeof(WeirdPropertyClass),
@@ -558,9 +559,9 @@ namespace NHibernate.Query.Generator.Tests
             PatientRecord record1 = new PatientRecord(new Name("Ayende", "Rahien"), new DateTime(1980, 1, 1));
             PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
             Patient patient = new Patient(new PatientRecord[] {record1, record2});
-            patient.Save();
+			patient.Save();
 
-		    patientRecordId1 = record1.Id;
+			patientRecordId1 = record1.Id;
             patientRecordId2 = record2.Id;
         }
 
