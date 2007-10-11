@@ -311,6 +311,15 @@
             <param name="distributedTransaction">if set to <c>true</c>, the TM will create a distributed transaction.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Services.Transaction.DefaultTransactionManager.InstantiateTransaction(Castle.Services.Transaction.TransactionMode,Castle.Services.Transaction.IsolationMode,System.Boolean)">
+            <summary>
+            Factory method for creating a transaction.
+            </summary>
+            <param name="transactionMode">The transaction mode.</param>
+            <param name="isolationMode">The isolation mode.</param>
+            <param name="distributedTransaction">if set to <c>true</c>, the TM will create a distributed transaction.</param>
+            <returns>A transaction</returns>
+        </member>
         <member name="P:Castle.Services.Transaction.DefaultTransactionManager.ActivityManager">
             <summary>
             Gets or sets the activity manager.

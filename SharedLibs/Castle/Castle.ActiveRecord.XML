@@ -444,6 +444,14 @@
             or sequential select fetching.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.BelongsToAttribute.PropertyRef">
+            <summary>
+            From NHibernate docs: The name of a property of the 
+            associated class that is joined to the primary key 
+            of this class. If not specified, the primary key of 
+            the associated class is used.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.BelongsToAttribute.Update">
             <summary>
             Set to <c>false</c> to ignore this association when updating entities of this ActiveRecord class.
@@ -3876,7 +3884,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitDependentObject(Castle.ActiveRecord.Framework.Internal.DependentObjectModel)">
             <summary>
-            Visits the Dependent Object א
+            Visits the Dependent Object à
             </summary>
             <param name="model">The model</param>
         </member>
@@ -4084,6 +4092,15 @@
             </summary>
             <remarks>
             Infer the column name and applies and column prefixes specified
+            </remarks>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.VisitCompositeUserType(Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel)">
+            <summary>
+            Visits the custom composite user type.
+            </summary>
+            <remarks>
+            Apply any column prefixes specified
             </remarks>
             <param name="model">The model.</param>
         </member>
@@ -5809,6 +5826,12 @@
             request (in a thread pool thread, for instnace).
             </remarks>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.IWebThreadScopeInfo">
+            <summary>
+            Implemenation of this interface provides <see cref="T:Castle.ActiveRecord.Framework.IThreadScopeInfo"/> that is compatible 
+            with Session Per Request pattern.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.Framework.Scopes.HybridWebThreadScopeInfo.CurrentStack">
             <summary>
             Gets the current stack.
@@ -6932,6 +6955,28 @@
             </summary>
             <returns>A string representation of this object.</returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Asc(System.String[])">
+            <summary>
+            Ascending Order
+            </summary>
+            <remarks>
+            Returns an array of Ascending <see cref="T:NHibernate.Expression.Order"/> instances specifing which properties to use to 
+            order a result.
+            </remarks>
+            <param name="propertyNames">List of property names to order by ascending</param>
+            <returns>Array of <see cref="T:NHibernate.Expression.Order"/> objects suitable for passing to FindAll and variants</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Desc(System.String[])">
+            <summary>
+            Descending Order
+            </summary>
+            <remarks>
+            Returns an array of Descending <see cref="T:NHibernate.Expression.Order"/> instances specifing which properties to use to 
+            order a result.
+            </remarks>
+            <param name="propertyNames">List of property names to order by descending</param>
+            <returns>Array of <see cref="T:NHibernate.Expression.Order"/> objects suitable for passing to FindAll and variants</returns>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordBase`1">
             <summary>
             Base class for all ActiveRecord Generic classes. 
@@ -8026,6 +8071,13 @@
             Initializes the framework reading the configuration from
             the <c>AppDomain</c> and checking all the types on the executing <c>Assembly</c>
             </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.RegisterAssemblies(System.Reflection.Assembly[])">
+            <summary>
+            Registers new assemblies in ActiveRecord
+            Usefull for dynamic assembly-adding after initialization
+            </summary>
+            <param name="assemblies"></param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.RegisterTypes(System.Type[])">
             <summary>
