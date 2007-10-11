@@ -1,0 +1,69 @@
+TRACE_MODELER_FILE_FORMAT 1
+
+# Created with Trace Modeler v0.9.85
+
+ENCODING UTF-8
+TIMESTAMP 2007/10/10 19:40:13:375
+
+# diagram style
+SHOW_FLOW true
+FLOW_COLOR 436207871
+SHOW_EMPTY_RETURNS false
+ACTIVATION_WIDTH large
+TARGET_ICON_SIZE large
+LIFELINE_SPACING 125
+MESSAGE_SPACING 20
+FOUND_CALL_LENGTH 70
+CALL_ALIGNMENT sender
+RETURN_ALIGNMENT receiver
+LAYOUT_LEFT_TO_RIGHT true
+FONT font0 "SansSerif" 11
+FONT_COMMENTS font0
+FONT_TARGETS font0
+FONT_REGULAR font0
+
+# targets
+ACTOR target0 "Web User"
+OBJECT target1 "UnitOfWorkApplication"
+OBJECT target2 "UnitOfWork"
+OBJECT target3 "ISession"
+OBJECT target4 "IUnitOfWork"
+OBJECT target5 "IHttpHandler" DESTROY_AFTER_LAST_CALL
+
+# trace
+CALL target0 ""
+   CALL target1 "First Page Request"
+      CALL target1 "PreRequestHandlerExecute"
+         CALL target2 "Start"
+            CONSTRUCT target3 "OpenSession"
+            RETURN "ISession"
+            CONSTRUCT target4 "New(ISession)"
+            RETURN ""
+            CALL target2 "set_Current(IUnitOfWork)"
+            RETURN ""
+         RETURN ""
+      RETURN ""
+      CONSTRUCT target5 "ProcessRequest"
+         CALL target2 "StartLongConversation"
+         RETURN ""
+         CALL target5 "DoStuff"
+         RETURN ""
+      RETURN "Response"
+      CALL target1 "PostRequestHandlerExecute"
+         CALL target2 "InLongConversation"
+         RETURN "true"
+         CALL target2 "get_CurrentSession"
+         RETURN "ISession"
+         CALL target3 "Disconnect"
+         RETURN ""
+         CALL target1 "SaveUnitOfWorkToAspSession"
+         RETURN ""
+      RETURN ""
+   RETURN "Html"
+RETURN ""
+
+# comments
+COMMENT 594.8928571428572 -9.0 "This is very much simplified view\nof how the NHibernate session (ISession) is\nopened and a IUnitOfWork newed up. In\nactual fact a IUnitOfWorkFactory (not shown)\ndoes this work"
+   UNBOUND_LINK 406.82142857142856 97.0 
+   UNBOUND_LINK 521.5714285714286 145.0 
+COMMENT 182.5 -77.0 "Open-session-in-view extended with long conversations \n- shows the sequence for the first page request"
