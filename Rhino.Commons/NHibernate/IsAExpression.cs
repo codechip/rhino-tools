@@ -29,7 +29,7 @@
 namespace Rhino.Commons
 {
 	using System;
-	using System.Collections;
+	using System.Collections.Generic;
 	using global::NHibernate;
 	using global::NHibernate.Engine;
 	using global::NHibernate.Expression;
@@ -55,7 +55,7 @@ namespace Rhino.Commons
 		}
 
 		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery,
-		                                      IDictionary enabledFilters)
+		                                      IDictionary<string, IFilter> enabledFilters)
 		{
 			string alias;
 			Type targetType;

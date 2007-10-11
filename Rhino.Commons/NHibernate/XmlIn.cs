@@ -30,6 +30,7 @@ namespace Rhino.Commons
 {
 	using System;
 	using System.Collections;
+	using System.Collections.Generic;
 	using System.Data;
 	using System.IO;
 	using System.Xml;
@@ -72,7 +73,7 @@ namespace Rhino.Commons
 			return propertyName + " big in (" + StringHelper.ToString(values) + ')';
 		}
 
-		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery, IDictionary enabledFilters)
+		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery, IDictionary<string, IFilter> enabledFilters)
 		{
 			//we only need this for SQL Server, and or large amount of values
             if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
