@@ -646,8 +646,13 @@
 		<CallTarget Targets="Compile-Castle-For-NH" />
 	</Target>
 	<Target Name="Compile-Castle-For-NH">
-		<Exec Condition="'$(Enable-Tests)' == 'false'" Command='nant -f:default.build -D:common.testrunner.enabled=false -D:project.config=$(Configuration) clean build' WorkingDirectory="$(Castle-Dir)" />
-		<Exec Condition="'$(Enable-Tests)' == 'true'" Command='nant -f:default.build -D:common.testrunner.enabled=true -D:project.config=$(Configuration) clean build' WorkingDirectory="$(Castle-Dir)" />
+		<Exec Condition="'$(Enable-Tests)' == 'false'" Command='nant -f:default.build -D:common.testrunner.enabled=false -D:project.config=$(Configuration) clean init copy-referenced-assemblies' WorkingDirectory="$(Castle-Dir)" />
+		<Exec Condition="'$(Enable-Tests)' == 'false'" Command='nant -f:core.build -D:common.testrunner.enabled=false -D:project.config=$(Configuration) build' WorkingDirectory="$(Castle-Dir)\Core" />
+		<Exec Condition="'$(Enable-Tests)' == 'false'" Command='nant -f:Castle.DynamicProxy2.build -D:common.testrunner.enabled=false -D:project.config=$(Configuration) build' WorkingDirectory="$(Castle-Dir)\Tools\Castle.DynamicProxy2" />
+
+		<Exec Condition="'$(Enable-Tests)' == 'true'" Command='nant -f:default.build -D:common.testrunner.enabled=true -D:project.config=$(Configuration) clean init copy-referenced-assemblies' WorkingDirectory="$(Castle-Dir)" />
+		<Exec Condition="'$(Enable-Tests)' == 'true'" Command='nant -f:core.build -D:common.testrunner.enabled=true -D:project.config=$(Configuration) build' WorkingDirectory="$(Castle-Dir)\Core" />
+		<Exec Condition="'$(Enable-Tests)' == 'true'" Command='nant -f:Castle.DynamicProxy2.build -D:common.testrunner.enabled=true -D:project.config=$(Configuration) build' WorkingDirectory="$(Castle-Dir)\Tools\Castle.DynamicProxy2" />
 	</Target>
 
 	<!-- NHibernate Compile -->
