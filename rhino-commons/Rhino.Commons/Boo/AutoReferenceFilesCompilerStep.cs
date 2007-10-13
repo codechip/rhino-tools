@@ -8,6 +8,7 @@ namespace Rhino.Commons.Boo
 	using global::Boo.Lang.Compiler;
 	using global::Boo.Lang.Compiler.Ast;
 	using global::Boo.Lang.Compiler.IO;
+	using global::Boo.Lang.Compiler.MetaProgramming;
 	using global::Boo.Lang.Compiler.Steps;
 
 	[CLSCompliant(false)]
@@ -41,6 +42,12 @@ namespace Rhino.Commons.Boo
 			if (assemblyCache.TryGetValue(path, out assembly) == false)
 			{
 				assembly = CompileAssembly(node, path, errors);
+
+				if (assembly == null)
+				{
+					throw new CompilationErrorsException(errors);
+				}
+
 				assemblyCache.Add(path, assembly);
 			}
 

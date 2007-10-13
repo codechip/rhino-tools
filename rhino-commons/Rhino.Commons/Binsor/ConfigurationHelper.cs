@@ -26,13 +26,13 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+
+using System;
 using System.Collections;
 using Castle.Core.Configuration;
 
 namespace Rhino.Commons.Binsor
 {
-	using System;
-
 	public static class ConfigurationHelper
 	{
 		public static IConfiguration CreateConfiguration(IConfiguration parent, string name,
@@ -112,6 +112,22 @@ namespace Rhino.Commons.Binsor
 			}
 
 			return config;
+		}
+
+		public static void ConvertDependencyToConfiguration(IConfiguration config, string name, object value)
+		{
+			if (value is IDictionary)
+			{
+				new keymap(name).Build(config, value);
+			}
+			else if (value is ICollection)
+			{
+				new list(name).Build(config, value);
+			}
+			else
+			{
+				SetConfigurationValue(config, name, value, false);
+			}
 		}
 
 		public static bool RequiresConfiguration(object value)
