@@ -143,6 +143,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Binsor\ConfigurationHelper.cs" />
     <Compile Include="Binsor\Facility.cs" />
     <Compile Include="Binsor\RegisterComponentAndFacilitiesAfterCreation.cs" />
     <Compile Include="Boo\AutoReferenceFilesCompilerStep.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Repositories\RepositoryDetachedCriteriaFactory.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
     <Compile Include="Repositories\RepositoryImplBase.cs" />
+    <Compile Include="Binsor\BooComponentInstaller.cs" />
     <Compile Include="Tasks\Boo.cs" />
     <Compile Include="Tasks\SqlBatchExecute.cs" />
     <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />

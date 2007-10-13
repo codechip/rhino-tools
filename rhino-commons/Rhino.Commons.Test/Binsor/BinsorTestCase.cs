@@ -29,6 +29,7 @@
 using System;
 using System.IO;
 using Castle.Core;
+using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.Windsor;
 using MbUnit.Framework;
@@ -111,7 +112,82 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual(LifestyleType.Transient, handler.ComponentModel.LifestyleType); 
 		}
 
-        
+		[Test]
+        public void ContainerUsesXmlConfigurationIfNotBooExtension()
+        {
+			RhinoContainer container = new RhinoContainer(
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.xml"));
+
+			ISender sender = container.Resolve<ISender>();
+			Assert.IsNotNull(sender);
+        }
+
+		[Test]
+		public void CanDefineConfiguration()
+		{
+			IHandler handler = _container.Kernel.GetHandler("email_sender2");
+			Assert.IsNotNull(handler);
+
+			IConfiguration component = handler.ComponentModel.Configuration;
+			Assert.AreEqual("component", component.Name);
+			Assert.AreEqual("true", component.Attributes["startable"]);
+
+			IConfiguration parameters = AssertConfiguration(component, "parameters");
+			IConfiguration to = AssertConfiguration(parameters, "to");
+			Assert.AreEqual(2, to.Children.Count);
+			Assert.AreEqual("craig", to.Children[0].Value);
+			Assert.AreEqual("ayende", to.Children[1].Value);
+
+			IConfiguration backups = AssertConfiguration(parameters, "backups");
+			Assert.AreEqual(2, backups.Children.Count);
+			Assert.AreEqual("${email_sender}", backups.Children[0].Value);
+			Assert.AreEqual("${email_sender}", backups.Children[1].Value);
+		}
+
+		[Test]
+		public void CanDefineComplexConfigurations()
+		{
+			IHandler handler = _container.Kernel.GetHandler("fubar1");
+			Assert.IsNotNull(handler);
+
+			IConfiguration component = handler.ComponentModel.Configuration;
+			IConfiguration parameters = AssertConfiguration(component, "parameters");
+			IConfiguration fields = AssertConfiguration(parameters, "fields");
+			IConfiguration map = AssertConfiguration(fields, "map");
+			Assert.AreEqual(2, map.Children.Count);
+			IConfiguration item1 = map.Children[0];
+			Assert.AreEqual("name", item1.Attributes["key"]);
+			Assert.AreEqual("David Beckham", item1.Value);
+			IConfiguration item2 = map.Children[1];
+			Assert.AreEqual("age", item2.Attributes["key"]);
+			Assert.AreEqual("32", item2.Value);
+		}
+
+		[Test]
+		public void CanDefineComplexConfigurationsWithBuilders()
+		{
+			IHandler handler = _container.Kernel.GetHandler("fubar2");
+			Assert.IsNotNull(handler);
+
+			IConfiguration component = handler.ComponentModel.Configuration;
+			IConfiguration parameters = AssertConfiguration(component, "parameters");
+			IConfiguration fields = AssertConfiguration(parameters, "fields");
+			IConfiguration map = AssertConfiguration(fields, "map");
+			Assert.AreEqual(2, map.Children.Count);
+			IConfiguration item1 = map.Children[0];
+			Assert.AreEqual("name", item1.Attributes["name"]);
+			Assert.AreEqual("David Beckham", item1.Value);
+			IConfiguration item2 = map.Children[1];
+			Assert.AreEqual("age", item2.Attributes["name"]);
+			Assert.AreEqual("32", item2.Value);
+		}
+
+		private static IConfiguration AssertConfiguration(IConfiguration parent, string name)
+		{
+			IConfiguration config = parent.Children[name];
+			Assert.IsNotNull(config);
+			return config;
+		}
 	}
 }
 

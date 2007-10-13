@@ -58,11 +58,9 @@ namespace Rhino.Commons
 		}
 
     	public RhinoContainer(string fileName, IEnvironmentInfo env)
+			: base(new DefaultKernel(), new BooComponentInstaller(fileName))
         {
-            if (Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase))
-                BooReader.Read(this, fileName);
-            else
-                InitalizeFromConfigurationSource(new XmlInterpreter(fileName), env);
+			InitalizeFromConfigurationSource((IConfigurationInterpreter)Installer, env);
         }
 
         public RhinoContainer(IConfigurationInterpreter interpreter)
@@ -71,7 +69,6 @@ namespace Rhino.Commons
         }
 
 		public RhinoContainer(IConfigurationInterpreter interpreter, IEnvironmentInfo env)
-			: base()
 		{
 			InitalizeFromConfigurationSource(interpreter, env);
 		}

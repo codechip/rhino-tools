@@ -29,22 +29,24 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Boo.Lang;
 using Castle.Core;
+using Castle.Core.Configuration;
 using Castle.MicroKernel;
 
 namespace Rhino.Commons.Binsor
 {
 	public class Component : IQuackFu, INeedSecondPassRegistration
 	{
-		private readonly IDictionary _attributes = new Hashtable();
-		private readonly IDictionary _parameters = new Hashtable();
-		private readonly Dictionary<string, string> _references = new Dictionary<string, string>();
 		private readonly string _name;
-		private readonly LifestyleType lifestyle = LifestyleType.Singleton;
 		private readonly Type _service;
 		private readonly Type _impl;
+		private readonly IDictionary _attributes = new Hashtable();
+		private readonly IDictionary _dependencies = new Hashtable();
+		private readonly LifestyleType _lifestyle = LifestyleType.Singleton;
+		private IConfiguration _configuration;
+		private IConfiguration _parameters;
+
         //important, we need to get this when we create the component, because we need
         //to support nested components
 	    private readonly IKernel kernel = IoC.Container.Kernel;
@@ -53,33 +55,36 @@ namespace Rhino.Commons.Binsor
 		{
 		}
 
-		public Component(string name, Type service, Type impl, LifestyleType lifestyleType) : this(name, service, impl)
+		public Component(string name, Type service, Type impl, LifestyleType lifestyleType) 
+			: this(name, service, impl)
 		{
-			this.lifestyle = lifestyleType;
+			_lifestyle = lifestyleType;
 		}
 
 		public Component(string name, Type service, Type impl)
 		{
-			this._name = name;
+			_name = name;
 			_service = service;
 			_impl = impl;
 		    BooReader.NeedSecondPassRegistrations.Add(this);
 		}
 
-		public Component(string name, Type service, IDictionary parameters) : this(name, service)
+		public Component(string name, Type service, IDictionary configuration)
+			: this(name, service)
 		{
-			_parameters = parameters;
+			CreateConfiguration(configuration);
 		}
 
 		public Component(string name, Type service, Type impl, IDictionary parameters, LifestyleType lifestyleType)
 			: this(name, service, impl, parameters)
 		{
-			this.lifestyle = lifestyleType;
+			_lifestyle = lifestyleType;
 		}
 
-		public Component(string name, Type service, Type impl, IDictionary parameters) : this(name, service, impl)
+		public Component(string name, Type service, Type impl, IDictionary configuration) 
+			: this(name, service, impl)
 		{
-			_parameters = parameters;
+			CreateConfiguration(configuration);
 		}
 
 		public string Name
@@ -89,50 +94,79 @@ namespace Rhino.Commons.Binsor
 
         public Component Register()
 		{
-            this.kernel.AddComponent(_name, _service, _impl);
-			IHandler handler = this.kernel.GetHandler(_name);
-			handler.ComponentModel.LifestyleType = lifestyle;
+			if (_configuration != null)
+			{
+				kernel.ConfigurationStore.AddComponentConfiguration(_name, _configuration);
+			}
+        	kernel.AddComponent(_name, _service, _impl, _lifestyle);
             return this;
 		}
 
         public void RegisterSecondPass()
         {
-            IHandler handler = kernel.GetHandler(_name);
-            kernel.RegisterCustomDependencies(_name, _parameters);
-            foreach (KeyValuePair<string, string> pair in _references)
-            {
-                handler.ComponentModel.Parameters.Add(pair.Key, pair.Value);
-            }
+            kernel.RegisterCustomDependencies(_name, _dependencies);
         }
 
-		public object QuackGet(string name, object[] property_parameters)
+		public object QuackGet(string name, object[] property_dependencies)
 		{
-			if(property_parameters!=null && property_parameters.Length>0)
+			if(property_dependencies!=null && property_dependencies.Length>0)
 			{
-				return _attributes[property_parameters[0]];
+				return _attributes[property_dependencies[0]];
 			}
-			return _parameters[name];
+			return _dependencies[name];
 		}
 
-		public object QuackSet(string name, object[] property_parameters, object value)
+		public object QuackSet(string name, object[] property_dependencies, object value)
 		{
-			if (value is ComponentReference)
+			if (ConfigurationHelper.RequiresConfiguration(value))
 			{
-				string referenceName = ((ComponentReference) value).Name;
-				_references.Add(name, referenceName);
+				EnsureParametersConfiguration();
+				ConfigurationHelper.SetConfigurationValue(_parameters, name, value, false);
 				return null;
 			}
-			if(property_parameters!=null && property_parameters.Length>0)
+
+			if(property_dependencies!=null && property_dependencies.Length>0)
 			{
-				_attributes[property_parameters[0]] = value;
+				_attributes[property_dependencies[0]] = value;
 				return null;
 			}
-			return _parameters[name] = value;
+
+			return _dependencies[name] = value;
 		}
 
 		public object QuackInvoke(string name, params object[] args)
 		{
 			throw new NotSupportedException("You can't invoke a method on a component");
+		}
+
+		private void CreateConfiguration(IDictionary configuration)
+		{
+			_configuration = ConfigurationHelper.CreateConfiguration(null, "component", configuration);
+		}
+
+		private void EnsureParametersConfiguration()
+		{
+			if (_parameters == null)
+			{
+				if (_configuration == null)
+				{
+					CreateConfiguration(null);
+				}
+				else
+				{
+					foreach (IConfiguration child in _configuration.Children)
+					{
+						if (child.Name.Equals("parameters", StringComparison.InvariantCultureIgnoreCase))
+						{
+							_parameters = child;
+							return;
+						}
+					}
+				}
+
+				_parameters = new MutableConfiguration("parameters");
+				_configuration.Children.Add(_parameters);
+			}
 		}
 	}
 
@@ -145,14 +179,24 @@ namespace Rhino.Commons.Binsor
 	{
 	    readonly string name;
 
-		public string Name
-		{
-			get { return this.name; }
-		}
-
 		public ComponentReference(string name)
 		{
-			this.name = "${" + name + "}";
+			this.name = name;
+		}
+
+		public ComponentReference(Component component)
+			: this(component.Name)
+		{
+		}
+
+		public string Name
+		{
+			get { return name; }
+		}
+
+		public override string ToString()
+		{
+			return "${" + name + "}";
 		}
 	}
 }

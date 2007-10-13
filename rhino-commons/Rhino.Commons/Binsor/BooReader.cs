@@ -65,15 +65,15 @@ namespace Rhino.Commons.Binsor
             }
         }
 
-        public static void Read(IWindsorContainer contianer, string fileName)
+        public static void Read(IWindsorContainer container, string fileName)
         {
-            Read(contianer, fileName, GenerationOptions.Memory);
+            Read(container, fileName, GenerationOptions.Memory);
         }
-        public static void Read(IWindsorContainer contianer, string fileName, GenerationOptions generationOptions)
+        public static void Read(IWindsorContainer container, string fileName, GenerationOptions generationOptions)
         {
             try
             {
-                using (IoC.UseLocalContainer(contianer))
+                using (IoC.UseLocalContainer(container))
                 {
                     IConfigurationRunner conf = GetConfigurationInstanceFromFile(fileName, generationOptions);
                     conf.Run();
