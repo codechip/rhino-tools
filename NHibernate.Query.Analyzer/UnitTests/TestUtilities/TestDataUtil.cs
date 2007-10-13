@@ -49,11 +49,10 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 			constr = string.Format(constr, tmpFile);
 			File.Delete(tmpFile); //GetTempFileName create a zero size file
 			Configuration cfg = new Configuration();
-			cfg.SetProperty("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			cfg.SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			cfg.SetProperty("hibernate.connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
-			cfg.SetProperty("hibernate.connection.connection_string", constr);
-			//cfg.SetProperty("hibernate.connection.release_mode", "on_close");
+			cfg.SetProperty("connection.provider", "NHibernate.Connection.DriverConnectionProvider");
+			cfg.SetProperty("dialect", "NHibernate.Dialect.SQLiteDialect");
+			cfg.SetProperty("connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
+			cfg.SetProperty("connection.connection_string", constr);
 			cfg.AddAssembly(typeof (IProjectsRepository).Assembly);
 			return new ProjectsRepository(cfg);
 		}
@@ -73,6 +72,6 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 			get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.hbm.xml"); }
 		}
 
-		public const string HibernateConnectionString = "hibernate.connection.connection_string";
+		public const string HibernateConnectionString = "connection.connection_string";
 	}
 }

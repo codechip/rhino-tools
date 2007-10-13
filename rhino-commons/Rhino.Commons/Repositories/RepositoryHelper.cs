@@ -45,7 +45,7 @@ namespace Rhino.Commons
 			}
 			else if (With.Caching.ShouldForceCacheRefresh)
 			{
-				query.SetForceCacheRefresh(true);
+				query.SetCacheMode(CacheMode.Refresh);
 			}
 		}
 

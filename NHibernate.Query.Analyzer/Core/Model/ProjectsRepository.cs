@@ -195,7 +195,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Core.Model
             /// </summary>
             public virtual string ExpandEnvironmentVariablesInConnectionString()
             {
-                string connectionStringProeprty = "hibernate.connection.connection_string";
+                string connectionStringProeprty = "connection.connection_string";
                 string cnstr = cfg.GetProperty(connectionStringProeprty);
                 if (logger.IsDebugEnabled)
                     logger.Debug("Connection String is:" + cnstr);

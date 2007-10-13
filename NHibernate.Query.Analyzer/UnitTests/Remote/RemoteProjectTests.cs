@@ -52,10 +52,10 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Remote
 			string[] asms = { asmFilename },
 					 mappings = { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.hbm.xml") };
 			current = new RemoteProject();
-			current.Cfg.SetProperty("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");
-			current.Cfg.SetProperty("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
-			current.Cfg.SetProperty("hibernate.connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
-			current.Cfg.SetProperty("hibernate.connection.connection_string", conStr);
+			current.Cfg.SetProperty("connection.provider", "NHibernate.Connection.DriverConnectionProvider");
+			current.Cfg.SetProperty("dialect", "NHibernate.Dialect.SQLiteDialect");
+			current.Cfg.SetProperty("connection.driver_class", typeof(SQLite20Driver).AssemblyQualifiedName);
+			current.Cfg.SetProperty("connection.connection_string", conStr);
 			current.BuildInternalProject(asms, mappings, new string[0], new ArrayList());
 		}
 

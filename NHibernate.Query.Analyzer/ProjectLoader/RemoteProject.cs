@@ -169,10 +169,10 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 
 		public string[] HqlToSql(string hqlQuery, IDictionary parameters)
 		{
-			using (ISessionImplementor session = (ISessionImplementor)factory.OpenSession())
+			using (ISession session = factory.OpenSession())
 			{
 				IList list = HqlToSqlList(hqlQuery,
-										  CreateQueryParameters(parameters), session);
+										  CreateQueryParameters(parameters), (ISessionImplementor)session);
 				ArrayList cmds = new ArrayList();
 				foreach (string sqlString in list)
 				{
@@ -652,9 +652,9 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 		{
 			try
 			{
-				using (ISessionImplementor session = (ISessionImplementor)factory.OpenSession())
+				using (ISession session = factory.OpenSession())
 				{
-					IList commands = HqlToCommandList(hqlQuery, TypedParameterToQueryParameter(parameters), session);
+					IList commands = HqlToCommandList(hqlQuery, TypedParameterToQueryParameter(parameters), (ISessionImplementor)session);
 					DataSet ds = new DataSet();
 					foreach (IDbCommand command in commands)
 					{
