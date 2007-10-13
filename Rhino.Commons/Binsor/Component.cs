@@ -121,7 +121,7 @@ namespace Rhino.Commons.Binsor
 			if (ConfigurationHelper.RequiresConfiguration(value))
 			{
 				EnsureParametersConfiguration();
-				ConfigurationHelper.SetConfigurationValue(_parameters, name, value, false);
+				ConfigurationHelper.ConvertDependencyToConfiguration(_parameters, name, value);
 				return null;
 			}
 
