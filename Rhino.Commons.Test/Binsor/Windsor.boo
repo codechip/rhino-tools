@@ -46,8 +46,34 @@ customer_repository = Component("customer_repository",
 email = Component("email_sender", ISender, EmailSender,
 	Host: "example.dot.org")
 
+Component("email_sender2", ISender, EmailSender,
+	{ startable: true,
+	  parameters: {
+		to: ( "craig", "ayende" ),
+		backups: ( @email_sender, email ) 
+		} 
+	  } )
+
 # making sure that loops work
 
 for i in range(4):
 	o = Component("foo_${i}", Fubar)
 	o.foo = i
+	
+Component("fubar1", Fubar,
+	{ factoryId: 'fubar_factory', factoryCreate: 'Create',
+	  parameters: {
+		fields: { 'map':
+			( { key: 'name', _:'David Beckham' },
+	          { key: 'age', _: 32 } )
+	        }
+	    } } )
+
+Component("fubar2", Fubar,
+	{ factoryId: 'fubar_factory', factoryCreate: 'Create',
+	  parameters: {
+		keymap('fields', key: 'name'): {
+			name: 'David Beckham',
+			age: 32 
+			}
+		} } ) 

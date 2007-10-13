@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,42 +27,49 @@
 #endregion
 
 
-namespace Rhino.Commons.Test.Binsor
+using System;
+using System.IO;
+using Castle.Core.Resource;
+using Castle.MicroKernel;
+using Castle.Windsor;
+using Castle.Windsor.Configuration.Interpreters;
+using Castle.Windsor.Installer;
+
+namespace Rhino.Commons.Binsor
 {
-	public interface ISender
+	public class BooComponentInstaller : XmlInterpreter, IComponentsInstaller
 	{
-		ISender[] Backups { get; set; }
+		private readonly string fileName;
 
-		void Send(string msg);
-	}
-	
-	public class EmailSender : ISender
-	{
-		private string host;
-		private string[] to;
-		private ISender[] backups;
-
-		public string Host
+		public BooComponentInstaller(String fileName)
+			: base(fileName)
 		{
-			get { return host; }
-			set { host = value; }
+			this.fileName = fileName;
 		}
 
-		public string[] To
+		public override void ProcessResource(IResource source, IConfigurationStore store)
 		{
-			get { return to; }
-			set { to = value; }
+			if (!IsBooConfiguration())
+			{
+				base.ProcessResource(source, store);
+			}
 		}
 
-		public ISender[] Backups
+		public void SetUp(IWindsorContainer container, IConfigurationStore store)
 		{
-			get { return backups; }
-			set { backups = value; }
+			if (IsBooConfiguration())
+			{
+				BooReader.Read(container, fileName);
+			}
+			else
+			{
+				new DefaultComponentInstaller().SetUp(container, store);
+			}
 		}
 
-		public void Send(string msg)
+		private bool IsBooConfiguration()
 		{
-			
+			return Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

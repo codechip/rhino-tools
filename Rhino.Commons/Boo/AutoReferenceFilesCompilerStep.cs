@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rhino.Commons.Boo
 {
@@ -14,7 +13,7 @@ namespace Rhino.Commons.Boo
 	[CLSCompliant(false)]
 	public class AutoReferenceFilesCompilerStep : AbstractTransformerCompilerStep
 	{
-		private Dictionary<string, Assembly> assemblyCache = new Dictionary<string, Assembly>();
+		private readonly Dictionary<string, Assembly> assemblyCache = new Dictionary<string, Assembly>();
 
 		private readonly string baseDirectory;
 
@@ -32,15 +31,18 @@ namespace Rhino.Commons.Boo
 
 			//we may need to preserve this, since it may be used in several compiler cycles.
 			//which will set them to different things
-			CompilerErrorCollection errors = this.Errors;
-			AssemblyCollection references = this.Parameters.References;
+			CompilerErrorCollection errors = Errors;
+			AssemblyCollection references = Parameters.References;
 			string path = node.AssemblyReference.Name
 				.Replace("~", AppDomain.CurrentDomain.BaseDirectory);
 			path = Path.Combine(baseDirectory, path);
 
 			Assembly assembly;
 			if (assemblyCache.TryGetValue(path, out assembly) == false)
+			{
 				assembly = CompileAssembly(node, path, errors);
+				assemblyCache.Add(path, assembly);
+			}
 
 			references.Add(assembly);
 		}

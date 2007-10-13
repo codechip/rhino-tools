@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<components>
+		<component id="email.sender"
+							 service="Rhino.Commons.Test.Binsor.ISender, Rhino.Commons.Test"
+							 type="Rhino.Commons.Test.Binsor.EmailSender, Rhino.Commons.Test">
+		</component>
+	</components>
+</configuration>
