@@ -32,6 +32,9 @@ import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.FactorySupport from Castle.MicroKernel
 import Castle.Facilities.Logging
+import System.Reflection
+
+import Castle.Facilities.ActiveRecordIntegration
 
 Facility("factory", FactorySupportFacility)
 
@@ -43,3 +46,8 @@ Facility("loggerFacility", LoggingFacility,
 		bar: "nar"
 		}
 	) 
+
+Facility( "arintegration",
+            ActiveRecordFacility,
+            isWeb: true,
+            assemblies : [ Assembly.Load("Rhino.Commons") ] )

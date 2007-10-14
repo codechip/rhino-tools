@@ -9,7 +9,9 @@ using Rhino.Commons.Binsor;
 
 namespace Rhino.Commons.Test.Binsor
 {
-    [TestFixture]
+	using Castle.Facilities.ActiveRecordIntegration;
+
+	[TestFixture]
     public class BinsorFacilities_TestCase
     {
         private IWindsorContainer _container;
@@ -30,6 +32,18 @@ namespace Rhino.Commons.Test.Binsor
             IFacility[] facilities = _container.Kernel.GetFacilities();
             Assert.AreNotEqual(0, facilities.Length);
         }
+
+		[Test]
+		public void CanDefineActiveRecordFacility()
+		{
+			IFacility[] facilities = _container.Kernel.GetFacilities();
+			foreach (IFacility facility in facilities)
+			{
+				if(facility is ActiveRecordFacility)
+					return;//found
+			}
+			Assert.Fail("Could not find AR Facility");
+		}
 
         [Test]
         public void CanAddConfiguarion()
