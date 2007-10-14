@@ -97,7 +97,7 @@ namespace Rhino.Commons.Test.Components
 
 	public class TotalCalculator : AbstractCalculator
 	{
-		private decimal CalculateTotal(Order order)
+		private static decimal CalculateTotal(Order order)
 		{
 			decimal total = 0;
 			foreach (OrderItem item in order.Items)
@@ -123,7 +123,7 @@ namespace Rhino.Commons.Test.Components
 			set { _gstRate = value; }
 		}
 
-		private bool IsNewZealand(Order order)
+		private static bool IsNewZealand(Order order)
 		{
 			return (order.CountryCode == "NZ");
 		}
@@ -184,7 +184,7 @@ namespace Rhino.Commons.Test.Components
 
 	public class DefaultCostCalculator : ICostCalculator
 	{
-		private AbstractCalculator[] _calculators;
+		private readonly AbstractCalculator[] _calculators;
 
 		public DefaultCostCalculator(AbstractCalculator[] calculators)
 		{

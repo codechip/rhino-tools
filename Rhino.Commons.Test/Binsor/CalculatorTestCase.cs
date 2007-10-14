@@ -49,6 +49,7 @@ namespace Rhino.Commons.Test.Binsor
 			Console.WriteLine(path);
 			BooReader.Read(_container, path);
 		}
+
 		[Test]
 		public void CanInjectArraysOfComponentsInConstructor()
 		{
@@ -62,6 +63,23 @@ namespace Rhino.Commons.Test.Binsor
 			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
 
 			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>();
+			Assert.AreEqual(110, costCalculator.CalculateTotal(order1));
+			Assert.AreEqual(10, costCalculator.CalculateTotal(order2));
+		}
+
+		[Test]
+		public void CanInjectArraysOfComponentsInConstructorUsingParameters()
+		{
+			Order order1 = new Order();
+			order1.CountryCode = "NZ";
+			order1.Items.Add(new OrderItem("water", 10, 1.0m, false));
+			order1.Items.Add(new OrderItem("glass", 5, 20.0m, true));
+
+			Order order2 = new Order();
+			order2.CountryCode = "US";
+			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
+
+			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>("costCalculator.default2");
 			Assert.AreEqual(110, costCalculator.CalculateTotal(order1));
 			Assert.AreEqual(10, costCalculator.CalculateTotal(order2));
 		}

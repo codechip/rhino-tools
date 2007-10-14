@@ -61,7 +61,7 @@ for i in range(4):
 	o.foo = i
 	
 Component("fubar1", Fubar,
-	{ factoryId: 'fubar_factory', factoryCreate: 'Create',
+	{ factoryId: @fubar_factory, factoryCreate: 'Create',
 	  parameters: {
 		fields: { 'map':
 			( { key: 'name', _:'David Beckham' },
