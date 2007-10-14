@@ -191,6 +191,7 @@
 			;$(_Ass-Cstl-Atm)
 			;$(_Ass-Cstl-Logging)
 			;$(_Ass-Cstl-Log4Net)
+			;$(_Ass-Cstl-AR-Integration)
 		</_Deps-Rhn-From-Cstl>
 		
 		<_Asses-Cstl-All>
