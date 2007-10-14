@@ -63,8 +63,8 @@ namespace Rhino.Commons.Test.Binsor
 			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
 
 			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>();
-			Assert.AreEqual(110, costCalculator.CalculateTotal(order1));
-			Assert.AreEqual(10, costCalculator.CalculateTotal(order2));
+			Assert.AreEqual(110m, costCalculator.CalculateTotal(order1));
+			Assert.AreEqual(10m, costCalculator.CalculateTotal(order2));
 		}
 
 		[Test]
@@ -80,8 +80,8 @@ namespace Rhino.Commons.Test.Binsor
 			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
 
 			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>("costCalculator.default2");
-			Assert.AreEqual(110, costCalculator.CalculateTotal(order1));
-			Assert.AreEqual(10, costCalculator.CalculateTotal(order2));
+			Assert.AreEqual(110m, costCalculator.CalculateTotal(order1));
+			Assert.AreEqual(10m, costCalculator.CalculateTotal(order2));
 		}
 	}
 }
