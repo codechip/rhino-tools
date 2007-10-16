@@ -28,54 +28,55 @@
 
 
 using System;
+using System.Reflection;
+using System.Collections;
 using Boo.Lang;
 using Castle.Core.Configuration;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Facilities;
 
 namespace Rhino.Commons.Binsor
 {
-    public class Facility : IQuackFu
-    {
-        private readonly Type facility;
-        private readonly string key;
-		private readonly object[] arguments;
-        private readonly IConfiguration configuration = new MutableConfiguration("facility");
+	using System.Collections.Generic;
+
+	public class Facility : IQuackFu
+	{
+		private readonly string _key;
+        private readonly Type _facility;
+		private readonly IDictionary _parameters = new Hashtable();
+		private readonly IConfiguration _configuration;
+
         //important, we need to get this when we create the facility, because we need
         //to support nested components
         private readonly IKernel kernel = IoC.Container.Kernel;
 
         public Facility(string name, Type facility)
         {
-            key = name;
-            this.facility = facility;
+            _key = name;
+            _facility = facility;
         }
 
-		public Facility(string name, Type facility, params object[] arguments)
+		public Facility(string name, Type facility, IDictionary configuration)
 			: this(name, facility)
 		{
-			this.arguments = arguments;
+			_configuration = ConfigurationHelper.CreateConfiguration(null, "facility", configuration);
 		}
 
         public string Key
         {
-            get { return key; }
+            get { return _key; }
         }
 
         public Facility Register()
         {
-        	IFacility instance;
+        	IFacility instance = CreateFacilityInstance();
 
-			if (arguments == null || arguments.Length == 0)
+			if (_configuration != null)
 			{
-				instance = (IFacility) Activator.CreateInstance(facility);
-			}
-			else
-			{
-				instance = (IFacility) Activator.CreateInstance(facility, arguments);
+				kernel.ConfigurationStore.AddFacilityConfiguration(_key, _configuration);
 			}
 
-            kernel.ConfigurationStore.AddFacilityConfiguration(key, configuration);
-            kernel.AddFacility(key, instance);
+        	kernel.AddFacility(_key, instance);
 
             return this;
         }
@@ -87,13 +88,58 @@ namespace Rhino.Commons.Binsor
 
         public object QuackSet(string name, object[] property_parameters, object value)
         {
-			ConfigurationHelper.SetConfigurationValue(configuration, name, value, true);
-            return null;
-        }
+			return _parameters[name] = value;
+		}
 
         public object QuackInvoke(string name, params object[] args)
         {
             throw new NotSupportedException("You can't invoke a method on a facility");
         }
+
+		private IFacility CreateFacilityInstance()
+		{
+			List<object> parameters = new List<object>();
+			ConstructorInfo constructor = SelectEligbleConstructor(parameters);
+			return (IFacility) constructor.Invoke(parameters.ToArray());
+		}
+
+		private ConstructorInfo SelectEligbleConstructor(ICollection<object> arguments)
+		{
+			ConstructorInfo[] constructors = _facility.GetConstructors();
+
+			foreach (ConstructorInfo constuctorInfo in constructors)
+			{
+				ParameterInfo[] parameters = constuctorInfo.GetParameters();
+				if (parameters.Length != _parameters.Count) continue;
+
+				arguments.Clear();
+
+				foreach (ParameterInfo parameterInfo in parameters)
+				{
+					if (_parameters.Contains(parameterInfo.Name))
+					{
+						object parameter = _parameters[parameterInfo.Name];
+
+						if (parameter != null && parameterInfo.ParameterType.IsInstanceOfType(parameter))
+						{
+							arguments.Add(parameter);
+						}
+						else 
+						{
+							break;
+						}
+					}
+				}
+
+				if (parameters.Length == arguments.Count)
+				{
+					return constuctorInfo;
+				}
+			}
+
+			throw new FacilityException(
+				"Unable to find a matching constructor for the Facility " +
+				_facility.Name);
+		}
     }
 }

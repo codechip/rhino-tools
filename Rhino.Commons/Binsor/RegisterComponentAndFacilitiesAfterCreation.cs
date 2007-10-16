@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Ast.Visitors;
 using Boo.Lang.Compiler.Steps;
 
 namespace Rhino.Commons.Binsor

@@ -39,15 +39,32 @@ import Castle.Facilities.ActiveRecordIntegration
 Facility("factory", FactorySupportFacility)
 
 Facility("loggerFacility", LoggingFacility, 
-	loggingApi: "Log4net", 
-	configFile: "log4net.config",
-	NestedConfig: {
-		something: "foo",
-		bar: "nar"
+	{ @loggingApi: "Log4net", 
+	  @configFile: "log4net.config",
+	  NestedConfig: {
+		@something: "foo",
+		@bar: "nar"
 		}
-	) 
-
-Facility( "arintegration",
-            ActiveRecordFacility,
-            isWeb: true,
-            assemblies : [ Assembly.Load("Rhino.Commons") ] )
+	} ) 
+	
+Facility( "arintegration", ActiveRecordFacility,
+	{ @isWeb: true, @isDebug: true,
+	  assemblies: [ Assembly.Load("Rhino.Commons") ],
+	  child(config): { keyvalues(): {
+		'show_sql': true,
+		'command_timeout': 5000,
+		'cache.use_query_cache': false,
+		'dialect': 'NHibernate.Dialect.MsSql2005Dialect',
+		'connection.provider': 'NHibernate.Connection.DriverConnectionProvider',
+		'connection.driver_class': 'NHibernate.Driver.SqlClientDriver',
+		'connection.connection_string': '#{connectionString1}'
+		} },
+	  child(config): {
+		@type: Fubar, keyvalues(): {
+		'dialect': 'NHibernate.Dialect.SQLiteDialect',
+		'connection.provider': 'NHibernate.Connection.DriverConnectionProvider',
+		'connection.driver_class': 'NHibernate.Driver.SQLite20Driver',		
+		'connection.connection_string': '#{connectionString2}',
+		'connection.release_mode': 'on_close',	
+		} }
+    } )

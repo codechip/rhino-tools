@@ -36,7 +36,7 @@ using Castle.MicroKernel;
 
 namespace Rhino.Commons.Binsor
 {
-	public class Component : IQuackFu, INeedSecondPassRegistration
+	public class Component : IQuackFu, INeedSecondPassRegistration, IConfigurationFormatter
 	{
 		private readonly string _name;
 		private readonly Type _service;
@@ -75,8 +75,8 @@ namespace Rhino.Commons.Binsor
 			CreateConfiguration(configuration);
 		}
 
-		public Component(string name, Type service, Type impl, IDictionary parameters, LifestyleType lifestyleType)
-			: this(name, service, impl, parameters)
+		public Component(string name, Type service, Type impl, IDictionary configuration, LifestyleType lifestyleType)
+			: this(name, service, impl, configuration)
 		{
 			_lifestyle = lifestyleType;
 		}
@@ -139,6 +139,18 @@ namespace Rhino.Commons.Binsor
 			throw new NotSupportedException("You can't invoke a method on a component");
 		}
 
+		public void Format(IConfiguration parent, string name, bool useAttribute)
+		{
+			if (useAttribute)
+			{
+				parent.Attributes.Add(name, _name);
+			}
+			else
+			{
+				new ComponentReference(this).Format(parent, name, useAttribute);
+			}
+		}
+
 		private void CreateConfiguration(IDictionary configuration)
 		{
 			_configuration = ConfigurationHelper.CreateConfiguration(null, "component", configuration);
@@ -175,13 +187,13 @@ namespace Rhino.Commons.Binsor
         void RegisterSecondPass();
     }
 
-    public class ComponentReference
+    public class ComponentReference : IConfigurationFormatter
 	{
-	    readonly string name;
+	    private readonly string _name;
 
 		public ComponentReference(string name)
 		{
-			this.name = name;
+			_name = name;
 		}
 
 		public ComponentReference(Component component)
@@ -191,12 +203,20 @@ namespace Rhino.Commons.Binsor
 
 		public string Name
 		{
-			get { return name; }
+			get { return _name; }
 		}
 
-		public override string ToString()
+		public void Format(IConfiguration parent, string name, bool useAttribute)
 		{
-			return "${" + name + "}";
+			if (useAttribute)
+			{
+				parent.Attributes.Add(name, _name);
+			}
+			else
+			{
+				string reference = "${" + _name + "}";
+				ConfigurationHelper.CreateChild(parent, name, reference);
+			}
 		}
 	}
 }
