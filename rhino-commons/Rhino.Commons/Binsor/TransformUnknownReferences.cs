@@ -63,13 +63,13 @@ namespace Rhino.Commons.Binsor
             {
                 MethodInvocationExpression mie = (MethodInvocationExpression) node.ParentNode;
                 //Transform the first parameter of Component ctor to string.
-            	string target = mie.Target.ToString();
-                if ((target == "Component" || target == "Facility") && mie.Arguments[0] == node)
-                {
+            	//string target = mie.Target.ToString();
+                //if ((target == "Component" || target == "Facility") && mie.Arguments[0] == node)
+                //{
                     StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
                     mie.Replace(node, literal);
                     return;
-                }
+                //}
             }
             else if (
                 //search for the left side of a key in a hash literal expression

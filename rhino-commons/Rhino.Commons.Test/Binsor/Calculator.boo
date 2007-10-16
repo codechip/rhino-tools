@@ -16,7 +16,7 @@ calcTotal = Component( "calc.total", AbstractCalculator, TotalCalculator )
  
 Component( "costCalculator.default", ICostCalculator, DefaultCostCalculator,
 	calculators: (calcGst, calcShipping, calcTotal) )
-	
+
 # Using Parameters Only
 
 calcGst2 = Component( "calc.gst2", AbstractCalculator, GstCalculator,
@@ -35,5 +35,5 @@ calcTotal2 = Component( "calc.total2", AbstractCalculator, TotalCalculator )
 Component( "costCalculator.default2", ICostCalculator, DefaultCostCalculator,
 	{ parameters: {
 		calculators: {
-			array: (calcGst, calcShipping, calcTotal) }
+			array: (calcGst2, calcShipping2, calcTotal2) }
 	  } } )

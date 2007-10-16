@@ -31,7 +31,14 @@ import file from "disposable.boo"
 import Rhino.Commons
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
+import Castle.Facilities.Logging
+# Facility constructors
 
+Facility("loggerFacility", LoggingFacility, 
+	loggingApi: LoggerImplementation.Log4net, 
+	configFile: "log4net.config"
+	) 
+	
 # generic type registration
 Component(defualt_repository, IRepository, NHRepository, LifestyleType.Transient)
 
@@ -47,7 +54,7 @@ email = Component("email_sender", ISender, EmailSender,
 	Host: "example.dot.org")
 
 Component("email_sender2", ISender, EmailSender,
-	{ startable: true,
+	{ @startable: true,
 	  parameters: {
 		to: ( "craig", "ayende" ),
 		backups: ( @email_sender, email ) 
@@ -61,19 +68,25 @@ for i in range(4):
 	o.foo = i
 	
 Component("fubar1", Fubar,
-	{ factoryId: @fubar_factory, factoryCreate: 'Create',
+	{ @factoryId: 'fubar_factory', 
+	  @factoryCreate: 'Create',
 	  parameters: {
-		fields: { 'map':
-			( { key: 'name', _:'David Beckham' },
-	          { key: 'age', _: 32 } )
-	        }
-	    } } )
-
+		fields: {
+			keymap(fields): {
+				name: 'David Beckham',
+				age: 32 
+				}
+			} 
+		} }
+	) 
+		
 Component("fubar2", Fubar,
-	{ factoryId: 'fubar_factory', factoryCreate: 'Create',
+	{ @factoryId: 'fubar_factory', 
+	  @factoryCreate: 'Create',
 	  parameters: {
-		keymap('fields', key: 'name'): {
+		keyvalues(fields): {
 			name: 'David Beckham',
 			age: 32 
 			}
-		} } ) 
+		} } 
+	) 
