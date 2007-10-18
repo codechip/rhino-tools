@@ -89,6 +89,32 @@ namespace Rhino.Commons.Binsor
             }
         }
 
+		public static void Read(IWindsorContainer container, Stream stream, string name)
+		{
+			Read(container, stream, GenerationOptions.Memory, name);
+		}
+
+		public static void Read(IWindsorContainer container, Stream stream, GenerationOptions generationOptions, string name)
+		{
+			try
+			{
+				using (IoC.UseLocalContainer(container))
+				{
+					IConfigurationRunner conf = GetConfigurationInstanceFromStream(name, stream, generationOptions);
+					conf.Run();
+					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+					{
+						needSecondPassRegistration.RegisterSecondPass();
+					}
+				}
+			}
+			finally
+			{
+				NeedSecondPassRegistrations = null;
+			}
+		}
+
+
         private static IConfigurationRunner GetConfigurationInstanceFromFile(string fileName, GenerationOptions generationOptions)
         {
             FileInput fileInput = new FileInput(fileName);
@@ -116,6 +142,33 @@ namespace Rhino.Commons.Binsor
             Type type = run.GeneratedAssembly.GetType(Path.GetFileNameWithoutExtension(fileName));
             return Activator.CreateInstance(type) as IConfigurationRunner;
         }
+		private static IConfigurationRunner GetConfigurationInstanceFromStream(string name, Stream stream, GenerationOptions generationOptions)
+		{
+			ReaderInput readerInput = new ReaderInput(name, new StreamReader(stream));
+			BooCompiler compiler = new BooCompiler();
+			compiler.Parameters.Ducky = true;
+			if (generationOptions == GenerationOptions.Memory)
+				compiler.Parameters.Pipeline = new CompileToMemory();
+			else
+				compiler.Parameters.Pipeline = new CompileToFile();
+			
+			compiler.Parameters.Pipeline.Insert(1, new BinsorCompilerStep());
+			compiler.Parameters.Pipeline.Replace(
+				typeof(ProcessMethodBodiesWithDuckTyping),
+				new TransformUnknownReferences());
+			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
+				new RegisterComponentAndFacilitiesAfterCreation());
+			compiler.Parameters.OutputType = CompilerOutputType.Library;
+			compiler.Parameters.Input.Add(readerInput);
+			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
+			CompilerContext run = compiler.Run();
+			if (run.Errors.Count != 0)
+			{
+				throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
+			}
+			Type type = run.GeneratedAssembly.GetType(name);
+			return Activator.CreateInstance(type) as IConfigurationRunner;
+		}
 
         public enum GenerationOptions
         {

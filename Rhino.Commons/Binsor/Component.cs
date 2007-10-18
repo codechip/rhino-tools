@@ -75,7 +75,7 @@ namespace Rhino.Commons.Binsor
 			CreateConfiguration(configuration);
 		}
 
-		public Component(string name, Type service, Type impl, IDictionary configuration, LifestyleType lifestyleType)
+		public Component(string name, Type service, Type impl, LifestyleType lifestyleType, IDictionary configuration)
 			: this(name, service, impl, configuration)
 		{
 			_lifestyle = lifestyleType;
