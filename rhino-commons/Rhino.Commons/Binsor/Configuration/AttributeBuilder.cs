@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,31 +27,29 @@
 #endregion
 
 
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
-
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Configuration
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	using Castle.Core.Configuration;
+
+	public class AttributeBuilder : IConfigurationBuilder
 	{
-		public override void Run()
+		private readonly string _name;
+
+		public AttributeBuilder(string name)
 		{
-			foreach (Module module in CompileUnit.Modules)
-			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
-			}
+			_name = name;
+		}
+
+		public void Build(IConfiguration parent, object configValue)
+		{
+			ConfigurationHelper.SetConfigurationValue(parent, _name, configValue, null, true);
+		}
+	}
+
+	public sealed class attrib : AttributeBuilder
+	{
+		public attrib(string name) : base(name)
+		{
 		}
 	}
 }

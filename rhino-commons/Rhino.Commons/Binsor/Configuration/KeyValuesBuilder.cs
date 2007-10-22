@@ -1,4 +1,5 @@
-﻿#region license
+#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,34 +25,50 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
-
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
-
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Configuration
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	using System.Collections;
+	using Castle.Core.Configuration;
+
+	public class KeyValuesBuilder : KeyMapBuilder
 	{
-		public override void Run()
+		private string _value = "value";
+
+		public KeyValuesBuilder()
 		{
-			foreach (Module module in CompileUnit.Modules)
-			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
-			}
+		}
+
+		public KeyValuesBuilder(string name)
+			: base(name)
+		{
+		}
+
+		public string value
+		{
+			get { return _value; }
+			set { _value = value; }
+		}
+
+		protected override void Build(IConfiguration parent, DictionaryEntry entry)
+		{
+			IConfiguration child = ConfigurationHelper.CreateChild(parent, item, null);
+			child.Attributes[key] = entry.Key.ToString();
+			ConfigurationHelper.SetConfigurationValue(child, _value, entry.Value, null, true);
+		}
+	}
+
+	public sealed class keyvalues : KeyValuesBuilder
+	{
+		public keyvalues()
+		{
+		}
+
+		public keyvalues(string name)
+			: base(name)
+		{
 		}
 	}
 }

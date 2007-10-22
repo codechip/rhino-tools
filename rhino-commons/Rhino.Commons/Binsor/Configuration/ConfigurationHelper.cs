@@ -31,14 +31,14 @@ using System;
 using System.Collections;
 using Castle.Core.Configuration;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Configuration
 {
 	public static class ConfigurationHelper
 	{
 		public static IConfiguration CreateConfiguration(IConfiguration parent, string name,
 														 IDictionary dictionary)
 		{
-			return CreateConfiguration(parent, name, dictionary, null);
+			return CreateConfiguration(parent, name, dictionary, "value");
 		}
 
 		public static IConfiguration CreateConfiguration(IConfiguration parent, string name,
@@ -46,7 +46,7 @@ namespace Rhino.Commons.Binsor
 		{
 			string value = null;
 
-			if (!string.IsNullOrEmpty(valueKey))
+			if (dictionary != null && !string.IsNullOrEmpty(valueKey))
 			{
 				object valueItem = dictionary[valueKey];
 				if (valueItem != null)
@@ -56,7 +56,10 @@ namespace Rhino.Commons.Binsor
 				}
 			}
 
-			IConfiguration config = CreateChild(parent, name, value);
+			if (!string.IsNullOrEmpty(name))
+			{
+				parent = CreateChild(parent, name, value);
+			}
 
 			if (dictionary != null)
 			{
@@ -65,18 +68,18 @@ namespace Rhino.Commons.Binsor
 					IConfigurationBuilder builder = entry.Key as IConfigurationBuilder;
 					if (builder != null)
 					{
-						builder.Build(config, entry.Value);	
+						builder.Build(parent, entry.Value);	
 					}
 					else
 					{
 						bool useAttribute;
 						string key = ExtractKey(entry.Key, out useAttribute);
-						SetConfigurationValue(config, key, entry.Value, valueKey, useAttribute);
+						SetConfigurationValue(parent, key, entry.Value, valueKey, useAttribute);
 					}
 				}
 			}
 
-			return config;
+			return parent;
 		}
 
 		public static void SetConfigurationValue(IConfiguration config, string name,
@@ -176,7 +179,7 @@ namespace Rhino.Commons.Binsor
 			return false;
 		}
 
-		internal static IConfiguration CreateChild(IConfiguration parent, string name, string value)
+		public static IConfiguration CreateChild(IConfiguration parent, string name, string value)
 		{
 			IConfiguration config = new MutableConfiguration(name, value);
 
@@ -188,7 +191,7 @@ namespace Rhino.Commons.Binsor
 			return config;
 		}
 
-		internal static string ExtractKey(object key, out bool isAttribute)
+		public static string ExtractKey(object key, out bool isAttribute)
 		{
 			isAttribute = false;
 			string keyName = key.ToString();
@@ -207,175 +210,4 @@ namespace Rhino.Commons.Binsor
 			return keyName;
 		}
 	}
-
-	public interface IConfigurationFormatter
-	{
-		void Format(IConfiguration parent, string name, bool useAttribute);
-	}
-
-	public interface IConfigurationBuilder
-	{
-		void Build(IConfiguration parent, object value);
-	}
-
-	#region child builder
-
-	public class child : IConfigurationBuilder
-	{
-		private readonly string _name;
-		private string _value = "value";
-
-		public child(string name)
-		{
-			_name = name;
-		}
-
-		public string value
-		{
-			get { return _value; }
-			set { _value = value; }
-		}
-
-		public void Build(IConfiguration parent, object value)
-		{
-			ConfigurationHelper.SetConfigurationValue(parent, _name, value, _value, false);
-		}
-	}
-
-	#endregion
-
-	#region list builder
-
-	public class list : IConfigurationBuilder
-	{
-		private readonly string _name;
-		private string _item = "item";
-		private string _value = "value";
-
-		public list()
-		{	
-		}
-
-		public list(string name)
-		{
-			_name = name;
-		}
-
-		public string item
-		{
-			get { return _item; }
-			set { _item = value; }
-		}
-
-		public string value
-		{
-			get { return _value; }
-			set { _value = value; }
-		}
-
-		public void Build(IConfiguration parent, object value)
-		{
-			ICollection list = (ICollection) value;
-
-			if (!string.IsNullOrEmpty(_name))
-			{
-				IConfiguration config = ConfigurationHelper.CreateChild(parent, _name, null);
-				parent = config;
-			}
-
-			foreach (object child in list)
-			{
-				ConfigurationHelper.SetConfigurationValue(parent, _item, child, _value, false);
-			}				
-		}
-	}
-
-	#endregion
-
-	#region keymap builder
-
-	public class keymap : IConfigurationBuilder
-	{
-		private readonly string _name;
-		private string _key = "key";
-		private string _item = "item";
-
-		public keymap()
-		{	
-		}
-
-		public keymap(string name)
-		{
-			_name = name;
-		}
-
-		public string key
-		{
-			get { return _key; }
-			set { _key = value; }
-		}
-
-		public string item
-		{
-			get { return _item; }
-			set { _item = value; }
-		}
-
-		public void Build(IConfiguration parent, object value)
-		{
-			IDictionary map = (IDictionary) value;
-
-			if (!string.IsNullOrEmpty(_name))
-			{
-				IConfiguration config = ConfigurationHelper.CreateChild(parent, _name, null);
-				parent = config;
-			}
-
-			foreach (DictionaryEntry entry in map)
-			{
-				Build(parent, entry);			
-			}
-		}
-
-		protected virtual void Build(IConfiguration parent, DictionaryEntry entry)
-		{
-			string keyName = entry.Key.ToString();
-			ConfigurationHelper.SetConfigurationValue(parent, _item, entry.Value, null, false);
-			IConfiguration child = parent.Children[parent.Children.Count - 1];
-			child.Attributes[_key] = keyName;
-		}
-	}
-
-	#endregion
-
-	#region keyvalues builder
-
-	public class keyvalues : keymap
-	{
-		private string _value = "value";
-
-		public keyvalues()
-		{	
-		}
-
-		public keyvalues(string name)
-			: base(name)
-		{	
-		}
-
-		public string value
-		{
-			get { return _value; }
-			set { _value = value; }
-		}
-
-		protected override void Build(IConfiguration parent, DictionaryEntry entry)
-		{
-			IConfiguration child = ConfigurationHelper.CreateChild(parent, item, null);
-			child.Attributes[key] = entry.Key.ToString();
-			ConfigurationHelper.SetConfigurationValue(child, _value, entry.Value, null, true);
-		}
-	}
-
-	#endregion
 }

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,31 +27,54 @@
 #endregion
 
 
+using System;
 using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
-
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Macros
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	[CLSCompliant(false)]
+	public class BaseNamedBinsorMacro<T> : AbstractBinsorMacro
 	{
-		public override void Run()
+		protected MethodInvocationExpression create;
+
+		public override Statement Expand(MacroStatement macro)
 		{
-			foreach (Module module in CompileUnit.Modules)
+			Expression name;
+			if (!EnsureName(macro, out name))
+				return null;
+
+			create = new MethodInvocationExpression(
+				AstUtil.CreateReferenceExpression(typeof(T).FullName)
+				);
+			create.Arguments.Add(name);
+
+			if (!ConfigureMacro(macro))
+				return null;
+
+			return new ExpressionStatement(create);
+		}
+
+		protected virtual bool ProcessStatements(MacroStatement macro)
+		{
+			return true;
+		}
+
+		private bool ConfigureMacro(MacroStatement macro)
+		{
+			if (MoveConstructorArguments(create, macro))
 			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
+				ProcessExtensions(macro);
+				return ProcessStatements(macro);
 			}
+
+			return false;
+		}
+
+		private void ProcessExtensions(MacroStatement macro)
+		{
+			ApplyExtensions(macro, delegate(Expression extension)
+			                {
+								create.Arguments.Add(extension);
+			                });
 		}
 	}
 }

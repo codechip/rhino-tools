@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,31 +27,49 @@
 #endregion
 
 
+using System;
 using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Macros
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	[CLSCompliant(false)]
+	public class ConfigurationMacro : AbstractBinsorMacro
 	{
-		public override void Run()
+		public override Statement Expand(MacroStatement macro)
 		{
-			foreach (Module module in CompileUnit.Modules)
+			MacroStatement parent = macro.ParentNode.ParentNode as MacroStatement;
+
+			if (parent == null ||
+				(!parent.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)) &&
+				(!parent.Name.Equals("facility", StringComparison.InvariantCultureIgnoreCase)))
 			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
+				AddCompilerError(macro.LexicalInfo, 
+					"A configuration statement can appear only under a component or facility element");
+				return null;
 			}
+
+			if (macro.Block != null)
+			{
+				HashConfigurationBuilder builder = new HashConfigurationBuilder();
+
+				if (builder.Build(macro.Block, Errors))
+				{
+					Expression extension = CreateExtension(builder.HashConfiguration);
+					RegisterExtension(parent, extension);
+				}
+			}
+
+			return new ReturnStatement();
+		}
+
+		private static MethodInvocationExpression CreateExtension(
+			HashLiteralExpression configuration)
+		{
+			MethodInvocationExpression extenstion = new MethodInvocationExpression(
+				AstUtil.CreateReferenceExpression(typeof(ConfigurationExtension).FullName)
+				);
+			extenstion.Arguments.Add(configuration);
+			return extenstion;
 		}
 	}
 }
