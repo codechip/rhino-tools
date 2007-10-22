@@ -129,5 +129,5 @@ component email_sender3, ISender, EmailSender:
 component email_sender_factory, EmailSenderFactory
 	
 component email_sender4, ISender, EmailSender:
-	startable
-	factorySupport @email_sender_factory.Create()
+	start
+	createUsing @email_sender_factory.Create

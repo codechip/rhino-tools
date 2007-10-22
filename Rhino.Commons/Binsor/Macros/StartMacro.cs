@@ -35,7 +35,7 @@ using Boo.Lang.Compiler.Ast;
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class StartableMacro : AbstractBinsorMacro
+	public class StartMacro : AbstractBinsorMacro
 	{
 		public override Statement Expand(MacroStatement macro)
 		{
@@ -45,11 +45,11 @@ namespace Rhino.Commons.Binsor.Macros
 				(!component.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)))
 			{
 				AddCompilerError(macro.LexicalInfo,
-								 "A startable statement can appear only under a component");
+								 "A start statement can appear only under a component");
 				return null;
 			}
 
-			if (!EnsureNoStatements(macro, "startable"))
+			if (!EnsureNoStatements(macro, "start"))
 			{
 				return null;
 			}

@@ -36,7 +36,7 @@ using Boo.Lang.Compiler.Ast;
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class FactorySupportMacro : AbstractBinsorMacro
+	public class CreateUsingMacro : AbstractBinsorMacro
 	{
 		public override Statement Expand(MacroStatement macro)
 		{
@@ -46,11 +46,11 @@ namespace Rhino.Commons.Binsor.Macros
 				(!component.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)))
 			{
 				AddCompilerError(macro.LexicalInfo,
-								 "A factorySupport statement can appear only under a component");
+								 "A createUsing statement can appear only under a component");
 				return null;
 			}
 
-			if (!EnsureNoStatements(macro, "factorySupport"))
+			if (!EnsureNoStatements(macro, "createUsing"))
 			{
 				return null;
 			}
@@ -80,7 +80,7 @@ namespace Rhino.Commons.Binsor.Macros
 			if (macro.Arguments.Count != 1)
 			{
 				_compileErrors.Add(CompilerErrorFactory.CustomError(macro.LexicalInfo,
-					"A factorySupport statement must be in the form @factory.<CreateMethod>[()]"));
+					"A createUsing statement must be in the form @factory.<CreateMethod>[()]"));
 				return false;
 			}
 
