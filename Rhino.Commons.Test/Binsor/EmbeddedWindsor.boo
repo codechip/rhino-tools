@@ -26,10 +26,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-import Rhino.Commons
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
+
 # Facility constructors
 
 Facility("loggerFacility", LoggingFacility, 

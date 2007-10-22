@@ -65,4 +65,12 @@ namespace Rhino.Commons.Test.Binsor
 			
 		}
 	}
+
+	public class EmailSenderFactory
+	{
+		public ISender Create()
+		{
+			return new EmailSender();
+		}
+	}
 }

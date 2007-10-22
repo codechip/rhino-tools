@@ -37,3 +37,47 @@ Component( "costCalculator.default2", ICostCalculator, DefaultCostCalculator,
 		calculators: {
 			array: (calcGst2, calcShipping2, calcTotal2) }
 	  } } )
+	  
+# Using Binsor Macros
+
+# Using Dependencies
+
+component calc_gst, AbstractCalculator, GstCalculator:
+	gstRate = decimal(1.20)
+ 
+component calc_shipping, AbstractCalculator, ShippingCalculator:
+	shippingCost = decimal(0.0)
+	fragileShippingPremium = decimal(0.0)
+   
+component calc_total, AbstractCalculator, TotalCalculator
+ 
+component cost_calculator_default, ICostCalculator, DefaultCostCalculator:
+	calculators = ( @calc_gst, @calc_shipping, @calc_total )
+
+# Using Parameters Only
+
+component calc_gst2, AbstractCalculator, GstCalculator:
+	configuration:
+		parameters:
+			gsRate = 1.20
+		end
+	end
+ 
+component calc_shipping2, AbstractCalculator, ShippingCalculator:
+	configuration:
+		parameters:
+			shippingCost = 0.0
+			fragileShippingPremium = 0.0
+		end
+	end
+   
+component calc_total2, AbstractCalculator, TotalCalculator
+ 
+component cost_calculator_default2, ICostCalculator, DefaultCostCalculator:
+	configuration:
+		parameters:
+			calculators:
+				array = ( @calc_gst2, @calc_shipping2, @calc_total2 )
+			end
+		end
+	end

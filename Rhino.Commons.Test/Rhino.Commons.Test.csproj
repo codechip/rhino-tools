@@ -134,6 +134,7 @@
     <None Include="app.config" />
     <None Include="Binsor\Calculator.boo" />
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo" />
+    <None Include="Binsor\Windsor2.boo" />
     <None Include="Binsor\disposable.boo" />
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
@@ -168,6 +169,7 @@
     <Compile Include="Binsor\BinsorStreamTestCase.cs" />
     <Compile Include="Binsor\Calculator.cs" />
     <Compile Include="Binsor\CalculatorTestCase.cs" />
+    <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Boo\AutoReferenceFilesCompilerStepFixure.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
