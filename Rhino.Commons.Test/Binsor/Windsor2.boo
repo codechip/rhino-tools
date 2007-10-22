@@ -33,14 +33,15 @@ import Castle.Facilities.Logging
 import Castle.Facilities.ActiveRecordIntegration
 import Castle.Facilities.FactorySupport from Castle.MicroKernel
 import Castle.Facilities.Startable from Castle.MicroKernel
+import Castle.Facilities.EventWiring from Castle.MicroKernel
 
 import file from "disposable.boo"
 
 # Facility constructors
 
 facility startable_facility, StartableFacility
-
 facility factory_facility, FactorySupportFacility
+facility eventwiring_facility, EventWiringFacility
 
 facility logger_facility, LoggingFacility: 
 	loggingApi = LoggerImplementation.Log4net
@@ -127,7 +128,11 @@ component email_sender3, ISender, EmailSender:
 	size = 10
 	
 component email_sender_factory, EmailSenderFactory
-	
+
+component email_listener, EmailListener
+
 component email_sender4, ISender, EmailSender:
 	start
 	createUsing @email_sender_factory.Create
+	wireEvent Sent:
+		to @email_listener.OnSent
