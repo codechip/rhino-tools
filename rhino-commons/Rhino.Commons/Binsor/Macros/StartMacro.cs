@@ -30,40 +30,14 @@
 
 
 using System;
-using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class StartMacro : AbstractBinsorMacro
+	public class StartMacro : BaseBinsorExtensionMacro<StartableExtension>
 	{
-		public override Statement Expand(MacroStatement macro)
+		public StartMacro() : base("start", true, "component")
 		{
-			MacroStatement component = macro.ParentNode.ParentNode as MacroStatement;
-
-			if (component == null ||
-				(!component.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)))
-			{
-				AddCompilerError(macro.LexicalInfo,
-								 "A start statement can appear only under a component");
-				return null;
-			}
-
-			if (!EnsureNoStatements(macro, "start"))
-			{
-				return null;
-			}
-
-			RegisterExtension(component, CreateStartableExtension());
-
-			return null;
-		}
-
-		private static MethodInvocationExpression CreateStartableExtension()
-		{
-			return new MethodInvocationExpression(
-				AstUtil.CreateReferenceExpression(typeof(StartableExtension).FullName)
-				);
 		}
 	}
 }

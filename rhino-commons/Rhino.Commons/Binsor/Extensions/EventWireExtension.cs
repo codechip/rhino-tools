@@ -28,52 +28,54 @@
 
 #endregion
 
+using System.Collections;
+	using Castle.Core.Configuration;
 
-using System;
-using Boo.Lang.Compiler;
-using Boo.Lang.Compiler.Ast;
-
-namespace Rhino.Commons.Binsor.Macros
+namespace Rhino.Commons.Binsor
 {
-	[CLSCompliant(false)]
-	public class CreateUsingMacro : BaseBinsorExtensionMacro<FactorySupportExtension>
+	public class EventWireExtension : IComponentExtension
 	{
-		public CreateUsingMacro() : base("createUsing", true, "component")
-		{	
+		private readonly string _eventName;
+		private readonly IDictionary _listeners;
+
+		public EventWireExtension(string eventName, IDictionary listeners)
+		{
+			_eventName = eventName;
+			_listeners = listeners;
 		}
 
-		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
-												MacroStatement macro, MacroStatement parent,
-												ref Statement expansion)
+		void IComponentExtension.Apply(Component component)
 		{
-			CreateUsingVisitor visitor = new CreateUsingVisitor();
-			return visitor.InitializeExtension(extension, macro, Errors);
+			AddSubscribers(component);
 		}
-	}
 
-	internal class CreateUsingVisitor : ComponentMethodVisitor
-	{
-		private MethodInvocationExpression _extension;
-		private CompilerErrorCollection _compileErrors;
-
-		public bool InitializeExtension(MethodInvocationExpression extension,
-		                                MacroStatement macro,
-		                                CompilerErrorCollection compileErrors)
+		private void AddSubscribers(Component component)
 		{
-			_extension = extension;
-			_compileErrors = compileErrors;
+			IConfiguration subscribers = ObtainSubscribers(component);
 
-			if (macro.Arguments.Count != 1 || !ExtractMethod(macro.Arguments[0]))
+			foreach (DictionaryEntry listener in _listeners)
 			{
-				_compileErrors.Add(CompilerErrorFactory.CustomError(macro.LexicalInfo,
-					"A createUsing statement must be in the form @factory.<CreateMethod>[()]"));
-				return false;
+				IConfiguration subscriber = new MutableConfiguration("subscriber");
+				ComponentReference componentId = (ComponentReference) listener.Key;
+				subscriber.Attributes["event"] = _eventName;
+				subscriber.Attributes["id"] = componentId.Name;
+				subscriber.Attributes["handler"] = listener.Value.ToString();
+				subscribers.Children.Add(subscriber);
+			}
+		}
+
+		private static IConfiguration ObtainSubscribers(Component component)
+		{
+			IConfiguration config = component.Configuration;
+			IConfiguration subscribers = config.Children["subscribers"];
+			
+			if (subscribers == null)
+			{
+				subscribers = new MutableConfiguration("subscribers");
+				config.Children.Add(subscribers);
 			}
 
-			_extension.Arguments.Add(Component);
-			_extension.Arguments.Add(Method);
-
-			return true;
+			return subscribers;
 		}
 	}
 }

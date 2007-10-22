@@ -152,12 +152,15 @@
     <Compile Include="Binsor\Configuration\KeyMapBuilder.cs" />
     <Compile Include="Binsor\Configuration\KeyValuesBuilder.cs" />
     <Compile Include="Binsor\Configuration\ListBuilder.cs" />
+    <Compile Include="Binsor\Extensions\EventWireExtension.cs" />
     <Compile Include="Binsor\Extensions\FactorySupportExtension.cs" />
     <Compile Include="Binsor\Facility.cs" />
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
     <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
+    <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
     <Compile Include="Binsor\Macros\BaseNamedBinsorMacro.cs" />
     <Compile Include="Binsor\Macros\ComponentMacro.cs" />
+    <Compile Include="Binsor\Macros\ComponentMethodVisitor.cs" />
     <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
     <Compile Include="Binsor\Extensions\LifestyleExtension.cs" />
     <Compile Include="Binsor\Macros\ConfigurationNodeVisitor.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="Binsor\Macros\HashConfigurationBuilder.cs" />
     <Compile Include="Binsor\Macros\LifestyleMacro.cs" />
     <Compile Include="Binsor\Macros\MacroHelper.cs" />
+    <Compile Include="Binsor\Macros\WireEventMacro.cs" />
     <Compile Include="Binsor\RegisterComponentAndFacilitiesAfterCreation.cs" />
     <Compile Include="Boo\AutoReferenceFilesCompilerStep.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />

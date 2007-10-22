@@ -27,6 +27,8 @@
 #endregion
 
 
+using System;
+
 namespace Rhino.Commons.Test.Binsor
 {
 	public interface ISender
@@ -36,11 +38,28 @@ namespace Rhino.Commons.Test.Binsor
 		void Send(string msg);
 	}
 	
+	public class SentEventArgs : EventArgs
+	{
+		private readonly string msg;
+	
+		public SentEventArgs(string msg)
+		{
+			this.msg = msg;
+		}
+
+		public string Message
+		{
+			get { return msg; }
+		}
+	}
+
 	public class EmailSender : ISender
 	{
 		private string host;
 		private string[] to;
 		private ISender[] backups;
+
+		public event EventHandler<SentEventArgs> Sent;
 
 		public string Host
 		{
@@ -62,7 +81,10 @@ namespace Rhino.Commons.Test.Binsor
 
 		public void Send(string msg)
 		{
-			
+			if (Sent != null)
+			{
+				Sent(this, new SentEventArgs(msg));
+			}
 		}
 	}
 
@@ -71,6 +93,26 @@ namespace Rhino.Commons.Test.Binsor
 		public ISender Create()
 		{
 			return new EmailSender();
+		}
+	}
+
+	public class EmailListener
+	{
+		private string msg;
+
+		public string Message
+		{
+			get { return msg; }
+		}
+		
+		public void ClearMessage()
+		{
+			msg = null;
+		}
+
+		public void OnSent(object sender, SentEventArgs args)
+		{
+			msg = args.Message;
 		}
 	}
 }

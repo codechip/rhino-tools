@@ -33,43 +33,29 @@ using Boo.Lang.Compiler.Ast;
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class ConfigurationMacro : AbstractBinsorMacro
+	public class ConfigurationMacro : BaseBinsorExtensionMacro<ConfigurationExtension>
 	{
-		public override Statement Expand(MacroStatement macro)
+		public ConfigurationMacro() : base("configuation", false, "component", "facility")
+		{	
+		}
+
+		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
+		                                        MacroStatement macro, MacroStatement parent,
+		                                        ref Statement expansion)
 		{
-			MacroStatement parent = macro.ParentNode.ParentNode as MacroStatement;
-
-			if (parent == null ||
-				(!parent.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)) &&
-				(!parent.Name.Equals("facility", StringComparison.InvariantCultureIgnoreCase)))
-			{
-				AddCompilerError(macro.LexicalInfo, 
-					"A configuration statement can appear only under a component or facility element");
-				return null;
-			}
-
 			if (macro.Block != null)
 			{
 				HashConfigurationBuilder builder = new HashConfigurationBuilder();
 
 				if (builder.Build(macro.Block, Errors))
 				{
-					Expression extension = CreateExtension(builder.HashConfiguration);
-					RegisterExtension(parent, extension);
+					extension.Arguments.Add(builder.HashConfiguration);
+					expansion = new ReturnStatement();
+					return true;
 				}
 			}
 
-			return new ReturnStatement();
-		}
-
-		private static MethodInvocationExpression CreateExtension(
-			HashLiteralExpression configuration)
-		{
-			MethodInvocationExpression extenstion = new MethodInvocationExpression(
-				AstUtil.CreateReferenceExpression(typeof(ConfigurationExtension).FullName)
-				);
-			extenstion.Arguments.Add(configuration);
-			return extenstion;
+			return false;
 		}
 	}
 }

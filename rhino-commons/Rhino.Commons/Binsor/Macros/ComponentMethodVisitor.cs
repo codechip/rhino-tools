@@ -28,52 +28,60 @@
 
 #endregion
 
-
 using System;
-using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
+
 	[CLSCompliant(false)]
-	public class CreateUsingMacro : BaseBinsorExtensionMacro<FactorySupportExtension>
+	public class ComponentMethodVisitor : DepthFirstVisitor
 	{
-		public CreateUsingMacro() : base("createUsing", true, "component")
-		{	
+		private bool _found;
+		private ReferenceExpression _component;
+		private StringLiteralExpression _method;
+
+		public ReferenceExpression Component
+		{
+			get { return _component; }
 		}
 
-		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
-												MacroStatement macro, MacroStatement parent,
-												ref Statement expansion)
+		public StringLiteralExpression Method
 		{
-			CreateUsingVisitor visitor = new CreateUsingVisitor();
-			return visitor.InitializeExtension(extension, macro, Errors);
+			get { return _method; }
 		}
-	}
 
-	internal class CreateUsingVisitor : ComponentMethodVisitor
-	{
-		private MethodInvocationExpression _extension;
-		private CompilerErrorCollection _compileErrors;
-
-		public bool InitializeExtension(MethodInvocationExpression extension,
-		                                MacroStatement macro,
-		                                CompilerErrorCollection compileErrors)
+		public bool ExtractMethod(Expression expression)
 		{
-			_extension = extension;
-			_compileErrors = compileErrors;
+			_found = false;
+			Visit(expression);
+			return _found;
+		}
 
-			if (macro.Arguments.Count != 1 || !ExtractMethod(macro.Arguments[0]))
+		public override void OnMemberReferenceExpression(MemberReferenceExpression node)
+		{
+			if (node.Target is ReferenceExpression)
 			{
-				_compileErrors.Add(CompilerErrorFactory.CustomError(macro.LexicalInfo,
-					"A createUsing statement must be in the form @factory.<CreateMethod>[()]"));
-				return false;
+				_component = (ReferenceExpression) node.Target;
+			}
+			else if (node.Target is StringLiteralExpression)
+			{
+				StringLiteralExpression name = (StringLiteralExpression) node.Target;
+				_component = new ReferenceExpression(name.Value);
+			}
+			else
+			{
+				return;
 			}
 
-			_extension.Arguments.Add(Component);
-			_extension.Arguments.Add(Method);
+			_method = new StringLiteralExpression(node.Name);
 
-			return true;
+			_found = _component.Name.StartsWith("@");
+		}
+
+		public override void OnMethodInvocationExpression(MethodInvocationExpression node)
+		{
+			Visit(node.Target);
 		}
 	}
 }

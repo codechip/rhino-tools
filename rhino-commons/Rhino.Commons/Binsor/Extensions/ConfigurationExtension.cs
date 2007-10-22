@@ -28,6 +28,7 @@
 
 
 using System.Collections;
+using Castle.Core.Configuration;
 using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor
@@ -43,12 +44,17 @@ namespace Rhino.Commons.Binsor
 
 		void IComponentExtension.Apply(Component component)
 		{
-			ConfigurationHelper.CreateConfiguration(component.Configuration, null, _configuration);
+			ApplyConfiguration(component.Configuration);
 		}
 
 		void IFacilityExtension.Apply(Facility facility)
 		{
-			ConfigurationHelper.CreateConfiguration(facility.Configuration, null, _configuration);
+			ApplyConfiguration(facility.Configuration);
+		}
+
+		private void ApplyConfiguration(IConfiguration parent)
+		{
+			ConfigurationHelper.CreateConfiguration(parent, null, _configuration);			
 		}
 	}
 }

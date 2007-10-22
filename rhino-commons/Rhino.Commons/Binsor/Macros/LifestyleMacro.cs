@@ -1,4 +1,5 @@
 #region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,94 +25,87 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
-
-
-using System;
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.TypeSystem;
-using Castle.MicroKernel;
 
 namespace Rhino.Commons.Binsor.Macros
 {
+	using System;
+	using Castle.MicroKernel;
+	using global::Boo.Lang.Compiler.Ast;
+	using global::Boo.Lang.Compiler.TypeSystem;
+
 	[CLSCompliant(false)]
-	public class LifestyleMacro : AbstractBinsorMacro
+	public class LifestyleMacro : BaseBinsorExtensionMacro<LifestyleExtension>
 	{
-		public override Statement Expand(MacroStatement macro)
+		public LifestyleMacro() : base("lifestyle", true, "component")
 		{
-			MacroStatement component = macro.ParentNode.ParentNode as MacroStatement;
+		}
 
-			if (component == null ||
-				(!component.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)))
-			{
-				AddCompilerError(macro.LexicalInfo,
-					"A lifestyle statement can appear only under a component");
-				return null;
-			}
-
-			if (!EnsureNoStatements(macro, "lifestyle"))
-			{
-				return null;
-			}
-
+		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
+		                                        MacroStatement macro, MacroStatement parent,
+		                                        ref Statement expansion)
+		{
 			if (macro.Arguments.Count < 1)
 			{
-				return AddMissingLifestyleTypeError(macro);
+				AddMissingLifestyleTypeError(macro);
+				return false;
 			}
 
 			ReferenceExpression lifestyle = macro.Arguments[0] as ReferenceExpression;
 			if (lifestyle == null)
 			{
-				return AddMissingLifestyleTypeError(macro);
+				AddMissingLifestyleTypeError(macro);
+				return false;
 			}
 
 			IEntity entity = NameResolutionService.Resolve(lifestyle.Name);
 			if (entity == null || entity.EntityType != EntityType.Type)
 			{
-				return AddMissingLifestyleTypeError(macro);
-			}
-			Type lifestyleType = ((ExternalType)entity).ActualType;
-
-			MethodInvocationExpression extension =
-				CreateLifestyleExtension(lifestyle, lifestyleType);
-
-			if (extension != null && MacroArgumentsToCreateNamedArguments(extension, macro))
-			{
-				RegisterExtension(component, extension);
+				AddMissingLifestyleTypeError(macro);
+				return false;
 			}
 
+			Type lifestyleType = ((ExternalType) entity).ActualType;
+
+			return (InitializeLifestyleExtension(ref extension, lifestyle, lifestyleType) &&
+			        MacroArgumentsToCreateNamedArguments(extension, macro));
+		}
+
+		protected override MethodInvocationExpression CreateExtension()
+		{
 			return null;
 		}
 
-		private MethodInvocationExpression CreateLifestyleExtension(
-			ReferenceExpression lifestyle, Type lifestyleType)
+		private bool InitializeLifestyleExtension(ref MethodInvocationExpression extension,
+		                                          ReferenceExpression lifestyle, Type lifestyleType)
 		{
 			if (typeof(LifestyleExtension).IsAssignableFrom(lifestyleType))
 			{
-				return new MethodInvocationExpression(lifestyle);
+				extension = new MethodInvocationExpression(lifestyle);
 			}
-			else 
+			else
 			{
 				if (!typeof(ILifestyleManager).IsAssignableFrom(lifestyleType))
 				{
 					AddCompilerError(lifestyle.LexicalInfo,
-						"A custom lifestyle statement must specify a type that implements " +
-						typeof(ILifestyleManager).FullName);
-					return null;
+					                 "A custom lifestyle statement must specify a type that implements " +
+					                 typeof(ILifestyleManager).FullName);
+					return false;
 				}
 
-				MethodInvocationExpression custom = new MethodInvocationExpression(
+				extension = new MethodInvocationExpression(
 					AstUtil.CreateReferenceExpression(typeof(Custom).FullName)
 					);
-				custom.Arguments.Add(AstUtil.CreateReferenceExpression(lifestyleType.FullName));
-				return custom;
-			}			
+				extension.Arguments.Add(AstUtil.CreateReferenceExpression(lifestyleType.FullName));
+			}
+
+			return true;
 		}
 
-		private Statement AddMissingLifestyleTypeError(MacroStatement macro)
+		private void AddMissingLifestyleTypeError(MacroStatement macro)
 		{
 			AddCompilerError(macro.LexicalInfo, "A lifestyle statement must specify a valid lifestyle");
-			return null;
 		}
 	}
 }

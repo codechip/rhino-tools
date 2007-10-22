@@ -250,6 +250,20 @@ namespace Rhino.Commons.Test.Binsor
 			}
 		}
 
+		[Test]
+		public void CanDefineConfigurationsForEventWiringFacility()
+		{
+			EmailListener listener = _container.Resolve<EmailListener>();
+			Assert.IsNotNull(listener);
+			Assert.IsNull(listener.Message);
+
+			ISender sender = _container.Resolve<ISender>("email_sender4");
+			Assert.IsNotNull(sender);
+
+			sender.Send("Events are alive!");
+			Assert.AreEqual("Events are alive!", listener.Message);
+		}
+
 		private static void AssertAttribute(IConfiguration parent, string name, string value)
 		{
 			string attribute = parent.Attributes[name];
