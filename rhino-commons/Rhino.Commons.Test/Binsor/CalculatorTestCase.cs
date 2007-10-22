@@ -83,5 +83,39 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual(110m, costCalculator.CalculateTotal(order1));
 			Assert.AreEqual(10m, costCalculator.CalculateTotal(order2));
 		}
+
+		[Test]
+		public void CanInjectArraysOfComponentsInConstructor2()
+		{
+			Order order1 = new Order();
+			order1.CountryCode = "NZ";
+			order1.Items.Add(new OrderItem("water", 10, 1.0m, false));
+			order1.Items.Add(new OrderItem("glass", 5, 20.0m, true));
+
+			Order order2 = new Order();
+			order2.CountryCode = "US";
+			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
+
+			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>("cost_calculator_default");
+			Assert.AreEqual(110m, costCalculator.CalculateTotal(order1));
+			Assert.AreEqual(10m, costCalculator.CalculateTotal(order2));
+		}
+
+		[Test]
+		public void CanInjectArraysOfComponentsInConstructorUsingParameters2()
+		{
+			Order order1 = new Order();
+			order1.CountryCode = "NZ";
+			order1.Items.Add(new OrderItem("water", 10, 1.0m, false));
+			order1.Items.Add(new OrderItem("glass", 5, 20.0m, true));
+
+			Order order2 = new Order();
+			order2.CountryCode = "US";
+			order2.Items.Add(new OrderItem("sand", 50, 0.2m, false));
+
+			ICostCalculator costCalculator = _container.Resolve<ICostCalculator>("cost_calculator_default2");
+			Assert.AreEqual(110m, costCalculator.CalculateTotal(order1));
+			Assert.AreEqual(10m, costCalculator.CalculateTotal(order2));
+		}
 	}
 }

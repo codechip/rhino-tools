@@ -26,12 +26,12 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-import file from "disposable.boo"
-
-import Rhino.Commons
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
+
+import file from "disposable.boo"
+
 # Facility constructors
 
 Facility("loggerFacility", LoggingFacility, 
@@ -89,4 +89,4 @@ Component("fubar2", Fubar,
 			age: 32 
 			}
 		} } 
-	) 
+	)

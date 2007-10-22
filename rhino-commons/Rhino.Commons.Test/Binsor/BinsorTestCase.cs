@@ -132,13 +132,13 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual("component", component.Name);
 			Assert.AreEqual("true", component.Attributes["startable"]);
 
-			IConfiguration parameters = AssertConfiguration(component, "parameters");
-			IConfiguration to = AssertConfiguration(parameters, "to");
+			IConfiguration parameters = AssertChild(component, "parameters");
+			IConfiguration to = AssertChild(parameters, "to");
 			Assert.AreEqual(2, to.Children.Count);
 			Assert.AreEqual("craig", to.Children[0].Value);
 			Assert.AreEqual("ayende", to.Children[1].Value);
 
-			IConfiguration backups = AssertConfiguration(parameters, "backups");
+			IConfiguration backups = AssertChild(parameters, "backups");
 			Assert.AreEqual(2, backups.Children.Count);
 			Assert.AreEqual("${email_sender}", backups.Children[0].Value);
 			Assert.AreEqual("${email_sender}", backups.Children[1].Value);
@@ -151,9 +151,9 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.IsNotNull(handler);
 
 			IConfiguration component = handler.ComponentModel.Configuration;
-			IConfiguration parameters = AssertConfiguration(component, "parameters");
-			IConfiguration fields = AssertConfiguration(parameters, "fields");
-			IConfiguration map = AssertConfiguration(fields, "fields");
+			IConfiguration parameters = AssertChild(component, "parameters");
+			IConfiguration fields = AssertChild(parameters, "fields");
+			IConfiguration map = AssertChild(fields, "fields");
 			Assert.AreEqual(2, map.Children.Count);
 			IConfiguration item1 = map.Children[0];
 			Assert.AreEqual("name", item1.Attributes["key"]);
@@ -170,8 +170,8 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.IsNotNull(handler);
 
 			IConfiguration component = handler.ComponentModel.Configuration;
-			IConfiguration parameters = AssertConfiguration(component, "parameters");
-			IConfiguration fields = AssertConfiguration(parameters, "fields");
+			IConfiguration parameters = AssertChild(component, "parameters");
+			IConfiguration fields = AssertChild(parameters, "fields");
 			Assert.AreEqual(2, fields.Children.Count);
 			IConfiguration item1 = fields.Children[0];
 			Assert.AreEqual("name", item1.Attributes["key"]);
@@ -181,7 +181,7 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual("32", item2.Attributes["value"]);
 		}
 
-		private static IConfiguration AssertConfiguration(IConfiguration parent, string name)
+		private static IConfiguration AssertChild(IConfiguration parent, string name)
 		{
 			IConfiguration config = parent.Children[name];
 			Assert.IsNotNull(config);
