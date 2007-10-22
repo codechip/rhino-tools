@@ -26,12 +26,12 @@ namespace Rhino.Commons.Binsor
             MethodInvocationExpression mie = (MethodInvocationExpression)expression;
             Expression newExpr = expression;
             string invokedMethod = GetInvokedMethodName_SafeForPropertyEvals(mie);
-            if (invokedMethod == "Component")
+            if (invokedMethod == "Component" || invokedMethod == typeof(Component).FullName)
             {
                 newExpr = CodeBuilder.CreateMethodInvocation(mie,
                                                              typeof(Component).GetMethod("Register"));
             }
-            else if (invokedMethod == "Facility")
+            else if (invokedMethod == "Facility" || invokedMethod == typeof(Facility).FullName)
             {
                 newExpr = CodeBuilder.CreateMethodInvocation(mie,
                                                              typeof(Facility).GetMethod("Register"));

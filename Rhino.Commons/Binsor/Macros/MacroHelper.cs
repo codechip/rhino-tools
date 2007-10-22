@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,31 +27,53 @@
 #endregion
 
 
+using System;
 using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Macros
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	[CLSCompliant(false)]
+	public static class MacroHelper
 	{
-		public override void Run()
+		public static string GetName(Expression expression)
 		{
-			foreach (Module module in CompileUnit.Modules)
+			if (expression is StringLiteralExpression)
+				return ((StringLiteralExpression)expression).Value;
+			return ((ReferenceExpression)expression).Name;
+		}
+
+		public static bool IsAssignment(Expression expression, out BinaryExpression assign)
+		{
+			assign = expression as BinaryExpression;
+			return (assign != null && assign.Operator == BinaryOperatorType.Assign);
+		}
+
+		public static bool IsNewBlock(MethodInvocationExpression method, out Block block)
+		{
+			block = null;
+
+			if (method.Arguments.Count > 0 &&
+					method.Arguments[method.Arguments.Count - 1] is BlockExpression)
 			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
+				block = ((BlockExpression)method.Arguments[method.Arguments.Count - 1]).Body;
 			}
+
+			return block != null;
+		}
+
+		public static bool IsBlockEnd(Statement statement)
+		{
+			if (statement is ExpressionStatement)
+			{
+				ExpressionStatement expression = (ExpressionStatement) statement;
+				MethodInvocationExpression end = expression.Expression as MethodInvocationExpression;
+				return (end != null) &&
+					   string.Equals("end", GetName(end.Target),
+									 StringComparison.InvariantCultureIgnoreCase) &&
+					   end.Arguments.Count == 0 && end.NamedArguments.Count == 0;
+			}
+
+			return false;
 		}
 	}
 }

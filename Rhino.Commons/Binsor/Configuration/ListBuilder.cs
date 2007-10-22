@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -27,31 +27,63 @@
 #endregion
 
 
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
+using System.Collections;
+using Castle.Core.Configuration;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Configuration
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	public class ListBuilder : IConfigurationBuilder
 	{
-		public override void Run()
+		private readonly string _name;
+		private string _item = "item";
+		private string _value = "value";
+
+		public ListBuilder()
 		{
-			foreach (Module module in CompileUnit.Modules)
+		}
+
+		public ListBuilder(string name)
+		{
+			_name = name;
+		}
+
+		public string item
+		{
+			get { return _item; }
+			set { _item = value; }
+		}
+
+		public string value
+		{
+			get { return _value; }
+			set { _value = value; }
+		}
+
+		public void Build(IConfiguration parent, object configValue)
+		{
+			ICollection list = (ICollection)configValue;
+
+			if (!string.IsNullOrEmpty(_name))
 			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
+				IConfiguration config = ConfigurationHelper.CreateChild(parent, _name, null);
+				parent = config;
 			}
+
+			foreach (object child in list)
+			{
+				ConfigurationHelper.SetConfigurationValue(parent, _item, child, _value, false);
+			}
+		}
+	}
+
+	public sealed class list : ListBuilder
+	{
+		public list()
+		{
+		}
+
+		public list(string name) : base(name)
+		{
 		}
 	}
 }

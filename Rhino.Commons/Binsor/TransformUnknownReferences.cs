@@ -36,7 +36,8 @@ using Boo.Lang.Compiler.TypeSystem;
 
 namespace Rhino.Commons.Binsor
 {
-    internal class TransformUnknownReferences : ProcessMethodBodiesWithDuckTyping
+
+	internal class TransformUnknownReferences : ProcessMethodBodiesWithDuckTyping
     {
         private readonly ConstructorInfo _componentReferenceConstructor =
             typeof (ComponentReference).GetConstructor(new Type[] {typeof (string)});
@@ -71,6 +72,13 @@ namespace Rhino.Commons.Binsor
                     return;
                 //}
             }
+			else if (node.ParentNode is ExpressionPair)
+			{
+				ExpressionPair pair = (ExpressionPair) node.ParentNode;
+				StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
+				pair.Replace(node, literal);
+				return;
+			}
             else if (
                 //search for the left side of a key in a hash literal expression
                 node.ParentNode is ExpressionPair 

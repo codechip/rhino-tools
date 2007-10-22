@@ -33,6 +33,7 @@ using Boo.Lang;
 using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel;
+using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor
 {
@@ -41,50 +42,56 @@ namespace Rhino.Commons.Binsor
 		private readonly string _name;
 		private readonly Type _service;
 		private readonly Type _impl;
-		private readonly IDictionary _attributes = new Hashtable();
-		private readonly IDictionary _dependencies = new Hashtable();
-		private readonly LifestyleType _lifestyle = LifestyleType.Singleton;
 		private IConfiguration _configuration;
 		private IConfiguration _parameters;
+		private readonly IComponentExtension[] _extensions;
+		private readonly IDictionary _attributes = new Hashtable();
+		private readonly IDictionary _dependencies = new Hashtable();
+		private readonly LifestyleType? _lifestyle;
 
         //important, we need to get this when we create the component, because we need
         //to support nested components
 	    private readonly IKernel kernel = IoC.Container.Kernel;
 
-	    public Component(string name, Type service) : this(name, service, service)
+		public Component(string name, Type service,
+		                 params IComponentExtension[] extensions)
+			: this(name, service, service, extensions)
 		{
 		}
 
-		public Component(string name, Type service, Type impl, LifestyleType lifestyleType) 
-			: this(name, service, impl)
-		{
-			_lifestyle = lifestyleType;
-		}
-
-		public Component(string name, Type service, Type impl)
+		public Component(string name, Type service, Type impl,
+		                 params IComponentExtension[] extensions)
 		{
 			_name = name;
 			_service = service;
 			_impl = impl;
+			_extensions = extensions;
 		    BooReader.NeedSecondPassRegistrations.Add(this);
+		}
+
+		public Component(string name, Type service, Type impl, LifestyleType lifestyleType)
+			: this(name, service, impl)
+		{
+			_lifestyle = lifestyleType;
 		}
 
 		public Component(string name, Type service, IDictionary configuration)
 			: this(name, service)
 		{
-			CreateConfiguration(configuration);
+			EnsureConfiguration(configuration);
 		}
 
-		public Component(string name, Type service, Type impl, LifestyleType lifestyleType, IDictionary configuration)
+		public Component(string name, Type service, Type impl, LifestyleType lifestyleType,
+		                 IDictionary configuration)
 			: this(name, service, impl, configuration)
 		{
 			_lifestyle = lifestyleType;
 		}
 
-		public Component(string name, Type service, Type impl, IDictionary configuration) 
+		public Component(string name, Type service, Type impl, IDictionary configuration)
 			: this(name, service, impl)
 		{
-			CreateConfiguration(configuration);
+			EnsureConfiguration(configuration);
 		}
 
 		public string Name
@@ -92,14 +99,46 @@ namespace Rhino.Commons.Binsor
 			get { return _name; }
 		}
 
+		public IConfiguration Configuration
+		{
+			get
+			{
+				EnsureConfiguration(null);
+				return _configuration;
+			}
+		}
+
+		public IDictionary Dependencies
+		{
+			get { return _dependencies; }
+		}
+
         public Component Register()
 		{
+			if (_extensions != null)
+			{
+				EnsureConfiguration(null);
+				foreach (IComponentExtension extension in _extensions)
+				{
+					extension.Apply(this);
+				}
+			}
+
 			if (_configuration != null)
 			{
 				kernel.ConfigurationStore.AddComponentConfiguration(_name, _configuration);
 			}
-        	kernel.AddComponent(_name, _service, _impl, _lifestyle);
-            return this;
+
+			if (_lifestyle.HasValue)
+			{
+				kernel.AddComponent(_name, _service, _impl, _lifestyle.Value);
+			}
+			else
+			{
+				kernel.AddComponent(_name, _service, _impl);
+			}
+
+        	return this;
 		}
 
         public void RegisterSecondPass()
@@ -125,7 +164,7 @@ namespace Rhino.Commons.Binsor
 				return null;
 			}
 
-			if(property_dependencies!=null && property_dependencies.Length>0)
+			if (property_dependencies!=null && property_dependencies.Length>0)
 			{
 				_attributes[property_dependencies[0]] = value;
 				return null;
@@ -151,28 +190,26 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		private void CreateConfiguration(IDictionary configuration)
+		private void EnsureConfiguration(IDictionary configuration)
 		{
-			_configuration = ConfigurationHelper.CreateConfiguration(null, "component", configuration);
+			if (_configuration == null)
+			{
+				_configuration = ConfigurationHelper.CreateConfiguration(null, "component", configuration);
+			}
 		}
 
 		private void EnsureParametersConfiguration()
 		{
 			if (_parameters == null)
 			{
-				if (_configuration == null)
+				EnsureConfiguration(null);
+
+				foreach (IConfiguration child in _configuration.Children)
 				{
-					CreateConfiguration(null);
-				}
-				else
-				{
-					foreach (IConfiguration child in _configuration.Children)
+					if (child.Name.Equals("parameters", StringComparison.InvariantCultureIgnoreCase))
 					{
-						if (child.Name.Equals("parameters", StringComparison.InvariantCultureIgnoreCase))
-						{
-							_parameters = child;
-							return;
-						}
+						_parameters = child;
+						return;
 					}
 				}
 
@@ -186,6 +223,11 @@ namespace Rhino.Commons.Binsor
     {
         void RegisterSecondPass();
     }
+
+	public interface IComponentExtension
+	{
+		void Apply(Component component);
+	}
 
     public class ComponentReference : IConfigurationFormatter
 	{

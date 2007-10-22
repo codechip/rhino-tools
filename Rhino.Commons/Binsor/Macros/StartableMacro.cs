@@ -1,4 +1,5 @@
-﻿#region license
+#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,34 +25,45 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
 
+using System;
 using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Macros
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	[CLSCompliant(false)]
+	public class StartableMacro : AbstractBinsorMacro
 	{
-		public override void Run()
+		public override Statement Expand(MacroStatement macro)
 		{
-			foreach (Module module in CompileUnit.Modules)
+			MacroStatement component = macro.ParentNode.ParentNode as MacroStatement;
+
+			if (component == null ||
+				(!component.Name.Equals("component", StringComparison.InvariantCultureIgnoreCase)))
 			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				definition.Members.Add(method);
-				module.Members.Add(definition);
+				AddCompilerError(macro.LexicalInfo,
+								 "A startable statement can appear only under a component");
+				return null;
 			}
+
+			if (!EnsureNoStatements(macro, "startable"))
+			{
+				return null;
+			}
+
+			RegisterExtension(component, CreateStartableExtension());
+
+			return null;
+		}
+
+		private static MethodInvocationExpression CreateStartableExtension()
+		{
+			return new MethodInvocationExpression(
+				AstUtil.CreateReferenceExpression(typeof(StartableExtension).FullName)
+				);
 		}
 	}
 }

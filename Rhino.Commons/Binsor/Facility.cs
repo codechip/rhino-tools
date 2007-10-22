@@ -30,35 +30,37 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using Boo.Lang;
 using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
+using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor
 {
-	using System.Collections.Generic;
-
 	public class Facility : IQuackFu
 	{
 		private readonly string _key;
         private readonly Type _facility;
-		private readonly IDictionary _parameters = new Hashtable();
 		private readonly IConfiguration _configuration;
+		private readonly IFacilityExtension[] _extensions;
+		private readonly IDictionary _parameters = new Hashtable();
 
         //important, we need to get this when we create the facility, because we need
         //to support nested components
         private readonly IKernel kernel = IoC.Container.Kernel;
 
-        public Facility(string name, Type facility)
+		public Facility(string name, Type facility, params IFacilityExtension[] extensions)
+			: this(name, facility, (IDictionary) null)
         {
-            _key = name;
-            _facility = facility;
+			_extensions = extensions;
         }
 
 		public Facility(string name, Type facility, IDictionary configuration)
-			: this(name, facility)
 		{
+			_key = name;
+			_facility = facility;
 			_configuration = ConfigurationHelper.CreateConfiguration(null, "facility", configuration);
 		}
 
@@ -67,8 +69,26 @@ namespace Rhino.Commons.Binsor
             get { return _key; }
         }
 
+		public IConfiguration Configuration
+		{
+			get { return _configuration; }
+		}
+
+		public IDictionary Parameters
+		{
+			get { return _parameters; }	
+		}
+
         public Facility Register()
         {
+			if (_extensions != null)
+			{
+				foreach (IFacilityExtension extension in _extensions)
+				{
+					extension.Apply(this);
+				}
+			}
+
         	IFacility instance = CreateFacilityInstance();
 
 			if (_configuration != null)
@@ -142,4 +162,9 @@ namespace Rhino.Commons.Binsor
 				_facility.Name);
 		}
     }
+
+	public interface IFacilityExtension
+	{
+		void Apply(Facility facility);
+	}
 }
