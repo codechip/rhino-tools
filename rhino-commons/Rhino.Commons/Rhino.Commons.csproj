@@ -161,8 +161,8 @@
     <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
     <Compile Include="Binsor\Extensions\LifestyleExtension.cs" />
     <Compile Include="Binsor\Macros\ConfigurationNodeVisitor.cs" />
-    <Compile Include="Binsor\Macros\StartableMacro.cs" />
-    <Compile Include="Binsor\Macros\FactorySupportMacro.cs" />
+    <Compile Include="Binsor\Macros\StartMacro.cs" />
+    <Compile Include="Binsor\Macros\CreateUsingMacro.cs" />
     <Compile Include="Binsor\Macros\FacilityMacro.cs" />
     <Compile Include="Binsor\Macros\HashConfigurationBuilder.cs" />
     <Compile Include="Binsor\Macros\LifestyleMacro.cs" />
