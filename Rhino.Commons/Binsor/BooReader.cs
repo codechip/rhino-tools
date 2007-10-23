@@ -35,12 +35,14 @@ using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
 using Boo.Lang.Compiler.Steps;
 using Boo.Lang.Parser;
+using Castle.MicroKernel;
+using Castle.MicroKernel.SubSystems.Resource;
+using Castle.Core.Resource;
 using Castle.Windsor;
+using Rhino.Commons.Boo;
 
 namespace Rhino.Commons.Binsor
 {
-	using Boo;
-
 	public static class BooReader
     {
         private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
@@ -68,13 +70,15 @@ namespace Rhino.Commons.Binsor
         {
             Read(container, fileName, GenerationOptions.Memory);
         }
+
         public static void Read(IWindsorContainer container, string fileName, GenerationOptions generationOptions)
         {
             try
             {
                 using (IoC.UseLocalContainer(container))
                 {
-                    IConfigurationRunner conf = GetConfigurationInstanceFromFile(fileName, generationOptions);
+                    IConfigurationRunner conf = GetConfigurationInstanceFromFile(
+						fileName, container, generationOptions);
                     conf.Run();
                     foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
                     {
@@ -99,7 +103,8 @@ namespace Rhino.Commons.Binsor
 			{
 				using (IoC.UseLocalContainer(container))
 				{
-					IConfigurationRunner conf = GetConfigurationInstanceFromStream(name, stream, generationOptions);
+					IConfigurationRunner conf = GetConfigurationInstanceFromStream(
+						name, container, stream, generationOptions);
 					conf.Run();
 					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
@@ -114,51 +119,44 @@ namespace Rhino.Commons.Binsor
 		}
 
 
-        private static IConfigurationRunner GetConfigurationInstanceFromFile(string fileName, GenerationOptions generationOptions)
-        {
-            FileInput fileInput = new FileInput(fileName);
-            BooCompiler compiler = new BooCompiler();
-            compiler.Parameters.Ducky = true;
-            if (generationOptions == GenerationOptions.Memory)
-                compiler.Parameters.Pipeline = new CompileToMemory();
-            else
-                compiler.Parameters.Pipeline = new CompileToFile();
-        	compiler.Parameters.Pipeline.Insert(1, new AutoReferenceFilesCompilerStep(Path.GetDirectoryName(fileName)));
-            compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
-            compiler.Parameters.Pipeline.Replace(
-                typeof(ProcessMethodBodiesWithDuckTyping),
-                new TransformUnknownReferences());
-            compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
-                new RegisterComponentAndFacilitiesAfterCreation());
-            compiler.Parameters.OutputType = CompilerOutputType.Library;
-            compiler.Parameters.Input.Add(fileInput);
-            compiler.Parameters.References.Add(typeof(BooReader).Assembly);
-            CompilerContext run = compiler.Run();
-            if (run.Errors.Count != 0)
-            {
-                throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
-            }
-            Type type = run.GeneratedAssembly.GetType(Path.GetFileNameWithoutExtension(fileName));
-            return Activator.CreateInstance(type) as IConfigurationRunner;
-        }
-		private static IConfigurationRunner GetConfigurationInstanceFromStream(string name, Stream stream, GenerationOptions generationOptions)
+		private static IConfigurationRunner GetConfigurationInstanceFromFile(
+			string fileName, IWindsorContainer container, GenerationOptions generationOptions)
 		{
-			ReaderInput readerInput = new ReaderInput(name, new StreamReader(stream));
+			string baseDirectory = Path.GetDirectoryName(fileName);
+			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
+			return GetConfigurationInstance(Path.GetFileNameWithoutExtension(fileName),
+											new FileInput(fileName), generationOptions,
+											new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
+        }
+
+		private static IConfigurationRunner GetConfigurationInstanceFromStream(
+			string name, IWindsorContainer container, Stream stream, GenerationOptions generationOptions)
+		{
+			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
+			return GetConfigurationInstance(name, new ReaderInput(name, new StreamReader(stream)),
+			                                generationOptions, new AutoReferenceFilesCompilerStep(urlResolver));
+		}
+
+		private static IConfigurationRunner GetConfigurationInstance(
+			string name, ICompilerInput input, GenerationOptions generationOptions,
+			AutoReferenceFilesCompilerStep autoReferenceStep)
+		{
 			BooCompiler compiler = new BooCompiler();
 			compiler.Parameters.Ducky = true;
 			if (generationOptions == GenerationOptions.Memory)
 				compiler.Parameters.Pipeline = new CompileToMemory();
 			else
 				compiler.Parameters.Pipeline = new CompileToFile();
-			
-			compiler.Parameters.Pipeline.Insert(1, new BinsorCompilerStep());
+
+			compiler.Parameters.Pipeline.Insert(1, autoReferenceStep);
+			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
 			compiler.Parameters.Pipeline.Replace(
 				typeof(ProcessMethodBodiesWithDuckTyping),
 				new TransformUnknownReferences());
 			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
 				new RegisterComponentAndFacilitiesAfterCreation());
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
-			compiler.Parameters.Input.Add(readerInput);
+			compiler.Parameters.Input.Add(input);
 			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)
@@ -167,6 +165,32 @@ namespace Rhino.Commons.Binsor
 			}
 			Type type = run.GeneratedAssembly.GetType(name);
 			return Activator.CreateInstance(type) as IConfigurationRunner;
+		}
+
+		private static UrlResolverDelegate CreateWindorUrlResolver(IWindsorContainer container)
+		{
+			IResourceSubSystem subSystem = (IResourceSubSystem)
+					container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+
+			return delegate(string url, string basePath)
+			       {
+			       	IResource resource;
+
+					if (url.IndexOf(':') < 0)
+					{
+						url = "file://" + url;
+					}
+
+			       	if (!string.IsNullOrEmpty(basePath))
+			       	{
+			       		resource = subSystem.CreateResource(url, basePath);
+			       	}
+			       	else
+			       	{
+			       		resource = subSystem.CreateResource(url);
+			       	}
+			       	return resource.GetStreamReader();
+			       };
 		}
 
         public enum GenerationOptions
