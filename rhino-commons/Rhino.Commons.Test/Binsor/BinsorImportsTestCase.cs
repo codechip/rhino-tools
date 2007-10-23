@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -25,60 +24,37 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
-using System.Collections;
-	using Castle.Core.Configuration;
+using System;
+using System.IO;
+using Castle.Windsor;
+using MbUnit.Framework;
+using Rhino.Commons.Binsor;
 
-namespace Rhino.Commons.Binsor
+
+namespace Rhino.Commons.Test.Binsor
 {
-	public class EventWireExtension : IComponentExtension
+	[TestFixture]
+	public class BinsorImportsTestCase
 	{
-		private readonly string _eventName;
-		private readonly IDictionary _subscribers;
+		private IWindsorContainer _container;
 
-		public EventWireExtension(string eventName, IDictionary subscribers)
+		[SetUp]
+		public void TestInitialize()
 		{
-			_eventName = eventName;
-			_subscribers = subscribers;
+			_container = new RhinoContainer();
+			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Imports.boo"));
+			Console.WriteLine(path);
+			BooReader.Read(_container, path);
 		}
 
-		void IComponentExtension.Apply(Component component)
+		[Test]
+		public void CanImportEmbeddedResourceConfiguration()
 		{
-			AddSubscribers(component);
-		}
-
-		private void AddSubscribers(Component component)
-		{
-			if (_subscribers.Count > 0)
-			{
-				IConfiguration subscribers = ObtainSubscribers(component);
-
-				foreach(DictionaryEntry entry in _subscribers)
-				{
-					IConfiguration subscriber = new MutableConfiguration("subscriber");
-					ComponentReference componentId = (ComponentReference) entry.Key;
-					subscriber.Attributes["event"] = _eventName;
-					subscriber.Attributes["id"] = componentId.Name;
-					subscriber.Attributes["handler"] = entry.Value.ToString();
-					subscribers.Children.Add(subscriber);
-				}
-			}
-		}
-
-		private static IConfiguration ObtainSubscribers(Component component)
-		{
-			IConfiguration config = component.Configuration;
-			IConfiguration subscribers = config.Children["subscribers"];
-			
-			if (subscribers == null)
-			{
-				subscribers = new MutableConfiguration("subscribers");
-				config.Children.Add(subscribers);
-			}
-
-			return subscribers;
+			bool has_disposable = _container.Kernel.HasComponent(typeof(IDisposable));
+			Assert.IsTrue(has_disposable, "should have a disposable!");
 		}
 	}
 }
+

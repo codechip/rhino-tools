@@ -132,7 +132,8 @@ component email_sender_factory, EmailSenderFactory
 component email_listener, EmailListener
 
 component email_sender4, ISender, EmailSender:
-	start
 	createUsing @email_sender_factory.Create
 	wireEvent Sent:
 		to @email_listener.OnSent
+	start
+

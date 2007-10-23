@@ -62,8 +62,8 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void CanUseMoreThanSingleFile()
 		{
-			bool has_repos = _container.Kernel.HasComponent(typeof(IDisposable));
-			Assert.IsTrue(has_repos, "should have generic repository!");
+			bool has_disposable = _container.Kernel.HasComponent(typeof(IDisposable));
+			Assert.IsTrue(has_disposable, "should have a disposable!");
 		}
 
 		[Test]
