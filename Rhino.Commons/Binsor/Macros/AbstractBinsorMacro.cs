@@ -113,24 +113,9 @@ namespace Rhino.Commons.Binsor.Macros
 		{
 			if (macro.Block.HasStatements)
 			{
-				bool skipEnd = false;
-
 				foreach (Statement statement in macro.Block.Statements)
 				{
-					if (skipEnd)
-					{
-						skipEnd = false;
-						if (MacroHelper.IsBlockEnd(statement)) continue;
-					}
-					else if (statement is ReturnStatement)
-					{
-						skipEnd = true;
-						continue;
-					}
-					else
-					{
-						if (!action(statement)) return false;
-					}
+					if (!action(statement)) return false;
 				}
 			}
 

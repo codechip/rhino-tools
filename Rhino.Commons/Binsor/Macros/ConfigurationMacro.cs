@@ -50,7 +50,6 @@ namespace Rhino.Commons.Binsor.Macros
 				if (builder.Build(macro.Block, Errors))
 				{
 					extension.Arguments.Add(builder.HashConfiguration);
-					expansion = new ReturnStatement();
 					return true;
 				}
 			}

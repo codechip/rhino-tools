@@ -61,7 +61,6 @@ facility arintegration, ActiveRecordFacility:
 			connection.provider = 'NHibernate.Connection.DriverConnectionProvider'
 			connection.driver_class = 'NHibernate.Driver.SqlClientDriver'
 			connection.connection_string = 'connectionString1'
-		end
 		config(keyvalues, item: add):
 			@type = Fubar
 			dialect = 'NHibernate.Dialect.SQLiteDialect'
@@ -69,8 +68,6 @@ facility arintegration, ActiveRecordFacility:
 			connection.driver_class = 'NHibernate.Driver.SQLite20Driver'
 			connection.connection_string = 'connectionString2'
 			connection.release_mode = 'on_close'
-		end
-	end
 	
 	
 # generic type registration
@@ -91,8 +88,6 @@ component email_sender2, ISender, EmailSender:
 		parameters:
 			to = ( "craig", "ayende" )
 			backups = ( @email_sender, )
-		end 
-	end
 
 # making sure that loops work
 
@@ -116,15 +111,11 @@ component email_sender3, ISender, EmailSender:
 			friends:
 				friend = @friend1
 				friend = @friend2
-			end
 			address(keymap, key: key):
 				line1 = '124 Fletcher'
 				city = 'Valley Stream'
 				state = 'NY'
 				zipCode = 11512
-			end
-		end
-	end	
 	size = 10
 	
 component email_sender_factory, EmailSenderFactory
@@ -135,5 +126,3 @@ component email_sender4, ISender, EmailSender:
 	createUsing @email_sender_factory.Create
 	wireEvent Sent:
 		to @email_listener.OnSent
-	start
-

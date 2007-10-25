@@ -60,20 +60,5 @@ namespace Rhino.Commons.Binsor.Macros
 
 			return block != null;
 		}
-
-		public static bool IsBlockEnd(Statement statement)
-		{
-			if (statement is ExpressionStatement)
-			{
-				ExpressionStatement expression = (ExpressionStatement) statement;
-				MethodInvocationExpression end = expression.Expression as MethodInvocationExpression;
-				return (end != null) &&
-					   string.Equals("end", GetName(end.Target),
-									 StringComparison.InvariantCultureIgnoreCase) &&
-					   end.Arguments.Count == 0 && end.NamedArguments.Count == 0;
-			}
-
-			return false;
-		}
 	}
 }

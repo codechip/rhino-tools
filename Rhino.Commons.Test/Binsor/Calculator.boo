@@ -60,16 +60,12 @@ component calc_gst2, AbstractCalculator, GstCalculator:
 	configuration:
 		parameters:
 			gsRate = 1.20
-		end
-	end
  
 component calc_shipping2, AbstractCalculator, ShippingCalculator:
 	configuration:
 		parameters:
 			shippingCost = 0.0
 			fragileShippingPremium = 0.0
-		end
-	end
    
 component calc_total2, AbstractCalculator, TotalCalculator
  
@@ -78,6 +74,3 @@ component cost_calculator_default2, ICostCalculator, DefaultCostCalculator:
 		parameters:
 			calculators:
 				array = ( @calc_gst2, @calc_shipping2, @calc_total2 )
-			end
-		end
-	end
