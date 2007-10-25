@@ -43,7 +43,6 @@ namespace Rhino.Commons.Binsor.Macros
 		private CompilerErrorCollection _compileErrors;
 		private HashLiteralExpression _configuration;
 		private Dictionary<string, object> _childContext;
-		bool _ignoreBlockEnd;
 
 		public bool Build(Block block, CompilerErrorCollection compileErrors)
 		{
@@ -83,16 +82,8 @@ namespace Rhino.Commons.Binsor.Macros
 
 			if (block.HasStatements)
 			{
-				_ignoreBlockEnd = false;
-
 				foreach(Statement statement in block.Statements)
 				{
-					if (_ignoreBlockEnd && MacroHelper.IsBlockEnd(statement))
-					{
-						_ignoreBlockEnd = false;
-						continue;
-					}
-
 					ExpressionStatement expression = statement as ExpressionStatement;
 
 					if (expression == null)
@@ -221,7 +212,6 @@ namespace Rhino.Commons.Binsor.Macros
 					{
 						_configuration.Items.Add(new ExpressionPair(nodeVisitor.Node,
 						                                            nested.HashConfiguration));
-						_ignoreBlockEnd = true;
 						return true;
 					}
 				}
