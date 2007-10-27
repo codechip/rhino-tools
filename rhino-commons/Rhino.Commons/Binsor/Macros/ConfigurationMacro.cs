@@ -28,33 +28,15 @@
 
 
 using System;
-using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class ConfigurationMacro : BaseBinsorExtensionMacro<ConfigurationExtension>
+	public class ConfigurationMacro : BaseConfigurationMacro<ConfigurationExtension>
 	{
-		public ConfigurationMacro() : base("configuation", false, "component", "facility")
-		{	
-		}
-
-		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
-		                                        MacroStatement macro, MacroStatement parent,
-		                                        ref Statement expansion)
+		public ConfigurationMacro()
+			: base("configuation", "component", "facility")
 		{
-			if (macro.Block != null)
-			{
-				HashConfigurationBuilder builder = new HashConfigurationBuilder();
-
-				if (builder.Build(macro.Block, Errors))
-				{
-					extension.Arguments.Add(builder.HashConfiguration);
-					return true;
-				}
-			}
-
-			return false;
 		}
 	}
 }

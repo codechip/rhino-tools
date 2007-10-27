@@ -142,10 +142,23 @@ namespace Rhino.Commons.Test.Binsor
 		}
 
 		[Test]
-		public void CanPassPrimitiveParameters()
+		public void CanPassComponentReferencesByType()
+		{
+			FakeRepository<Fubar> fakeRepository = (FakeRepository<Fubar>)_container.Resolve<IRepository<Fubar>>("fubar_repository");
+
+			Assert.IsNotNull(fakeRepository.Inner);
+			Assert.IsTrue(fakeRepository.Inner is NHRepository<Fubar>);
+		}
+
+		[Test]
+		public void CanPassMultipleDependenciesOnSingleLine()
 		{
 			EmailSender sender = (EmailSender) _container.Resolve<ISender>();
 			Assert.AreEqual("example.dot.org", sender.Host);
+			Assert.AreEqual(3, sender.To.Length);
+			Assert.In("Kaitlyn", sender.To);
+			Assert.In("Lauren", sender.To);
+			Assert.In("Matthew", sender.To);
 		}
 
 		[Test]
@@ -257,7 +270,7 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.IsNotNull(listener);
 			Assert.IsNull(listener.Message);
 
-			ISender sender = _container.Resolve<ISender>("email_sender4");
+			ISender sender = _container.Resolve<ISender>(typeof(EmailSender).FullName);
 			Assert.IsNotNull(sender);
 
 			sender.Send("Events are alive!");
@@ -291,8 +304,6 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			foreach(IConfiguration child in parent.Children)
 			{
-				string k = child.Attributes["key"];
-				string v = child.Attributes["value"];
 				if (item == child.Name && child.Attributes["key"] == key &&
 				    child.Attributes["value"] == value)
 				{

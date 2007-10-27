@@ -27,61 +27,37 @@
 #endregion
 
 
-using System.Collections;
-using Castle.Core.Configuration;
-using Rhino.Commons.Binsor.Configuration;
+using System;
+using Boo.Lang.Compiler.Ast;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Macros
 {
-	public class ConfigurationExtension : IComponentExtension, IFacilityExtension
+	[CLSCompliant(false)]
+	public class BaseConfigurationMacro<T> : BaseBinsorExtensionMacro<T> where T : ConfigurationExtension
 	{
-		private readonly IDictionary _configuration;
-
-		public ConfigurationExtension(IDictionary configuration)
-		{
-			_configuration = configuration;
+		public BaseConfigurationMacro(string name, params string[] validParents)
+			: base(name, false, validParents)
+		{	
 		}
 
-		void IComponentExtension.Apply(Component component)
+		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
+		                                        MacroStatement macro, MacroStatement parent,
+		                                        ref Statement expansion)
 		{
-			ApplyConfiguration(component.Configuration);
-		}
-
-		void IFacilityExtension.Apply(Facility facility)
-		{
-			ApplyConfiguration(facility.Configuration);
-		}
-
-		protected virtual IConfiguration GetRootConfiguration(IConfiguration root)
-		{
-			return root;
-		}
-
-		private void ApplyConfiguration(IConfiguration parent)
-		{
-			parent = GetRootConfiguration(parent);
-			ConfigurationHelper.CreateConfiguration(parent, null, _configuration);			
-		}
-	}
-
-	public class ParametersExtension : ConfigurationExtension
-	{
-		public ParametersExtension(IDictionary configuration)
-			: base(configuration)
-		{
-		}
-
-		protected override IConfiguration GetRootConfiguration(IConfiguration root)
-		{
-			IConfiguration parameters = root.Children["parameters"];
-
-			if (parameters == null)
+			if (macro.Block != null)
 			{
-				parameters = new MutableConfiguration("parameters");
-				root.Children.Add(parameters);
+				PromoteExtensions(macro, parent);
+
+				HashConfigurationBuilder builder = new HashConfigurationBuilder();
+
+				if (builder.BuildConfig(macro.Block, Errors) && builder.HasConfiguration)
+				{
+					extension.Arguments.Add(builder.HashConfiguration);
+					return true;
+				}
 			}
 
-			return parameters;
+			return false;
 		}
 	}
 }

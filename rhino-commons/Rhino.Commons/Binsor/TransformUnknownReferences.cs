@@ -42,6 +42,9 @@ namespace Rhino.Commons.Binsor
         private readonly ConstructorInfo _componentReferenceConstructor =
             typeof (ComponentReference).GetConstructor(new Type[] {typeof (string)});
 
+		private readonly ConstructorInfo _componentReferenceTypeConstructor =
+		  typeof(ComponentReference).GetConstructor(new Type[] { typeof(Type) });
+
         public override void OnReferenceExpression(ReferenceExpression node)
         {
             IEntity entity = NameResolutionService.Resolve(node.Name);
@@ -52,11 +55,22 @@ namespace Rhino.Commons.Binsor
             }
             if (node.Name.StartsWith("@"))
             {
+            	Expression argument;
+            	ConstructorInfo constructorInfo;
                 string refComponentName = node.Name.Substring(1);
-                StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(refComponentName);
-                ExternalConstructor constructor =
-                    new ExternalConstructor(TypeSystemServices, _componentReferenceConstructor);
-                MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, literal);
+            	entity = NameResolutionService.Resolve(refComponentName);
+				if (entity == null || entity.EntityType != EntityType.Type)
+				{
+					constructorInfo = _componentReferenceConstructor;
+					argument = CodeBuilder.CreateStringLiteral(refComponentName);
+				}
+				else
+				{
+					constructorInfo = _componentReferenceTypeConstructor;
+					argument = CodeBuilder.CreateReference(entity);
+				}
+                ExternalConstructor constructor = new ExternalConstructor(TypeSystemServices, constructorInfo);
+                MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, argument);
                 node.ParentNode.Replace(node, invocation);
                 return;
             }

@@ -51,6 +51,11 @@ namespace Rhino.Commons.Binsor
         //to support nested components
         private readonly IKernel kernel = IoC.Container.Kernel;
 
+		public Facility(Type facility, params IFacilityExtension[] extensions)
+			: this(facility.FullName, facility, extensions)
+		{
+		}
+
 		public Facility(string name, Type facility, params IFacilityExtension[] extensions)
 			: this(name, facility, (IDictionary) null)
         {

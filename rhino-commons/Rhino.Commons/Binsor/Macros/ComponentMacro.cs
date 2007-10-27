@@ -28,35 +28,11 @@
 
 
 using System;
-using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class ComponentMacro : BaseNamedBinsorMacro<Component>
+	public class ComponentMacro : BaseBinsorToplevelMacro<Component>
 	{
-		protected override bool ProcessStatements(MacroStatement macro)
-		{
-			return ProcessStatements(macro,
-			                         delegate(Statement statement)
-			                         {
-			                         	return ProcessDependency(statement);
-			                         });
-		}
-
-		private bool ProcessDependency(Statement statement)
-		{
-			ExpressionStatement expression = statement as ExpressionStatement;
-			if (expression == null || !(expression.Expression is BinaryExpression))
-			{
-				AddCompilerError(statement.LexicalInfo,
-					"Component dependencies must be in the format name=value,...");
-				return false;				
-			}
-
-			BinaryExpression dependency = (BinaryExpression) expression.Expression;
-			create.NamedArguments.Add(new ExpressionPair(dependency.Left, dependency.Right));
-			return true;
-		}
 	}
 }

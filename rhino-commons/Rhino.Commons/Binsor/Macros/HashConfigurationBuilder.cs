@@ -38,18 +38,36 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
 	public class HashConfigurationBuilder : DepthFirstVisitor
 	{
+		private bool _skip;
 		private bool _found;
 		private bool _applied;
+		private bool _attributesOnly;
 		private CompilerErrorCollection _compileErrors;
 		private HashLiteralExpression _configuration;
 		private Dictionary<string, object> _childContext;
 
-		public bool Build(Block block, CompilerErrorCollection compileErrors)
+		public bool BuildConfig(Block block, CompilerErrorCollection compileErrors)
 		{
+			return Build(block, false, compileErrors);
+		}
+
+		public bool BuildAttributes(Block block, CompilerErrorCollection compileErrors)
+		{
+			return Build(block, true, compileErrors);
+		}
+
+		private bool Build(Block block, bool attributesOnly, CompilerErrorCollection compileErrors)
+		{
+			_attributesOnly = attributesOnly;
 			_compileErrors = compileErrors;
 			_configuration = new HashLiteralExpression();
 			_childContext = new Dictionary<string, object>();
 			return BuildHashConfiguration(block);
+		}
+
+		public bool HasConfiguration
+		{
+			get { return _configuration.Items.Count > 0; }	
 		}
 
 		public HashLiteralExpression HashConfiguration
@@ -67,29 +85,37 @@ namespace Rhino.Commons.Binsor.Macros
 		public override void OnMethodInvocationExpression(MethodInvocationExpression child)
 		{
 			_found = true;
-			_applied = BuildConfigurationChild(child);
+			if ((_skip = _attributesOnly) == false)
+			{
+				_applied = BuildConfigurationChild(child);	
+			}
 		}
 
 		public override void OnStringLiteralExpression(StringLiteralExpression literal)
 		{
 			_found = true;
-			_applied = BuildConfigurationChild(literal);
+			if ((_skip = _attributesOnly) == false)
+			{
+				_applied = BuildConfigurationChild(literal);
+			}
 		}
 
 		private bool BuildHashConfiguration(Block block)
 		{
+			_skip = false;
 			_applied = true;
 
 			if (block.HasStatements)
 			{
-				foreach(Statement statement in block.Statements)
+				for(int i = 0; i < block.Statements.Count;)
 				{
+					Statement statement = block.Statements[i];
 					ExpressionStatement expression = statement as ExpressionStatement;
 
 					if (expression == null)
 					{
 						_compileErrors.Add(CompilerErrorFactory.CustomError(
-							statement.LexicalInfo, "Unrecgonized configuration syntax"));
+						                   statement.LexicalInfo, "Unrecgonized configuration syntax"));
 						return false;
 					}
 
@@ -99,17 +125,26 @@ namespace Rhino.Commons.Binsor.Macros
 					if (!_found)
 					{
 						_compileErrors.Add(CompilerErrorFactory.CustomError(
-							expression.LexicalInfo, "Unrecgonized configuration syntax"));
-						return false;					
+						                   	expression.LexicalInfo, "Unrecgonized configuration syntax"));
+						return false;
 					}
 
-					if (!_applied) return false;
+					if (_applied)
+					{
+						if (!_skip)
+						{
+							block.Statements.RemoveAt(i);
+						}
+						else ++i;
+					}
+					else
+					{
+						return false;
+					}
 				}
-
-				return true;
 			}
 
-			return false;
+			return true;
 		}
 
 		private bool BuildConfigurationNode(BinaryExpression node, bool asAttribute)
@@ -128,16 +163,21 @@ namespace Rhino.Commons.Binsor.Macros
 				return BuildConfigurationAttribute(nodeVisitor.Node, node.Right, configuration);
 			}
 
-			return BuildConfigurationChild(nodeVisitor.Node, node.Right);
+			if ((_skip =_attributesOnly) == false)
+			{
+				return BuildConfigurationChild(nodeVisitor.Node, node.Right);
+			}
+
+			return true;
 		}
 
 		private bool BuildConfigurationAttribute(Expression node, Expression value,
 		                                         HashLiteralExpression configuration)
 		{
 			ArrayLiteralExpression attributes;
-			if (IsAttributeAssignment(value, out attributes))
+			if (MacroHelper.IsCompoundAssignment(value, out attributes))
 			{
-				// @attrib1=value1, attrib2=value2: Multiple attribute
+				// @attrib1=value1, attrib2=value2: Multiple attributes
 
 				foreach(Expression attribute in attributes.Items)
 				{
@@ -170,7 +210,7 @@ namespace Rhino.Commons.Binsor.Macros
 			ArrayLiteralExpression attribs;
 			List<Expression> attributes = null;
 
-			if (IsAttributeAssignment(value, out attribs))
+			if (MacroHelper.IsCompoundAssignment(value, out attribs))
 			{
 				attributes = new List<Expression>();
 
@@ -208,7 +248,8 @@ namespace Rhino.Commons.Binsor.Macros
 				if (configBlock.HasStatements)
 				{
 					HashConfigurationBuilder nested = new HashConfigurationBuilder();
-					if (nested.Build(configBlock, _compileErrors))
+					if (nested.BuildConfig(configBlock, _compileErrors) &&
+					    nested.HasConfiguration)
 					{
 						_configuration.Items.Add(new ExpressionPair(nodeVisitor.Node,
 						                                            nested.HashConfiguration));
@@ -257,21 +298,6 @@ namespace Rhino.Commons.Binsor.Macros
 			}
 
 			return true;
-		}
-
-		private static bool IsAttributeAssignment(Expression expression,
-		                                          out ArrayLiteralExpression attributes)
-		{
-			attributes = expression as ArrayLiteralExpression;
-
-			if (attributes != null)
-			{
-				BinaryExpression attribute;
-				return (attributes.Items.Count > 1 &&
-				        MacroHelper.IsAssignment(attributes.Items[1], out attribute));
-			}
-
-			return false;
 		}
 
 		private Expression EnsureUniqueChild(Expression node)

@@ -39,17 +39,17 @@ import file from "disposable.boo"
 
 # Facility constructors
 
-facility startable_facility, StartableFacility
-facility factory_facility, FactorySupportFacility
-facility eventwiring_facility, EventWiringFacility
+facility StartableFacility
+facility FactorySupportFacility
+facility EventWiringFacility
 
-facility logger_facility, LoggingFacility: 
+facility LoggingFacility: 
 	loggingApi = LoggerImplementation.Log4net
 	configFile = 'log4net.config'
 
 # Facility configuration
 	
-facility arintegration, ActiveRecordFacility:
+facility ActiveRecordFacility:
 	configuration:
 		@isWeb = true, isDebug = true
 		assemblies = [ Assembly.Load("Rhino.Commons") ]
@@ -71,23 +71,28 @@ facility arintegration, ActiveRecordFacility:
 	
 	
 # generic type registration
+
+component IRepository, NHRepository
+
 component defualt_repository, IRepository, NHRepository:
 	lifestyle Transient
 
 component 'disposable', System.IDisposable, MyDisposable.Impl
 
 component customer_repository, IRepository of Fubar, FakeRepository of Fubar:
+	inner = @NHRepository
+
+component fubar_repository, IRepository of Fubar, FakeRepository of Fubar:
 	inner = @defualt_repository
 
 component email_sender, ISender, EmailSender:
-	Host = 'example.dot.org'
+	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
 
 component email_sender2, ISender, EmailSender:
-	configuration:
-		@startable = true
-		parameters:
-			to = ( "craig", "ayende" )
-			backups = ( @email_sender, )
+	@startable = true
+	parameters:
+		to = ( "craig", "ayende" )
+		backups = ( @email_sender, )
 
 # making sure that loops work
 
@@ -96,10 +101,11 @@ for i in range(4):
 		foo = i
 
 component email_sender3, ISender, EmailSender:
+	@startable = true
+	@tag1 = 'important', tag2 = 'priority'
 	lifestyle Pooled, InitialPoolSize = 10, MaxPoolSize = 100
 	configuration:
 		hosts(list, item: host) = ['rhino', 'orca']
-		@tag1 = 'important', tag2 = 'priority'
 		protocol
 		'configuration'
 		vision left = 20, right = 30
@@ -116,13 +122,11 @@ component email_sender3, ISender, EmailSender:
 				city = 'Valley Stream'
 				state = 'NY'
 				zipCode = 11512
-	size = 10
-	
-component email_sender_factory, EmailSenderFactory
 
-component email_listener, EmailListener
-
-component email_sender4, ISender, EmailSender:
-	createUsing @email_sender_factory.Create
+component EmailListener
+component EmailSenderFactory
+component ISender, EmailSender:
+	@startable = true
+	createUsing @EmailSenderFactory.Create
 	wireEvent Sent:
-		to @email_listener.OnSent
+		to @EmailListener.OnSent

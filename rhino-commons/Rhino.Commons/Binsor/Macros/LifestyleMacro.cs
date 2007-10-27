@@ -28,13 +28,14 @@
 
 #endregion
 
+
+using System;
+using Castle.MicroKernel;
+using Boo.Lang.Compiler.Ast;
+using Boo.Lang.Compiler.TypeSystem;
+
 namespace Rhino.Commons.Binsor.Macros
 {
-	using System;
-	using Castle.MicroKernel;
-	using global::Boo.Lang.Compiler.Ast;
-	using global::Boo.Lang.Compiler.TypeSystem;
-
 	[CLSCompliant(false)]
 	public class LifestyleMacro : BaseBinsorExtensionMacro<LifestyleExtension>
 	{
@@ -59,6 +60,7 @@ namespace Rhino.Commons.Binsor.Macros
 				return false;
 			}
 
+			macro.Arguments.RemoveAt(0);
 			IEntity entity = NameResolutionService.Resolve(lifestyle.Name);
 			if (entity == null || entity.EntityType != EntityType.Type)
 			{
@@ -69,7 +71,7 @@ namespace Rhino.Commons.Binsor.Macros
 			Type lifestyleType = ((ExternalType) entity).ActualType;
 
 			return (InitializeLifestyleExtension(ref extension, lifestyle, lifestyleType) &&
-			        MacroArgumentsToCreateNamedArguments(extension, macro));
+			        ArgumentsToCreateNamedArguments(macro.Arguments, extension));
 		}
 
 		protected override MethodInvocationExpression CreateExtension()
