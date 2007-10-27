@@ -57,20 +57,17 @@ component cost_calculator_default, ICostCalculator, DefaultCostCalculator:
 # Using Parameters Only
 
 component calc_gst2, AbstractCalculator, GstCalculator:
-	configuration:
-		parameters:
-			gsRate = 1.20
+	parameters:
+		gsRate = 1.20
  
 component calc_shipping2, AbstractCalculator, ShippingCalculator:
-	configuration:
-		parameters:
-			shippingCost = 0.0
-			fragileShippingPremium = 0.0
+	parameters:
+		shippingCost = 0.0
+		fragileShippingPremium = 0.0
    
 component calc_total2, AbstractCalculator, TotalCalculator
  
 component cost_calculator_default2, ICostCalculator, DefaultCostCalculator:
-	configuration:
-		parameters:
-			calculators:
-				array = ( @calc_gst2, @calc_shipping2, @calc_total2 )
+	parameters:
+		calculators:
+			array = ( @calc_gst2, @calc_shipping2, @calc_total2 )

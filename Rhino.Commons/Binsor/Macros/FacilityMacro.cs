@@ -28,35 +28,11 @@
 
 
 using System;
-using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class FacilityMacro : BaseNamedBinsorMacro<Facility>
+	public class FacilityMacro : BaseBinsorToplevelMacro<Facility>
 	{
-		protected override bool ProcessStatements(MacroStatement macro)
-		{
-			return ProcessStatements(macro,
-			                         delegate(Statement statement)
-			                         {
-										 return ProcessParameter(statement);
-			                         });
-		}
-
-		private bool ProcessParameter(Statement statement)
-		{
-			ExpressionStatement expression = statement as ExpressionStatement;
-			if (expression == null || !(expression.Expression is BinaryExpression))
-			{
-				AddCompilerError(statement.LexicalInfo,
-					"Facility parameters must be in the format name=value,...");
-				return false;				
-			}
-
-			BinaryExpression parameter = (BinaryExpression) expression.Expression;
-			create.NamedArguments.Add(new ExpressionPair(parameter.Left, parameter.Right));
-			return true;
-		}
 	}
 }

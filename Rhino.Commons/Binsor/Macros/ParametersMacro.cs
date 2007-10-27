@@ -28,53 +28,15 @@
 
 
 using System;
-using Boo.Lang.Compiler.Ast;
+
 namespace Rhino.Commons.Binsor.Macros
 {
 	[CLSCompliant(false)]
-	public class BaseNamedBinsorMacro<T> : AbstractBinsorMacro
+	public class ParametersMacro : BaseConfigurationMacro<ParametersExtension>
 	{
-		protected MethodInvocationExpression create;
-
-		public override Statement Expand(MacroStatement macro)
+		public ParametersMacro()
+			: base("parameters", "component", "configuration")
 		{
-			Expression name;
-			if (!EnsureName(macro, out name))
-				return null;
-
-			create = new MethodInvocationExpression(
-				AstUtil.CreateReferenceExpression(typeof(T).FullName)
-				);
-			create.Arguments.Add(name);
-
-			if (!ConfigureMacro(macro))
-				return null;
-
-			return new ExpressionStatement(create);
-		}
-
-		protected virtual bool ProcessStatements(MacroStatement macro)
-		{
-			return true;
-		}
-
-		private bool ConfigureMacro(MacroStatement macro)
-		{
-			if (MoveConstructorArguments(create, macro))
-			{
-				ProcessExtensions(macro);
-				return ProcessStatements(macro);
-			}
-
-			return false;
-		}
-
-		private void ProcessExtensions(MacroStatement macro)
-		{
-			ApplyExtensions(macro, delegate(Expression extension)
-			                {
-								create.Arguments.Add(extension);
-			                });
 		}
 	}
 }

@@ -53,8 +53,20 @@ namespace Rhino.Commons.Binsor
         //to support nested components
 	    private readonly IKernel kernel = IoC.Container.Kernel;
 
+		public Component(Type service,
+						 params IComponentExtension[] extensions)
+			: this(service, service, extensions)
+		{
+		}
+
+		public Component(Type service, Type impl,
+					 params IComponentExtension[] extensions)
+			: this(impl.FullName, service, impl, extensions)
+		{
+		}
+
 		public Component(string name, Type service,
-		                 params IComponentExtension[] extensions)
+						 params IComponentExtension[] extensions)
 			: this(name, service, service, extensions)
 		{
 		}
@@ -204,17 +216,13 @@ namespace Rhino.Commons.Binsor
 			{
 				EnsureConfiguration(null);
 
-				foreach (IConfiguration child in _configuration.Children)
-				{
-					if (child.Name.Equals("parameters", StringComparison.InvariantCultureIgnoreCase))
-					{
-						_parameters = child;
-						return;
-					}
-				}
+				_parameters = _configuration.Children["parameters"];
 
-				_parameters = new MutableConfiguration("parameters");
-				_configuration.Children.Add(_parameters);
+				if (_parameters == null)
+				{
+					_parameters = new MutableConfiguration("parameters");
+					_configuration.Children.Add(_parameters);
+				}
 			}
 		}
 	}
@@ -229,13 +237,20 @@ namespace Rhino.Commons.Binsor
 		void Apply(Component component);
 	}
 
-    public class ComponentReference : IConfigurationFormatter
+	#region ComponentReference
+
+	public class ComponentReference : IConfigurationFormatter
 	{
 	    private readonly string _name;
 
 		public ComponentReference(string name)
 		{
 			_name = name;
+		}
+
+		public ComponentReference(Type type)
+			: this(type.FullName)
+		{
 		}
 
 		public ComponentReference(Component component)
@@ -261,4 +276,6 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 	}
+
+	#endregion
 }
