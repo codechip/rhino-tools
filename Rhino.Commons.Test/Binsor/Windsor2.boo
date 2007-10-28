@@ -119,7 +119,13 @@ component email_sender3, ISender, EmailSender:
 				line1 = '124 Fletcher'
 				city = 'Valley Stream'
 				state = 'NY'
-				zipCode = 11512
+				zipCode = '11512'
+			address2(keymap) = { 
+				line1: '3747 Dartbrook',
+				city: 'Rockwall',
+				state: 'TX',
+				zipCode: '75032'
+				}
 
 component EmailListener
 component EmailSenderFactory

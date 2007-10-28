@@ -256,11 +256,26 @@ namespace Rhino.Commons.Test.Binsor
 			IConfiguration parameters = AssertChild(component, "parameters");
 			IConfiguration address = AssertChild(parameters, "address");
 			Assert.AreEqual(4, address.Children.Count);
-			foreach (IConfiguration child in address.Children)
-			{
-				Assert.AreEqual("item", child.Name);
-				Assert.IsNotNull(child.Attributes["key"]);
-			}
+			AssertKeyValue(address, "item", "line1", "124 Fletcher");
+			AssertKeyValue(address, "item", "city", "Valley Stream");
+			AssertKeyValue(address, "item", "state", "NY");
+			AssertKeyValue(address, "item", "zipCode", "11512");
+		}
+
+		[Test]
+		public void CanDefineConfigurationsWithKeymapAndHashLiteral()
+		{
+			IHandler handler = _container.Kernel.GetHandler("email_sender3");
+			Assert.IsNotNull(handler);
+
+			IConfiguration component = handler.ComponentModel.Configuration;
+			IConfiguration parameters = AssertChild(component, "parameters");
+			IConfiguration address = AssertChild(parameters, "address2");
+			Assert.AreEqual(4, address.Children.Count);
+			AssertKeyValue(address, "item", "line1", "3747 Dartbrook");
+			AssertKeyValue(address, "item", "city", "Rockwall");
+			AssertKeyValue(address, "item", "state", "TX");
+			AssertKeyValue(address, "item", "zipCode", "75032");
 		}
 
 		[Test]
@@ -297,6 +312,22 @@ namespace Rhino.Commons.Test.Binsor
 		private static IConfiguration AssertChild(IConfiguration parent, string name)
 		{
 			return AssertChild(parent, name, null);
+		}
+
+		private static IConfiguration AssertKeyValue(IConfiguration parent, string item,
+													 string key, string value)
+		{
+			foreach (IConfiguration child in parent.Children)
+			{
+				if (item == child.Name && child.Attributes["key"] == key &&
+					child.Value == value)
+				{
+					return child;
+				}
+			}
+
+			Assert.Fail("No child {0} found with key={1}, value={2}", item, key, value);
+			return null;
 		}
 
 		private static IConfiguration AssertKeyValueAttrib(IConfiguration parent, string item,
