@@ -72,8 +72,6 @@ facility ActiveRecordFacility:
 	
 # generic type registration
 
-component IRepository, NHRepository
-
 component defualt_repository, IRepository, NHRepository:
 	lifestyle Transient
 

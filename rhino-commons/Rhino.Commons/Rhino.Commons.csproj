@@ -158,12 +158,14 @@
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
     <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
-    <Compile Include="Binsor\Macros\BaseNamedBinsorMacro.cs" />
+    <Compile Include="Binsor\Macros\BaseBinsorToplevelMacro.cs" />
     <Compile Include="Binsor\Macros\ComponentMacro.cs" />
     <Compile Include="Binsor\Macros\ComponentMethodVisitor.cs" />
-    <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
+    <Compile Include="Binsor\Macros\BaseConfigurationMacro.cs" />
     <Compile Include="Binsor\Extensions\LifestyleExtension.cs" />
     <Compile Include="Binsor\Macros\ConfigurationNodeVisitor.cs" />
+    <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
+    <Compile Include="Binsor\Macros\ParametersMacro.cs" />
     <Compile Include="Binsor\Macros\StartMacro.cs" />
     <Compile Include="Binsor\Macros\CreateUsingMacro.cs" />
     <Compile Include="Binsor\Macros\FacilityMacro.cs" />

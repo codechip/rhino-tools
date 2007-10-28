@@ -239,18 +239,21 @@ namespace Rhino.Commons.Binsor
 
 	#region ComponentReference
 
-	public class ComponentReference : IConfigurationFormatter
+	public class ComponentReference : IConfigurationFormatter, INeedSecondPassRegistration
 	{
 	    private readonly string _name;
+		private readonly Type _service;
 
 		public ComponentReference(string name)
 		{
 			_name = name;
 		}
 
-		public ComponentReference(Type type)
-			: this(type.FullName)
+		public ComponentReference(Type service)
+			: this(service.FullName)
 		{
+			_service = service;
+			BooReader.NeedSecondPassRegistrations.Add(this);
 		}
 
 		public ComponentReference(Component component)
@@ -273,6 +276,14 @@ namespace Rhino.Commons.Binsor
 			{
 				string reference = "${" + _name + "}";
 				ConfigurationHelper.CreateChild(parent, name, reference);
+			}
+		}
+
+		public void RegisterSecondPass()
+		{
+			if (!IoC.Container.Kernel.HasComponent(_name))
+			{
+				IoC.Container.AddComponent(_name, _service);
 			}
 		}
 	}
