@@ -42,10 +42,12 @@ namespace Rhino.Commons.Binsor.Macros
 				AstUtil.CreateReferenceExpression(typeof(T).FullName)
 				);
 
-			if (!ConfigureBinsorMacro(macro))
-				return null;
-
-			return new ExpressionStatement(create);
+			if (ConfigureBinsorMacro(macro))
+			{
+				return new ExpressionStatement(create);				
+			}
+				
+			return null;
 		}
 
 		private bool ConfigureBinsorMacro(MacroStatement macro)
