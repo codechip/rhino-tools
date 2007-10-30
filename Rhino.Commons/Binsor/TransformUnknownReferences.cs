@@ -55,23 +55,7 @@ namespace Rhino.Commons.Binsor
             }
             if (node.Name.StartsWith("@"))
             {
-            	Expression argument;
-            	ConstructorInfo constructorInfo;
-                string refComponentName = node.Name.Substring(1);
-            	entity = NameResolutionService.Resolve(refComponentName);
-				if (entity == null || entity.EntityType != EntityType.Type)
-				{
-					constructorInfo = _componentReferenceConstructor;
-					argument = CodeBuilder.CreateStringLiteral(refComponentName);
-				}
-				else
-				{
-					constructorInfo = _componentReferenceTypeConstructor;
-					argument = CodeBuilder.CreateReference(entity);
-				}
-                ExternalConstructor constructor = new ExternalConstructor(TypeSystemServices, constructorInfo);
-                MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, argument);
-                node.ParentNode.Replace(node, invocation);
+				ReplaceWithComponentReference(node, node.Name);
                 return;
             }
             else if (node.ParentNode is MethodInvocationExpression)
@@ -108,5 +92,41 @@ namespace Rhino.Commons.Binsor
 
             base.OnReferenceExpression(node);
         }
+
+		public override void OnMemberReferenceExpression(MemberReferenceExpression node)
+		{
+			string name = node.ToString();
+
+			if (name.StartsWith("@"))
+			{
+				ReplaceWithComponentReference(node, name);
+				return;
+			}
+
+			base.OnMemberReferenceExpression(node);
+		}
+
+		private void ReplaceWithComponentReference(Node node, string name)
+		{
+			Expression argument;
+			ConstructorInfo constructorInfo;
+
+			name = name.Substring(1);
+			IEntity entity = NameResolutionService.ResolveQualifiedName(name);
+
+			if (entity == null || entity.EntityType != EntityType.Type)
+			{
+				constructorInfo = _componentReferenceConstructor;
+				argument = CodeBuilder.CreateStringLiteral(name);
+			}
+			else
+			{
+				constructorInfo = _componentReferenceTypeConstructor;
+				argument = CodeBuilder.CreateReference(entity);
+			}
+			ExternalConstructor constructor = new ExternalConstructor(TypeSystemServices, constructorInfo);
+			MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, argument);
+			node.ParentNode.Replace(node, invocation);			
+		}
     }
 }
