@@ -17,7 +17,12 @@ Building From NHibernate and Castle Trunks
 2) Build each project first using the respective scripts and build methods
 
 3) Create a file in the root directory of Rhino-Tools named
-   BuildFromTrunk-COnfig.build -- Use the sample as an example
+   BuildFromTrunk-Config.build -- Use the sample as an example
+   
+   * Important *
+   *
+   * Castle requires NUnit on the path so be sure set Castle-Test-Framework and Castle-Tester-Console
+   * int the BuildFromTrunk-Config.build file.
 
 4) Patch Castle source to work with NH-Trunk
 
