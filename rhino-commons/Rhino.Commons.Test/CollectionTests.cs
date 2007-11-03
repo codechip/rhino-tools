@@ -188,7 +188,34 @@ namespace Rhino.Commons.Test
         [Test]
         public void Containing_WillRetunCollectionContainingArgumentsSupplied()
         {
-            AssertCollectionEquals(ListContaining(1, 2, 3), Collection.Containing(1, 2, 3));
+            List<int> expected = new List<int>();
+            expected.AddRange(new int[3] {1, 2, 3});
+            AssertCollectionEquals(expected, Collection.Containing(1, 2, 3));
+        }
+
+
+        [Test]
+        public void ListContaining_WillRetunNullWhenPassedNull()
+        {
+            ICollection<object> actual = Collection.ListContaining<object>(null);
+            Assert.IsNull(actual);
+        }
+
+
+        [Test]
+        public void ListContaining_WillRetunEmptyListWhenPassedNothing()
+        {
+            ICollection<int> actual = Collection.ListContaining<int>();
+            Assert.IsEmpty((ICollection)actual);
+        }
+
+
+        [Test]
+        public void ListContaining_WillRetunListContainingArgumentsSupplied()
+        {
+            List<int> expected = new List<int>();
+            expected.AddRange(new int[3] { 1, 2, 3 });
+            AssertCollectionEquals(expected, Collection.ListContaining(1, 2, 3));
         }
 
 
