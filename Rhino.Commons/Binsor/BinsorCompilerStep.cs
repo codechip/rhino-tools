@@ -34,6 +34,17 @@ namespace Rhino.Commons.Binsor
 {
 	internal class BinsorCompilerStep : AbstractCompilerStep
 	{
+		private readonly string environment;
+
+		public BinsorCompilerStep() : this("")
+		{
+		}
+
+		public BinsorCompilerStep(string environment)
+		{
+			this.environment = environment;	
+		}
+
 		public override void Run()
 		{
 			foreach (Module module in CompileUnit.Modules)
@@ -49,6 +60,14 @@ namespace Rhino.Commons.Binsor
 				Method method = new Method("Run");
 				method.Body = module.Globals;
 				module.Globals = new Block();
+				Property property = new Property("Environment");
+				property.Getter = new Method("getter_Environment");
+				property.Getter.Body.Add(
+					new ReturnStatement(
+						new StringLiteralExpression(environment ?? "")
+						)
+					);
+				definition.Members.Add(property);
 				definition.Members.Add(method);
 				module.Members.Add(definition);
 			}

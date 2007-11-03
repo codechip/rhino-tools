@@ -66,19 +66,25 @@ namespace Rhino.Commons.Binsor
             }
         }
 
-        public static void Read(IWindsorContainer container, string fileName)
+		public static void Read(IWindsorContainer container, string fileName)
+		{
+			Read(container, fileName, "");
+		}
+
+		public static void Read(IWindsorContainer container, string fileName, string environment)
         {
-            Read(container, fileName, GenerationOptions.Memory);
+            Read(container, fileName, environment, GenerationOptions.Memory);
         }
 
-        public static void Read(IWindsorContainer container, string fileName, GenerationOptions generationOptions)
-        {
+		public static void Read(IWindsorContainer container, string fileName, string environment,
+		                        GenerationOptions generationOptions)
+		{
             try
             {
                 using (IoC.UseLocalContainer(container))
                 {
                     IConfigurationRunner conf = GetConfigurationInstanceFromFile(
-						fileName, container, generationOptions);
+						fileName, environment, container, generationOptions);
                     conf.Run();
                     foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
                     {
@@ -94,19 +100,27 @@ namespace Rhino.Commons.Binsor
 
 		public static void Read(IWindsorContainer container, Stream stream, string name)
 		{
-			Read(container, stream, GenerationOptions.Memory, name);
+			Read(container, stream, name, "");
 		}
 
-		public static void Read(IWindsorContainer container, Stream stream, GenerationOptions generationOptions, string name)
+		public static void Read(IWindsorContainer container, Stream stream,
+		                        string name, string environment)
+		{
+			Read(container, stream, GenerationOptions.Memory, name, environment);
+		}
+
+		public static void Read(IWindsorContainer container, Stream stream,
+		                        GenerationOptions generationOptions, string name,
+		                        string envronment)
 		{
 			try
 			{
-				using (IoC.UseLocalContainer(container))
+				using(IoC.UseLocalContainer(container))
 				{
 					IConfigurationRunner conf = GetConfigurationInstanceFromStream(
-						name, container, stream, generationOptions);
+						name, envronment, container, stream, generationOptions);
 					conf.Run();
-					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+					foreach(INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
 						needSecondPassRegistration.RegisterSecondPass();
 					}
@@ -120,25 +134,30 @@ namespace Rhino.Commons.Binsor
 
 
 		private static IConfigurationRunner GetConfigurationInstanceFromFile(
-			string fileName, IWindsorContainer container, GenerationOptions generationOptions)
+			string fileName, string environment, IWindsorContainer container,
+			GenerationOptions generationOptions)
 		{
 			string baseDirectory = Path.GetDirectoryName(fileName);
 			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
-			return GetConfigurationInstance(Path.GetFileNameWithoutExtension(fileName),
-											new FileInput(fileName), generationOptions,
-											new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
-        }
+			return GetConfigurationInstance(
+				Path.GetFileNameWithoutExtension(fileName), environment,
+				new FileInput(fileName), generationOptions,
+				new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
+		}
 
 		private static IConfigurationRunner GetConfigurationInstanceFromStream(
-			string name, IWindsorContainer container, Stream stream, GenerationOptions generationOptions)
+			string name, string environment, IWindsorContainer container, Stream stream,
+			GenerationOptions generationOptions)
 		{
 			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
-			return GetConfigurationInstance(name, new ReaderInput(name, new StreamReader(stream)),
-			                                generationOptions, new AutoReferenceFilesCompilerStep(urlResolver));
+			return GetConfigurationInstance(
+				name, environment, new ReaderInput(name, new StreamReader(stream)),
+				generationOptions, new AutoReferenceFilesCompilerStep(urlResolver));
 		}
 
 		private static IConfigurationRunner GetConfigurationInstance(
-			string name, ICompilerInput input, GenerationOptions generationOptions,
+			string name, string environment, ICompilerInput input,
+			GenerationOptions generationOptions,
 			AutoReferenceFilesCompilerStep autoReferenceStep)
 		{
 			BooCompiler compiler = new BooCompiler();
@@ -149,7 +168,7 @@ namespace Rhino.Commons.Binsor
 				compiler.Parameters.Pipeline = new CompileToFile();
 
 			compiler.Parameters.Pipeline.Insert(1, autoReferenceStep);
-			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep());
+			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep(environment));
 			compiler.Parameters.Pipeline.Replace(
 				typeof(ProcessMethodBodiesWithDuckTyping),
 				new TransformUnknownReferences());

@@ -172,6 +172,7 @@
     <Compile Include="Binsor\CalculatorTestCase.cs" />
     <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
+    <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Boo\AutoReferenceFilesCompilerStepFixure.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />

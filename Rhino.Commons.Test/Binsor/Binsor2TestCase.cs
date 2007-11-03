@@ -35,7 +35,6 @@ using Castle.Facilities.ActiveRecordIntegration;
 using Castle.MicroKernel;
 using Castle.Windsor;
 using MbUnit.Framework;
-using Rhino.Commons.Binsor;
 using Rhino.Commons.Test.Components;
 
 namespace Rhino.Commons.Test.Binsor
@@ -48,10 +47,9 @@ namespace Rhino.Commons.Test.Binsor
 		[SetUp]
 		public void TestInitialize()
 		{
-			_container = new RhinoContainer();
 			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor2.boo"));
 			Console.WriteLine(path);
-			BooReader.Read(_container, path);
+			_container = new RhinoContainer(path);
 		}
 
 		[Test]
@@ -218,7 +216,6 @@ namespace Rhino.Commons.Test.Binsor
 			AssertAttribute(child, "age", "32");
 		}
 
-
 		[Test]
 		public void CanDefineConfigurationWithChildrenAndAttributes()
 		{
@@ -290,6 +287,18 @@ namespace Rhino.Commons.Test.Binsor
 
 			sender.Send("Events are alive!");
 			Assert.AreEqual("Events are alive!", listener.Message);
+		}
+
+		[Test]
+		public void CanUseEnvironmentInfoPassedInToContainer()
+		{
+			Assert.IsFalse(_container.Kernel.HasComponent("foo_bar"));
+
+			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor2.boo"));
+			RhinoContainer container = new RhinoContainer(path, new TestEnvironmentInfo("Binsor2"));
+			Fubar fubar = container.Resolve<Fubar>("foo_bar");
+			Assert.IsNotNull(fubar);
+			Assert.AreEqual("Binsor2", fubar.Foo);
 		}
 
 		private static void AssertAttribute(IConfiguration parent, string name, string value)
