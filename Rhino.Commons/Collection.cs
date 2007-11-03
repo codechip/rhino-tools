@@ -42,6 +42,11 @@ namespace Rhino.Commons
             return new List<T>(items);
         }
 
+        public static IList<T> ListContaining<T>(params T[] items)
+        {
+            if (items == null) return null;
+            return new List<T>(items);
+        }
 
         public static T First<T>(ICollection<T> collection)
         {
