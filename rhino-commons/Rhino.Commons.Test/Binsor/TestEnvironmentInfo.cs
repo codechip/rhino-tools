@@ -27,49 +27,22 @@
 #endregion
 
 
-using System;
-using System.IO;
-using Castle.Core.Resource;
-using Castle.MicroKernel;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
-using Castle.Windsor.Installer;
-
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Test.Binsor
 {
-	public class BooComponentInstaller : XmlInterpreter, IComponentsInstaller
+	using Castle.Windsor;
+
+	class TestEnvironmentInfo : IEnvironmentInfo
 	{
-		private readonly string fileName;
+		private readonly string environment;
 
-		public BooComponentInstaller(String fileName)
-			: base(fileName)
+		public TestEnvironmentInfo(string environment)
 		{
-			this.fileName = fileName;
+			this.environment = environment;	
 		}
 
-		public override void ProcessResource(IResource source, IConfigurationStore store)
+		public string GetEnvironmentName()
 		{
-			if (!IsBooConfiguration())
-			{
-				base.ProcessResource(source, store);
-			}
-		}
-
-		public void SetUp(IWindsorContainer container, IConfigurationStore store)
-		{
-			if (IsBooConfiguration())
-			{
-				BooReader.Read(container, fileName, EnvironmentName);
-			}
-			else
-			{
-				new DefaultComponentInstaller().SetUp(container, store);
-			}
-		}
-
-		private bool IsBooConfiguration()
-		{
-			return Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase);
+			return environment;
 		}
 	}
 }

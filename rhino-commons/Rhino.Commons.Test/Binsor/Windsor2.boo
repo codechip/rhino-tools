@@ -134,3 +134,7 @@ component ISender, EmailSender:
 	createUsing @EmailSenderFactory.Create
 	wireEvent Sent:
 		to @EmailListener.OnSent
+
+if Environment == "Binsor2":
+	component foo_bar, Fubar:
+		foo = Environment
