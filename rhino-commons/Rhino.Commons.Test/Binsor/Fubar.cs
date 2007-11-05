@@ -27,15 +27,12 @@
 #endregion
 
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Rhino.Commons.Test.Components
 {
     public class Fubar
     {
         object foo;
+		private static readonly Fubar instance = new Fubar("Instance");
 
         public object Foo
         {
@@ -46,5 +43,10 @@ namespace Rhino.Commons.Test.Components
         {
             this.foo = foo;
         }
+
+		public static Fubar Instance
+		{
+			get { return instance; }
+		}
     }
 }

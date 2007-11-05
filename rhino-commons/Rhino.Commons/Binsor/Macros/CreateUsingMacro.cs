@@ -55,6 +55,7 @@ namespace Rhino.Commons.Binsor.Macros
 	{
 		private MethodInvocationExpression _extension;
 		private CompilerErrorCollection _compileErrors;
+		private StringLiteralExpression _instanceAcessor;
 
 		public bool InitializeExtension(MethodInvocationExpression extension,
 		                                MacroStatement macro,
@@ -63,17 +64,30 @@ namespace Rhino.Commons.Binsor.Macros
 			_extension = extension;
 			_compileErrors = compileErrors;
 
-			if (macro.Arguments.Count != 1 || !ExtractMethod(macro.Arguments[0]))
+			if (macro.Arguments.Count != 1 ||
+			    (!ExtractMethod(macro.Arguments[0]) && _instanceAcessor == null))
 			{
 				_compileErrors.Add(CompilerErrorFactory.CustomError(macro.LexicalInfo,
 					"A createUsing statement must be in the form @factory.<CreateMethod>[()]"));
 				return false;
 			}
 
-			_extension.Arguments.Add(Component);
-			_extension.Arguments.Add(Method);
+			if (_instanceAcessor == null)
+			{
+				_extension.Arguments.Add(Component);
+				_extension.Arguments.Add(Method);
+			}
+			else
+			{
+				_extension.Arguments.Add(_instanceAcessor);
+			}
 
 			return true;
+		}
+
+		public override void OnReferenceExpression(ReferenceExpression accessor)
+		{
+			_instanceAcessor = new StringLiteralExpression(accessor.Name);
 		}
 	}
 }

@@ -33,6 +33,12 @@ namespace Rhino.Commons.Binsor
 	{
 		private readonly string factoryId;
 		private readonly string factoryCreate;
+		private readonly string instanceAccessor;
+
+		public FactorySupportExtension(string instanceAccessor)
+		{
+			this.instanceAccessor = instanceAccessor;
+		}
 
 		public FactorySupportExtension(ComponentReference factoryRef, string factoryCreate)
 		{
@@ -42,8 +48,15 @@ namespace Rhino.Commons.Binsor
 
 		void IComponentExtension.Apply(Component component)
 		{
-			component.Configuration.Attributes["factoryId"] = factoryId;
-			component.Configuration.Attributes["factoryCreate"] = factoryCreate;
+			if (instanceAccessor == null)
+			{
+				component.Configuration.Attributes["factoryId"] = factoryId;
+				component.Configuration.Attributes["factoryCreate"] = factoryCreate;
+			}
+			else
+			{
+				component.Configuration.Attributes["instance-accessor"] = instanceAccessor;
+			}
 		}
 	}
 }
