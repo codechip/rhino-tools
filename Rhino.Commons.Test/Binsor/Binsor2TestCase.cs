@@ -276,6 +276,14 @@ namespace Rhino.Commons.Test.Binsor
 		}
 
 		[Test]
+		public void CanDefineConfigurationsForFactorySupportFacilityWithAccessor()
+		{
+			Fubar foo = (Fubar)_container.Resolve("foo_instance");
+			Assert.IsNotNull(foo);
+			Assert.AreEqual("Instance", foo.Foo);
+		}
+
+		[Test]
 		public void CanDefineConfigurationsForEventWiringFacility()
 		{
 			EmailListener listener = _container.Resolve<EmailListener>();

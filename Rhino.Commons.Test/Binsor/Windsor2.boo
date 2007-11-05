@@ -138,3 +138,6 @@ component ISender, EmailSender:
 if Environment == "Binsor2":
 	component foo_bar, Fubar:
 		foo = Environment
+		
+component "foo_instance", Fubar:
+	createUsing Instance
