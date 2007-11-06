@@ -36,6 +36,8 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.ForTesting
 {
+    using Util;
+
     public abstract class TestFixtureBaseTests : TestFixtureBase 
     {
         [SetUp]

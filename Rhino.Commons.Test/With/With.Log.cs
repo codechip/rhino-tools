@@ -39,6 +39,8 @@ using Rhino.Commons.Logging;
 
 namespace Rhino.Commons.Test
 {
+    using Util;
+
     [TestFixture]
     public class WithLogTests
     {

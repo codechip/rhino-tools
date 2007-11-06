@@ -37,6 +37,8 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.UoW
 {
+    using Util;
+
     [TestFixture]
     public class TransactionalFlush : TestFixtureBase
     {

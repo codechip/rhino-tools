@@ -43,7 +43,7 @@ namespace Rhino.Commons
 	using global::NHibernate.Type;
 	using global::NHibernate.UserTypes;
 	using global::NHibernate.Util;
-	using NHibernate.Persister.Entity;
+    using global::NHibernate.Persister.Entity;
 
 	public class XmlIn : AbstractCriterion
 	{

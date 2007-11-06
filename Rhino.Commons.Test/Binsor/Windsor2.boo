@@ -28,6 +28,7 @@
 
 import System.Reflection
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
+import Rhino.Commons from Rhino.Commons.NHibernate
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
 import Castle.Facilities.ActiveRecordIntegration
@@ -52,7 +53,7 @@ facility LoggingFacility:
 facility ActiveRecordFacility:
 	configuration:
 		@isWeb = true, isDebug = true
-		assemblies = [ Assembly.Load("Rhino.Commons") ]
+		assemblies = [ Assembly.Load("Rhino.Commons.NHibernate") ]
 		config(keyvalues, item: add):
 			show_sql = true
 			command_timeout = 5000

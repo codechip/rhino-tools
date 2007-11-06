@@ -28,13 +28,13 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Data;
+using NHibernate.Expression;
+
 namespace Rhino.Commons
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Data;
-	using NHibernate.Expression;
-
 	public class RepositoryDecorator<T> : IRepository<T>
 	{
 		private IRepository<T> inner;
