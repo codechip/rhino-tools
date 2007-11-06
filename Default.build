@@ -31,7 +31,12 @@
 		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Commons.Test\bin\$(Configuration)\Rhino.Commons.Test.dll"/>
 	</ItemGroup>
 	<Target Name="BeforeTest" Condition="$(MergeAssemblies)">
-	 <CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll"
+	
+	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-core"/>
+	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-nhibernate"/>	 
+ 	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord"/>	 
+ 	 
+	 <CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll"
 						 Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;
 $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\NHibernate.dll;
 $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\log4net.dll;
@@ -40,19 +45,43 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Iesi.Collections.d
 $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProxy.dll;" >
 		<Output TaskParameter="Include" ItemName = "MergeAssemblies" /> 
 	</CreateItem>
-		
+			
 	<ILMerge
 				ToolPath="$(SharedLibsDir)\Tools\"
 				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies)"
 				 ExcludeFile="$(excludeFile)"
-				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\Rhino.Commons.dll"
+				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-core\Rhino.Commons.dll"
 				 LogFile="$(logFile)"
 				 DebugInfo="true"
 				 XmlDocumentation="true"
 				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
 				  />
+
+	<ILMerge
+				ToolPath="$(SharedLibsDir)\Tools\"
+				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies);
+										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll"
+				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-nhibernate\Rhino.Commons.dll"
+				 LogFile="$(logFile)"
+				 DebugInfo="true"
+				 XmlDocumentation="true"
+				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
+				  />
+
+	<ILMerge
+				ToolPath="$(SharedLibsDir)\Tools\"
+				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies);
+										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll;
+										$(MSBuildProjectDirectory)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\Rhino.Commons.ActiveRecord.dll"
+				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord\Rhino.Commons.dll"
+				 LogFile="$(logFile)"
+				 DebugInfo="true"
+				 XmlDocumentation="true"
+				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
+				  />
+				  				  				  				  				  				  				  
 		<!-- <Delete Files="@(MergeAssemblies)" /> -->
-		<CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons\bin\Rhino.Commons.dll"
+		<CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord\Rhino.Commons.dll"
 			Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;">
 				<Output TaskParameter="Include" ItemName = "ZipFiles"/>
 	</CreateItem>
