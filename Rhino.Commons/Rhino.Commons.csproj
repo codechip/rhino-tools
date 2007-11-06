@@ -104,45 +104,26 @@
     <Compile Include="ElementNotFoundException.cs" />
     <Compile Include="GenericEventArgs.cs" />
     <Compile Include="HttpModules\PagePerformanceModule.cs" />
-    <Compile Include="HttpModules\UnitOfWorkApplication.cs" />
     <Compile Include="Indexers.cs" />
     <Compile Include="LocalDataImpl\LocalData.cs" />
     <Compile Include="LocalDataImpl\ILocalData.cs" />
     <Compile Include="Logging\WebLoggingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\NHRepository.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Threading\ThreadSafeQueue.cs" />
     <Compile Include="Threading\CountdownLatch.cs" />
     <Compile Include="ToPublic\SqlCommandSet.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
-    <Compile Include="Repositories\Parameter.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="UnitOfWork\NHibernateUnitOfWorkAdapter.cs" />
-    <Compile Include="UnitOfWork\UnitOfWork.cs" />
     <Compile Include="RhinoContainer\IoC.cs" />
     <Compile Include="RhinoContainer\RhinoContainer.cs" />
     <Compile Include="StaticReflection.cs" />
-    <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="Validation.cs" />
-    <Compile Include="With\With.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Compile Include="Binsor\Configuration\AttributeBuilder.cs" />
     <Compile Include="Binsor\Configuration\ChildBuilder.cs" />
     <Compile Include="Binsor\Extensions\ConfigurationExtension.cs" />
@@ -178,50 +159,28 @@
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />
-    <Compile Include="Facilities\RhinoTransactionFacility.cs" />
-    <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
-    <Compile Include="ForTesting\MappingInfo.cs" />
-    <Compile Include="ForTesting\TestFixtureBase.cs" />
-    <Compile Include="ForTesting\UnitOfWorkTestContextDbStrategy.cs" />
-    <Compile Include="ForTesting\NHibernateEmbeddedDBTestFixtureBase.cs" />
-    <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
-    <Compile Include="ForTesting\UnitOfWorkTestContext.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
-    <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScope.cs" />
     <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="Logging\RollingSqlliteAppender.cs" />
-    <Compile Include="NHibernate\CriteriaBatch.cs" />
-    <Compile Include="NHibernate\IsAExpression.cs" />
-    <Compile Include="NHibernate\XmlIn.cs" />
-    <Compile Include="Repositories\RepositoryDecorator.cs" />
-    <Compile Include="Repositories\RepositoryDetachedCriteriaFactory.cs" />
-    <Compile Include="Repositories\RepositoryHelper.cs" />
-    <Compile Include="Repositories\RepositoryImplBase.cs" />
     <Compile Include="Binsor\BooComponentInstaller.cs" />
     <Compile Include="Tasks\Boo.cs" />
     <Compile Include="Tasks\SqlBatchExecute.cs" />
     <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
     <Compile Include="Threading\ThreadPool\WorkItem.cs" />
     <Compile Include="Threading\ThreadPool\WorkItemStatus.cs" />
-    <Compile Include="UnitOfWork\BaseUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
-    <Compile Include="UnitOfWork\RhinoTransaction.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
-    <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
-    <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
-    <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />
     <Compile Include="Logging\InMemoryMessageAppender.cs" />
-    <Compile Include="With\With.Cache.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
     <Compile Include="With\With.Log.cs" />
     <Compile Include="XmlRead.cs" />
     <Compile Include="XmlUpdate.cs" />
-    <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Facilities\" />
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -19,6 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.ActiveRecord"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.NHibernate", "Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj", "{BF4E220E-5AF8-4448-ABA9-981D69AB8775}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +50,12 @@ Global
 		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Start|Any CPU.ActiveCfg = Release|Any CPU
 		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Start|Any CPU.Build.0 = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
