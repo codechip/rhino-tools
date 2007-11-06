@@ -67,7 +67,7 @@ namespace Rhino.Commons.Test.Binsor
 					AssertAttribute(config, "isDebug", "true");
 					IConfiguration assemblies = AssertChild(config, "assemblies");
 					Assert.AreEqual(1, assemblies.Children.Count);
-					Assert.AreEqual(Assembly.Load("Rhino.Commons").ToString(),
+					Assert.AreEqual(Assembly.Load("Rhino.Commons.NHibernate").ToString(),
 					                assemblies.Children[0].Value);
 
 					int configCount = 0;

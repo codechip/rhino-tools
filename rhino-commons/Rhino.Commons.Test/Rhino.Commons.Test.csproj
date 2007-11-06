@@ -196,6 +196,10 @@
       <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
       <Name>Rhino.Commons.ActiveRecord</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj">
+      <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
+      <Name>Rhino.Commons.NHibernate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons\Rhino.Commons.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>

@@ -47,7 +47,7 @@ Facility("loggerFacility", LoggingFacility,
 	
 Facility( "arintegration", ActiveRecordFacility,
 	{ @isWeb: true, @isDebug: true,
-	  assemblies: [ Assembly.Load("Rhino.Commons") ],
+	  assemblies: [ Assembly.Load("Rhino.Commons.NHibernate") ],
 	  child(config): { keyvalues(): {
 		'show_sql': true,
 		'command_timeout': 5000,

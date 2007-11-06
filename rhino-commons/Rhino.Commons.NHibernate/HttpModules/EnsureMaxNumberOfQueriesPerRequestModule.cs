@@ -37,7 +37,7 @@ using log4net.Appender;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 using Rhino.Commons.Exceptions;
-using Rhino.Commons.Properties;
+using Rhino.Commons.NHibernate.Properties;
 
 namespace Rhino.Commons.HttpModules
 {

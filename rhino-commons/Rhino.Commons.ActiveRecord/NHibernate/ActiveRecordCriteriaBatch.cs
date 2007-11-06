@@ -28,14 +28,14 @@
 
 #endregion
 
+using System;
+using System.Collections;
+using Castle.ActiveRecord;
+using NHibernate;
+using NHibernate.Expression;
+
 namespace Rhino.Commons
 {
-	using System;
-	using System.Collections;
-	using Castle.ActiveRecord;
-	using NHibernate;
-	using NHibernate.Expression;
-
 	public class ActiveRecordCriteriaBatch : CriteriaBatch, IActiveRecordQuery<IList>
 	{
 		private Type rootType = null;

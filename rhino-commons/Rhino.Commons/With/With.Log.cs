@@ -33,7 +33,7 @@ using log4net;
 using log4net.Repository.Hierarchy;
 using Rhino.Commons.Logging;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.Util
 {
     public static partial class With
     {
@@ -70,12 +70,12 @@ namespace Rhino.Commons
             return Log(loggerType.FullName, operation);
         }
 
-		/// <summary>
-		/// overload for <see cref="Log(string, Proc)"/>
-		/// </summary>
-		public static IList<string> Log<T>(Proc operation)
-		{
-			return Log(typeof(T), operation);
-		}
+        /// <summary>
+        /// overload for <see cref="Log(string, Proc)"/>
+        /// </summary>
+        public static IList<string> Log<T>(Proc operation)
+        {
+            return Log(typeof(T), operation);
+        }
     }
 }
