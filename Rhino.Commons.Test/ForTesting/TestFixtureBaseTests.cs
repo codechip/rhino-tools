@@ -165,7 +165,7 @@ namespace Rhino.Commons.Test.ForTesting
                 VerifyCanCreateUseAndDisposeUnitOfWork();
             });
 
-            Assert.Less(timing, 0.1, "reinstating then using existing context sufficiently performant");
+            Assert.Less(timing, 0.2, "reinstating then using existing context sufficiently performant");
         }
 
 
