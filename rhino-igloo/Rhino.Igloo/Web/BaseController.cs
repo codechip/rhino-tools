@@ -160,6 +160,24 @@ namespace Rhino.Igloo
 			return TryParseDateFromInput(inputName, "dd/MM/yyyy");
 		}
 
+
+        /// <summary>
+        /// Tries the parse enum from input.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inputName">Name of the input.</param>
+        /// <returns></returns>
+        protected static T TryParseEnumFromInput<T>(string inputName)
+        {
+            string userInput = Scope.Input[inputName];
+            int value;
+            if (int.TryParse(userInput, out value) == false)
+            {
+                return default(T);
+            }
+            return (T)Enum.ToObject(typeof(T), value);
+        }
+
 		/// <summary>
 		/// Tries to parse the inputName as date.
 		/// </summary>
@@ -215,6 +233,19 @@ namespace Rhino.Igloo
 			return TryGetByIdString<T>(maybeId);
 		}
 
+        /// <summary>
+        /// Tries to get the value for the input key.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inputKey">The input key.</param>
+        /// <returns></returns>
+        protected static T TryGetFromInputChar<T>(string inputKey)
+            where T : class
+        {
+            string maybeId = Scope.Input[inputKey];
+            return TryGetByIdChar<T>(maybeId);
+        }
+
 		/// <summary>
 		/// Tries the get by id.
 		/// </summary>
@@ -241,6 +272,20 @@ namespace Rhino.Igloo
 				return null;
 			return Repository<T>.Get(maybeId);
 		}
+
+        /// <summary>
+        /// Tries the get by id.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="maybeId">The maybe id.</param>
+        /// <returns></returns>
+        protected static T TryGetByIdChar<T>(string maybeId)
+            where T : class
+        {
+            if (maybeId == null || maybeId.Length != 1)
+                return null;
+            return Repository<T>.Get(maybeId.ToCharArray()[0]);
+        }
 
 		/// <summary>
 		/// Gets the validator runner.
