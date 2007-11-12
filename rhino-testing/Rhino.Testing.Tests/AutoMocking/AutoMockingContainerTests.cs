@@ -1,13 +1,14 @@
 using System;
 using Castle.MicroKernel;
 using MbUnit.Framework;
+using Rhino.Mocks;
 
 namespace Rhino.Testing.Tests.AutoMocking
 {
 	[TestFixture]
 	public class AutoMockingContainerTests : AutoMockingTests
 	{
-		[Test]
+	    [Test]
 		public void Resolving_ConditionalDependencyWithMockMissing_WillNotResolve()
 		{
 			container.MarkMissing<ICollectionOfServices>();
@@ -99,5 +100,26 @@ namespace Rhino.Testing.Tests.AutoMocking
 			ComponentBeingConfigured target = container.Create<ComponentBeingConfigured>();
 			Assert.AreEqual(target.ReallyCoolService, container.Get<IReallyCoolService>());
 		}
+
+
+	    [Test]
+	    public void Create_SafeToCallMultipleTimes()
+	    {
+	        container.Create<ComponentBeingConfigured>();
+	        container.Create<ComponentBeingConfigured>();
+	    }
+
+
+	    [Test]
+	    public void Get_ReturnsStubs_ThatAreReadyForRecording()
+	    {
+	        container.Mark<IReallyCoolService>().Stubbed();
+	        IReallyCoolService service = container.Get<IReallyCoolService>();
+
+	        SetupResult.For(service.GetName()).Return("Ayende");
+	        mocks.ReplayAll();
+
+	        Assert.AreEqual("Ayende", service.GetName());
+	    }
 	}
 }

@@ -59,17 +59,23 @@ namespace Rhino.Testing.AutoMocking
             Kernel.AddFacility("AutoMockingFacility", new AutoMockingFacility(this));
         }
 
-        public T Create<T>()
+
+        private void AddComponentIfMissing<T>()
         {
             Type targetType = typeof(T);
-            AddComponent(targetType.FullName, targetType);
+            if (!Kernel.HasComponent(targetType.FullName))
+                AddComponent(targetType.FullName, targetType);
+        }
+
+        public T Create<T>()
+        {
+            AddComponentIfMissing<T>();
             return Resolve<T>();
         }
 
 		public T Create<T>(IDictionary parameters)
         {
-            Type targetType = typeof(T);
-            AddComponent(targetType.FullName, targetType);
+            AddComponentIfMissing<T>();
             return Resolve<T>(parameters);
         }
 

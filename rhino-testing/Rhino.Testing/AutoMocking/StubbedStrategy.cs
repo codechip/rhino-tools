@@ -27,7 +27,6 @@ namespace Rhino.Testing.AutoMocking
         {
             object target = Mocks.Stub(type);
             AutoMock.AddService(type, target);
-            Mocks.Replay(target);
             return target;
         }
     }
