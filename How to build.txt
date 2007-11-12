@@ -22,9 +22,9 @@ Building From NHibernate and Castle Trunks
    * Important *
    *
    * Castle requires NUnit on the path so be sure set Castle-Test-Framework and Castle-Tester-Console
-   * int the BuildFromTrunk-Config.build file.
+   * in the BuildFromTrunk-Config.build file.
 
-4) Patch Castle source to work with NH-Trunk
+4) Patch Castle source to work with NH-Trunk, check out the branch that works with nh trunk!
 
 5) Copy the new NHibernate assemblies to the SharedLibs folder of the Castle project.
 
@@ -60,7 +60,7 @@ Customizing A Trunk Build
 
    <Target Name=ProjectY">
      <MSBuild Project="BuildFromTrunk" Targets="CopyTo" Parameters="Configuration=release;Dest-Dir=C:\ProjectX
-      ;With-Rhino-Commons=true
+      ;With-Rhino-Commons-NH=true
       ;With-Log4Net=true" />
    </Target>
 
@@ -72,6 +72,17 @@ Customizing A Trunk Build
       ;With-MR-NVelocity=true
       ;With-Rhino-Commons=true" />
    </Target>
+
+** Tips **
+  nant is case sensitive and msbuild is not so when specifying a COnfiguration parameter value use lowercase b/c nh and castle do.
+  
+  Patching the trunk is a pain, check the castle tree for a branch that works with NH trunk.
+  
+  Using Configuration=debug will give you full debug builds of all the libraries, useful for troubleshooting
+     framework bugs but a royal pia for debugging your own applications.
+  
+  You can configure your own projects to use either the debug or release builds depending on your project config
+     Unload the project, edit the references, change the path from ../lib/release/whatever.dll to ../lib/$(Configuration)/whatever.dll
 
 Options List
 ==================
@@ -112,6 +123,8 @@ With-MR-Brail
 With-MR-Json
 
 With-Rhino-Commons
+With-Rhino-Commons-NH
+With-Rhino-Commons-AR
 With-Rhino-Mocks
 With-Nhqg
 

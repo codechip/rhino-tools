@@ -87,6 +87,7 @@
 	<!-- Rhino Assemblies -->
 	<PropertyGroup>
 		<_Ass-Rhn-Commons>Rhino.Commons</_Ass-Rhn-Commons>
+		<_Ass-Rhn-Commons-NH>Rhino.Commons.NHibernate</_Ass-Rhn-Commons-NH>
 		<_Ass-Rhn-Commons-AR>Rhino.Commons.ActiveRecord</_Ass-Rhn-Commons-AR>
 		<_Ass-Rhn-Mocks>Rhino.Mocks</_Ass-Rhn-Mocks>
 	</PropertyGroup>
@@ -242,8 +243,14 @@
 			;$(_Ass-Boo)
 		</_Asses-Rhn-Commons>
 
-		<_Asses-Rhn-Commons-AR>
+		<_Asses-Rhn-Commons-NH>
 			$(_Asses-Rhn-Commons)
+			;$(_Ass-Rhn-Commons-NH)
+		</_Asses-Rhn-Commons-NH>
+
+		<_Asses-Rhn-Commons-AR>
+			$(_Asses-Rhn-Commons-NH)
+			;(_Ass-Rhn-Commons-AR)
 			;$(_Asses-Cstl-AR))
 		</_Asses-Rhn-Commons-AR>
 
@@ -273,7 +280,7 @@
 			OR '$(With-AR-Integration)' == 'true'
 			OR '$(With-MR-AR-Support)' == 'true'
 			OR '$(With-MR-AR-Scaffolding)' == 'true'
-			OR '$(With-Rhino-Commons)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-NH>
 		<_With-NH Condition="'$(_With-NH)' != 'true'">false</_With-NH>
 
@@ -472,6 +479,10 @@
 		<_With-Rhino-Commons Condition="'$(With-Rhino-Commons)' == 'true'">true</_With-Rhino-Commons>
 		<_With-Rhino-Commons Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons>
 
+		<_With-Rhino-Commons-NH Condition="'$(With-Rhino-Commons-NH)' == 'true'
+			OR ('$(With-Rhino-Commons)' == 'true' AND '$(_With-NH)' == 'true')">true</_With-Rhino-Commons-NH>
+		<_With-Rhino-Commons-NH Condition="'$(_With-Rhino-Commons-NH)' != 'true'">false</_With-Rhino-Commons-NH>
+		
 		<_With-Rhino-Commons-AR Condition="'$(With-Rhino-Commons-AR)' == 'true' 
 			OR ('$(With-Rhino-Commons)' == 'true' AND '$(_With-AR)' == 'true')">true</_With-Rhino-Commons-AR>
 		<_With-Rhino-Commons-AR Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons-AR>
@@ -513,6 +524,7 @@
 		<_Asses Condition="'$(_With-MR-Json)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-Json);$(_Ass-Json)</_Asses>
 
 		<_Asses Condition="'$(_With-Rhino-Commons)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons)</_Asses>
+		<_Asses Condition="'$(_With-Rhino-Commons-NH)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-NH)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Commons-AR)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-AR)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Mocks)' == 'true'">$(_Asses);$(_Asses-Rhn-Mocks)</_Asses>
 		<_Asses Condition="'$(_With-Markdown)' == 'true'">$(_Asses);$(_Ass_Markdown)</_Asses>
@@ -712,7 +724,7 @@
 		<CreateItem Include="$(_Asses-Cstl-All)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle"/>
 		</CreateItem>
-		<CreateItem Include="$(Rhino-Prjct-Commons-Dir)\Rhino.Commons\bin\$(Configuration)\$(_Ass-Rhn-Commons);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\$(_Ass-Rhn-Commons-AR)">
+		<CreateItem Include="$(Rhino-Prjct-Commons-Dir)\Rhino.Commons\bin\$(Configuration)\$(_Ass-Rhn-Commons);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.NHibernate\bin\$(Configuration)\$(_Ass-Rhn-Commons-NH);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\$(_Ass-Rhn-Commons-AR)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Commons"/>
 		</CreateItem>
 		<CreateItem Include="$(Rhino-Prjct-Mocks-Dir)\Rhino.Mocks\bin\$(Configuration)\$(_Ass-Rhn-Mocks)">
