@@ -30,6 +30,7 @@
 	<ItemGroup>
 		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Commons.Test\bin\$(Configuration)\Rhino.Commons.Test.dll"/>
 	</ItemGroup>
+	
 	<Target Name="BeforeTest" Condition="$(MergeAssemblies)">
 	
 	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-core"/>

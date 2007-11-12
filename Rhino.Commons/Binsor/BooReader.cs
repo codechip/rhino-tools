@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,8 +25,8 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -44,27 +45,24 @@ using Rhino.Commons.Boo;
 namespace Rhino.Commons.Binsor
 {
 	public static class BooReader
-    {
-        private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
+	{
+		private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
 
-        internal static ICollection<INeedSecondPassRegistration> NeedSecondPassRegistrations
-        {
-            get
-            {
-                ICollection<INeedSecondPassRegistration> data = (ICollection<INeedSecondPassRegistration>)
-                    Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
-                if (data == null)
-                {
-                    Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] =
-                        data = new List<INeedSecondPassRegistration>();
-                }
-                return data;
-            }
-            set
-            {
-                Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] = value;
-            }
-        }
+		internal static ICollection<INeedSecondPassRegistration> NeedSecondPassRegistrations
+		{
+			get
+			{
+				ICollection<INeedSecondPassRegistration> data = (ICollection<INeedSecondPassRegistration>)
+				                                                Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
+				if (data == null)
+				{
+					Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] =
+						data = new List<INeedSecondPassRegistration>();
+				}
+				return data;
+			}
+			set { Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] = value; }
+		}
 
 		public static void Read(IWindsorContainer container, string fileName)
 		{
@@ -72,55 +70,58 @@ namespace Rhino.Commons.Binsor
 		}
 
 		public static void Read(IWindsorContainer container, string fileName, string environment)
-        {
-            Read(container, fileName, environment, GenerationOptions.Memory);
-        }
-
-		public static void Read(IWindsorContainer container, string fileName, string environment,
-		                        GenerationOptions generationOptions)
 		{
-            try
-            {
-                using (IoC.UseLocalContainer(container))
-                {
-                    IConfigurationRunner conf = GetConfigurationInstanceFromFile(
+			Read(container, fileName, environment, GenerationOptions.Memory);
+		}
+
+		public static void Read(
+			IWindsorContainer container, string fileName, string environment,
+			GenerationOptions generationOptions)
+		{
+			try
+			{
+				using (IoC.UseLocalContainer(container))
+				{
+					IConfigurationRunner conf = GetConfigurationInstanceFromFile(
 						fileName, environment, container, generationOptions);
-                    conf.Run();
-                    foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
-                    {
-                        needSecondPassRegistration.RegisterSecondPass();
-                    }
-                }
-            }
-            finally
-            {
-                NeedSecondPassRegistrations = null;
-            }
-        }
+					conf.Run();
+					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+					{
+						needSecondPassRegistration.RegisterSecondPass();
+					}
+				}
+			}
+			finally
+			{
+				NeedSecondPassRegistrations = null;
+			}
+		}
 
 		public static void Read(IWindsorContainer container, Stream stream, string name)
 		{
 			Read(container, stream, name, "");
 		}
 
-		public static void Read(IWindsorContainer container, Stream stream,
-		                        string name, string environment)
+		public static void Read(
+			IWindsorContainer container, Stream stream,
+			string name, string environment)
 		{
 			Read(container, stream, GenerationOptions.Memory, name, environment);
 		}
 
-		public static void Read(IWindsorContainer container, Stream stream,
-		                        GenerationOptions generationOptions, string name,
-		                        string envronment)
+		public static void Read(
+			IWindsorContainer container, Stream stream,
+			GenerationOptions generationOptions, string name,
+			string envronment)
 		{
 			try
 			{
-				using(IoC.UseLocalContainer(container))
+				using (IoC.UseLocalContainer(container))
 				{
 					IConfigurationRunner conf = GetConfigurationInstanceFromStream(
 						name, envronment, container, stream, generationOptions);
 					conf.Run();
-					foreach(INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
 						needSecondPassRegistration.RegisterSecondPass();
 					}
@@ -139,10 +140,14 @@ namespace Rhino.Commons.Binsor
 		{
 			string baseDirectory = Path.GetDirectoryName(fileName);
 			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
-			return GetConfigurationInstance(
+			using(TextReader reader = File.OpenText(fileName))
+			{
+				return GetConfigurationInstance(
 				Path.GetFileNameWithoutExtension(fileName), environment,
-				new FileInput(fileName), generationOptions,
+				new ReaderInput(Path.GetFileNameWithoutExtension(fileName), reader), 
+				generationOptions,
 				new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
+			}
 		}
 
 		private static IConfigurationRunner GetConfigurationInstanceFromStream(
@@ -150,15 +155,18 @@ namespace Rhino.Commons.Binsor
 			GenerationOptions generationOptions)
 		{
 			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
-			return GetConfigurationInstance(
-				name, environment, new ReaderInput(name, new StreamReader(stream)),
-				generationOptions, new AutoReferenceFilesCompilerStep(urlResolver));
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				return GetConfigurationInstance(
+					name, environment, new ReaderInput(name, reader),
+					generationOptions, new AutoReferenceFilesCompilerStep(urlResolver));
+			}
 		}
 
 		private static IConfigurationRunner GetConfigurationInstance(
 			string name, string environment, ICompilerInput input,
 			GenerationOptions generationOptions,
-			AutoReferenceFilesCompilerStep autoReferenceStep)
+			ICompilerStep autoReferenceStep)
 		{
 			BooCompiler compiler = new BooCompiler();
 			compiler.Parameters.Ducky = true;
@@ -170,13 +178,13 @@ namespace Rhino.Commons.Binsor
 			compiler.Parameters.Pipeline.Insert(1, autoReferenceStep);
 			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep(environment));
 			compiler.Parameters.Pipeline.Replace(
-				typeof(ProcessMethodBodiesWithDuckTyping),
+				typeof (ProcessMethodBodiesWithDuckTyping),
 				new TransformUnknownReferences());
-			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
-				new RegisterComponentAndFacilitiesAfterCreation());
+			compiler.Parameters.Pipeline.InsertAfter(typeof (TransformUnknownReferences),
+			                                         new RegisterComponentAndFacilitiesAfterCreation());
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
-			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
+			compiler.Parameters.References.Add(typeof (BooReader).Assembly);
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)
 			{
@@ -189,33 +197,35 @@ namespace Rhino.Commons.Binsor
 		private static UrlResolverDelegate CreateWindorUrlResolver(IWindsorContainer container)
 		{
 			IResourceSubSystem subSystem = (IResourceSubSystem)
-					container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+			                               container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
 
 			return delegate(string url, string basePath)
-			       {
-			       	IResource resource;
+			{
+				IResource resource;
 
-					if (url.IndexOf(':') < 0)
-					{
-						url = "file://" + url;
-					}
+				if (url.IndexOf(':') < 0)
+				{
+					url = "file://" + url;
+				}
 
-			       	if (!string.IsNullOrEmpty(basePath))
-			       	{
-			       		resource = subSystem.CreateResource(url, basePath);
-			       	}
-			       	else
-			       	{
-			       		resource = subSystem.CreateResource(url);
-			       	}
-			       	return resource.GetStreamReader();
-			       };
+				if (!string.IsNullOrEmpty(basePath))
+				{
+					resource = subSystem.CreateResource(url, basePath);
+				}
+				else
+				{
+					resource = subSystem.CreateResource(url);
+				}
+				using (resource)
+				using (TextReader reader = resource.GetStreamReader())
+					return new StringReader(reader.ReadToEnd());
+			};
 		}
 
-        public enum GenerationOptions
-        {
-            Memory,
-            File
-        }
-    }
+		public enum GenerationOptions
+		{
+			Memory,
+			File
+		}
+	}
 }

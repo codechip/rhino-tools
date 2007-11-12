@@ -168,13 +168,9 @@ namespace Rhino.Commons.HttpModules
 
         private void CreateContainer()
         {
-            string windsorConfig = Settings.Default.WindsorConfig;
-            if (!Path.IsPathRooted(windsorConfig))
-            {
-                //In ASP.Net apps, the current directory and the base path are NOT the same.
-                windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
-            }
-            FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
+            string windsorConfig = GetWindsorConfig();
+
+        	FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
             watcher = new FileSystemWatcher(Path.GetDirectoryName(windsorConfig));
             watcher.Filter = Path.GetFileName(windsorConfig);
             watcher.Created += resetIoC;
@@ -187,7 +183,28 @@ namespace Rhino.Commons.HttpModules
             watcher.EnableRaisingEvents = true;
         }
 
-        protected virtual IWindsorContainer CreateContainer(string windsorConfig)
+    	private static string GetWindsorConfig()
+    	{
+    		string windsorConfig = Settings.Default.WindsorConfig;
+    		if (!Path.IsPathRooted(windsorConfig))
+    		{
+    			//In ASP.Net apps, the current directory and the base path are NOT the same.
+    			windsorConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, windsorConfig);
+    		}
+    		string[] extensions = {".config", ".boo" };
+    		foreach (string extension in extensions)
+    		{
+    			string path = windsorConfig+extension;
+    			if(File.Exists(path))
+    			{
+    				windsorConfig = path;
+    				break;
+    			}
+    		}
+    		return windsorConfig;
+    	}
+
+    	protected virtual IWindsorContainer CreateContainer(string windsorConfig)
         {
             return new RhinoContainer(windsorConfig);
         }

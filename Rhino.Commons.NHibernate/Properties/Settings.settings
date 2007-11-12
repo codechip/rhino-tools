@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="WindsorConfig" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Windsor.config</Value>
+      <Value Profile="(Default)">Windsor</Value>
     </Setting>
     <Setting Name="HibernateConfig" Type="System.String" Scope="Application">
       <Value Profile="(Default)">hibernate.cfg.xml</Value>
