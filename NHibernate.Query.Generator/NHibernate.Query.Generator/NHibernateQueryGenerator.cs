@@ -53,7 +53,7 @@ namespace NHibernate.Query.Generator
 			{
 				using (StringReader reader = new StringReader(inputFileContent))
 				{
-					QueryGenerator qg = new QueryGenerator(reader, CodeProvider, "Query");
+					QueryGenerator qg = new QueryGenerator(reader, CodeProvider, FileNameSpace);
 					using (TextWriter writer = new StreamWriter(ms))
 					{
 						qg.Generate(writer);
