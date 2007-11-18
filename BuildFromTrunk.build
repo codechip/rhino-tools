@@ -15,7 +15,7 @@
 		<Rhino-Prjct-Commons-Dir>$(Rhino-Dir)\rhino-commons</Rhino-Prjct-Commons-Dir>
 		<Rhino-Prjct-NHQG-Dir>$(Rhino-Dir)\NHibernate.Query.Generator</Rhino-Prjct-NHQG-Dir>
 		<Rhino-Prjct-Mocks-Dir>$(Rhino-Dir)\rhino-mocks</Rhino-Prjct-Mocks-Dir>
-		
+		<Rhino-Prjct-Testing-Dir>$(Rhino-Dir)\rhino-testing</Rhino-Prjct-Testing-Dir>
 		<_Artifact-Dir>$(Artifact-Dir)\$(Configuration)</_Artifact-Dir>
 	</PropertyGroup>
 	
@@ -34,6 +34,8 @@
 		<_Ass-NVelocity>NVelocity</_Ass-NVelocity>
 		<_Ass-Json>Newtonsoft.Json</_Ass-Json>
 		<_Ass-Markdown>anrControls.Markdown.NET</_Ass-Markdown>
+    <_Ass-NRefactory>ICSharpCode.NRefactory</_Ass-NRefactory>
+    <_Misc-Cstl-CodeGen-Target>Castle.Tools.CodeGenerator.targets</_Misc-Cstl-CodeGen-Target>
 	</PropertyGroup>
 
 	<!-- NHibernate Assemblies -->
@@ -84,12 +86,17 @@
 		<_Ass-Cstl-MR-Transform>Castle.MonoRail.TransformFilters</_Ass-Cstl-MR-Transform>	
 	</PropertyGroup>
 
+  <PropertyGroup>
+    <_Ass-Cstl-CodeGen>Castle.Tools.CodeGenerator</_Ass-Cstl-CodeGen>
+  </PropertyGroup>
+  
 	<!-- Rhino Assemblies -->
 	<PropertyGroup>
 		<_Ass-Rhn-Commons>Rhino.Commons</_Ass-Rhn-Commons>
 		<_Ass-Rhn-Commons-NH>Rhino.Commons.NHibernate</_Ass-Rhn-Commons-NH>
 		<_Ass-Rhn-Commons-AR>Rhino.Commons.ActiveRecord</_Ass-Rhn-Commons-AR>
 		<_Ass-Rhn-Mocks>Rhino.Mocks</_Ass-Rhn-Mocks>
+    <_Ass-Rhn-Testing>Rhino.Testing</_Ass-Rhn-Testing>
 	</PropertyGroup>
 	
 	<!-- NHibernate Bundles -->
@@ -194,7 +201,15 @@
 			;$(_Ass-Cstl-Log4Net)
 			;$(_Ass-Cstl-AR-Integration)
 		</_Deps-Rhn-From-Cstl>
-		
+
+    <_Deps-Cstl-CodeGen-From-Cstl>
+      $(_Ass-Cstl-Binder)
+      ;$(_Ass-Cstl-Email)
+      ;$(_Ass-Cstl-Validator)
+      ;$(_Ass-Cstl-MR)
+      ;$(_Ass-Cstl-Core)
+    </_Deps-Cstl-CodeGen-From-Cstl>
+    
 		<_Asses-Cstl-All>
 			$(_Ass-Cstl-Core)
 			;$(_Ass-Cstl-Dp2)
@@ -259,6 +274,11 @@
 			;$(_Ass-Cstl-Core)
 			;$(_Ass-Cstl-Dp2)
 		</_Asses-Rhn-Mocks>
+
+    <_Asses-Rhn-Testing>
+      $(_Asses-Rhn-Mocks)
+      ;$(_Ass-Rhn-Testing)
+    </_Asses-Rhn-Testing>
 		
 	</PropertyGroup>
 	<!-- Build Options and Configuration -->
@@ -318,7 +338,12 @@
 			OR '$(With-Atm)' == 'true'
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-MicroKernel>
+      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-AR)' == 'true'
+      OR '$(With-Rhino-Mocks)' == 'true'
+      OR '$(With-Cstl-CodeGen)' == 'true'
+      OR '$(With-Mocks)' == 'true'
+      OR '$(With-Rhino-Testing)' == 'true'">true</_With-MicroKernel>
 		<_With-MicroKernel Condition="'$(_With-MicroKernel)' != 'true'">false</_With-MicroKernel>
 		
 		<_With-Windsor Condition="
@@ -326,6 +351,7 @@
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-Wcf)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
+      OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Windsor>
 		<_With-Windsor Condition="'$(_With-Windsor)' != 'true'">false</_With-Windsor>
 
@@ -334,12 +360,14 @@
 			OR '$(With-Log4Net)' == 'true'
 			OR '$(With-NLog)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
+      OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Logging>
 		<_With-Logging Condition="'$(_With-Log4Net)' != 'true'">false</_With-Logging>
 		
 		<_With-Log4Net Condition="
 			'$(With-Log4Net)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
+      OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Log4Net>
 		<_With-Log4Net Condition="'$(_With-Log4Net)' != 'true'">false</_With-Log4Net>
 		
@@ -349,12 +377,14 @@
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-AR-Integration)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
+      OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Transaction>
 		<_With-Transaction Condition="'$(_With-Transaction)' != 'true'">false</_With-Transaction>
 
 		<_With-Atm Condition="
 			'$(With-Atm)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
+      OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Atm>
 		<_With-Atm Condition="'$(_With-Transaction)' != 'true'">false</_With-Atm>
 
@@ -385,6 +415,7 @@
 			OR '$(With-MR-Json)' == 'true'
 			OR '$(With-MR-NVelocity)' == 'true'
 			OR '$(With-MR-Brail)' == 'true'
+      OR '$(With-Cstl-CodeGen)' == 'true'
 			OR '$(With-MR-Transform)' == 'true'">true</_With-MR>
 		<_With-MR Condition="'$(_With-MR)' != 'true'">false</_With-MR>
 
@@ -417,13 +448,15 @@
 		<_With-MR-Json Condition="'$(_With-MR-Json)' != 'true'">false</_With-MR-Json>
 		
 		<_With-Binder Condition="
-			'$(With-Binder)' == 'true' 
+			'$(With-Binder)' == 'true'
+      OR '$(With-Cstl-CodeGen)' == 'true'
 			OR '$(_With_MR-AR-Scaffolding)' == 'true'">true</_With-Binder>
 		<_With-Binder Condition="'$(_With-Binder)' != 'true'">false</_With-Binder>
 
 		<_With-Validator Condition="
 			'$(With-Validator)' == 'true' 
 			OR '$(_With-Binder)' == 'true' 
+      OR '$(With-Cstl-CodeGen)' == 'true'
 			OR '$(_With-AR)' == 'true'">true</_With-Validator>
 		<_With-Validator Condition="'$(_With-Validator)' != 'true'">false</_With-Validator>
 		
@@ -440,6 +473,7 @@
 
 		<_With-Email Condition="
 			'$(With-Email)' == 'true' 
+      OR '$(With-Cstl-CodeGen)' == 'true'
 			OR '$(_With-MR)' == 'true'">true</_With-Email>
 		<_With-Email Condition="'$(_With-Email)' != 'true'">false</_With-Email>
 
@@ -475,7 +509,10 @@
 
 		<_With-Rhino-Mocks Condition="'$(With-Mocks)' == 'true' OR '$(With-Rhino-Mocks)' == 'true'">true</_With-Rhino-Mocks>
 		<_With-Rhino-Mocks Condition="'$(_With-Rhino-Mocks)' != 'true'">false</_With-Rhino-Mocks>
-		
+
+    <_With-Rhino-Testing Condition="'$(With-Mocks)' == 'true' OR '$(With-Rhino-Testing)' == 'true'">true</_With-Rhino-Testing>
+    <_With-Rhino-Testing Condition="'$(_With-Rhino-Testing)' != 'true'">false</_With-Rhino-Testing>
+    
 		<_With-Rhino-Commons Condition="'$(With-Rhino-Commons)' == 'true'">true</_With-Rhino-Commons>
 		<_With-Rhino-Commons Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons>
 
@@ -486,7 +523,9 @@
 		<_With-Rhino-Commons-AR Condition="'$(With-Rhino-Commons-AR)' == 'true' 
 			OR ('$(With-Rhino-Commons)' == 'true' AND '$(_With-AR)' == 'true')">true</_With-Rhino-Commons-AR>
 		<_With-Rhino-Commons-AR Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons-AR>
-		
+
+    <_With-Cstl-CodeGen Condition="'$(With-Cstl-CodeGen)' == 'true'">true</_With-Cstl-CodeGen>
+    <_With-Cstl-CodeGen Condition="'$(With-Cstl-CodeGen)' != 'true'">false</_With-Cstl-CodeGen>
 	</PropertyGroup>
 
 	<!-- Assembly Deployment List -->
@@ -527,6 +566,7 @@
 		<_Asses Condition="'$(_With-Rhino-Commons-NH)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-NH)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Commons-AR)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-AR)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Mocks)' == 'true'">$(_Asses);$(_Asses-Rhn-Mocks)</_Asses>
+    <_Asses Condition="'$(_With-Rhino-Testing)' == 'true'">$(_Asses);$(_Asses-Rhn-Testing)</_Asses>
 		<_Asses Condition="'$(_With-Markdown)' == 'true'">$(_Asses);$(_Ass_Markdown)</_Asses>
 	</PropertyGroup>
 
@@ -535,6 +575,7 @@
 		<Tool-SqlLite Include="$(Rhino-Lib-Dir)\SqLite.Net\*.dll" ></Tool-SqlLite>
 		<Tool-SqlLite-x64 Include="$(Rhino-Lib-Dir)\SqLite.Net\x64\*.dll"></Tool-SqlLite-x64>
 		<Tool-SqlCe Include="$(Rhino-Lib-Dir)\SqlCE\*.dll"></Tool-SqlCe>
+    <Tool-Castle-CodeGenerator Include="$(_Artifact-Dir\$(Configuration)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
 	</ItemGroup>
 	<!-- Top Level Targets -->
 	<Target Name="Update-All">
@@ -547,6 +588,7 @@
 		<CallTarget Targets="Build-Castle-For-NH" />
 		<CallTarget Targets="Build-NH" />
 		<CallTarget Targets="Build-Castle" />
+    <CallTarget Targets="Build-Castle-CodeGen" />
 		<CallTarget Targets="Build-Rhino" />
 	</Target>
 
@@ -554,6 +596,7 @@
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
+    <CallTarget Targets="Build-Rhino-Testing" />
 	</Target>
 	
 	<!-- Subversion Update -->
@@ -593,6 +636,12 @@
 		</CreateItem>
 	</Target>
 
+  <Target Name="_Create-Deps-For-Cstl-CodeGen-From-Castle">
+    <CreateItem Include="$(_Deps-Cstl-CodeGen-From-Cstl)">
+      <Output TaskParameter="Include" ItemName="_Deps-For-Cstl-CodeGen-From-Castle"/>
+    </CreateItem>
+  </Target>
+  
 	<Target Name="_Delete-NH-Deps" DependsOnTargets="_Create-Deps-For-NH-From-Castle">
 		<Delete Files="$(NH-Lib-Dir)\%(_Deps-For-NH-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(NH-Lib-Dir)\%(_Deps-For-NH-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
@@ -644,7 +693,19 @@
 		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
 		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
 	</Target>
-	
+
+  <Target Name="_Delete-Cstl-CodeGen-Deps" DependsOnTargets="_Create-Deps-For-Cstl-CodeGen-From-Castle">
+    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
+    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
+    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
+  </Target>
+
+  <Target Name="_Copy-Cstl-CodeGen-Deps" DependsOnTargets="_Delete-Cstl-CodeGen-Deps">
+    <Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+    <Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+    <Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+  </Target>
+  
 	<!-- Castle Compile -->
 	<Target Name="Build-Castle" DependsOnTargets="_Delete-Castle-Deps;_Copy-Castle-Deps">
 		<CallTarget Targets="Compile-Castle" />
@@ -681,8 +742,16 @@
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
+    <CallTarget Targets="Build-Rhino-Testing" />
 	</Target>
-	
+
+  <Target Name="Build-Castle-CodeGen" DependsOnTargets="_Delete-Cstl-CodeGen-Deps;_Copy-Cstl-CodeGen-Deps">
+    <CallTarget Targets="Compile-Castle-CodeGen" />
+  </Target>
+  <Target Condition="$(_With-Cstl-CodeGen)"  Name="Compile-Castle-CodeGen">
+    <MSBuild Projects="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator\Castle.Tools.CodeGenerator.csproj" Properties="Configuration=Release" Targets="Clean;Build" />
+  </Target>
+  
 	<Target Name="Build-Rhino-Commons" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-Commons" />
 	</Target>
@@ -697,6 +766,13 @@
 		<MSBuild Projects="$(Rhino-Prjct-Mocks-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
 	</Target>
 
+  <Target Name="Build-Rhino-Testing" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
+    <CallTarget Targets="Compile-Rhino-Testing" />
+  </Target>
+  <Target Name="Compile-Rhino-Testing">
+    <MSBuild Projects="$(Rhino-Prjct-Testing-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
+  </Target>
+  
 	<Target Name="Build-Rhino-NHQG" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-NHQG" />
 	</Target>
@@ -711,9 +787,10 @@
 
 		<Copy Condition="$(_With-Nhqg)" SourceFiles="@(Tool-NHQG)" DestinationFolder="$(Dest-Tool-Dir)\NHQG\" ContinueOnError="true" />
 		<Copy Condition="$(_With-Nhqg) And '$(Configuration)' == 'debug'" SourceFiles="@(Tool-NHQG)" DestinationFolder="$(Dest-Tool-Dir)\debug\NHQG\" ContinueOnError="true" />
-		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite)" DestinationFolder="$(Dest-Lib-Dir)\" ContinueOnError="true" />
+		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite)" DestinationFolder="$(Dest-Lib-Dir)\x86\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite-x64)" DestinationFolder="$(Dest-Lib-Dir)\x64\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlCe)" SourceFiles="@(Tool-SqlCe)" DestinationFolder="$(Dest-Lib-Dir)\SqlCe\" ContinueOnError="true" />
+    <Copy Condition="$(_With-Cstl-CodeGen)" SourceFiles="@(Tool-Castle-CodeGenerator)" DestinationFolder="$(Dest-Lib-Dir)\Castle.CodeGenerator\" ContinueOnError="true" />
 	</Target>
 
 
@@ -730,10 +807,15 @@
 		<CreateItem Include="$(Rhino-Prjct-Mocks-Dir)\Rhino.Mocks\bin\$(Configuration)\$(_Ass-Rhn-Mocks)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Mocks"/>
 		</CreateItem>
-
+    <CreateItem Include="$(Rhino-Prjct-Testing-Dir)\Rhino.Testing\bin\$(Configuration)\$(_Ass-Rhn-Testing)">
+      <Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Testing"/>
+    </CreateItem>
 		<CreateItem Include="$(Rhino-Prjct-NHQG-Dir)\NHibernate.Query.Generator\bin\$(Configuration)\**\*.*">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-NHQG"/>
 		</CreateItem>
+    <CreateItem Include="$(Castle-Contrib-CodeGen-Dir)\Build\Release\AnyCPU\**\*.*;$(Castle-Contrib-CodeGen-Dir)\$(_Misc-Cstl-CodeGen-Target)">
+      <Output TaskParameter="Include" ItemName="All-Build-Items-Castle-CodeGen"/>
+    </CreateItem>
 	</Target>
 	
 	<Target Name="Copy-To-Artifact-Dir" DependsOnTargets="_Create-All-Build-Items">
@@ -753,7 +835,12 @@
 		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 		<Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 
-		<Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Rhino-NHQG)" DestinationFolder="$(_Artifact-Dir)\NHQG\" SkipUnchangedFiles="true" />
+    <Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+    <Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+
+    <Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Rhino-NHQG)" DestinationFolder="$(_Artifact-Dir)\NHQG\" SkipUnchangedFiles="true" />
+    <Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Castle-CodeGen)" DestinationFolder="$(_Artifact-Dir)\Castle.CodeGenerator\" SkipUnchangedFiles="true" />
 	</Target>
 	
 	<Target Name="Display-Deployment-List" DependsOnTargets="Display-Deployment-List-Flags;_CreateUniqueFileList">

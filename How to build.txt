@@ -40,6 +40,9 @@ Customizing A Trunk Build
 2) Create a file in the root directory of Rhino-Tools named
    MyBuild.build -- Use the sample as an example
 
+   * If you want to build the castle code generator make sure to pass the BuildAll target the parameter With-Cstl-CodeGen
+   * Make sure the directory paths are configured for Castle Contrib
+
 3) Create a target for each one of your projects that is using NH, Castle, and Rhino
    
    The target should call the CopyTo target of the BuildFromTrunk.build script.
@@ -126,12 +129,14 @@ With-Rhino-Commons
 With-Rhino-Commons-NH
 With-Rhino-Commons-AR
 With-Rhino-Mocks
+With-Mocks
+With-Rhino-Testing
 With-Nhqg
 
 With-SqlLite
 With-SqlCe
 
-
+With-Cstl-CodeGen
 
 
 
