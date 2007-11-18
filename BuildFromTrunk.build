@@ -575,7 +575,7 @@
 		<Tool-SqlLite Include="$(Rhino-Lib-Dir)\SqLite.Net\*.dll" ></Tool-SqlLite>
 		<Tool-SqlLite-x64 Include="$(Rhino-Lib-Dir)\SqLite.Net\x64\*.dll"></Tool-SqlLite-x64>
 		<Tool-SqlCe Include="$(Rhino-Lib-Dir)\SqlCE\*.dll"></Tool-SqlCe>
-    <Tool-Castle-CodeGenerator Include="$(_Artifact-Dir\$(Configuration)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
+    <Tool-Castle-CodeGenerator Include="$(_Artifact-Dir)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
 	</ItemGroup>
 	<!-- Top Level Targets -->
 	<Target Name="Update-All">
@@ -790,7 +790,7 @@
 		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite)" DestinationFolder="$(Dest-Lib-Dir)\x86\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite-x64)" DestinationFolder="$(Dest-Lib-Dir)\x64\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlCe)" SourceFiles="@(Tool-SqlCe)" DestinationFolder="$(Dest-Lib-Dir)\SqlCe\" ContinueOnError="true" />
-    <Copy Condition="$(_With-Cstl-CodeGen)" SourceFiles="@(Tool-Castle-CodeGenerator)" DestinationFolder="$(Dest-Lib-Dir)\Castle.CodeGenerator\" ContinueOnError="true" />
+    <Copy Condition="$(_With-Cstl-CodeGen)" SourceFiles="@(Tool-Castle-CodeGenerator)" DestinationFolder="$(Dest-Tool-Dir)\Castle.CodeGenerator\" ContinueOnError="true" />
 	</Target>
 
 
