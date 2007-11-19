@@ -25,19 +25,6 @@
 					<Directory Id="INSTALLLOCATION"
 							   Name="NHQG"
 							   LongName="NHibernate Query Generator">
-						<Component Id="DynamicProxy"
-								   Guid="45CCE997-AB88-DB2B-F927-A6D07E64CA9F">
-							<File Id="_163072F0A81FAF0CA5A431C41CDA3C91"
-								  Name="DnyProx.DLL"
-								  LongName="Castle.DynamicProxy.dll"
-								  Source="$(var.BuildPath)Castle.DynamicProxy.dll"
-								  Vital="yes"
-								  KeyPath="yes"
-								  AssemblyManifest="_163072F0A81FAF0CA5A431C41CDA3C91"
-								  AssemblyApplication="_163072F0A81FAF0CA5A431C41CDA3C91"
-								  Assembly=".net"
-								  DiskId="1" />
-						</Component>
 						<Component Id="Log4Net"
 								   Guid="6584B262-BE7B-A186-42B3-540328112ABF">
 							<File Id="_17C0F2D5998C66C8E8C43754CC8FA800"
@@ -261,7 +248,6 @@
 					 Level="1"
 					 Title="Required Files"
 					 Description="The files required for NHibernate Query Generator to work">
-				<ComponentRef Id="DynamicProxy" />
 				<ComponentRef Id="Log4Net" />
 				<ComponentRef Id="NHib" />
 				<ComponentRef Id="iesi_collections" />
