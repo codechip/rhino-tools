@@ -49,9 +49,12 @@ namespace Rhino.Commons.Binsor
 
 		public override void ProcessResource(IResource source, IConfigurationStore store)
 		{
-			if (!IsBooConfiguration())
+			using (source)
 			{
-				base.ProcessResource(source, store);
+				if (!IsBooConfiguration())
+				{
+					base.ProcessResource(source, store);
+				}
 			}
 		}
 

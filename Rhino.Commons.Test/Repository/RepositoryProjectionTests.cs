@@ -37,7 +37,7 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
-    public class RepositoryProjectionTests : RepositoryTestsBase
+    public abstract class RepositoryProjectionTests : RepositoryTestsBase
     {
         [SetUp]
         public void TestInitialize()

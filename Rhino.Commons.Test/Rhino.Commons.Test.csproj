@@ -111,6 +111,7 @@
       <HintPath>..\..\SharedLibs\SqlCE\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,9 @@
     <None Include="Repository\Windsor.config">
     </None>
     <None Include="UoW\Windsor.config" />
+    <None Include="Windsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binsor\Windsor.xml" />
@@ -177,6 +181,7 @@
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
+    <Compile Include="HttpModules\UnitOfWorkApplicationFixture.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
