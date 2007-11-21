@@ -160,6 +160,15 @@ namespace Rhino.Igloo
 			return TryParseDateFromInput(inputName, "dd/MM/yyyy");
 		}
 
+        /// <summary>
+        /// Tries the parse date and time from input.
+        /// </summary>
+        /// <param name="inputName">Name of the input.</param>
+        /// <returns></returns>
+        protected static DateTime? TryParseDateAndTimeFromInput(string inputName)
+        {
+            return TryParseDateFromInput(inputName, "dd/MM/yyyy HH:mm");
+        }
 
         /// <summary>
         /// Tries the parse enum from input.
