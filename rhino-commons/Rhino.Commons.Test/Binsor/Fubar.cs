@@ -29,7 +29,9 @@
 
 namespace Rhino.Commons.Test.Components
 {
-    public class Fubar
+	using System.Collections.Generic;
+
+	public class Fubar
     {
         object foo;
 		private static readonly Fubar instance = new Fubar("Instance");
@@ -49,4 +51,19 @@ namespace Rhino.Commons.Test.Components
 			get { return instance; }
 		}
     }
+
+	public class MyComponent
+	{
+		private readonly IDictionary<string, string> someMapping;
+
+		public MyComponent(IDictionary<string, string> someMapping)
+		{
+			this.someMapping = someMapping;
+		}
+
+		public IDictionary<string, string> SomeMapping
+		{
+			get { return someMapping; }
+		}
+	}
 }

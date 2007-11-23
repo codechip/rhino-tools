@@ -309,6 +309,15 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual("Binsor2", fubar.Foo);
 		}
 
+		[Test]
+		public void CanDefineConfigurationWithMaps()
+		{
+			MyComponent component = _container.Resolve<MyComponent>();
+			Assert.AreEqual(2, component.SomeMapping.Count);
+			Assert.AreEqual("value1", component.SomeMapping["key1"]);
+			Assert.AreEqual("value2", component.SomeMapping["key2"]);
+		}
+
 		private static void AssertAttribute(IConfiguration parent, string name, string value)
 		{
 			string attribute = parent.Attributes[name];
