@@ -142,3 +142,10 @@ if Environment == "Binsor2":
 		
 component "foo_instance", Fubar:
 	createUsing Instance
+	
+component MyComponent:
+	parameters:
+		someMapping:
+			map(keymap):
+				key1 = 'value1'
+				key2 = 'value2'	
