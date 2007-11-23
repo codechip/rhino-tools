@@ -150,7 +150,11 @@ namespace Rhino.Commons
                             InitializationAware.Configured(cfg);
                         }
                         sessionFactory = cfg.BuildSessionFactory();
-                    }
+                        if (InitializationAware != null)
+                        {
+                          InitializationAware.Initialized(cfg, sessionFactory);
+                        }
+                      }
                 }
                 return sessionFactory;
             }
