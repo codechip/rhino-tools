@@ -35,7 +35,12 @@ namespace Rhino.Commons
 	{
 		public static void Transaction(IsolationLevel level, Proc transactional)
 		{
-			using (UnitOfWork.Start())
+			Transaction(level, transactional, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
+		}
+
+		public static void Transaction(IsolationLevel level, Proc transactional, UnitOfWorkNestingOptions nestingOptions)
+		{
+			using (UnitOfWork.Start(nestingOptions))
 			{
 				// If we are already in a transaction, don't start a new one
 				if (UnitOfWork.Current.IsInActiveTransaction)
