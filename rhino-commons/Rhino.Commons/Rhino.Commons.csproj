@@ -10,9 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rhino.Commons</RootNamespace>
     <AssemblyName>Rhino.Commons</AssemblyName>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
@@ -121,6 +120,9 @@
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\ayende-open-source.snk">
+      <Link>ayende-open-source.snk</Link>
+    </None>
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />

@@ -9,6 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rhino.Commons.NHibernate</RootNamespace>
     <AssemblyName>Rhino.Commons.NHibernate</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -113,6 +115,9 @@
     <EmbeddedResource Include="UnitOfWork\MinimalRepositoryConfiguration.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\ayende-open-source.snk">
+      <Link>ayende-open-source.snk</Link>
+    </None>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
