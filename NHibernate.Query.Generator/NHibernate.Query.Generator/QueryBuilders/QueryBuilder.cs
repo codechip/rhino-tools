@@ -364,8 +364,7 @@ Use HQL for this functionality...",
 					continue;
 				if (pair.Key != "this")
 				{
-					temp = detachedCriteria.SetFetchMode(pair.Key, val.Value)
-							.CreateCriteria(pair.Key, val.Key);
+					temp = CreateCriteriaByPath(pair.Key, critTable, detachedCriteria, val.Key);
 				}
 				foreach (NHibernate.Expression.ICriterion criterion in pair.Value)
 				{
@@ -378,7 +377,7 @@ Use HQL for this functionality...",
 				{
 					if (!string.IsNullOrEmpty(sortOrder.AssociationPath))
 					{
-						NHibernate.Expression.DetachedCriteria tempOrder = CreateCriteriaByPath(sortOrder.AssociationPath, critTable, detachedCriteria);
+						NHibernate.Expression.DetachedCriteria tempOrder = CreateCriteriaByPath(sortOrder.AssociationPath, critTable, detachedCriteria, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
 						tempOrder.AddOrder(sortOrder);
 					}
 				}
@@ -394,7 +393,7 @@ Use HQL for this functionality...",
 				return NHibernate.Expression.DetachedCriteria.For(typeof(T), alias);
 		}
 
-		private static NHibernate.Expression.DetachedCriteria CreateCriteriaByPath(string keyPath, System.Collections.Hashtable critTable, DetachedCriteria currentCriteria)
+		private static NHibernate.Expression.DetachedCriteria CreateCriteriaByPath(string keyPath, System.Collections.Hashtable critTable, DetachedCriteria currentCriteria, NHibernate.SqlCommand.JoinType joinType)
 		{
 			string assPath = keyPath;
 			string[] split = assPath.Split('.');
@@ -419,7 +418,7 @@ Use HQL for this functionality...",
 					if (!string.IsNullOrEmpty(s))
 					{
 						assPath = assPath + "." + s;
-						currentCriteria = currentCriteria.CreateCriteria(s, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
+						currentCriteria = currentCriteria.CreateCriteria(s, joinType);
 						critTable.Add(assPath, currentCriteria);
 					}
 				}
