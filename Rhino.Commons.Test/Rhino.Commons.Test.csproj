@@ -145,12 +145,6 @@
     <EmbeddedResource Include="Binsor\disposable.boo" />
     <None Include="Binsor\Facilities.boo" />
     <None Include="Binsor\Windsor.boo" />
-    <Content Include="Boo\anotherFile.boo">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Boo\hasReferenceToAnotherFile.boo">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="ForTesting\AnotherWindsor-NH.config" />
     <None Include="ForTesting\AnotherWindsor-AR.config" />
     <None Include="ForTesting\Windsor-AR.config">
@@ -182,7 +176,6 @@
     <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
-    <Compile Include="Boo\AutoReferenceFilesCompilerStepFixure.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
@@ -202,6 +195,10 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
+      <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
+      <Name>Rhino.DSL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
       <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
       <Name>Rhino.Commons.ActiveRecord</Name>
@@ -214,6 +211,9 @@
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Boo\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
