@@ -26,19 +26,18 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
-using System.IO;
-using System.Reflection;
-using System.Collections.Generic;
-using Boo.Lang.Compiler;
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.IO;
-using Boo.Lang.Compiler.MetaProgramming;
-using Boo.Lang.Compiler.Steps;
-
-namespace Rhino.Commons.Boo
+namespace Rhino.DSL
 {
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Reflection;
+	using Boo.Lang.Compiler;
+	using Boo.Lang.Compiler.Ast;
+	using Boo.Lang.Compiler.IO;
+	using Boo.Lang.Compiler.MetaProgramming;
+	using Boo.Lang.Compiler.Steps;
+
 	public delegate TextReader UrlResolverDelegate(string url, string basePath);
 
 	[CLSCompliant(false)]

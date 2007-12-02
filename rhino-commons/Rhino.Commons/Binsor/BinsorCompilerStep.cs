@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,15 +25,15 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
-
-
-using Boo.Lang.Compiler.Ast;
-using Boo.Lang.Compiler.Steps;
 
 namespace Rhino.Commons.Binsor
 {
-	internal class BinsorCompilerStep : AbstractCompilerStep
+	using Boo.Lang.Compiler.Ast;
+	using DSL;
+
+	internal class BinsorCompilerStep : AnonymousBaseClassCompilerStep
 	{
 		private readonly string environment;
 
@@ -41,36 +42,27 @@ namespace Rhino.Commons.Binsor
 		}
 
 		public BinsorCompilerStep(string environment)
+			: base(typeof (IConfigurationRunner), "Run",
+				   //default namespaces
+			       "Rhino.Commons",
+			       "Rhino.Commons.Binsor",
+			       "Rhino.Commons.Binsor.Macros",
+			       "Rhino.Commons.Binsor.Configuration",
+			       "Castle.Core")
 		{
-			this.environment = environment;	
+			this.environment = environment;
 		}
 
-		public override void Run()
+		protected override void ExtendBaseClass(TypeDefinition definition)
 		{
-			foreach (Module module in CompileUnit.Modules)
-			{
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Macros"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Rhino.Commons.Binsor.Configuration"));
-				module.Imports.Add(new Import(module.LexicalInfo, "Castle.Core"));
-				ClassDefinition definition = new ClassDefinition();
-				definition.Name = module.FullName;
-				definition.BaseTypes.Add(new SimpleTypeReference(typeof (IConfigurationRunner).FullName));
-				Method method = new Method("Run");
-				method.Body = module.Globals;
-				module.Globals = new Block();
-				Property property = new Property("Environment");
-				property.Getter = new Method("getter_Environment");
-				property.Getter.Body.Add(
-					new ReturnStatement(
-						new StringLiteralExpression(environment ?? "")
-						)
-					);
-				definition.Members.Add(property);
-				definition.Members.Add(method);
-				module.Members.Add(definition);
-			}
+			Property property = new Property("Environment");
+			property.Getter = new Method("getter_Environment");
+			property.Getter.Body.Add(
+				new ReturnStatement(
+					new StringLiteralExpression(environment ?? "")
+					)
+				);
+			definition.Members.Add(property);
 		}
 	}
 }

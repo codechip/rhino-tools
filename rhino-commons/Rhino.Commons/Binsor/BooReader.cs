@@ -40,10 +40,10 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Resource;
 using Castle.Core.Resource;
 using Castle.Windsor;
-using Rhino.Commons.Boo;
-
 namespace Rhino.Commons.Binsor
 {
+	using DSL;
+
 	public static class BooReader
 	{
 		private static readonly BooToken tokenThatIsNeededToKeepReferenceToTheBooParserAssembly = new BooToken();
