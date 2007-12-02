@@ -73,21 +73,21 @@ facility ActiveRecordFacility:
 	
 # generic type registration
 
-component defualt_repository, IRepository, NHRepository:
+component 'defualt_repository', IRepository, NHRepository:
 	lifestyle Transient
 
 component 'disposable', System.IDisposable, MyDisposable.Impl
 
-component customer_repository, IRepository of Fubar, FakeRepository of Fubar:
+component 'customer_repository', IRepository of Fubar, FakeRepository of Fubar:
 	inner = @NHRepository
 
-component fubar_repository, IRepository of Fubar, FakeRepository of Fubar:
+component 'fubar_repository', IRepository of Fubar, FakeRepository of Fubar:
 	inner = @defualt_repository
 
-component email_sender, ISender, EmailSender:
+component 'email_sender', ISender, EmailSender:
 	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
 
-component email_sender2, ISender, EmailSender:
+component 'email_sender2', ISender, EmailSender:
 	@startable = true
 	parameters:
 		to = ( "craig", "ayende" )
@@ -99,7 +99,7 @@ for i in range(4):
 	component "foo_${i}", Fubar:
 		foo = i
 
-component email_sender3, ISender, EmailSender:
+component 'email_sender3', ISender, EmailSender:
 	@startable = true
 	@tag1 = 'important', tag2 = 'priority'
 	lifestyle Pooled, InitialPoolSize = 10, MaxPoolSize = 100
@@ -137,7 +137,7 @@ component ISender, EmailSender:
 		to @EmailListener.OnSent
 
 if Environment == "Binsor2":
-	component foo_bar, Fubar:
+	component 'foo_bar', Fubar:
 		foo = Environment
 		
 component "foo_instance", Fubar:

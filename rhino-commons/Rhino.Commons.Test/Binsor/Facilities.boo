@@ -48,7 +48,7 @@ Facility("loggerFacility", LoggingFacility,
 Facility( "arintegration", ActiveRecordFacility,
 	{ @isWeb: true, @isDebug: true,
 	  assemblies: [ Assembly.Load("Rhino.Commons.NHibernate") ],
-	  child(config): { keyvalues(): {
+	  child('config'): { keyvalues(): {
 		'show_sql': true,
 		'command_timeout': 5000,
 		'cache.use_query_cache': false,
@@ -57,7 +57,7 @@ Facility( "arintegration", ActiveRecordFacility,
 		'connection.driver_class': 'NHibernate.Driver.SqlClientDriver',
 		'connection.connection_string': '#{connectionString1}'
 		} },
-	  child(config): {
+	  child('config'): {
 		@type: Fubar, keyvalues(): {
 		'dialect': 'NHibernate.Dialect.SQLiteDialect',
 		'connection.provider': 'NHibernate.Connection.DriverConnectionProvider',

@@ -30,8 +30,11 @@
 
 namespace Rhino.Commons.Binsor.Configuration
 {
+	using System;
 	using System.Collections;
 	using Castle.Core.Configuration;
+	using global::Boo.Lang.Compiler.Ast;
+	using global::Boo.Lang.Compiler.MetaProgramming;
 
 	public class KeyValuesBuilder : KeyMapBuilder
 	{
@@ -60,6 +63,7 @@ namespace Rhino.Commons.Binsor.Configuration
 		}
 	}
 
+	[CLSCompliant(false)]
 	public sealed class keyvalues : KeyValuesBuilder
 	{
 		public keyvalues()

@@ -39,7 +39,7 @@ Facility("loggerFacility", LoggingFacility,
 	) 
 	
 # generic type registration
-Component(defualt_repository, IRepository, NHRepository, LifestyleType.Transient)
+Component("defualt_repository", IRepository, NHRepository, LifestyleType.Transient)
 
 customer_repository = Component("customer_repository", 
 	IRepository of Fubar,  FakeRepository of Fubar,
@@ -68,7 +68,7 @@ Component("fubar1", Fubar,
 	  @factoryCreate: 'Create',
 	  parameters: {
 		fields: {
-			keymap(fields): {
+			keymap('fields'): {
 				name: 'David Beckham',
 				age: 32 
 				}
@@ -80,7 +80,7 @@ Component("fubar2", Fubar,
 	{ @factoryId: 'fubar_factory', 
 	  @factoryCreate: 'Create',
 	  parameters: {
-		keyvalues(fields): {
+		keyvalues('fields'): {
 			name: 'David Beckham',
 			age: 32 
 			}
