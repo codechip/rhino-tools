@@ -58,18 +58,6 @@ namespace Rhino.Commons.Binsor
 				ReplaceWithComponentReference(node, node.Name);
                 return;
             }
-            else if (node.ParentNode is MethodInvocationExpression)
-            {
-                MethodInvocationExpression mie = (MethodInvocationExpression) node.ParentNode;
-                //Transform the first parameter of Component ctor to string.
-            	//string target = mie.Target.ToString();
-                //if ((target == "Component" || target == "Facility") && mie.Arguments[0] == node)
-                //{
-                    StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
-                    mie.Replace(node, literal);
-                    return;
-                //}
-            }
 			else if (node.ParentNode is ExpressionPair)
 			{
 				ExpressionPair pair = (ExpressionPair) node.ParentNode;

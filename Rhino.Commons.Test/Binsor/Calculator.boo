@@ -42,32 +42,32 @@ Component( "costCalculator.default2", ICostCalculator, DefaultCostCalculator,
 
 # Using Dependencies
 
-component calc_gst, AbstractCalculator, GstCalculator:
+component 'calc_gst', AbstractCalculator, GstCalculator:
 	gstRate = decimal(1.20)
  
-component calc_shipping, AbstractCalculator, ShippingCalculator:
+component 'calc_shipping', AbstractCalculator, ShippingCalculator:
 	shippingCost = decimal(0.0)
 	fragileShippingPremium = decimal(0.0)
    
-component calc_total, AbstractCalculator, TotalCalculator
+component 'calc_total', AbstractCalculator, TotalCalculator
  
-component cost_calculator_default, ICostCalculator, DefaultCostCalculator:
+component 'cost_calculator_default', ICostCalculator, DefaultCostCalculator:
 	calculators = ( @calc_gst, @calc_shipping, @calc_total )
 
 # Using Parameters Only
 
-component calc_gst2, AbstractCalculator, GstCalculator:
+component 'calc_gst2', AbstractCalculator, GstCalculator:
 	parameters:
 		gsRate = 1.20
  
-component calc_shipping2, AbstractCalculator, ShippingCalculator:
+component 'calc_shipping2', AbstractCalculator, ShippingCalculator:
 	parameters:
 		shippingCost = 0.0
 		fragileShippingPremium = 0.0
    
-component calc_total2, AbstractCalculator, TotalCalculator
+component 'calc_total2', AbstractCalculator, TotalCalculator
  
-component cost_calculator_default2, ICostCalculator, DefaultCostCalculator:
+component 'cost_calculator_default2', ICostCalculator, DefaultCostCalculator:
 	parameters:
 		calculators:
 			array = ( @calc_gst2, @calc_shipping2, @calc_total2 )
