@@ -53,7 +53,7 @@ namespace Rhino.Commons.Binsor
 			get
 			{
 				ICollection<INeedSecondPassRegistration> data = (ICollection<INeedSecondPassRegistration>)
-				                                                Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
+																Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
 				if (data == null)
 				{
 					Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] =
@@ -112,14 +112,14 @@ namespace Rhino.Commons.Binsor
 		public static void Read(
 			IWindsorContainer container, Stream stream,
 			GenerationOptions generationOptions, string name,
-			string envronment)
+			string environment)
 		{
 			try
 			{
 				using (IoC.UseLocalContainer(container))
 				{
 					IConfigurationRunner conf = GetConfigurationInstanceFromStream(
-						name, envronment, container, stream, generationOptions);
+						name, environment, container, stream, generationOptions);
 					conf.Run();
 					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
@@ -140,11 +140,11 @@ namespace Rhino.Commons.Binsor
 		{
 			string baseDirectory = Path.GetDirectoryName(fileName);
 			UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
-			using(TextReader reader = File.OpenText(fileName))
+			using (TextReader reader = urlResolver(fileName, null))
 			{
 				return GetConfigurationInstance(
 				Path.GetFileNameWithoutExtension(fileName), environment,
-				new ReaderInput(Path.GetFileNameWithoutExtension(fileName), reader), 
+				new ReaderInput(Path.GetFileNameWithoutExtension(fileName), reader),
 				generationOptions,
 				new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
 			}
@@ -178,13 +178,13 @@ namespace Rhino.Commons.Binsor
 			compiler.Parameters.Pipeline.Insert(1, autoReferenceStep);
 			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep(environment));
 			compiler.Parameters.Pipeline.Replace(
-				typeof (ProcessMethodBodiesWithDuckTyping),
+				typeof(ProcessMethodBodiesWithDuckTyping),
 				new TransformUnknownReferences());
-			compiler.Parameters.Pipeline.InsertAfter(typeof (TransformUnknownReferences),
-			                                         new RegisterComponentAndFacilitiesAfterCreation());
+			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
+													 new RegisterComponentAndFacilitiesAfterCreation());
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
-			compiler.Parameters.References.Add(typeof (BooReader).Assembly);
+			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)
 			{
@@ -197,7 +197,7 @@ namespace Rhino.Commons.Binsor
 		private static UrlResolverDelegate CreateWindorUrlResolver(IWindsorContainer container)
 		{
 			IResourceSubSystem subSystem = (IResourceSubSystem)
-			                               container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+										   container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
 
 			return delegate(string url, string basePath)
 			{

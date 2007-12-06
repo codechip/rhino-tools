@@ -181,6 +181,12 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual("32", item2.Attributes["value"]);
 		}
 
+		[Test]
+		public void CanCreateContainerFromEmbeddedResource()
+		{
+			new RhinoContainer("assembly://Rhino.Commons.Test/Binsor/disposable.boo");
+		}
+
 		private static IConfiguration AssertChild(IConfiguration parent, string name)
 		{
 			IConfiguration config = parent.Children[name];

@@ -1,4 +1,5 @@
 #region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,55 +25,32 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
-
-
-using System;
-using System.IO;
-using Castle.Core.Resource;
-using Castle.MicroKernel;
-using Castle.Windsor;
-using Castle.Windsor.Configuration.Interpreters;
-using Castle.Windsor.Installer;
 
 namespace Rhino.Commons.Binsor
 {
-	public class BooComponentInstaller : XmlInterpreter, IComponentsInstaller
+	using System;
+	using Castle.MicroKernel;
+	using Castle.Windsor;
+
+	public class BooComponentInstaller : IComponentsInstaller
 	{
 		private readonly string fileName;
+		private readonly IEnvironmentInfo env;
 
-		public BooComponentInstaller(String fileName)
-			: base(fileName)
+		public BooComponentInstaller(String fileName, IEnvironmentInfo env)
 		{
 			this.fileName = fileName;
-		}
-
-		public override void ProcessResource(IResource source, IConfigurationStore store)
-		{
-			using (source)
-			{
-				if (!IsBooConfiguration())
-				{
-					base.ProcessResource(source, store);
-				}
-			}
+			this.env = env;
 		}
 
 		public void SetUp(IWindsorContainer container, IConfigurationStore store)
 		{
-			if (IsBooConfiguration())
-			{
-				BooReader.Read(container, fileName, EnvironmentName);
-			}
-			else
-			{
-				new DefaultComponentInstaller().SetUp(container, store);
-			}
-		}
-
-		private bool IsBooConfiguration()
-		{
-			return Path.GetExtension(fileName).Equals(".boo", StringComparison.InvariantCultureIgnoreCase);
+			string name = null;
+			if (env != null)
+				name = env.GetEnvironmentName();
+			BooReader.Read(container, fileName, name);
 		}
 	}
 }
