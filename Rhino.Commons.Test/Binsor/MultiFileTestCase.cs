@@ -30,6 +30,15 @@ namespace Rhino.Commons.Test.Binsor
 		}
 
 		[Test]
+		public void CanOverrideAttributesSetOnAnotherFile()
+		{
+			EmailSender sender = (EmailSender)_container.Resolve<ISender>("email_sender2");
+			Assert.AreEqual("example.dot.org", sender.Host);
+			CollectionAssert.AreElementsEqual(new string[] { "Kaitlyn", "Matthew", "Lauren" },
+				sender.To);
+		}
+
+		[Test]
 		public void CanSetConfgurationOnComponentDefinedInAnotherFile()
 		{
 			IHandler handler = _container.Kernel.GetHandler("email_sender3");
