@@ -55,10 +55,7 @@ class StatementUtil:
 		self.expressionWriter = boo.ExpressionWriter
 		RegisterWriters()
 	
-	def WriteStatement(statement as IStatement, formatter as IFormatter):
-		raise ArgumentNullException('statement') if statement is null
-		raise ArgumentNullException('formatter') if formatter is null
-		
+	def WriteStatement([required] statement as IStatement, [required] formatter as IFormatter):
 		writer as callable = GetWriter(statement)
 		raise ArgumentException("Invalid statement ${statement.GetType().Name}",'statement') if writer is null
 	
@@ -107,10 +104,11 @@ class StatementUtil:
 	
 	def WriteBlockStatement(statement as IBlockStatement, formatter as IFormatter):
 		if statement.Statements.Count > 0:
-			for i in range(statement.Statements.Count):
-				stmt = statement.Statements[i]
+			for i as int, stmt as IStatement in zip(range(statement.Statements.Count), statement.Statements):
 				self.WriteStatement(stmt, formatter)
 				formatter.WriteLine() if i+1 < statement.Statements.Count and (stmt isa ITryCatchFinallyStatement or stmt isa IForEachStatement or stmt isa IConditionStatement or stmt isa IWhileStatement or stmt isa IDoStatement or stmt isa IForStatement or stmt isa ILockStatement or stmt isa ISwitchStatement or stmt isa IUsingStatement)
+		else:
+			boo.WritePass(formatter)
 	
 	def WriteExpressionStatement(statement as IExpressionStatement, formatter as IFormatter):
 		expressionWriter.WriteExpression(statement.Expression, formatter)

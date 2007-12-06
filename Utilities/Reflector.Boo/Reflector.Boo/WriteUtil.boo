@@ -109,9 +109,7 @@ class WriteUtil:
 		
 		self.WriteDeclaringType(value.DeclaringType as ITypeReference, formatter)
 	
-	def WriteEventDeclaration(value as IEventDeclaration, formatter as IFormatter):
-		raise ArgumentNullException('value') if value is null
-		
+	def WriteEventDeclaration([required] value as IEventDeclaration, [required] formatter as IFormatter):
 		if (boo.Configuration["ShowCustomAttributes"] == "true") and (value.Attributes.Count != 0):
 			boo.WriteCustomAttributes(value, formatter, null)
 			formatter.WriteLine()
@@ -161,7 +159,7 @@ class WriteUtil:
 			formatter.Write(' ')
 		
 		if information.IsStatic:
-			formatter.WriteKeyword('static ')
+			formatter.WriteKeyword('static')
 			formatter.Write(' ')
 		
 		formatter.WriteKeyword('event')
@@ -178,7 +176,9 @@ class WriteUtil:
 			
 		
 		self.WriteDeclaration(eventName, formatter)
-		missingBodies as bool = (((addMethod == null) or (addMethod.Body == null)) and ((removeMethod == null) or (removeMethod.Body == null)) and ((invokeMethod == null) or (invokeMethod.Body == null)))
+		formatter.Write(':')
+		
+		missingBodies as bool = (((addMethod == null) or (not addMethod.Body isa IStatement)) and ((removeMethod == null) or (not removeMethod.Body isa IStatement)) and ((invokeMethod == null) or (not invokeMethod.Body isa IStatement)))
 		if (missingBodies) or (fieldReference != null):
 			formatter.WriteIndent()
 			formatter.WriteLine()
@@ -186,8 +186,9 @@ class WriteUtil:
 			formatter.WriteOutdent()
 			formatter.WriteLine()	
 		else:
-			hasBody as bool = (((addMethod != null) and (addMethod.Body != null)) or ((removeMethod != null) and (removeMethod.Body != null)) or ((invokeMethod != null) and (invokeMethod.Body != null)))
+			hasBody as bool = (((addMethod != null) and (addMethod.Body isa IStatement)) or ((removeMethod != null) and (removeMethod.Body isa IStatement)) or ((invokeMethod != null) and (invokeMethod.Body isa IStatement)))
 			formatter.WriteIndent()
+			formatter.WriteLine()
 			
 			if addMethod != null:
 				if not hasBody:
@@ -202,10 +203,12 @@ class WriteUtil:
 					formatter.Write(' ')
 				
 				formatter.WriteKeyword('add')
+				formatter.Write(':')
 				formatter.WriteIndent()
 				formatter.WriteLine()
 					
-				if addMethod.Body != null:
+				if addMethod.Body isa IStatement:
+					#formatter.Write(addMethod.Body.GetType().FullName)
 					statementUtil.WriteStatement(addMethod.Body, formatter)
 				else:
 					boo.WritePass(formatter)
@@ -227,15 +230,18 @@ class WriteUtil:
 					formatter.Write(' ')
 				
 				formatter.WriteKeyword('remove')
-				if removeMethod.Body != null:
-					formatter.WriteLine()
-					formatter.WriteIndent()
+				formatter.Write(':')
+				formatter.WriteLine()
+				formatter.WriteIndent()
+
+				if removeMethod.Body isa IStatement:
+					#formatter.Write(removeMethod.Body.GetType().FullName)
 					statementUtil.WriteStatement(removeMethod.Body, formatter)
-					formatter.WriteOutdent()
-					formatter.WriteLine()
 				else:
 					boo.WritePass(formatter)
 				
+				formatter.WriteOutdent()
+				formatter.WriteLine()
 			
 			if invokeMethod != null:
 				if not hasBody:
@@ -250,12 +256,12 @@ class WriteUtil:
 					formatter.Write(' ')
 				
 				formatter.WriteKeyword('raise')
-				if invokeMethod.Body != null:
-					formatter.WriteLine()
-					formatter.WriteIndent()
+				formatter.Write(':')
+				formatter.WriteLine()
+				formatter.WriteIndent()
+
+				if invokeMethod.Body isa IStatement:
 					statementUtil.WriteStatement(invokeMethod.Body, formatter)
-					formatter.WriteOutdent()
-					formatter.WriteLine()
 				else:
 					boo.WritePass(formatter)
 				
@@ -560,7 +566,7 @@ class WriteUtil:
 			if (boo.Configuration["ShowCustomAttributes"] == "true") and (setMethod.Attributes.Count != 0):
 				boo.WriteCustomAttributes(setMethod, formatter, null)
 			
-			formatter.WriteLine() unless setMethod.Attributes.Count > 0 or valueParameterDeclaration.Attributes.Count > 0 or setMethod.ReturnType.Attributes.Count > 0
+#			formatter.WriteLine() unless setMethod.Attributes.Count > 0 or valueParameterDeclaration.Attributes.Count > 0 or setMethod.ReturnType.Attributes.Count > 0
 			formatter.WriteKeyword('set')
 			formatter.Write(':')
 			if setMethod.Body is not null and setMethod.Body isa IBlockStatement:

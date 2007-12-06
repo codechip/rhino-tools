@@ -133,6 +133,8 @@ class ExpressionUtil:
 			return '&='
 		elif selector == BinaryOperator.BitwiseExclusiveOr:
 			return '^='
+		elif selector == BinaryOperator.Modulus:
+			return '%='
 		else:
 			return "/*unknown operator - should never happen*/"	
 			

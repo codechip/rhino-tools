@@ -35,3 +35,4 @@
 * Statement modifiers for short lines, conditionals with only one statement
 ** How short is short enough?
 * Don't need typeof around types in Boo
+* Both events and properties need to take after methods for "show expanded" (lower lefthand pane)
