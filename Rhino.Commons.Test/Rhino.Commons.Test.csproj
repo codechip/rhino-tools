@@ -141,6 +141,8 @@
     <None Include="Binsor\Calculator.boo" />
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo" />
     <None Include="Binsor\Imports.boo" />
+    <None Include="Binsor\MultiFileConfig_Extension.boo" />
+    <None Include="Binsor\MultiFileConfig_Main.boo" />
     <None Include="Binsor\Windsor2.boo" />
     <EmbeddedResource Include="Binsor\disposable.boo" />
     <None Include="Binsor\Facilities.boo" />
@@ -175,6 +177,8 @@
     <Compile Include="Binsor\CalculatorTestCase.cs" />
     <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
+    <Compile Include="Binsor\ConfigurationAsserts.cs" />
+    <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />

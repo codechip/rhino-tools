@@ -35,7 +35,7 @@ namespace Rhino.Commons.Binsor.Macros
 	public class ParametersMacro : BaseConfigurationMacro<ParametersExtension>
 	{
 		public ParametersMacro()
-			: base("parameters", "component", "configuration")
+			: base("parameters", "component", "configuration", "extend")
 		{
 		}
 	}

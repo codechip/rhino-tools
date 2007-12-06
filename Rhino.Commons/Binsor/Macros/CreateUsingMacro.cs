@@ -38,7 +38,7 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
 	public class CreateUsingMacro : BaseBinsorExtensionMacro<FactorySupportExtension>
 	{
-		public CreateUsingMacro() : base("createUsing", true, "component")
+		public CreateUsingMacro() : base("createUsing", true, "component", "extend")
 		{	
 		}
 

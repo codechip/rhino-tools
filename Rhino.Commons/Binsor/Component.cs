@@ -37,6 +37,8 @@ using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor
 {
+	using System.Collections.Generic;
+
 	public class Component : IQuackFu, INeedSecondPassRegistration, IConfigurationFormatter
 	{
 		private readonly string _name;
@@ -127,14 +129,7 @@ namespace Rhino.Commons.Binsor
 
         public Component Register()
 		{
-			if (_extensions != null)
-			{
-				EnsureConfiguration(null);
-				foreach (IComponentExtension extension in _extensions)
-				{
-					extension.Apply(this);
-				}
-			}
+			RegisterExtensions(_extensions);
 
 			if (_configuration != null)
 			{
@@ -153,7 +148,19 @@ namespace Rhino.Commons.Binsor
         	return this;
 		}
 
-        public void RegisterSecondPass()
+		private void RegisterExtensions(IEnumerable<IComponentExtension> extensions)
+		{
+			if (extensions != null)
+			{
+				EnsureConfiguration(null);
+				foreach (IComponentExtension extension in extensions)
+				{
+					extension.Apply(this);
+				}
+			}
+		}
+
+		public void RegisterSecondPass()
         {
             kernel.RegisterCustomDependencies(_name, _dependencies);
         }
@@ -225,68 +232,10 @@ namespace Rhino.Commons.Binsor
 				}
 			}
 		}
-	}
 
-    public interface INeedSecondPassRegistration
-    {
-        void RegisterSecondPass();
-    }
-
-	public interface IComponentExtension
-	{
-		void Apply(Component component);
-	}
-
-	#region ComponentReference
-
-	public class ComponentReference : IConfigurationFormatter, INeedSecondPassRegistration
-	{
-	    private readonly string _name;
-		private readonly Type _service;
-
-		public ComponentReference(string name)
+		public void AddExtensions(IComponentExtension[] extensions)
 		{
-			_name = name;
-		}
-
-		public ComponentReference(Type service)
-			: this(service.FullName)
-		{
-			_service = service;
-			BooReader.NeedSecondPassRegistrations.Add(this);
-		}
-
-		public ComponentReference(Component component)
-			: this(component.Name)
-		{
-		}
-
-		public string Name
-		{
-			get { return _name; }
-		}
-
-		public void Format(IConfiguration parent, string name, bool useAttribute)
-		{
-			if (useAttribute)
-			{
-				parent.Attributes.Add(name, _name);
-			}
-			else
-			{
-				string reference = "${" + _name + "}";
-				ConfigurationHelper.CreateChild(parent, name, reference);
-			}
-		}
-
-		public void RegisterSecondPass()
-		{
-			if (!IoC.Container.Kernel.HasComponent(_name))
-			{
-				IoC.Container.AddComponent(_name, _service);
-			}
+			RegisterExtensions(extensions);
 		}
 	}
-
-	#endregion
 }
