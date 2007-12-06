@@ -5,6 +5,8 @@ DefineComponent()
 extend "email_sender":
 	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
 
+extend "email_sender2":
+	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
 
 extend 'email_sender3':
 	@startable = true
