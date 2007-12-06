@@ -47,6 +47,11 @@ namespace Rhino.Commons
 		{
 			   return Container.Resolve(serviceType);
 		}
+
+		public static object Resolve(string serviceName)
+		{
+			return Container.Resolve(serviceName);
+		}
 		
 		public static object Resolve(Type serviceType, string serviceName)
 		{
