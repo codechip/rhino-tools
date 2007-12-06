@@ -58,8 +58,15 @@ namespace Rhino.Commons.Test.Binsor
 		private string host;
 		private string[] to;
 		private ISender[] backups;
+		private string[] hosts;
 
 		public event EventHandler<SentEventArgs> Sent;
+
+		public string[] Hosts
+		{
+			get { return hosts; }
+			set { hosts = value; }
+		}
 
 		public string Host
 		{

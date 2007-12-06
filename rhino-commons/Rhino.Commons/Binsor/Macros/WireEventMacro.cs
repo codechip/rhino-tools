@@ -37,7 +37,7 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
 	public class WireEventMacro : BaseBinsorExtensionMacro<EventWireExtension>
 	{
-		public WireEventMacro() : base("wireEvent", false, "component")
+		public WireEventMacro() : base("wireEvent", false, "component", "extend")
 		{	
 		}
 

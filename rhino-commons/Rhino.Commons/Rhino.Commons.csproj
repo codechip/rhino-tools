@@ -126,8 +126,10 @@
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
+    <Compile Include="Binsor\ComponentReference.cs" />
     <Compile Include="Binsor\Configuration\AttributeBuilder.cs" />
     <Compile Include="Binsor\Configuration\ChildBuilder.cs" />
+    <Compile Include="Binsor\Extend.cs" />
     <Compile Include="Binsor\Extensions\ConfigurationExtension.cs" />
     <Compile Include="Binsor\Configuration\ConfigurationHelper.cs" />
     <Compile Include="Binsor\Configuration\IConfigurationBuilder.cs" />
@@ -139,6 +141,8 @@
     <Compile Include="Binsor\Extensions\FactorySupportExtension.cs" />
     <Compile Include="Binsor\Facility.cs" />
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
+    <Compile Include="Binsor\IComponentExtension.cs" />
+    <Compile Include="Binsor\INeedSecondPassRegistration.cs" />
     <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorToplevelMacro.cs" />
@@ -148,6 +152,7 @@
     <Compile Include="Binsor\Extensions\LifestyleExtension.cs" />
     <Compile Include="Binsor\Macros\ConfigurationNodeVisitor.cs" />
     <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
+    <Compile Include="Binsor\Macros\ExtendMacro.cs" />
     <Compile Include="Binsor\Macros\ParametersMacro.cs" />
     <Compile Include="Binsor\Macros\StartMacro.cs" />
     <Compile Include="Binsor\Macros\CreateUsingMacro.cs" />

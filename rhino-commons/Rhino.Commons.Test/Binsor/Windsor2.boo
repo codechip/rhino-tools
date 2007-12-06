@@ -44,6 +44,9 @@ facility StartableFacility
 facility FactorySupportFacility
 facility EventWiringFacility
 
+component EmailListener
+component EmailSenderFactory
+
 facility LoggingFacility: 
 	loggingApi = LoggerImplementation.Log4net
 	configFile = 'log4net.config'
@@ -128,8 +131,8 @@ component 'email_sender3', ISender, EmailSender:
 				zipCode: '75032'
 				}
 
-component EmailListener
-component EmailSenderFactory
+
+
 component ISender, EmailSender:
 	@startable = true
 	createUsing @EmailSenderFactory.Create

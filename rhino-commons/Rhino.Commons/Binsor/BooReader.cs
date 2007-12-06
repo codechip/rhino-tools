@@ -42,6 +42,7 @@ using Castle.Core.Resource;
 using Castle.Windsor;
 namespace Rhino.Commons.Binsor
 {
+	using Boo.Lang.Compiler.Ast.Visitors;
 	using DSL;
 
 	public static class BooReader
@@ -62,6 +63,19 @@ namespace Rhino.Commons.Binsor
 				return data;
 			}
 			set { Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] = value; }
+		}
+
+		public static Component GetComponentByName(string name)
+		{
+			foreach (INeedSecondPassRegistration secondPassRegistration in NeedSecondPassRegistrations)
+			{
+				Component component = secondPassRegistration as Component;
+				if (component == null)
+					continue;
+				if (component.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+					return component;
+			}
+			throw new InvalidOperationException("Could not find component named: " + name);
 		}
 
 		public static void Read(IWindsorContainer container, string fileName)
@@ -182,6 +196,9 @@ namespace Rhino.Commons.Binsor
 				new TransformUnknownReferences());
 			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
 													 new RegisterComponentAndFacilitiesAfterCreation());
+			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
+													 new PrintBoo());
+			
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
 			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
@@ -227,5 +244,7 @@ namespace Rhino.Commons.Binsor
 			Memory,
 			File
 		}
+
+
 	}
 }

@@ -39,7 +39,7 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
 	public class LifestyleMacro : BaseBinsorExtensionMacro<LifestyleExtension>
 	{
-		public LifestyleMacro() : base("lifestyle", true, "component")
+		public LifestyleMacro() : base("lifestyle", true, "component", "extend")
 		{
 		}
 

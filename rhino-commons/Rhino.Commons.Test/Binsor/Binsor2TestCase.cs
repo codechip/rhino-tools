@@ -40,7 +40,7 @@ using Rhino.Commons.Test.Components;
 namespace Rhino.Commons.Test.Binsor
 {
 	[TestFixture]
-	public class Binsor2TestCase
+	public class Binsor2TestCase : ConfigurationAsserts
 	{
 		private IWindsorContainer _container;
 
@@ -316,60 +316,6 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual(2, component.SomeMapping.Count);
 			Assert.AreEqual("value1", component.SomeMapping["key1"]);
 			Assert.AreEqual("value2", component.SomeMapping["key2"]);
-		}
-
-		private static void AssertAttribute(IConfiguration parent, string name, string value)
-		{
-			string attribute = parent.Attributes[name];
-			Assert.AreEqual(value, attribute);
-		}
-
-		private static IConfiguration AssertChild(IConfiguration parent, string name, string value)
-		{
-			IConfiguration child = parent.Children[name];
-			Assert.IsNotNull(child, "Expected child {0}", name);
-			if (value != null)
-			{
-				Assert.AreEqual(value, child.Value);
-			}
-			return child;
-		}
-
-		private static IConfiguration AssertChild(IConfiguration parent, string name)
-		{
-			return AssertChild(parent, name, null);
-		}
-
-		private static IConfiguration AssertKeyValue(IConfiguration parent, string item,
-													 string key, string value)
-		{
-			foreach (IConfiguration child in parent.Children)
-			{
-				if (item == child.Name && child.Attributes["key"] == key &&
-					child.Value == value)
-				{
-					return child;
-				}
-			}
-
-			Assert.Fail("No child {0} found with key={1}, value={2}", item, key, value);
-			return null;
-		}
-
-		private static IConfiguration AssertKeyValueAttrib(IConfiguration parent, string item,
-		                                                   string key, string value)
-		{
-			foreach(IConfiguration child in parent.Children)
-			{
-				if (item == child.Name && child.Attributes["key"] == key &&
-				    child.Attributes["value"] == value)
-				{
-					return child;
-				}
-			}
-
-			Assert.Fail("No child {0} found with key={1}, value={2}", item, key, value);
-			return null;
 		}
 	}
 }
