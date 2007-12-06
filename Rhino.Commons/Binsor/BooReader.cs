@@ -196,8 +196,6 @@ namespace Rhino.Commons.Binsor
 				new TransformUnknownReferences());
 			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
 													 new RegisterComponentAndFacilitiesAfterCreation());
-			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
-													 new PrintBoo());
 			
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
