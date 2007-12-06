@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,109 +25,139 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
-
-
-using System;
-using System.IO;
-using Castle.Core.Resource;
-using Castle.MicroKernel;
-using Castle.MicroKernel.SubSystems.Conversion;
-using Castle.Windsor;
-using Castle.Windsor.Configuration;
-using Castle.Windsor.Configuration.Interpreters;
-using Rhino.Commons.Binsor;
 
 namespace Rhino.Commons
 {
-    public class RhinoContainer : WindsorContainer
-    {
-        private bool isDisposed = false;
+	using System;
+	using System.IO;
+	using Binsor;
+	using Castle.Core.Resource;
+	using Castle.MicroKernel;
+	using Castle.MicroKernel.SubSystems.Conversion;
+	using Castle.Windsor;
+	using Castle.Windsor.Configuration;
+	using Castle.Windsor.Configuration.Interpreters;
+	using Castle.Windsor.Installer;
 
-        public RhinoContainer()
-        {
-        }
+	public class RhinoContainer : WindsorContainer
+	{
+		private bool isDisposed = false;
 
-        public RhinoContainer(IWindsorContainer parent)
-            : base(parent, new XmlInterpreter(new StaticContentResource("<configuration/>")))
-        {
-        }
+		public RhinoContainer()
+		{
+		}
+
+		public RhinoContainer(IWindsorContainer parent)
+			: base(parent, new XmlInterpreter(new StaticContentResource("<configuration/>")))
+		{
+		}
 
 		public RhinoContainer(string fileName)
 			: this(fileName, null)
 		{
 		}
 
-    	public RhinoContainer(string fileName, IEnvironmentInfo env)
-			: base(new DefaultKernel(), new BooComponentInstaller(fileName))
-        {
-			InitalizeFromConfigurationSource((IConfigurationInterpreter)Installer, env);
-        }
+		public RhinoContainer(string fileName, IEnvironmentInfo env)
+			: base(new DefaultKernel(), CreateInterpreter(fileName, env))
+		{
+			if (IsBoo(fileName))
+			{
+				RunInstaller();
+			}
+			else
+			{
+				InitalizeFromConfigurationSource(
+				new XmlInterpreter(fileName), env);
+			}
+		}
 
-        public RhinoContainer(IConfigurationInterpreter interpreter)
-            : this(interpreter, null)
-        {
-        }
+
+		public RhinoContainer(IConfigurationInterpreter interpreter)
+			: this(interpreter, null)
+		{
+		}
 
 		public RhinoContainer(IConfigurationInterpreter interpreter, IEnvironmentInfo env)
 		{
 			InitalizeFromConfigurationSource(interpreter, env);
 		}
 
-    	private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter,
-    	                                              IEnvironmentInfo env)
-    	{
-            DefaultConversionManager conversionManager = (DefaultConversionManager)Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
-            conversionManager.Add(new ConfigurationObjectConverter());
+		public bool IsDisposed
+		{
+			get { return isDisposed; }
+		}
+
+		private static IComponentsInstaller CreateInterpreter(string fileName, IEnvironmentInfo env)
+		{
+			if (IsBoo(fileName))
+				return new BooComponentInstaller(fileName, env);
+			return new DefaultComponentInstaller();
+		}
+
+		private static bool IsBoo(string fileName)
+		{
+			string[] extensions = new string[] {".boo", ".binsor",};
+			string extension = Path.GetExtension(fileName);
+			foreach (string ext in extensions)
+			{
+				if (extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase))
+					return true;
+			}
+			return false;
+		}
+
+		private void InitalizeFromConfigurationSource(IConfigurationInterpreter interpreter,
+		                                              IEnvironmentInfo env)
+		{
+			DefaultConversionManager conversionManager =
+				(DefaultConversionManager) Kernel.GetSubSystem(SubSystemConstants.ConversionManagerKey);
+			conversionManager.Add(new ConfigurationObjectConverter());
 
 			if (env != null)
 			{
 				interpreter.EnvironmentName = env.GetEnvironmentName();
 			}
 
-            interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
-            RunInstaller();
-        }
+			interpreter.ProcessResource(interpreter.Source, Kernel.ConfigurationStore);
+			RunInstaller();
+		}
 
-        public override T Resolve<T>(string key)
-        {
-            AssertNotDisposed();
-            return base.Resolve<T>(key);
-        }
+		public override T Resolve<T>(string key)
+		{
+			AssertNotDisposed();
+			return base.Resolve<T>(key);
+		}
 
-        public override object Resolve(string key)
-        {
-            AssertNotDisposed();
-            return base.Resolve(key);
-        }
+		public override object Resolve(string key)
+		{
+			AssertNotDisposed();
+			return base.Resolve(key);
+		}
 
-        public override object Resolve(string key, Type service)
-        {
-            AssertNotDisposed();
-            return base.Resolve(key, service);
-        }
+		public override object Resolve(string key, Type service)
+		{
+			AssertNotDisposed();
+			return base.Resolve(key, service);
+		}
 
-        public override object Resolve(Type service)
-        {
-            AssertNotDisposed();
-            return base.Resolve(service);
-        }
+		public override object Resolve(Type service)
+		{
+			AssertNotDisposed();
+			return base.Resolve(service);
+		}
 
-        private void AssertNotDisposed()
-        {
-            if (isDisposed)
-                throw new ObjectDisposedException("The container has been disposed!");
-        }
+		private void AssertNotDisposed()
+		{
+			if (isDisposed)
+				throw new ObjectDisposedException("The container has been disposed!");
+		}
 
-        public override void Dispose()
-        {
-            isDisposed = true;
-            base.Dispose();
-        }
-
-        public bool IsDisposed
-        {
-            get { return isDisposed; }
-        }
-    }
+		public override void Dispose()
+		{
+			isDisposed = true;
+			base.Dispose();
+		}
+	}
 }
