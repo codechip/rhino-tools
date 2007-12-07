@@ -103,6 +103,44 @@
 									  KeyPath="yes"
 									  Value="{DE8A7135-96F6-47ba-9DC9-D7D837B4CDE3}" />
 						</Component>
+						<Component Id="Register_Custom_Tool_2008"
+								   Guid="700ea3fe-b2c4-4e4e-8d7c-d8365d9b70e6">
+							<Registry Id="_4A53A2970ED940359ED6AAE13679940B"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{fae04ec1-301f-11d3-bf4b-00c04f79efbc}\NHibernateQueryGenerator"
+									  Type="string"
+									  Value="Generate Strongly Typed Queries From Nhibernate Mapping Files (*.hbm.xml)" />
+							<Registry Id="_6C31F31527BB48EBB19D25FA9A1A2691"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{fae04ec1-301f-11d3-bf4b-00c04f79efbc}\NHibernateQueryGenerator"
+									  Name="GeneratesDesignTimeSource"
+									  Type="integer"
+									  Value="1" />
+							<Registry Id="_E86B35D805F64C0F823DDAFC6626AC40"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{164b10b9-b200-11d0-8c61-00a0c91e29d5}\NHibernateQueryGenerator"
+									  Type="string"
+									  Value="Generate Strongly Typed Queries From Nhibernate Mapping Files (*.hbm.xml)" />
+							<Registry Id="_BA2ABA6A401E4D62A5D15E8C481D2C1D"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{164b10b9-b200-11d0-8c61-00a0c91e29d5}\NHibernateQueryGenerator"
+									  Name="GeneratesDesignTimeSource"
+									  Type="integer"
+									  Value="1" />
+							<Registry Id="_75A4A95B219641D9A91CF961EFB535A4"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{164b10b9-b200-11d0-8c61-00a0c91e29d5}\NHibernateQueryGenerator"
+									  Name="CLSID"
+									  Type="string"
+									  Value="{DE8A7135-96F6-47ba-9DC9-D7D837B4CDE3}" />
+							<Registry Id="_B22AAB071D2B4FA689D8E65721D8013D"
+									  Root="HKLM"
+									  Key="Software\Microsoft\VisualStudio\9.0\Generators\{fae04ec1-301f-11d3-bf4b-00c04f79efbc}\NHibernateQueryGenerator"
+									  Name="CLSID"
+									  Type="string"
+									  KeyPath="yes"
+									  Value="{DE8A7135-96F6-47ba-9DC9-D7D837B4CDE3}" />
+						</Component>
 						<Component Id="NHQG_CONF"
 								   Guid="AF635E43-2257-8D69-6DD4-46CCCF54D4B7">
 							<File Id="NHIB_CONFIGURATION"
@@ -260,6 +298,14 @@
 					 Title="Custom Tool For Visual Studio .Net">
 				<ComponentRef Id="Register_COM_Component" />
 				<ComponentRef Id="Register_Custom_Tool" />
+				<Condition Level="0">NOT Privileged</Condition>
+			</Feature>
+			<Feature Id="Custom_Tool_2008"
+					 Level="1"
+					 Description="An extention to Visual Studio 2008 that will automatically generate the strongly typed query files when a change occurs to NHibernate's Mapping files."
+					 Title="Custom Tool For Visual Studio .Net 2008">
+				<ComponentRef Id="Register_COM_Component" />
+				<ComponentRef Id="Register_Custom_Tool_2008" />
 				<Condition Level="0">NOT Privileged</Condition>
 			</Feature>
 			<Feature Id="Add_To_Path"
