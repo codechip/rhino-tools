@@ -77,6 +77,11 @@ namespace Rhino.Commons
             get { return CurrentLongConversationId != null; }
         }
 
+        public static bool IsStarted
+        {
+            get { return Local.Data[CurrentUnitOfWorkKey] != null; }
+        }
+
         internal static Guid? CurrentLongConversationId
         {
             get { return (Guid?) Local.Data[CurrentLongConversationIdKey]; }

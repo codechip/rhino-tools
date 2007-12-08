@@ -108,9 +108,8 @@ namespace Rhino.Commons.HttpModules
             }
             else
             {
-                IUnitOfWork unitOfWork = UnitOfWork.Current;
-                if (unitOfWork != null)
-                    unitOfWork.Dispose();
+                if (UnitOfWork.IsStarted)
+                    UnitOfWork.Current.Dispose();
             }
         }
 
