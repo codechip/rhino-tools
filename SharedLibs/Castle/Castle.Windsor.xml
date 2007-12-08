@@ -815,6 +815,32 @@
             <param name="arguments"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll``1">
+            <summary>
+            Resolve all valid components that match this type.
+            </summary>
+            <typeparam name="T">The service type</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll(System.Type)">
+            <summary>
+            Resolve all valid components that mathc this service
+            <param name="service">the service to match</param>
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll(System.Type,System.Collections.IDictionary)">
+            <summary>
+            Resolve all valid components that mathc this service
+            <param name="service">the service to match</param>
+            <param name="arguments">Arguments to resolve the service</param>
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll``1(System.Collections.IDictionary)">
+            <summary>
+            Resolve all valid components that match this type.
+            <typeparam name="T">The service type</typeparam>
+            <param name="arguments">Arguments to resolve the service</param>
+            </summary>
+        </member>
         <member name="P:Castle.Windsor.IWindsorContainer.Name">
             <summary>
             Gets the container's name
@@ -1107,6 +1133,19 @@
             </summary>
             <param name="service"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.ResolveAll``1">
+            <summary>
+            Resolve all valid components that match this type.
+            </summary>
+            <typeparam name="T">The service type</typeparam>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.ResolveAll``1(System.Collections.IDictionary)">
+            <summary>
+            Resolve all valid components that match this type.
+            <typeparam name="T">The service type</typeparam>
+            <param name="arguments">Arguments to resolve the service</param>
+            </summary>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Type)">
             <summary>
