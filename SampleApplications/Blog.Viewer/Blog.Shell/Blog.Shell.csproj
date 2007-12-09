@@ -117,12 +117,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IoC.UI\IoC.UI.csproj">
-      <Project>{010E3DAB-FB44-4CB4-BB54-7D3DBD074F94}</Project>
-      <Name>IoC.UI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="AppShell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\FavIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Binsor.Presentation.Framework\Binsor.Presentation.Framework.csproj">
+      <Project>{010E3DAB-FB44-4CB4-BB54-7D3DBD074F94}</Project>
+      <Name>Binsor.Presentation.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

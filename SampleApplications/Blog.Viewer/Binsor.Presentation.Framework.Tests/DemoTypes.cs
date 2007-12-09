@@ -1,8 +1,8 @@
 namespace Binsor.Presentation.Framework.Tests.Demo
 {
 	using System;
-	using Data;
-	using Interfaces;
+    using Binsor.Presentation.Framework.Interfaces;
+    using Binsor.Presentation.Framework.Data;
 
 	public class DemoView : IView
 	{

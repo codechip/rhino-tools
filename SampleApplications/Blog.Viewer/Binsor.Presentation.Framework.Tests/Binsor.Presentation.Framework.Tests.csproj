@@ -95,6 +95,7 @@
     <Compile Include="ApplicationContextFixture.cs" />
     <Compile Include="ContainerConfigurationFixture.cs" />
     <Compile Include="DemoTypes.cs" />
+    <Compile Include="MenuItemDataFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +117,12 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Binsor.Presentation.Framework\Binsor.Presentation.Framework.csproj">
+      <Project>{010E3DAB-FB44-4CB4-BB54-7D3DBD074F94}</Project>
+      <Name>Binsor.Presentation.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

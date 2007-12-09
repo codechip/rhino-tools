@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("IoC.UI")]
+[assembly: AssemblyTitle("Binsor.Presentation.Framework")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rhino")]
-[assembly: AssemblyProduct("IoC.UI")]
+[assembly: AssemblyProduct("Binsor.Presentation.Framework")]
 [assembly: AssemblyCopyright("Copyright © Rhino 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

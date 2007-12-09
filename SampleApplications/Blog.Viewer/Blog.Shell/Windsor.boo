@@ -1,5 +1,5 @@
-import file from "assembly://IoC.UI/DefaultConfig.boo"
-import namespaces from "assembly://IoC.UI/DefaultImport.boo"
+import file from "assembly://Binsor.Presentation.Framework/DefaultConfig.boo"
+import namespaces from "assembly://Binsor.Presentation.Framework/DefaultImport.boo"
 
 InitializeContainer("Blog.Shell")
 PrintRegisteredComponents()

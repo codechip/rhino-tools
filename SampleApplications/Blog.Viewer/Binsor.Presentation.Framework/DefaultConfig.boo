@@ -1,9 +1,9 @@
-import namespaces from "assembly://IoC.UI/DefaultImport.boo"
+import namespaces from "assembly://Binsor.Presentation.Framework/DefaultImport.boo"
 
 class WellKnown:
 	public static Types = (ICommand, IView, ILayout, IModuleLoader, IPresenter, IApplicationContext )
 	public static Singletons = (ICommand, IModuleLoader, IApplicationContext )
-	public static Assemblies = ("IoC.UI", )
+	public static Assemblies = ("Binsor.Presentation.Framework", )
 
 def InitializeContainer( *assemblies as (string) ):
 	facility 'common.resolvers', AddCommonResolversFacility
