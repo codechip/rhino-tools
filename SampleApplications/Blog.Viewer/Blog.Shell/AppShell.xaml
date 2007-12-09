@@ -1,0 +1,64 @@
+﻿<Window 
+    x:Class="Blog.Shell.AppShell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Height="600"
+    Width="800"
+    x:Name="ApplicationShell"
+	Initialized="ApplicationShell_Initialized"
+	>
+    <Window.CommandBindings>
+        <CommandBinding Command="Help" CanExecute="Help_CanExecute" Executed="Help_Executed"/>
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="Auto"  />
+            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Height="27" VerticalAlignment="Top">
+            <Menu Name="MainMenu">
+                <MenuItem Header="_File" Name="File">
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="310"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Name="Header" Grid.Column="0">
+                <Border CornerRadius="5" BorderBrush="Blue" BorderThickness="5">
+                    <TextBlock VerticalAlignment="Center" FontSize="25">
+                    Really Cool Header here
+                    </TextBlock>
+                </Border>
+            </DockPanel>
+            <StackPanel HorizontalAlignment="Left" Grid.Column="1" Margin="5">
+                <Image Style="{StaticResource Logo}" Name="Logo"  />
+            </StackPanel>
+        </Grid>
+
+        <DockPanel Name="MainContent" Grid.Row="2" >
+            <Border CornerRadius="5" BorderBrush="Green" BorderThickness="5">
+                <TextBlock VerticalAlignment="Center" FontSize="25">
+                    Your content here
+                </TextBlock>
+            </Border>
+        </DockPanel>
+
+        <DockPanel Name="Footer" Grid.Row="3">
+            <Border CornerRadius="5" BorderBrush="Orange" BorderThickness="5">
+                <TextBlock VerticalAlignment="Center" FontSize="25">
+                    Really Cool Footer here
+                </TextBlock>
+            </Border>
+        </DockPanel>
+    </Grid>
+</Window>

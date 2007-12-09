@@ -1,0 +1,163 @@
+<Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <Providers />
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <EditorManager>
+    <RecentFiles>
+      <File id="d:Miscellaneous Files/f:WindsorContainer.cs" caret="24277" scrollPosition="0|26" />
+      <File id="d:Miscellaneous Files/f:BooComponentInstaller.cs" caret="2215" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:BooReader.cs" caret="8380" scrollPosition="0|175" />
+      <File id="d:Miscellaneous Files/f:AssemblyResourceFactory.cs" caret="737" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:DefaultResourceSubSystem.cs" caret="1982" scrollPosition="0|40" />
+      <File id="d:Miscellaneous Files/f:CustomUri.cs" caret="1172" scrollPosition="0|17" />
+      <File id="d:Miscellaneous Files/f:AssemblyResource.cs" caret="2997" scrollPosition="0|79" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultImport.boo" caret="126" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:Command.cs" caret="55" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:Commands.cs" caret="184" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:AutoReferenceFilesCompilerStep.cs" caret="3247" scrollPosition="0|46" />
+      <File id="d:Miscellaneous Files/f:DefaultKernel.cs" caret="40627" scrollPosition="0|1281" />
+      <File id="d:Miscellaneous Files/f:DefaultHandler.cs" caret="1425" scrollPosition="0|26" />
+      <File id="d:Miscellaneous Files/f:RhinoContainer.cs" caret="2179" scrollPosition="0|13" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IShellView.cs" caret="10" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Resolvers/f:ArrayOfComponentsResolver.cs" caret="660" scrollPosition="0|4" />
+      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ApplicationShell.Designer.cs" caret="556" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Exceptions/f:UnknownControlTypeException.cs" caret="104" scrollPosition="0|0" />
+      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:Program.cs" caret="475" scrollPosition="0|0" />
+      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ShellModuleLoader.cs" caret="405" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:IApplicationContext.cs" caret="551" scrollPosition="0|12" />
+      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ApplicationShell.cs" caret="542" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Data/f:MenuItemData.cs" caret="535" scrollPosition="0|18" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Util/f:Extensions.cs" caret="3754" scrollPosition="0|93" />
+      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:Windsor.boo" caret="189" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultConfig.boo" caret="181" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ContainerConfigurationFixture.cs" caret="247" scrollPosition="0|10" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DemoTypes.cs" caret="271" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IModuleLoader.cs" caret="103" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationContext.cs" caret="50" scrollPosition="0|0" />
+    </RecentFiles>
+  </EditorManager>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:@">
+      <Item value="Start" priority="0" />
+      <Item value="Controls" priority="1" />
+      <Item value="Name" priority="4" />
+      <Item value="Text" priority="0" />
+      <Item value="AccessibilityObject" priority="1" />
+      <Item value="ShortcutKey" priority="0" />
+      <Item value="ShortcutKeys" priority="1" />
+      <Item value="Command" priority="4" />
+      <Item value="Click" priority="0" />
+      <Item value="Items" priority="1" />
+      <Item value="IsInstanceOfType" priority="1" />
+      <Item value="DropDownItems" priority="2" />
+      <Item value="Key" priority="0" />
+      <Item value="IsAssignableFrom" priority="0" />
+      <Item value="Value" priority="0" />
+      <Item value="GetType" priority="1" />
+      <Item value="Parent" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.Core.DependencyModel">
+      <Item value="DependencyType" priority="1" />
+      <Item value="TargetType" priority="2" />
+      <Item value="DependencyKey" priority="0" />
+      <Item value="IsOptional" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Type">
+      <Item value="IsArray" priority="0" />
+      <Item value="GetElementType" priority="0" />
+      <Item value="IsAssignableFrom" priority="0" />
+      <Item value="IsGenericType" priority="0" />
+      <Item value="GetGenericTypeDefinition" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.MicroKernel.ISubDependencyResolver">
+      <Item value="CanResolve" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.Core.DependencyType">
+      <Item value="CompareTo" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.MicroKernel.IKernel">
+      <Item value="Resolver" priority="0" />
+      <Item value="HasComponent" priority="0" />
+      <Item value="ResolveAll" priority="0" />
+      <Item value="ComponentRegistered" priority="0" />
+      <Item value="GetHandler" priority="0" />
+      <Item value="RaiseHandlerRegistered" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.MicroKernel.IDependencyResolver">
+      <Item value="AddSubResolver" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:IoC.UI.Interfaces.IModuleLoader">
+      <Item value="Initialize" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.MicroKernel.CreationContext">
+      <Item value="Dependencies" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.Dictionary&lt;System.Type,System.Collections.Generic.List&lt;Castle.MicroKernel.IHandler&gt;&gt;">
+      <Item value="TryGetValue" priority="0" />
+      <Item value="Remove" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List&lt;Castle.MicroKernel.IHandler&gt;">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.Core.ComponentModel">
+      <Item value="Name" priority="0" />
+      <Item value="Service" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Castle.MicroKernel.IHandler">
+      <Item value="ComponentModel" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.KeyValuePair&lt;System.Type,System.Collections.Generic.List&lt;Castle.MicroKernel.IHandler&gt;&gt;">
+      <Item value="Key" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Forms.Shortcut">
+      <Item value="ToString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="IsNullOrEmpty" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:IoC.UI.Data.MenuItemData">
+      <Item value="Parent" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@IoC.UI.Commands">
+      <Item value="Dispatch" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Nullable&lt;System.Windows.Forms.Keys&gt;">
+      <Item value="Value" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Windows.Forms.MessageBox">
+      <Item value="Show" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:IoC.UI.Interfaces.IShellView">
+      <Item value="AddMenuItems" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:TValue">
+      <Item value="DynamicInvoke" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Forms.ToolStripItemCollection">
+      <Item value="Add" priority="1" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

@@ -1,0 +1,86 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shell="clr-namespace:Blog.Shell"
+    >
+    <Style x:Key="Logo">
+        <Setter Property="Image.Source" Value="logo.jpg"/>
+        <Setter Property="Image.Stretch" Value="None"/>
+        <Setter Property="Image.Cursor" Value="Hand"/>
+        <Setter Property="Image.HorizontalAlignment" Value="Right"/>
+        <Setter Property="Image.BitmapEffect">
+            <Setter.Value>
+                <DropShadowBitmapEffect ShadowDepth="10" Opacity="2" Color="Gray" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type shell:AppShell}" >
+        <Setter Property="Window.Background" Value="#FDF6E9"/>
+        <Setter Property="Window.Icon" Value="FavIcon.ico"/>
+        <Setter Property="Window.Title" Value="Blog Shell"/>
+    </Style>
+
+
+    <Style x:Key="{x:Type Menu}" TargetType="Menu">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Menu">
+                    <Border  Background="{StaticResource DarkBrush}" BorderBrush="{StaticResource DarkBrush}" BorderThickness="2">
+                        <Border  Background="{StaticResource DarkBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="{x:Static MenuItem.TopLevelHeaderTemplateKey}"
+                   TargetType="MenuItem">
+        <Border Name="Border" >
+            <Grid>
+                <ContentPresenter 
+                      Margin="6,3,6,3" 
+                      ContentSource="Header"
+                      RecognizesAccessKey="True" />
+                <Popup 
+                      Name="Popup"
+                      Placement="Bottom"
+                      IsOpen="{TemplateBinding IsSubmenuOpen}"
+                      AllowsTransparency="True" 
+                      Focusable="False"
+                      PopupAnimation="Fade">
+                    <Border 
+                        Name="SubmenuBorder"
+                        SnapsToDevicePixels="True"
+                        Background="{StaticResource MenuBackgroundBrush}"
+                        BorderBrush="{StaticResource SolidBorderBrush}"
+                        BorderThickness="1" >
+                        <StackPanel  
+                              IsItemsHost="True" 
+                              KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSuspendingPopupAnimation" Value="true">
+                <Setter TargetName="Popup" Property="PopupAnimation" Value="None"/>
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter TargetName="Border" Property="Background"
+                Value="{StaticResource NormalBrush}"/>
+                <Setter TargetName="Border" Property="BorderBrush"
+                Value="Transparent"/>
+            </Trigger>
+            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="True">
+                <Setter TargetName="SubmenuBorder" Property="CornerRadius" Value="0,0,4,4"/>
+                <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,0,0,3"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>
