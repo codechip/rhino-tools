@@ -10,6 +10,15 @@ namespace IoC.UI.Tests.Demo
 
 	public class DemoLayout : ILayout
 	{
+		public bool CanAccept(IView view)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AddView(IView view)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	public class DemoModuleLoader : IModuleLoader
