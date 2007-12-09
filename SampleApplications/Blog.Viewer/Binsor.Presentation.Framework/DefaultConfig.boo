@@ -1,8 +1,24 @@
 import namespaces from "assembly://Binsor.Presentation.Framework/DefaultImport.boo"
 
 class WellKnown:
-	public static Types = (ICommand, IView, ILayout, ILayoutRegistry, IModuleLoader, IPresenter, IApplicationContext )
-	public static Singletons = (ICommand, IModuleLoader, ILayoutRegistry, IApplicationContext )
+
+	public static Types = (
+		ICommand, 
+		IView, 
+		ILayout, 
+		ILayoutRegistry, 
+		IModuleLoader, 
+		IPresenter, 
+		ILayoutDecoratorResolver, 
+		IApplicationContext )
+
+	public static Singletons = (
+		ICommand, 
+		IModuleLoader, 
+		ILayoutRegistry, 
+		ILayoutDecoratorResolver, 
+		IApplicationContext )
+
 	public static Assemblies = ("Binsor.Presentation.Framework", )
 
 
