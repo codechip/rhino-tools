@@ -28,14 +28,14 @@ namespace Binsor.Presentation.Framework.Tests
         [Row(typeof(IModuleLoader), typeof(DemoModuleLoader))]
         [Row(typeof(IPresenter), typeof(DemoPresenter))]
         [Row(typeof(IApplicationContext), typeof(DefaultApplicationContext))]
-        public void WillRecognizeTypesAutomatically(Type interfaceType, Type concreteType)
-        {
+        public void Configration_should_recognize_well_know_types_and_register_them_automatically(Type interfaceType, Type concreteType)
+		{
             Assert.AreEqual(concreteType, container.Kernel.GetHandler(interfaceType).ComponentModel.Implementation);
         }
 
         [Test]
-        public void WillFillTheMenuItemsFromConfiguration()
-        {
+        public void Can_specify_menus_names_and_command_names_using_declerative_configuration()
+		{
             DemoModuleLoader resolve = (DemoModuleLoader)container.Resolve<IModuleLoader>();
 
             Assert.AreEqual("File_Exit", resolve.Items[0].Name);
@@ -48,16 +48,16 @@ namespace Binsor.Presentation.Framework.Tests
         }
 
         [Test]
-        public void CanDefineNamedMenuesWithoutCommands()
-        {
+        public void Can_define_menu_names_without_requiring_a_command()
+		{
             DemoModuleLoader resolve = (DemoModuleLoader)container.Resolve<IModuleLoader>();
             Assert.AreEqual("Help", resolve.Items[2].Name);
             Assert.IsNull(resolve.Items[2].Command);
         }
 
         [Test]
-        public void CanSetMenuTextFromConfig()
-        {
+        public void Can_specify_menu_header_from_declerative_configuration()
+		{
             DemoModuleLoader resolve = (DemoModuleLoader)container.Resolve<IModuleLoader>();
             Assert.AreEqual("H&elp", resolve.Items[2].Header);
         }
@@ -66,8 +66,8 @@ namespace Binsor.Presentation.Framework.Tests
         [Row(typeof(IView))]
         [Row(typeof(ILayout))]
         [Row(typeof(IPresenter))]
-        public void EnsureTrasientTypes(Type type)
-        {
+        public void Views_layouts_and_presenters_should_be_transients(Type type)
+		{
             object a = container.Resolve(type);
             object b = container.Resolve(type);
             Assert.AreNotSame(a, b,
@@ -77,8 +77,8 @@ namespace Binsor.Presentation.Framework.Tests
         [RowTest]
         [Row(typeof(IModuleLoader))]
         [Row(typeof(IApplicationContext))]
-        public void EnsureSingletonTypes(Type type)
-        {
+        public void ModuleLoaders_and_the_application_context_should_be_singletons(Type type)
+		{
             container.Kernel.AddComponentInstance<IApplicationShell>(MockRepository.GenerateStub<IApplicationShell>());
             object a = container.Resolve(type);
             object b = container.Resolve(type);

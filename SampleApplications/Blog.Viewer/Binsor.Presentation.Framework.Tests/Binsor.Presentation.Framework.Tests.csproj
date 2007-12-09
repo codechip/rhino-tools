@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="ApplicationContextFixture.cs" />
     <Compile Include="ContainerConfigurationFixture.cs" />
+    <Compile Include="DefaultLayourRegistryFixture.cs" />
     <Compile Include="DemoTypes.cs" />
     <Compile Include="MenuExtensionsFixture.cs" />
     <Compile Include="MenuItemDataFixture.cs" />

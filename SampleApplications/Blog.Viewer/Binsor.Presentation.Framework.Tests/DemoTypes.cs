@@ -19,6 +19,15 @@ namespace Binsor.Presentation.Framework.Tests.Demo
 		{
 			throw new NotImplementedException();
 		}
+
+		#region ILayout Members
+
+		public string Name
+		{
+			get { return "Demo"; }
+		}
+
+		#endregion
 	}
 
 	public class DemoModuleLoader : IModuleLoader

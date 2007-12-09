@@ -92,9 +92,11 @@
   <ItemGroup>
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="Data\MenuItemData.cs" />
+    <Compile Include="Exceptions\DuplicateLayoutException.cs" />
     <Compile Include="Extensions\MenuExtensions.cs" />
     <Compile Include="Facilities\AddCommonResolversFacility.cs" />
     <Compile Include="Impl\DefaultApplicationContext.cs" />
+    <Compile Include="Impl\DefaultLayoutRegistry.cs" />
     <Compile Include="Interfaces\IApplicationContext.cs" />
     <Compile Include="Interfaces\ILayout.cs" />
     <Compile Include="Interfaces\ILayoutRegistry.cs" />
@@ -132,9 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Interfaces\Interfaces.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

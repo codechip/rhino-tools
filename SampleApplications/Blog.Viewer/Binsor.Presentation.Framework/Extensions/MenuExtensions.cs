@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using Binsor.Presentation.Framework.Data;
-
-namespace Binsor.Presentation.Framework.Extensions
+﻿namespace Binsor.Presentation.Framework.Extensions
 {
-    public static class MenuExtensions
+	using System.Windows.Controls;
+	using Data;
+
+	public static class MenuExtensions
     {
         public static void AddMenuItems(this Menu menu, params MenuItemData[] items)
         {

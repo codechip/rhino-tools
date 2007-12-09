@@ -1,64 +1,4 @@
 <Configuration>
-  <SharedSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </SharedSolutionDisabledTemplatesManager>
-  <UnitTestRunner>
-    <CustomStartDirectory>
-    </CustomStartDirectory>
-    <UseShadowCopy>True</UseShadowCopy>
-    <UseCustomFolder>False</UseCustomFolder>
-    <Providers />
-  </UnitTestRunner>
-  <UserSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </UserSolutionDisabledTemplatesManager>
-  <FileStructureView>
-    <AutoScrollToSource>False</AutoScrollToSource>
-    <TrackCaretLocation>False</TrackCaretLocation>
-  </FileStructureView>
-  <ReFormatCode>
-    <ReorderMembers>False</ReorderMembers>
-    <OptimizeUsings>False</OptimizeUsings>
-    <RemoveRedundantThis>False</RemoveRedundantThis>
-    <ShortenReferences>False</ShortenReferences>
-  </ReFormatCode>
-  <NAntValidationSettings>
-    <NAntPath value="" />
-  </NAntValidationSettings>
-  <EditorManager>
-    <RecentFiles>
-      <File id="d:Miscellaneous Files/f:WindsorContainer.cs" caret="24277" scrollPosition="0|26" />
-      <File id="d:Miscellaneous Files/f:BooComponentInstaller.cs" caret="2215" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:BooReader.cs" caret="8380" scrollPosition="0|175" />
-      <File id="d:Miscellaneous Files/f:AssemblyResourceFactory.cs" caret="737" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:DefaultResourceSubSystem.cs" caret="1982" scrollPosition="0|40" />
-      <File id="d:Miscellaneous Files/f:CustomUri.cs" caret="1172" scrollPosition="0|17" />
-      <File id="d:Miscellaneous Files/f:AssemblyResource.cs" caret="2997" scrollPosition="0|79" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultImport.boo" caret="126" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:Command.cs" caret="55" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:Commands.cs" caret="184" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:AutoReferenceFilesCompilerStep.cs" caret="3247" scrollPosition="0|46" />
-      <File id="d:Miscellaneous Files/f:DefaultKernel.cs" caret="40627" scrollPosition="0|1281" />
-      <File id="d:Miscellaneous Files/f:DefaultHandler.cs" caret="1425" scrollPosition="0|26" />
-      <File id="d:Miscellaneous Files/f:RhinoContainer.cs" caret="2179" scrollPosition="0|13" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IShellView.cs" caret="10" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Resolvers/f:ArrayOfComponentsResolver.cs" caret="660" scrollPosition="0|4" />
-      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ApplicationShell.Designer.cs" caret="556" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Exceptions/f:UnknownControlTypeException.cs" caret="104" scrollPosition="0|0" />
-      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:Program.cs" caret="475" scrollPosition="0|0" />
-      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ShellModuleLoader.cs" caret="405" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:IApplicationContext.cs" caret="551" scrollPosition="0|12" />
-      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:ApplicationShell.cs" caret="542" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Data/f:MenuItemData.cs" caret="535" scrollPosition="0|18" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Util/f:Extensions.cs" caret="3754" scrollPosition="0|93" />
-      <File id="548F8EF7-F2E9-4399-926F-2A0046CEFE62/f:Windsor.boo" caret="189" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultConfig.boo" caret="181" scrollPosition="0|0" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ContainerConfigurationFixture.cs" caret="247" scrollPosition="0|10" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DemoTypes.cs" caret="271" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IModuleLoader.cs" caret="103" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationContext.cs" caret="50" scrollPosition="0|0" />
-    </RecentFiles>
-  </EditorManager>
   <CompletionStatisticsManager>
     <ItemStatistics item="Qualified:@">
       <Item value="Start" priority="0" />
@@ -160,4 +100,58 @@
       <Item value="Add" priority="1" />
     </ItemStatistics>
   </CompletionStatisticsManager>
+  <EditorManager>
+    <RecentFiles>
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultImport.boo" caret="126" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Resolvers/f:ArrayOfComponentsResolver.cs" caret="660" scrollPosition="0|4" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Data/f:MenuItemData.cs" caret="535" scrollPosition="0|18" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DemoTypes.cs" caret="271" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IModuleLoader.cs" caret="103" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ContainerConfigurationFixture.cs" caret="0" scrollPosition="0|0" />
+      <File id="C7D66F70-DD13-40B7-9BF6-7E940851E508/f:AppShell.xaml.cs" caret="0" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:MenuExtensionsFixture.cs" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationShell.cs" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationContext.cs" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:DefaultApplicationContext.cs" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:ILayoutRegistry.cs" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultConfig.boo" caret="0" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Extensions/f:MenuExtensions.cs" caret="822" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:DefaultLayoutRegistry.cs" caret="228" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ApplicationContextFixture.cs" caret="1515" scrollPosition="0|12" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DefaultLayourRegisterFixture.cs" caret="148" scrollPosition="0|0" />
+    </RecentFiles>
+  </EditorManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <Providers />
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
 </Configuration>

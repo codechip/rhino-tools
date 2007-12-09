@@ -15,8 +15,8 @@ namespace Binsor.Presentation.Framework.Tests
     public class MenuItemDataFixture
     {
         [Test]
-        public void IfCommandExplicitlySet_WillNotTryToSetCommandUsingCommandName()
-        {
+        public void When_command_is_explicitly_set_on_menu_item_data_should_not_try_to_resolve_command_by_name_from_IoC()
+		{
             MockRepository mocks = new MockRepository();
             MenuItemData mid = new MenuItemData { CommandName = "test" };
 
@@ -36,12 +36,11 @@ namespace Binsor.Presentation.Framework.Tests
                     Assert.AreSame(command, mid.Command);
                 }
             }
-
         }
 
         [Test]
-        public void WillResolveCommandUsingContainer()
-        {
+        public void When_command_is_not_specifid_should_try_to_resolve_command_instance_from_IoC_container()
+		{
             MockRepository mocks = new MockRepository();
             MenuItemData mid = new MenuItemData { CommandName = "test" };
 

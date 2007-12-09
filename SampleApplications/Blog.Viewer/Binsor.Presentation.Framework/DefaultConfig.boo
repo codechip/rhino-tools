@@ -1,8 +1,8 @@
 import namespaces from "assembly://Binsor.Presentation.Framework/DefaultImport.boo"
 
 class WellKnown:
-	public static Types = (ICommand, IView, ILayout, IModuleLoader, IPresenter, IApplicationContext )
-	public static Singletons = (ICommand, IModuleLoader, IApplicationContext )
+	public static Types = (ICommand, IView, ILayout, ILayoutRegistry, IModuleLoader, IPresenter, IApplicationContext )
+	public static Singletons = (ICommand, IModuleLoader, ILayoutRegistry, IApplicationContext )
 	public static Assemblies = ("Binsor.Presentation.Framework", )
 
 def InitializeContainer( *assemblies as (string) ):

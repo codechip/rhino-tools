@@ -11,8 +11,8 @@ namespace Binsor.Presentation.Framework.Tests
     public class ApplicationContextFixture
     {
         [Test]
-        public void WillInitializeAllModuleLoadersOnStart()
-        {
+        public void When_application_context_is_started_it_will_initialized_all_the_module_loader()
+		{
 
             MockRepository mocks = new MockRepository();
             IModuleLoader mockLoader1 = mocks.DynamicMock<IModuleLoader>();
@@ -20,7 +20,9 @@ namespace Binsor.Presentation.Framework.Tests
             IModuleLoader mockLoader3 = mocks.DynamicMock<IModuleLoader>();
             IApplicationShell stubShell = mocks.Stub<IApplicationShell>();
             DefaultApplicationContext context = mocks.PartialMock<DefaultApplicationContext>(
-                stubShell, new IModuleLoader[] { mockLoader1, mockLoader2, mockLoader3 });
+                stubShell, 
+				mocks.DynamicMock<ILayoutRegistry>(),
+				new IModuleLoader[] { mockLoader1, mockLoader2, mockLoader3 });
 
             //we may have order dependnecies, let us verify
             //that it does this in order

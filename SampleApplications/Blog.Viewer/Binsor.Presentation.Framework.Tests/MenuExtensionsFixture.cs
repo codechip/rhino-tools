@@ -14,8 +14,8 @@ namespace Binsor.Presentation.Framework.Tests
     public class MenuExtensionsFixture
     {
         [Test]
-        public void WillAddItemToRootMenu()
-        {
+        public void When_adding_menu_item_should_be_able_to_add_to_root_menu()
+		{
             Menu menu = new Menu { Name = "MainMenu" };
             menu.AddMenuItems(new MenuItemData { Parent = "MainMenu" });
 
@@ -23,8 +23,8 @@ namespace Binsor.Presentation.Framework.Tests
         }
 
         [Test]
-        public void WillAddItemToNestedMenu()
-        {
+        public void When_adding_menu_items_should_be_able_to_add_to_child_menu_item()
+		{
             Menu menu = new Menu { Name = "MainMenu" };
             MenuItem child = new MenuItem { Name = "Child" };
             menu.Items.Add(child);
@@ -34,8 +34,8 @@ namespace Binsor.Presentation.Framework.Tests
         }
 
         [Test]
-        public void WillAddItemToNestedMenu_TwoLevelsDeep()
-        {
+        public void When_adding_menu_items_should_be_able_to_add_to_grandchild_menu_item()
+		{
             Menu menu = new Menu { Name = "MainMenu" };
             MenuItem child = new MenuItem { Name = "Child" };
             MenuItem grandchild = new MenuItem { Name = "Grandchild" };
@@ -47,8 +47,8 @@ namespace Binsor.Presentation.Framework.Tests
         }
 
         [Test]
-        public void IfParentDoesNotExist_WillIgnoreAddition()
-        {
+        public void When_adding_menu_item_and_the_parent_does_not_exist_should_ignore_addition()
+		{
             Menu menu = new Menu { Name = "MainMenu" };
             MenuItem child = new MenuItem { Name = "Child" };
             menu.Items.Add(child);

@@ -10,13 +10,16 @@ namespace Binsor.Presentation.Framework.Impl
 	{
 		private readonly IApplicationShell shell;
 		private readonly IModuleLoader[] loaders;
+        private readonly ILayoutRegistry layouts;
 
 		public DefaultApplicationContext(
 			IApplicationShell shell,
+            ILayoutRegistry layouts,
 			IModuleLoader[] loaders
 			)
 		{
 			this.shell = shell;
+            this.layouts = layouts;
 			this.loaders = loaders;
 		}
 
@@ -27,5 +30,11 @@ namespace Binsor.Presentation.Framework.Impl
 				loader.Initialize(this, shell);
 			}
 		}
-	}
+
+        public ILayoutRegistry Layouts
+        {
+            get { return layouts; }
+        }
+
+    }
 }
