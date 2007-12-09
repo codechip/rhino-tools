@@ -1,7 +1,7 @@
 import file from "assembly://Binsor.Presentation.Framework/DefaultConfig.boo"
 import namespaces from "assembly://Binsor.Presentation.Framework/DefaultImport.boo"
 
-InitializeContainer(WellKnown.Assemblies, "Blog.Shell")
+InitializeContainer("Blog.Shell")
 PrintRegisteredComponents()
 
 extend 'ShellModuleLoader':

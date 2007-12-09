@@ -94,6 +94,7 @@
     <Compile Include="Attributes\SkipAutomaticRegistrationAttribute.cs" />
     <Compile Include="Data\MenuItemData.cs" />
     <Compile Include="Exceptions\DuplicateLayoutException.cs" />
+    <Compile Include="Exceptions\MissingLayoutException.cs" />
     <Compile Include="Extensions\MenuExtensions.cs" />
     <Compile Include="Facilities\AddCommonResolversFacility.cs" />
     <Compile Include="Interfaces\ILayoutDecoratorResolver.cs" />

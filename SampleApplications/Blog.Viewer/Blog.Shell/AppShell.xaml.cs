@@ -38,7 +38,10 @@ namespace Blog.Shell
         {
             IoC.Initialize(new RhinoContainer("assembly://Blog.Shell/Windsor.boo"));
             IoC.Container.Kernel.AddComponentInstance<IApplicationShell>(this);
-            IApplicationContext context = IoC.Resolve<IApplicationContext>();
+        	IApplicationContext context = IoC.Resolve<IApplicationContext>();
+        	context.Layouts.Register(Header);
+			context.Layouts.Register(MainContent);
+			context.Layouts.Register(Footer);
             context.Start();
         }
 

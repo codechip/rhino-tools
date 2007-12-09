@@ -4,6 +4,6 @@ namespace Binsor.Presentation.Framework.Interfaces
 
 	public interface ILayoutDecoratorResolver
 	{
-		ILayout GetLayoutDecoratorFor<T>(T element) where T : FrameworkElement;	
+		ILayout GetLayoutDecoratorFor(FrameworkElement element);	
 	}
 }

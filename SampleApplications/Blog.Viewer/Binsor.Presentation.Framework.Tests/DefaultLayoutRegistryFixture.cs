@@ -1,20 +1,22 @@
 namespace Binsor.Presentation.Framework.Tests
 {
+	using System.Threading;
 	using MbUnit.Framework;
 	using Binsor.Presentation.Framework.Services;
 	using Binsor.Presentation.Framework.Tests.Demo;
 	using Binsor.Presentation.Framework.Exceptions;
 	using Rhino.Mocks;
 	using Binsor.Presentation.Framework.Interfaces;
+	using System.Windows.Controls;
 
-	[TestFixture]
+	[TestFixture(ApartmentState =ApartmentState.STA)]
 	public class DefaultLayoutRegistryFixture
 	{
 		[Test]
 		public void After_a_layout_is_registered_if_can_be_retrieved_by_name()
 		{
-			DefaultLayoutRegistry registry = new DefaultLayoutRegistry();
-			registry.RegisterLayout(new DemoLayout());
+			DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
+			registry.Register(new DemoLayout());
 
 			Assert.IsNotNull(registry.GetLayout("Demo"));
 		}
@@ -24,9 +26,9 @@ namespace Binsor.Presentation.Framework.Tests
 			"Layout names must be unique. A layout named 'Demo' already exists.")]
 		public void When_two_layouts_with_same_name_are_added_to_the_registry_an_exception_should_be_thrown()
 		{
-			DefaultLayoutRegistry registry = new DefaultLayoutRegistry();
-			registry.RegisterLayout(new DemoLayout());
-			registry.RegisterLayout(new DemoLayout());
+			DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
+			registry.Register(new DemoLayout());
+			registry.Register(new DemoLayout());
 		}
 
 		[Test]
@@ -44,8 +46,8 @@ namespace Binsor.Presentation.Framework.Tests
 
 			using (mocks.Record())
 			{
-				DefaultLayoutRegistry registry = new DefaultLayoutRegistry();
-				registry.RegisterLayout(mockLayout);
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
+				registry.Register(mockLayout);
 				registry.AddView(view);
 			}
 		}
@@ -66,9 +68,60 @@ namespace Binsor.Presentation.Framework.Tests
 
 			using (mocks.Record())
 			{
-				DefaultLayoutRegistry registry = new DefaultLayoutRegistry();
-				registry.RegisterLayout(mockLayout);
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
+				registry.Register(mockLayout);
 				registry.AddView(view);
+			}
+		}
+
+		[Test]
+		[ExpectedException(typeof(MissingLayoutException), "Could not find layout: Demo")]
+		public void When_requesting_a_missing_layout_should_throw_meaningful_exception()
+		{
+			DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
+			registry.GetLayout("Demo");
+		}
+
+		[Test]
+		public void When_registering_using_framework_element_will_add_layout_decorator_for_that_element()
+		{
+			var panel = new DockPanel { Name = "Demo" };
+
+			MockRepository mocks = new MockRepository();
+			ILayoutDecoratorResolver mockLayoutDecoratorResolver = mocks.CreateMock<ILayoutDecoratorResolver>();
+			using (mocks.Record())
+			{
+				SetupResult.For(mockLayoutDecoratorResolver.GetLayoutDecoratorFor(panel))
+					.Return(new DemoLayout());
+			}
+
+			using(mocks.Playback())
+			{
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(mockLayoutDecoratorResolver);
+				registry.Register(panel);
+				Assert.IsNotNull(registry.GetLayout("Demo"));
+			}
+		}
+
+		[Test]
+		[ExpectedException(typeof(MissingLayoutException), "Could not find layout: Demo")]
+		public void When_trying_to_register_framework_element_that_has_no_configured_layout_will_ignore_the_registration()
+		{
+			var panel = new DockPanel { Name = "Demo" };
+
+			MockRepository mocks = new MockRepository();
+			ILayoutDecoratorResolver mockLayoutDecoratorResolver = mocks.CreateMock<ILayoutDecoratorResolver>();
+			using (mocks.Record())
+			{
+				SetupResult.For(mockLayoutDecoratorResolver.GetLayoutDecoratorFor(panel))
+					.Return(null);
+			}
+
+			using (mocks.Playback())
+			{
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(mockLayoutDecoratorResolver);
+				registry.Register(panel);
+				registry.GetLayout("Demo");
 			}
 		}
 	}
