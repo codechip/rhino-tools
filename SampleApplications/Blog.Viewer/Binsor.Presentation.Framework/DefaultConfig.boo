@@ -5,11 +5,13 @@ class WellKnown:
 	public static Singletons = (ICommand, IModuleLoader, ILayoutRegistry, IApplicationContext )
 	public static Assemblies = ("Binsor.Presentation.Framework", )
 
+
 def InitializeContainer( *assemblies as (string) ):
 	facility 'common.resolvers', AddCommonResolversFacility
 	for assembly in cat(WellKnown.Assemblies, assemblies):
 		for type as Type in Assembly.Load(assembly).GetTypes():
 			continue unless type.IsClass and not type.IsAbstract
+			continue if type.IsDefined(SkipAutomaticRegistrationAttribute, false)
 			ProcessType(type)
 			
 def ProcessType(type as Type):

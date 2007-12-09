@@ -83,6 +83,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -91,7 +92,9 @@
   <ItemGroup>
     <Compile Include="ApplicationContextFixture.cs" />
     <Compile Include="ContainerConfigurationFixture.cs" />
-    <Compile Include="DefaultLayourRegistryFixture.cs" />
+    <Compile Include="DefaultLayoutRegistryFixture.cs" />
+    <Compile Include="DefaultLayoutDecoratorResolverFixture.cs" />
+    <Compile Include="PanelDecoratingLayoutFixture.cs" />
     <Compile Include="DemoTypes.cs" />
     <Compile Include="MenuExtensionsFixture.cs" />
     <Compile Include="MenuItemDataFixture.cs" />
@@ -122,6 +125,9 @@
       <Project>{010E3DAB-FB44-4CB4-BB54-7D3DBD074F94}</Project>
       <Name>Binsor.Presentation.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultLayoutDecoratorResolverFixtureConfig.boo" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,14 +1,14 @@
 namespace Binsor.Presentation.Framework.Tests
 {
 	using MbUnit.Framework;
-	using Binsor.Presentation.Framework.Impl;
+	using Binsor.Presentation.Framework.Services;
 	using Binsor.Presentation.Framework.Tests.Demo;
 	using Binsor.Presentation.Framework.Exceptions;
 	using Rhino.Mocks;
 	using Binsor.Presentation.Framework.Interfaces;
 
 	[TestFixture]
-	public class DefaultLayourRegistryFixture
+	public class DefaultLayoutRegistryFixture
 	{
 		[Test]
 		public void After_a_layout_is_registered_if_can_be_retrieved_by_name()
@@ -53,7 +53,23 @@ namespace Binsor.Presentation.Framework.Tests
 		[Test]
 		public void When_layout_says_that_it_can_accept_view_registry_should_add_view_to_layout()
 		{
-			
+			MockRepository mocks = new MockRepository();
+			ILayout mockLayout = mocks.CreateMock<ILayout>();
+			DemoView view = new DemoView();
+			using (mocks.Record())
+			{
+				SetupResult.For(mockLayout.Name).Return("something");
+
+				Expect.Call(mockLayout.CanAccept(view)).Return(true);
+				Expect.Call(delegate { mockLayout.AddView(view); });
+			}
+
+			using (mocks.Record())
+			{
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry();
+				registry.RegisterLayout(mockLayout);
+				registry.AddView(view);
+			}
 		}
 	}
 }

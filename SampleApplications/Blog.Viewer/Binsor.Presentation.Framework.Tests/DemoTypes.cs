@@ -3,9 +3,14 @@ namespace Binsor.Presentation.Framework.Tests.Demo
 	using System;
     using Binsor.Presentation.Framework.Interfaces;
     using Binsor.Presentation.Framework.Data;
+	using System.Windows;
 
-	public class DemoView : IView
+	public class DemoView : UIElement, IView
 	{
+		public string Name
+		{
+			get { return "Demo"; }
+		}
 	}
 
 	public class DemoLayout : ILayout

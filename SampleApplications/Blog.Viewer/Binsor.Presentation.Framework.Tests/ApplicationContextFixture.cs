@@ -2,7 +2,7 @@ namespace Binsor.Presentation.Framework.Tests
 {
     using System;
     using Data;
-    using Impl;
+    using Services;
     using Interfaces;
     using MbUnit.Framework;
     using Rhino.Mocks;

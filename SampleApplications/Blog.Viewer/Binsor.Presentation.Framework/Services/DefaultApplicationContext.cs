@@ -1,9 +1,10 @@
-namespace Binsor.Presentation.Framework.Impl
+namespace Binsor.Presentation.Framework.Services
 {
 	using System;
 	using System.Collections;
 	using Interfaces;
     using System.Windows;
+	using Binsor.Presentation.Framework.Attributes;
 
 	[Component("ApplicationContext")]
 	public class DefaultApplicationContext : IApplicationContext

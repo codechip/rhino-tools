@@ -90,13 +90,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentAttribute.cs" />
+    <Compile Include="Attributes\ComponentAttribute.cs" />
+    <Compile Include="Attributes\SkipAutomaticRegistrationAttribute.cs" />
     <Compile Include="Data\MenuItemData.cs" />
     <Compile Include="Exceptions\DuplicateLayoutException.cs" />
     <Compile Include="Extensions\MenuExtensions.cs" />
     <Compile Include="Facilities\AddCommonResolversFacility.cs" />
-    <Compile Include="Impl\DefaultApplicationContext.cs" />
-    <Compile Include="Impl\DefaultLayoutRegistry.cs" />
+    <Compile Include="Interfaces\ILayoutDecoratorResolver.cs" />
+    <Compile Include="Services\DefaultApplicationContext.cs" />
+    <Compile Include="Services\DefaultLayoutDecoratorResolver.cs" />
+    <Compile Include="Services\DefaultLayoutRegistry.cs" />
+    <Compile Include="Layouts\PanelDecoratingLayout.cs" />
     <Compile Include="Interfaces\IApplicationContext.cs" />
     <Compile Include="Interfaces\ILayout.cs" />
     <Compile Include="Interfaces\ILayoutRegistry.cs" />

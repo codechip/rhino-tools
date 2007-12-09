@@ -1,4 +1,4 @@
-namespace Binsor.Presentation.Framework
+namespace Binsor.Presentation.Framework.Attributes
 {
 	using System;
 

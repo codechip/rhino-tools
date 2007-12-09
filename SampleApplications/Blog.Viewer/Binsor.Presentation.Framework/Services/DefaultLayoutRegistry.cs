@@ -1,4 +1,4 @@
-﻿namespace Binsor.Presentation.Framework.Impl
+﻿namespace Binsor.Presentation.Framework.Services
 {
 	using System.Collections.Generic;
 	using Exceptions;

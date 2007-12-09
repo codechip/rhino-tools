@@ -3,7 +3,7 @@ namespace Binsor.Presentation.Framework.Tests
     using System;
     using Castle.Windsor;
     using Demo;
-    using Impl;
+    using Services;
     using Interfaces;
     using MbUnit.Framework;
     using Rhino.Commons;
@@ -27,7 +27,6 @@ namespace Binsor.Presentation.Framework.Tests
         [Row(typeof(ILayout), typeof(DemoLayout))]
         [Row(typeof(IModuleLoader), typeof(DemoModuleLoader))]
         [Row(typeof(IPresenter), typeof(DemoPresenter))]
-        [Row(typeof(IApplicationContext), typeof(DefaultApplicationContext))]
         public void Configration_should_recognize_well_know_types_and_register_them_automatically(Type interfaceType, Type concreteType)
 		{
             Assert.AreEqual(concreteType, container.Kernel.GetHandler(interfaceType).ComponentModel.Implementation);
@@ -76,8 +75,8 @@ namespace Binsor.Presentation.Framework.Tests
 
         [RowTest]
         [Row(typeof(IModuleLoader))]
-        [Row(typeof(IApplicationContext))]
-        public void ModuleLoaders_and_the_application_context_should_be_singletons(Type type)
+		[Row(typeof(IApplicationContext))]
+        public void ModuleLoaders_and_application_context_should_be_singletons(Type type)
 		{
             container.Kernel.AddComponentInstance<IApplicationShell>(MockRepository.GenerateStub<IApplicationShell>());
             object a = container.Resolve(type);

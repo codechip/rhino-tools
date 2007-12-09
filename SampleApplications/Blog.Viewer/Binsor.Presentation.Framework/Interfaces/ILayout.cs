@@ -1,3 +1,4 @@
+using System.Windows;
 namespace Binsor.Presentation.Framework.Interfaces
 {
 	public interface ILayout

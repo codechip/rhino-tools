@@ -1,7 +1,10 @@
 import System
 import System.Reflection
+import System.Collections
 import Binsor.Presentation.Framework
+import Binsor.Presentation.Framework.Attributes
 import Binsor.Presentation.Framework.Data
+import Binsor.Presentation.Framework.Layouts
 import Binsor.Presentation.Framework.Facilities
 import Binsor.Presentation.Framework.Interfaces
 import System.Windows.Input
