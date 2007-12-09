@@ -1,7 +1,7 @@
 namespace Blog.Shell
 {
-	using IoC.UI.Data;
-	using IoC.UI.Interfaces;
+	using Binsor.Presentation.Framework.Data;
+	using Binsor.Presentation.Framework.Interfaces;
 
 	public class ShellModuleLoader : IModuleLoader
 	{

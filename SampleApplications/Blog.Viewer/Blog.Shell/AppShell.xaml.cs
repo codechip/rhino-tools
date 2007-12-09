@@ -10,13 +10,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using IoC.UI.Interfaces;
-using IoC.UI.Util;
+using Binsor.Presentation.Framework.Interfaces;
+using Binsor.Presentation.Framework.Util;
 
 namespace Blog.Shell
 {
     using IoC = Rhino.Commons.IoC;
-    using IoC.UI.Data;
+    using Binsor.Presentation.Framework.Data;
     using Rhino.Commons;
 
     /// <summary>

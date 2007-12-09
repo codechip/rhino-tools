@@ -9,7 +9,7 @@ using Rhino.Commons;
 namespace Blog.Shell
 {
     using IoC = Rhino.Commons.IoC;
-    using IoC.UI.Interfaces;
+    using Binsor.Presentation.Framework.Interfaces;
     using System.Threading;
 
     /// <summary>
