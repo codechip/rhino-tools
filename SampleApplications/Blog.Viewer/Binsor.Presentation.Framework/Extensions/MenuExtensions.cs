@@ -5,11 +5,11 @@ using System.Windows;
 using System.Windows.Controls;
 using Binsor.Presentation.Framework.Data;
 
-namespace Binsor.Presentation.Framework.Util
+namespace Binsor.Presentation.Framework.Extensions
 {
-    public static class WpfExtensions
+    public static class MenuExtensions
     {
-        public static void AddMenuItems(this Menu menu, MenuItemData[] items)
+        public static void AddMenuItems(this Menu menu, params MenuItemData[] items)
         {
             foreach (var itemData in items)
             {

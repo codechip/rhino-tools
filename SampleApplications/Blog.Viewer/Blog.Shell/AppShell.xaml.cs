@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Binsor.Presentation.Framework.Interfaces;
-using Binsor.Presentation.Framework.Util;
+using Binsor.Presentation.Framework.Extensions;
 
 namespace Blog.Shell
 {

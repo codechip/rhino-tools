@@ -1,7 +1,6 @@
 namespace Binsor.Presentation.Framework.Tests
 {
     using System;
-    using System.Windows.Forms;
     using Data;
     using Impl;
     using Interfaces;
