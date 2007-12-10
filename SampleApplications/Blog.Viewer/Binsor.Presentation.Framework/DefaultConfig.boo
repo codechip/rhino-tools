@@ -23,9 +23,12 @@ class WellKnown:
 
 
 def InitializeContainer( *assemblies as (string) ):
+	InitializeContainer( assemblies )
+	
+def InitializeContainer( assemblies as IEnumerable ):
 	facility 'common.resolvers', AddCommonResolversFacility
-	for assembly in cat(WellKnown.Assemblies, assemblies):
-		for type as Type in Assembly.Load(assembly).GetTypes():
+	for assembly as string in cat(WellKnown.Assemblies, assemblies):		
+		for type as Type in LoadAssembly(assembly).GetTypes():
 			continue unless type.IsClass and not type.IsAbstract
 			continue if type.IsDefined(SkipAutomaticRegistrationAttribute, false)
 			ProcessType(type)
@@ -54,3 +57,11 @@ def PrintRegisteredComponents():
 	for handler in kernel.NamingSubSystem.GetHandlers():
 		print "${handler.ComponentModel.Name} => ${handler.ComponentModel.Service}"
 		
+def LoadAssembly(assembly as string):
+	if assembly.Contains(".dll") or assembly.Contains(".dll"):
+		if Path.GetDirectoryName(assembly) == Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory):
+			return Assembly.Load(Path.GetFileNameWithoutExtension(assembly))
+		else: # no choice but to use the LoadFile, with the different context :-(
+			return Assembly.LoadFile(assembly)
+	else:
+		return Assembly.Load(assembly)
