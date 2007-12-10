@@ -7,6 +7,7 @@ class WellKnown:
 		IView, 
 		ILayout, 
 		ILayoutRegistry, 
+		ILayoutSelector,
 		IModuleLoader, 
 		IPresenter, 
 		ILayoutDecoratorResolver, 

@@ -9,17 +9,19 @@
 	{
 		private Dictionary<string, ILayout> layouts = new Dictionary<string, ILayout>();
 		private ILayoutDecoratorResolver layoutDeocratorResolver;
+		ILayoutSelector layoutSelector;
 
-		public DefaultLayoutRegistry(ILayoutDecoratorResolver layoutDeocratorResolver)
+		public DefaultLayoutRegistry(ILayoutDecoratorResolver layoutDeocratorResolver, ILayoutSelector layoutSelector)
 		{
 			this.layoutDeocratorResolver = layoutDeocratorResolver;
+			this.layoutSelector = layoutSelector;
 		}
 
 		public void AddView(IView view)
 		{
 			foreach (ILayout layout in layouts.Values)
 			{
-				if(layout.CanAccept(view))
+				if(layoutSelector.CanAccept(layout, view))
 					layout.AddView(view);
 			}
 		}

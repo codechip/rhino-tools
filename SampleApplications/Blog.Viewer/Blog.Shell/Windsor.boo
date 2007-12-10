@@ -17,3 +17,8 @@ extend 'ShellModuleLoader':
 component 'Header', SingleViewPanelDecoratingLayout
 component 'MainContent', SingleViewPanelDecoratingLayout
 component 'Footer', SingleViewPanelDecoratingLayout
+
+extend 'DefaultLayoutSelector':
+	acceptableViewNames = {
+		'MainContent' : ("ContentView",)
+	}

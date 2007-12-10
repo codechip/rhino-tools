@@ -12,32 +12,6 @@ namespace Binsor.Presentation.Framework.Tests
 	public class PanelDecoratingLayoutFixture
 	{
 		[Test]
-		public void When_asked_about_accepting_a_view_with_acceptable_name_should_return_true()
-		{
-			PanelDecoratingLayout layout = new PanelDecoratingLayout(null, new[]
-			{
-				"Demo",
-				"Barn"
-			});
-
-			bool result = layout.CanAccept(new DemoView());
-			Assert.IsTrue(result);
-		}
-
-		[Test]
-		public void When_asked_about_accepting_a_view_with_an_uknown_name_should_return_false()
-		{
-			PanelDecoratingLayout layout = new PanelDecoratingLayout(null, new[]
-			{
-				"Barn",
-				"Yard"
-			});
-
-			bool result = layout.CanAccept(new DemoView());
-			Assert.IsFalse(result);
-		}
-
-		[Test]
 		public void When_adding_a_view_to_the_layout_should_add_view_to_panel_children_collection()
 		{
 			Panel element = new DockPanel();

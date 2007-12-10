@@ -42,11 +42,6 @@ namespace Binsor.Presentation.Framework.Layouts
 			get { return element.Name; }
 		}
 
-		public bool CanAccept(IView view)
-		{
-			return acceptableViewNames.Contains(view.Name);
-		}
-
 		public virtual void AddView(IView view)
 		{
 			element.Children.Add((UIElement)view);

@@ -94,6 +94,7 @@
     <Compile Include="ContainerConfigurationFixture.cs" />
     <Compile Include="DefaultLayoutRegistryFixture.cs" />
     <Compile Include="DefaultLayoutDecoratorResolverFixture.cs" />
+    <Compile Include="DefaultLayoutSelectorFixture.cs" />
     <Compile Include="PanelDecoratingLayoutFixture.cs" />
     <Compile Include="DemoTypes.cs" />
     <Compile Include="MenuExtensionsFixture.cs" />

@@ -98,6 +98,7 @@
     <Compile Include="Extensions\MenuExtensions.cs" />
     <Compile Include="Facilities\AddCommonResolversFacility.cs" />
     <Compile Include="Interfaces\ILayoutDecoratorResolver.cs" />
+    <Compile Include="Interfaces\ILayoutSelector.cs" />
     <Compile Include="Interfaces\IViewMarker.cs" />
     <Compile Include="Layouts\SingleViewPanelDecoratingLayout.cs" />
     <Compile Include="Services\DefaultApplicationContext.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Resolvers\ArrayOfComponentsResolver.cs" />
     <Compile Include="Resolvers\CurrentScopeResolver.cs" />
     <Compile Include="Scope\Scope.cs" />
+    <Compile Include="Services\DefaultLayoutSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DefaultConfig.boo" />
