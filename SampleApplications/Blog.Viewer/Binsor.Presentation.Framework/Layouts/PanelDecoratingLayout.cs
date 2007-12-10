@@ -40,7 +40,7 @@ namespace Binsor.Presentation.Framework.Layouts
 			return acceptableViewNames.Contains(view.Name);
 		}
 
-		public void AddView(IView view)
+		public virtual void AddView(IView view)
 		{
 			element.Children.Add((UIElement)view);
 		}

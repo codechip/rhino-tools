@@ -98,6 +98,8 @@
     <Compile Include="Extensions\MenuExtensions.cs" />
     <Compile Include="Facilities\AddCommonResolversFacility.cs" />
     <Compile Include="Interfaces\ILayoutDecoratorResolver.cs" />
+    <Compile Include="Interfaces\IViewMarker.cs" />
+    <Compile Include="Layouts\SingleViewPanelDecoratingLayout.cs" />
     <Compile Include="Services\DefaultApplicationContext.cs" />
     <Compile Include="Services\DefaultLayoutDecoratorResolver.cs" />
     <Compile Include="Services\DefaultLayoutRegistry.cs" />

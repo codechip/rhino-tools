@@ -99,6 +99,7 @@
     <Compile Include="MenuExtensionsFixture.cs" />
     <Compile Include="MenuItemDataFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleViewPanelDecoratingLayoutFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Windsor.boo" />

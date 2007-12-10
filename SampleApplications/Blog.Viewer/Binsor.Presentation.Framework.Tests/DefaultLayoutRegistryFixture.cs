@@ -44,7 +44,7 @@ namespace Binsor.Presentation.Framework.Tests
 				Expect.Call(mockLayout.CanAccept(view)).Return(false);
 			}
 
-			using (mocks.Record())
+			using (mocks.Playback())
 			{
 				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
 				registry.Register(mockLayout);
@@ -66,7 +66,7 @@ namespace Binsor.Presentation.Framework.Tests
 				Expect.Call(delegate { mockLayout.AddView(view); });
 			}
 
-			using (mocks.Record())
+			using (mocks.Playback())
 			{
 				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null);
 				registry.Register(mockLayout);

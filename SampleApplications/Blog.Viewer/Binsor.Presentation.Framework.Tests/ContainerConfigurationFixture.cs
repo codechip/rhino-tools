@@ -84,5 +84,12 @@ namespace Binsor.Presentation.Framework.Tests
             Assert.AreSame(a, b,
                               "Should get different instances, " + type + " should be singleton ");
         }
+
+    	[Test]
+		public void When_application_context_is_retrieved_from_container_it_layout_property_is_not_null()
+		{
+			container.Kernel.AddComponentInstance<IApplicationShell>(MockRepository.GenerateStub<IApplicationShell>());
+			Assert.IsNotNull(container.Resolve<IApplicationContext>().Layouts);
+    	}
     }
 }

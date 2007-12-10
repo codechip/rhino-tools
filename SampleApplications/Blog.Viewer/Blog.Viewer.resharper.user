@@ -102,23 +102,36 @@
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultImport.boo" caret="126" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Resolvers/f:ArrayOfComponentsResolver.cs" caret="660" scrollPosition="0|4" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Data/f:MenuItemData.cs" caret="535" scrollPosition="0|18" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DemoTypes.cs" caret="271" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IModuleLoader.cs" caret="103" scrollPosition="0|0" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ContainerConfigurationFixture.cs" caret="0" scrollPosition="0|0" />
-      <File id="C7D66F70-DD13-40B7-9BF6-7E940851E508/f:AppShell.xaml.cs" caret="0" scrollPosition="0|0" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:MenuExtensionsFixture.cs" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationShell.cs" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IApplicationContext.cs" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:DefaultApplicationContext.cs" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:ILayoutRegistry.cs" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultConfig.boo" caret="0" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Extensions/f:MenuExtensions.cs" caret="822" scrollPosition="0|0" />
-      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Impl/f:DefaultLayoutRegistry.cs" caret="228" scrollPosition="0|0" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ApplicationContextFixture.cs" caret="1515" scrollPosition="0|12" />
-      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DefaultLayourRegisterFixture.cs" caret="148" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Exceptions/f:DuplicateLayoutException.cs" caret="342" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Exceptions/f:MissingLayoutException.cs" caret="104" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Services/f:DefaultLayoutDecoratorResolver.cs" caret="641" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ContainerConfigurationFixture.cs" caret="3405" scrollPosition="0|59" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Layouts/f:PanelDecoratingLayout.cs" caret="1166" scrollPosition="0|25" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DefaultLayoutDecoratorResolverFixture.cs" caret="1961" scrollPosition="0|23" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:PanelDecoratingLayoutFixture.cs" caret="1133" scrollPosition="0|24" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Layouts/f:SingleViewPanelDecoratingLayout.cs" caret="440" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:SingleViewPanelDecoratingLayoutFixture.cs" caret="794" scrollPosition="0|0" />
+      <File id="C7D66F70-DD13-40B7-9BF6-7E940851E508/f:Windsor.boo" caret="213" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/f:DefaultConfig.boo" caret="734" scrollPosition="0|5" />
+      <File id="C7D66F70-DD13-40B7-9BF6-7E940851E508/f:App.xaml.cs" caret="602" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:IoC.cs" caret="2505" scrollPosition="0|18" />
+      <File id="d:Miscellaneous Files/f:DefaultKernel.cs" caret="24786" scrollPosition="0|577" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IView.cs" caret="144" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Interfaces/f:IViewMarker.cs" caret="195" scrollPosition="0|0" />
+      <File id="01E77968-FE79-41B6-8993-95C8BAF65B98/d:Resources/f:Styles.xaml" caret="215" scrollPosition="0|0" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Resolvers/f:ArrayOfComponentsResolver.cs" caret="540" scrollPosition="0|0" />
+      <File id="C7D66F70-DD13-40B7-9BF6-7E940851E508/f:AppShell.xaml.cs" caret="1279" scrollPosition="0|10" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Services/f:DefaultApplicationContext.cs" caret="878" scrollPosition="0|1" />
+      <File id="01E77968-FE79-41B6-8993-95C8BAF65B98/f:HeaderModuleLoader.cs" caret="453" scrollPosition="0|0" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:ApplicationContextFixture.cs" caret="1097" scrollPosition="0|9" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:MenuItemDataFixture.cs" caret="1473" scrollPosition="0|30" />
+      <File id="A16411A3-2982-4C18-9188-C970C9A03B72/f:DefaultLayoutRegistryFixture.cs" caret="2356" scrollPosition="0|57" />
+      <File id="010E3DAB-FB44-4CB4-BB54-7D3DBD074F94/d:Services/f:DefaultLayoutRegistry.cs" caret="868" scrollPosition="0|3" />
+      <File id="01E77968-FE79-41B6-8993-95C8BAF65B98/f:BlogHeader.xaml" caret="423" scrollPosition="0|6" />
+      <File id="6728C966-EAFA-4F12-B4D6-F187050C1B52/f:MainContent.xaml" caret="386" scrollPosition="0|1" />
+      <File id="01E77968-FE79-41B6-8993-95C8BAF65B98/f:BlogHeader.xaml.cs" caret="517" scrollPosition="0|0" />
+      <File id="6728C966-EAFA-4F12-B4D6-F187050C1B52/f:MainContent.xaml.cs" caret="574" scrollPosition="0|0" />
+      <File id="6728C966-EAFA-4F12-B4D6-F187050C1B52/f:MainContentModuleLoader.cs" caret="393" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

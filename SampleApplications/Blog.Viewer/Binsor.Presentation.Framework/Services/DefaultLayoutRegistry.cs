@@ -17,6 +17,11 @@
 
 		public void AddView(IView view)
 		{
+			foreach (ILayout layout in layouts.Values)
+			{
+				if(layout.CanAccept(view))
+					layout.AddView(view);
+			}
 		}
 
 
