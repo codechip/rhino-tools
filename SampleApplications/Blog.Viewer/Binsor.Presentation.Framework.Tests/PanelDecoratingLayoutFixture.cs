@@ -15,11 +15,7 @@ namespace Binsor.Presentation.Framework.Tests
 		public void When_adding_a_view_to_the_layout_should_add_view_to_panel_children_collection()
 		{
 			Panel element = new DockPanel();
-			PanelDecoratingLayout layout = new PanelDecoratingLayout(element, new[]
-			{
-				"Barn",
-				"Yard"
-			});
+			PanelDecoratingLayout layout = new PanelDecoratingLayout(element);
 			layout.AddView(new DemoView());
 			Assert.AreEqual(1, element.Children.Count);
 		}

@@ -10,26 +10,14 @@ namespace Binsor.Presentation.Framework.Layouts
 {
 	using Attributes;
 
-	[SkipAutomaticRegistration("Layouts are configured manually, because they are tied to specific elements.")]
+	[SkipRegistrationForLayout]
 	public class PanelDecoratingLayout : ILayout
 	{
 		private readonly Panel element;
-		private readonly string[] acceptableViewNames;
-
 
 		public PanelDecoratingLayout(Panel element)
 		{
 			this.element = element;
-			acceptableViewNames = new[] { element.Name };
-		}
-
-		public PanelDecoratingLayout(
-			Panel element, 
-			string[] acceptableViewNames
-			)
-		{
-			this.element = element;
-			this.acceptableViewNames = acceptableViewNames;
 		}
 
 		public Panel Element

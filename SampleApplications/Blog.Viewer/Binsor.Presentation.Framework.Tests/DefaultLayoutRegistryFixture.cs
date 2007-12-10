@@ -47,7 +47,7 @@ namespace Binsor.Presentation.Framework.Tests
 
 			using (mocks.Playback())
 			{
-				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null, null);
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null, mockSelector);
 				registry.Register(stubbedLayout);
 				registry.AddView(view);
 			}
@@ -70,7 +70,7 @@ namespace Binsor.Presentation.Framework.Tests
 
 			using (mocks.Playback())
 			{
-				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null, null);
+				DefaultLayoutRegistry registry = new DefaultLayoutRegistry(null, mockSelector);
 				registry.Register(mockLayout);
 				registry.AddView(view);
 			}

@@ -11,6 +11,14 @@ namespace Binsor.Presentation.Framework.Services
 	{
 		IDictionary acceptableViewNamesPerLayout;
 
+		/// <summary>
+		/// no config means it will use the default name matching
+		/// </summary>
+		public DefaultLayoutSelector()
+		{
+
+		}
+
 		public DefaultLayoutSelector(IDictionary acceptableViewNames)
 		{
 			this.acceptableViewNamesPerLayout = acceptableViewNames;

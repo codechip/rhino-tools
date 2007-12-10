@@ -18,11 +18,7 @@ namespace Binsor.Presentation.Framework.Tests
 
 			Assert.AreEqual(2, element.Children.Count);
 
-			PanelDecoratingLayout layout = new SingleViewPanelDecoratingLayout(element, new[]
-			{
-				"Barn",
-				"Yard"
-			});
+			PanelDecoratingLayout layout = new SingleViewPanelDecoratingLayout(element);
 			layout.AddView(new DemoView());
 			Assert.AreEqual(1, element.Children.Count);
 		}

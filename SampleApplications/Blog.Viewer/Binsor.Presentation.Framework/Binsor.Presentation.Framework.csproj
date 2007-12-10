@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ComponentAttribute.cs" />
     <Compile Include="Attributes\SkipAutomaticRegistrationAttribute.cs" />
+    <Compile Include="Attributes\SkipRegistrationForLayout.cs" />
     <Compile Include="Data\MenuItemData.cs" />
     <Compile Include="Exceptions\DuplicateLayoutException.cs" />
     <Compile Include="Exceptions\MissingLayoutException.cs" />

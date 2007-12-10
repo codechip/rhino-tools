@@ -4,15 +4,11 @@ namespace Binsor.Presentation.Framework.Layouts
 	using Attributes;
 	using Interfaces;
 
-	[SkipAutomaticRegistration("Layouts are configured manually, because they are tied to specific elements.")]
+	[SkipRegistrationForLayout]
 	public class SingleViewPanelDecoratingLayout : PanelDecoratingLayout
 	{
 		public SingleViewPanelDecoratingLayout(Panel element) : base(element)
 		{
-		}
-
-		public SingleViewPanelDecoratingLayout(Panel element, string[] acceptableViewNames) : base(element, acceptableViewNames)
-		{ 
 		}
 
 		public override void AddView(IView view)
