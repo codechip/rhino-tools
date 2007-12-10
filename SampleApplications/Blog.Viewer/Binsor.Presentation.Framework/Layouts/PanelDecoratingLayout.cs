@@ -16,6 +16,13 @@ namespace Binsor.Presentation.Framework.Layouts
 		private readonly Panel element;
 		private readonly string[] acceptableViewNames;
 
+
+		public PanelDecoratingLayout(Panel element)
+		{
+			this.element = element;
+			acceptableViewNames = new[] { element.Name };
+		}
+
 		public PanelDecoratingLayout(
 			Panel element, 
 			string[] acceptableViewNames

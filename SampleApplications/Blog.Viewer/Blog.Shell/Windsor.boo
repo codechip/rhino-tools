@@ -11,11 +11,8 @@ extend 'ShellModuleLoader':
 			MenuItemData(Header: "A_bout", Parent: "Help", Command: ApplicationCommands.Help),
 	)
 	
-component 'Header', SingleViewPanelDecoratingLayout:
-	acceptableViewNames = ( "Header", )
+component 'Header', SingleViewPanelDecoratingLayout
 	
-component 'MainContent', SingleViewPanelDecoratingLayout:
-	acceptableViewNames = ( "MainContent", )
+component 'MainContent', SingleViewPanelDecoratingLayout
 	
-component 'Footer', SingleViewPanelDecoratingLayout:
-	acceptableViewNames = ( "Footer", )
+component 'Footer', SingleViewPanelDecoratingLayout
