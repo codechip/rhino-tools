@@ -12,7 +12,8 @@ namespace NHibernate.Query.Generator
         public string OutputDirectory;
         [Argument(ArgumentType.AtMostOnce, HelpText = "The base namespace to use, default to 'Query'", ShortName = "ns")]
         public string BaseNamespace = "Query";
-    }
+        [Argument(ArgumentType.AtMostOnce, HelpText = "Would put all generated classes in a single file, default to 'false'", ShortName = "single")]
+        public bool SingleOutput = false;    }
 
     public enum Lang
     {

@@ -56,6 +56,12 @@ namespace NHibernate.Query.Generator
 
             try
             {
+				if (options.SingleOutput)
+				{
+					string genFile = Path.Combine(outputDir, "Where." + targetExtention);
+					File.Delete(genFile);
+				}
+				
                 SetupCodeProvider();
 
 				string[] inputDirectories = inputFilePattern.Split('|');
@@ -71,7 +77,7 @@ namespace NHibernate.Query.Generator
 					
 					foreach (string file in Directory.GetFiles(directoryName, fileName))
 					{
-						OutputFile(file, options.BaseNamespace);
+						OutputFile(file, options.BaseNamespace, options.SingleOutput);
 					}
             	}
 
@@ -98,19 +104,24 @@ namespace NHibernate.Query.Generator
             }
         }
 
-        private static void OutputFile(string file, string baseNamespace)
+        private static void OutputFile(string file, string baseNamespace, bool singleOutput)
         {
             string fileExt = Path.GetExtension(file);
             string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + "." + targetExtention);
+			if (singleOutput)
+			{
+				outputFile = Path.Combine(outputDir, "Where." + targetExtention);
+			}
+			
             // hbm file
             if (fileExt.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                GenerateSingleFile(File.OpenText(file), outputFile, baseNamespace);
+                GenerateSingleFile(File.OpenText(file), outputFile, baseNamespace, singleOutput);
             }
             else if (fileExt.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
                      fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase)) // Active Record...
             {
-                GenerateFromActiveRecordAssembly(file, baseNamespace);
+                GenerateFromActiveRecordAssembly(file, baseNamespace, singleOutput);
             }
         }
 
@@ -126,7 +137,7 @@ namespace NHibernate.Query.Generator
             Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
         }
 
-        private static void GenerateFromActiveRecordAssembly(string file, string baseNamespace)
+        private static void GenerateFromActiveRecordAssembly(string file, string baseNamespace, bool singleOutput)
         {
             string fullPath = Path.GetFullPath(file);
             RegisterAssemblyResolver(fullPath);
@@ -181,8 +192,13 @@ namespace NHibernate.Query.Generator
 
                     System.Type type = (System.Type)Get(model, "Type");
                 		string typeName = type.Name.Split('`')[0]; // Handle generic types
-                    string genFile = Path.Combine(outputDir, "Where." + typeName + "." + targetExtention);
-                    GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile, baseNamespace);
+                    string genFile = "Where." + typeName;
+					if (singleOutput)
+					{
+						genFile = "Where";
+					}
+	                genFile = Path.Combine(outputDir, genFile + "." + targetExtention);
+					GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile, baseNamespace, singleOutput);
                 }
             }
 
@@ -200,8 +216,12 @@ namespace NHibernate.Query.Generator
                 {
                     genFile += i.ToString();
                 }
+				if (singleOutput)
+				{
+					genFile = "Where";
+				}
                 genFile += "." + targetExtention;
-                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile), baseNamespace);
+                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile), baseNamespace, singleOutput);
                 i += 1;
             }
 
@@ -266,14 +286,18 @@ namespace NHibernate.Query.Generator
             };
         }
 
-        private static void GenerateSingleFile(TextReader input, string destinationFile, string baseNamespace)
+        private static void GenerateSingleFile(TextReader input, string destinationFile, string baseNamespace, bool singleOutput)
         {
+			if (!singleOutput)
+			{
+				File.Delete(destinationFile);
+			}
             QueryGenerator generator = new QueryGenerator(input, provider, baseNamespace);
-            using (StreamWriter outputStream = File.CreateText(destinationFile))
+            using (StreamWriter outputStream = File.AppendText(destinationFile))
             {
                 generator.Generate(outputStream);
             }
-            Console.WriteLine("Successfuly created file {0}", destinationFile);
+            Console.WriteLine("Successfuly written to file {0}", destinationFile);
         }
 
         private static void SetupCodeProvider()
