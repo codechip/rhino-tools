@@ -8,6 +8,8 @@
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
 		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
 		<ClsCompliant>true</ClsCompliant>
+		<OutDir>$(MSBuildProjectDirectory)\..\Build\$(ProjectName)\</OutDir>
+		<ArtifactssDir>$(MSBuildProjectDirectory)\..\Artifacts</ArtifactssDir>
 	</PropertyGroup>
 
 	<Target Name="BuildAll"
@@ -19,7 +21,7 @@
 	
 	<Target Name="Clean">
 		<MSBuild Projects="$(SolutionFile)"
-				 Properties="Configuration=$(Configuration)"
+				 Properties="Configuration=$(Configuration);OutDir=$(OutDir);OutputPath=$(OutDir)"
 				 Targets="Clean" />
 	</Target>
 	<Target Name="GenerateAssemblyInfo">
@@ -42,11 +44,15 @@
 	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
 		
 		<MSBuild Projects="$(SolutionFile)"
-				 Properties="Configuration=$(Configuration)" />
+				 Properties="Configuration=$(Configuration);
+				 OutDir=$(OutDir);
+				 OutputPath=$(OutDir);
+				 ArtifactssDir=$(ArtifactssDir);
+				 TreatWarningsAsErrors=True" />
 	</Target>
 
 	<ItemGroup>
-		<ExistingZipFiles Include="$(MSBuildProjectDirectory)\$(ProjectName)*.zip"/>
+		<ExistingZipFiles Include="$(ArtifactssDir)\$(ProjectName)*.zip"/>
 	</ItemGroup>
 
 	<Target Name="Zip">
@@ -59,7 +65,7 @@
 			<Output TaskParameter="Revision"
 					PropertyName="Revision" />
 		</SvnVersion>
-		<CreateProperty value="$(OutputDir)\$(ProjectName)-@$(Revision)-$(Configuration)-$(buildDate).zip">
+		<CreateProperty value="$(ArtifactssDir)\$(ProjectName)-@$(Revision)-$(Configuration)-$(buildDate).zip">
 			<Output TaskParameter="Value"
 					PropertyName="ZipFileName" />
 		</CreateProperty>
