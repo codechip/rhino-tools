@@ -4,6 +4,7 @@
 	<Target Name="Build">
 		<MsBuild Projects="
 		rhino-mocks\default.build;
+		rhino-dsl\default.build;
 		NHibernate.Query.Analyzer\default.build;
 		NHibernate.Query.Generator\default.build;
 		rhino-commons\default.build;
