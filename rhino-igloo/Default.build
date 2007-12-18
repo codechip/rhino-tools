@@ -18,15 +18,24 @@
 			<File>$(MSBuildProjectDirectory)\Rhino.Igloo\AssemblyInfo.cs</File>
 		</AssemblyInfo>
 	</ItemGroup>
-
-
-	<ItemGroup>
-		<ZipFiles Include="$(OutDir)\Rhino.Igloo.dll"/>
-		<ZipFiles Include="$(OutDir)\Rhino.Igloo.xml"/>
-	</ItemGroup>
-
+	
+	
+	
+	
 	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+	
+	
+	<Target Name="BeforeZip">
+		<CreateItem Include="$(OutDir)\*.dll;">
+				<Output TaskParameter="Include" ItemName="ZipFiles"/>
+		</CreateItem>
+	</Target>
+	
 	<PropertyGroup>
 			<EnableTest>False</EnableTest>
 	</PropertyGroup>
+	
+	
+	
+
 </Project>
