@@ -72,6 +72,11 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.TestUtilities
 			get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\Ayende.NHibernateQueryAnalyzer.TestProject.hbm.xml"); }
 		}
 
+		public static string TestDbFile
+		{
+			get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"TestProject\TestProject.db"); }
+		}
+
 		public const string HibernateConnectionString = "connection.connection_string";
 	}
 }

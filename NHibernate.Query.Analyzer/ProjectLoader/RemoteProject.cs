@@ -51,6 +51,8 @@ using Environment = NHibernate.Cfg.Environment;
 
 namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 {
+	using System.Diagnostics;
+
 	public class RemoteProject : MarshalByRefObject, IDisposable
 	{
 		private static readonly MethodInfo getQuery =
@@ -619,7 +621,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 					throw;
 				else
 					//Otherwise we lose all the exception info.
-					throw new Exception(ex.Message);
+					throw new Exception(ex.ToString());
 			}
 		}
 

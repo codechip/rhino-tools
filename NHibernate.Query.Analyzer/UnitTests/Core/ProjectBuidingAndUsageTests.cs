@@ -36,6 +36,9 @@ using MbUnit.Framework;
 
 namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
 {
+	using System.Data;
+	using System.Data.SQLite;
+
 	/// <summary>
 	/// A TestFixture for the <see cref="Ayende.NHibernateQueryAnalyzer.Core.Model.Project"/> 
 	/// class
@@ -128,6 +131,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
         [Test]
         public void HandleNullables()
         {
+        	FileAssert.Exists(TestDataUtil.TestDbFile);
             current.BuildProject();
             IList hrg = current.RunHql("from Files f where f.Size is null order by f.Id");
             Assert.AreEqual(6, hrg.Count);
@@ -141,5 +145,15 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
             Assert.AreEqual("two.txt", ro["Filename"]);
             Assert.AreEqual(null, ro["Size"]);
         }
+
+		[Test]
+		public void CanOpenDatabase()
+		{
+			using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + TestDataUtil.TestDbFile + ";UTF8Encoding=True;Version=3"))
+			{
+				connection.Open();
+				Assert.AreEqual(ConnectionState.Open, connection.State);
+			}
+		}
 	}
 }

@@ -115,7 +115,7 @@ namespace Ayende.NHibernateQueryAnalyzer.Tests.Core
                         tblNames.Add(reader.GetString(0));
                     }
                 }
-                Assert.Less(3, tblNames.Count, "No tables were created during EnsureDataBaseFileExists()");
+                Assert.LowerEqualThan(3, tblNames.Count, "No tables were created during EnsureDataBaseFileExists()");
                 CollectionAssert.Contains(tblNames, "Projects", "Table 'Projects' doesn't exist in database");
                 CollectionAssert.Contains(tblNames,"Files", "Table 'Files' doesn't exist in database");
                 CollectionAssert.Contains(tblNames, "Queries", "Table 'Queries' doesn't exist in database");

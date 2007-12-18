@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project 
 		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 
 	<PropertyGroup>
 		<ProjectName>Ayende.NHibernate.Query.Analyzer</ProjectName>
@@ -35,12 +34,18 @@
 			</AssemblyInfo>
 	</ItemGroup>
 	<ItemGroup>
-		<TestAssembly Include="$(MSBuildProjectDirectory)\UnitTests\bin\$(Configuration)\Ayende.NHibernateQueryAnalyzer.UnitTests.dll"/>
+		<TestAssembly Include="$(OutDir)\Ayende.NHibernateQueryAnalyzer.UnitTests.dll"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.dll"/>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.config"/>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\Stub\bin\$(Configuration)\*.exe"/>
+		<ZipFiles Include="$(OutDir)\Ayende.NHibernateQueryAnalyzer*.dll"/>
+		<ZipFiles Include="$(OutDir)\Ayende.NHibernateQueryAnalyzer*.config"/>
+		<ZipFiles Include="$(OutDir)\Ayende.NHibernateQueryAnalyzer*.exe"/>
+		<ZipFiles Include="$(OutDir)\Castle.Core.dll;$(OutDir)\GuiTools.dll;$(OutDir)\Iesi.Collections.dll;"/>
+		<ZipFiles Include="$(OutDir)\Lithium.dll;$(OutDir)\log4net.dll;;$(OutDir)\NHibernate.dll"/>
+		<ZipFiles Include="$(OutDir)\Nullables.dll;$(OutDir)\Nullables.NHibernate.dll;;$(OutDir)\SLSExceptionReporter.dll"/>
+		<ZipFiles Include="$(OutDir)\System.Data.SQLite.dll;$(OutDir)\WeifenLuo.WinFormsUI.Docking.dll"/>
 	</ItemGroup>
+	
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 </Project>

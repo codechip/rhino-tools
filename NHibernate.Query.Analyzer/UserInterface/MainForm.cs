@@ -102,6 +102,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 		private MainForm()
 		{
 			InitializeComponent();
+			dockingZone.DocumentStyle = DocumentStyles.DockingWindow;
 		}
 
 		public MainForm(IProjectsRepository repository) : this()
@@ -688,7 +689,7 @@ namespace Ayende.NHibernateQueryAnalyzer.UserInterface
 		{
 			NQADocument d = view as NQADocument;
 			if(d!=null)
-				d.Show(dockingZone,DockState.Document);
+				d.Show(dockingZone);
 		}
 
 		public SaveFileDialog HbmSaveDlg

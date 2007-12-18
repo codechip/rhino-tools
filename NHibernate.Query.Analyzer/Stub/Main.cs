@@ -46,7 +46,7 @@ namespace Ayende.NHibernateQueryAnalyzer
 		{
 			try
 			{
-				Application.ThreadException+=new ThreadExceptionEventHandler(Application_ThreadException);
+				//Application.ThreadException+=new ThreadExceptionEventHandler(Application_ThreadException);
 				Configuration cfg = new Configuration().AddAssembly(typeof(ProjectsRepository).Assembly);
 				IProjectsRepository dataManager = new ProjectsRepository(cfg);
 				Application.Run(new MainForm(dataManager));
