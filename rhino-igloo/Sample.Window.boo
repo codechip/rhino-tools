@@ -5,7 +5,7 @@ import Rhino.Commons from Rhino.Commons.NHibernate as nh
 import Rhino.Commons from Rhino.Commons.ActiveRecord as ar
 
 facility  "transaction.facility", RhinoTransactionFacility
-facility "bijection.facility", BijectionFacility:
+facility "rhino.igloo.facility", RhinoIglooFacility:
 	assemblies = (Assembly.Load("MyApp.Web"), Assembly.Load("MyApp.Controllers"))
 
 activeRecordAssemblies = ( Assembly.Load("MyApp.Model"), )
