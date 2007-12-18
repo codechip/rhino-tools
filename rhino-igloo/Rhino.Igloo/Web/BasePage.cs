@@ -59,6 +59,9 @@ namespace Rhino.Igloo
             ((BaseMaster) Master).ScriptManager.Services.Add(reference);
         }
 
+        /// <summary>
+        /// Use gzip / default compression is the client allows this.
+        /// </summary>
         public void EnableCompression()
         {
             string acceptEnconding = Request.Headers["Accept-encoding"];

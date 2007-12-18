@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project 
+		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<ProjectName>Rhino.Igloo</ProjectName>
+		<ShortName>rhino-Igloo</ShortName>
+		<SolutionFile>Rhino.Igloo.sln</SolutionFile>
+		<FlattenZipFile>True</FlattenZipFile>
+		<SectionId>-2</SectionId>
+		<Version>1.0.0</Version>
+		<ExtraInfo></ExtraInfo>
+	
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<AssemblyInfo Include="Item">
+			<File>$(MSBuildProjectDirectory)\Rhino.Igloo\AssemblyInfo.cs</File>
+		</AssemblyInfo>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ZipFiles Include="$(OutDir)\Rhino.Igloo.dll"/>
+		<ZipFiles Include="$(OutDir)\Rhino.Igloo.xml"/>
+	</ItemGroup>
+
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+	<PropertyGroup>
+			<EnableTest>False</EnableTest>
+	</PropertyGroup>
+</Project>

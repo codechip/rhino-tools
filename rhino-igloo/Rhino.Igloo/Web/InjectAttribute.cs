@@ -54,17 +54,14 @@ namespace Rhino.Igloo
             set { _name = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the scope.
+        /// </summary>
+        /// <value>The scope.</value>
         public ScopeType Scope
         {
             get { return scope; }
             set { scope = value; }
         }
-    }
-
-    public enum ScopeType
-    {
-        Input,
-        Session,
-        Flash
     }
 }

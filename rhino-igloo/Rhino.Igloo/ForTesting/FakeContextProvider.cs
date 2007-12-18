@@ -31,15 +31,27 @@ using Rhino.Igloo;
 
 namespace Rhino.Igloo.Tests
 {
+    /// <summary>
+    /// Fake contenxt provider, always return the same context.
+    /// Useful for testing.
+    /// </summary>
 	public class FakeContextProvider : IContextProvider
 	{
 		private static IContext current;
 
+        /// <summary>
+        /// Sets the current context.
+        /// </summary>
+        /// <param name="theCurrentContext">The current context.</param>
 		public static void SetTheCurrentContext(IContext theCurrentContext)
 		{
 			current = theCurrentContext;
 		}
 
+        /// <summary>
+        /// Get the current context
+        /// </summary>
+        /// <value></value>
 		public IContext Current
 		{
 			get { return current; }

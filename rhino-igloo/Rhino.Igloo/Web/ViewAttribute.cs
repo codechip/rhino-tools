@@ -31,5 +31,8 @@ using System;
 
 namespace Rhino.Igloo
 {
+    /// <summary>
+    /// Marks the type as a view
+    /// </summary>
 	public sealed class ViewAttribute : Attribute{}
 }

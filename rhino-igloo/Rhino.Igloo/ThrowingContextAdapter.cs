@@ -34,6 +34,9 @@ using System.Security.Principal;
 
 namespace Rhino.Igloo
 {
+    /// <summary>
+    /// A context adapter that always throws.
+    /// </summary>
 	public class ThrowingContextAdapter : IContext
 	{
 		/// <summary>
@@ -101,6 +104,10 @@ namespace Rhino.Igloo
 		}
 
 
+        /// <summary>
+        /// Gets the principal of the current user
+        /// </summary>
+        /// <value>The identity.</value>
 	    public IPrincipal CurrentUser
 	    {
             get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); } 
@@ -214,48 +221,88 @@ namespace Rhino.Igloo
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
         }
 
+        /// <summary>
+        /// Return the Url of the request
+        /// </summary>
 	    public Uri Url()
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
 
+
+        /// <summary>
+        /// Url encode the string
+        /// </summary>
+        /// <param name="s">The unencoded url</param>
+        /// <returns>The encoded url</returns>
 	    public string UrlEncode(string s)
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
 
+        /// <summary>
+        /// Url decode the string
+        /// </summary>
+        /// <param name="s">The encoded url</param>
+        /// <returns>The unencoded url</returns>
 	    public string UrlDecode(string s)
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
 
 
+        /// <summary>
+        /// Resolves the URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <returns></returns>
 	    public string ResolveUrl(string url)
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
 
 
+        /// <summary>
+        /// Sets the context varaible with the specified value
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
 	    public void SetContextVaraible(string name, object value)
 	    {
 	        throw new NotImplementedException();
 	    }
 
+        /// <summary>
+        /// Gets the logon user server variable
+        /// </summary>
+        /// <returns></returns>
 	    public string GetLogonUser()
 	    {
 	        throw new NotImplementedException();
 	    }
 
+        /// <summary>
+        /// Check that the client ip address is in the given list.
+        /// </summary>
+        /// <param name="listOfIps"></param>
+        /// <returns></returns>
 	    public bool ClientIpIsIn(ICollection listOfIps)
 	    {
 	        throw new NotImplementedException();
 	    }
 
+        /// <summary>
+        /// Clears the session.
+        /// </summary>
 	    public void ClearSession()
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
 	    }
 
+        /// <summary>
+        /// Determines whether the browser is IE 7
+        /// </summary>
+        /// <returns></returns>
 	    public bool BrowserIsIE7()
 	    {
             throw new NotSupportedException("You are not in a web context, you cannot call the context");

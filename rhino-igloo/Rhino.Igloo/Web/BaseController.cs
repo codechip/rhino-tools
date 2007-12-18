@@ -310,6 +310,10 @@ namespace Rhino.Igloo
 			}
 		}
 
+        /// <summary>
+        /// Allow a derive class to initialize itself before handing the instance
+        /// to the view
+        /// </summary>
 	    public virtual void Initialize()
 	    {
 	        

@@ -97,6 +97,9 @@ namespace Rhino.Igloo
         /// <value>The uploaded files.</value>
         IList<UploadedFile> UploadedFiles { get; }
 
+        /// <summary>
+        /// The raw url that the user has sent
+        /// </summary>
 	    string RawUrl { get; }
 
 	    /// <summary>

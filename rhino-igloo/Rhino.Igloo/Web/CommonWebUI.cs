@@ -32,6 +32,9 @@ using Rhino.Commons;
 
 namespace Rhino.Igloo
 {
+    /// <summary>
+    /// Helper class that injects dependencies into the sender.
+    /// </summary>
     public  static class CommonWebUI
     {
         /// <summary>
