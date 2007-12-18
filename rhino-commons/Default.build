@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project
 	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 
 	<PropertyGroup>
 		<ProjectName>Rhino.Commons</ProjectName>
@@ -28,30 +27,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Commons.Test\bin\$(Configuration)\Rhino.Commons.Test.dll"/>
+		<TestAssembly Include="$(OutDir)\Rhino.Commons.Test.dll"/>
 	</ItemGroup>
 	
 	<Target Name="BeforeTest" Condition="$(MergeAssemblies)">
 	
-	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-core"/>
-	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-nhibernate"/>	 
- 	 <MakeDir Directories= "$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord"/>	 
+	 <MakeDir Directories= "$(OutDir)\rhino-core"/>
+	 <MakeDir Directories= "$(OutDir)\rhino-nhibernate"/>	 
+ 	 <MakeDir Directories= "$(OutDir)\rhino-activerecord"/>	 
  	 
-	 <CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll"
-						 Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;
-$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\NHibernate.dll;
-$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\log4net.dll;
-$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\System.Data.Sqlite.dll;
-$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Iesi.Collections.dll;
-$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProxy.dll;" >
+	 <CreateItem Include="$(OutDir)\*.dll"
+						 Exclude="$(OutDir)\Rhino.Commons.dll;
+$(OutDir)\NHibernate.dll;
+$(OutDir)\log4net.dll;
+$(OutDir)\System.Data.Sqlite.dll;
+$(OutDir)\Iesi.Collections.dll;
+$(OutDir)\Castle.DynamicProxy.dll;" >
 		<Output TaskParameter="Include" ItemName = "MergeAssemblies" /> 
 	</CreateItem>
 			
 	<ILMerge
 				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies)"
+				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies)"
 				 ExcludeFile="$(excludeFile)"
-				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-core\Rhino.Commons.dll"
+				 OutputFile="$(OutDir)\rhino-core\Rhino.Commons.dll"
 				 LogFile="$(logFile)"
 				 DebugInfo="true"
 				 XmlDocumentation="true"
@@ -60,9 +59,9 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 
 	<ILMerge
 				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies);
+				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies);
 										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll"
-				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-nhibernate\Rhino.Commons.dll"
+				 OutputFile="$(OutDir)\rhino-nhibernate\Rhino.Commons.dll"
 				 LogFile="$(logFile)"
 				 DebugInfo="true"
 				 XmlDocumentation="true"
@@ -71,10 +70,10 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 
 	<ILMerge
 				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;@(MergeAssemblies);
+				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies);
 										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll;
 										$(MSBuildProjectDirectory)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\Rhino.Commons.ActiveRecord.dll"
-				 OutputFile="$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord\Rhino.Commons.dll"
+				 OutputFile="$(OutDir)\rhino-activerecord\Rhino.Commons.dll"
 				 LogFile="$(logFile)"
 				 DebugInfo="true"
 				 XmlDocumentation="true"
@@ -82,10 +81,13 @@ $(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Castle.DynamicProx
 				  />
 				  				  				  				  				  				  				  
 		<!-- <Delete Files="@(MergeAssemblies)" /> -->
-		<CreateItem Include="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\*.dll;$(MSBuildProjectDirectory)\Rhino.Commons\bin\rhino-activerecord\Rhino.Commons.dll"
-			Exclude="$(MSBuildProjectDirectory)\Rhino.Commons\bin\$(Configuration)\Rhino.Commons.dll;">
+		<CreateItem Include="$(OutDir)\*.dll;$(OutDir)\rhino-activerecord\Rhino.Commons.dll"
+			Exclude="$(OutDir)\Rhino.Commons.dll;">
 				<Output TaskParameter="Include" ItemName = "ZipFiles"/>
 	</CreateItem>
 	
 	</Target>
+	
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+
 </Project>

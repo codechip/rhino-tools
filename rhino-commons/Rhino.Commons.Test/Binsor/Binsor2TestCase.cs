@@ -45,10 +45,11 @@ namespace Rhino.Commons.Test.Binsor
 		private IWindsorContainer _container;
 
 		[SetUp]
-		public void TestInitialize()
+		public override void TestInitialize()
 		{
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor2.boo"));
-			Console.WriteLine(path);
+            base.TestInitialize();
+
+			string path = Path.GetFullPath(@"Binsor\Windsor2.boo");
 			_container = new RhinoContainer(path);
 		}
 
@@ -183,8 +184,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void ContainerUsesXmlConfigurationIfNotBooExtension()
 		{
-			RhinoContainer container = new RhinoContainer(
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.xml"));
+			RhinoContainer container = new RhinoContainer(@"Binsor\Windsor.xml");
 
 			ISender sender = container.Resolve<ISender>();
 			Assert.IsNotNull(sender);
@@ -302,7 +302,7 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			Assert.IsFalse(_container.Kernel.HasComponent("foo_bar"));
 
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor2.boo"));
+			string path = Path.GetFullPath(@"Binsor\Windsor2.boo");
 			RhinoContainer container = new RhinoContainer(path, new TestEnvironmentInfo("Binsor2"));
 			Fubar fubar = container.Resolve<Fubar>("foo_bar");
 			Assert.IsNotNull(fubar);

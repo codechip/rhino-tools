@@ -12,17 +12,17 @@ namespace Rhino.Commons.Test.Binsor
 	using Castle.Facilities.ActiveRecordIntegration;
 
 	[TestFixture]
-    public class BinsorFacilities_TestCase
+    public class BinsorFacilities_TestCase : BaseTest
     {
         private IWindsorContainer _container;
 
         [SetUp]
-        public void TestInitialize()
+        public override void TestInitialize()
         {
+            base.TestInitialize();
+
             _container = new RhinoContainer();
-            string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Facilities.boo"));
-            Console.WriteLine(path);
+            string path = Path.GetFullPath(@"Binsor\Facilities.boo");
             BooReader.Read(_container, path);
         }
 

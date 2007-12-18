@@ -37,15 +37,17 @@ namespace Rhino.Commons.Test.Binsor
 	using Components;
 
 	[TestFixture]
-	public class CalculatorTestCase
+	public class CalculatorTestCase : BaseTest
 	{
 		private IWindsorContainer _container;
 
 		[SetUp]
-		public void TestInitialize()
+		public override void TestInitialize()
 		{
+            base.TestInitialize();
+
 			_container = new RhinoContainer();
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Calculator.boo"));
+			string path = Path.GetFullPath(@"Binsor\Calculator.boo");
 			Console.WriteLine(path);
 			BooReader.Read(_container, path);
 		}

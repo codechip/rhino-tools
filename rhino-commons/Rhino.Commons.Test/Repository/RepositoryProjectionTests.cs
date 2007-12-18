@@ -235,10 +235,11 @@ namespace Rhino.Commons.Test.Repository
     public class NHibernateRepositoryProjectionTests : RepositoryProjectionTests
     {
         [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
+        public override void OneTimeTestInitialize()
         {
+            base.OneTimeTestInitialize();
             string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
+                Path.GetFullPath(@"Repository\Windsor.config");
 
             FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
@@ -260,10 +261,11 @@ namespace Rhino.Commons.Test.Repository
     public class ActiveRecordRepositoryProjectionTests : RepositoryProjectionTests
     {
         [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
+        public override void OneTimeTestInitialize()
         {
+            base.OneTimeTestInitialize();
             string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
+                Path.GetFullPath(@"Repository\Windsor-AR.config");
             FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
         }
     }

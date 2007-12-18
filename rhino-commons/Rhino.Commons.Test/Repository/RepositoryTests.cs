@@ -26,7 +26,6 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using MbUnit.Framework;
@@ -39,7 +38,7 @@ namespace Rhino.Commons.Test.Repository
     public class RepositoryTests : RepositoryTestsBase
     {
         [SetUp]
-        public void TestInitialize()
+        public  void TestInitialize()
         {
             CurrentContext.CreateUnitOfWork();
             CreateObjectsInDb();
@@ -68,7 +67,7 @@ namespace Rhino.Commons.Test.Repository
         }
 
 
-        private void AssumedParentObjectNamesAreUnique(List<Parent> list)
+        private static void AssumedParentObjectNamesAreUnique(List<Parent> list)
         {
             foreach (Parent parent in list)
             {
@@ -351,10 +350,10 @@ namespace Rhino.Commons.Test.Repository
     public class NHibernateRepositoryTests : RepositoryTests
     {
         [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
+        public override void OneTimeTestInitialize()
         {
-            string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor.config"));
+            base.OneTimeTestInitialize(); 
+            string path = Path.GetFullPath(@"Repository\Windsor.config");
             FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
     }
@@ -365,10 +364,11 @@ namespace Rhino.Commons.Test.Repository
     public class ActiveRecordRepositoryTests : RepositoryTests
     {
         [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
+        public override void OneTimeTestInitialize()
         {
+            base.OneTimeTestInitialize();
             string path =
-                Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Repository\Windsor-AR.config"));
+                Path.GetFullPath(@"Repository\Windsor-AR.config");
             FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
         }
     }

@@ -39,15 +39,17 @@ using Rhino.Commons.Test.Components;
 namespace Rhino.Commons.Test.Binsor
 {
 	[TestFixture]
-	public class BinsorTestCase
+	public class BinsorTestCase : BaseTest
 	{
 		private IWindsorContainer _container;
 
 		[SetUp]
-		public void TestInitialize()
+		public override void TestInitialize()
 		{
+            base.TestInitialize();
+
 			_container = new RhinoContainer();
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.boo"));
+			string path = Path.GetFullPath(@"Binsor\Windsor.boo");
 			Console.WriteLine(path);
 			BooReader.Read(_container, path);
 		}
@@ -115,8 +117,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
         public void ContainerUsesXmlConfigurationIfNotBooExtension()
         {
-			RhinoContainer container = new RhinoContainer(
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.xml"));
+			RhinoContainer container = new RhinoContainer(@"Binsor\Windsor.xml");
 
 			ISender sender = container.Resolve<ISender>();
 			Assert.IsNotNull(sender);

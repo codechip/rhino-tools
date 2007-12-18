@@ -70,7 +70,7 @@ namespace Rhino.Commons.Test.ForTesting
                 return
                     Path.GetFullPath(
                         Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                     @"..\..\ForTesting\AnotherWindsor-AR.config"));
+                                     @"ForTesting\AnotherWindsor-AR.config"));
             }
         }
 
@@ -81,7 +81,7 @@ namespace Rhino.Commons.Test.ForTesting
                 return
                     Path.GetFullPath(
                         Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                     @"..\..\ForTesting\Windsor-AR.config"));
+                                     @"ForTesting\Windsor-AR.config"));
             }
         }
     }
