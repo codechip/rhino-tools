@@ -74,6 +74,9 @@ namespace Rhino.Igloo
         /// <remarks>It must be overriden.</remarks>
         protected override void Init()
         {
+            Kernel.Resolver.AddSubResolver(new ContextResolver());
+            Kernel.Resolver.AddSubResolver(new LoggingResolver());
+
             if (assemblies == null)
             {
                 if (FacilityConfig == null)

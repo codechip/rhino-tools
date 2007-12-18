@@ -108,7 +108,6 @@
     <Compile Include="HttpContextProvider.cs" />
     <Compile Include="IContext.cs" />
     <Compile Include="IContextProvider.cs" />
-    <Compile Include="IoC\AdditionalFunctionalityFacility.cs" />
     <Compile Include="IoC\BijectionFacility.cs" />
     <Compile Include="IoC\CachingInterceptor.cs" />
     <Compile Include="IoC\CachingInterceptorContributer.cs" />
