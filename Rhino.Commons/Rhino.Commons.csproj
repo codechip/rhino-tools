@@ -76,6 +76,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.DSL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Build\Rhino.DSL\Rhino.DSL.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
@@ -176,12 +180,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
-      <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
-      <Name>Rhino.DSL</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

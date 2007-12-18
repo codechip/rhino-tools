@@ -339,25 +339,25 @@ namespace Rhino.Commons.Test.ForTesting
 
         protected abstract string WindsorFilePath { get; }
 
-        protected string ActiveRecordWindsorFilePath
+        protected static string ActiveRecordWindsorFilePath
         {
             get
             {
                 return
                     Path.GetFullPath(
                         Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                     @"..\..\ForTesting\Windsor-AR.config"));
+                                     @"ForTesting\Windsor-AR.config"));
             }
         }
 
-        protected string NHibernateWindsorFilePath
+        protected static string NHibernateWindsorFilePath
         {
             get
             {
                 return
                     Path.GetFullPath(
                         Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                     @"..\..\ForTesting\Windsor-NH.config"));
+                                     @"ForTesting\Windsor-NH.config"));
             }
         }
     }

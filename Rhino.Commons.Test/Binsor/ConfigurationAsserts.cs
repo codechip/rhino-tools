@@ -3,7 +3,7 @@ namespace Rhino.Commons.Test.Binsor
 	using Castle.Core.Configuration;
 	using MbUnit.Framework;
 
-	public class ConfigurationAsserts
+	public class ConfigurationAsserts : BaseTest
 	{
 		public static void AssertAttribute(IConfiguration parent, string name, string value)
 		{

@@ -138,31 +138,62 @@
       <Link>ayende-open-source.snk</Link>
     </None>
     <None Include="app.config" />
-    <None Include="Binsor\Calculator.boo" />
-    <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo" />
-    <None Include="Binsor\Imports.boo" />
-    <None Include="Binsor\MultiFileConfig_Extension.boo" />
-    <None Include="Binsor\MultiFileConfig_Main.boo" />
-    <None Include="Binsor\Windsor2.boo" />
-    <EmbeddedResource Include="Binsor\disposable.boo" />
-    <None Include="Binsor\Facilities.boo" />
-    <None Include="Binsor\Windsor.boo" />
-    <None Include="ForTesting\AnotherWindsor-NH.config" />
-    <None Include="ForTesting\AnotherWindsor-AR.config" />
+    <None Include="Binsor\Calculator.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Binsor\Imports.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\MultiFileConfig_Extension.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\MultiFileConfig_Main.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Windsor2.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Binsor\disposable.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Binsor\Facilities.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Windsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\AnotherWindsor-NH.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\AnotherWindsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="ForTesting\Windsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="ForTesting\Windsor-NH.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Repository\Windsor-AR.config" />
+    <None Include="Repository\Windsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Repository\Windsor.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="UoW\Windsor.config" />
+    <None Include="UoW\Windsor.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Windsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Binsor\Windsor.xml" />
+    <Content Include="Binsor\Windsor.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -183,6 +214,7 @@
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
+    <Compile Include="BaseTest.cs" />
     <Compile Include="HttpModules\UnitOfWorkApplicationFixture.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
@@ -199,10 +231,6 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
-      <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
-      <Name>Rhino.DSL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
       <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
       <Name>Rhino.Commons.ActiveRecord</Name>

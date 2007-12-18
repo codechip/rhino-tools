@@ -36,15 +36,17 @@ using Rhino.Commons.Binsor;
 namespace Rhino.Commons.Test.Binsor
 {
 	[TestFixture]
-	public class BinsorImportsTestCase
+	public class BinsorImportsTestCase : BaseTest
 	{
 		private IWindsorContainer _container;
 
 		[SetUp]
-		public void TestInitialize()
+		public override void TestInitialize()
 		{
+            base.TestInitialize();
+
 			_container = new RhinoContainer();
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Imports.boo"));
+			string path = Path.GetFullPath(@"Binsor\Imports.boo");
 			Console.WriteLine(path);
 			BooReader.Read(_container, path);
 		}

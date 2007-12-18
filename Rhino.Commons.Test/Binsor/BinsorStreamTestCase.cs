@@ -80,8 +80,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void ContainerUsesXmlConfigurationIfNotBooExtension()
 		{
-			RhinoContainer container = new RhinoContainer(
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\Windsor.xml"));
+			RhinoContainer container = new RhinoContainer(@"Binsor\Windsor.xml");
 
 			ISender sender = container.Resolve<ISender>();
 			Assert.IsNotNull(sender);

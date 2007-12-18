@@ -13,9 +13,11 @@ namespace Rhino.Commons.Test.Binsor
 		private IWindsorContainer _container;
 
 		[SetUp]
-		public void TestInitialize()
+		public override void TestInitialize()
 		{
-			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Binsor\MultiFileConfig_Extension.boo"));
+            base.TestInitialize();
+
+			string path = Path.GetFullPath(@"Binsor\MultiFileConfig_Extension.boo");
 			Console.WriteLine(path);
 			_container = new RhinoContainer(path);
 		}

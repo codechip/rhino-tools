@@ -40,6 +40,11 @@ namespace Rhino.Commons.Test.Repository
 {
     public class RepositoryTestsBase : TestFixtureBase
     {
+        public virtual void OneTimeTestInitialize()
+        {
+            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        }
+
         protected List<Parent> parentsInDb;
 
         protected static MappingInfo MappingInfoForRepositoryTests

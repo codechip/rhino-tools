@@ -50,7 +50,7 @@ namespace Rhino.Commons.Test.UoW
             //turn on log4net logging (and supress output to console)
             BasicConfigurator.Configure(new MemoryAppender());
 
-            string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\UoW\Windsor.config"));
+            string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UoW\Windsor.config"));
             FixtureInitialize(PersistenceFramework.NHibernate,
                               path,
                               DatabaseEngine.MsSqlCe,
