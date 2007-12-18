@@ -46,25 +46,25 @@ namespace Rhino.Igloo
     /// <summary>
     /// Setup the container so we can get Bijection support for controllers and views
     /// </summary>
-    public class BijectionFacility : AbstractFacility
+    public class RhinoIglooFacility : AbstractFacility
     {
-        private static ILog logger = LogManager.GetLogger(typeof(BijectionFacility));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(RhinoIglooFacility));
 
         private Assembly[] assemblies = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BijectionFacility"/> class.
+        /// Initializes a new instance of the <see cref="RhinoIglooFacility"/> class.
         /// </summary>
         /// <param myName="assemblies">The assemblies.</param>
-        public BijectionFacility(params Assembly[] assemblies)
+        public RhinoIglooFacility(params Assembly[] assemblies)
         {
             this.assemblies = assemblies;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BijectionFacility"/> class.
+        /// Initializes a new instance of the <see cref="RhinoIglooFacility"/> class.
         /// </summary>
-        public BijectionFacility()
+        public RhinoIglooFacility()
         {
         }
 
@@ -116,7 +116,7 @@ namespace Rhino.Igloo
 
         private Assembly ObtainAssembly(String assemblyName)
         {
-            logger.DebugFormat("Loading assembly '{0}' for BijectionFacility", assemblyName);
+            logger.DebugFormat("Loading assembly '{0}' for RhinoIglooFacility", assemblyName);
             return Assembly.Load(assemblyName);
         }
 
