@@ -83,6 +83,10 @@
     <Compile Include="ActiveRecordModel\Where.User.cs" />
     <Compile Include="ActiveRecordModel\Where.WeirdClass.cs" />
     <Compile Include="ActiveRecordModel\Where.WeirdPropertyClass.cs" />
+    <Compile Include="CompositeIds\CompositeIdChild.cs" />
+    <Compile Include="CompositeIds\CompositeIdChild.hbm.cs" />
+    <Compile Include="CompositeIds\CompositeIdParent.cs" />
+    <Compile Include="CompositeIds\CompositeIdParent.hbm.cs" />
     <Compile Include="ExtendingWhere.cs" />
     <Compile Include="FieldProblems.cs" />
     <Compile Include="Sample.hbm.cs">
@@ -90,6 +94,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Sample.hbm.xml</DependentUpon>
     </Compile>
+    <Compile Include="TestCompositeIds.cs" />
     <Compile Include="TestEagerFetch.cs" />
     <Compile Include="TestUtil.cs" />
     <Compile Include="UsingActiveRecordWithQueriesTestFixture.cs" />
@@ -102,6 +107,7 @@
     <Compile Include="WithEagerFetch\Application.hbm.cs" />
     <Compile Include="WithEagerFetch\KeyedDomainObject.cs" />
     <Compile Include="WithEagerFetch\Operation.cs" />
+    <Compile Include="WithTopLevelAssemblySpecification.hbm.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sample.hbm.xml">
@@ -128,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CompositeIds\CompositeIdChild.hbm.xml" />
+    <EmbeddedResource Include="CompositeIds\CompositeIdParent.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

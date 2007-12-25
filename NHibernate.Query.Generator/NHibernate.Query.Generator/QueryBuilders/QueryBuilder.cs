@@ -53,7 +53,7 @@ namespace QueryNamespace
 		private PropertyProjectionBuilder propertyProjection = null;
 		public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
 		public NHibernate.FetchMode? fetchMode;
-		protected QueryBuilder<T> parent;
+		protected QueryBuilder<T> myQueryParent;
 		protected bool myShouldSkipJoinOnIdEquality = false;
 
 		public delegate DetachedCriteria CreateDetachedCriteriaDelegate(string alias);
@@ -75,19 +75,19 @@ namespace QueryNamespace
 		{
 		}
 
-		public QueryBuilder(QueryBuilder<T> parent, string name, string associationPath, bool backTrackAssociationsOnEquality)
-			: this(parent, name, associationPath)
+		public QueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath, bool backTrackAssociationsOnEquality)
+			: this(myQueryParent, name, associationPath)
 		{
 			this.backTrackAssociationsOnEquality = backTrackAssociationsOnEquality;
 		}
 
-		public QueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
+		public QueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
 		{
-			this.parent = parent;
+			this.myQueryParent = myQueryParent;
 			this.myName = name;
 			this.associationPath = associationPath ?? "this";
-			if (ReferenceEquals(parent, null) == false)//can't use != it is overloaded
-				parent.children.Add(this);
+			if (ReferenceEquals(myQueryParent, null) == false)//can't use != it is overloaded
+				myQueryParent.children.Add(this);
 		}
 
 		public QueryBuilder<T> AddCriterion(NHibernate.Expression.ICriterion criterion)
@@ -246,15 +246,15 @@ namespace QueryNamespace
 			QueryBuilder<T> combined = new QueryBuilder<T>(null, lhs.myName, null);
 
 			QueryBuilder<T> lhsRoot = lhs;
-			while (ReferenceEquals(lhsRoot.parent, null) == false)
+			while (ReferenceEquals(lhsRoot.myQueryParent, null) == false)
 			{
-				lhsRoot = lhsRoot.parent;
+				lhsRoot = lhsRoot.myQueryParent;
 			}
 
 			QueryBuilder<T> rhsRoot = rhs;
-			while (ReferenceEquals(rhsRoot.parent, null) == false)
+			while (ReferenceEquals(rhsRoot.myQueryParent, null) == false)
 			{
-				rhsRoot = rhsRoot.parent;
+				rhsRoot = rhsRoot.myQueryParent;
 			}
 
 
@@ -336,9 +336,9 @@ Use HQL for this functionality...",
 
 		public DetachedCriteria ToDetachedCriteria(string alias, params OrderByClause[] sortOrders)
 		{
-			if (ReferenceEquals(parent, null) == false)//can't use != we overloaded that
+			if (ReferenceEquals(myQueryParent, null) == false)//can't use != we overloaded that
 			{
-				return parent.ToDetachedCriteria(alias);
+				return myQueryParent.ToDetachedCriteria(alias);
 			}
 
 			NHibernate.Expression.DetachedCriteria detachedCriteria = CreateDetachedCriteria(alias);
@@ -466,7 +466,7 @@ Use HQL for this functionality...",
 			if (criterionsByAssociation.ContainsKey(associationPath) == false)
 				criterionsByAssociation.Add(associationPath, new System.Collections.Generic.List<NHibernate.Expression.ICriterion>());
 			if (criterionsByJoinTypeAndFetchMode.ContainsKey(associationPath) == false ||
-				this.parent is CollectionQueryBuilder<T>)
+				this.myQueryParent is CollectionQueryBuilder<T>)
 			{
 				//avoid adding temporary query builders if they are just there
 				//to build the query, frex: Where.Post.Blog.Id, the Blog should not 
@@ -493,8 +493,8 @@ Use HQL for this functionality...",
 	public partial class IdQueryBuilder<T> : QueryBuilder<T>
 	{
 		private string oldName;
-		public IdQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
-			: base(parent, name, associationPath)
+		public IdQueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
+			: base(myQueryParent, name, associationPath)
 		{
 			this.oldName = name;
 			associationPath = BackTrackParentPath(associationPath);
@@ -527,10 +527,10 @@ Use HQL for this functionality...",
 
 	public partial class CollectionQueryBuilder<T> : QueryBuilder<T>
 	{
-		public CollectionQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
-			: base(parent, name, associationPath)
+		public CollectionQueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
+			: base(myQueryParent, name, associationPath)
 		{
-			if (ReferenceEquals(parent, null) == false)//can't use != it is overloaded
+			if (ReferenceEquals(myQueryParent, null) == false)//can't use != it is overloaded
 			{
 				if (associationPath == null || associationPath == "this")
 				{
@@ -542,7 +542,7 @@ Use HQL for this functionality...",
 
 		public QueryBuilder<T> Exists(NHibernate.Expression.DetachedCriteria criteria)
 		{
-			criteria = criteria.SetProjection(NHibernate.Expression.Projections.Property("id"));
+			criteria = criteria.SetProjection(NHibernate.Expression.Projections.Id());
 			AddCriterion(NHibernate.Expression.Subqueries.Exists(criteria));
 			return this;
 		}
@@ -557,8 +557,8 @@ Use HQL for this functionality...",
 
 	public partial class PropertyQueryBuilder<T> : QueryBuilder<T>
 	{
-		public PropertyQueryBuilder(QueryBuilder<T> parent, string name, string associationPath)
-			: base(parent, name, associationPath)
+		public PropertyQueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
+			: base(myQueryParent, name, associationPath)
 		{
 		}
 
