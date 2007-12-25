@@ -81,8 +81,7 @@ $(OutDir)\Castle.DynamicProxy.dll;" >
 				  />
 				  				  				  				  				  				  				  
 		<!-- <Delete Files="@(MergeAssemblies)" /> -->
-		<CreateItem Include="$(OutDir)\*.dll;$(OutDir)\rhino-activerecord\Rhino.Commons.dll"
-			Exclude="$(OutDir)\Rhino.Commons.dll;">
+		<CreateItem Include="$(OutDir)\*.dll;" >
 				<Output TaskParameter="Include" ItemName = "ZipFiles"/>
 	</CreateItem>
 	
