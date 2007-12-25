@@ -12,6 +12,7 @@
 		<Castle-Build-Dir>$(Castle-Dir)\build\net-2.0\$(Configuration)</Castle-Build-Dir>
 
 		<Rhino-Lib-Dir>$(Rhino-Dir)\SharedLibs</Rhino-Lib-Dir>
+		<Rhino-Prjct-Dsl-Dir>$(Rhino-Dir)\rhino-dsl</Rhino-Prjct-Dsl-Dir>
 		<Rhino-Prjct-Commons-Dir>$(Rhino-Dir)\rhino-commons</Rhino-Prjct-Commons-Dir>
 		<Rhino-Prjct-NHQG-Dir>$(Rhino-Dir)\NHibernate.Query.Generator</Rhino-Prjct-NHQG-Dir>
 		<Rhino-Prjct-Mocks-Dir>$(Rhino-Dir)\rhino-mocks</Rhino-Prjct-Mocks-Dir>
@@ -92,6 +93,7 @@
   
 	<!-- Rhino Assemblies -->
 	<PropertyGroup>
+		<_Ass-Rhn-Dsl>Rhino.Dsl</_Ass-Rhn-Dsl>
 		<_Ass-Rhn-Commons>Rhino.Commons</_Ass-Rhn-Commons>
 		<_Ass-Rhn-Commons-NH>Rhino.Commons.NHibernate</_Ass-Rhn-Commons-NH>
 		<_Ass-Rhn-Commons-AR>Rhino.Commons.ActiveRecord</_Ass-Rhn-Commons-AR>
@@ -247,15 +249,20 @@
 
 	<!-- Rhino Bundles -->
 	<PropertyGroup>
+		<_Asses-Rhn-Dsl>
+			$(_Ass-Rhn-Dsl)
+			;$(_Ass-Boo)
+		</_Asses-Rhn-Dsl>
+
 		<_Asses-Rhn-Commons>
-			$(_Ass-Rhn-Commons)
+		  	$(_Asses-Rhn-Dsl)
+			;$(_Ass-Rhn-Commons)
 			;$(_Asses-NH-Core)
 			;$(_Asses-Cstl-Windsor)
 			;$(_Ass-Cstl-Transaction)
 			;$(_Ass-Cstl-Atm)
 			;$(_Ass-Cstl-Logging)
 			;$(_Ass-Cstl-Log4Net)
-			;$(_Ass-Boo)
 		</_Asses-Rhn-Commons>
 
 		<_Asses-Rhn-Commons-NH>
@@ -593,6 +600,7 @@
 	</Target>
 
 	<Target Name="Build-Rhino">
+		<CallTarget Targets="Build-Rhino-Dsl" />
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
@@ -739,6 +747,7 @@
 
 	<!-- Rhino Compile -->
 	<Target Name="Build-Rhino">
+		<CallTarget Targets="Build-Rhino-Dsl" />
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
@@ -751,6 +760,13 @@
   <Target Condition="$(_With-Cstl-CodeGen)"  Name="Compile-Castle-CodeGen">
     <MSBuild Projects="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator\Castle.Tools.CodeGenerator.csproj" Properties="Configuration=Release" Targets="Clean;Build" />
   </Target>
+
+	<Target Name="Build-Rhino-Dsl" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
+		<CallTarget Targets="Compile-Rhino-Dsl" />
+	</Target>
+	<Target Name="Compile-Rhino-Dsl">
+		<MSBuild Projects="$(Rhino-Prjct-Dsl-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
+	</Target>
   
 	<Target Name="Build-Rhino-Commons" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-Commons" />

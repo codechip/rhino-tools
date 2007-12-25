@@ -148,9 +148,9 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"$(TargetDir)NHQG.exe" /lang:cs /files:"$(TargetDir)NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
-"$(TargetDir)NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir) "</PostBuildEvent>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PostBuildEvent>rem "$(TargetDir)NHQG.exe" /lang:cs /files:"$(TargetDir)NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
+rem "$(TargetDir)NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir)"</PostBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)..\NHibernate.Query.Generator\bin\$(ConfigurationName)\NHQG.exe" /lang:cs /files:"$(ProjectDir)..\NHibernate.Query.Generator.Model\bin\$(ConfigurationName)\NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
+"$(ProjectDir)..\NHibernate.Query.Generator\bin\$(ConfigurationName)\NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir)ActiveRecordModel\.."</PreBuildEvent>
   </PropertyGroup>
 </Project>

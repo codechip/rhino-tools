@@ -27,14 +27,14 @@
 #endregion
 
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Castle.ActiveRecord.Framework.Internal;
 using NHibernate.Cfg;
 
 namespace Rhino.Commons.NHibernateUtil
 {
+	using global::NHibernate.Util;
+
 	public class PluralizingNamingStrategy : INamingStrategy
 	{
 		public static PluralizingNamingStrategy Instnace = new PluralizingNamingStrategy();
@@ -59,6 +59,11 @@ namespace Rhino.Commons.NHibernateUtil
 		public string ColumnName(string columnName)
 		{
 			return columnName;
+		}
+
+		public string LogicalColumnName(string columnName, string propertyName)
+		{
+			return StringHelper.IsNotEmpty(columnName) ? columnName : StringHelper.Unqualify(propertyName);			
 		}
 
 		Dictionary<string, string> previousAssociations = new Dictionary<string, string>();
