@@ -46,7 +46,7 @@ namespace NHibernate.Query.Generator.Tests
 	public class GeneratorTests
 	{
 		private string code;
-
+		
 		[SetUp]
 		public void TestInitialize()
 		{

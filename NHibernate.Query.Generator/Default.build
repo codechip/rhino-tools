@@ -2,7 +2,6 @@
 <Project 
 		DefaultTargets="Init"
 		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
 
 	<PropertyGroup>
 		<ProjectName>NHibernate.Query.Generator</ProjectName>
@@ -35,17 +34,20 @@
 		<FileUpdate Regex="REAL_VERSION" 
 					Files="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')" 
 					ReplacementText="$(Version).$(Revision).0" />
-		<MsBuild  Projects="$(MSBuildProjectFile)"
+		<MsBuild Projects="$(MSBuildProjectFile)"
 				  Targets="BuildAll"/>
 	</Target>
 
 	<ItemGroup>
-		<TestAssembly Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator.Tests\bin\$(Configuration)\NHibernate.Query.Generator.Tests.dll"/>
+		<TestAssembly Include="$(OutDir)\NHibernate.Query.Generator.Tests.dll"/>
 	</ItemGroup>
 
 	<ItemGroup>
-		<ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\*.dll"/>
-    <ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\*.exe"/>
-    <ZipFiles Include="$(MSBuildProjectDirectory)\NHibernate.Query.Generator\bin\$(Configuration)\*.config"/>
+		<ZipFiles Include="$(OutDir)\*.dll"/>
+		<ZipFiles Include="$(OutDir)\*.exe"/>
+		<ZipFiles Include="$(OutDir)\*.config"/>
 	</ItemGroup>
+
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+
 </Project>

@@ -138,8 +138,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"$(TargetDir)NHQG.exe" /lang:cs /files:"$(TargetDir)NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
+"$(TargetDir)NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir) "</PostBuildEvent>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>

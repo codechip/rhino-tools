@@ -39,7 +39,9 @@ using NHibernate.SqlCommand;
 
 namespace NHibernate.Query.Generator
 {
-    /// <summary>
+	using System.Collections.Generic;
+
+	/// <summary>
     /// Read an HBM file and generates a cs query file
     /// </summary>
     public class QueryGenerator
@@ -189,6 +191,7 @@ namespace NHibernate.Query.Generator
             else
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration groupableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+			AddNotClsCompliant(groupableClassDeclaration);
             groupableClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -281,6 +284,7 @@ namespace NHibernate.Query.Generator
             else
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration orderableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+        	AddNotClsCompliant(orderableClassDeclaration);
             orderableClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -391,6 +395,7 @@ namespace NHibernate.Query.Generator
             else
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration projectByForClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
+        	AddNotClsCompliant(projectByForClassDeclaration);
             projectByForClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -524,6 +529,7 @@ namespace NHibernate.Query.Generator
                         continue;
                     CodeTypeDeclaration collectionDerived =
                         new CodeTypeDeclaration("Query_Collection_" + collectionName);
+                	AddNotClsCompliant(collectionDerived);
                     collectionDerived.BaseTypes.Add(type);
 
                     CodeConstructor ctor = new CodeConstructor();
@@ -799,11 +805,13 @@ namespace NHibernate.Query.Generator
         {
             // Root_Query_Blog
             CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Root_Query_" + display);
+        	AddNotClsCompliant(innerClass);
             innerClass.BaseTypes.Add(new CodeTypeReference("Query_" + display, new CodeTypeReference(entityType)));
             innerClass.IsPartial = true;
 
             // proeprty 
             CodeMemberProperty prop = new CodeMemberProperty();
+			AddNotClsCompliant(prop);
             prop.Name = display;
             prop.Type = new CodeTypeReference(innerClass.Name);
             prop.Attributes = MemberAttributes.Public | MemberAttributes.Static;
@@ -825,11 +833,14 @@ namespace NHibernate.Query.Generator
         {
             // Query_Blog<T1> : Query.QueryBuilder<T1>
             CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Query_" + display);
+        	AddNotClsCompliant(innerClass);
             innerClass.IsPartial = true;
             string genericParameterName = GetGenericParameterName();
             innerClass.TypeParameters.Add(genericParameterName);
 
-            string classname;
+			AddNotClsCompliant(innerClass);
+
+        	string classname;
             if (extends == null)
                 classname = "QueryBuilder";
             else
@@ -875,7 +886,19 @@ namespace NHibernate.Query.Generator
             return innerClass;
         }
 
-        /// <summary>
+    	private void AddNotClsCompliant(CodeTypeMember innerClass)
+    	{
+			if (innerClass.CustomAttributes.Count != 0)
+				return;
+
+    		CodeAttributeDeclaration notCLSComliant = new CodeAttributeDeclaration(
+    			typeof(CLSCompliantAttribute).FullName,
+    			new CodeAttributeArgument(new CodePrimitiveExpression(false))
+    			);
+    		innerClass.CustomAttributes.Add(notCLSComliant);
+    	}
+
+    	/// <summary>
         /// Gets the name of the next generic parameter.
         /// This is just to make sure that we don't have duplicate names.
         /// </summary>
@@ -893,7 +916,7 @@ namespace NHibernate.Query.Generator
         {
             string name = GetName(queryNode);
             CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Queries");
-            innerClass.IsPartial = true;
+        	innerClass.IsPartial = true;
             ns.Types.Add(innerClass);
             CodeMemberProperty prop = new CodeMemberProperty();
             prop.Attributes = MemberAttributes.Static | MemberAttributes.Public;

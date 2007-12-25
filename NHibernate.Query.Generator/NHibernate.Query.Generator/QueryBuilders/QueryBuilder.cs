@@ -54,15 +54,15 @@ namespace QueryNamespace
 		public NHibernate.SqlCommand.JoinType joinType = NHibernate.SqlCommand.JoinType.InnerJoin;
 		public NHibernate.FetchMode? fetchMode;
 		protected QueryBuilder<T> parent;
-		protected bool shouldSkipJoinOnIdEquality = false;
+		protected bool myShouldSkipJoinOnIdEquality = false;
 
 		public delegate DetachedCriteria CreateDetachedCriteriaDelegate(string alias);
 		public static CreateDetachedCriteriaDelegate CreateDetachedCriteria = DefaultCreateDetachedCriteria;
 
 		public virtual bool ShouldSkipJoinOnIdEquality
 		{
-			get { return shouldSkipJoinOnIdEquality; }
-			set { shouldSkipJoinOnIdEquality = value; }
+			get { return myShouldSkipJoinOnIdEquality; }
+			set { myShouldSkipJoinOnIdEquality = value; }
 		}
 
 		public QueryBuilder()
