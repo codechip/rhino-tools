@@ -38,7 +38,7 @@
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\OSS\NHibernate\nhibernate\src\NHibernate\bin\Debug-2.0\log4net.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=1.2.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

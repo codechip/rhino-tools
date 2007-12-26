@@ -1,4 +1,54 @@
 <Configuration>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <Providers />
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <ReFormatCode>
+    <ReorderMembers>False</ReorderMembers>
+    <OptimizeUsings>False</OptimizeUsings>
+    <RemoveRedundantThis>False</RemoveRedundantThis>
+    <ShortenReferences>False</ShortenReferences>
+  </ReFormatCode>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <EditorManager>
+    <RecentFiles>
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:User.hbm.cs" caret="460" scrollPosition="0|60" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:User.hbm.xml" caret="367" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Comment.hbm.xml" caret="433" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Post.hbm.xml" caret="0" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Blog.hbm.xml" caret="148" scrollPosition="0|0" />
+      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:hibernate.cfg.xml" caret="582" scrollPosition="6|0" />
+      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:App.config" caret="0" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Post.cs" caret="977" scrollPosition="0|44" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Category.hbm.xml" caret="0" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Blog.cs" caret="474" scrollPosition="0|22" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:User.cs" caret="163" scrollPosition="0|0" />
+      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Comment.cs" caret="293" scrollPosition="0|17" />
+      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:Program.cs" caret="1456" scrollPosition="0|21" />
+    </RecentFiles>
+  </EditorManager>
   <CompletionStatisticsManager>
     <ItemStatistics item="Qualified:@Query.OrderBy+User">
       <Item value="Username" priority="0" />
@@ -28,10 +78,11 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Query.ProjectBy">
       <Item value="Blog" priority="0" />
+      <Item value="User" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@NHibernate.Expression.Expression">
       <Item value="Lt" priority="0" />
-      <Item value="Eq" priority="1" />
+      <Item value="Eq" priority="3" />
       <Item value="Between" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Query.Where.Post">
@@ -42,7 +93,7 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Query.Where.User">
       <Item value="Email" priority="1" />
-      <Item value="Username" priority="1" />
+      <Item value="Username" priority="2" />
       <Item value="Bio" priority="0" />
       <Item value="CreatedAt" priority="0" />
     </ItemStatistics>
@@ -62,9 +113,11 @@
     <ItemStatistics item="Qualified:@Query.Where">
       <Item value="Post" priority="0" />
       <Item value="User" priority="3" />
+      <Item value="Category" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@NHibernate.Expression.Subqueries">
-      <Item value="Exists" priority="0" />
+      <Item value="Exists" priority="1" />
+      <Item value="Eq" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Iesi.Collections.Generic.ISet&lt;MyBlog.Tag&gt;">
       <Item value="Count" priority="0" />
@@ -72,9 +125,10 @@
     <ItemStatistics item="Qualified:@NHibernate.Expression.Projections">
       <Item value="Property" priority="1" />
       <Item value="SqlProjection" priority="0" />
-      <Item value="ProjectionList" priority="1" />
+      <Item value="ProjectionList" priority="2" />
       <Item value="RowCount" priority="0" />
       <Item value="SqlGroupProjection" priority="0" />
+      <Item value="Id" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Rhino.Commons.IoC">
       <Item value="Initialize" priority="1" />
@@ -91,7 +145,7 @@
       <Item value="Posts" priority="4" />
       <Item value="Filter" priority="0" />
       <Item value="Text" priority="0" />
-      <Item value="CreateCriteria" priority="6" />
+      <Item value="CreateCriteria" priority="9" />
       <Item value="List" priority="0" />
       <Item value="ExcludeNulls" priority="0" />
       <Item value="BuildSessionFactory" priority="0" />
@@ -103,6 +157,9 @@
       <Item value="Comments" priority="3" />
       <Item value="Blogs" priority="0" />
       <Item value="Get" priority="0" />
+      <Item value="SetProjection" priority="0" />
+      <Item value="Add" priority="0" />
+      <Item value="CreateAlias" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Rhino.Commons.NHibernateUnitOfWorkFactory">
       <Item value="CurrentNHibernateSession" priority="1" />
@@ -113,7 +170,7 @@
       <Item value="NotEq" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@NHibernate.Expression.DetachedCriteria">
-      <Item value="For" priority="0" />
+      <Item value="For" priority="2" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.DateTime.Today">
       <Item value="AddDays" priority="0" />
@@ -121,58 +178,11 @@
     <ItemStatistics item="Qualified:Query.PropertyQueryBuilder&lt;T1&gt;">
       <Item value="Like" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:@NHibernate.Expression.Property">
+      <Item value="ForName" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Query.Where.Category">
+      <Item value="Name" priority="0" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
-  <EditorManager>
-    <RecentFiles>
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Comment.cs" caret="682" scrollPosition="0|11" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:User.hbm.cs" caret="460" scrollPosition="0|60" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:User.hbm.xml" caret="367" scrollPosition="0|0" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Comment.hbm.xml" caret="433" scrollPosition="0|0" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Blog.cs" caret="0" scrollPosition="0|0" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Post.hbm.xml" caret="0" scrollPosition="0|0" />
-      <File id="1F2D844F-519D-48E7-BC4B-EDF8CB481315/f:Blog.hbm.xml" caret="148" scrollPosition="0|0" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/d:UnknownPath/f:HbmBinder.cs" caret="11463" scrollPosition="0|338" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:DriverConnectionProvider.cs" caret="1401" scrollPosition="0|0" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:BatcherImpl.cs" caret="5611" scrollPosition="0|162" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:NHybridDataReader.cs" caret="8521" scrollPosition="0|342" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:QueryParameters.cs" caret="13449" scrollPosition="0|452" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:StringTokenizer.cs" caret="1682" scrollPosition="0|50" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:BasicLoader.cs" caret="564" scrollPosition="0|33" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:ClassicQueryTranslatorFactory.cs" caret="540" scrollPosition="0|0" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:Settings.cs" caret="3004" scrollPosition="0|96" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:SessionFactoryImpl.cs" caret="15081" scrollPosition="0|501" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:PreprocessingParser.cs" caret="3922" scrollPosition="0|149" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:PathExpressionParser.cs" caret="13876" scrollPosition="0|501" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:FunctionStack.cs" caret="3249" scrollPosition="0|116" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:ParserHelper.cs" caret="821" scrollPosition="0|6" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:ClauseParser.cs" caret="2826" scrollPosition="0|117" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:Loader.cs" caret="51869" scrollPosition="0|1725" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:QueryTranslator.cs" caret="35628" scrollPosition="0|1278" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:SessionImpl.cs" caret="51203" scrollPosition="0|1709" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:QueryImpl.cs" caret="1103" scrollPosition="0|37" />
-      <File id="UNDEFINED_UNIQUE_NAME_Miscellaneous Files/f:SelectParser.cs" caret="3339" scrollPosition="0|92" />
-      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:hibernate.cfg.xml" caret="582" scrollPosition="6|0" />
-      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:App.config" caret="0" scrollPosition="0|0" />
-      <File id="925C2189-5795-453C-B3DA-10497DAC6FEB/f:Program.cs" caret="1029" scrollPosition="0|10" />
-    </RecentFiles>
-  </EditorManager>
-  <FileStructureView>
-    <AutoScrollToSource>False</AutoScrollToSource>
-    <TrackCaretLocation>False</TrackCaretLocation>
-  </FileStructureView>
-  <NAntValidationSettings>
-    <NAntPath value="" />
-  </NAntValidationSettings>
-  <ReFormatCode>
-    <ReorderMembers>False</ReorderMembers>
-    <OptimizeUsings>False</OptimizeUsings>
-    <RemoveRedundantThis>False</RemoveRedundantThis>
-    <ShortenReferences>False</ShortenReferences>
-  </ReFormatCode>
-  <SharedSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </SharedSolutionDisabledTemplatesManager>
-  <UserSolutionDisabledTemplatesManager>
-    <DisabledTemplates />
-  </UserSolutionDisabledTemplatesManager>
 </Configuration>

@@ -1,39 +1,49 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using MyBlog;
-using NHibernate;
-using NHibernate.Cfg;
-using NHibernate.Dialect;
-using NHibernate.Dialect.Function;
-using NHibernate.Expression;
-using NHibernate.Tool.hbm2ddl;
-using NHibernate.Type;
-using Query;
-
 namespace MyBlog.Console
 {
+	using System;
+	using System.Collections;
+	using NHibernate;
+	using NHibernate.Cfg;
+	using NHibernate.Dialect;
+	using NHibernate.Dialect.Function;
+	using NHibernate.Expression;
+	using Query;
+
 	class Program
 	{
 		static void Main(string[] args)
 		{
-			Configuration configuration = new Configuration()
-				.Configure("hibernate.cfg.xml");
-			ISessionFactory sessionFactory = configuration
-				.BuildSessionFactory();
-			//new SchemaExport(configuration).Execute(true,true,false,false);
-			System.Console.Clear();
-			using (ISession session = sessionFactory.OpenSession())
+			try
 			{
-				IList list = session.CreateQuery("select b, rowcount() from Blog b")
-						.SetFirstResult(5)
-						.SetMaxResults(10)
-						.List();
-				foreach (object[] tuple in list)
+				Configuration configuration = new Configuration()
+					.Configure("hibernate.cfg.xml");
+				ISessionFactory sessionFactory = configuration
+					.BuildSessionFactory();
+				//new SchemaExport(configuration).Execute(true,true,false,false);
+
+				using (ISession session = sessionFactory.OpenSession())
 				{
-					System.Console.WriteLine("Entity: {0}", ((Blog)tuple[0]).Id);
-					System.Console.WriteLine("Row Count: {0}", (int)tuple[1]);
+					DetachedCriteria blogAuthorIsJosh = Where.User.Username == "josh";
+					blogAuthorIsJosh.CreateCriteria("Blogs", "userBlog")
+						.SetProjection(Projections.Id())
+						.Add(Property.ForName("userBlog.id").EqProperty("blog.id"));
+					DetachedCriteria categoryIsNh = DetachedCriteria.For(typeof(Category), "category")
+						.SetProjection(Projections.Id())
+						.Add(Expression.Eq("Name", "NHibernate"))
+						.Add(Property.ForName("category.id").EqProperty("postCategory.id"));
+					session.CreateCriteria(typeof(Post), "post")
+						.CreateAlias("Categories", "postCategory")
+						.Add(Subqueries.Exists(categoryIsNh))
+						.CreateAlias("Comments", "comment")
+						.Add(Expression.Eq("comment.Name", "ayende"))
+						.CreateAlias("Blog", "blog")
+						.Add(Subqueries.Exists(blogAuthorIsJosh))
+						.List();
 				}
+			}
+			catch (Exception ex)
+			{
+				System.Console.WriteLine(ex);
 			}
 		}
 
@@ -46,7 +56,7 @@ namespace MyBlog.Console
 	{
 		public CustomFunctionsMsSql2005Dialect()
 		{
-			RegisterFunction("rowcount", new NoArgSQLFunction("count(*) over", 
+			RegisterFunction("rowcount", new NoArgSQLFunction("count(*) over",
 				NHibernateUtil.Int32, true));
 		}
 	}
