@@ -159,6 +159,9 @@
     <None Include="Binsor\MultiFileConfig_Main.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Binsor\UsingAllTypes.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\Windsor2.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -221,6 +224,7 @@
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
+    <Compile Include="Binsor\UsingAllTypesFixture.cs" />
     <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
@@ -254,9 +258,6 @@
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Boo\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

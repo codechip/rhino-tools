@@ -47,7 +47,6 @@ namespace Rhino.Commons.Test.Binsor
 
 			_container = new RhinoContainer();
 			string path = Path.GetFullPath(@"Binsor\Imports.boo");
-			Console.WriteLine(path);
 			BooReader.Read(_container, path);
 		}
 

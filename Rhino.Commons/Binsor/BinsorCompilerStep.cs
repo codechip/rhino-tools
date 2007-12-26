@@ -46,6 +46,7 @@ namespace Rhino.Commons.Binsor
 				   //default namespaces
 			       "Rhino.Commons",
 			       "Rhino.Commons.Binsor",
+                   "Rhino.Commons.Binsor.BinsorGlobalMethods",
 			       "Rhino.Commons.Binsor.Macros",
 			       "Rhino.Commons.Binsor.Configuration",
 			       "Castle.Core")
