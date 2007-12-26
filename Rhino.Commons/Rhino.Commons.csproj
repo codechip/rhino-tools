@@ -81,6 +81,7 @@
       <HintPath>..\..\Build\Rhino.DSL\Rhino.DSL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -163,6 +164,7 @@
     <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScope.cs" />
+    <Compile Include="Logging\AsyncBulkInsertAppender.cs" />
     <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="Logging\RollingSqlliteAppender.cs" />

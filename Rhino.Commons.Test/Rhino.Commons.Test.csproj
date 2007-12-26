@@ -103,6 +103,7 @@
       <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -113,7 +114,9 @@
       <HintPath>..\..\SharedLibs\SqlCE\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +183,10 @@
     <None Include="ForTesting\Windsor-NH.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Logging\BulkInsert.config">
+      <SubType>Form</SubType>
+    </EmbeddedResource>
+    <None Include="Repository\Windsor-AR.config" />
     <None Include="Repository\Windsor-AR.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -219,6 +226,7 @@
     <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="HttpModules\UnitOfWorkApplicationFixture.cs" />
+    <Compile Include="Logging\AsyncBulkInsertAppenderTestFixture.cs" />
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
