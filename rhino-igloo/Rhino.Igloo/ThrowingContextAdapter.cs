@@ -116,6 +116,10 @@ namespace Rhino.Igloo
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
         }
 
+		/// <summary>
+		/// Authenticates as the user name
+		/// </summary>
+		/// <param name="user">The user.</param>
     	public void Authenticate(string user)
     	{
     		throw new NotSupportedException("You are not in a web context, you cannot call the context");

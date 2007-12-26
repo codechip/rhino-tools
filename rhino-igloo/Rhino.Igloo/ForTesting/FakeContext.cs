@@ -209,7 +209,16 @@ namespace Rhino.Igloo.Tests
             lastUser = user;
         }
 
-        /// <summary>
+		/// <summary>
+		/// Authenticates as the user name
+		/// </summary>
+		/// <param name="user">The user.</param>
+    	public void Authenticate(string user)
+    	{
+    		lastUser = user;
+    	}
+
+    	/// <summary>
         /// Signs the user out of the system
         /// </summary>
         public void SignOut()
