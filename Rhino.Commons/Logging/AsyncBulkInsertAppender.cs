@@ -163,6 +163,7 @@ namespace Rhino.Commons.Logging
 					eventsList.AddLast(events);
 					if (anotherThreadAlreadyHandlesLogging)
 						return;
+						anotherThreadAlreadyHandlesLogging = true;
 				}
 				while (true)
 				{
@@ -174,7 +175,6 @@ namespace Rhino.Commons.Logging
 							anotherThreadAlreadyHandlesLogging = false;
 							return;
 						}
-						anotherThreadAlreadyHandlesLogging = true;
 						current = eventsList.First.Value;
 						eventsList.RemoveFirst();
 					}
