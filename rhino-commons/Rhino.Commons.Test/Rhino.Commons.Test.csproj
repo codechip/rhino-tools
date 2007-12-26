@@ -144,6 +144,9 @@
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Binsor\MultiFileConfig_Main2.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\Imports.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

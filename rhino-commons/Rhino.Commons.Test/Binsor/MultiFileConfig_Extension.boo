@@ -1,6 +1,8 @@
 import file from MultiFileConfig_Main.boo
+import file from MultiFileConfig_Main2.boo
 
 DefineComponent()
+DefineComponent2()
 
 extend "email_sender":
 	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
