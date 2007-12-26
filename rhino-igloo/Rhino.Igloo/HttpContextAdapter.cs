@@ -70,7 +70,20 @@ namespace Rhino.Igloo
             destination = context.Response.ApplyAppPathModifier(destination);
             // NOTE: This must not throw exception (which it would do if endRequest is true
             // because it is called from transactional methods.
-            context.Response.Redirect(destination, false);
+            Redirect(destination, true);
+        }
+
+        /// <summary>
+        /// Redirects to the specified destination.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void Redirect(string destination, bool endResponse)
+        {
+            destination = context.Response.ApplyAppPathModifier(destination);
+            // NOTE: This must not throw exception (which it would do if endRequest is true
+            // because it is called from transactional methods.
+            context.Response.Redirect(destination, endResponse);
         }
 
         /// <summary>
@@ -158,6 +171,17 @@ namespace Rhino.Igloo
         /// <param name="user">The user.</param>
         public void AuthenticateAndRedirect(string destination, string user)
         {
+            AuthenticateAndRedirect(destination, user, true);
+        }
+
+        /// <summary>
+        /// Authenticates the user and redirect to the desination.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void AuthenticateAndRedirect(string destination, string user, bool endResponse)
+        {
             FormsAuthenticationTicket authTicket =
                 new FormsAuthenticationTicket(user, false, 60);
 
@@ -167,7 +191,7 @@ namespace Rhino.Igloo
                 new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
 
             context.Response.Cookies.Add(authCookie);
-            context.Response.Redirect(destination);
+            context.Response.Redirect(destination, endResponse);
         }
 
         /// <summary>

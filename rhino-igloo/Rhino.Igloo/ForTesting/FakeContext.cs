@@ -75,6 +75,16 @@ namespace Rhino.Igloo.Tests
         }
 
         /// <summary>
+        /// Redirects the specified destination.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void Redirect(string destination, bool endResponse)
+        {
+            LastRedirectedUrl = destination;
+        }
+
+        /// <summary>
         /// Gets the inputs.
         /// </summary>
         /// <value>The inputs.</value>
@@ -173,6 +183,18 @@ namespace Rhino.Igloo.Tests
         /// <param name="destination">The destination.</param>
         /// <param name="user">The user.</param>
         public void AuthenticateAndRedirect(string destination, string user)
+        {
+            lastRedirectedUrl = destination;
+            lastUser = user;
+        }
+
+        /// <summary>
+        /// Authenticates the user and redirect to the destination
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void AuthenticateAndRedirect(string destination, string user, bool endResponse)
         {
             lastRedirectedUrl = destination;
             lastUser = user;

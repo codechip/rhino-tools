@@ -35,7 +35,7 @@ namespace RhinoIglooSample.Controllers
             Scope.Session["username"] = user.Name;
             if(user.PasswordExpiresAt < DateTime.Today)
             {
-                Context.Redirect("ChangePassword.aspx");
+                Context.Redirect("ChangePassword.aspx",false);
             }
             return user != null;
         }

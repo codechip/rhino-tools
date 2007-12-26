@@ -48,6 +48,13 @@ namespace Rhino.Igloo
 		/// <param myName="destination">The destination.</param>
 		void Redirect(string destination);
 
+        /// <summary>
+        /// Redirects the specified destination.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        void Redirect(string destination, bool endResponse);
+
 		/// <summary>
 		/// Gets the variable from the user input
 		/// </summary>
@@ -79,6 +86,14 @@ namespace Rhino.Igloo
 		/// <param name="destination">The destination.</param>
 		/// <param name="user">The user.</param>
 	    void AuthenticateAndRedirect(string destination,string user);
+
+        /// <summary>
+        /// Authenticates the user and redirect to the destination
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        void AuthenticateAndRedirect(string destination, string user, bool endResponse);
 
 		/// <summary>
 		/// Signs the user out of the system

@@ -48,6 +48,16 @@ namespace Rhino.Igloo
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
 
+        /// <summary>
+        /// Redirects the specified destination.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void Redirect(string destination, bool endResponse)
+        {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
+
 		/// <summary>
 		/// Gets the variable from the user input
 		/// </summary>
@@ -94,6 +104,17 @@ namespace Rhino.Igloo
 		{
 			throw new NotSupportedException("You are not in a web context, you cannot call the context");
 		}
+
+        /// <summary>
+        /// Authenticates the user and redirect to the destination
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="endResponse">if set to <c>true</c> [end response].</param>
+        public void AuthenticateAndRedirect(string destination, string user, bool endResponse)
+        {
+            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+        }
 
 		/// <summary>
 		/// Signs the user out of the system
