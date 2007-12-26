@@ -224,7 +224,7 @@ namespace Rhino.Commons.Test
 		[Test]
 		public void ListContaining_WillRetunNullWhenPassedNull()
 		{
-			ICollection<object> actual = Collection.ListContaining<object>(null);
+			ICollection<object> actual = Collection.Containing<object>(null);
 			Assert.IsNull(actual);
 		}
 
@@ -232,7 +232,7 @@ namespace Rhino.Commons.Test
 		[Test]
 		public void ListContaining_WillRetunEmptyListWhenPassedNothing()
 		{
-			ICollection<int> actual = Collection.ListContaining<int>();
+			ICollection<int> actual = Collection.Containing<int>();
 			Assert.IsEmpty((ICollection) actual);
 		}
 
@@ -242,7 +242,7 @@ namespace Rhino.Commons.Test
 		{
 			List<int> expected = new List<int>();
 			expected.AddRange(new int[3] {1, 2, 3});
-			AssertCollectionEquals(expected, Collection.ListContaining(1, 2, 3));
+			AssertCollectionEquals(expected, Collection.Containing(1, 2, 3));
 		}
 
 

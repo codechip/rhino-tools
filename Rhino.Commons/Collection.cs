@@ -37,13 +37,7 @@ namespace Rhino.Commons
 {
 	public static class Collection
 	{
-		public static ICollection<T> Containing<T>(params T[] items)
-		{
-			if (items == null) return null;
-			return new List<T>(items);
-		}
-
-		public static IList<T> ListContaining<T>(params T[] items)
+		public static IList<T> Containing<T>(params T[] items)
 		{
 			if (items == null) return null;
 			return new List<T>(items);
@@ -126,7 +120,7 @@ namespace Rhino.Commons
 
 		public static T[] ToArray<T>(object list)
 		{
-			return ToArray<T>((IList) list);
+			return ToArray<T>((IList)list);
 		}
 
 		public static T[] ToArray<T>(IEnumerable list)
@@ -170,8 +164,12 @@ namespace Rhino.Commons
 			return enumerator.Current;
 		}
 
-
 		public static ICollection<T> ToUniqueCollection<T>(IEnumerable<T> collection)
+		{
+			return ToUniqueCollection<T>((IEnumerable) collection);
+		}
+
+		public static ICollection<T> ToUniqueCollection<T>(IEnumerable collection)
 		{
 			if (collection == null) return null;
 
