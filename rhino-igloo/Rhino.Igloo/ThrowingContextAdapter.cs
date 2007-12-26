@@ -117,6 +117,17 @@ namespace Rhino.Igloo
         }
 
 		/// <summary>
+		/// Authenticates the specified destination.
+		/// </summary>
+		/// <param name="destination">The destination.</param>
+		/// <param name="user">The user.</param>
+		public void Authenticate(string destination, string user)
+		{
+			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+		}
+
+
+		/// <summary>
 		/// Signs the user out of the system
 		/// </summary>
 		public void SignOut()

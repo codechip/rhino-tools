@@ -182,19 +182,28 @@ namespace Rhino.Igloo
         /// <param name="endResponse">if set to <c>true</c> [end response].</param>
         public void AuthenticateAndRedirect(string destination, string user, bool endResponse)
         {
-            FormsAuthenticationTicket authTicket =
-                new FormsAuthenticationTicket(user, false, 60);
-
-            string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-
-            HttpCookie authCookie =
-                new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-
-            context.Response.Cookies.Add(authCookie);
-            context.Response.Redirect(destination, endResponse);
+        	Authenticate(user);
+        	context.Response.Redirect(destination, endResponse);
         }
 
-        /// <summary>
+		/// <summary>
+		/// Authenticates the specified user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+    	public void Authenticate(string user)
+    	{
+    		FormsAuthenticationTicket authTicket =
+    			new FormsAuthenticationTicket(user, false, 60);
+
+    		string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+
+    		HttpCookie authCookie =
+    			new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+
+    		context.Response.Cookies.Add(authCookie);
+    	}
+
+    	/// <summary>
         /// Signs the user out of the system
         /// </summary>
         public void SignOut()

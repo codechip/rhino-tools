@@ -96,6 +96,12 @@ namespace Rhino.Igloo
         void AuthenticateAndRedirect(string destination, string user, bool endResponse);
 
 		/// <summary>
+		/// Authenticates as the user name
+		/// </summary>
+		/// <param name="user">The user.</param>
+	    void AuthenticateAndRedirect(string user);
+
+		/// <summary>
 		/// Signs the user out of the system
 		/// </summary>
 	    void SignOut();

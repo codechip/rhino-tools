@@ -188,7 +188,16 @@ namespace Rhino.Igloo.Tests
             lastUser = user;
         }
 
-        /// <summary>
+		/// <summary>
+		/// Authenticates as the user name
+		/// </summary>
+		/// <param name="user">The user.</param>
+    	public void AuthenticateAndRedirect(string user)
+    	{
+    		lastUser = user;
+    	}
+
+    	/// <summary>
         /// Authenticates the user and redirect to the destination
         /// </summary>
         /// <param name="destination">The destination.</param>
