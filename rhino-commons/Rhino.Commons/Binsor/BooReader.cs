@@ -43,6 +43,7 @@ using Castle.Windsor;
 namespace Rhino.Commons.Binsor
 {
 	using Boo.Lang.Compiler.Ast.Visitors;
+	using Boo.Lang.Extensions;
 	using DSL;
 
 	public static class BooReader
@@ -200,6 +201,7 @@ namespace Rhino.Commons.Binsor
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
 			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
+            compiler.Parameters.References.Add(typeof(MacroMacro).Assembly);
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)
 			{
