@@ -3,10 +3,10 @@ import Rhino.Commons from Rhino.Commons.NHibernate
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
 
-def DefineComponent():
-	component "email_sender4", ISender, EmailSender
+def DefineComponent2():
+	component "email_sender", ISender, EmailSender
 	
-	component "email_sender5", ISender, EmailSender:
+	component "email_sender2", ISender, EmailSender:
 		Host = 'example123.dot.org', To = ( 'Lauren' )
 
-	component 'email_sender6', ISender, EmailSender
+	component 'email_sender3', ISender, EmailSender
