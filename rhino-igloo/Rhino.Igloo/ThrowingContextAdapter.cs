@@ -116,7 +116,12 @@ namespace Rhino.Igloo
             throw new NotSupportedException("You are not in a web context, you cannot call the context");
         }
 
-		/// <summary>
+    	public void AuthenticateAndRedirect(string user)
+    	{
+    		throw new NotSupportedException("You are not in a web context, you cannot call the context");
+    	}
+
+    	/// <summary>
 		/// Authenticates the specified destination.
 		/// </summary>
 		/// <param name="destination">The destination.</param>
