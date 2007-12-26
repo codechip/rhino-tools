@@ -99,7 +99,7 @@ namespace Rhino.Igloo
 		/// Authenticates as the user name
 		/// </summary>
 		/// <param name="user">The user.</param>
-	    void AuthenticateAndRedirect(string user);
+	    void Authenticate(string user);
 
 		/// <summary>
 		/// Signs the user out of the system

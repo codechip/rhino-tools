@@ -186,7 +186,7 @@ namespace Rhino.Igloo
         	context.Response.Redirect(destination, endResponse);
         }
 
-		/// <summary>
+    	/// <summary>
 		/// Authenticates the specified user.
 		/// </summary>
 		/// <param name="user">The user.</param>
