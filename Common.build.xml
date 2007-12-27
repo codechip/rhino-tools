@@ -7,7 +7,7 @@
 		<OutputDir>$(MSBuildProjectDirectory)</OutputDir>
 		<LogsDir>$(MSBuildProjectDirectory)</LogsDir>
 		<KeyFile>$(MSBuildProjectDirectory)\..\ayende-open-source.snk</KeyFile>
-		<ClsCompliant>true</ClsCompliant>
+		<ClsCompliant Condition="'$(ClsCompliant)' == ''">true</ClsCompliant>
 		<OutDir>$(MSBuildProjectDirectory)\..\Build\$(ProjectName)\</OutDir>
 		<ArtifactssDir>$(MSBuildProjectDirectory)\..\Artifacts</ArtifactssDir>
 	</PropertyGroup>
@@ -30,7 +30,7 @@
 					PropertyName="Revision" />
 		</SvnVersion>
 		<AssemblyInfo AssemblyCompany ="Rhino"
-			AssemblyCopyright="Oren Eini (c) 2006"
+			AssemblyCopyright="Oren Eini (c) 2006 - 2008"
 			AssemblyDescription="$(ProjectName)"
 			AssemblyInformationalVersion="$(Version).$(Revision)"
 			 AssemblyTitle ="$(ProjectName)$(ExtraInfo)"
@@ -75,7 +75,10 @@
 	</Target>
 	
 	<Target Name="UnitTest" Condition="$(EnableTest)">
-		<MbUnit Assemblies="@(TestAssembly)" ReportFileNameFormat="MbUnit.Results" ReportTypes ="html; xml"  ReportOutputDirectory="$(MSBuildProjectDirectory)" />
+		<MbUnit Assemblies="@(TestAssembly)" 
+			ReportFileNameFormat="MbUnit.Results" 
+			ReportTypes ="html; xml"  
+			ReportOutputDirectory="$(OutDir)TestResults" />
 	</Target>
 	
 	<Target Name="Upload" Condition="$(FtpUsername) != ''">
