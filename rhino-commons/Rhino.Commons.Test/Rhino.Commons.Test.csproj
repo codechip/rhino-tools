@@ -189,7 +189,6 @@
     <EmbeddedResource Include="Logging\BulkInsert.config">
       <SubType>Form</SubType>
     </EmbeddedResource>
-    <None Include="Repository\Windsor-AR.config" />
     <None Include="Repository\Windsor-AR.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
