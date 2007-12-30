@@ -93,28 +93,16 @@
     <Compile Include="Binsor\IConfigurationRunner.cs" />
     <Compile Include="Binsor\TransformUnknownReferences.cs" />
     <Compile Include="BulkDeleter.cs" />
-    <Compile Include="Collection.cs" />
-    <Compile Include="DateUtil.cs" />
-    <Compile Include="DelegateDefinations.cs" />
-    <Compile Include="DisposableAction.cs" />
-    <Compile Include="ElementNotFoundException.cs" />
-    <Compile Include="GenericEventArgs.cs" />
     <Compile Include="HttpModules\PagePerformanceModule.cs" />
-    <Compile Include="Indexers.cs" />
-    <Compile Include="LocalDataImpl\LocalData.cs" />
-    <Compile Include="LocalDataImpl\ILocalData.cs" />
     <Compile Include="Logging\WebLoggingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectAttribute.cs" />
     <Compile Include="RhinoContainer\ConfigurationObjectConverter.cs" />
-    <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Threading\ThreadSafeQueue.cs" />
     <Compile Include="Threading\CountdownLatch.cs" />
     <Compile Include="ToPublic\SqlCommandSet.cs" />
     <Compile Include="RhinoContainer\IoC.cs" />
     <Compile Include="RhinoContainer\RhinoContainer.cs" />
-    <Compile Include="StaticReflection.cs" />
-    <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ayende-open-source.snk">
@@ -160,9 +148,6 @@
     <Compile Include="Binsor\Macros\MacroHelper.cs" />
     <Compile Include="Binsor\Macros\WireEventMacro.cs" />
     <Compile Include="Binsor\RegisterComponentAndFacilitiesAfterCreation.cs" />
-    <Compile Include="Exceptions\HackExpiredException.cs" />
-    <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
-    <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScope.cs" />
     <Compile Include="Logging\AsyncBulkInsertAppender.cs" />
@@ -183,6 +168,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+      <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
+      <Name>Rhino.Commons.Clr</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

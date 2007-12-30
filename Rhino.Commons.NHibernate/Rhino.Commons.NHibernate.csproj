@@ -106,6 +106,10 @@
     <Compile Include="With\With.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+      <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
+      <Name>Rhino.Commons.Clr</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons\Rhino.Commons.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>

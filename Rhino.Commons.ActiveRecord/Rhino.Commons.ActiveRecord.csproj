@@ -79,6 +79,10 @@
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+      <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
+      <Name>Rhino.Commons.Clr</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj">
       <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
       <Name>Rhino.Commons.NHibernate</Name>

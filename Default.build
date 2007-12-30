@@ -13,6 +13,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<AssemblyInfo Include="Item">
+			<File>$(MSBuildProjectDirectory)\Rhino.Commons.Clr\Properties\AssemblyInfo.cs</File>
+		</AssemblyInfo>
+		<AssemblyInfo Include="Item">
 			<File>$(MSBuildProjectDirectory)\Rhino.Commons\Properties\AssemblyInfo.cs</File>
 		</AssemblyInfo>
 		<AssemblyInfo Include="Item">
