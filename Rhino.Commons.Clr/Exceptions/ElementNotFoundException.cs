@@ -28,10 +28,8 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.Exceptions
 {
     public class ElementNotfoundException : Exception
     {
