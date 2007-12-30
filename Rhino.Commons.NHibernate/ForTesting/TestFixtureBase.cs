@@ -61,14 +61,6 @@ namespace Rhino.Commons.ForTesting
         /// <see cref="string.Empty"/> a database with a name
         /// derived from the other parameters supplied will be created. See
         /// <see cref="DeriveDatabaseNameFrom(Assembly)"/> and <see cref="DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
-        /// <para>
-        /// Currently every UnitOfWorkContext created for the ActiveRecord
-        /// framework within the scope of a running application must use the
-        /// same database engine. An attempt to create another UnitOfWorkContext
-        /// for a different database engine will throw an <see
-        /// cref="InvalidOperationException"/> exception. This constraint may be
-        /// able to be removed in future.
-        /// </para>
         /// </remarks>
         public static void FixtureInitialize(PersistenceFramework framework,
                                              string rhinoContainerConfig,
