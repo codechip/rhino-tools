@@ -44,7 +44,7 @@
     <Compile Include="Exceptions\ElementNotFoundException.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
-    <Compile Include="Exceptions\ThereBeDragonsAttribute.cs" />
+    <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="GenericEventArgs.cs" />
     <Compile Include="Indexers.cs" />
