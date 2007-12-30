@@ -46,7 +46,7 @@
     </Reference>
     <Reference Include="Rhino.Commons, Version=1.5.646.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLibs\Rhino.Commons.dll</HintPath>
+      <HintPath>..\Build\Rhino.Commons\Rhino.Commons.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
