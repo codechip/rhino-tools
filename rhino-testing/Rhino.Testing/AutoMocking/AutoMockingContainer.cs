@@ -26,7 +26,7 @@ namespace Rhino.Testing.AutoMocking
             get { return _mocks; }
         }
 
-        private object GetService(Type type) 
+        private new object GetService(Type type) 
         {
             if (_services.ContainsKey(type))
                 return _services[type];
