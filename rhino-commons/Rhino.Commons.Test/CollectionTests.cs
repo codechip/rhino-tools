@@ -33,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using MbUnit.Framework;
+using Rhino.Commons.Exceptions;
 
 namespace Rhino.Commons.Test
 {
