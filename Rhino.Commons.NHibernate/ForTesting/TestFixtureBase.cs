@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using Rhino.Commons;
 
 namespace Rhino.Commons.ForTesting
 {
@@ -172,6 +173,34 @@ namespace Rhino.Commons.ForTesting
         private static string StringOrEmpty(string s)
         {
             return s ?? string.Empty;
+        }
+
+
+        /// <summary>
+        /// Throw away all <see cref="UnitOfWorkTestContext"/> objects within <see cref="Contexts"/>
+        /// and referenced by <see cref="CurrentContext"/>. WARNING: Subsequent calls to  <see
+        /// cref="FixtureInitialize(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// and all its overloads will now take considerably longer as the persistent framework will
+        /// be initialised a fresh.
+        /// </summary>
+        /// <remarks>
+        /// This method should be used vary sparingly. It is highly unlikely that you will need to
+        /// call this method between every test.
+        /// <para>
+        /// Calling this method will dispose of <see cref="UnitOfWorkTestContext"/> objects within
+        /// <see cref="Contexts"/>. Each context maintains a reference to a 
+        ///  <see cref="RhinoContainer"/>. If this container object is
+        /// referenced by <see cref="IoC"/>.<see cref="IoC.Container"/> then any subsequent calls to <see
+        /// cref="IoC"/>.<see cref="IoC.Resolve(Type)"/> and any of the overloads will throw.
+        /// </para>
+        /// </remarks>
+        public static void DisposeAndRemoveAllUoWTestContexts() 
+        {
+            foreach (UnitOfWorkTestContext context in Contexts)
+                context.Dispose();
+
+            CurrentContext = null;
+            Contexts.Clear();
         }
     }
 }
