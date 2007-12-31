@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Rhino.Commons.ForTesting
@@ -75,20 +76,30 @@ namespace Rhino.Commons.ForTesting
 
             if (GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName) == null)
             {
-                UnitOfWorkTestContextDbStrategy dbStrategy = 
+                UnitOfWorkTestContextDbStrategy dbStrategy =
                     UnitOfWorkTestContextDbStrategy.For(databaseEngine, databaseName);
-                Contexts.Add(UnitOfWorkTestContext.For(framework, rhinoContainerConfig, dbStrategy, mappingInfo));
+                UnitOfWorkTestContext newContext =
+                    UnitOfWorkTestContext.For(framework, rhinoContainerConfig, dbStrategy, mappingInfo);
+                Contexts.Add(newContext);
+                Debug.Print(string.Format("Created another UnitOfWorkContext for: {0}", newContext));
             }
 
             UnitOfWorkTestContext context =
                 GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName);
 
-            if (!Equals(context, CurrentContext))
+            if (!Equals(context, CurrentContext) || IsInversionOfControlContainerOutOfSynchWith(context))
             {
                 context.IntialiseContainerAndUowFactory();
             }
 
             CurrentContext = context;
+            Debug.Print(string.Format("CurrentContext is: {0}", CurrentContext));
+        }
+
+
+        private static bool IsInversionOfControlContainerOutOfSynchWith(UnitOfWorkTestContext context) 
+        {
+            return (IoC.IsInitialized == false) != (context.RhinoContainer == null);
         }
 
 
