@@ -43,16 +43,22 @@ namespace Rhino.Commons.Test.ForTesting
         [SetUp]
         public void TestInitialize()
         {
-            CurrentContext = null;
-            Contexts.Clear();
+            //WARNING: ordinarily you would never dispose of your contexts like this between each test,
+            //as this would seriously degrade performance.
+            //We're only doing it here because we're testing the test framework itself
+            IoC.Reset();
+            DisposeAndRemoveAllUoWTestContexts();
         }
 
 
         [TearDown]
         public void TestCleanup()
         {
-            CurrentContext = null;
-            Contexts.Clear();
+            //WARNING: ordinarily you would never dispose of your contexts like this between each test,
+            //as this would seriously degrade performance.
+            //We're only doing it here because we're testing the test framework itself
+            IoC.Reset();
+            DisposeAndRemoveAllUoWTestContexts();
         }
 
 

@@ -54,7 +54,7 @@ namespace Rhino.Commons.ForTesting
     /// database and UnitOfWork context required for testing. Allows different
     /// implementations of this context to be substituted at runtime
     /// </summary>
-    public abstract class UnitOfWorkTestContext 
+    public abstract class UnitOfWorkTestContext  : IDisposable
     {
         private const string activeRecordTestContextType = "Rhino.Commons.ForTesting.ARUnitOfWorkTestContext, Rhino.Commons.ActiveRecord";
         private static Type activeRecordType;
@@ -299,7 +299,14 @@ namespace Rhino.Commons.ForTesting
                               RhinoContainerConfigPath ?? "");
         }
 
+        #region IDisposable Members
 
+        public void Dispose()
+        {
+            if (rhinoContainer != null) rhinoContainer.Dispose();
+        }
+
+        #endregion
 
         private class NHibernateUnitOfWorkTestContext : UnitOfWorkTestContext
         {
