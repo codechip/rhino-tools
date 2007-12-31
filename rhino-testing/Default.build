@@ -21,7 +21,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Testing.Tests\bin\$(Configuration)\Rhino.Testing.Tests.dll"/>
+		<!--<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Testing.Tests\bin\$(Configuration)\Rhino.Testing.Tests.dll"/>-->
+		<TestAssembly Include="$(OutDir)\Rhino.Testing.Tests.dll"/>
 	</ItemGroup>
 	
 </Project>
