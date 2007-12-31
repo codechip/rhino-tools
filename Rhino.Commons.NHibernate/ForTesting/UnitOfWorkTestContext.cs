@@ -289,6 +289,17 @@ namespace Rhino.Commons.ForTesting
         }
 
 
+        public override string ToString()
+        {
+            return
+                string.Format("Framework: {0}; DatabaseEngine: {1}; DatabaseName: {2}; RhinoContainerPath: {3}",
+                              Framework,
+                              DatabaseEngine,
+                              DatabaseName,
+                              RhinoContainerConfigPath ?? "");
+        }
+
+
 
         private class NHibernateUnitOfWorkTestContext : UnitOfWorkTestContext
         {
