@@ -45,7 +45,7 @@ namespace NHibernate.Query.Generator.Tests
 
 			TextReader reader = new StreamReader(sampleStream);
 			TextWriter writer = new StringWriter(sb);
-			QueryGenerator generator = new QueryGenerator(reader, new CSharpCodeProvider(), "Query");
+			QueryGenerator generator = new QueryGenerator(reader, new CSharpCodeProvider(), "Query", null);
 			generator.Generate(writer);
 
 			return sb.ToString();

@@ -292,7 +292,7 @@ namespace NHibernate.Query.Generator
 			{
 				File.Delete(destinationFile);
 			}
-            QueryGenerator generator = new QueryGenerator(input, provider, baseNamespace);
+            QueryGenerator generator = new QueryGenerator(input, provider, baseNamespace, null);
             using (StreamWriter outputStream = File.AppendText(destinationFile))
             {
                 generator.Generate(outputStream);

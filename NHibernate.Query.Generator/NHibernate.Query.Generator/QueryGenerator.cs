@@ -31,6 +31,7 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
@@ -74,6 +75,7 @@ namespace NHibernate.Query.Generator
         private readonly TextReader _reader;
         private readonly CodeDomProvider _provider;
         private readonly string baseNamespace;
+        private readonly string import;
         private readonly XmlDocument hbm = new XmlDocument();
         private XmlNamespaceManager nsMgr;
         private string hbmCodeNameSpace;
@@ -83,11 +85,12 @@ namespace NHibernate.Query.Generator
         /// </summary>
         private int genericTypeNamesRequested = 1;
 
-        public QueryGenerator(TextReader reader, CodeDomProvider provider, string baseNamespace)
+        public QueryGenerator(TextReader reader, CodeDomProvider provider, string baseNamespace, string import)
         {
             _reader = reader;
             _provider = provider;
             this.baseNamespace = baseNamespace;
+            this.import = import;
             Array.Sort(numericTypeNames);
         }
 
@@ -95,9 +98,18 @@ namespace NHibernate.Query.Generator
         {
             //General CodeDOM setup
             CodeCompileUnit unit = new CodeCompileUnit();
+
             CodeNamespace queryNameSpace = new CodeNamespace(baseNamespace);
             GenerateVersionComment(queryNameSpace);
             unit.Namespaces.Add(queryNameSpace);
+
+            if (import != null)
+            {
+                CodeNamespaceImport nsImport = new CodeNamespaceImport(import);
+                queryNameSpace.Imports.Add(nsImport);
+            }
+
+
             CodeTypeDeclaration whereTypeDeclaration = new CodeTypeDeclaration("Where");
             queryNameSpace.Types.Add(whereTypeDeclaration);
             whereTypeDeclaration.IsPartial = true;
@@ -524,7 +536,13 @@ namespace NHibernate.Query.Generator
                     type.TypeArguments.Add(genericTypeName);
 
                     string collectionName = collectionNode.Attributes["name"].Value;
+                    
                     string collectionClassName = GetClassNameFromCollection(collectionNode);
+
+                    //If it's composite-element, needs to generate query object for it todo: not always - check
+                    if(collectionNode.SelectSingleNode("nh:composite-element/@class", nsMgr) != null)
+                        GenerateCompositeElement(collectionNode, collectionClassName, innerClass);
+
                     if(collectionClassName==null)//not a node type we can handle
                         continue;
                     CodeTypeDeclaration collectionDerived =
@@ -576,7 +594,38 @@ namespace NHibernate.Query.Generator
                 }
             }
         }
-        
+
+        private void GenerateCompositeElement(XmlNode collectionNode, string collectionClassName, CodeTypeDeclaration innerClass)
+        {
+            //note: quick hack (generate class)
+                string genericCompositeTypeName = GetTypeNameForCode(collectionClassName);
+                string typeNameForDisplay = GetTypeNameForDisplay(collectionClassName);
+                string typeExtendsForDisplay = null;
+
+                // This creates the query class Query_Blog<T2>
+                CodeTypeDeclaration innerCompositeClass = CreateQueryClassInParentClass(innerClass, typeNameForDisplay, typeExtendsForDisplay);
+
+                // generate full object query for simple properties
+                GenerateProperties(null,
+                                   genericCompositeTypeName,
+                                   AssociationBehavior.DoNotAdd,
+                                   "PropertyQueryBuilder",
+                                   collectionNode,
+                                   innerCompositeClass,
+                                   "nh:property");
+
+                // generate reference to related query obj
+                GenerateProperties(null, genericCompositeTypeName, AssociationBehavior.AddAssociationFromName, UseTheQueryClass, collectionNode, innerCompositeClass,
+                                   "nh:many-to-one", "nh:one-to-one");
+
+                // generate reference to component
+                GenerateComponents(genericCompositeTypeName, innerCompositeClass, collectionNode, "", "nh:component", "nh:dynamic-component");
+                                                
+                //This creates the root query class, Where.Blog
+                CreateRootClassAndPropertyInParentClass(innerCompositeClass, typeNameForDisplay, genericCompositeTypeName);
+            
+        }
+
         private void GenerateWithMethods(CodeTypeDeclaration collectionDerived, CodeTypeDeclaration innerClass, string collectionClassName)
         {
             //With(JoinType joinType)
@@ -728,6 +777,8 @@ namespace NHibernate.Query.Generator
             }
         }
 
+        
+        
         private void GenerateComponents(string genericParameterName, CodeTypeDeclaration parent, XmlNode node, string prefix, params string[] componentPath)
         {
             foreach (string xpathForClass in componentPath)
