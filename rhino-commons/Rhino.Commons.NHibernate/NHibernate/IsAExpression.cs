@@ -29,7 +29,6 @@
 namespace Rhino.Commons
 {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using global::NHibernate;
 	using global::NHibernate.Engine;
@@ -65,12 +64,14 @@ namespace Rhino.Commons
 			if (string.IsNullOrEmpty(_propertyNameOrAlias))
 			{
 				alias = criteriaQuery.GetSQLAlias(criteria);
-				targetType = criteriaQuery.GetEntityName(criteria);
+				string entityName = criteriaQuery.GetEntityName(criteria);
+				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).MappedClass;
 			}
 			else if ((aliasedCriteria = criteria.GetCriteriaByAlias(_propertyNameOrAlias)) != null)
 			{
 				alias = criteriaQuery.GetSQLAlias(aliasedCriteria);
-				targetType = criteriaQuery.GetEntityName(aliasedCriteria);		
+				string entityName = criteriaQuery.GetEntityName(aliasedCriteria);
+				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).MappedClass;
 			}
 			else 
 			{
