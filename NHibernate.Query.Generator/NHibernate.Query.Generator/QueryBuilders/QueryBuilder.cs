@@ -266,10 +266,7 @@ namespace QueryNamespace
 		public static QueryBuilder<T> operator !(QueryBuilder<T> other)
 		{
 			QueryBuilder<T> not = new QueryBuilder<T>(other, other.myName, null);
-			if (other.children.Count != 0)
-			{
-				throw new System.InvalidOperationException("Cannot use ! operator on complex queries");
-			}
+			
 			NHibernate.Expression.Conjunction conjunction = new NHibernate.Expression.Conjunction();
 			foreach (NHibernate.Expression.ICriterion crit in other.GetCriterionRecursive())
 			{
