@@ -106,7 +106,7 @@ namespace Ayende.NHibernateQueryAnalyzer.ProjectLoader
 					entity.EntityName = EntityName;
 					entity.TableName = model.Table.Name;
 
-					foreach (Property property in model.PropertyCollection)
+					foreach (Property property in model.PropertyIterator)
 					{
 						entity.AddProperty(property.Name, property.Type.Name, property.Type.IsEntityType,
 										   property.Type.ReturnedClass.Name);

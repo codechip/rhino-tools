@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Update-All;Build-All;Copy-To-Artifact-Dir" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="BuildFromTrunk-Config.build"/>
-	
+
 	<!-- Auto Configured Settings -->
 	<PropertyGroup>
 		<NH-Lib-Dir>$(NH-Dir)\lib\net\2.0</NH-Lib-Dir>
 		<NH-Build-Dir Condition="$(Configuration)=='debug'">$(NH-Dir)\build\NHibernate-2.0.0.Alpha1-debug\bin\net-2.0</NH-Build-Dir>
 		<NH-Build-Dir Condition="$(Configuration)=='release'">$(NH-Dir)\build\NHibernate-2.0.0.Alpha1\bin\net-2.0</NH-Build-Dir>
-		
+
 		<Castle-Lib-Dir>$(Castle-Dir)\SharedLibs\net\2.0</Castle-Lib-Dir>
 		<Castle-Build-Dir>$(Castle-Dir)\build\net-2.0\$(Configuration)</Castle-Build-Dir>
+
+		<Castle-AspView-Build-Dir>$(Castle-Contrib-AspView-Dir)\Build\$(Configuration)</Castle-AspView-Build-Dir>
+		<Castle-ViewComponents-Build-Dir>$(Castle-Contrib-ViewComponents-Dir)\Castle.MonoRail.ViewComponents\bin\$(Configuration)</Castle-ViewComponents-Build-Dir>
 
 		<Rhino-Lib-Dir>$(Rhino-Dir)\SharedLibs</Rhino-Lib-Dir>
 		<Rhino-Prjct-Dsl-Dir>$(Rhino-Dir)\rhino-dsl</Rhino-Prjct-Dsl-Dir>
@@ -19,14 +22,14 @@
 		<Rhino-Prjct-Testing-Dir>$(Rhino-Dir)\rhino-testing</Rhino-Prjct-Testing-Dir>
 		<_Artifact-Dir>$(Artifact-Dir)\$(Configuration)</_Artifact-Dir>
 	</PropertyGroup>
-	
+
 	<!-- 3rd Party Assemblies and Licenses -->
 	<PropertyGroup>
 		<_Ass-Log4Net>log4net</_Ass-Log4Net>
 		<_Ass-Lic-Log4Net>log4net.license.txt</_Ass-Lic-Log4Net>
 		<_Ass-Iesi>Iesi.Collections</_Ass-Iesi>
 		<_Ass-Lic-Iesi>Iesi.Collections.license.txt</_Ass-Lic-Iesi>
-		<_Ass-Boo>Boo.Lang.CodeDom;Boo.Lang.Compiler;Boo.Lang;Boo.Lang.Interpreter;Boo.Lang.Parser</_Ass-Boo>
+		<_Ass-Boo>Boo.Lang.CodeDom;Boo.Lang.Compiler;Boo.Lang;Boo.Lang.Interpreter;Boo.Lang.Parser;Boo.Lang.Useful;Boo.Lang.Extensions</_Ass-Boo>
 		<_Ass-Prevalence>Bamboo.Prevalence;Bamboo.Prevalence.Util</_Ass-Prevalence>
 		<_Ass-Lic-Prevalence>Bamboo.Prevalence.license.txt</_Ass-Lic-Prevalence>
 		<_Ass-MemCached>Memcached.ClientLibrary</_Ass-MemCached>
@@ -35,8 +38,8 @@
 		<_Ass-NVelocity>NVelocity</_Ass-NVelocity>
 		<_Ass-Json>Newtonsoft.Json</_Ass-Json>
 		<_Ass-Markdown>anrControls.Markdown.NET</_Ass-Markdown>
-    <_Ass-NRefactory>ICSharpCode.NRefactory</_Ass-NRefactory>
-    <_Misc-Cstl-CodeGen-Target>Castle.Tools.CodeGenerator.targets</_Misc-Cstl-CodeGen-Target>
+		<_Ass-NRefactory>ICSharpCode.NRefactory</_Ass-NRefactory>
+		<_Misc-Cstl-CodeGen-Target>Castle.Tools.CodeGenerator.targets</_Misc-Cstl-CodeGen-Target>
 	</PropertyGroup>
 
 	<!-- NHibernate Assemblies -->
@@ -87,20 +90,25 @@
 		<_Ass-Cstl-MR-Transform>Castle.MonoRail.TransformFilters</_Ass-Cstl-MR-Transform>	
 	</PropertyGroup>
 
-  <PropertyGroup>
-    <_Ass-Cstl-CodeGen>Castle.Tools.CodeGenerator</_Ass-Cstl-CodeGen>
-  </PropertyGroup>
-  
+	<!-- CastleContrib Assemblies -->
+	<PropertyGroup>
+		<_Ass-Cstl-CodeGen>Castle.Tools.CodeGenerator</_Ass-Cstl-CodeGen>
+		<_Ass-Cstl-MR-AspView>Castle.MonoRail.Views.AspView</_Ass-Cstl-MR-AspView>
+		<_Ass-Cstl-MR-AspView-VCompile>VCompile</_Ass-Cstl-MR-AspView-VCompile>
+		<_Ass-Cstl-MR-ViewComponents>Castle.MonoRail.ViewComponents</_Ass-Cstl-MR-ViewComponents>
+	</PropertyGroup>
+
 	<!-- Rhino Assemblies -->
 	<PropertyGroup>
 		<_Ass-Rhn-Dsl>Rhino.Dsl</_Ass-Rhn-Dsl>
 		<_Ass-Rhn-Commons>Rhino.Commons</_Ass-Rhn-Commons>
+		<_Ass-Rhn-Commons-Clr>Rhino.Commons.Clr</_Ass-Rhn-Commons-Clr>
 		<_Ass-Rhn-Commons-NH>Rhino.Commons.NHibernate</_Ass-Rhn-Commons-NH>
 		<_Ass-Rhn-Commons-AR>Rhino.Commons.ActiveRecord</_Ass-Rhn-Commons-AR>
 		<_Ass-Rhn-Mocks>Rhino.Mocks</_Ass-Rhn-Mocks>
-    <_Ass-Rhn-Testing>Rhino.Testing</_Ass-Rhn-Testing>
+		<_Ass-Rhn-Testing>Rhino.Testing</_Ass-Rhn-Testing>
 	</PropertyGroup>
-	
+
 	<!-- NHibernate Bundles -->
 	<PropertyGroup>
 		<_Asses-NH-Core>
@@ -135,8 +143,9 @@
 			;$(_Ass-NH)
 			;$(_Ass-NH-Mapping)
 		</_Deps-Cstl-From-NH>
-		
+
 		<_Deps-Rhn-From-NH>$(_Asses-NH-Core)</_Deps-Rhn-From-NH>
+
 		<_Asses-NH-All>
 			$(_Ass-NH)
 			;$(_Ass-NH-Mapping)
@@ -194,6 +203,7 @@
 		</_Asses-Cstl-MR-AR-Scaffold>
 
 		<_Deps-NH-From-Cstl>$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp2)</_Deps-NH-From-Cstl>
+
 		<_Deps-Rhn-From-Cstl>
 			$(_Asses-Cstl-Windsor)
 			;$(_Asses-Cstl-AR)
@@ -204,14 +214,6 @@
 			;$(_Ass-Cstl-AR-Integration)
 		</_Deps-Rhn-From-Cstl>
 
-    <_Deps-Cstl-CodeGen-From-Cstl>
-      $(_Ass-Cstl-Binder)
-      ;$(_Ass-Cstl-Email)
-      ;$(_Ass-Cstl-Validator)
-      ;$(_Ass-Cstl-MR)
-      ;$(_Ass-Cstl-Core)
-    </_Deps-Cstl-CodeGen-From-Cstl>
-    
 		<_Asses-Cstl-All>
 			$(_Ass-Cstl-Core)
 			;$(_Ass-Cstl-Dp2)
@@ -247,6 +249,46 @@
 		</_Asses-Cstl-All>
 	</PropertyGroup>
 
+	<!-- CastleContrib Bundles -->
+	<PropertyGroup>
+		<_Asses-Cstl-MR-AspView>$(_Ass-Cstl-MR-AspView);$(_Ass-Cstl-MR-AspView-VCompile)</_Asses-Cstl-MR-AspView>
+
+		<_Asses-Cstl-MR-ViewComponents>$(_Ass-Cstl-MR-ViewComponents)</_Asses-Cstl-MR-ViewComponents>
+
+		<_Deps-Cstl-CodeGen-From-Cstl>
+			$(_Ass-Cstl-Binder)
+			;$(_Ass-Cstl-Email)
+			;$(_Ass-Cstl-Validator)
+			;$(_Ass-Cstl-MR)
+			;$(_Ass-Cstl-Core)
+		</_Deps-Cstl-CodeGen-From-Cstl>
+
+		<_Deps-Cstl-MR-AspView-From-Cstl>
+			$(_Ass-Cstl-Binder)
+			;$(_Ass-Cstl-Core)
+			;$(_Ass-Cstl-DictionaryAdapter)
+			;$(_Ass-Cstl-Email)
+			;$(_Ass-Cstl-MR)
+			;$(_Ass-Cstl-MR-Test)
+			;$(_Ass-Cstl-Validator)
+		</_Deps-Cstl-MR-AspView-From-Cstl>
+
+		<_Deps-Cstl-MR-ViewComponents-From-Cstl>
+			$(_Ass-Boo)
+			;$(_Ass-Cstl-Binder)
+			;$(_Ass-Cstl-Core)
+			;$(_Ass-Cstl-Dp)
+			;$(_Ass-Cstl-Dp2)
+			;$(_Ass-Cstl-Email)
+			;$(_Ass-Cstl-MR)
+			;$(_Ass-Cstl-MR-Brail)
+			;$(_Ass-Cstl-NVelocityTemplateEngine)
+			;$(_Ass-Cstl-Validator)
+			;$(_Ass-Cstl-TemplateEngine)
+			;$(_Ass-NVelocity)
+		</_Deps-Cstl-MR-ViewComponents-From-Cstl>
+	</PropertyGroup>
+
 	<!-- Rhino Bundles -->
 	<PropertyGroup>
 		<_Asses-Rhn-Dsl>
@@ -254,9 +296,14 @@
 			;$(_Ass-Boo)
 		</_Asses-Rhn-Dsl>
 
+		<_Asses-Rhn-Commons-Clr>
+			$(_Ass-Rhn-Commons-Clr)
+		</_Asses-Rhn-Commons-Clr>
+
 		<_Asses-Rhn-Commons>
-		  	$(_Asses-Rhn-Dsl)
+			$(_Asses-Rhn-Dsl)
 			;$(_Ass-Rhn-Commons)
+			;$(_Asses-Rhn-Commons-Clr)
 			;$(_Asses-NH-Core)
 			;$(_Asses-Cstl-Windsor)
 			;$(_Ass-Cstl-Transaction)
@@ -272,7 +319,7 @@
 
 		<_Asses-Rhn-Commons-AR>
 			$(_Asses-Rhn-Commons-NH)
-			;(_Ass-Rhn-Commons-AR)
+			;$(_Ass-Rhn-Commons-AR)
 			;$(_Asses-Cstl-AR))
 		</_Asses-Rhn-Commons-AR>
 
@@ -282,11 +329,11 @@
 			;$(_Ass-Cstl-Dp2)
 		</_Asses-Rhn-Mocks>
 
-    <_Asses-Rhn-Testing>
-      $(_Asses-Rhn-Mocks)
-      ;$(_Ass-Rhn-Testing)
-    </_Asses-Rhn-Testing>
-		
+		<_Asses-Rhn-Testing>
+			$(_Asses-Rhn-Mocks)
+			;$(_Ass-Rhn-Testing)
+		</_Asses-Rhn-Testing>
+
 	</PropertyGroup>
 	<!-- Build Options and Configuration -->
 	<PropertyGroup>
@@ -316,25 +363,25 @@
 			OR '$(With-NH-Integration)' == 'true'
 			">true</_With-NH-Mapping>
 		<_With-NH-Mapping Condition="'$(_With-NH-Mapping)' != 'true'">false</_With-NH-Mapping>
-		
+
 		<_With-NH-Search Condition="'$(With-NH-Search)' != 'true'">false</_With-NH-Search>
 		<_With-NH-Search Condition="'$(_With-NH-Search)' != 'false'">true</_With-NH-Search>
-		
+
 		<_With-NH-Prevalence Condition="'$(With-NH-Prevalence)' != 'true'">false</_With-NH-Prevalence>
 		<_With-NH-Prevalence Condition="'$(_With-NH-Prevalence)' != 'false'">true</_With-NH-Prevalence>
-		
+
 		<_With-NH-MemCached Condition="'$(With-NH-MemCached)' != 'true'">false</_With-NH-MemCached>
 		<_With-NH-MemCached Condition="'$(_With-NH-MemCached)' != 'false'">true</_With-NH-MemCached>
-		
+
 		<_With-NH-SysCache Condition="'$(With-NH-SysCache)' != 'true'">false</_With-NH-SysCache>
 		<_With-NH-SysCache Condition="'$(_With-NH-SysCache)' != 'false'">true</_With-NH-SysCache>
-		
+
 		<_With-NH-SysCache2 Condition="'$(With-NH-SysCache2)' != 'true'">false</_With-NH-SysCache2>
 		<_With-NH-SysCache2 Condition="'$(_With-NH-SysCache2)' != 'false'">true</_With-NH-SysCache2>
-		
+
 		<_With-NH-SqlTypes Condition="'$(With-NH-SqlTypes)' != 'true'">false</_With-NH-SqlTypes>
 		<_With-NH-SqlTypes Condition="'$(_With-NH-SqlTypes)' != 'false'">true</_With-NH-SqlTypes>
-		
+
 		<_With-NH-OraTypes Condition="'$(With-NH-OraTypes)' != 'true'">false</_With-NH-OraTypes>
 		<_With-NH-OraTypes Condition="'$(_With-NH-OraTypes)' != 'false'">true</_With-NH-OraTypes>
 
@@ -345,20 +392,20 @@
 			OR '$(With-Atm)' == 'true'
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'
-      OR '$(With-Rhino-Mocks)' == 'true'
-      OR '$(With-Cstl-CodeGen)' == 'true'
-      OR '$(With-Mocks)' == 'true'
-      OR '$(With-Rhino-Testing)' == 'true'">true</_With-MicroKernel>
+			OR '$(With-Rhino-Mocks)' == 'true'
+			OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-Mocks)' == 'true'
+			OR '$(With-Rhino-Testing)' == 'true'">true</_With-MicroKernel>
 		<_With-MicroKernel Condition="'$(_With-MicroKernel)' != 'true'">false</_With-MicroKernel>
-		
+
 		<_With-Windsor Condition="
 			'$(With-Windsor)' == 'true'
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-Wcf)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Windsor>
 		<_With-Windsor Condition="'$(_With-Windsor)' != 'true'">false</_With-Windsor>
 
@@ -367,37 +414,37 @@
 			OR '$(With-Log4Net)' == 'true'
 			OR '$(With-NLog)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Logging>
 		<_With-Logging Condition="'$(_With-Log4Net)' != 'true'">false</_With-Logging>
-		
+
 		<_With-Log4Net Condition="
 			'$(With-Log4Net)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Log4Net>
 		<_With-Log4Net Condition="'$(_With-Log4Net)' != 'true'">false</_With-Log4Net>
-		
+
 		<_With-Transaction Condition="
 			'$(With-Transaction)' == 'true'
 			OR '$(With-Atm)' == 'true'
 			OR '$(With-NH-Integration)' == 'true'
 			OR '$(With-AR-Integration)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Transaction>
 		<_With-Transaction Condition="'$(_With-Transaction)' != 'true'">false</_With-Transaction>
 
 		<_With-Atm Condition="
 			'$(With-Atm)' == 'true'
 			OR '$(With-Rhino-Commons)' == 'true'
-      OR '$(With-Rhino-Commons-NH)' == 'true'
+			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-Atm>
 		<_With-Atm Condition="'$(_With-Transaction)' != 'true'">false</_With-Atm>
 
 		<_With-Wcf Condition="'$(With-Wcf)' == 'true'">true</_With-Wcf>
 		<_With-Wcf Condition="'$(_With-Wcf)' != 'true'">false</_With-Wcf>
-		
+
 		<_With-AR Condition="
 			'$(With-AR)' == 'true'
 			OR '$(With-AR-Integration)' == 'true'
@@ -412,7 +459,7 @@
 
 		<_With-AR-Integration Condition="'$(With-AR-Integration)' == 'true'">true</_With-AR-Integration>
 		<_With-AR-Integration Condition="'$(_With-AR-Integration)' != 'true'">false</_With-AR-Integration>
-	
+
 		<_With-MR Condition="
 			'$(With-MR)' == 'true'
 			OR '$(With-MR-TestSupport)' == 'true'
@@ -422,7 +469,9 @@
 			OR '$(With-MR-Json)' == 'true'
 			OR '$(With-MR-NVelocity)' == 'true'
 			OR '$(With-MR-Brail)' == 'true'
-      OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-MR-AspView)' == 'true'
+			OR '$(With-MR-ViewComponents)' == 'true'
 			OR '$(With-MR-Transform)' == 'true'">true</_With-MR>
 		<_With-MR Condition="'$(_With-MR)' != 'true'">false</_With-MR>
 
@@ -437,7 +486,7 @@
 
 		<_With-MR-AR-Scaffolding Condition="'$(With-MR-AR-Scaffolding)' == 'true'">true</_With-MR-AR-Scaffolding>
 		<_With-MR-AR-Scaffolding Condition="'$(_With-MR-AR-Scaffolding)' != 'true'">false</_With-MR-AR-Scaffolding>
-		
+
 		<_With-MR-Windsor Condition="
 			('$(_With-MR)' == 'true' AND '$(_With-Windsor)' == 'true')
 			OR '$(With-MR-Windsor)' == 'true'">true</_With-MR-Windsor>
@@ -453,26 +502,30 @@
 
 		<_With-MR-Json Condition="'$(With-MR-Json)' == 'true'">true</_With-MR-Json>
 		<_With-MR-Json Condition="'$(_With-MR-Json)' != 'true'">false</_With-MR-Json>
-		
+
 		<_With-Binder Condition="
 			'$(With-Binder)' == 'true'
-      OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-MR-AspView)' == 'true'
+			OR '$(With-MR-ViewComponents)' == 'true'
 			OR '$(_With_MR-AR-Scaffolding)' == 'true'">true</_With-Binder>
 		<_With-Binder Condition="'$(_With-Binder)' != 'true'">false</_With-Binder>
 
 		<_With-Validator Condition="
 			'$(With-Validator)' == 'true' 
 			OR '$(_With-Binder)' == 'true' 
-      OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-MR-AspView)' == 'true'
+			OR '$(With-MR-ViewComponents)' == 'true'
 			OR '$(_With-AR)' == 'true'">true</_With-Validator>
 		<_With-Validator Condition="'$(_With-Validator)' != 'true'">false</_With-Validator>
-		
+
 		<_With-TemplateEngine Condition="
 			'$(With-TemplateEngine)' == 'true'
 			OR '$(With-NVelocity-TemplateEngine)' == 'true'
 			OR '$(With-MR-AR-Scaffolding)' == 'true'">true</_With-TemplateEngine>
 		<_With-TemplateEngine Condition="'$(_With-TemplateEngine)' != 'true'">false</_With-TemplateEngine>
-		
+
 		<_With-NVelocity-TemplateEngine Condition="
 			'$(With-NVelocity-TemplateEngine)' == 'true'
 			OR '$(With-MR-AR-Scaffolding)' == 'true'">true</_With-NVelocity-TemplateEngine>
@@ -480,14 +533,17 @@
 
 		<_With-Email Condition="
 			'$(With-Email)' == 'true' 
-      OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-Cstl-CodeGen)' == 'true'
+			OR '$(With-MR-AspView)' == 'true'
+			OR '$(With-MR-ViewComponents)' == 'true'
 			OR '$(_With-MR)' == 'true'">true</_With-Email>
 		<_With-Email Condition="'$(_With-Email)' != 'true'">false</_With-Email>
 
 		<_With-DictionaryAdapter Condition="
-			'$(With-DictionaryAdapter)' == 'true'">true</_With-DictionaryAdapter>
+			'$(With-DictionaryAdapter)' == 'true'
+			OR '$(With-MR-AspView)' == 'true'">true</_With-DictionaryAdapter>
 		<_With-DictionaryAdapter Condition="'$(_With-DictionaryAdapter)' != 'true'">false</_With-DictionaryAdapter>
-		
+
 		<_With-NVelocity Condition="
 			'$(With-NVelocity)' == 'true' 
 			OR '$(_With-MR-NVelocity)' == 'true'
@@ -499,7 +555,7 @@
 			'$(With-Markdown)' == 'true' 
 			OR '$(_With-MR-Brail)' == 'true'">true</_With-Markdown>
 		<_With-Markdown Condition="'$(_With-Markdown)' != 'true'">false</_With-Markdown>
-		
+
 		<_With-Newsoft-Json Condition="
 			'$(With-Newsoft-Json)' == 'true'
 			OR '$(_With-MR-Json)' == 'true'">true</_With-Newsoft-Json>
@@ -517,22 +573,34 @@
 		<_With-Rhino-Mocks Condition="'$(With-Mocks)' == 'true' OR '$(With-Rhino-Mocks)' == 'true'">true</_With-Rhino-Mocks>
 		<_With-Rhino-Mocks Condition="'$(_With-Rhino-Mocks)' != 'true'">false</_With-Rhino-Mocks>
 
-    <_With-Rhino-Testing Condition="'$(With-Mocks)' == 'true' OR '$(With-Rhino-Testing)' == 'true'">true</_With-Rhino-Testing>
-    <_With-Rhino-Testing Condition="'$(_With-Rhino-Testing)' != 'true'">false</_With-Rhino-Testing>
-    
+		<_With-Rhino-Testing Condition="'$(With-Mocks)' == 'true' OR '$(With-Rhino-Testing)' == 'true'">true</_With-Rhino-Testing>
+		<_With-Rhino-Testing Condition="'$(_With-Rhino-Testing)' != 'true'">false</_With-Rhino-Testing>
+
 		<_With-Rhino-Commons Condition="'$(With-Rhino-Commons)' == 'true'">true</_With-Rhino-Commons>
 		<_With-Rhino-Commons Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons>
+
+		<_With-Rhino-Commons-Clr Condition="'$(With-Rhino-Commons-Clr)' == 'true'">true</_With-Rhino-Commons-Clr>
+		<_With-Rhino-Commons-Clr Condition="'$(_With-Rhino-Commons-Clr)' != 'true'">false</_With-Rhino-Commons-Clr>
 
 		<_With-Rhino-Commons-NH Condition="'$(With-Rhino-Commons-NH)' == 'true'
 			OR ('$(With-Rhino-Commons)' == 'true' AND '$(_With-NH)' == 'true')">true</_With-Rhino-Commons-NH>
 		<_With-Rhino-Commons-NH Condition="'$(_With-Rhino-Commons-NH)' != 'true'">false</_With-Rhino-Commons-NH>
-		
+
 		<_With-Rhino-Commons-AR Condition="'$(With-Rhino-Commons-AR)' == 'true' 
 			OR ('$(With-Rhino-Commons)' == 'true' AND '$(_With-AR)' == 'true')">true</_With-Rhino-Commons-AR>
 		<_With-Rhino-Commons-AR Condition="'$(_With-Rhino-Commons)' != 'true'">false</_With-Rhino-Commons-AR>
 
-    <_With-Cstl-CodeGen Condition="'$(With-Cstl-CodeGen)' == 'true'">true</_With-Cstl-CodeGen>
-    <_With-Cstl-CodeGen Condition="'$(With-Cstl-CodeGen)' != 'true'">false</_With-Cstl-CodeGen>
+		<_With-Rhino-Dsl Condition="'$(With-Rhino-Dsl)' == 'true'">true</_With-Rhino-Dsl>
+		<_With-Rhino-Dsl Condition="'$(_With-Rhino-Dsl)' != 'true'">false</_With-Rhino-Dsl>
+
+		<_With-Cstl-CodeGen Condition="'$(With-Cstl-CodeGen)' == 'true'">true</_With-Cstl-CodeGen>
+		<_With-Cstl-CodeGen Condition="'$(_With-Cstl-CodeGen)' != 'true'">false</_With-Cstl-CodeGen>
+
+		<_With-MR-AspView Condition="'$(With-MR-AspView)' == 'true'">true</_With-MR-AspView>
+		<_With-MR-AspView Condition="'$(_With-MR-AspView)' != 'true'">false</_With-MR-AspView>
+
+		<_With-MR-ViewComponents Condition="'$(With-MR-ViewComponents)' == 'true'">true</_With-MR-ViewComponents>
+		<_With-MR-ViewComponents Condition="'$(_With-MR-ViewComponents)' != 'true'">false</_With-MR-ViewComponents>
 	</PropertyGroup>
 
 	<!-- Assembly Deployment List -->
@@ -546,7 +614,7 @@
 		<_Asses Condition="'$(_With-NH-SysCache2)' == 'true'">$(_Asses);$(_Asses-NH-Core);$(_Ass-NH-SysCache2)</_Asses>
 		<_Asses Condition="'$(_With-NH-OraTypes)' == 'true'">$(_Asses);$(_Asses-NH-Core);$(_Ass-NH-OraTypes)</_Asses>
 		<_Asses Condition="'$(_With-NH-SqlTypes)' == 'true'">$(_Asses);$(_Asses-NH-Core);$(_Ass-NH-SqlTypes)</_Asses>
-		
+
 		<_Asses Condition="'$(_With-AR)' == 'true'">$(_Asses);$(_Asses-Cstl-AR)</_Asses>
 		<_Asses Condition="'$(_With-DP)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp)</_Asses>
 		<_Asses Condition="'$(_With-DP2)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp2)</_Asses>
@@ -569,11 +637,16 @@
 		<_Asses Condition="'$(_With-MR-Brail)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-Brail);$(_Ass-Boo);$(_Ass-Markdown)</_Asses>
 		<_Asses Condition="'$(_With-MR-Json)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-Json);$(_Ass-Json)</_Asses>
 
+		<_Asses Condition="'$(_With-MR-AspView)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Asses-Cstl-MR-AspView)</_Asses>
+		<_Asses Condition="'$(_With-MR-ViewComponents)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Asses-Cstl-MR-ViewComponents)</_Asses>
+
 		<_Asses Condition="'$(_With-Rhino-Commons)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Commons-NH)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-NH)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Commons-AR)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-AR)</_Asses>
+		<_Asses Condition="'$(_With-Rhino-Commons-Clr)' == 'true'">$(_Asses);$(_Asses-Rhn-Commons-Clr)</_Asses>
+		<_Asses Condition="'$(_With-Rhino-Dsl)' == 'true'">$(_Asses);$(_Asses-Rhn-Dsl)</_Asses>
 		<_Asses Condition="'$(_With-Rhino-Mocks)' == 'true'">$(_Asses);$(_Asses-Rhn-Mocks)</_Asses>
-    <_Asses Condition="'$(_With-Rhino-Testing)' == 'true'">$(_Asses);$(_Asses-Rhn-Testing)</_Asses>
+		<_Asses Condition="'$(_With-Rhino-Testing)' == 'true'">$(_Asses);$(_Asses-Rhn-Testing)</_Asses>
 		<_Asses Condition="'$(_With-Markdown)' == 'true'">$(_Asses);$(_Ass_Markdown)</_Asses>
 	</PropertyGroup>
 
@@ -582,7 +655,7 @@
 		<Tool-SqlLite Include="$(Rhino-Lib-Dir)\SqLite.Net\*.dll" ></Tool-SqlLite>
 		<Tool-SqlLite-x64 Include="$(Rhino-Lib-Dir)\SqLite.Net\x64\*.dll"></Tool-SqlLite-x64>
 		<Tool-SqlCe Include="$(Rhino-Lib-Dir)\SqlCE\*.dll"></Tool-SqlCe>
-    <Tool-Castle-CodeGenerator Include="$(_Artifact-Dir)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
+		<Tool-Castle-CodeGenerator Include="$(_Artifact-Dir)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
 	</ItemGroup>
 	<!-- Top Level Targets -->
 	<Target Name="Update-All">
@@ -590,12 +663,14 @@
 		<CallTarget Targets="Update-Castle" />
 		<CallTarget Targets="Update-Rhino" />
 	</Target>
-	
+
 	<Target Name="Build-All">
 		<CallTarget Targets="Build-Castle-For-NH" />
 		<CallTarget Targets="Build-NH" />
 		<CallTarget Targets="Build-Castle" />
-    <CallTarget Targets="Build-Castle-CodeGen" />
+		<CallTarget Targets="Build-Castle-CodeGen" />
+		<CallTarget Targets="Build-Castle-AspView" />
+		<CallTarget Targets="Build-Castle-ViewComponents" />
 		<CallTarget Targets="Build-Rhino" />
 	</Target>
 
@@ -604,9 +679,9 @@
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
-    <CallTarget Targets="Build-Rhino-Testing" />
+		<CallTarget Targets="Build-Rhino-Testing" />
 	</Target>
-	
+
 	<!-- Subversion Update -->
 	<Target Name="Update-Castle">
 		<SvnUpdate LocalPath="$(Castle-Dir)" ToolPath="$(Svn-Dir)" />
@@ -631,25 +706,37 @@
 			<Output TaskParameter="Include" ItemName="_Deps-For-Castle-From-NH"/>
 		</CreateItem>
 	</Target>
-	
+
 	<Target Name="_Create-Deps-For-Rhino-From-NH">
 		<CreateItem Include="$(_Deps-Rhn-From-NH)">
 			<Output TaskParameter="Include" ItemName="_Deps-For-Rhino-From-NH"/>
 		</CreateItem>
 	</Target>
-	
+
 	<Target Name="_Create-Deps-For-Rhino-From-Castle">
 		<CreateItem Include="$(_Deps-Rhn-From-Cstl)">
 			<Output TaskParameter="Include" ItemName="_Deps-For-Rhino-From-Castle"/>
 		</CreateItem>
 	</Target>
 
-  <Target Name="_Create-Deps-For-Cstl-CodeGen-From-Castle">
-    <CreateItem Include="$(_Deps-Cstl-CodeGen-From-Cstl)">
-      <Output TaskParameter="Include" ItemName="_Deps-For-Cstl-CodeGen-From-Castle"/>
-    </CreateItem>
-  </Target>
-  
+	<Target Name="_Create-Deps-For-Cstl-CodeGen-From-Castle">
+		<CreateItem Include="$(_Deps-Cstl-CodeGen-From-Cstl)">
+			<Output TaskParameter="Include" ItemName="_Deps-For-Cstl-CodeGen-From-Castle"/>
+		</CreateItem>
+	</Target>
+
+	<Target Name="_Create-Deps-For-Cstl-MR-AspView-From-Castle">
+		<CreateItem Include="$(_Deps-Cstl-MR-AspView-From-Cstl)">
+			<Output TaskParameter="Include" ItemName="_Deps-For-Cstl-MR-AspView-From-Castle"/>
+		</CreateItem>
+	</Target>
+
+	<Target Name="_Create-Deps-For-Cstl-MR-ViewComponents-From-Castle">
+		<CreateItem Include="$(_Deps-Cstl-MR-ViewComponents-From-Cstl)">
+			<Output TaskParameter="Include" ItemName="_Deps-For-Cstl-MR-ViewComponents-From-Castle"/>
+		</CreateItem>
+	</Target>
+
 	<Target Name="_Delete-NH-Deps" DependsOnTargets="_Create-Deps-For-NH-From-Castle">
 		<Delete Files="$(NH-Lib-Dir)\%(_Deps-For-NH-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(NH-Lib-Dir)\%(_Deps-For-NH-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
@@ -658,10 +745,10 @@
 
 	<Target Name="_Copy-NH-Deps">
 		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-NH-From-Castle.Identity).dll" DestinationFolder="$(NH-Lib-Dir)\" ContinueOnError="true"/>
-		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-NH-From-Castle.Identity).xml" DestinationFolder="$(NH-Lib-Dir)\" ContinueOnError="true"/>
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-NH-From-Castle.Identity).pdb" DestinationFolder="$(NH-Lib-Dir)\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Lib-Dir)\%(_Deps-For-Castle-From-NH.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-NH-From-Castle.Identity).xml" DestinationFolder="$(NH-Lib-Dir)\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Lib-Dir)\%(_Deps-For-Castle-From-NH.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-NH-From-Castle.Identity).pdb" DestinationFolder="$(NH-Lib-Dir)\" ContinueOnError="true"/>
 	</Target>
-	
+
 	<Target Name="_Delete-Castle-Deps" DependsOnTargets="_Create-Deps-For-Castle-From-NH">
 		<Delete Files="$(Castle-Lib-Dir)\%(_Deps-For-Castle-From-NH.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Castle-Lib-Dir)\%(_Deps-For-Castle-From-NH.Identity).xml" TreatErrorsAsWarnings="true" />
@@ -670,19 +757,19 @@
 
 	<Target Name="_Copy-Castle-Deps" DependsOnTargets="_Delete-Castle-Deps">
 		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).dll" DestinationFolder="$(Castle-Lib-Dir)\" ContinueOnError="true"/>
-		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).xml" DestinationFolder="$(Castle-Lib-Dir)\" ContinueOnError="true"/>
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).pdb" DestinationFolder="$(Castle-Lib-Dir)\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).xml')" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).xml" DestinationFolder="$(Castle-Lib-Dir)\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Castle-From-NH.Identity).pdb" DestinationFolder="$(Castle-Lib-Dir)\" ContinueOnError="true"/>
 	</Target>
-	
+
 	<Target Name="_Delete-Rhino-Deps" DependsOnTargets="_Create-Deps-For-Rhino-From-NH;_Create-Deps-For-Rhino-From-Castle">
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
-		
+
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-NH.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-NH.Identity).xml" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\Castle\%(_Deps-For-Rhino-From-NH.Identity).pdb" TreatErrorsAsWarnings="true" />
-		
+
 		<Delete Files="$(Rhino-Lib-Dir)\NHibernate\%(_Deps-For-Rhino-From-NH.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\NHibernate\%(_Deps-For-Rhino-From-NH.Identity).xml" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Rhino-Lib-Dir)\NHibernate\%(_Deps-For-Rhino-From-NH.Identity).pdb" TreatErrorsAsWarnings="true" />
@@ -690,30 +777,56 @@
 
 	<Target Name="_Copy-Rhino-Deps" DependsOnTargets="_Delete-Rhino-Deps">
 		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).dll" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
-		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml')" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
 
 		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).dll" DestinationFolder="$(Rhino-Lib-Dir)\NHibernate\" ContinueOnError="true"/>
-		<Copy SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\NHibernate\" ContinueOnError="true"/>
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\NHibernate\" ContinueOnError="true"/>
-		
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml')" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\NHibernate\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(NH-Build-Dir)\%(_Deps-For-Rhino-From-NH.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\NHibernate\" ContinueOnError="true"/>
+
 		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).dll" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
-		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).xml" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
 	</Target>
 
-  <Target Name="_Delete-Cstl-CodeGen-Deps" DependsOnTargets="_Create-Deps-For-Cstl-CodeGen-From-Castle">
-    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
-    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
-    <Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
-  </Target>
+	<Target Name="_Delete-Cstl-CodeGen-Deps" DependsOnTargets="_Create-Deps-For-Cstl-CodeGen-From-Castle">
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
+	</Target>
 
-  <Target Name="_Copy-Cstl-CodeGen-Deps" DependsOnTargets="_Delete-Cstl-CodeGen-Deps">
-    <Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
-    <Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
-    <Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
-  </Target>
-  
+	<Target Name="_Copy-Cstl-CodeGen-Deps" DependsOnTargets="_Delete-Cstl-CodeGen-Deps">
+		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+	</Target>
+
+	<!-- AspView Compile -->
+	<Target Name="_Delete-Cstl-MR-AspView-Deps" DependsOnTargets="_Create-Deps-For-Cstl-MR-AspView-From-Castle">
+		<Delete Files="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
+	</Target>
+
+	<Target Name="_Copy-Cstl-MR-AspView-Deps" DependsOnTargets="_Delete-Cstl-MR-AspView-Deps">
+		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-AspView-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-AspView-Dir)\Solution Items\Lib\Castle\" ContinueOnError="true"/>
+	</Target>
+
+	<!-- ViewComponents Compile -->
+	<Target Name="_Delete-Cstl-MR-ViewComponents-Deps" DependsOnTargets="_Create-Deps-For-Cstl-MR-ViewComponents-From-Castle">
+		<Delete Files="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
+	</Target>
+
+	<Target Name="_Copy-Cstl-MR-ViewComponents-Deps" DependsOnTargets="_Delete-Cstl-MR-ViewComponents-Deps">
+		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\" ContinueOnError="true"/>
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-MR-ViewComponents-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-ViewComponents-Dir)\SharedLibs\" ContinueOnError="true"/>
+	</Target>
+
 	<!-- Castle Compile -->
 	<Target Name="Build-Castle" DependsOnTargets="_Delete-Castle-Deps;_Copy-Castle-Deps">
 		<CallTarget Targets="Compile-Castle" />
@@ -751,15 +864,29 @@
 		<CallTarget Targets="Build-Rhino-Commons" />
 		<CallTarget Targets="Build-Rhino-NHQG" />
 		<CallTarget Targets="Build-Rhino-Mocks" />
-    <CallTarget Targets="Build-Rhino-Testing" />
+		<CallTarget Targets="Build-Rhino-Testing" />
 	</Target>
 
-  <Target Name="Build-Castle-CodeGen" DependsOnTargets="_Delete-Cstl-CodeGen-Deps;_Copy-Cstl-CodeGen-Deps">
-    <CallTarget Targets="Compile-Castle-CodeGen" />
-  </Target>
-  <Target Condition="$(_With-Cstl-CodeGen)"  Name="Compile-Castle-CodeGen">
-    <MSBuild Projects="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator\Castle.Tools.CodeGenerator.csproj" Properties="Configuration=Release" Targets="Clean;Build" />
-  </Target>
+	<Target Condition="$(_With-Cstl-CodeGen)" Name="Build-Castle-CodeGen" DependsOnTargets="_Delete-Cstl-CodeGen-Deps;_Copy-Cstl-CodeGen-Deps">
+		<CallTarget Targets="Compile-Castle-CodeGen" />
+	</Target>
+	<Target Condition="$(_With-Cstl-CodeGen)" Name="Compile-Castle-CodeGen">
+		<MSBuild Projects="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator.CmdLine\Castle.Tools.CodeGenerator.CmdLine.csproj" Properties="Configuration=Release" Targets="Clean;Build" />
+	</Target>
+
+	<Target Condition="$(_With-MR-AspView)" Name="Build-Castle-AspView" DependsOnTargets="_Delete-Cstl-MR-AspView-Deps;_Copy-Cstl-MR-AspView-Deps">
+		<CallTarget Targets="Compile-Castle-AspView" />
+	</Target>
+	<Target Condition="$(_With-MR-AspView)" Name="Compile-Castle-AspView">
+		<MSBuild Projects="$(Castle-Contrib-AspView-Dir)\Default.build" Properties="Configuration=$(Configuration)" Targets="Rebuild;CopyOutputToBuildDir" />
+	</Target>
+
+	<Target Condition="$(_With-MR-ViewComponents)" Name="Build-Castle-ViewComponents" DependsOnTargets="_Delete-Cstl-MR-ViewComponents-Deps;_Copy-Cstl-MR-ViewComponents-Deps">
+		<CallTarget Targets="Compile-Castle-ViewComponents" />
+	</Target>
+	<Target Condition="$(_With-MR-ViewComponents)" Name="Compile-Castle-ViewComponents">
+		<MSBuild Projects="$(Castle-Contrib-ViewComponents-Dir)\Castle.MonoRail.ViewComponents\Castle.MonoRail.ViewComponents-vs2005.csproj" Properties="Configuration=$(Configuration)" />
+	</Target>
 
 	<Target Name="Build-Rhino-Dsl" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-Dsl" />
@@ -767,7 +894,7 @@
 	<Target Name="Compile-Rhino-Dsl">
 		<MSBuild Projects="$(Rhino-Prjct-Dsl-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
 	</Target>
-  
+
 	<Target Name="Build-Rhino-Commons" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-Commons" />
 	</Target>
@@ -782,33 +909,33 @@
 		<MSBuild Projects="$(Rhino-Prjct-Mocks-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
 	</Target>
 
-  <Target Name="Build-Rhino-Testing" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
-    <CallTarget Targets="Compile-Rhino-Testing" />
-  </Target>
-  <Target Name="Compile-Rhino-Testing">
-    <MSBuild Projects="$(Rhino-Prjct-Testing-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
-  </Target>
-  
+	<Target Name="Build-Rhino-Testing" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
+		<CallTarget Targets="Compile-Rhino-Testing" />
+	</Target>
+	<Target Name="Compile-Rhino-Testing">
+		<MSBuild Projects="$(Rhino-Prjct-Testing-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
+	</Target>
+
 	<Target Name="Build-Rhino-NHQG" DependsOnTargets="_Delete-Rhino-Deps;_Copy-Rhino-Deps">
 		<CallTarget Targets="Compile-Rhino-NHQG" />
 	</Target>
 	<Target Name="Compile-Rhino-NHQG">
 		<MSBuild Projects="$(Rhino-Prjct-NHQG-Dir)\Default.build" Properties="Configuration=$(Configuration);EnableTest=$(Enable-Tests)" />
 	</Target>
-	
+
 	<Target Name="CopyTo" DependsOnTargets="Copy-To-Artifact-Dir;_CreateUniqueFileList">
-		<Copy SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).dll" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
-		<Copy SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).xml" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
-		<Copy Condition="'$(Configuration)' == 'debug'" SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).pdb" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
+		<Copy Condition="Exists('$(_Artifact-Dir)\%(_UniqueFiles.Identity).dll')" SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).dll" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
+		<Copy Condition="Exists('$(_Artifact-Dir)\%(_UniqueFiles.Identity).xml')" SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).xml" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
+		<Copy Condition="Exists('$(_Artifact-Dir)\%(_UniqueFiles.Identity).exe')" SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).exe" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
+		<Copy Condition="Exists('$(_Artifact-Dir)\%(_UniqueFiles.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(_Artifact-Dir)\%(_UniqueFiles.Identity).pdb" DestinationFolder="$(Dest-Lib-Dir)" ContinueOnError="true" />
 
 		<Copy Condition="$(_With-Nhqg)" SourceFiles="@(Tool-NHQG)" DestinationFolder="$(Dest-Tool-Dir)\NHQG\" ContinueOnError="true" />
 		<Copy Condition="$(_With-Nhqg) And '$(Configuration)' == 'debug'" SourceFiles="@(Tool-NHQG)" DestinationFolder="$(Dest-Tool-Dir)\debug\NHQG\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite)" DestinationFolder="$(Dest-Lib-Dir)\x86\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlLite)" SourceFiles="@(Tool-SqlLite-x64)" DestinationFolder="$(Dest-Lib-Dir)\x64\" ContinueOnError="true" />
 		<Copy Condition="$(_With-SqlCe)" SourceFiles="@(Tool-SqlCe)" DestinationFolder="$(Dest-Lib-Dir)\SqlCe\" ContinueOnError="true" />
-    <Copy Condition="$(_With-Cstl-CodeGen)" SourceFiles="@(Tool-Castle-CodeGenerator)" DestinationFolder="$(Dest-Tool-Dir)\Castle.CodeGenerator\" ContinueOnError="true" />
+		<Copy Condition="$(_With-Cstl-CodeGen)" SourceFiles="@(Tool-Castle-CodeGenerator)" DestinationFolder="$(Dest-Tool-Dir)\Castle.CodeGenerator\" ContinueOnError="true" />
 	</Target>
-
 
 	<Target Name="_Create-All-Build-Items">
 		<CreateItem Include="$(_Asses-NH-All)">
@@ -817,48 +944,70 @@
 		<CreateItem Include="$(_Asses-Cstl-All)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle"/>
 		</CreateItem>
-		<CreateItem Include="$(Rhino-Prjct-Commons-Dir)\Rhino.Commons\bin\$(Configuration)\$(_Ass-Rhn-Commons);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.NHibernate\bin\$(Configuration)\$(_Ass-Rhn-Commons-NH);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\$(_Ass-Rhn-Commons-AR)">
+		<CreateItem Include="$(Rhino-Prjct-Commons-Dir)\Rhino.Commons\obj\$(Configuration)\$(_Ass-Rhn-Commons);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.Clr\obj\$(Configuration)\$(_Ass-Rhn-Commons-Clr);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.NHibernate\obj\$(Configuration)\$(_Ass-Rhn-Commons-NH);$(Rhino-Prjct-Commons-Dir)\Rhino.Commons.ActiveRecord\obj\$(Configuration)\$(_Ass-Rhn-Commons-AR)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Commons"/>
 		</CreateItem>
-		<CreateItem Include="$(Rhino-Prjct-Mocks-Dir)\Rhino.Mocks\bin\$(Configuration)\$(_Ass-Rhn-Mocks)">
+		<CreateItem Include="$(Rhino-Prjct-Dsl-Dir)\Rhino.Dsl\obj\$(Configuration)\$(_Ass-Rhn-Dsl)">
+			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Dsl"/>
+		</CreateItem>
+		<CreateItem Include="$(Rhino-Prjct-Mocks-Dir)\Rhino.Mocks\obj\$(Configuration)\$(_Ass-Rhn-Mocks)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Mocks"/>
 		</CreateItem>
-    <CreateItem Include="$(Rhino-Prjct-Testing-Dir)\Rhino.Testing\bin\$(Configuration)\$(_Ass-Rhn-Testing)">
-      <Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Testing"/>
-    </CreateItem>
+		<CreateItem Include="$(Rhino-Prjct-Testing-Dir)\Rhino.Testing\obj\$(Configuration)\$(_Ass-Rhn-Testing)">
+			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Testing"/>
+		</CreateItem>
 		<CreateItem Include="$(Rhino-Prjct-NHQG-Dir)\NHibernate.Query.Generator\bin\$(Configuration)\**\*.*">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-NHQG"/>
 		</CreateItem>
-    <CreateItem Include="$(Castle-Contrib-CodeGen-Dir)\Build\Release\AnyCPU\**\*.*;$(Castle-Contrib-CodeGen-Dir)\$(_Misc-Cstl-CodeGen-Target)">
-      <Output TaskParameter="Include" ItemName="All-Build-Items-Castle-CodeGen"/>
-    </CreateItem>
+		<CreateItem Include="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator.CmdLine\bin\Release\**\*.*;$(Castle-Contrib-CodeGen-Dir)\$(_Misc-Cstl-CodeGen-Target)">
+			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle-CodeGen"/>
+		</CreateItem>
+		<CreateItem Include="$(_Asses-Cstl-MR-AspView)">
+			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle-AspView"/>
+		</CreateItem>
+		<CreateItem Include="$(Castle-ViewComponents-Build-Dir)\$(_Ass-Cstl-MR-ViewComponents)">
+			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle-ViewComponents"/>
+		</CreateItem>
 	</Target>
-	
+
 	<Target Name="Copy-To-Artifact-Dir" DependsOnTargets="_Create-All-Build-Items">
 		<Copy ContinueOnError="true" SourceFiles="$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy ContinueOnError="true" SourceFiles="$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).xml')" ContinueOnError="true" SourceFiles="$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="$(NH-Build-Dir)\%(All-Build-Items-NH.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 
 		<Copy ContinueOnError="true" SourceFiles="$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy ContinueOnError="true" SourceFiles="$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).xml')" ContinueOnError="true" SourceFiles="$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="$(Castle-Build-Dir)\%(All-Build-Items-Castle.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+
+		<Copy Condition="Exists('$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).dll')" ContinueOnError="true" SourceFiles="$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).xml')" ContinueOnError="true" SourceFiles="$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).exe')" ContinueOnError="true" SourceFiles="$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).exe" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="$(Castle-AspView-Build-Dir)\%(All-Build-Items-Castle-AspView.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+
+		<Copy Condition="Exists('%(All-Build-Items-Castle-ViewComponents.Identity).dll')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Castle-ViewComponents.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Castle-ViewComponents.Identity).xml')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Castle-ViewComponents.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Castle-ViewComponents.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Castle-ViewComponents.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+
+		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Commons.Identity).xml')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Commons.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+
+		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Dsl.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Dsl.Identity).xml')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Dsl.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Dsl.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Dsl.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 
 		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Mocks.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Mocks.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Mocks.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		
-		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-		<Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Commons.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Mocks.Identity).xml')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Mocks.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Mocks.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Mocks.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 
-    <Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-    <Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
-    <Copy Condition="'$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).dll" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Testing.Identity).xml')" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).xml" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
+		<Copy Condition="Exists('%(All-Build-Items-Rhino-Testing.Identity).pdb') AND '$(Configuration)' == 'debug'" ContinueOnError="true" SourceFiles="%(All-Build-Items-Rhino-Testing.Identity).pdb" DestinationFolder="$(_Artifact-Dir)" SkipUnchangedFiles="true" />
 
-    <Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Rhino-NHQG)" DestinationFolder="$(_Artifact-Dir)\NHQG\" SkipUnchangedFiles="true" />
-    <Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Castle-CodeGen)" DestinationFolder="$(_Artifact-Dir)\Castle.CodeGenerator\" SkipUnchangedFiles="true" />
+		<Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Rhino-NHQG)" DestinationFolder="$(_Artifact-Dir)\NHQG\" SkipUnchangedFiles="true" />
+		<Copy ContinueOnError="true" SourceFiles="@(All-Build-Items-Castle-CodeGen)" DestinationFolder="$(_Artifact-Dir)\Castle.CodeGenerator\" SkipUnchangedFiles="true" />
 	</Target>
-	
+
 	<Target Name="Display-Deployment-List" DependsOnTargets="Display-Deployment-List-Flags;_CreateUniqueFileList">
 		<Message Text="$(_Artifact-Dir)\$(Configuration)\%(_UniqueFiles.Identity).dll" />
 		<Message Text="$(_Artifact-Dir)\$(Configuration)\%(_UniqueFiles.Identity).xml" />
@@ -876,7 +1025,7 @@
 			<Output TaskParameter="Filtered" ItemName="_UniqueFiles"/>
 		</RemoveDuplicates>
 	</Target>
-	
+
 	<Target Name="Display-Deployment-List-Flags">
 		<Message Text="With-NH is $(_With-NH)" />
 		<Message Text="With-NH-Mapping is $(_With-NH-Mapping)" />

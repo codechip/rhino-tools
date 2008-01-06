@@ -442,12 +442,6 @@
             </summary>
             <param name="source">The source.</param>
         </member>
-        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.GetConfigValue(System.String)">
-            <summary>
-            If a config value is an empty string we return null, this is to keep
-            backward compability with old code
-            </summary>
-        </member>
         <member name="P:Castle.Windsor.Configuration.Interpreters.XmlInterpreter.Kernel">
             <summary>
             Gets or sets the kernel.
@@ -710,6 +704,20 @@
             <param name="key"></param>
             <param name="extendedProperties"></param>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentEx(System.Type)">
+            <summary>
+            Adds a component to be registered in the container using a fluent interface.
+            </summary>
+            <param name="serviceType">The service type.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentEx``1">
+            <summary>
+            Adds a component to be registered in the container using a fluent interface.
+            </summary>
+            <typeparam name="S">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String)">
             <summary>
             Returns a component instance by the key
@@ -723,6 +731,14 @@
             </summary>
             <param name="key"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <param name="key"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String,System.Type)">
@@ -746,6 +762,14 @@
             </summary>
             <param name="service"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.Type,System.Object)">
+            <summary>
+            Returns a component instance by the service
+            </summary>
+            <param name="service"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Release(System.Object)">
@@ -789,6 +813,14 @@
             <param name="arguments"></param>
             <returns>The component instance</returns>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.Resolve``1(System.Object)">
+            <summary>
+            Returns a component instance by the service
+            </summary>
+            <typeparam name="T">Service type</typeparam>
+            <param name="argumentsAsAnonymousType"></param>
+            <returns>The component instance</returns>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve``1(System.String)">
             <summary>
             Returns a component instance by the key
@@ -806,6 +838,15 @@
             <param name="arguments"></param>
             <returns>The Component instance</returns>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.Resolve``1(System.String,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <typeparam name="T">Service type</typeparam>
+            <param name="key">Component's key</param>
+            <param name="argumentsAsAnonymousType"></param>
+            <returns>The Component instance</returns>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String,System.Type,System.Collections.IDictionary)">
             <summary>
             Returns a component instance by the key
@@ -813,6 +854,15 @@
             <param name="key"></param>
             <param name="service"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String,System.Type,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <param name="key"></param>
+            <param name="service"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll``1">
@@ -834,11 +884,25 @@
             <param name="arguments">Arguments to resolve the service</param>
             </summary>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll(System.Type,System.Object)">
+            <summary>
+            Resolve all valid components that mathc this service
+            <param name="service">the service to match</param>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the service</param>
+            </summary>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll``1(System.Collections.IDictionary)">
             <summary>
             Resolve all valid components that match this type.
             <typeparam name="T">The service type</typeparam>
             <param name="arguments">Arguments to resolve the service</param>
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.ResolveAll``1(System.Object)">
+            <summary>
+            Resolve all valid components that match this type.
+            <typeparam name="T">The service type</typeparam>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the service</param>
             </summary>
         </member>
         <member name="P:Castle.Windsor.IWindsorContainer.Name">
@@ -1104,6 +1168,20 @@
             <param name="key"></param>
             <param name="extendedProperties"></param>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentEx(System.Type)">
+            <summary>
+            Adds a component to be registered in the container using a fluent interface.
+            </summary>
+            <param name="serviceType">The service type.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentEx``1">
+            <summary>
+            Adds a component to be registered in the container using a fluent interface.
+            </summary>
+            <typeparam name="S">The <see cref="T:System.Type"/> to manage.</typeparam>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String)">
             <summary>
             Returns a component instance by the key
@@ -1119,12 +1197,28 @@
             <param name="arguments"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.Type,System.Object)">
+            <summary>
+            Returns a component instance by the service
+            </summary>
+            <param name="service"></param>
+            <param name="argumentsAsAnonymousType"></param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Collections.IDictionary)">
             <summary>
             Returns a component instance by the key
             </summary>
             <param name="key"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <param name="key"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.Type)">
@@ -1147,6 +1241,13 @@
             <param name="arguments">Arguments to resolve the service</param>
             </summary>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.ResolveAll``1(System.Object)">
+            <summary>
+            Resolve all valid components that match this type.
+            <typeparam name="T">The service type</typeparam>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the service</param>
+            </summary>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Type)">
             <summary>
             Returns a component instance by the key
@@ -1157,11 +1258,20 @@
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Type,System.Collections.IDictionary)">
             <summary>
-            
+            Returns a component instance by the key
             </summary>
             <param name="key"></param>
             <param name="service"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String,System.Type,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <param name="key"></param>
+            <param name="service"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve``1(System.Collections.IDictionary)">
@@ -1172,12 +1282,28 @@
             <param name="arguments"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.Resolve``1(System.Object)">
+            <summary>
+            Returns a component instance by the service 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="argumentsAsAnonymousType"></param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve``1(System.String,System.Collections.IDictionary)">
             <summary>
             Returns a component instance by the key
             </summary>
             <param name="key"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.Resolve``1(System.String,System.Object)">
+            <summary>
+            Returns a component instance by the key
+            </summary>
+            <param name="key"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve``1">

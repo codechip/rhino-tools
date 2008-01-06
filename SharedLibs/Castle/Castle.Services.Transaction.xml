@@ -275,6 +275,11 @@
             Raised when the transaction was disposed
             </summary>
         </member>
+        <member name="E:Castle.Services.Transaction.ITransactionManager.TransactionFailed">
+            <summary>
+            Raised when the transaction has failed on commit/rollback
+            </summary>
+        </member>
         <member name="P:Castle.Services.Transaction.ITransactionManager.CurrentTransaction">
             <summary>
             Returns the current <see cref="T:Castle.Services.Transaction.ITransaction"/>. 

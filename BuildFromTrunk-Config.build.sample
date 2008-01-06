@@ -20,5 +20,10 @@
 		<Svn-Dir>$(Tools-Dir)\Subversion</Svn-Dir>
 		<Castle-TestFramework>nunit</Castle-TestFramework>
 		<Castle-Tester-Console>C:\Program Files (x86)\NUnit 2.4\bin\nunit-console.exe</NUnit-Dir>
+		
+		<Castle-Contrib-Dir>$(MSBuildProjectDirectory)\..\Castle-Contrib</Castle-Contrib-Dir>
+		<Castle-Contrib-CodeGen-Dir>$(Castle-Contrib-Dir)\codegenerator\trunk</Castle-Contrib-CodeGen-Dir>
+		<Castle-Contrib-AspView-Dir>$(Castle-Contrib-Dir)\viewengines\aspview\trunk</Castle-Contrib-AspView-Dir>
+		<Castle-Contrib-ViewComponents-Dir>$(Castle-Contrib-Dir)\viewcomponents\trunk</Castle-Contrib-ViewComponents-Dir>
 	</PropertyGroup>
 </Project>

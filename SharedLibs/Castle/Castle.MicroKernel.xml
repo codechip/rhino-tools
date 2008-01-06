@@ -1681,6 +1681,161 @@
             <param name="createOnDemand">true if the options should be created if not present.</param>
             <returns>The associated proxy options for the component model.</returns>
         </member>
+        <member name="T:Castle.MicroKernel.Registration.ComponentRegistration`2">
+            <summary>
+            
+            </summary>
+            <typeparam name="S">The service type</typeparam>
+            <typeparam name="T">The chaining type</typeparam>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.#ctor(Castle.MicroKernel.IKernel,`1)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/> class.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="chain">The chain</param>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithOverwrite">
+            <summary>
+            With the overwrite.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithName(System.String)">
+            <summary>
+            With the name.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithInstance(`0)">
+            <summary>
+            With the instance.
+            </summary>
+            <param name="instance">The instance.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithActivator``1">
+            <summary>
+            With the activator.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithExtendedProperties(Castle.MicroKernel.Registration.Property[])">
+            <summary>
+            With the extended properties.
+            </summary>
+            <param name="properties">The properties.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithExtendedProperties(System.Object)">
+            <summary>
+            With the extended properties.
+            </summary>
+            <param name="anonymous">The properties.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(Castle.MicroKernel.Registration.Property[])">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(System.Collections.IDictionary)">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(System.Object)">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="anonymous">The dependencies.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(Castle.MicroKernel.Registration.ServiceOverride[])">
+            <summary>
+            With the service overrides.
+            </summary>
+            <param name="overrides">The overrides.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(System.Collections.IDictionary)">
+            <summary>
+            With the service overrides.
+            </summary>
+            <param name="overrides">The overrides.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(System.Object)">
+            <summary>
+            With the service overrides.
+            </summary>
+            <param name="anonymous">The overrides.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithInterceptors(Castle.Core.InterceptorReference[])">
+            <summary>
+            With the interceptors.
+            </summary>
+            <param name="interceptors">The interceptors.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AsStartable">
+            <summary>
+            Ases the startable.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddComponentEx``1">
+            <summary>
+            Registers the current component and add another.
+            </summary>
+            <typeparam name="SS"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.Register">
+            <summary>
+            Registers this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.BuildComponentModel">
+            <summary>
+            Builds the component model.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddAttributeDescriptor(System.String,System.String)">
+            <summary>
+            Adds the attribute descriptor.
+            </summary>
+            <param name="name">The name.</param>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddDescriptor(Castle.MicroKernel.Registration.ComponentDescriptor{`0,`1})">
+            <summary>
+            Adds the descriptor.
+            </summary>
+            <param name="descriptor">The descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`2.Proxy">
+            <summary>
+            Gets the proxy.
+            </summary>
+            <value>The proxy.</value>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`2.WithLifestyle">
+            <summary>
+            Gets the with lifestyle.
+            </summary>
+            <value>The with lifestyle.</value>
+        </member>
         <member name="T:Castle.MicroKernel.Releasers.AllComponentsReleasePolicy">
             <summary>
             Summary description for AllComponentsReleasePolicy.
@@ -3004,6 +3159,32 @@
             <param name="serviceType"></param>
             <param name="instance"></param>
         </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddComponentInstance(System.String,System.Type,System.Type,System.Object)">
+            <summary>
+            Used mostly by facilities. Adds an instance
+            to be used as a component.
+            </summary>
+            <param name="key"></param>
+            <param name="serviceType"></param>
+            <param name="instance"></param>
+            <param name="classType"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddComponentEx(System.Type)">
+            <summary>
+            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
+            using a fluent interface.
+            </summary>
+            <param name="serviceType">The service type.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddComponentEx``1">
+            <summary>
+            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
+            using a fluent interface.
+            </summary>
+            <typeparam name="S">The service <see cref="T:System.Type"/> to manage.</typeparam>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
         <member name="M:Castle.MicroKernel.IKernel.RemoveComponent(System.String)">
             <summary>
             Returns true if the specified component was 
@@ -3039,6 +3220,14 @@
             <param name="service">The service type</param>
             <param name="arguments">Arguments to resolve the services</param>
         </member>
+        <member name="M:Castle.MicroKernel.IKernel.ResolveAll(System.Type,System.Object)">
+            <summary>
+            Returns all the valid component instances by
+            the service type
+            </summary>
+            <param name="service">The service type</param>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the services</param>
+        </member>
         <member name="M:Castle.MicroKernel.IKernel.Resolve(System.Type,System.Collections.IDictionary)">
             <summary>
             Returns the component instance by the service type
@@ -3057,6 +3246,24 @@
             <param name="arguments"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.IKernel.Resolve(System.Type,System.Object)">
+            <summary>
+            Returns the component instance by the service type
+            using dynamic arguments
+            </summary>
+            <param name="service">Service to resolve</param>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the services</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.Resolve(System.String,System.Object)">
+            <summary>
+            Returns the component instance by the component key
+            using dynamic arguments
+            </summary>
+            <param name="key">Key to resolve</param>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the services</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.IKernel.Resolve(System.String,System.Type)">
             <summary>
             Returns a component instance by the key
@@ -3071,6 +3278,14 @@
             using dynamic arguments
             </summary>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.Resolve``1(System.Object)">
+            <summary>
+            Returns the component instance by the service type
+            using dynamic arguments
+            </summary>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the services</param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.IKernel.Resolve``1">
@@ -3104,6 +3319,15 @@
             <param name="service"></param>
             <param name="dependencies"></param>
         </member>
+        <member name="M:Castle.MicroKernel.IKernel.RegisterCustomDependencies(System.Type,System.Object)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="service"></param>
+            <param name="dependenciesAsAnonymousType"></param>
+        </member>
         <member name="M:Castle.MicroKernel.IKernel.RegisterCustomDependencies(System.String,System.Collections.IDictionary)">
             <summary>
             Associates objects with a component handler,
@@ -3112,6 +3336,15 @@
             </summary>
             <param name="key"></param>
             <param name="dependencies"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.RegisterCustomDependencies(System.String,System.Object)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="key"></param>
+            <param name="dependenciesAsAnonymousType"></param>
         </member>
         <member name="M:Castle.MicroKernel.IKernel.ReleaseComponent(System.Object)">
             <summary>
@@ -3562,12 +3795,36 @@
             <param name="serviceType"></param>
             <param name="instance"></param>
         </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.AddComponentEx(System.Type)">
+            <summary>
+            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
+            using a fluent interface.
+            </summary>
+            <param name="serviceType">The service type.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.AddComponentEx``1">
+            <summary>
+            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
+            using a fluent interface.
+            </summary>
+            <typeparam name="S">The service <see cref="T:System.Type"/> to manage.</typeparam>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
+        </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve``1(System.Collections.IDictionary)">
             <summary>
             Returns the component instance by the service type
             using dynamic arguments
             </summary>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.Resolve``1(System.Object)">
+            <summary>
+            Returns the component instance by the service type
+            using dynamic arguments
+            </summary>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve``1">
@@ -3597,6 +3854,14 @@
             <param name="service">The service type</param>
             <param name="arguments">Arguments to resolve the services</param>
         </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.ResolveAll(System.Type,System.Object)">
+            <summary>
+            Returns all the valid component instances by
+            the service type
+            </summary>
+            <param name="service">The service type</param>
+            <param name="argumentsAsAnonymousType">Arguments to resolve the services</param>
+        </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.Type,System.Collections.IDictionary)">
             <summary>
             Returns the component instance by the service type
@@ -3604,6 +3869,15 @@
             </summary>
             <param name="service"></param>
             <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.Type,System.Object)">
+            <summary>
+            Returns the component instance by the service type
+            using dynamic arguments
+            </summary>
+            <param name="service"></param>
+            <param name="argumentsAsAnonymousType"></param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.String,System.Collections.IDictionary)">
@@ -3614,6 +3888,51 @@
             <param name="key"></param>
             <param name="arguments"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.String,System.Object)">
+            <summary>
+            Returns the component instance by the component key
+            using dynamic arguments
+            </summary>
+            <param name="key"></param>
+            <param name="argumentsAsAnonymousType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.RegisterCustomDependencies(System.Type,System.Collections.IDictionary)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="service"></param>
+            <param name="dependencies"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.RegisterCustomDependencies(System.Type,System.Object)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="service"></param>
+            <param name="dependenciesAsAnonymousType"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.RegisterCustomDependencies(System.String,System.Collections.IDictionary)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="key"></param>
+            <param name="dependencies"></param>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.RegisterCustomDependencies(System.String,System.Object)">
+            <summary>
+            Associates objects with a component handler,
+            allowing it to use the specified dictionary
+            when resolving dependencies
+            </summary>
+            <param name="key"></param>
+            <param name="dependenciesAsAnonymousType"></param>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.String,System.Type)">
             <summary>
@@ -3631,6 +3950,23 @@
             <param name="service"></param>
             <param name="arguments"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.Resolve(System.String,System.Type,System.Object)">
+            <summary>
+            Resolves the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="service">The service.</param>
+            <param name="argumentsAsAnonymousType">Type of the arguments as anonymous.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.DefaultKernel.ReleaseComponent(System.Object)">
+            <summary>
+            Releases a component instance. This allows
+            the kernel to execute the proper decomission
+            lifecycles on the component instance.
+            </summary>
+            <param name="instance"></param>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.GetHandlers(System.Type)">
             <summary>

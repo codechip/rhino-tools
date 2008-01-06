@@ -78,6 +78,12 @@
             Gets or sets the cache strategy to use for this property
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.BaseAttribute.CacheRegion">
+            <summary>
+            Gets or sets the a name for a cache region.
+            </summary>
+            <value>The cache region name.</value>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordAttribute.#ctor">
             <summary>
             Uses the class name as table name
@@ -125,6 +131,12 @@
             <summary>
             Gets or sets the value that represents the
             target class on the discriminator column
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordAttribute.DiscriminatorLength">
+            <summary>
+            Gets or sets the length of the discriminator
+            column (valid for string type only)
             </summary>
         </member>
         <member name="P:Castle.ActiveRecord.ActiveRecordAttribute.Where">
@@ -2660,9 +2672,14 @@
             Not to be confused by databases supported by ActiveRecord
             </summary>
         </member>
-        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer">
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer2005">
             <summary>
-            Microsoft SQL Server
+            Microsoft SQL Server 2005
+            </summary>
+        </member>
+        <member name="F:Castle.ActiveRecord.Framework.Config.DatabaseType.MSSQLServer2000">
+            <summary>
+            Microsoft SQL Server 2000
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel">
@@ -2787,6 +2804,12 @@
             <value>
             	<c>true</c> if this instance is nested type; otherwise, <c>false</c>.
             </value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.ParentNested">
+            <summary>
+            Gets or sets the parent nested.
+            </summary>
+            <value>The parent nested.</value>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.IsNestedCompositeType">
             <summary>
@@ -3884,7 +3907,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitDependentObject(Castle.ActiveRecord.Framework.Internal.DependentObjectModel)">
             <summary>
-            Visits the Dependent Object א
+            Visits the Dependent Object à
             </summary>
             <param name="model">The model</param>
         </member>
@@ -5432,6 +5455,12 @@
             is maintaining
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ISessionScope.Evict(System.Object)">
+            <summary>
+            Evicts the specified instance from the session cache. 
+            </summary>
+            <param name="instance">The instance.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.ISessionScope.RegisterSession(System.Object,NHibernate.ISession)">
             <summary>
             This method is invoked when no session was available
@@ -5517,6 +5546,12 @@
             Flushes the sessions that this scope 
             is maintaining
             </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.Evict(System.Object)">
+            <summary>
+            Evicts the specified instance from the session cache.
+            </summary>
+            <param name="instance">The instance.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.IsKeyKnown(System.Object)">
             <summary>
@@ -7776,6 +7811,25 @@
             <param name="instance">The instance.</param>
             <param name="replicationMode">The replication mode.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Evict(System.Object)">
+            <summary>
+            Evicts the specified instance from the first level cache (session level).
+            </summary>
+            <param name="instance">The instance.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.GlobalEvict(System.Type)">
+            <summary>
+            Evicts the specified type.
+            </summary>
+            <param name="type">The type.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.GlobalEvict(System.Type,System.Object)">
+            <summary>
+            Evicts the specified type.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="id">The id.</param>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordMediator`1">
             <summary>
             Allow programmers to use the 
@@ -7852,6 +7906,23 @@
             <param name="criteria">The criteria</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAllByProperty(System.String,System.Object)">
+            <summary>
+            Finds records based on a property value - automatically converts null values to IS NULL style queries. 
+            </summary>
+            <param name="property">A property name (not a column name)</param>
+            <param name="value">The value to be equals to</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAllByProperty(System.String,System.String,System.Object)">
+            <summary>
+            Finds records based on a property value - automatically converts null values to IS NULL style queries. 
+            </summary>
+            <param name="orderByColumn">The column name to be ordered ASC</param>
+            <param name="property">A property name (not a column name)</param>
+            <param name="value">The value to be equals to</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll">
             <summary>
             Returns all instances found for the specified type.
@@ -7890,7 +7961,7 @@
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
