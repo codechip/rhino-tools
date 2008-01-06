@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -44,6 +45,7 @@
     <Compile Include="Exceptions\ElementNotFoundException.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="GenericEventArgs.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="LocalDataImpl\ILocalData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticReflection.cs" />
+    <Compile Include="Use.cs" />
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
