@@ -31,7 +31,9 @@ using System;
 using Boo.Lang.Compiler.Ast;
 namespace Rhino.Commons.Binsor.Macros
 {
-	[CLSCompliant(false)]
+    using Extensions;
+
+    [CLSCompliant(false)]
 	public class BaseBinsorToplevelMacro<T> : AbstractBinsorMacro
 	{
 		protected MethodInvocationExpression create;

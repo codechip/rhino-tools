@@ -47,22 +47,22 @@ namespace Rhino.Commons
 	[ThereBeDragons("Not supported by Microsoft, but has major performance boost")]
 	public class SqlCommandSet : IDisposable
 	{
-		private static Type sqlCmdSetType;
-		private object instance;
-		private PropSetter<SqlConnection> connectionSetter;
-		private PropSetter<SqlTransaction> transactionSetter;
-		private PropGetter<SqlConnection> connectionGetter;
-		private PropGetter<SqlCommand> commandGetter;
-		private AppendCommand doAppend;
-		private ExecuteNonQueryCommand doExecuteNonQuery;
-		private DisposeCommand doDispose;
+		private static readonly Type sqlCmdSetType;
+		private readonly object instance;
+		private readonly PropSetter<SqlConnection> connectionSetter;
+		private readonly PropSetter<SqlTransaction> transactionSetter;
+		private readonly PropGetter<SqlConnection> connectionGetter;
+		private readonly PropGetter<SqlCommand> commandGetter;
+		private readonly AppendCommand doAppend;
+		private readonly ExecuteNonQueryCommand doExecuteNonQuery;
+		private readonly DisposeCommand doDispose;
 		private int countOfCommands = 0;
 
 		static SqlCommandSet()
 		{
 			Assembly sysData = Assembly.Load("System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
 			sqlCmdSetType = sysData.GetType("System.Data.SqlClient.SqlCommandSet");
-			Debug.Assert(sqlCmdSetType != null, "Could not find SqlCommandSet!");
+			Guard.Against(sqlCmdSetType == null, "Could not find SqlCommandSet!");
 		}
 
 		public SqlCommandSet()
@@ -139,8 +139,7 @@ namespace Rhino.Commons
 		/// </returns>
 		public int ExecuteNonQuery()
 		{
-			if (Connection == null)
-				throw new ArgumentNullException(
+            Guard.Against<ArgumentException>(Connection == null,
 					"Connection was not set! You must set the connection property before calling ExecuteNonQuery()");
 			if(CountOfCommands==0)
 				return 0;

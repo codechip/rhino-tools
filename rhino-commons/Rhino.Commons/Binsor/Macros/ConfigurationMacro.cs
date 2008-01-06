@@ -31,7 +31,9 @@ using System;
 
 namespace Rhino.Commons.Binsor.Macros
 {
-	[CLSCompliant(false)]
+    using Extensions;
+
+    [CLSCompliant(false)]
 	public class ConfigurationMacro : BaseConfigurationMacro<ConfigurationExtension>
 	{
 		public ConfigurationMacro()

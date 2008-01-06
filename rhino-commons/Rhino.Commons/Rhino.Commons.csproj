@@ -125,6 +125,7 @@
     <Compile Include="Binsor\Configuration\ListBuilder.cs" />
     <Compile Include="Binsor\Extensions\EventWireExtension.cs" />
     <Compile Include="Binsor\Extensions\FactorySupportExtension.cs" />
+    <Compile Include="Binsor\Extensions\ParametersExtension.cs" />
     <Compile Include="Binsor\Facility.cs" />
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
     <Compile Include="Binsor\IComponentExtension.cs" />

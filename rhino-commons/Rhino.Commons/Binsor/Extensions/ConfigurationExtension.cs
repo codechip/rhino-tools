@@ -31,57 +31,36 @@ using System.Collections;
 using Castle.Core.Configuration;
 using Rhino.Commons.Binsor.Configuration;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons.Binsor.Extensions
 {
-	public class ConfigurationExtension : IComponentExtension, IFacilityExtension
-	{
-		private readonly IDictionary _configuration;
+    public class ConfigurationExtension : IComponentExtension, IFacilityExtension
+    {
+        private readonly IDictionary _configuration;
 
-		public ConfigurationExtension(IDictionary configuration)
-		{
-			_configuration = configuration;
-		}
+        public ConfigurationExtension(IDictionary configuration)
+        {
+            _configuration = configuration;
+        }
 
-		void IComponentExtension.Apply(Component component)
-		{
-			ApplyConfiguration(component.Configuration);
-		}
+        void IComponentExtension.Apply(Component component)
+        {
+            ApplyConfiguration(component.Configuration);
+        }
 
-		void IFacilityExtension.Apply(Facility facility)
-		{
-			ApplyConfiguration(facility.Configuration);
-		}
+        void IFacilityExtension.Apply(Facility facility)
+        {
+            ApplyConfiguration(facility.Configuration);
+        }
 
-		protected virtual IConfiguration GetRootConfiguration(IConfiguration root)
-		{
-			return root;
-		}
+        protected virtual IConfiguration GetRootConfiguration(IConfiguration root)
+        {
+            return root;
+        }
 
-		private void ApplyConfiguration(IConfiguration parent)
-		{
-			parent = GetRootConfiguration(parent);
-			ConfigurationHelper.CreateConfiguration(parent, null, _configuration);			
-		}
-	}
-
-	public class ParametersExtension : ConfigurationExtension
-	{
-		public ParametersExtension(IDictionary configuration)
-			: base(configuration)
-		{
-		}
-
-		protected override IConfiguration GetRootConfiguration(IConfiguration root)
-		{
-			IConfiguration parameters = root.Children["parameters"];
-
-			if (parameters == null)
-			{
-				parameters = new MutableConfiguration("parameters");
-				root.Children.Add(parameters);
-			}
-
-			return parameters;
-		}
-	}
+        private void ApplyConfiguration(IConfiguration parent)
+        {
+            parent = GetRootConfiguration(parent);
+            ConfigurationHelper.CreateConfiguration(parent, null, _configuration);			
+        }
+    }
 }

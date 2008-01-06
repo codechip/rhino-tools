@@ -32,7 +32,9 @@ using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
-	[CLSCompliant(false)]
+    using Extensions;
+
+    [CLSCompliant(false)]
 	public class BaseConfigurationMacro<T> : BaseBinsorExtensionMacro<T> where T : ConfigurationExtension
 	{
 		public BaseConfigurationMacro(string name, params string[] validParents)
