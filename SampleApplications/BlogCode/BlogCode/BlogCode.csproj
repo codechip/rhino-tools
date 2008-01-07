@@ -36,10 +36,14 @@
     <Compile Include="ErlangTasks\AbstractTask.cs" />
     <Compile Include="ErlangTasks\Condition.cs" />
     <Compile Include="ErlangTasks\DeadLockException.cs" />
+    <Compile Include="ErlangTasks\Demos\GeneratorTask.cs" />
     <Compile Include="ErlangTasks\Demos\ParallelQSort.cs" />
     <Compile Include="ErlangTasks\Future.cs" />
     <Compile Include="ErlangTasks\Scheduler.cs" />
     <Compile Include="ErlangTasks\Demos\MultiplicationTask.cs" />
+    <Compile Include="ErlangTasks\SchedulingOptions.cs" />
+    <Compile Include="ErlangTasks\ThreadingOptions.cs" />
+    <Compile Include="ErlangTasks\WaitForFuture.cs" />
     <Compile Include="Pipelines\GetAllProcesses.cs" />
     <Compile Include="Pipelines\IOperation.cs" />
     <Compile Include="Pipelines\LimitByWorkingSetSize.cs" />

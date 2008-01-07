@@ -12,9 +12,21 @@ namespace pipelines
         {
             //ProcessesPipeline();
 
-            MultiThreadedMultiplication();
+            //MultiThreadedMultiplication();
 
             //ParallelTasks();
+            DateTime start = DateTime.Now;
+            
+            MillionsOfTasks();
+
+            Console.WriteLine(DateTime.Now-start);
+        }
+
+        private static void MillionsOfTasks()
+        {
+            Scheduler scheduler = new Scheduler();
+            scheduler.Schedule(new GeneratorTask(10));
+            scheduler.Execute();
         }
 
         private static void ProcessesPipeline()

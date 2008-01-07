@@ -1,6 +1,5 @@
 namespace pipelines
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     public abstract class AbstractTask
@@ -45,8 +44,31 @@ namespace pipelines
                 // This is because setting it to complete in the scheduler will wake
                 // waiting threads, and we want to mark the task as complete beforehand
                 completed.SetValue(result);
+
+                //we want to avoid stack overflow if we keep reusing the same stack
+                // only the first level task will reuse a thread
+                if (SchedulingOptions.NestedStackCount == 0)
+                {
+                    SchedulingOptions.NestedStackCount = 1;
+                    while (true)
+                    {
+                        if (scheduler.TrySchedule(ExecuteTaskInSameThread, ThreadingOptions.ReuseCurrentThread) == false)
+                            break;
+                    }
+                    SchedulingOptions.NestedStackCount = 0;
+                }
                 scheduler.Completed(this);
             }
+        }
+
+        public void ExecuteTaskInSameThread(AbstractTask task)
+        {
+            task.Continue();
+        }
+
+        public WaitForFuture Done(Future future)
+        {
+            return new WaitForFuture(future);
         }
 
         protected abstract IEnumerable<Condition> Execute();
