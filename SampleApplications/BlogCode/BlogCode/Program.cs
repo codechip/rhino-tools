@@ -17,9 +17,20 @@ namespace pipelines
             //ParallelTasks();
             DateTime start = DateTime.Now;
             
-            MillionsOfTasks();
+            //MillionsOfTasks();
+
+            GatherAllFilesTasks();
 
             Console.WriteLine(DateTime.Now-start);
+        }
+
+        private static void GatherAllFilesTasks()
+        {
+            Scheduler scheduler = new Scheduler();
+            Future files = scheduler.Schedule(new GatherAllFiles(@"D:\OSS"));
+            scheduler.Execute();
+            Console.WriteLine("Files: {0}, Tasks: {1}", files.GetValue<ICollection<string>>().Count,
+                scheduler.TotalTasks);
         }
 
         private static void MillionsOfTasks()

@@ -4,19 +4,27 @@ namespace pipelines
 
     public abstract class AbstractTask
     {
-        private Scheduler scheduler;
         private readonly Future completed = new Future();
-        private IEnumerator<Condition> state;
-        private object result = null;
 
-        public void SetResult(object value)
+        private ExecutionState executionState = ExecutionState.NotStarted;
+        private object result = null;
+        private Scheduler scheduler;
+        private IEnumerator<Condition> state;
+
+        public ExecutionState ExecutionState
         {
-            result = value;
+            get { return executionState; }
+            set { executionState = value; }
         }
 
         public Future Completed
         {
             get { return completed; }
+        }
+
+        public void SetResult(object value)
+        {
+            result = value;
         }
 
         protected Future Spawn(AbstractTask task)
@@ -26,12 +34,13 @@ namespace pipelines
 
         protected internal void Initialize(Scheduler aScheduler)
         {
-            this.scheduler = aScheduler;
+            scheduler = aScheduler;
             state = Execute().GetEnumerator();
         }
 
         public void Continue()
         {
+            ExecutionState = ExecutionState.Running;
             bool hasNext = state.MoveNext();
             if (hasNext)
             {
@@ -44,6 +53,7 @@ namespace pipelines
                 // This is because setting it to complete in the scheduler will wake
                 // waiting threads, and we want to mark the task as complete beforehand
                 completed.SetValue(result);
+                ExecutionState = ExecutionState.Completed;
 
                 //we want to avoid stack overflow if we keep reusing the same stack
                 // only the first level task will reuse a thread
@@ -69,6 +79,24 @@ namespace pipelines
         public WaitForFuture Done(Future future)
         {
             return new WaitForFuture(future);
+        }
+
+        public WaitForFuture Done(params Future[] futures)
+        {
+            return Done((ICollection<Future>) futures);
+        }
+
+        public WaitForFuture Done(ICollection<Future> enumerable)
+        {
+            return new WaitForFuture(delegate
+            {
+                foreach (Future future in enumerable)
+                {
+                    if(future.HasValue==false)
+                        return false;
+                }
+                return true;
+            });
         }
 
         protected abstract IEnumerable<Condition> Execute();

@@ -6,22 +6,17 @@ namespace pipelines
 
     public class Scheduler
     {
-        private int totalTasks;
-        public class SchedulePair
-        {
-            public AbstractTask Task;
-            public Condition Condition;
-
-            public SchedulePair(AbstractTask task, Condition condition)
-            {
-                Task = task;
-                Condition = condition;
-            }
-        }
-
-        private readonly object syncLock = new object();
+        //I am waiting for the bug about this not being refreshed with hot swappable CPUs
+        private readonly int cachedProcessorCount = Environment.ProcessorCount;
         private readonly LinkedList<SchedulePair> queqedTasks = new LinkedList<SchedulePair>();
+        private readonly object syncLock = new object();
         private int currentRunningProcessCount = 0;
+        private int totalTasks;
+
+        public int TotalTasks
+        {
+            get { return totalTasks; }
+        }
 
         public Future Schedule(AbstractTask task)
         {
@@ -30,7 +25,6 @@ namespace pipelines
             {
                 totalTasks += 1;
                 queqedTasks.AddLast(new SchedulePair(task, delegate { return true; }));
-                Monitor.PulseAll(syncLock);
             }
             return task.Completed;
         }
@@ -40,6 +34,11 @@ namespace pipelines
             lock (syncLock)
             {
                 totalTasks += 1;
+                if (task.ExecutionState == ExecutionState.Running)
+                {
+                    Interlocked.Decrement(ref currentRunningProcessCount);
+                }
+                task.ExecutionState = ExecutionState.Scheduled;
                 queqedTasks.AddLast(new SchedulePair(task, condition));
                 Monitor.PulseAll(syncLock);
             }
@@ -56,7 +55,7 @@ namespace pipelines
 
         public void ExecuteInThreadPool(AbstractTask task)
         {
-            ThreadPool.QueueUserWorkItem(delegate
+            WaitCallback back = delegate
             {
                 try
                 {
@@ -67,8 +66,9 @@ namespace pipelines
                 {
                     SchedulingOptions.NestedStackCount = 0;
                 }
-            });
-
+            };
+            //back(null);
+            ThreadPool.QueueUserWorkItem(back);
         }
 
         public bool TrySchedule(Action<AbstractTask> executeTask, ThreadingOptions threadingOptions)
@@ -81,10 +81,9 @@ namespace pipelines
                 bool? result = TryGetTaskToRun(ref task, threadingOptions);
                 if (result.HasValue)
                     return result.Value;
-                //we want to avoid overwhelming the thread pool
-                int maxRunningTasks = Environment.ProcessorCount;
 
-                while (currentRunningProcessCount >= maxRunningTasks)
+                //we want to avoid overwhelming the machine
+                while (currentRunningProcessCount >= cachedProcessorCount)
                 {
                     if (threadingOptions == ThreadingOptions.WillCreateNewThread)
                     {
@@ -94,27 +93,28 @@ namespace pipelines
                     {
                         return false;
                     }
-                    else//if we are reusing a thread, we can safely go "above" the maxRunnintTask limit
+                    else //if we are reusing a thread, we can safely go "above" the maxRunnintTask limit
                     {
                         break;
                     }
                 }
-                if (threadingOptions != ThreadingOptions.ReuseCurrentThread)
-                    Interlocked.Increment(ref currentRunningProcessCount);
-                if (totalTasks % 100 == 0)
+                Interlocked.Increment(ref currentRunningProcessCount);
+                if (totalTasks%100 == 0)
                 {
-                    System.Console.WriteLine("Running: {0}, queued: {1}, Total: {2}", currentRunningProcessCount, queqedTasks.Count, totalTasks);
+                    Console.WriteLine("Running: {0}, queued: {1}, Total: {2}", currentRunningProcessCount,
+                                      queqedTasks.Count, totalTasks);
                 }
             }
             executeTask(task);
             return true;
         }
+
         /// <summary>
         /// This must run under the lock!
         /// </summary>
         private bool? TryGetTaskToRun(ref AbstractTask task, ThreadingOptions threadingOptions)
         {
-            SchedulePair pairToRemove = null;
+            //this approach gives us an O(1) _removal_ cost from the list
             LinkedListNode<SchedulePair> node = queqedTasks.First;
             while (node != null)
             {
@@ -122,17 +122,25 @@ namespace pipelines
                 if (pair.Condition())
                 {
                     task = pair.Task;
-                    pairToRemove = pair;
+                    queqedTasks.Remove(node);
                     break;
                 }
+                pair.CannotRunCount += 1;
+                //this is probably a process that is waiting for other processes
+                //move it to the end of the list so we don't have to iterate over it all
+                //the time
+                LinkedListNode<SchedulePair> prev = node;
+                node = node.Next;
+                if(pair.CannotRunCount==3)
+                {
+                    pair.CannotRunCount = 0;
+                    queqedTasks.Remove(prev);
+                    queqedTasks.AddLast(prev);
+                }
             }
-            if (pairToRemove != null)
+            if (task == null) // no tasks to run
             {
-                queqedTasks.Remove(node);
-            }
-            if (task == null)// no tasks to run
-            {
-                if (currentRunningProcessCount == 0)//nothing runs, we are probably deadlocked
+                if (currentRunningProcessCount == 0) //nothing runs, we are probably deadlocked
                     throw new DeadLockException();
                 if (threadingOptions == ThreadingOptions.WillCreateNewThread)
                 {
@@ -151,10 +159,26 @@ namespace pipelines
         {
             lock (syncLock)
             {
-                if (SchedulingOptions.NestedStackCount == 0)
-                    Interlocked.Decrement(ref currentRunningProcessCount);
+                Interlocked.Decrement(ref currentRunningProcessCount);
                 Monitor.PulseAll(syncLock);
             }
         }
+
+        #region Nested type: SchedulePair
+
+        public class SchedulePair
+        {
+            public Condition Condition;
+            public int CannotRunCount = 0;
+            public AbstractTask Task;
+
+            public SchedulePair(AbstractTask task, Condition condition)
+            {
+                Task = task;
+                Condition = condition;
+            }
+        }
+
+        #endregion
     }
 }
