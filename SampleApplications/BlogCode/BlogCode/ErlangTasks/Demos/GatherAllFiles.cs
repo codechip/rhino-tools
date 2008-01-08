@@ -10,7 +10,6 @@ namespace pipelines.ErlangTasks.Demos
         public GatherAllFiles(string root)
         {
             this.root = root;
-            System.Console.WriteLine(root);
         }
 
         protected override IEnumerable<Condition> Execute()

@@ -15,13 +15,28 @@ namespace pipelines
             //MultiThreadedMultiplication();
 
             //ParallelTasks();
-            DateTime start = DateTime.Now;
             
             //MillionsOfTasks();
 
-            GatherAllFilesTasks();
+            //GatherAllFilesTasks();
 
-            Console.WriteLine(DateTime.Now-start);
+            HandlingErrors();
+        }
+
+        private static void HandlingErrors()
+        {
+            Scheduler scheduler = new Scheduler();
+            Future result = scheduler.Schedule(new ThrowExceptionWhenZero(5));
+            scheduler.Execute();
+            try
+            {
+                object dummy = result.Value;
+            }
+            catch (TaskFailedException e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
 
         private static void GatherAllFilesTasks()

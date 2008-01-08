@@ -1,25 +1,27 @@
 namespace pipelines
 {
+    using System;
+
     public class Future
     {
         private object value;
         private bool hasValue;
-        private string error;
+        private Exception exception;
 
-        public void SetValue(object value)
+        public void SetValue(object v)
         {
-            this.value = value;
+            this.value = v;
             hasValue = true;
         }
 
-        public void SetError(string error)
+        public void SetError(Exception e)
         {
-            this.error = error;
+            this.exception = e;
         }
 
         public bool HasError
         {
-            get { return error != null; }
+            get { return exception != null; }
         }
 
         public T GetValue<T>()
@@ -29,7 +31,15 @@ namespace pipelines
 
         public object Value
         {
-            get { return value; }
+            get
+            {
+                if (exception != null)
+                    throw new TaskFailedException("Exception occured when executing task", exception);
+                if (hasValue == false)
+                    throw new InvalidFutureValueAccessException(
+                        "Future value cannot be accessed before it is set. Use the HasValue to verify that it has a value");
+                return value;
+            }
         }
 
         public bool HasValue
@@ -37,9 +47,14 @@ namespace pipelines
             get { return hasValue; }
         }
 
-        public string Error
+        public Exception Exception
         {
-            get { return error; }
+            get { return exception; }
+        }
+
+        public static implicit operator Condition(Future f)
+        {
+            return delegate { return f.HasValue; };
         }
     }
 }

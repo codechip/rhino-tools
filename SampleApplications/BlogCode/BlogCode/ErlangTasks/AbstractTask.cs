@@ -1,5 +1,6 @@
 namespace pipelines
 {
+    using System;
     using System.Collections.Generic;
 
     public abstract class AbstractTask
@@ -41,7 +42,7 @@ namespace pipelines
         public void Continue()
         {
             ExecutionState = ExecutionState.Running;
-            bool hasNext = state.MoveNext();
+            bool hasNext = ExecuteCurrentWork();
             if (hasNext)
             {
                 scheduler.Schedule(this, state.Current);
@@ -53,7 +54,8 @@ namespace pipelines
                 // This is because setting it to complete in the scheduler will wake
                 // waiting threads, and we want to mark the task as complete beforehand
                 completed.SetValue(result);
-                ExecutionState = ExecutionState.Completed;
+                if (ExecutionState == ExecutionState.Running)
+                    ExecutionState = ExecutionState.Completed;
 
                 //we want to avoid stack overflow if we keep reusing the same stack
                 // only the first level task will reuse a thread
@@ -71,6 +73,20 @@ namespace pipelines
             }
         }
 
+        private bool ExecuteCurrentWork()
+        {
+            try
+            {
+                return state.MoveNext();
+            }
+            catch (Exception e)
+            {
+                completed.SetError(e);
+                ExecutionState = ExecutionState.Error;
+                return false;
+            }
+        }
+
         public void ExecuteTaskInSameThread(AbstractTask task)
         {
             task.Continue();
@@ -83,7 +99,7 @@ namespace pipelines
 
         public WaitForFuture Done(params Future[] futures)
         {
-            return Done((ICollection<Future>) futures);
+            return Done((ICollection<Future>)futures);
         }
 
         public WaitForFuture Done(ICollection<Future> enumerable)
@@ -92,7 +108,7 @@ namespace pipelines
             {
                 foreach (Future future in enumerable)
                 {
-                    if(future.HasValue==false)
+                    if (future.HasValue == false)
                         return false;
                 }
                 return true;
