@@ -12,7 +12,7 @@ namespace Rhino.Etl.Core
     /// </summary>
     public abstract class EtlProcess : EtlProcessBase<EtlProcess>, IDisposable
     {
-        private readonly IPipelineExecuter pipelineExecuter = new ThreadPoolPipelineExecuter();
+        private IPipelineExecuter pipelineExecuter = new ThreadPoolPipelineExecuter();
 
         /// <summary>
         /// Gets the pipeline executer.
@@ -21,6 +21,7 @@ namespace Rhino.Etl.Core
         public IPipelineExecuter PipelineExecuter
         {
             get { return pipelineExecuter; }
+			set { pipelineExecuter = value; }
         }
 
 
@@ -65,7 +66,7 @@ namespace Rhino.Etl.Core
             Initialize();
             MergeLastOperationsToOperations();
             RegisterToOperationsEvents();
-
+			Notice("Starting to execute {0}", Name);
             PipelineExecuter.Execute(Name, operations);
 
             PostProcessing();
@@ -87,7 +88,7 @@ namespace Rhino.Etl.Core
         /// <param name="op">The op.</param>
         protected virtual void OnFinishedProcessing(AbstractOperation op)
         {
-            Info("Finished {0}: {1}", op.Name, op.Statistics);
+            Notice("Finished {0}: {1}", op.Name, op.Statistics);
         }
 
         /// <summary>

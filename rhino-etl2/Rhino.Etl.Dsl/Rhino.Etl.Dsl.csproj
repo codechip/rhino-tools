@@ -38,17 +38,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SharedLibs\Boo\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
-    <Reference Include="Boo.Lang.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+    <Reference Include="Rhino.Commons, Version=1.5.1072.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\Boo\Boo.Lang.Extensions.dll</HintPath>
+      <HintPath>..\..\Build\Rhino.Commons\Rhino.Commons.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Commons.Clr, Version=1.5.1060.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+    <Reference Include="Rhino.Commons.Clr, Version=1.5.1072.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Build\Rhino.Commons\Rhino.Commons.Clr.dll</HintPath>
+      <HintPath>..\..\Build\Rhino.Commons\Rhino.Commons.Clr.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.DSL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Build\Rhino.DSL\Rhino.DSL.dll</HintPath>
+      <HintPath>..\..\Build\Rhino.Commons\Rhino.DSL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -80,6 +80,9 @@
       <Project>{DC42946E-5972-411C-A061-F2932E49C31F}</Project>
       <Name>Rhino.Etl.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

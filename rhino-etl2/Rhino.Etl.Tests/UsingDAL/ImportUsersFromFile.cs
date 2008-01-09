@@ -1,10 +1,8 @@
 namespace Rhino.Etl.Tests.UsingDAL
 {
-    using System.Collections.Generic;
-    using Core;
-    using Rhino.Etl.Core.Operations;
+	using Core;
 
-    public class ImportUsersFromFile : EtlProcess
+	public class ImportUsersFromFile : EtlProcess
     {
         protected override void Initialize()
         {

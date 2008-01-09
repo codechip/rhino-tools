@@ -71,6 +71,21 @@ namespace Rhino.Etl.Core
             }
         }
 
+		
+        /// <summary>
+        /// Logs a notice message
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The args.</param>
+        protected void Notice(string format, params object[] args)
+        {
+            if (log.Logger.IsEnabledFor(Level.Notice))
+            {
+                log.Logger.Log(GetType(), Level.Notice, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+            }
+        }
+
+
         /// <summary>
         /// Logs an information message
         /// </summary>

@@ -47,8 +47,11 @@ namespace Rhino.Etl.Core.Operations
             Guard.Against(right == null, "Right branch of a join cannot be null");
 
             Dictionary<Row, object> matchedRightRows = new Dictionary<Row, object>();
-            CachingEnumerable<Row> rightEnumerable = new CachingEnumerable<Row>(right.Execute(null));
-            foreach (Row leftRow in left.Execute(null))
+            CachingEnumerable<Row> rightEnumerable = new CachingEnumerable<Row>(
+				new EventRaisingEnumerator(right, right.Execute(null))
+				);
+        	IEnumerable<Row> execute = left.Execute(null);
+        	foreach (Row leftRow in new EventRaisingEnumerator(left, execute))
             {
                 bool leftNeedOuterJoin = true;
                 foreach (Row rightRow in rightEnumerable)
@@ -64,7 +67,9 @@ namespace Rhino.Etl.Core.Operations
                 {
                     Row emptyRow = new Row();
                     if (MatchJoinCondition(leftRow, emptyRow))
-                        yield return MergeRows(leftRow, emptyRow);
+                    	yield return MergeRows(leftRow, emptyRow);
+                	else
+                    	LeftOrphanRow(leftRow);
                 }
             }
             foreach (Row rightRow in rightEnumerable)
@@ -72,12 +77,35 @@ namespace Rhino.Etl.Core.Operations
                 if (matchedRightRows.ContainsKey(rightRow))
                     continue;
                 Row emptyRow = new Row();
-                if (MatchJoinCondition(emptyRow, rightRow))
-                    yield return MergeRows(emptyRow, rightRow);
+				if (MatchJoinCondition(emptyRow, rightRow))
+					yield return MergeRows(emptyRow, rightRow);
+				else
+					RightOrphanRow(rightRow);
             }
         }
 
-        /// <summary>
+		/// <summary>
+		/// Called when a row on the right side was filtered by
+		/// the join condition, allow a derived class to perform 
+		/// logic associated to that, such as logging
+		/// </summary>
+    	protected virtual void RightOrphanRow(Row row)
+    	{
+    		
+    	}
+
+    	/// <summary>
+		/// Called when a row on the left side was filtered by
+		/// the join condition, allow a derived class to perform 
+		/// logic associated to that, such as logging
+		/// </summary>
+		/// <param name="row">The row.</param>
+    	protected virtual void LeftOrphanRow(Row row)
+    	{
+    		
+    	}
+
+    	/// <summary>
         /// Merges the two rows into a single row
         /// </summary>
         /// <param name="leftRow">The left row.</param>
@@ -135,5 +163,67 @@ namespace Rhino.Etl.Core.Operations
                 yield return error;
             }
         }
+
+		/// <summary>
+		/// Perform an inner join equality on the two objects.
+		/// Null values are not considered equal
+		/// </summary>
+		/// <param name="left">The left.</param>
+		/// <param name="right">The right.</param>
+		/// <returns></returns>
+		protected virtual bool InnerJoin(object left, object right)
+		{
+			if (left == null)
+				return false;
+			if(right == null)
+				return false;
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// Perform an left join equality on the two objects.
+		/// Null values are not considered equal, but a null on the right side
+		/// with a value on the left is considered equal
+		/// </summary>
+		/// <param name="left">The left.</param>
+		/// <param name="right">The right.</param>
+		/// <returns></returns>
+		protected virtual bool LeftJoin(object left, object right)
+		{
+			if (left == null)
+				return false;
+			if(right == null)
+				return true;
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// Perform an right join equality on the two objects.
+		/// Null values are not considered equal, but a null on the left side
+		/// with a value on the right is considered equal
+		/// </summary>
+		/// <param name="left">The left.</param>
+		/// <param name="right">The right.</param>
+		/// <returns></returns>
+		protected virtual bool RightJoin(object left, object right)
+		{
+			if(right == null)
+				return false;
+			if (left == null)
+				return true;
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// Perform an full join equality on the two objects.
+		/// Null values are considered equal
+		/// </summary>
+		/// <param name="left">The left.</param>
+		/// <param name="right">The right.</param>
+		/// <returns></returns>
+		protected virtual bool FullJoin(object left, object right)
+		{
+			return Equals(left, right);
+		}
     }
 }
