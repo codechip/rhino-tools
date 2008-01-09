@@ -44,10 +44,13 @@
     <Compile Include="ErlangTasks\InvalidFutureValueAccessException.cs" />
     <Compile Include="ErlangTasks\Scheduler.cs" />
     <Compile Include="ErlangTasks\Demos\MultiplicationTask.cs" />
+    <Compile Include="ErlangTasks\ScheduleStatus.cs" />
     <Compile Include="ErlangTasks\SchedulingOptions.cs" />
     <Compile Include="ErlangTasks\TaskFailedException.cs" />
     <Compile Include="ErlangTasks\ThreadingOptions.cs" />
+    <Compile Include="ErlangTasks\ThreadUtil.cs" />
     <Compile Include="ErlangTasks\WaitForFuture.cs" />
+    <Compile Include="ErlangTasks\YieldOnIdleTask.cs" />
     <Compile Include="Pipelines\GetAllProcesses.cs" />
     <Compile Include="Pipelines\IOperation.cs" />
     <Compile Include="Pipelines\LimitByWorkingSetSize.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ErlangTasks\Demos\UseMultiplicationTask.cs" />
     <Compile Include="ThrowExceptionWhenZero.cs" />
+    <Compile Include="WaitFiveSeconds.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

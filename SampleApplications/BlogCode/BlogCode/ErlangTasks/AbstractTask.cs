@@ -45,7 +45,7 @@ namespace pipelines
             bool hasNext = ExecuteCurrentWork();
             if (hasNext)
             {
-                scheduler.Schedule(this, state.Current);
+                scheduler.Reschedule(this, state.Current);
             }
             else
             {
@@ -54,21 +54,10 @@ namespace pipelines
                 // This is because setting it to complete in the scheduler will wake
                 // waiting threads, and we want to mark the task as complete beforehand
                 completed.SetValue(result);
+
                 if (ExecutionState == ExecutionState.Running)
                     ExecutionState = ExecutionState.Completed;
 
-                //we want to avoid stack overflow if we keep reusing the same stack
-                // only the first level task will reuse a thread
-                if (SchedulingOptions.NestedStackCount == 0)
-                {
-                    SchedulingOptions.NestedStackCount = 1;
-                    while (true)
-                    {
-                        if (scheduler.TrySchedule(ExecuteTaskInSameThread, ThreadingOptions.ReuseCurrentThread) == false)
-                            break;
-                    }
-                    SchedulingOptions.NestedStackCount = 0;
-                }
                 scheduler.Completed(this);
             }
         }
@@ -85,11 +74,6 @@ namespace pipelines
                 ExecutionState = ExecutionState.Error;
                 return false;
             }
-        }
-
-        public void ExecuteTaskInSameThread(AbstractTask task)
-        {
-            task.Continue();
         }
 
         public WaitForFuture Done(Future future)

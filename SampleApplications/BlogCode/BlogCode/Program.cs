@@ -15,12 +15,22 @@ namespace pipelines
             //MultiThreadedMultiplication();
 
             //ParallelTasks();
-            
+
             //MillionsOfTasks();
 
             //GatherAllFilesTasks();
 
-            HandlingErrors();
+            //HandlingErrors();
+
+            //ScheduledTasks();
+
+        }
+
+        private static void ScheduledTasks()
+        {
+            Scheduler scheduler = new Scheduler();
+            Future result = scheduler.Schedule(new WaitFiveSeconds());
+            scheduler.Execute();
         }
 
         private static void HandlingErrors()
@@ -30,13 +40,13 @@ namespace pipelines
             scheduler.Execute();
             try
             {
-                object dummy = result.Value;
+                result.GetValue<int>();
             }
             catch (TaskFailedException e)
             {
                 Console.WriteLine(e);
             }
-            
+
         }
 
         private static void GatherAllFilesTasks()
