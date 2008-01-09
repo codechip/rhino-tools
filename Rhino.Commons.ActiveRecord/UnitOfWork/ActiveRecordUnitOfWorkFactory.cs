@@ -40,10 +40,12 @@ using NHibernate.Cfg;
 
 namespace Rhino.Commons
 {
+	using System.Collections.Generic;
+
 	public class ActiveRecordUnitOfWorkFactory : IUnitOfWorkFactory
 	{
 		private readonly Assembly[] assemblies;
-		private static object lockObj = new object();
+		private static readonly object lockObj = new object();
 		private static bool initialized = false;
 		private readonly IConfigurationSource configurationSource;
 		private INHibernateInitializationAware initializationAware;
@@ -55,11 +57,11 @@ namespace Rhino.Commons
 			set { initializationAware = value; }
 		}
 
-        public ActiveRecordUnitOfWorkFactory()
-        {
-            //assumes that another class will have taken on the responsibility of initializing the ActiveRecord framework
-            initialized = true;
-        }
+		public ActiveRecordUnitOfWorkFactory()
+		{
+			//assumes that another class will have taken on the responsibility of initializing the ActiveRecord framework
+			initialized = true;
+		}
 
 		public ActiveRecordUnitOfWorkFactory(Assembly[] assemblies)
 		{
@@ -67,10 +69,10 @@ namespace Rhino.Commons
 			this.configurationSource = ActiveRecordSectionHandler.Instance;
 		}
 
-        public ActiveRecordUnitOfWorkFactory(string[] assemblyNames)
-            : this(assemblyNames, ActiveRecordSectionHandler.Instance)
-        {
-        }
+		public ActiveRecordUnitOfWorkFactory(string[] assemblyNames)
+			: this(assemblyNames, ActiveRecordSectionHandler.Instance)
+		{
+		}
 
 		public ActiveRecordUnitOfWorkFactory(Assembly[] assemblies, IConfigurationSource configurationSource)
 		{
@@ -78,15 +80,15 @@ namespace Rhino.Commons
 			this.configurationSource = configurationSource;
 		}
 
-        public ActiveRecordUnitOfWorkFactory(string[] assemblyNames, IConfigurationSource configurationSource)
-        {
-            this.configurationSource = configurationSource;
-            this.assemblies = new Assembly[assemblyNames.Length];
-            for (int i = 0; i < assemblyNames.Length; i++)
-                this.assemblies[i] = Assembly.Load(assemblyNames[i]);
-        }
+		public ActiveRecordUnitOfWorkFactory(string[] assemblyNames, IConfigurationSource configurationSource)
+		{
+			this.configurationSource = configurationSource;
+			this.assemblies = new Assembly[assemblyNames.Length];
+			for (int i = 0; i < assemblyNames.Length; i++)
+				this.assemblies[i] = Assembly.Load(assemblyNames[i]);
+		}
 
-	    public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
+		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
 		{
 			InitializeIfNecessary();
 			ISessionScope scope;
@@ -110,20 +112,38 @@ namespace Rhino.Commons
 				{
 					if (!initialized)
 					{
+						List<Type> registerdTypes = new List<Type>();
+						ActiveRecordStarter.SessionFactoryHolderCreated += delegate(ISessionFactoryHolder holder)
+						{
+							holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
+							{
+								registerdTypes.Add(rootType);
+								if (InitializationAware != null)
+								{
+									InitializationAware.Configured(holder.GetConfiguration(rootType));
+								}
+						
+							};
+						};
+						
 						ActiveRecordStarter.ResetInitializationFlag();
 						ActiveRecordStarter.Initialize(assemblies, configurationSource);
+						ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
 						if (InitializationAware != null)
 						{
-							ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-							Configuration configuration = holder.GetConfiguration(typeof (ActiveRecordBase));
-							ISessionFactory sessionFactory = holder.GetSessionFactory(typeof (ActiveRecordBase));
-							InitializationAware.Initialized(configuration, sessionFactory);
+							foreach (Type type in registerdTypes)
+							{
+								Configuration configuration = sessionFactoryHolder.GetConfiguration(type);
+								ISessionFactory factory = sessionFactoryHolder.GetSessionFactory(type);
+								InitializationAware.Initialized(configuration, factory);
+							}
 						}
 						initialized = true;
 					}
 				}
 			}
 		}
+
 
 		public ISession CurrentSession
 		{
@@ -133,9 +153,9 @@ namespace Rhino.Commons
 				if (scope == null)
 					throw new InvalidOperationException("You are not in a unit of work");
 				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-				return holder.CreateSession(typeof (ActiveRecordBase));
+				return holder.CreateSession(typeof(ActiveRecordBase));
 			}
-		    set { throw new NotImplementedException("Not sure how to implement the storeage of the session here"); }
+			set { throw new NotImplementedException("Not sure how to implement the storeage of the session here"); }
 		}
 	}
 }
