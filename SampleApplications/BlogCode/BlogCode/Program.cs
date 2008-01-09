@@ -14,7 +14,7 @@ namespace pipelines
 
             //MultiThreadedMultiplication();
 
-            //ParallelTasks();
+            ParallelTasks();
 
             //MillionsOfTasks();
 
@@ -86,10 +86,6 @@ namespace pipelines
             {
                 items.Add(r.Next());
             }
-            for (int i = 0; i < 12; i++)
-            {
-                Console.WriteLine(items[i]);
-            }
             Console.WriteLine("-----------");
             Scheduler scheduler = new Scheduler();
             ParallelQSort task = new ParallelQSort(items.ToArray());
@@ -97,10 +93,6 @@ namespace pipelines
             scheduler.Execute();
 
             int[] value = task.Completed.GetValue<int[]>();
-            for (int i = 0; i < 12; i++)
-            {
-                Console.WriteLine(value[i]);
-            }
         }
     }
 }

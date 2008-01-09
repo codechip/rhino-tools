@@ -122,11 +122,12 @@ namespace pipelines
                 {
                     if (threadingOptions == ThreadingOptions.WillCreateNewThread)
                     {
+                        // we have to put this back in the tasks list
+                        // otherwise we might never execute this task
+                        ScheduleFirst(task);
+
                         Monitor.Wait(syncLock);
-                    }
-                    else if (threadingOptions != ThreadingOptions.ReuseCurrentThread)
-                    {
-                        return false;
+                        return true;
                     }
                     else //if we are reusing a thread, we can safely go "above" the maxRunnintTask limit
                     {

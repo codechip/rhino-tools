@@ -44,7 +44,7 @@ namespace pipelines
 
         public bool HasValue
         {
-            get { return hasValue; }
+            get { return hasValue || HasError; }
         }
 
         public Exception Exception

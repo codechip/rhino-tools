@@ -14,6 +14,7 @@ namespace pipelines.ErlangTasks.Demos
         public ParallelQSort(int[] items)
         {
             this.items = items;
+            Console.WriteLine(items.Length);
         }
 
         protected override IEnumerable<Condition> Execute()
