@@ -55,10 +55,9 @@ namespace NHibernate.Query.Generator.Tests
 	public class UsingActiveRecordWithQueriesTestFixture
 	{
 		private SessionScope sessionScope;
-	    private long patientRecordId1;
-	    private long patientRecordId2;
+		private long patientRecordId1;
 
-	    [Test]
+		[Test]
 		[Ignore("reverted the patch that supported it")]
 		public void QueryWithJoinOverSamePropertyName()
 		{
@@ -447,28 +446,28 @@ namespace NHibernate.Query.Generator.Tests
 				SetIsLazyByDefault(true);
 			}
 		}
-        [Test]
-        public void CanQueryOnPropertyWithJoin()
-        {
-            Patient[] patients = Patient.FindAll(Where.Patient.PatientRecords.With().BirthDate == new DateTime(1980,1,1));
-            Assert.AreEqual(1, patients.Length);
-        }
+		[Test]
+		public void CanQueryOnPropertyWithJoin()
+		{
+			Patient[] patients = Patient.FindAll(Where.Patient.PatientRecords.With().BirthDate == new DateTime(1980, 1, 1));
+			Assert.AreEqual(1, patients.Length);
+		}
 
-        [Test]
-        public void CanQueryOnComponentWithJoin()
-        {
-            Patient[] patients = Patient.FindAll(
+		[Test]
+		public void CanQueryOnComponentWithJoin()
+		{
+			Patient[] patients = Patient.FindAll(
 				Where.Patient.PatientRecords
 					.With().Name.FirstName == "Ayende");
-            Assert.AreEqual(1, patients.Length);
-        }
+			Assert.AreEqual(1, patients.Length);
+		}
 
-        [Test]
-        public void CanQueryOnPrimaryKeyWithJoin()
-        {
-            Patient[] patients = Patient.FindAll(Where.Patient.PatientRecords.With().Id == patientRecordId1);
-            Assert.AreEqual(1, patients.Length);
-        }
+		[Test]
+		public void CanQueryOnPrimaryKeyWithJoin()
+		{
+			Patient[] patients = Patient.FindAll(Where.Patient.PatientRecords.With().Id == patientRecordId1);
+			Assert.AreEqual(1, patients.Length);
+		}
 
 		[TestFixtureSetUp]
 		public void OneTimeSetup()
@@ -492,18 +491,21 @@ namespace NHibernate.Query.Generator.Tests
 										   typeof(WeirdPropertyClass),
 										   typeof(OtherWeirdClass),
 										   typeof(Post),
-                                           typeof(Blog),
-                                           typeof(User),
-                                           typeof(Role),
-                                           typeof(Comment),
-                                           typeof(Cat),
-                                           typeof(DomesticCat),
-                                           typeof(Project),
-                                           typeof(InstalledComponnet),
-                                           typeof(Componnet),
-                                           typeof(Patient),
-                                           typeof(PatientRecord));
-        }
+										   typeof(Blog),
+										   typeof(User),
+										   typeof(Role),
+										   typeof(Comment),
+										   typeof(Cat),
+										   typeof(DomesticCat),
+										   typeof(Project),
+										   typeof(InstalledComponnet),
+										   typeof(Componnet),
+										   typeof(Patient),
+										   typeof(PatientRecord),
+										   typeof(MediaType),
+										   typeof(Format),
+										   typeof(ResourceType));
+		}
 
 		[SetUp]
 		public void TestInitialize()
@@ -554,21 +556,45 @@ namespace NHibernate.Query.Generator.Tests
 			InstalledComponnet ic = new InstalledComponnet(componnet);
 			ic.Save();
 
-            new Project(ic).Save();
+			new Project(ic).Save();
 
-            PatientRecord record1 = new PatientRecord(new Name("Ayende", "Rahien"), new DateTime(1980, 1, 1));
-            PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
-            Patient patient = new Patient(new PatientRecord[] {record1, record2});
+			PatientRecord record1 = new PatientRecord(new Name("Ayende", "Rahien"), new DateTime(1980, 1, 1));
+			PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
+			Patient patient = new Patient(new PatientRecord[] { record1, record2 });
 			patient.Save();
 
 			patientRecordId1 = record1.Id;
-            patientRecordId2 = record2.Id;
-        }
+		}
 
 		[Test]
 		public void CanUseJoinedBaseClass()
 		{
 			PropertyQueryBuilder<MesajIst> email = Where.MesajIst.Email;
+		}
+
+		[Test]
+		public void ComplexGraphTraversal()
+		{
+			MediaType t = new MediaType();
+			Format f = new Format();
+			f.MediaType = t;
+			t.Formats.Add(f);
+			ResourceType rt = new ResourceType();
+			f.ResourceTypes.Add(rt);
+			ActiveRecordMediator.Save(t);
+			ActiveRecordMediator.Save(f);
+			ActiveRecordMediator.Save(rt);
+			SessionScope.Current.Flush();
+
+			using (ReplaceConsole)
+			{
+				QueryBuilder<MediaType> builder = Where.MediaType
+													.Formats.With()
+													.ResourceTypes.With()
+													.Id == rt.Id;
+				MediaType[] all = ActiveRecordMediator<MediaType>.FindAll(builder);
+				Assert.AreEqual(1, all.Length);
+			}
 		}
 
 		[TearDown]

@@ -39,6 +39,10 @@ using Query;
 
 namespace NHibernate.Query.Generator.Tests
 {
+	using ActiveRecord;
+	using Castle.ActiveRecord;
+	using Castle.ActiveRecord.Framework.Internal;
+
 	[TestFixture]
 	public class FieldProblems
 	{
@@ -86,10 +90,10 @@ namespace NHibernate.Query.Generator.Tests
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InstalledUICulture;
 
 			QueryBuilder<Canistar> builder = (Where.Canistar.State == CanistarState.Packager &&
-			                        Where.Canistar.Lot.Expiration < new DateTime(2007,12,20)) ||
-			                       (Where.Canistar.State == CanistarState.Packager &&
+									Where.Canistar.Lot.Expiration < new DateTime(2007, 12, 20)) ||
+								   (Where.Canistar.State == CanistarState.Packager &&
 									Where.Canistar.DateOffset < new DateTime(2007, 12, 20)
-			                       );
+								   );
 			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration<12/20/2007 12:00:00 AM) or (State = Packager and DateOffset<12/20/2007 12:00:00 AM)))";
 			Assert.AreEqual(expected, builder.ToDetachedCriteria().ToString());
 		}
