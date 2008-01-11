@@ -3,6 +3,7 @@
 	assembly='Rhino.Commons.Test'
 	namespace='Rhino.Commons.Test.Repository'
 	xmlns='urn:nhibernate-mapping-2.2'>
+  <import rename='ParentDto' class='Rhino.Commons.Test.Repository.ParentDto, Rhino.Commons.Test'/>
 	<class name='Parent'>
 		<id name="Id" column="ParentId">
 			<generator class="assigned"/>
@@ -23,11 +24,9 @@
 	</class>
 
 	<query name="QueryParentInfoByName">
-		<![CDATA[
 			select new ParentDto(p.Name, p.Age)
 				from Parent p
 				where p.Name Like :nameOfPerson
-		]]>
 	</query>
 	
 </hibernate-mapping>

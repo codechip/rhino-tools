@@ -343,33 +343,4 @@ namespace Rhino.Commons.Test.Repository
             return DetachedCriteria.For<Parent>().Add(Expression.In("Name", names));
         }
     }
-
-
-
-    [TestFixture, Ignore("Broken after update to trunk, config issue with query in mapping file.")]
-    public class NHibernateRepositoryTests : RepositoryTests
-    {
-        [TestFixtureSetUp]
-        public override void OneTimeTestInitialize()
-        {
-            base.OneTimeTestInitialize(); 
-            string path = Path.GetFullPath(@"Repository\Windsor.config");
-            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
-        }
-    }
-
-
-
-    [TestFixture, Ignore("Broken after update to trunk.")]
-    public class ActiveRecordRepositoryTests : RepositoryTests
-    {
-        [TestFixtureSetUp]
-        public override void OneTimeTestInitialize()
-        {
-            base.OneTimeTestInitialize();
-            string path =
-                Path.GetFullPath(@"Repository\Windsor-AR.config");
-            FixtureInitialize(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
-        }
-    }
 }

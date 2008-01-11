@@ -39,7 +39,7 @@ namespace Rhino.Commons.Test.UoW
 {
     using Util;
 
-    [TestFixture, Ignore("Broken after update to trunk.")]
+    [TestFixture]
     public class TransactionalFlush : TestFixtureBase
     {
         const string TransactionLog = "NHibernate.Transaction.AdoTransaction";

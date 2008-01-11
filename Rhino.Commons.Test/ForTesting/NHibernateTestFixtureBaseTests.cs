@@ -35,7 +35,7 @@ using NHibernate.Cfg;
 
 namespace Rhino.Commons.Test.ForTesting
 {
-    [TestFixture, Ignore("Broken after update to trunk, config issue with query in mapping file.")]
+    [TestFixture]
     public class NHibernateTestFixtureBaseTests : TestFixtureBaseTests
     {
         [Test]

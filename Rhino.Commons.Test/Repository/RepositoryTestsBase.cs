@@ -51,8 +51,7 @@ namespace Rhino.Commons.Test.Repository
         {
             get
             {
-                return MappingInfo.FromAssemblyContaining<Parent>()
-                    .AddQueryLanguageImports(typeof (ParentDto));
+                return MappingInfo.FromAssemblyContaining<Parent>();
             }
         }
 

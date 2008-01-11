@@ -233,6 +233,9 @@
     <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
+    <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
+    <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
+    <Compile Include="Repository\NHibernateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryProjectionTests.cs" />
     <Compile Include="Repository\RepositoryTests.cs" />
     <Compile Include="Repository\RepositoryTestsBase.cs" />
