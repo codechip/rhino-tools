@@ -36,7 +36,7 @@ namespace Rhino.Commons.Test.ForTesting
     [TestFixture]
     public class ActiveRecordTestFixtureBaseTests : TestFixtureBaseTests
     {
-        [Test, Ignore("Breaking after update to trunk.")]
+        [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
         {
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();

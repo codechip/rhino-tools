@@ -231,31 +231,6 @@ namespace Rhino.Commons.Test.Repository
         }
     }
 
-    [TestFixture, Ignore("Broken after update to trunk, config issue with query in mapping file.")]
-    public class NHibernateRepositoryProjectionTests : RepositoryProjectionTests
-    {
-        [TestFixtureSetUp]
-        public override void OneTimeTestInitialize()
-        {
-            base.OneTimeTestInitialize();
-            string path =
-                Path.GetFullPath(@"Repository\Windsor.config");
-
-            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
-        }
-
-
-        [Test]
-        public void CanReportAllFromNamedQuery()
-        {
-            ICollection<ParentDto> dtos =
-                Repository<Parent>.ReportAll<ParentDto>("QueryParentInfoByName",
-                                                        new Parameter("nameOfPerson", "Parent%"));
-            Assert.AreEqual(parentsInDb.Count, dtos.Count);
-        }
-    }
-
-
 
     [TestFixture]
     public class ActiveRecordRepositoryProjectionTests : RepositoryProjectionTests
@@ -271,7 +246,7 @@ namespace Rhino.Commons.Test.Repository
     }
 
 
-    internal class ParentSummaryDto
+    public class ParentSummaryDto
     {
         private string name;
         private int age;
@@ -306,7 +281,7 @@ namespace Rhino.Commons.Test.Repository
     }
 
 
-    internal class ParentDto
+    public class ParentDto
     {
         private string name;
         private int age;
