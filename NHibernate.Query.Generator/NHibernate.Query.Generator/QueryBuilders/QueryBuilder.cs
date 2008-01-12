@@ -368,17 +368,23 @@ Use HQL for this functionality...",
 					temp.Add(criterion);
 				}
 			}
+
+			System.Collections.Generic.List<OrderByClause> allOrderbyClauses = new System.Collections.Generic.List<OrderByClause>(this.orderByClauses);
+
 			if (sortOrders != null)
 			{
-				foreach (OrderByClause sortOrder in sortOrders)
+				allOrderbyClauses.AddRange(sortOrders);
+			}
+
+			foreach (OrderByClause sortOrder in allOrderbyClauses)
+			{
+				if (!string.IsNullOrEmpty(sortOrder.AssociationPath))
 				{
-					if (!string.IsNullOrEmpty(sortOrder.AssociationPath))
-					{
-						NHibernate.Expression.DetachedCriteria tempOrder = CreateCriteriaByPath(sortOrder.AssociationPath, critTable, detachedCriteria, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
-						tempOrder.AddOrder(sortOrder);
-					}
+					NHibernate.Expression.DetachedCriteria tempOrder = CreateCriteriaByPath(sortOrder.AssociationPath, critTable, detachedCriteria, NHibernate.SqlCommand.JoinType.LeftOuterJoin);
+					tempOrder.AddOrder(sortOrder);
 				}
 			}
+			
 			return detachedCriteria;
 		}
 

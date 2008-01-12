@@ -223,6 +223,10 @@ namespace Rhino.Etl.Core.Operations
 		/// <returns></returns>
 		protected virtual bool FullJoin(object left, object right)
 		{
+			if(left == null)
+				return true;
+			if(right == null)
+				return true;
 			return Equals(left, right);
 		}
     }
