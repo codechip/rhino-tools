@@ -58,6 +58,32 @@ namespace Rhino.Commons
 			   return Container.Resolve(serviceName, serviceType);
         }
 
+        /// <summary>
+        /// Tries to resolve the component, but return null
+        /// instead of throwing if it is not there.
+        /// Useful for optional dependencies.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T TryResolve<T>()
+        {
+            return TryResolve<T>(default(T));
+        }
+
+        /// <summary>
+        /// Tries to resolve the compoennt, but return the default 
+        /// value if could not find it, instead of throwing.
+        /// Useful for optional dependencies.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static T TryResolve<T>(T defaultValue)
+        {
+            if (Container.Kernel.HasComponent(typeof(T)) == false)
+                return defaultValue;
+            return Container.Resolve<T>();
+        }
 
         public static T Resolve<T>()
         {

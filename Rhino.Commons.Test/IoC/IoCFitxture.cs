@@ -35,6 +35,8 @@ using MbUnit.Framework;
 
 namespace Rhino.Commons.Test.IoCTests
 {
+    using System.Data.SqlClient;
+
     [TestFixture]
     public class IoCFitxture
     {
@@ -57,7 +59,34 @@ namespace Rhino.Commons.Test.IoCTests
             }
             Assert.AreSame(container, IoC.Container);
         }
-    	
+
+        [Test]
+        public void WillNotThrowIfTryingToResolveNonExistingComponent()
+        {
+            WindsorContainer container = new WindsorContainer();
+            IoC.Initialize(container);
+            IDisposable disposable = IoC.TryResolve<IDisposable>();
+            Assert.IsNull(disposable);
+        }
+
+        [Test]
+        public void WillResolveComponentsInTryResolveIfRegistered()
+        {
+            WindsorContainer container = new WindsorContainer();
+            IoC.Initialize(container);
+            IoC.Container.AddComponent<IDisposable, SqlConnection>();
+            IDisposable disposable = IoC.TryResolve<IDisposable>();
+            Assert.IsNotNull(disposable);
+        }
+
+        [Test]
+        public void CanSpecifyDefaultValueWhenTryingToResolve()
+        {
+            WindsorContainer container = new WindsorContainer();
+            IoC.Initialize(container);
+            IDisposable disposable = IoC.TryResolve<IDisposable>(new SqlConnection());
+            Assert.IsNotNull(disposable);
+        }
     }
 }
     
