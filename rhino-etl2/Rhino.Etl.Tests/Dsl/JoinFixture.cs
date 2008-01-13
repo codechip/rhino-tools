@@ -13,14 +13,14 @@ namespace Rhino.Etl.Tests.Dsl
         [Test]
         public void CanCompile()
         {
-            using(EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/InnerJoin.boo"))
+            using(EtlProcess process = CreateDslInstance("Dsl/InnerJoin.boo"))
                 Assert.IsNotNull(process);
         }
 
         [Test]
         public void CanWriteJoinsToDatabase()
         {
-            using(EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/InnerJoin.boo"))
+            using(EtlProcess process = CreateDslInstance("Dsl/InnerJoin.boo"))
                 process.Execute();
             List<string> roles = new List<string>();
             Use.Transaction("test", delegate(IDbCommand command)

@@ -2,10 +2,11 @@ namespace Rhino.Etl.Tests
 {
     using System.Collections.Generic;
     using System.Data;
+    using Aggregation;
     using Commons;
     using MbUnit.Framework;
 
-    public class BaseUserToPeopleTest
+    public class BaseUserToPeopleTest : BaseDslTest
     {
         [SetUp]
         public virtual void SetUp()

@@ -1,10 +1,13 @@
 namespace Rhino.Etl.Tests.Aggregation
 {
-    using System.Collections.Generic;
-    using Core;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using Core;
     using MbUnit.Framework;
+	using Rhino.Etl.Dsl;
 
-    public class BaseAggregationFixture
+	public class BaseAggregationFixture : BaseDslTest
     {
         protected List<Row> rows;
 

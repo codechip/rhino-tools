@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Aggregation\AggregationFixture.cs" />
     <Compile Include="Aggregation\BaseAggregationFixture.cs" />
+    <Compile Include="Aggregation\BaseDslTest.cs" />
     <Compile Include="Aggregation\CostPerProductAggregation.cs" />
     <Compile Include="Aggregation\RowCount.cs" />
     <Compile Include="BaseFibonacciTest.cs" />

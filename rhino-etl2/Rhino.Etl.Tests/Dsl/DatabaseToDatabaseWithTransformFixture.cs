@@ -13,14 +13,14 @@ namespace Rhino.Etl.Tests.Dsl
         [Test]
         public void CanCompile()
         {
-            using(EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/UsersToPeople.boo"))
+            using(EtlProcess process = CreateDslInstance("Dsl/UsersToPeople.boo"))
                 Assert.IsNotNull(process);
         }
 
         [Test]
         public void CanCopyTableWithTransform()
         {
-            using(EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/UsersToPeople.boo"))
+            using(EtlProcess process = CreateDslInstance("Dsl/UsersToPeople.boo"))
                 process.Execute();
 
             List<string[]> names = Use.Transaction<List<string[]>>("test", delegate(IDbCommand cmd)

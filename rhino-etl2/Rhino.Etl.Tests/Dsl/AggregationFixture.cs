@@ -1,6 +1,8 @@
 namespace Rhino.Etl.Tests.Dsl
 {
-    using System.Collections.Generic;
+	using System;
+	using System.Collections.Generic;
+    using System.IO;
     using Aggregation;
     using Core;
     using Joins;
@@ -14,14 +16,15 @@ namespace Rhino.Etl.Tests.Dsl
         [Test]
         public void CanCompile()
         {
-            EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/Aggregate.boo");
+            EtlProcess process = CreateDslInstance("Dsl/Aggregate.boo");
             Assert.IsNotNull(process);
         }
 
-        [Test]
+
+    	[Test]
         public void CanPerformAggregationFromDsl()
         {
-            EtlProcess process = EtlDslEngine.Facotry.Create<EtlProcess>("Dsl/Aggregate.boo");
+            EtlProcess process = CreateDslInstance("Dsl/Aggregate.boo");
             process.Register(new GenericEnumerableOperation(rows));
             ResultsToList operation = new ResultsToList();
             process.RegisterLast(operation);
