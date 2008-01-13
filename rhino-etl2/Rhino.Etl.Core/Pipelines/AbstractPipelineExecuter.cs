@@ -21,7 +21,7 @@ namespace Rhino.Etl.Core.Pipelines
         {
             try
             {
-                IEnumerable<Row> enumerablePipeline = PipelineToEnumerable(pipeline);
+                IEnumerable<Row> enumerablePipeline = PipelineToEnumerable(pipeline, new List<Row>());
                 try
                 {
                     DateTime start = DateTime.Now;
@@ -41,21 +41,21 @@ namespace Rhino.Etl.Core.Pipelines
             DisposeAllOperations(pipeline);
         }
 
-        /// <summary>
-        /// Transform the pipeline to an enumerable
-        /// </summary>
-        /// <param name="pipeline">The pipeline.</param>
-        /// <returns></returns>
-        public virtual IEnumerable<Row> PipelineToEnumerable(ICollection<IOperation> pipeline)
+		/// <summary>
+		/// Transform the pipeline to an enumerable
+		/// </summary>
+		/// <param name="pipeline">The pipeline.</param>
+		/// <param name="rows">The rows</param>
+		/// <returns></returns>
+        public virtual IEnumerable<Row> PipelineToEnumerable(ICollection<IOperation> pipeline, IEnumerable<Row> rows)
         {
-            IEnumerable<Row> current = new List<Row>();
-            foreach (IOperation operation in pipeline)
+        	foreach (IOperation operation in pipeline)
             {
                 operation.PrepareForExecution(this);
-                IEnumerable<Row> enumerator = operation.Execute(current);
-                current = DecorateEnumerable(operation, enumerator);
+                IEnumerable<Row> enumerator = operation.Execute(rows);
+                rows = DecorateEnumerable(operation, enumerator);
             }
-            return current;
+            return rows;
         }
 
         /// <summary>

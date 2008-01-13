@@ -11,7 +11,7 @@ namespace Rhino.Etl.Tests
         {
             InMemoryFibonacci fibonacci = new InMemoryFibonacci();
             fibonacci.Execute();
-            Assert.AreEqual(25, fibonacci.FibonacciOperation.Statistics.ProcessedRows);
+            Assert.AreEqual(25, fibonacci.FibonacciOperation.Statistics.OutputtedRows);
         }
 
         [Test]

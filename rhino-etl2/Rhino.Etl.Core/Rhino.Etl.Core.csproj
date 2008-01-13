@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="Boo.Lang, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Build\Rhino.Commons\Boo.Lang.dll</HintPath>
+      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enumerables\ThreadSafeEnumerator.cs" />
+    <Compile Include="Operations\BranchingOperation.cs" />
     <Compile Include="Pipelines\AbstractPipelineExecuter.cs" />
     <Compile Include="ConventionOperations\ConventionInputCommandOperation.cs" />
     <Compile Include="ConventionOperations\ConventionOutputCommandOperation.cs" />

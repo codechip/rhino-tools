@@ -49,6 +49,7 @@ namespace Rhino.Etl.Core.ConventionOperations
         {
             supportedTypes = new Hashtable();
             supportedTypes[typeof (byte[])] = typeof (byte[]);
+			supportedTypes[typeof (Guid)] = typeof (Guid);
             supportedTypes[typeof (Object)] = typeof (Object);
             supportedTypes[typeof (Boolean)] = typeof (Boolean);
             supportedTypes[typeof (SByte)] = typeof (SByte);

@@ -83,7 +83,7 @@ namespace Rhino.Etl.Core.Operations
         public IEnumerable<Row> Execute(IEnumerable<Row> rows)
         {
             MergeLastOperationsToOperations();
-            return pipelineExeuter.PipelineToEnumerable(operations);
+            return pipelineExeuter.PipelineToEnumerable(operations, rows);
         }
 
         ///<summary>

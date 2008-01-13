@@ -105,10 +105,10 @@ namespace Rhino.Etl.Core
         /// <param name="dictionary">The dictionary.</param>
         protected virtual void OnRowProcessed(AbstractOperation op, Row dictionary)
         {
-            if (op.Statistics.ProcessedRows % 1000 == 0)
-                Info("Processed {0} rows in {1}", op.Statistics.ProcessedRows, op.Name);
+            if (op.Statistics.OutputtedRows % 1000 == 0)
+                Info("Processed {0} rows in {1}", op.Statistics.OutputtedRows, op.Name);
             else
-                Debug("Processed {0} rows in {1}", op.Statistics.ProcessedRows, op.Name);
+                Debug("Processed {0} rows in {1}", op.Statistics.OutputtedRows, op.Name);
         }
 
         /// <summary>

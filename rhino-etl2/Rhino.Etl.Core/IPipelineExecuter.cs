@@ -17,11 +17,13 @@ namespace Rhino.Etl.Core
         /// <param name="pipeline">The pipeline.</param>
         void Execute(string pipelineName, ICollection<IOperation> pipeline);
 
-        /// <summary>
-        /// Transform the pipeline to an enumerable
-        /// </summary>
-        /// <param name="pipeline">The pipeline.</param>
-        IEnumerable<Row> PipelineToEnumerable(ICollection<IOperation> pipeline);
+		/// <summary>
+		/// Transform the pipeline to an enumerable
+		/// </summary>
+		/// <param name="pipeline">The pipeline.</param>
+		/// <param name="rows">The rows.</param>
+		/// <returns></returns>
+        IEnumerable<Row> PipelineToEnumerable(ICollection<IOperation> pipeline, IEnumerable<Row> rows);
 
         /// <summary>
         /// Gets all errors that occured under this executer

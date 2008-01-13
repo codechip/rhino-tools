@@ -10,15 +10,15 @@ namespace Rhino.Etl.Core.Operations
     {
         private DateTime? start;
         private DateTime? end;
-        private int processedRows = 0;
+        private long outputtedRows = 0;
 
         /// <summary>
-        /// Gets number of the processed rows.
+        /// Gets number of the outputted rows.
         /// </summary>
         /// <value>The processed rows.</value>
-        public int ProcessedRows
+        public long OutputtedRows
         {
-            get { return processedRows; }
+            get { return outputtedRows; }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Rhino.Etl.Core.Operations
         /// </summary>
         public void MarkRowProcessed()
         {
-            Interlocked.Increment(ref processedRows);
+            Interlocked.Increment(ref outputtedRows);
         }
 
         /// <summary>
@@ -68,7 +68,16 @@ namespace Rhino.Etl.Core.Operations
         /// </returns>
         public override string ToString()
         {
-            return ProcessedRows + " Rows in " + Duration;
+            return OutputtedRows + " Rows in " + Duration;
         }
+
+		/// <summary>
+		/// Adds to the count of the output rows.
+		/// </summary>
+		/// <param name="rowProcessed">The row processed.</param>
+    	public void AddOutputRows(long rowProcessed)
+    	{
+    		Interlocked.Increment(ref outputtedRows);
+    	}
     }
 }

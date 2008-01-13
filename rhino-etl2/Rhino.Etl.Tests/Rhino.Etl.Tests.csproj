@@ -30,7 +30,7 @@
   <ItemGroup>
     <Reference Include="Boo.Lang, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Build\Rhino.Commons\Boo.Lang.dll</HintPath>
+      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -73,6 +73,7 @@
     <None Include="Dsl\Aggregate.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="Branches\BranchingProcess.cs" />
     <Compile Include="Dsl\AggregationFixture.cs" />
     <Compile Include="Dsl\DatabaseToDatabaseWithTransformFixture.cs" />
     <Compile Include="Dsl\JoinFixture.cs" />
@@ -120,6 +121,8 @@
     <Compile Include="LoadTest\UpperCaseUserNames.cs" />
     <Compile Include="OutputCommandFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Branches\MultiplyByThreeOperation.cs" />
+    <Compile Include="Branches\BranchesFixture.cs" />
     <Compile Include="SqlBatchOperationFixture.cs" />
     <Compile Include="SqlBulkInsertOperationFixture.cs" />
     <Compile Include="UsingDAL\ExportUsersToFile.cs" />
