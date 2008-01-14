@@ -59,6 +59,8 @@
     <Compile Include="ConventionOperations\ConventionSqlBatchOpeartion.cs" />
     <Compile Include="Enumerables\ThreadSafeEnumerator.cs" />
     <Compile Include="Operations\BranchingOperation.cs" />
+    <Compile Include="Operations\JoinType.cs" />
+    <Compile Include="Operations\NestedLoopsJoinOperation.cs" />
     <Compile Include="Pipelines\AbstractPipelineExecuter.cs" />
     <Compile Include="ConventionOperations\ConventionInputCommandOperation.cs" />
     <Compile Include="ConventionOperations\ConventionOutputCommandOperation.cs" />

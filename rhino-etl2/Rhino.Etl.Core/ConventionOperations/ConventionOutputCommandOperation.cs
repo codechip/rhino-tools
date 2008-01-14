@@ -50,6 +50,7 @@ namespace Rhino.Etl.Core.ConventionOperations
 		{
 			PrepareRow(row);
 			cmd.CommandText = Command;
+			CopyRowValuesToCommandParameters(currentCommand, row);
 		}
 
 	}

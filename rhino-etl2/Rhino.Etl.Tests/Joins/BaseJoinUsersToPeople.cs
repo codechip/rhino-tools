@@ -4,7 +4,7 @@ namespace Rhino.Etl.Tests.Joins
     using Core;
     using Rhino.Etl.Core.Operations;
 
-    public abstract class BaseJoinUsersToPeople : JoinOperation
+    public abstract class BaseJoinUsersToPeople : NestedLoopsJoinOperation
     {
         protected override Row MergeRows(Row leftRow, Row rightRow)
         {

@@ -9,6 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rhino.Etl.Tests</RootNamespace>
     <AssemblyName>Rhino.Etl.Tests</AssemblyName>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -111,10 +113,15 @@
     <Compile Include="Joins\LeftJoinUsersToPeopleByEmail.cs" />
     <Compile Include="Joins\RightJoinUsersToPeopleByEmail.cs" />
     <Compile Include="Joins\TrivialUsersToPeopleJoinProcess.cs" />
+    <Compile Include="LoadTest\AccumulateResults.cs" />
     <Compile Include="LoadTest\BatchUpdateUserNames.cs" />
     <Compile Include="LoadTest\BulkInsertUsers.cs" />
+    <Compile Include="LoadTest\GenerateRandomIds.cs" />
     <Compile Include="LoadTest\GenerateUsers.cs" />
+    <Compile Include="LoadTest\JoinUsersAndIds.cs" />
+    <Compile Include="LoadTest\Join_250_000_UsersWithMostlyFallingOut.cs" />
     <Compile Include="LoadTest\LoadTestFixture.cs" />
+    <Compile Include="LoadTest\LoadTestJoinsFixture.cs" />
     <Compile Include="LoadTest\PushDataToDatabase.cs" />
     <Compile Include="LoadTest\ReadUsers.cs" />
     <Compile Include="LoadTest\UpdateUserNames.cs" />
