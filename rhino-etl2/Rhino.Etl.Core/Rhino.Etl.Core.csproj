@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConventionOperations\ConventionSqlBatchOpeartion.cs" />
     <Compile Include="Enumerables\ThreadSafeEnumerator.cs" />
     <Compile Include="Operations\BranchingOperation.cs" />
     <Compile Include="Pipelines\AbstractPipelineExecuter.cs" />

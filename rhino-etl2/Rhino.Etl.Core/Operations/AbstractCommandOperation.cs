@@ -1,6 +1,7 @@
 namespace Rhino.Etl.Core.Operations
 {
     using System;
+    using System.Collections;
     using System.Data;
 
     /// <summary>
@@ -23,17 +24,14 @@ namespace Rhino.Etl.Core.Operations
         /// </summary>
         protected IDbCommand currentCommand;
 
-        /// <summary>
-        /// Adds the parameter the current command
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="val">The val.</param>
-        protected void AddParameter(string name, object val)
-        {
-            IDbDataParameter parameter = currentCommand.CreateParameter();
-            parameter.ParameterName = name;
-            parameter.Value = val ?? DBNull.Value;
-            currentCommand.Parameters.Add(parameter);
-        }
+		/// <summary>
+		/// Adds the parameter to the current command
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="value">The value.</param>
+		protected void AddParameter(string name, object value)
+		{
+			AddParameter(currentCommand, name, value);
+		}
     }
 }
