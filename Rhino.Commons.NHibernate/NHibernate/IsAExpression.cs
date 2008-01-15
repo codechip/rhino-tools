@@ -32,7 +32,7 @@ namespace Rhino.Commons
 	using System.Collections.Generic;
 	using global::NHibernate;
 	using global::NHibernate.Engine;
-	using global::NHibernate.Expression;
+	using global::NHibernate.Expressions;
 	using global::NHibernate.Hql.Util;
 	using global::NHibernate.Persister.Entity;
 	using global::NHibernate.SqlCommand;

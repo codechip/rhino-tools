@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using NHibernate.Expression;
+using NHibernate.Expressions;
 
 namespace Rhino.Commons
 {

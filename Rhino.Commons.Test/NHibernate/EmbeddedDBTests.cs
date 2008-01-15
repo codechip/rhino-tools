@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.Text;
 using NHibernate;
 using MbUnit.Framework;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.NHibernate

@@ -32,7 +32,7 @@ using System.IO;
 using Castle.ActiveRecord;
 using MbUnit.Framework;
 using NHibernate;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
