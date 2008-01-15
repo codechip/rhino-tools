@@ -86,15 +86,15 @@ namespace NHibernate.Query.Generator.Tests
 		public void ShouldGenerate_OrQuery_WithTwoPredicates()
 		{
 			//needed because we are doing a date.ToString()
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InstalledUICulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InstalledUICulture;
+			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
 			QueryBuilder<Canistar> builder = (Where.Canistar.State == CanistarState.Packager &&
 									Where.Canistar.Lot.Expiration < new DateTime(2007, 12, 20)) ||
 								   (Where.Canistar.State == CanistarState.Packager &&
 									Where.Canistar.DateOffset < new DateTime(2007, 12, 20)
 								   );
-			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration<12/20/2007 12:00:00 AM) or (State = Packager and DateOffset<12/20/2007 12:00:00 AM)))";
+			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration<12/20/2007 00:00:00) or (State = Packager and DateOffset<12/20/2007 00:00:00)))";
 			Assert.AreEqual(expected, builder.ToDetachedCriteria().ToString());
 		}
 	}

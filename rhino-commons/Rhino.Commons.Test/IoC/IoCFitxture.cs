@@ -30,7 +30,7 @@
 using System;
 using System.Collections.Generic;
 using Castle.Windsor;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using MbUnit.Framework;
 
 namespace Rhino.Commons.Test.IoCTests

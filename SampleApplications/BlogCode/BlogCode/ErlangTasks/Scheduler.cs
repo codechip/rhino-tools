@@ -6,17 +6,33 @@ namespace pipelines
 
     public class Scheduler
     {
+        [ThreadStatic]
+        private static LinkedList<SchedulePair> currentThreadQueuedTasks;
         //I am waiting for the bug about this not being refreshed with hot swappable CPUs
         private readonly int cachedProcessorCount = Environment.ProcessorCount;
         private readonly AbstractTask idleTask = new YieldOnIdleTask();
-        private readonly LinkedList<SchedulePair> queuedTasks = new LinkedList<SchedulePair>();
-        private readonly LinkedList<AbstractTask> executingTasks = new LinkedList<AbstractTask>();
+
         private readonly object syncLock = new object();
         private readonly LinkedList<Thread> threads = new LinkedList<Thread>();
         private int currentRunningProcessCount = 0;
         private ScheduleStatus status;
         private int threadCount;
         private int totalTasks;
+
+        /// <summary>
+        /// This contains the list of tasks to execute in the current queue
+        /// </summary>
+        private static LinkedList<SchedulePair> CurrentThreadQueuedTasks
+        {
+            get
+            {
+                if (currentThreadQueuedTasks == null)
+                {
+                    currentThreadQueuedTasks = new LinkedList<SchedulePair>();
+                }
+                return currentThreadQueuedTasks;
+            }
+        }
 
         public int TotalTasks
         {
@@ -43,10 +59,9 @@ namespace pipelines
                 if (task.ExecutionState == ExecutionState.Running)
                 {
                     Interlocked.Decrement(ref currentRunningProcessCount);
-                    executingTasks.Remove(task);
                 }
                 task.ExecutionState = ExecutionState.Scheduled;
-                queuedTasks.AddLast(new SchedulePair(task, condition));
+                CurrentThreadQueuedTasks.AddLast(new SchedulePair(task, condition));
                 Monitor.PulseAll(syncLock);
             }
             return task.Completed;
@@ -54,30 +69,28 @@ namespace pipelines
 
         public void Execute()
         {
+            for (int i = 0; i < cachedProcessorCount; i++)
+            {
+                SpinOffSchedulerThread();
+            }
             while (true)
             {
-                if (TrySchedule(RunInSeparateThread, ThreadingOptions.WillCreateNewThread) == false)
+                if (TrySchedule() == false)
                     break;
             }
         }
 
-        public void ExecuteTaskInSameThread(AbstractTask task)
-        {
-            task.Continue();
-        }
-
-        public void RunInSeparateThread(AbstractTask task)
+        public void SpinOffSchedulerThread()
         {
             int currentThreadId = Interlocked.Increment(ref threadCount);
             Thread thread = new Thread(delegate(object state)
             {
                 try
                 {
-                    task.Continue();//execute once 
                     //now we will reuse this thread to execute additional schedling
                     while (true)
                     {
-                        if (TrySchedule(ExecuteTaskInSameThread, ThreadingOptions.ReuseCurrentThread) == false)
+                        if (TrySchedule() == false)
                             break;
                     }
                 }
@@ -94,72 +107,51 @@ namespace pipelines
 
         public void ScheduleFirst(AbstractTask task)
         {
-            lock(syncLock)
+            lock (syncLock)
             {
                 task.ExecutionState = ExecutionState.Scheduled;
-                queuedTasks.AddFirst(new SchedulePair(task, delegate { return true; }));
+                CurrentThreadQueuedTasks.AddFirst(new SchedulePair(task, delegate { return true; }));
                 Monitor.PulseAll(syncLock);
             }
         }
 
-        public bool TrySchedule(Action<AbstractTask> executeTask, ThreadingOptions threadingOptions)
+        public bool TrySchedule()
         {
             AbstractTask task = null;
             lock (syncLock)
             {
-                if (queuedTasks.Count == 0 && currentRunningProcessCount == 0)
+                if (CurrentThreadQueuedTasks.Count == 0 && currentRunningProcessCount == 0)
                     return false;
-                bool? result = TryGetTaskToRun(ref task, threadingOptions);
+                bool? result = TryGetTaskToRun(ref task);
                 if (result.HasValue)
                     return result.Value;
 
-                //limit to the required concurrency level
-                
-                //note that here we make a copy of the value, to avoid issues
-                //with using a cache for it, thus missing a value change.
-                int tmpCurrentRunningProcesses = currentRunningProcessCount;
-                while (tmpCurrentRunningProcesses >= cachedProcessorCount)
-                {
-                    if (threadingOptions == ThreadingOptions.WillCreateNewThread)
-                    {
-                        // we have to put this back in the tasks list
-                        // otherwise we might never execute this task
-                        ScheduleFirst(task);
-
-                        Monitor.Wait(syncLock);
-                        return true;
-                    }
-                    else //if we are reusing a thread, we can safely go "above" the maxRunnintTask limit
-                    {
-                        break;
-                    }
-                }
+               
                 Interlocked.Increment(ref currentRunningProcessCount);
-                executingTasks.AddLast(task);
                 if (totalTasks%100 == 0)
                 {
                     Console.WriteLine("Running: {0}, queued: {1}, Total: {2}", currentRunningProcessCount,
-                                      queuedTasks.Count, totalTasks);
+                                      CurrentThreadQueuedTasks.Count, totalTasks);
                 }
             }
-            executeTask(task);
+            task.Continue();
             return true;
         }
 
         /// <summary>
         /// This must run under the lock!
         /// </summary>
-        private bool? TryGetTaskToRun(ref AbstractTask task, ThreadingOptions threadingOptions)
+        private bool? TryGetTaskToRun(ref AbstractTask task)
         {
             //this approach gives us an O(1) _removal_ cost from the list
-            LinkedListNode<SchedulePair> node = queuedTasks.First;
+            LinkedListNode<SchedulePair> node = CurrentThreadQueuedTasks.First;
             while (node != null)
             {
                 SchedulePair pair = node.Value;
                 if (pair.Condition())
                 {
                     task = pair.Task;
-                    queuedTasks.Remove(node);
+                    CurrentThreadQueuedTasks.Remove(node);
                     break;
                 }
                 pair.CannotRunCount += 1;
@@ -171,12 +163,13 @@ namespace pipelines
                 if (pair.CannotRunCount == 3 && Status != ScheduleStatus.Idle)
                 {
                     pair.CannotRunCount = -1; //give it a bit of a boost for the next time
-                    queuedTasks.Remove(prev);
-                    queuedTasks.AddLast(prev);
+                    CurrentThreadQueuedTasks.Remove(prev);
+                    CurrentThreadQueuedTasks.AddLast(prev);
                 }
             }
-            if (task == null) // no tasks to run
+            if (task == null) // no tasks to run in the curren threa, time to steal some work...
             {
+                StealWorkFromAnotherThread();
                 //nothing runs, and there are no tasks that we _can_ run
                 // we are either deadlocked or waiting for an external resource
                 // we will let the idle task decide what to do.
@@ -185,15 +178,6 @@ namespace pipelines
                     Status = ScheduleStatus.Idle;
                     task = idleTask;
                     return true;
-                }
-                if (threadingOptions == ThreadingOptions.WillCreateNewThread)
-                {
-                    Monitor.Wait(syncLock); // wait for a change
-                    return true;
-                }
-                else
-                {
-                    return false;
                 }
             }
             return null;
@@ -204,7 +188,6 @@ namespace pipelines
             lock (syncLock)
             {
                 Interlocked.Decrement(ref currentRunningProcessCount);
-                executingTasks.Remove(task);
                 Monitor.PulseAll(syncLock);
             }
         }

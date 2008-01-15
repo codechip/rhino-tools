@@ -1,4 +1,4 @@
-Imports NHibernate.Expression
+Imports NHibernate.Expressions
 Imports System
 Imports System.Collections
 Imports System.Collections.Generic
@@ -438,6 +438,7 @@ Namespace Query
 	End Class
 
 End Namespace
+
 
 
 

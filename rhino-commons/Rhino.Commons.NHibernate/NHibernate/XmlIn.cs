@@ -37,7 +37,7 @@ namespace Rhino.Commons
 	using global::NHibernate;
 	using global::NHibernate.Dialect;
 	using global::NHibernate.Engine;
-	using global::NHibernate.Expression;
+	using global::NHibernate.Expressions;
 	using global::NHibernate.SqlCommand;
 	using global::NHibernate.SqlTypes;
 	using global::NHibernate.Type;

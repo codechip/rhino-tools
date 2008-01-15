@@ -28,7 +28,7 @@
 
 
 using NHibernate;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
 using NHibernate.SqlCommand;
 

@@ -30,7 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 
 namespace Rhino.Commons.Test.Binsor
 {

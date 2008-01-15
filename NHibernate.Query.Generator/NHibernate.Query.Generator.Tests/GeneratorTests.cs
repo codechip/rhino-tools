@@ -35,10 +35,10 @@ using System.Text;
 using System.Xml;
 using MbUnit.Core.Exceptions;
 using Microsoft.CSharp;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using MbUnit.Framework;
 using Query;
-using Expr = NHibernate.Expression.Expression;
+using Expr = NHibernate.Expressions.Expression;
 
 namespace NHibernate.Query.Generator.Tests
 {

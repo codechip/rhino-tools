@@ -34,7 +34,7 @@ using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
 using Castle.ActiveRecord.Queries;
 using NHibernate.Cfg;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
 using NHibernate.SqlCommand;
 using NHibernate.Tool.hbm2ddl;

@@ -1104,6 +1104,11 @@
             Use for simple types.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.RelationAttribute.ElementType">
+            <summary>
+            Use for simple types.
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.RelationAttribute.NotFoundBehaviour">
             <summary>
             Gets or sets the way broken relations are handled.
@@ -3907,7 +3912,7 @@
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitDependentObject(Castle.ActiveRecord.Framework.Internal.DependentObjectModel)">
             <summary>
-            Visits the Dependent Object à
+            Visits the Dependent Object א
             </summary>
             <param name="model">The model</param>
         </member>
@@ -4565,6 +4570,58 @@
             </summary>
             <value>The max results.</value>
         </member>
+        <member name="T:Castle.ActiveRecord.Queries.Modifiers.QueryResultTransformer">
+            <summary>
+            Defines a query result transformation.
+            See <see cref="T:NHibernate.Transform.IResultTransformer"/> for more information.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.QueryResultTransformer.#ctor(NHibernate.Transform.IResultTransformer)">
+            <summary>
+            Initializes a new instance of the <see cref="P:Castle.ActiveRecord.Queries.Modifiers.QueryResultTransformer.ResultTransformer"/> class.
+            </summary>
+            <param name="transformer">The result transformer.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.QueryResultTransformer.Castle#ActiveRecord#Queries#Modifiers#IQueryModifier#Apply(NHibernate.IQuery)">
+            <summary>
+            Applies this modifier to the query.
+            </summary>
+            <param name="query">The query</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.Modifiers.QueryResultTransformer.ResultTransformer">
+            <summary>
+            Gets the <see cref="T:NHibernate.Transform.IResultTransformer"/>.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition">
+            <summary>
+            Represents a SQL query join definition.
+            See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition"/> class.
+            </summary>
+            <param name="associationPath">The association path.</param>
+            <param name="associationAlias">The association alias.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition.Castle#ActiveRecord#Queries#Modifiers#IQueryModifier#Apply(NHibernate.IQuery)">
+            <summary>
+            Applies this modifier to the query.
+            </summary>s
+            <param name="query">The query</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition.AssociationPath">
+            <summary>
+            Gets the path of the assocation
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.Modifiers.SqlQueryJoinDefinition.AssociationAlias">
+            <summary>
+            Gets the alias for the association
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Queries.Modifiers.SqlQueryReturnDefinition">
             <summary>
             Represents a SQL query return definition.
@@ -4595,6 +4652,35 @@
             Gets the alias for the object
             </summary>
             <value>The return alias.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition">
+            <summary>
+            Represents a SQL query scalar definition.
+            See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition.#ctor(NHibernate.Type.IType,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition"/> class.
+            </summary>
+            <param name="scalarType">The scalar type.</param>
+            <param name="columnAlias">The column alias.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition.Castle#ActiveRecord#Queries#Modifiers#IQueryModifier#Apply(NHibernate.IQuery)">
+            <summary>
+            Applies this modifier to the query.
+            </summary>s
+            <param name="query">The query</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition.ScalarType">
+            <summary>
+            Gets the scalar type
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Queries.Modifiers.SqlQueryScalarDefinition.ColumnAlias">
+            <summary>
+            Gets the column alias for the scalar
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordBaseQuery">
             <summary>
@@ -4832,6 +4918,24 @@
             See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.AddSqlJoinDefinition(System.String,System.String)">
+            <summary>
+            Adds a SQL query join definition.
+            See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.AddSqlScalarDefinition(NHibernate.Type.IType,System.String)">
+            <summary>
+            Adds a SQL query scalar definition.
+            See <see cref="M:NHibernate.ISession.CreateSQLQuery(System.String,System.String[],System.Type[])"/> for more information.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.SetResultTransformer(NHibernate.Transform.IResultTransformer)">
+            <summary>
+            Adds a query result transformer.
+            See <see cref="T:NHibernate.Transform.IResultTransformer"/> for more information.
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.Queries.HqlBasedQuery.CreateQuery(NHibernate.ISession)">
             <summary>
             Creates the <see cref="T:NHibernate.IQuery"/> instance.
@@ -4844,14 +4948,14 @@
             The query text.
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery.#ctor(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery.#ctor(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery"/> class.
             </summary>
             <param name="targetType">The target type.</param>
             <param name="criterias">Criteria applied to the query</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery.#ctor(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery.#ctor(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.ActiveRecordCriteriaQuery"/> class.
             </summary>
@@ -4929,14 +5033,14 @@
             </summary>
             <param name="targetType">The target type.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.CountQuery.#ctor(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.Queries.CountQuery.#ctor(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.CountQuery"/> class.
             </summary>
             <param name="targetType">The target type.</param>
             <param name="criterias">Criteria applied to the query</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.CountQuery.#ctor(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.Queries.CountQuery.#ctor(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.CountQuery"/> class.
             </summary>
@@ -4999,14 +5103,14 @@
             </code>
             </example>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given
             </summary>
             <param name="projections">The projections to use in the query</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[],NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[],NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5018,7 +5122,7 @@
             <param name="orders">The order by which to get the result</param>
             <param name="projections">The projections</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5030,14 +5134,14 @@
             <param name="order">The order by which to get the result</param>
             <param name="projections">The projections</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expression.Order,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expressions.Order,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
             The results will be loaded according to the order specified
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`2.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5094,14 +5198,14 @@
             Default implemenation of ProjectionQuery that returns an Untyped object array tuples
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given
             </summary>
             <param name="projections">The projections to use in the query</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[],NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[],NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5113,7 +5217,7 @@
             <param name="orders">The order by which to get the result</param>
             <param name="projections">The projections</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5125,14 +5229,14 @@
             <param name="order">The order by which to get the result</param>
             <param name="projections">The projections</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expression.Order,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expressions.Order,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
             The results will be loaded according to the order specified
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.ProjectionList)">
+        <member name="M:Castle.ActiveRecord.Queries.ProjectionQuery`1.#ctor(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.ProjectionList)">
             <summary>
             Create a new <see cref="T:Castle.ActiveRecord.Queries.ProjectionQuery`2"/> with the given projections.
             At least one projections must be given.
@@ -5155,14 +5259,14 @@
             </code>
             </example>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.#ctor(NHibernate.Expression.IProjection,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.#ctor(NHibernate.Expressions.IProjection,NHibernate.Expressions.ICriterion[])">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2"/> class.
             </summary>
             <param name="projection">The projection.</param>
             <param name="criterions">The criterions.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.#ctor(NHibernate.Expression.IProjection,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2.#ctor(NHibernate.Expressions.IProjection,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Queries.ScalarProjectionQuery`2"/> class.
             </summary>
@@ -6640,7 +6744,7 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6649,7 +6753,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Count(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -6682,7 +6786,7 @@
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
@@ -6690,7 +6794,7 @@
             <param name="criteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.Exists(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
@@ -6698,13 +6802,13 @@
             <param name="detachedCriteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns all instances found for the specified type according to the criteria
             </summary>
             <param name="targetType">The target type.</param>
             <param name="detachedCriteria">The criteria.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type)">
@@ -6714,17 +6818,17 @@
             <param name="targetType">The target type.</param>
             <returns>The <see cref="T:System.Array"/> of results</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using sort orders and criteria.
             </summary>
             <param name="targetType">The The target type.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindAll(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using criteria.
@@ -6772,7 +6876,7 @@
             <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to 
             <c>true</c> and the row is not found</exception>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -6781,7 +6885,7 @@
             <param name="orders">The sort order - used to determine which record is the first one.</param>
             <returns>A <c>targetType</c> instance or <c>null.</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -6790,7 +6894,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindFirst(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -6798,7 +6902,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -6807,7 +6911,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.FindOne(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -6816,29 +6920,29 @@
             <param name="criteria">The criteria</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
             <param name="targetType">The target type.</param>
             <param name="firstResult">The number of the first row to retrieve.</param>
             <param name="maxResults">The maximum number of results retrieved.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
             <param name="targetType">The target type.</param>
             <param name="firstResult">The number of the first row to retrieve.</param>
             <param name="maxResults">The maximum number of results retrieved.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
@@ -6848,7 +6952,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
@@ -6995,22 +7099,22 @@
             Ascending Order
             </summary>
             <remarks>
-            Returns an array of Ascending <see cref="T:NHibernate.Expression.Order"/> instances specifing which properties to use to 
+            Returns an array of Ascending <see cref="T:NHibernate.Expressions.Order"/> instances specifing which properties to use to 
             order a result.
             </remarks>
             <param name="propertyNames">List of property names to order by ascending</param>
-            <returns>Array of <see cref="T:NHibernate.Expression.Order"/> objects suitable for passing to FindAll and variants</returns>
+            <returns>Array of <see cref="T:NHibernate.Expressions.Order"/> objects suitable for passing to FindAll and variants</returns>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordBase.Desc(System.String[])">
             <summary>
             Descending Order
             </summary>
             <remarks>
-            Returns an array of Descending <see cref="T:NHibernate.Expression.Order"/> instances specifing which properties to use to 
+            Returns an array of Descending <see cref="T:NHibernate.Expressions.Order"/> instances specifing which properties to use to 
             order a result.
             </remarks>
             <param name="propertyNames">List of property names to order by descending</param>
-            <returns>Array of <see cref="T:NHibernate.Expression.Order"/> objects suitable for passing to FindAll and variants</returns>
+            <returns>Array of <see cref="T:NHibernate.Expressions.Order"/> objects suitable for passing to FindAll and variants</returns>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordBase`1">
             <summary>
@@ -7149,14 +7253,14 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count(NHibernate.Expressions.ICriterion[])">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
             <param name="criteria">The criteria expression</param>		
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Count(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -7186,21 +7290,21 @@
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.Expressions.ICriterion[])">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
             <param name="criteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.Exists(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
             <param name="detachedCriteria">The criteria expression</param>		
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns all the instances that match the detached criteria.
             </summary>
@@ -7214,16 +7318,16 @@
             </summary>
             <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.Order,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expressions.Order,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using sort orders and criteria.
             </summary>
-            <param name="order">An <see cref="T:NHibernate.Expression.Order"/> object.</param>
+            <param name="order">An <see cref="T:NHibernate.Expressions.Order"/> object.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The <see cref="T:System.Array"/> of results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for <typeparamref name="T"/>
             using sort orders and criteria.
@@ -7232,7 +7336,7 @@
             <param name="criteria"></param>
             <returns>An <see cref="T:System.Array"/> of <typeparamref name="T"/></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindAll(NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for <typeparamref name="T"/>
             using criteria.
@@ -7291,7 +7395,7 @@
             <exception cref="T:NHibernate.ObjectNotFoundException">if <c>throwOnNotFound</c> is set to 
             <c>true</c> and the row is not found</exception>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Searches and returns the first row for <typeparamref name="T"/>.
             </summary>
@@ -7299,7 +7403,7 @@
             <param name="orders">The sort order - used to determine which record is the first one.</param>
             <returns>A <c>targetType</c> instance or <c>null</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.Order,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expressions.Order,NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
@@ -7307,7 +7411,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
@@ -7315,14 +7419,14 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindFirst(NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row for <typeparamref name="T"/>
             </summary>
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -7330,7 +7434,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.FindOne(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -7338,17 +7442,17 @@
             <param name="criteria">The criteria</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
             <param name="firstResult">The number of the first row to retrieve.</param>
             <param name="maxResults">The maximum number of results retrieved.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
@@ -7357,13 +7461,13 @@
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordBase`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
             <param name="firstResult">The number of the first row to retrieve.</param>
             <param name="maxResults">The maximum number of results retrieved.</param>
-            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expression.Order"/> objects.</param>
+            <param name="orders">An <see cref="T:System.Array"/> of <see cref="T:NHibernate.Expressions.Order"/> objects.</param>
             <param name="criteria">The criteria expression</param>
             <returns>The sliced query results.</returns>
         </member>
@@ -7456,7 +7560,7 @@
             <param name="targetType">The AR subclass type</param>
             <param name="id">ID value</param>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7465,7 +7569,7 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7473,7 +7577,7 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7482,7 +7586,7 @@
             <param name="orders">The sort order - used to determine which record is the first one.</param>
             <returns>A <c>targetType</c> instance or <c>null.</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindFirst(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7490,7 +7594,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -7499,7 +7603,7 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindOne(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -7508,22 +7612,22 @@
             <param name="criteria">The criteria</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.SlicedFindAll(System.Type,System.Int32,System.Int32,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
@@ -7535,7 +7639,7 @@
             <param name="targetType"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using sort orders and criterias.
@@ -7545,7 +7649,7 @@
             <param name="criterias"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using criterias.
@@ -7554,7 +7658,7 @@
             <param name="criterias"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.FindAll(System.Type,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns all instances found for the specified type according to the criteria
             </summary>
@@ -7661,7 +7765,7 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -7670,7 +7774,7 @@
             <param name="criteria">The criteria expression</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Count(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -7703,13 +7807,13 @@
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.Expressions.ICriterion[])">
             <summary>
             Check if any instance matches the criteria.
             </summary>
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.Exists(System.Type,NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
@@ -7861,7 +7965,7 @@
             </summary>
             <param name="id">ID value</param>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7869,14 +7973,14 @@
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
             <param name="criterias">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Searches and returns the first row.
             </summary>
@@ -7884,21 +7988,21 @@
             <param name="orders">The sort order - used to determine which record is the first one.</param>
             <returns>A <c>targetType</c> instance or <c>null.</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindFirst(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns the first row.
             </summary>
             <param name="criteria">The criteria expression</param>
             <returns>A <c>targetType</c> instance or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expressions.ICriterion[])">
             <summary>
             Searches and returns the first row.
             </summary>
             <param name="criterias">The criterias.</param>
             <returns>A instance the targetType or <c>null</c></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindOne(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Searches and returns a row. If more than one is found, 
             throws <see cref="T:Castle.ActiveRecord.Framework.ActiveRecordException"/>
@@ -7929,7 +8033,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using sort orders and criterias.
@@ -7938,7 +8042,7 @@
             <param name="criterias"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns all instances found for the specified type 
             using criterias.
@@ -7946,22 +8050,22 @@
             <param name="criterias"></param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.FindAll(NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns all instances found for the specified type according to the criteria
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.Order[],NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.Order[],NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expression.DetachedCriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.SlicedFindAll(System.Int32,System.Int32,NHibernate.Expressions.DetachedCriteria,NHibernate.Expressions.Order[])">
             <summary>
             Returns a portion of the query results (sliced)
             </summary>
@@ -8036,7 +8140,7 @@
             </summary>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expressions.ICriterion[])">
             <summary>
             Returns the number of records of the specified 
             type in the database that match the given critera
@@ -8053,7 +8157,7 @@
             <param name="args">Positional parameters for the filter string</param>
             <returns>The count result</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Count(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Returns the number of records of the specified 
             type in the database
@@ -8082,13 +8186,13 @@
             <param name="id">The id to check on</param>
             <returns><c>true</c> if the ID exists; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expressions.ICriterion[])">
             <summary>
             Check if any instance matches the criteria.
             </summary>
             <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expression.DetachedCriteria)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator`1.Exists(NHibernate.Expressions.DetachedCriteria)">
             <summary>
             Check if any instance matching the criteria exists in the database.
             </summary>
@@ -8464,14 +8568,14 @@
             <param name="scriptFileName">Name of the script file.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.ActiveRecord.CriteriaHelper.AddCriterionToCriteria(NHibernate.ICriteria,NHibernate.Expression.ICriterion[])">
+        <member name="M:Castle.ActiveRecord.CriteriaHelper.AddCriterionToCriteria(NHibernate.ICriteria,NHibernate.Expressions.ICriterion[])">
             <summary>
             Adds a collection of ICriterion to an ICriteria.
             </summary>
             <param name="criteria">The ICriteria that will be modified.</param>
             <param name="criterions">The collection of Criterion.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.CriteriaHelper.AddOrdersToCriteria(NHibernate.ICriteria,NHibernate.Expression.Order[])">
+        <member name="M:Castle.ActiveRecord.CriteriaHelper.AddOrdersToCriteria(NHibernate.ICriteria,NHibernate.Expressions.Order[])">
             <summary>
             Adds a collection of Order (sort by) specifiers to an ICriteria.
             </summary>

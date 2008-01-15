@@ -252,27 +252,27 @@ namespace Query {
             /// <summary>
             /// Query helper for member Action.Name
             /// </summary>
-            public static NHibernate.Expression.IProjection Name {
+            public static NHibernate.Expressions.IProjection Name {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("Name");
+                    return NHibernate.Expressions.Projections.GroupProperty("Name");
                 }
             }
             
             /// <summary>
             /// Query helper for member Action.Description
             /// </summary>
-            public static NHibernate.Expression.IProjection Description {
+            public static NHibernate.Expressions.IProjection Description {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("Description");
+                    return NHibernate.Expressions.Projections.GroupProperty("Description");
                 }
             }
             
             /// <summary>
             /// Query helper for member Action.Obsolete
             /// </summary>
-            public static NHibernate.Expression.IProjection Obsolete {
+            public static NHibernate.Expressions.IProjection Obsolete {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("Obsolete");
+                    return NHibernate.Expressions.Projections.GroupProperty("Obsolete");
                 }
             }
         }

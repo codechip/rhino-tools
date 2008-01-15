@@ -17,25 +17,6 @@
             as the session is in fact managed by ActiveRecord framework
             </summary>
         </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CacheMode">
-            <summary>
-             The current cache mode. 
-            </summary>
-            
-            <remarks>
-            
-                        Cache mode determines the manner in which this session can interact with
-                        the second level cache.
-                        
-            </remarks>
-            
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Statistics">
-            <summary>
-             Get the statistics for this session.
-            </summary>
-            
-        </member>
         <member name="T:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate">
             <summary>
             Implements <see cref="T:NHibernate.ISessionFactory"/> allowing 
@@ -46,32 +27,6 @@
         </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetCurrentSession">
             <remarks>Needed for NHibernate 1.2 from trunk</remarks>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenStatelessSession">
-            <summary>
-             Get a new stateless session.
-            </summary>
-            
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenStatelessSession(System.Data.IDbConnection)">
-            <summary>
-             Get a new stateless session for the given ADO.NET connection.
-            </summary>
-            
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.NHibernate#ISessionFactory#DefinedFilterNames">
-            <summary>
-            
-                        Obtain a set of the names of all filters defined on this SessionFactory.
-                        
-            </summary>
-            <return>The set of filter names.</return>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Statistics">
-            <summary>
-             Get the statistics for this session factory
-            </summary>
-            
         </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.TransactionScopeResourceAdapter.#ctor(Castle.Services.Transaction.TransactionMode)">
             <summary>

@@ -35,7 +35,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 using NHibernate.SqlCommand;
 
 namespace NHibernate.Query.Generator
@@ -218,7 +218,7 @@ namespace NHibernate.Query.Generator
                     string associationPath = GetPath(prefix, prop.Name);
 
                     CodeExpression invokeExpression = new CodeMethodInvokeExpression(
-                        new CodeTypeReferenceExpression("NHibernate.Expression.Projections"),
+                        new CodeTypeReferenceExpression("NHibernate.Expressions.Projections"),
                         "GroupProperty", new CodePrimitiveExpression(associationPath));
 
                     prop.GetStatements.Add(new CodeMethodReturnStatement(invokeExpression));

@@ -9,7 +9,8 @@
 		NHibernate.Query.Generator\default.build;
 		rhino-commons\default.build;
 		rhino-testing\default.build;
+		rhino-etl\default.build;
+		rhino-security\default.build;
 		"/>
-		<!-- rhino-etl\default.build; has broken tests -->
 	</Target>
 </Project>

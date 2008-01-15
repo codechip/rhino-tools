@@ -19,7 +19,7 @@
 		<MSBuildCommunityTasksPath>$(Tools-Dir)</MSBuildCommunityTasksPath>
 		<Svn-Dir>$(Tools-Dir)\Subversion</Svn-Dir>
 		<Castle-TestFramework>nunit</Castle-TestFramework>
-		<Castle-Tester-Console>C:\Program Files (x86)\NUnit 2.4\bin\nunit-console.exe</NUnit-Dir>
+		<Castle-Tester-Console>C:\Program Files (x86)\NUnit 2.4\bin\nunit-console.exe</Castle-Tester-Console>
 		
 		<Castle-Contrib-Dir>$(MSBuildProjectDirectory)\..\Castle-Contrib</Castle-Contrib-Dir>
 		<Castle-Contrib-CodeGen-Dir>$(Castle-Contrib-Dir)\codegenerator\trunk</Castle-Contrib-CodeGen-Dir>

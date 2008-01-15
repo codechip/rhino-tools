@@ -178,9 +178,9 @@ namespace Query {
             /// <summary>
             /// Query helper for member CompositeIdChild.CompositeIdPart1
             /// </summary>
-            public static NHibernate.Expression.IProjection CompositeIdPart1 {
+            public static NHibernate.Expressions.IProjection CompositeIdPart1 {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("dummy.CompositeIdPart1");
+                    return NHibernate.Expressions.Projections.GroupProperty("dummy.CompositeIdPart1");
                 }
             }
             
@@ -190,9 +190,9 @@ namespace Query {
             /// <summary>
             /// Query helper for member CompositeIdChild.CompositeIdPart2
             /// </summary>
-            public static NHibernate.Expression.IProjection CompositeIdPart2 {
+            public static NHibernate.Expressions.IProjection CompositeIdPart2 {
                 get {
-                    return NHibernate.Expression.Projections.GroupProperty("dummy.CompositeIdPart2");
+                    return NHibernate.Expressions.Projections.GroupProperty("dummy.CompositeIdPart2");
                 }
             }
         }
