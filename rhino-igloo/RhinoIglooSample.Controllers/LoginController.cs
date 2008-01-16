@@ -2,7 +2,7 @@ namespace RhinoIglooSample.Controllers
 {
     using System;
     using Model;
-    using NHibernate.Expression;
+    using NHibernate.Expressions;
     using Rhino.Commons;
     using Rhino.Igloo;
 

@@ -1,4 +1,4 @@
-?<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Update-All;Build-All;Copy-To-Artifact-Dir" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="BuildFromTrunk-Config.build"/>
 
@@ -19,6 +19,7 @@
 		<Rhino-Prjct-Commons-Dir>$(Rhino-Dir)\rhino-commons</Rhino-Prjct-Commons-Dir>
 		<Rhino-Prjct-NHQG-Dir>$(Rhino-Dir)\NHibernate.Query.Generator</Rhino-Prjct-NHQG-Dir>
 		<Rhino-Prjct-Mocks-Dir>$(Rhino-Dir)\rhino-mocks</Rhino-Prjct-Mocks-Dir>
+		<Rhino-Prjct-Mocks-Build-Dir>$(Rhino-Prjct-Mocks-Dir)\..\build\Rhino.Mocks</Rhino-Prjct-Mocks-Build-Dir>
 		<Rhino-Prjct-Testing-Dir>$(Rhino-Dir)\rhino-testing</Rhino-Prjct-Testing-Dir>
 		<_Artifact-Dir>$(Artifact-Dir)\$(Configuration)</_Artifact-Dir>
 
@@ -199,7 +200,7 @@
 		<_Asses-Cstl-MR-AR>
 			$(_Asses-Cstl-AR)
 			;$(_Asses-Cstl-MR)
-			;$(_Asses-Cstl-MR-AR-Support)
+			;$(_Ass-Cstl-MR-AR-Support)
 		</_Asses-Cstl-MR-AR>
 
 		<_Deps-NH-From-Cstl>$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp2)</_Deps-NH-From-Cstl>
@@ -260,6 +261,10 @@
 			;$(_Ass-Cstl-Core)
 		</_Deps-Cstl-CodeGen-From-Cstl>
 
+		<_Deps-Cstl-CodeGen-From-Rhino>
+			$(_Ass-Rhn-Mocks)
+		</_Deps-Cstl-CodeGen-From-Rhino>
+		
 		<_Deps-Cstl-MR-AspView-From-Cstl>
 			$(_Ass-Cstl-Binder)
 			;$(_Ass-Cstl-Core)
@@ -598,6 +603,7 @@
 		<_Asses Condition="'$(_With-MicroKernel)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp2);$(_Ass-Cstl-MicroKernel)</_Asses>
 		<_Asses Condition="'$(_With-Windsor)' == 'true'">$(_Asses);$(_Asses-Cstl-Windsor)</_Asses>
 		<_Asses Condition="'$(_With-Binder)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Binder);$(_Ass-Cstl-Validator)</_Asses>
+		<_Asses Condition="'$(_With-DictionaryAdapter)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-DictionaryAdapter)</_Asses>
 		<_Asses Condition="'$(_With-Validator)' == 'true'">$(_Asses);$(_Ass-Cstl-Validator)</_Asses>
 		<_Asses Condition="'$(_With-Email)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Email)</_Asses>
 		<_Asses Condition="'$(_With-Transaction)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-Transaction)</_Asses>
@@ -717,6 +723,12 @@
 			<Output TaskParameter="Include" ItemName="_Deps-For-Cstl-CodeGen-From-Castle"/>
 		</CreateItem>
 	</Target>
+	
+	<Target Name="_Create-Deps-For-Cstl-CodeGen-From-Rhino">
+		<CreateItem Include="$(_Deps-Cstl-CodeGen-From-Rhino)">
+			<Output TaskParameter="Include" ItemName="_Deps-For-Cstl-CodeGen-From-Rhino"/>
+		</CreateItem>
+	</Target>
 
 	<Target Name="_Create-Deps-For-Cstl-MR-AspView-From-Castle">
 		<CreateItem Include="$(_Deps-Cstl-MR-AspView-From-Cstl)">
@@ -782,14 +794,18 @@
 		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Rhino-From-Castle.Identity).pdb" DestinationFolder="$(Rhino-Lib-Dir)\Castle\" ContinueOnError="true"/>
 	</Target>
 
-	<Target Name="_Delete-Cstl-CodeGen-Deps" DependsOnTargets="_Create-Deps-For-Cstl-CodeGen-From-Castle">
+	<Target Name="_Delete-Cstl-CodeGen-Deps" DependsOnTargets="_Create-Deps-For-Cstl-CodeGen-From-Castle;_Create-Deps-For-Cstl-CodeGen-From-Rhino">
 		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" TreatErrorsAsWarnings="true" />
 		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Rhino.Identity).dll" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Rhino.Identity).xml" TreatErrorsAsWarnings="true" />
+		<Delete Files="$(Castle-Contrib-CodeGen-Dir)\Libraries\%(_Deps-For-Cstl-CodeGen-From-Rhino.Identity).pdb" TreatErrorsAsWarnings="true" />
 	</Target>
 
 	<Target Name="_Copy-Cstl-CodeGen-Deps" DependsOnTargets="_Delete-Cstl-CodeGen-Deps">
 		<Copy SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).dll" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
+		<Copy SourceFiles="$(Rhino-Prjct-Mocks-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Rhino.Identity).dll" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
 		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml')" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).xml" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
 		<Copy Condition="Exists('$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb') AND '$(Configuration)' == 'debug'" SourceFiles="$(Castle-Build-Dir)\%(_Deps-For-Cstl-CodeGen-From-Castle.Identity).pdb" DestinationFolder="$(Castle-Contrib-CodeGen-Dir)\Libraries\" ContinueOnError="true"/>
 	</Target>
@@ -949,10 +965,10 @@
 		<CreateItem Include="$(Rhino-Prjct-Testing-Dir)\Rhino.Testing\obj\$(Configuration)\$(_Ass-Rhn-Testing)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-Testing"/>
 		</CreateItem>
-		<CreateItem Include="$(Rhino-Prjct-NHQG-Dir)\NHibernate.Query.Generator\bin\$(Configuration)\**\*.*">
+		<CreateItem Include="$(Rhino-Prjct-NHQG-Dir)\..\Build\NHibernate.Query.Generator\*.*">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Rhino-NHQG"/>
 		</CreateItem>
-		<CreateItem Include="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator.CmdLine\bin\Release\**\*.*;$(Castle-Contrib-CodeGen-Dir)\$(_Misc-Cstl-CodeGen-Target)">
+		<CreateItem Include="$(Castle-Contrib-CodeGen-Dir)\Castle.Tools.CodeGenerator.CmdLine\bin\$(Configuration)\**\*.*;$(Castle-Contrib-CodeGen-Dir)\$(_Misc-Cstl-CodeGen-Target)">
 			<Output TaskParameter="Include" ItemName="All-Build-Items-Castle-CodeGen"/>
 		</CreateItem>
 		<CreateItem Include="$(_Asses-Cstl-MR-AspView)">
@@ -1046,7 +1062,7 @@
 		<Message Text="With-NVelocity-TemplateEngine is $(_With-NVelocity-TemplateEngine)" />
 		<Message Text="With-DictionaryAdapter is $(_With-DictionaryAdapter)" />
 		<Message Text="With-Email is $(_With-Email)" />
-		<Message Text="With-Bindor is $(_With-Bindor)" />
+		<Message Text="With-Binder is $(_With-Binder)" />
 		<Message Text="With-Validator is $(_With-Validator)" />
 		<Message Text="With-NVelocity is $(_With-NVelocity)" />
 		<Message Text="With-Newsoft-Json is $(_With-Newsoft-Json)" />
