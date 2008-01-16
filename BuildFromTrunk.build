@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+?<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Update-All;Build-All;Copy-To-Artifact-Dir" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="BuildFromTrunk-Config.build"/>
 
@@ -21,6 +21,14 @@
 		<Rhino-Prjct-Mocks-Dir>$(Rhino-Dir)\rhino-mocks</Rhino-Prjct-Mocks-Dir>
 		<Rhino-Prjct-Testing-Dir>$(Rhino-Dir)\rhino-testing</Rhino-Prjct-Testing-Dir>
 		<_Artifact-Dir>$(Artifact-Dir)\$(Configuration)</_Artifact-Dir>
+
+		<!-- Source Revision Defaults -->
+		<Castle-Rev Condition="'$(Castle-Rev)' == ''">0</Castle-Rev>
+		<Cstl-CodeGen-Rev Condition="'$(Cstl-CodeGen-Rev)' == ''">0</Cstl-CodeGen-Rev>
+		<MR-AspView-Rev Condition="'$(MR-AspView-Rev)' == ''">0</MR-AspView-Rev>
+		<MR-ViewComponents-Rev Condition="'$(MR-ViewComponents-Rev)' == ''">0</MR-ViewComponents-Rev>
+		<NH-Rev Condition="'$(NH-Rev)' == ''">0</NH-Rev>
+		<Rhino-Rev Condition="'$(Rhino-Rev)' == ''">0</Rhino-Rev>
 	</PropertyGroup>
 
 	<!-- 3rd Party Assemblies and Licenses -->
@@ -81,11 +89,9 @@
 		<_Ass-Cstl-NH-Integration>Castle.Facilities.NHibernateIntegration</_Ass-Cstl-NH-Integration>
 		<_Ass-Cstl-MR>Castle.MonoRail.Framework</_Ass-Cstl-MR>
 		<_Ass-Cstl-MR-Test>Castle.MonoRail.TestSupport</_Ass-Cstl-MR-Test>
-		<_Ass-Cstl-MR-JSON>Castle.MonoRail.JSONSupport</_Ass-Cstl-MR-JSON>
 		<_Ass-Cstl-MR-NVelocity>Castle.MonoRail.Framework.Views.NVelocity</_Ass-Cstl-MR-NVelocity>
 		<_Ass-Cstl-MR-Brail>Castle.MonoRail.Views.Brail</_Ass-Cstl-MR-Brail>
 		<_Ass-Cstl-MR-AR-Support>Castle.MonoRail.ActiveRecordSupport</_Ass-Cstl-MR-AR-Support>
-		<_Ass-Cstl-MR-AR-Scaffold>Castle.MonoRail.ActiveRecordScaffold</_Ass-Cstl-MR-AR-Scaffold>
 		<_Ass-Cstl-MR-Windsor>Castle.MonoRail.WindsorExtension</_Ass-Cstl-MR-Windsor>
 		<_Ass-Cstl-MR-Transform>Castle.MonoRail.TransformFilters</_Ass-Cstl-MR-Transform>	
 	</PropertyGroup>
@@ -187,6 +193,7 @@
 			;$(_Ass-Cstl-Binder)
 			;$(_Ass-Cstl-MR)
 			;$(_Ass-Cstl-MR-Test)
+			;$(_Ass-Json)
 		</_Asses-Cstl-MR>
 
 		<_Asses-Cstl-MR-AR>
@@ -194,13 +201,6 @@
 			;$(_Asses-Cstl-MR)
 			;$(_Asses-Cstl-MR-AR-Support)
 		</_Asses-Cstl-MR-AR>
-
-		<_Asses-Cstl-MR-AR-Scaffold>
-			$(_Asses-Cstl-MR-AR)
-			;$(_Ass-NVelocity)
-			;$(_Ass-Cstl-TemplateEngine)
-			;$(_Ass-Cstl-NVelocityTemplateEngine)
-		</_Asses-Cstl-MR-AR-Scaffold>
 
 		<_Deps-NH-From-Cstl>$(_Ass-Cstl-Core);$(_Ass-Cstl-Dp2)</_Deps-NH-From-Cstl>
 
@@ -235,15 +235,12 @@
 			;$(_Ass-Cstl-NH-Integration)
 			;$(_Ass-Cstl-MR)
 			;$(_Ass-Cstl-MR-Test)
-			;$(_Ass-Cstl-MR-JSON)
 			;$(_Ass-Cstl-MR-NVelocity)
 			;$(_Ass-Cstl-MR-Brail)
 			;$(_Ass-Cstl-MR-AR-Support)
-			;$(_Ass-Cstl-MR-AR-Scaffold)
 			;$(_Ass-Cstl-MR-Windsor)
 			;$(_Ass-Cstl-MR-Transform)
 			;$(_Ass-NVelocity)
-			;$(_Ass-Json)
 			;$(_Ass-Boo)
 			;$(_Ass-Markdown)
 		</_Asses-Cstl-All>
@@ -353,7 +350,6 @@
 			OR '$(With-AR)' == 'true'
 			OR '$(With-AR-Integration)' == 'true'
 			OR '$(With-MR-AR-Support)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'
 			OR '$(With-Rhino-Commons-NH)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'">true</_With-NH>
 		<_With-NH Condition="'$(_With-NH)' != 'true'">false</_With-NH>
@@ -449,7 +445,6 @@
 			'$(With-AR)' == 'true'
 			OR '$(With-AR-Integration)' == 'true'
 			OR '$(With-MR-AR-Support)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'
 			OR '$(With-Rhino-Commons-AR)' == 'true'
 			">true</_With-AR>
 		<_With-AR Condition="'$(_With-AR)' != 'true'">false</_With-AR>
@@ -465,8 +460,6 @@
 			OR '$(With-MR-TestSupport)' == 'true'
 			OR '$(With-MR-Windsor)' == 'true'
 			OR '$(With-MR-AR-Support)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'
-			OR '$(With-MR-Json)' == 'true'
 			OR '$(With-MR-NVelocity)' == 'true'
 			OR '$(With-MR-Brail)' == 'true'
 			OR '$(With-Cstl-CodeGen)' == 'true'
@@ -480,35 +473,25 @@
 
 		<_With-MR-AR-Support Condition="
 			'$(With-MR-AR-Support)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'
 			OR ('$(_With-MR)' == 'true' AND '$(_With-AR)' == 'true')">true</_With-MR-AR-Support>
 		<_With-MR-AR-Support Condition="'$(_With-MR-AR-Support)' != 'true'">false</_With-MR-AR-Support>
-
-		<_With-MR-AR-Scaffolding Condition="'$(With-MR-AR-Scaffolding)' == 'true'">true</_With-MR-AR-Scaffolding>
-		<_With-MR-AR-Scaffolding Condition="'$(_With-MR-AR-Scaffolding)' != 'true'">false</_With-MR-AR-Scaffolding>
 
 		<_With-MR-Windsor Condition="
 			('$(_With-MR)' == 'true' AND '$(_With-Windsor)' == 'true')
 			OR '$(With-MR-Windsor)' == 'true'">true</_With-MR-Windsor>
 		<_With-MR-Windsor Condition="'$(_With-MR-Windsor)' != 'true'">false</_With-MR-Windsor>
 
-		<_With-MR-NVelocity Condition="
-			'$(With-MR-NVelocity)' == 'true' 
-			OR '$(_With-MR-AR-Scaffolding)' == 'true'">true</_With-MR-NVelocity>
+		<_With-MR-NVelocity Condition="'$(With-MR-NVelocity)' == 'true'">true</_With-MR-NVelocity>
 		<_With-MR-NVelocity Condition="'$(_With-MR-NVelocity)' != 'true'">false</_With-MR-NVelocity>
 
 		<_With-MR-Brail Condition="'$(With-MR-Brail)' == 'true'">true</_With-MR-Brail>
 		<_With-MR-Brail Condition="'$(_With-MR-Brail)' != 'true'">false</_With-MR-Brail>
 
-		<_With-MR-Json Condition="'$(With-MR-Json)' == 'true'">true</_With-MR-Json>
-		<_With-MR-Json Condition="'$(_With-MR-Json)' != 'true'">false</_With-MR-Json>
-
 		<_With-Binder Condition="
 			'$(With-Binder)' == 'true'
 			OR '$(With-Cstl-CodeGen)' == 'true'
 			OR '$(With-MR-AspView)' == 'true'
-			OR '$(With-MR-ViewComponents)' == 'true'
-			OR '$(_With_MR-AR-Scaffolding)' == 'true'">true</_With-Binder>
+			OR '$(With-MR-ViewComponents)' == 'true'">true</_With-Binder>
 		<_With-Binder Condition="'$(_With-Binder)' != 'true'">false</_With-Binder>
 
 		<_With-Validator Condition="
@@ -522,13 +505,10 @@
 
 		<_With-TemplateEngine Condition="
 			'$(With-TemplateEngine)' == 'true'
-			OR '$(With-NVelocity-TemplateEngine)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'">true</_With-TemplateEngine>
+			OR '$(With-NVelocity-TemplateEngine)' == 'true'">true</_With-TemplateEngine>
 		<_With-TemplateEngine Condition="'$(_With-TemplateEngine)' != 'true'">false</_With-TemplateEngine>
 
-		<_With-NVelocity-TemplateEngine Condition="
-			'$(With-NVelocity-TemplateEngine)' == 'true'
-			OR '$(With-MR-AR-Scaffolding)' == 'true'">true</_With-NVelocity-TemplateEngine>
+		<_With-NVelocity-TemplateEngine Condition="'$(With-NVelocity-TemplateEngine)' == 'true'">true</_With-NVelocity-TemplateEngine>
 		<_With-NVelocity-TemplateEngine Condition="'$(_With-NVelocity-TemplateEngine)' != 'true'">false</_With-NVelocity-TemplateEngine>
 
 		<_With-Email Condition="
@@ -547,7 +527,6 @@
 		<_With-NVelocity Condition="
 			'$(With-NVelocity)' == 'true' 
 			OR '$(_With-MR-NVelocity)' == 'true'
-			OR '$(_With-MR-AR-Scaffolding)' == 'true'
 			OR '$(With-NVelocity-TemplateEngine)' == 'true'">true</_With-NVelocity>
 		<_With-NVelocity Condition="'$(_With-NVelocity)' != 'true'">false</_With-NVelocity>
 
@@ -556,9 +535,7 @@
 			OR '$(_With-MR-Brail)' == 'true'">true</_With-Markdown>
 		<_With-Markdown Condition="'$(_With-Markdown)' != 'true'">false</_With-Markdown>
 
-		<_With-Newsoft-Json Condition="
-			'$(With-Newsoft-Json)' == 'true'
-			OR '$(_With-MR-Json)' == 'true'">true</_With-Newsoft-Json>
+		<_With-Newsoft-Json Condition="'$(With-Newsoft-Json)' == 'true'">true</_With-Newsoft-Json>
 		<_With-Newsoft-Json Condition="'$(_With-Newsoft-Json)' != 'true'">false</_With-Newsoft-Json>
 
 		<_With-SqlLite Condition="'$(With-SqlLite)' == 'true'">true</_With-SqlLite>
@@ -631,11 +608,10 @@
 		<_Asses Condition="'$(_With-Log4Net)' == 'true'">$(_Asses);$(_Ass-Cstl-Core);$(_Ass-Cstl-MicroKernel);$(_Ass-Cstl-DP2);$(_Ass-Cstl-Logging);$(_Ass-Cstl-Log4Net)</_Asses>
 		<_Asses Condition="'$(_With-MR)' == 'true'">$(_Asses);$(_Asses-Cstl-MR)</_Asses>
 		<_Asses Condition="'$(_With-MR-AR-Support)' == 'true'">$(_Asses);$(_Asses-Cstl-MR-AR)</_Asses>
-		<_Asses Condition="'$(_With-MR-AR-Scaffolding)' == 'true'">$(_Asses);$(_Asses-Cstl-MR-AR-Scaffold)</_Asses>
 		<_Asses Condition="'$(_With-MR-Windsor)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Asses-Cstl-Windsor);$(_Ass-Cstl-MR-Windsor)</_Asses>
 		<_Asses Condition="'$(_With-MR-NVelocity)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-NVelocity);$(_Ass-NVelocity)</_Asses>
 		<_Asses Condition="'$(_With-MR-Brail)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-Brail);$(_Ass-Boo);$(_Ass-Markdown)</_Asses>
-		<_Asses Condition="'$(_With-MR-Json)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Ass-Cstl-MR-Json);$(_Ass-Json)</_Asses>
+		<_Asses Condition="'$(_With-Newsoft-Json)' == 'true'">$(_Asses);$(_Ass-Json)</_Asses>
 
 		<_Asses Condition="'$(_With-MR-AspView)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Asses-Cstl-MR-AspView)</_Asses>
 		<_Asses Condition="'$(_With-MR-ViewComponents)' == 'true'">$(_Asses);$(_Asses-Cstl-MR);$(_Asses-Cstl-MR-ViewComponents)</_Asses>
@@ -657,10 +633,14 @@
 		<Tool-SqlCe Include="$(Rhino-Lib-Dir)\SqlCE\*.dll"></Tool-SqlCe>
 		<Tool-Castle-CodeGenerator Include="$(_Artifact-Dir)\Castle.CodeGenerator\**\*.*"></Tool-Castle-CodeGenerator>
 	</ItemGroup>
+
 	<!-- Top Level Targets -->
 	<Target Name="Update-All">
-		<CallTarget Targets="Update-NH" />
 		<CallTarget Targets="Update-Castle" />
+		<CallTarget Targets="Update-Castle-AspView" />
+		<CallTarget Targets="Update-Castle-CodeGen" />
+		<CallTarget Targets="Update-Castle-ViewComponents" />
+		<CallTarget Targets="Update-NH" />
 		<CallTarget Targets="Update-Rhino" />
 	</Target>
 
@@ -668,8 +648,8 @@
 		<CallTarget Targets="Build-Castle-For-NH" />
 		<CallTarget Targets="Build-NH" />
 		<CallTarget Targets="Build-Castle" />
-		<CallTarget Targets="Build-Castle-CodeGen" />
 		<CallTarget Targets="Build-Castle-AspView" />
+		<CallTarget Targets="Build-Castle-CodeGen" />
 		<CallTarget Targets="Build-Castle-ViewComponents" />
 		<CallTarget Targets="Build-Rhino" />
 	</Target>
@@ -684,17 +664,30 @@
 
 	<!-- Subversion Update -->
 	<Target Name="Update-Castle">
-		<SvnUpdate LocalPath="$(Castle-Dir)" ToolPath="$(Svn-Dir)" />
+		<SvnUpdate LocalPath="$(Castle-Dir)" Revision="$(Castle-Rev)" ToolPath="$(Svn-Dir)" />
 	</Target>
 
-	<Target Name="Update-NH">
-		<SvnUpdate LocalPath="$(NH-Dir)" ToolPath="$(Svn-Dir)" />
+	<Target Condition="'$(With-MR-AspView)' == 'true'" Name="Update-Castle-AspView">
+		<SvnUpdate LocalPath="$(Castle-Contrib-AspView-Dir)" Revision="$(MR-AspView-Rev)" ToolPath="$(Svn-Dir)" />
+	</Target>
+
+	<Target Condition="'$(With-Cstl-CodeGen)' == 'true'" Name="Update-Castle-CodeGen">
+		<SvnUpdate LocalPath="$(Castle-Contrib-CodeGen-Dir)" Revision="$(Cstl-CodeGen-Rev)" ToolPath="$(Svn-Dir)" />
+	</Target>
+
+	<Target Condition="'$(With-MR-ViewComponents)' == 'true'" Name="Update-Castle-ViewComponents">
+		<SvnUpdate LocalPath="$(Castle-Contrib-ViewComponents-Dir)" Revision="$(MR-ViewComponents-Rev)" ToolPath="$(Svn-Dir)" />
 	</Target>
 
 	<Target Name="Update-Rhino">
-		<SvnUpdate LocalPath="$(Rhino-Dir)" ToolPath="$(Svn-Dir)" />
+		<SvnUpdate LocalPath="$(Rhino-Dir)" Revision="$(Rhino-Rev)" ToolPath="$(Svn-Dir)" />
 	</Target>
 
+	<Target Name="Update-NH">
+		<SvnUpdate LocalPath="$(NH-Dir)" Revision="$(NH-Rev)" ToolPath="$(Svn-Dir)" />
+	</Target>
+
+	<!-- Inter-Target Build Dependencies -->
 	<Target Name="_Create-Deps-For-NH-From-Castle">
 		<CreateItem Include="$(_Deps-NH-From-Cstl)">
 			<Output TaskParameter="Include" ItemName="_Deps-For-NH-From-Castle"/>
@@ -1049,8 +1042,6 @@
 		<Message Text="With-MR-NVelocity is $(_With-MR-NVelocity)" />
 		<Message Text="With-MR-Brail is $(_With-MR-Brail)" />
 		<Message Text="With-MR-AR-Support is $(_With-MR-AR-Support)" />
-		<Message Text="With-MR-AR-Scaffolding is $(_With-MR-AR-Scaffolding)" />
-		<Message Text="With-MR-Json is $(_With-MR-Json)" />
 		<Message Text="With-TemplateEngine is $(_With-TemplateEngine)" />
 		<Message Text="With-NVelocity-TemplateEngine is $(_With-NVelocity-TemplateEngine)" />
 		<Message Text="With-DictionaryAdapter is $(_With-DictionaryAdapter)" />
