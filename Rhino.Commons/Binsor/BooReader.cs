@@ -40,9 +40,10 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Resource;
 using Castle.Core.Resource;
 using Castle.Windsor;
+
 namespace Rhino.Commons.Binsor
 {
-	using Boo.Lang.Compiler.Ast.Visitors;
+	using System.Reflection;
 	using Boo.Lang.Extensions;
 	using DSL;
 
@@ -55,7 +56,7 @@ namespace Rhino.Commons.Binsor
 			get
 			{
 				ICollection<INeedSecondPassRegistration> data = (ICollection<INeedSecondPassRegistration>)
-																Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
+				                                                Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly];
 				if (data == null)
 				{
 					Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] =
@@ -95,20 +96,24 @@ namespace Rhino.Commons.Binsor
 		{
 			try
 			{
-				using (IoC.UseLocalContainer(container))
-				{
-					IConfigurationRunner conf = GetConfigurationInstanceFromFile(
-						fileName, environment, container, generationOptions);
-					conf.Run();
-					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
-					{
-						needSecondPassRegistration.RegisterSecondPass();
-					}
-				}
+				Execute(container, GetConfigurationInstanceFromFile(
+				                   	fileName, environment, container, generationOptions));
 			}
 			finally
 			{
 				NeedSecondPassRegistrations = null;
+			}
+		}
+
+		public static void Execute(IWindsorContainer container, IConfigurationRunner configuration)
+		{
+			using (IoC.UseLocalContainer(container))
+			{
+				configuration.Run();
+				foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+				{
+					needSecondPassRegistration.RegisterSecondPass();
+				}
 			}
 		}
 
@@ -158,10 +163,10 @@ namespace Rhino.Commons.Binsor
 			using (TextReader reader = urlResolver(fileName, null))
 			{
 				return GetConfigurationInstance(
-				Path.GetFileNameWithoutExtension(fileName), environment,
-				new ReaderInput(Path.GetFileNameWithoutExtension(fileName), reader),
-				generationOptions,
-				new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
+					Path.GetFileNameWithoutExtension(fileName), environment,
+					new ReaderInput(Path.GetFileNameWithoutExtension(fileName), reader),
+					generationOptions,
+					new AutoReferenceFilesCompilerStep(baseDirectory, urlResolver));
 			}
 		}
 
@@ -193,15 +198,18 @@ namespace Rhino.Commons.Binsor
 			compiler.Parameters.Pipeline.Insert(1, autoReferenceStep);
 			compiler.Parameters.Pipeline.Insert(2, new BinsorCompilerStep(environment));
 			compiler.Parameters.Pipeline.Replace(
-				typeof(ProcessMethodBodiesWithDuckTyping),
+				typeof (ProcessMethodBodiesWithDuckTyping),
 				new TransformUnknownReferences());
-			compiler.Parameters.Pipeline.InsertAfter(typeof(TransformUnknownReferences),
-													 new RegisterComponentAndFacilitiesAfterCreation());
-			
+			compiler.Parameters.Pipeline.InsertAfter(typeof (TransformUnknownReferences),
+			                                         new RegisterComponentAndFacilitiesAfterCreation());
+
 			compiler.Parameters.OutputType = CompilerOutputType.Library;
 			compiler.Parameters.Input.Add(input);
-			compiler.Parameters.References.Add(typeof(BooReader).Assembly);
-            compiler.Parameters.References.Add(typeof(MacroMacro).Assembly);
+			compiler.Parameters.References.Add(typeof (BooReader).Assembly);
+			compiler.Parameters.References.Add(typeof (MacroMacro).Assembly);
+
+			TryAddAssembliesReferences(compiler.Parameters, "Rhino.Commons.NHibernate", "Rhino.Commons.ActiveRecord");
+
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)
 			{
@@ -211,10 +219,31 @@ namespace Rhino.Commons.Binsor
 			return Activator.CreateInstance(type) as IConfigurationRunner;
 		}
 
+		/// <summary>
+		/// Tries the add the speicifed assemblies to the compiler's references
+		/// In a late bound way
+		/// </summary>
+		/// <param name="cp">The compiler parameters.</param>
+		/// <param name="assembliesToAdd">The assemblies to add.</param>
+		private static void TryAddAssembliesReferences(CompilerParameters cp, params string[] assembliesToAdd)
+		{
+			foreach (string assembly in assembliesToAdd)
+			{
+				try
+				{
+					cp.References.Add(Assembly.Load(assembly));
+				}
+				catch
+				{
+					// we don't worry if we can't load the assemblies
+				}
+			}
+		}
+
 		private static UrlResolverDelegate CreateWindorUrlResolver(IWindsorContainer container)
 		{
 			IResourceSubSystem subSystem = (IResourceSubSystem)
-										   container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+			                               container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
 
 			return delegate(string url, string basePath)
 			{
@@ -244,7 +273,5 @@ namespace Rhino.Commons.Binsor
 			Memory,
 			File
 		}
-
-
 	}
 }
