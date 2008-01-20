@@ -1,13 +1,21 @@
 Building in visual studio
 ==================
 
-The AssemblyInfo.cs is missing from the repository. The reason for that is that the build is generating updated AssemblyInfo.cs files for all projects,
+The AssemblyInfo.cs is missing from the repository.
+=============================================
+The reason for that is that the build is generating updated AssemblyInfo.cs files for all projects,
 with the correct version and revision notes.
 
 You need to run:
  > msbuild buildall.build 
  
 from the command line before you can build in visual studio.
+
+You can also run:
+
+> msbuild default.build
+
+from a specific project directory, if you want to build just it
 
 
 Building From NHibernate and Castle Trunks
@@ -24,11 +32,7 @@ Building From NHibernate and Castle Trunks
    * Castle requires NUnit on the path so be sure set Castle-Test-Framework and Castle-Tester-Console
    * in the BuildFromTrunk-Config.build file.
 
-4) Patch Castle source to work with NH-Trunk, check out the branch that works with nh trunk!
-
-5) Copy the new NHibernate assemblies to the SharedLibs folder of the Castle project.
-
-6) From a command prompt with administrative access run the following command from the Rhino-Toosl root.
+4) From a command prompt with administrative access run the following command from the Rhino-Toosl root.
    >msbuild BuildFromTrunk.build /t:Build-All
 
 
