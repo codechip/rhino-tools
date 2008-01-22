@@ -1,4 +1,5 @@
 #region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,6 +25,7 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
 using Castle.ActiveRecord;
@@ -34,72 +36,108 @@ using NHibernate.Cfg;
 
 namespace Rhino.Commons.ForTesting
 {
-    internal class ARUnitOfWorkTestContext : UnitOfWorkTestContext
-    {
-        private IConfigurationSource activeRecordConfigs;
-        private ISessionFactory sessionFactory;
+	using System;
+	using Castle.Core.Configuration;
 
-        public ARUnitOfWorkTestContext(UnitOfWorkTestContextDbStrategy dbStrategy,
-                                       string rhinoContainerConfigPath,
-                                       MappingInfo assemblies)
-            : base(dbStrategy, rhinoContainerConfigPath, assemblies) {}
+	internal class ARUnitOfWorkTestContext : UnitOfWorkTestContext
+	{
+		private IConfigurationSource activeRecordConfigs;
+		private ISessionFactory sessionFactory;
 
-
-        private IConfigurationSource ActiveRecordConfigs
-        {
-            get { return activeRecordConfigs = activeRecordConfigs ?? CreateActiveRecordConfigs(); }
-        }
-
-        public override Configuration Configuration
-        {
-            get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
-        }
+		public ARUnitOfWorkTestContext(
+			UnitOfWorkTestContextDbStrategy dbStrategy,
+			string rhinoContainerConfigPath,
+			MappingInfo assemblies)
+			: base(dbStrategy, rhinoContainerConfigPath, assemblies)
+		{
+		}
 
 
-        public override PersistenceFramework Framework
-        {
-            get { return PersistenceFramework.ActiveRecord; }
-        }
+		private IConfigurationSource ActiveRecordConfigs
+		{
+			get { return activeRecordConfigs = activeRecordConfigs ?? CreateActiveRecordConfigs(); }
+		}
+
+		public override Configuration Configuration
+		{
+			get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
+		}
 
 
-        public override ISessionFactory SessionFactory
-        {
-            get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
-        }
+		public override PersistenceFramework Framework
+		{
+			get { return PersistenceFramework.ActiveRecord; }
+		}
 
 
-        public override void IntialiseContainerAndUowFactory()
-        {
-            if (IoC.IsInitialized) IoC.Reset();
-            ActiveRecordStarter.ResetInitializationFlag();
-
-            ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
-            ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
-
-            if (RhinoContainer != null)
-            {
-                IoC.Initialize(RhinoContainer);
-            }
-        }
+		public override ISessionFactory SessionFactory
+		{
+			get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
+		}
 
 
-        private InPlaceConfigurationSource_AlwaysLazy_AndPluralized CreateActiveRecordConfigs() 
-        {
-            InPlaceConfigurationSource_AlwaysLazy_AndPluralized cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
-            cfg.Add(typeof(ActiveRecordBase), DbStrategy.NHibernateProperties);
-            return cfg;
-        }
+		public override void IntialiseContainerAndUowFactory()
+		{
+			if (IoC.IsInitialized) IoC.Reset();
+			ActiveRecordStarter.ResetInitializationFlag();
+
+			if (RhinoContainer != null)
+			{
+				IoC.Initialize(RhinoContainer);
+			}
+
+			CallInitializationAwareConfigureIfExists();
+
+			ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
+
+			if (IoC.IsInitialized)
+			{
+				INHibernateInitializationAware initializationAware = IoC.TryResolve<INHibernateInitializationAware>();
+				if (initializationAware != null)
+					initializationAware.Initialized(Configuration, SessionFactory);
+			}
+
+			ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
+		}
+
+		private void CallInitializationAwareConfigureIfExists()
+		{
+			SessionFactoryHolderDelegate holderDelegate = null;
+			holderDelegate = delegate(ISessionFactoryHolder holder)
+			{
+				ActiveRecordStarter.SessionFactoryHolderCreated -= holderDelegate;
+				holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
+				{
+					if (IoC.IsInitialized)
+					{
+						INHibernateInitializationAware initializationAware = IoC.TryResolve<INHibernateInitializationAware>();
+						if (initializationAware != null)
+						{
+							Configuration configuration = holder.GetConfiguration(rootType);
+							initializationAware.Configured(configuration);
+						}
+					}
+				};
+			};
+			ActiveRecordStarter.SessionFactoryHolderCreated += holderDelegate;
+		}
 
 
+		private InPlaceConfigurationSource_AlwaysLazy_AndPluralized CreateActiveRecordConfigs()
+		{
+			InPlaceConfigurationSource_AlwaysLazy_AndPluralized cfg = new InPlaceConfigurationSource_AlwaysLazy_AndPluralized();
+			cfg.Add(typeof(ActiveRecordBase), DbStrategy.NHibernateProperties);
+			return cfg;
+		}
 
-        private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized : InPlaceConfigurationSource
-        {
-            public InPlaceConfigurationSource_AlwaysLazy_AndPluralized()
-            {
-                SetIsLazyByDefault(true);
-                SetPluralizeTableNames(true);
-            }
-        }
 
-    }
+		private class InPlaceConfigurationSource_AlwaysLazy_AndPluralized : InPlaceConfigurationSource
+		{
+			public InPlaceConfigurationSource_AlwaysLazy_AndPluralized()
+			{
+				SetIsLazyByDefault(true);
+				SetPluralizeTableNames(true);
+			}
+		}
+	}
 }

@@ -1,4 +1,4 @@
-import Rhino.Commons.Test.Binsor
+import Rhino.Commons.Test.Binsor from Rhino.Commons.Test
 
 for type in AllTypesBased of IView("Rhino.Commons.Test"):
 	component type
