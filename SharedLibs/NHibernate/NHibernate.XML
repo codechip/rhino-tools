@@ -19011,6 +19011,12 @@
             </p>
             </remarks>
         </member>
+        <member name="F:NHibernate.Id.TableGenerator.Where">
+            <summary>
+            An additional where clause that is added to 
+            the queries against the table.
+            </summary>
+        </member>
         <member name="F:NHibernate.Id.TableGenerator.ColumnParamName">
             <summary>
             The name of the column parameter.
@@ -19185,6 +19191,12 @@
             <param name="type">The <see cref="T:NHibernate.Type.IType"/> the identifier should be.</param>
             <param name="parms">An <see cref="T:System.Collections.IDictionary"/> of Param values that are keyed by parameter name.</param>
             <param name="dialect">The <see cref="T:NHibernate.Dialect.Dialect"/> to help with Configuration.</param>
+        </member>
+        <member name="M:NHibernate.Id.UUIDHexGenerator.GenerateNewGuid">
+            <summary>
+            Generate a Guid into a string using the <c>format</c>.
+            </summary>
+            <returns>A new Guid string</returns>
         </member>
         <member name="T:NHibernate.Id.UUIDStringGenerator">
             <summary>
