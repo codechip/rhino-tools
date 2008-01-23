@@ -112,12 +112,16 @@ namespace Rhino.Commons
 
 		public static IDisposable QueryCache(string region)
 		{
+			object prevCachingValueKey = Local.Data[Caching.cachingKey];
+			object prevCachingRegion = Local.Data[Caching.cachingRegionKey];
+
 			Local.Data[Caching.cachingKey] = true;
 			Local.Data[Caching.cachingRegionKey] = region;
+			
 			return new DisposableAction(delegate
 			{
-				Local.Data[Caching.cachingKey] = null;
-				Local.Data[Caching.cachingRegionKey] = null;
+				Local.Data[Caching.cachingKey] = prevCachingValueKey;
+				Local.Data[Caching.cachingRegionKey] = prevCachingRegion;
 			});
 		}
 	}

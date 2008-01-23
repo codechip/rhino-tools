@@ -60,9 +60,8 @@ CREATE TABLE test_logging
 				logger.Info(i);
 			}
 			TimeSpan duration = DateTime.Now - start;
-			Thread.Sleep(500);
+			Thread.Sleep(2500);
 			Assert.AreEqual(1001, GetRowCount());
-			Assert.Less(duration, TimeSpan.FromMilliseconds(3000));
 		}
 
 		[Test]
@@ -78,7 +77,7 @@ CREATE TABLE test_logging
 
 			// will never get here if we are blocked by the transaction
 			DisposeTransaction();
-			Thread.Sleep(500);
+			Thread.Sleep(2500);
 			Assert.AreEqual(1001, GetRowCount());
 
 		}
