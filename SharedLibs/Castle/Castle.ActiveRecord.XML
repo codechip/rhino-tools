@@ -1595,6 +1595,11 @@
             </summary>
             <value>Sql Expression</value>
         </member>
+        <member name="P:Castle.ActiveRecord.PropertyAttribute.IsOverride">
+            <summary>
+            Set to <c>true</c> if this property overrides a property in a base class
+            </summary>
+        </member>
         <member name="P:Castle.ActiveRecord.KeyPropertyAttribute.UnsavedValue">
             <summary>
             Gets or sets the unsaved value.
@@ -8359,6 +8364,17 @@
             </summary>
         </member>
         <member name="E:Castle.ActiveRecord.ActiveRecordStarter.ModelsCreated">
+            <summary>
+            Allows other frameworks to modify the ActiveRecordModel
+            before the generation of the NHibernate XML configuration.
+            As an example, this may be used to rewrite table names to
+            conform to an application-specific standard.  Since the
+            configuration source is passed in, it is possible to
+            determine the underlying database type and make changes
+            if necessary.
+            </summary>
+        </member>
+        <member name="E:Castle.ActiveRecord.ActiveRecordStarter.ModelsValidated">
             <summary>
             Allows other frameworks to modify the ActiveRecordModel
             before the generation of the NHibernate XML configuration.

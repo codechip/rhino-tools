@@ -1809,6 +1809,13 @@
             <param name="newName">Ignored</param>
             <returns>This ILogger instance.</returns> 
         </member>
+        <member name="M:Castle.Core.Logging.WebLogger.TryToGetTraceContext">
+            <summary>
+            Tries to get the current http context's trace context.
+            </summary>
+            <returns>The current http context's trace context or null if none is 
+            available</returns>
+        </member>
         <member name="T:Castle.Core.Logging.LoggerLevel">
             <summary>
             Supporting Logger levels.
