@@ -33,12 +33,12 @@
 			AssemblyCopyright="Oren Eini (c) 2006 - 2008"
 			AssemblyDescription="$(ProjectName)"
 			AssemblyInformationalVersion="$(Version).$(Revision)"
-			 AssemblyTitle ="$(ProjectName)$(ExtraInfo)"
-			 CodeLanguage="CS"
-			 CLSCompliant ="$(ClsCompliant)"
-			 AssemblyVersion ="$(Version).$(Revision)"
-			 OutputFile="%(AssemblyInfo.File)"
-			 />
+			AssemblyTitle ="$(ProjectName)$(ExtraInfo)"
+			CodeLanguage="CS"
+			CLSCompliant ="$(ClsCompliant)"
+			AssemblyVersion ="$(Version)"
+			OutputFile="%(AssemblyInfo.File)"
+			/>
 	</Target>
 	
 	<Target Name="Compile" DependsOnTargets="GenerateAssemblyInfo">
