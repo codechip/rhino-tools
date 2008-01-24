@@ -56,7 +56,7 @@ namespace Rhino.Commons
 
 		public DateRange(DateTime start, DateTime end)
 		{
-			Validation.DateRange(start, end);
+			Guard.Against<ArgumentException>(start > end, "The start date cannot come after the end date");
 			this.start = start;
 			this.end = end;
 		}
