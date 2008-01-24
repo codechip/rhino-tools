@@ -101,16 +101,16 @@ namespace Rhino.Commons
         /// </param>
         public void RegisterSessionFactory(ISessionFactory factory)
         {
-            Validation.NotNull(factory, "factory");
+            Guard.Against<ArgumentNullException>(factory == null, "factory");
             RegisterSessionFactory(null, factory);
         }
 
-        public void RegisterSessionFactory(Configuration cfg, ISessionFactory factory)
+        public void RegisterSessionFactory(Configuration configuration, ISessionFactory factory)
         {
-            Validation.NotNull(factory, "factory");
+            Guard.Against<ArgumentNullException>(factory == null, "factory");
             ISessionFactory old = sessionFactory;
-            this.cfg = cfg;
-            this.sessionFactory = factory;
+            cfg = configuration;
+            sessionFactory = factory;
             if (old != null)
             {
                 old.Close();

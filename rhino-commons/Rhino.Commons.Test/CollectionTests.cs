@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -70,7 +70,7 @@ namespace Rhino.Commons.Test
 		}
 
 		[Test]
-		[ExpectedException(typeof (ElementNotfoundException))]
+		[ExpectedException(typeof (ElementNotFoundException))]
 		public void FirstTestOnEmptyCollection_NotList()
 		{
 			Dictionary<int, int> dic = new Dictionary<int, int>();

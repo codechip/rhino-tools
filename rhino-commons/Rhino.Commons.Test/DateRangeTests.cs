@@ -57,7 +57,7 @@ namespace Rhino.Commons.Test
         [ExpectedException(typeof(ArgumentException), "The start date cannot come after the end date")]
         public void EndBeforeStart()
         {
-            DateRange range = new DateRange(end, start);
+			new DateRange(end, start);
         }
 
         [Test]

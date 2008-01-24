@@ -34,6 +34,7 @@ using MbUnit.Framework;
 
 namespace Rhino.Commons.Test
 {
+#pragma warning disable 612,618 // obsolete warning
     [TestFixture]
     public class ValidationTests
     {
@@ -84,4 +85,6 @@ namespace Rhino.Commons.Test
         }
         
     }
+#pragma warning restore 612,618
+
 }
