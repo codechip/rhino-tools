@@ -31,12 +31,26 @@ using System;
 
 namespace Rhino.Commons.Exceptions
 {
+	/// <summary>
+	/// Helper class that allow to specify temporary hacks in a 
+	/// simple fashion
+	/// </summary>
+	/// <example>
+	/// <code>
+	/// TimeBombHack.Until(new DateTime(2007,12,31), "Ignoring security for the client demo");
+	/// </code>
+	/// </example>
 	public static class TimeBombHack
 	{
-		public static void Until(DateTime date, string message)	
+		/// <summary>
+		/// Will throw with the specified message after the 
+		/// <param name="expiredAt">The expiry date</param>
+		/// <param name="message">The message.</param>
+		/// </summary>
+		public static void Until(DateTime expiredAt, string message)	
 		{
-            //if (DateTime.Today > date)
-            //    throw new HackExpiredException(string.Format("The hack ({0}) expired on ({1}). You really should fix it already", message, date));
+            if (DateTime.Today > expiredAt)
+                throw new HackExpiredException(string.Format("The hack ({0}) expired on ({1}). You really should fix it already", message, expiredAt));
 		}
 	}
 }

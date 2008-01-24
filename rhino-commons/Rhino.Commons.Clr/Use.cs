@@ -12,8 +12,15 @@ namespace Rhino.Commons
     {
         #region Delegates
 
+		/// <summary>
+		/// Delegate to execute an action with a command
+		/// and return a result: <typeparam name="T"/>
+		/// </summary>
         public delegate T Func<T>(IDbCommand command);
 
+		/// <summary>
+		/// Delegate to execute an action with a command
+		/// </summary>
         public delegate void Proc(IDbCommand command);
 
         #endregion
@@ -22,45 +29,77 @@ namespace Rhino.Commons
         private static readonly object activeTransactionKey = new object();
         private static readonly object transactionCounterKey = new object();
 
+		/// <summary>
+		/// Gets or sets the active connection.
+		/// </summary>
+		/// <value>The active connection.</value>
         private static IDbConnection ActiveConnection
         {
             get { return (IDbConnection) Local.Data[activeConnectionKey]; }
             set { Local.Data[activeConnectionKey] = value; }
         }
 
+		/// <summary>
+		/// Gets or sets the active transaction.
+		/// </summary>
+		/// <value>The active transaction.</value>
         private static IDbTransaction ActiveTransaction
         {
             get { return (IDbTransaction) Local.Data[activeTransactionKey]; }
             set { Local.Data[activeTransactionKey] = value; }
         }
 
+		/// <summary>
+		/// Gets or sets the transaction counter.
+		/// </summary>
+		/// <value>The transaction counter.</value>
         private static int TransactionCounter
         {
             get { return (int) (Local.Data[transactionCounterKey] ?? 0); }
             set { Local.Data[transactionCounterKey] = value; }
         }
 
-        public static T Transaction<T>(string name, Func<T> exec)
+		/// <summary>
+		/// Execute the specified delegate inside a transaction and return 
+		/// the result of the delegate.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="connectionStringName">The name of the named connection string in the configuration file</param>
+		/// <param name="actionToExecute">The action to execute</param>
+		/// <returns></returns>
+        public static T Transaction<T>(string connectionStringName, Func<T> actionToExecute)
         {
             T result = default(T);
-            Transaction(name, delegate(IDbCommand command) { result = exec(command); });
+            Transaction(connectionStringName, delegate(IDbCommand command) { result = actionToExecute(command); });
             return result;
         }
 
-        public static void Transaction(string name, Proc exec)
+		/// <summary>
+		/// Execute the specified delegate inside a transaction
+		/// </summary>
+		/// <param name="connectionStringName">Name of the connection string.</param>
+		/// <param name="actionToExecute">The action to execute.</param>
+        public static void Transaction(string connectionStringName, Proc actionToExecute)
         {
-            Transaction(name, IsolationLevel.Unspecified, exec);
+            Transaction(connectionStringName, IsolationLevel.Unspecified, actionToExecute);
         }
 
-        public static void Transaction(string name, IsolationLevel isolation, Proc exec)
+		/// <summary>
+		/// Execute the specified delegate inside a transaction with the specific
+		/// isolation level 
+		/// </summary>
+		/// <param name="connectionStringName">Name of the connection string.</param>
+		/// <param name="isolationLevel">The isolation level.</param>
+		/// <param name="actionToExecute">The action to execute.</param>
+        public static void Transaction(string connectionStringName, IsolationLevel isolationLevel, Proc actionToExecute)
         {
-            StartTransaction(name, isolation);
+            StartTransaction(connectionStringName, isolationLevel);
             try
             {
                 using (IDbCommand command = ActiveConnection.CreateCommand())
                 {
                     command.Transaction = ActiveTransaction;
-                    exec(command);
+                    actionToExecute(command);
                 }
                 CommitTransaction();
             }
@@ -75,6 +114,9 @@ namespace Rhino.Commons
             }
         }
 
+		/// <summary>
+		/// Disposes the transaction.
+		/// </summary>
         private static void DisposeTransaction()
         {
             if (TransactionCounter <= 0)
@@ -84,6 +126,9 @@ namespace Rhino.Commons
             }
         }
 
+		/// <summary>
+		/// Rollbacks the transaction.
+		/// </summary>
         private static void RollbackTransaction()
         {
             ActiveTransaction.Rollback();
@@ -92,6 +137,9 @@ namespace Rhino.Commons
             TransactionCounter = 0;
         }
 
+		/// <summary>
+		/// Commits the transaction.
+		/// </summary>
         private static void CommitTransaction()
         {
             TransactionCounter--;
@@ -103,6 +151,11 @@ namespace Rhino.Commons
             }
         }
 
+		/// <summary>
+		/// Starts the transaction.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="isolation">The isolation.</param>
         private static void StartTransaction(string name, IsolationLevel isolation)
         {
             if (TransactionCounter <= 0)

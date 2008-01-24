@@ -33,47 +33,92 @@ using System.Text;
 
 namespace Rhino.Commons
 {
+	/// <summary>
+	/// Allow to add named indexers to language like C#, that doesn't
+	/// support them. 
+	/// </summary>
+	/// <typeparam name="RetType">The type of the return type.</typeparam>
+	/// <typeparam name="IndexType">The type of the index type.</typeparam>
     public class PropertyIndexer<RetType, IndexType>
     {
-        private Func<RetType, IndexType> getter;
-        private Proc<IndexType, RetType> setter;
+        private readonly Func<RetType, IndexType> getter;
+        private readonly Proc<IndexType, RetType> setter;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PropertyIndexer&lt;RetType, IndexType&gt;"/> class.
+		/// </summary>
+		/// <param name="getter">The getter.</param>
+		/// <param name="setter">The setter.</param>
         public PropertyIndexer(Func<RetType, IndexType> getter, Proc<IndexType, RetType> setter)
         {
             this.getter = getter;
             this.setter = setter;
         }
 
+		/// <summary>
+		/// Gets or sets the RetType at the specified index.
+		/// </summary>
+		/// <value></value>
         public RetType this[IndexType index]
         {
             get { return getter(index); }
             set { setter(index, value); }
         }
     }
+
+	/// <summary>
+	/// Allow to add named getter indexers to language like C#, that doesn't
+	/// support them. 
+	/// </summary>
+	/// <typeparam name="RetType">The type of the ret type.</typeparam>
+	/// <typeparam name="IndexType">The type of the index type.</typeparam>
     public class PropertyIndexerGetter<RetType, IndexType>
     {
-        private Func<RetType, IndexType> getter;
+        private readonly Func<RetType, IndexType> getter;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PropertyIndexerGetter&lt;RetType, IndexType&gt;"/> class.
+		/// </summary>
+		/// <param name="getter">The getter.</param>
         public PropertyIndexerGetter(Func<RetType, IndexType> getter)
         {
             this.getter = getter;
         }
 
+		/// <summary>
+		/// Gets the RetType at the specified index.
+		/// </summary>
+		/// <value></value>
         public RetType this[IndexType index]
         {
             get { return getter(index); }
         }
     }
 
-    public class PropertyIndexerSetter<RetType, IndexType>
+    
+	/// <summary>
+	/// Allow to add named setter indexers to language like C#, that doesn't
+	/// support them. 
+	/// </summary>
+	/// <typeparam name="RetType">The type of the ret type.</typeparam>
+	/// <typeparam name="IndexType">The type of the index type.</typeparam>
+	public class PropertyIndexerSetter<RetType, IndexType>
     {
-        private Proc<IndexType, RetType> setter;
-        
+        private readonly Proc<IndexType, RetType> setter;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PropertyIndexerSetter&lt;RetType, IndexType&gt;"/> class.
+		/// </summary>
+		/// <param name="setter">The setter.</param>
         public PropertyIndexerSetter(Proc<IndexType, RetType> setter)
         {
             this.setter = setter;
         }
 
+		/// <summary>
+		/// Sets the RetType with the specified ERROR.
+		/// </summary>
+		/// <value></value>
         public RetType this[IndexType index]
         {
             set { setter(index, value); }
