@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,20 +25,48 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
-
-
-using System;
 
 namespace Rhino.Commons.Exceptions
 {
-    public class ElementNotfoundException : Exception
-    {
-        public ElementNotfoundException()
-        {
-        }
-        public ElementNotfoundException(string message) : base(message)
-        {
-        }
-    }
+	using System;
+	using System.Runtime.Serialization;
+
+	/// <summary>
+	/// Raised when a collection iteration was asked to find an element that
+	/// does not exists
+	/// </summary>
+	[Serializable]
+	public class ElementNotFoundException : Exception
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ElementNotFoundException"/> class.
+		/// </summary>
+		public ElementNotFoundException()
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ElementNotFoundException"/> class.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		public ElementNotFoundException(string message) : base(message)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ElementNotFoundException"/> class.
+		/// </summary>
+		/// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+		/// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+		/// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+		/// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+		protected ElementNotFoundException(
+			SerializationInfo info,
+			StreamingContext context)
+			: base(info, context)
+		{
+		}
+	}
 }

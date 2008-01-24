@@ -26,22 +26,32 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Rhino.Commons
 {
+	using System;
+
+	/// <summary>
+	/// Generic version of EveryArgs, allow to avoid 
+	/// defining custom  EventArgs types 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
     public class EventArgs<T> : EventArgs
     {
         T item;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EventArgs&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="item">The item.</param>
         public EventArgs(T item)
         {
             this.item = item;
         }
 
+		/// <summary>
+		/// Gets or sets the item for this event args
+		/// </summary>
+		/// <value>The item.</value>
         public T Item
         {
             get { return item; }

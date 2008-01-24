@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -36,15 +36,31 @@ using Rhino.Commons.Exceptions;
 
 namespace Rhino.Commons
 {
+	/// <summary>
+	/// Helper class for collections
+	/// </summary>
 	public static class Collection
 	{
+		/// <summary>
+		/// Return an IList containing all the items passed in the construtor.
+		/// A cheap way to create a list from known variables, basically.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="items">The items.</param>
+		/// <returns></returns>
 		public static IList<T> Containing<T>(params T[] items)
 		{
 			if (items == null) return null;
 			return new List<T>(items);
 		}
 
-		public static T First<T>(ICollection<T> collection)
+		/// <summary>
+		/// Get the first item in the collection, if it exists
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
+		public static T First<T>(IEnumerable<T> collection)
 		{
 			IList<T> list = collection as IList<T>;
 			if (list != null)
@@ -53,10 +69,16 @@ namespace Rhino.Commons
 			{
 				return item;
 			}
-			throw new ElementNotfoundException();
+			throw new ElementNotFoundException();
 		}
 
-		public static T Last<T>(ICollection<T> collection)
+		/// <summary>
+		/// Get the last element in the collection, if it exists
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
+		public static T Last<T>(IEnumerable<T> collection)
 		{
 			IList<T> list = collection as IList<T>;
 			if (list != null)
@@ -70,15 +92,31 @@ namespace Rhino.Commons
 			}
 			if (set)
 				return last;
-			throw new ElementNotfoundException();
+			throw new ElementNotFoundException();
 		}
 
-		public static ICollection<T> SelectAll<T>(ICollection<T> collection, Predicate<T> predicate)
+		/// <summary>
+		/// Selects all the items in the collection 
+		/// that match the specified predicate
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns></returns>
+		public static ICollection<T> SelectAll<T>(IEnumerable<T> collection, Predicate<T> predicate)
 		{
 			return SelectInternal(true, collection, predicate);
 		}
 
-		public static T Find<T>(ICollection<T> items, Predicate<T> pred)
+		/// <summary>
+		/// Find the first item that match the given predicate, or
+		/// default value if not element was matched
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="items">The items.</param>
+		/// <param name="pred">The pred.</param>
+		/// <returns></returns>
+		public static T Find<T>(IEnumerable<T> items, Predicate<T> pred)
 		{
 			foreach (T item in items)
 			{
@@ -88,7 +126,7 @@ namespace Rhino.Commons
 			return default(T);
 		}
 
-		private static ICollection<T> SelectInternal<T>(bool addIfTrue, ICollection<T> collection, Predicate<T> predicate)
+		private static ICollection<T> SelectInternal<T>(bool addIfTrue, IEnumerable<T> collection, Predicate<T> predicate)
 		{
 			ICollection<T> results = new List<T>();
 			foreach (T item in collection)
@@ -106,12 +144,26 @@ namespace Rhino.Commons
 			return results;
 		}
 
-		public static ICollection<T> SelectAllNot<T>(ICollection<T> collection, Predicate<T> predicate)
+		/// <summary>
+		/// Selects all items in the collection that does not 
+		/// match the specified predicate
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns></returns>
+		public static ICollection<T> SelectAllNot<T>(IEnumerable<T> collection, Predicate<T> predicate)
 		{
 			return SelectInternal(false, collection, predicate);
 		}
 
-		public static void ForEach<T>(ICollection<T> collection, Action<T> action)
+		/// <summary>
+		/// Execute the action on all the items in the collection
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="action">The action.</param>
+		public static void ForEach<T>(IEnumerable<T> collection, Action<T> action)
 		{
 			foreach (T item in collection)
 			{
@@ -119,11 +171,26 @@ namespace Rhino.Commons
 			}
 		}
 
-		public static T[] ToArray<T>(object list)
+		/// <summary>
+		/// Convert an untyped obj to array of specified type
+		/// The type is assumed to implement IEnumerable
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="obj">The list.</param>
+		/// <returns></returns>
+		public static T[] ToArray<T>(object obj)
 		{
-			return ToArray<T>((IList)list);
+			IEnumerable enumerable = obj as IEnumerable;
+			Guard.Against<ArgumentException>(enumerable==null, "obj did not implement IEnumerable");
+			return ToArray<T>(enumerable);
 		}
 
+		/// <summary>
+		/// Convert the given IEnumerable to an array
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list">The list.</param>
+		/// <returns></returns>
 		public static T[] ToArray<T>(IEnumerable list)
 		{
 			List<T> items = new List<T>();
@@ -134,11 +201,38 @@ namespace Rhino.Commons
 			return items.ToArray();
 		}
 
+		/// <summary>
+		/// Converts the list to a binding list
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list">The list.</param>
+		/// <returns></returns>
 		public static BindingList<T> ToBindingList<T>(IEnumerable list)
 		{
 			return new BindingList<T>(ToArray<T>(list));
 		}
 
+		/// <summary>
+		/// Groups the items in the collection according to the grouping value
+		/// returned from the converter
+		/// </summary>
+		/// <typeparam name="K">The item in the collection</typeparam>
+		/// <typeparam name="T">The grouping item</typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="converter">The converter.</param>
+		/// <example>
+		/// <code>
+		///	<![CDATA[
+		/// int [] nums = { 1,2,3,4,5,6,7,8,9,10};
+		/// IDictionary<bool, ICollection<int>> results = Collection.GroupBy<int, bool>(nums, delegate(int num) { return num % 2 == 0; });
+		/// ]]>
+		/// </code>
+		/// Will output:
+		/// { 
+		/// 	true :  { 2,4,6,8,10 },
+		/// 	false : { 1,3,5,7,9  },
+		/// }
+		/// </example>
 		public static IDictionary<T, ICollection<K>> GroupBy<K, T>(ICollection<K> collection, Converter<K, T> converter)
 		{
 			Dictionary<T, ICollection<K>> dic = new Dictionary<T, ICollection<K>>();
@@ -154,6 +248,12 @@ namespace Rhino.Commons
 			return dic;
 		}
 
+		/// <summary>
+		/// Return a single element from the collection, and throw if 
+		/// the collection has more than a single item
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
 		public static object Single(ICollection collection)
 		{
 			if (collection.Count == 0)
@@ -165,11 +265,25 @@ namespace Rhino.Commons
 			return enumerator.Current;
 		}
 
+		/// <summary>
+		/// Return a collection where each item from the original collection 
+		/// appear once and only once
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
 		public static ICollection<T> ToUniqueCollection<T>(IEnumerable<T> collection)
 		{
 			return ToUniqueCollection<T>((IEnumerable) collection);
 		}
 
+		/// <summary>
+		/// Return a collection where each item from the original collection 
+		/// appear once and only once
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
 		public static ICollection<T> ToUniqueCollection<T>(IEnumerable collection)
 		{
 			if (collection == null) return null;
@@ -183,6 +297,14 @@ namespace Rhino.Commons
 			return result;
 		}
 
+		/// <summary>
+		/// Translate from one type to another using the converter
+		/// </summary>
+		/// <typeparam name="TSource">The type of the source.</typeparam>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
+		/// <param name="source">The source.</param>
+		/// <param name="converter">The converter.</param>
+		/// <returns></returns>
 		public static IList<TResult> Map<TSource, TResult>(
 			IEnumerable<TSource> source,
 			Converter<TSource, TResult> converter)
@@ -196,8 +318,20 @@ namespace Rhino.Commons
 			return result;
 		}
 
+		/// <summary>
+		/// Delegate for accumelating the values
+		/// </summary>
 		public delegate TResult Accumelator<TSource, TResult>(TSource source, TResult result);
 
+		/// <summary>
+		/// Reduces the specified source from a collection to the <typeparamref name="TResult"/>
+		/// </summary>
+		/// <typeparam name="TSource">The type of the source.</typeparam>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
+		/// <param name="source">The source.</param>
+		/// <param name="startValue">The start value.</param>
+		/// <param name="accumulator">The accumulator.</param>
+		/// <returns></returns>
 		public static TResult Reduce<TSource, TResult>(
 			IEnumerable<TSource> source, TResult startValue,
 			Accumelator<TSource, TResult> accumulator)

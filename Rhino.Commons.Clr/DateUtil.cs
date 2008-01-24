@@ -26,31 +26,53 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Rhino.Commons
 {
+	using System;
+
+	/// <summary>
+	/// Helper class for dates
+	/// </summary>
     public static class DateUtil
     {
+		/// <summary>
+		/// Combines the date part of the first date with the 
+		/// time part of the second part
+		/// </summary>
+		/// <param name="datePart">The date part.</param>
+		/// <param name="timePart">The time part.</param>
+		/// <returns></returns>
         public static DateTime Combine(DateTime datePart, DateTime timePart)
         {
             return new DateTime(datePart.Year, datePart.Month, datePart.Day, 
                 timePart.Hour,  timePart.Minute, timePart.Second, timePart.Millisecond);
         }
-    	
+
+		/// <summary>
+		/// Get the start of the month of this date
+		/// </summary>
+		/// <param name="date">The date.</param>
+		/// <returns></returns>
     	public static DateTime StartMonth(DateTime date)
     	{
     		return new DateTime(date.Year, date.Month,1);
     	}
-    	
+
+		/// <summary>
+		/// Get the end of the month from this date
+		/// </summary>
+		/// <param name="date">The date.</param>
+		/// <returns></returns>
     	public static DateTime EndMonth(DateTime date)
     	{
 			return StartMonth(date).AddMonths(1).AddDays(-1);
     	}
-        
+
+		/// <summary>
+		/// Get the next date that match the day of the week
+		/// </summary>
+		/// <param name="dayOfWeek">The day of week.</param>
+		/// <returns></returns>
         public static DateTime Next(DayOfWeek dayOfWeek)
         {
             if (dayOfWeek <= DateTime.Today.DayOfWeek)
@@ -61,6 +83,11 @@ namespace Rhino.Commons
             return DateTime.Today.Date.AddDays((dayOfWeek - DateTime.Today.DayOfWeek)); 
         }
 
+		/// <summary>
+		/// Get the previous date that match the day of the week
+		/// </summary>
+		/// <param name="dayOfWeek">The day of week.</param>
+		/// <returns></returns>
         public static DateTime Previous(DayOfWeek dayOfWeek)
         {
             if (dayOfWeek >= DateTime.Today.DayOfWeek)
@@ -71,11 +98,21 @@ namespace Rhino.Commons
             return DateTime.Today.Date.AddDays((dayOfWeek - DateTime.Today.DayOfWeek));
         }
 
+		/// <summary>
+		/// Get the start of the ween this date is on
+		/// </summary>
+		/// <param name="time">The time.</param>
+		/// <returns></returns>
         public static DateTime StartWeek(DateTime time)
         {
             return time.Date.AddDays(DayOfWeek.Sunday - time.DayOfWeek);
         }
-        
+
+		/// <summary>
+		/// Get the end of the ween this date is on
+		/// </summary>
+		/// <param name="time">The time.</param>
+		/// <returns></returns>
         public static DateTime EndWeek(DateTime time)
         {
             return time.Date.AddDays(DayOfWeek.Saturday - time.DayOfWeek);

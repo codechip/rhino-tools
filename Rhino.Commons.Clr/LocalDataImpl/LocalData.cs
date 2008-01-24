@@ -33,10 +33,15 @@ using Rhino.Commons.LocalDataImpl;
 
 namespace Rhino.Commons
 {
-    public class Local
+	/// <summary>
+	/// This class is key for handling local data, data that is private
+	/// to the current context, be it the current thread, the current web 
+	/// request, etc.
+	/// </summary>
+    public static class Local
     {
-        static ILocalData current = new LocalData();
-        static object LocalDataHashtableKey = new object();
+        static readonly ILocalData current = new LocalData();
+        static readonly object LocalDataHashtableKey = new object();
         private class LocalData : ILocalData
         {
             [ThreadStatic]
@@ -74,11 +79,19 @@ namespace Rhino.Commons
             }
         }
 
+		/// <summary>
+		/// Gets the current data
+		/// </summary>
+		/// <value>The data.</value>
         public static ILocalData Data
         {
             get { return current; }
         }
 
+		/// <summary>
+		/// Gets a value indicating whether running in the web context
+		/// </summary>
+		/// <value><c>true</c> if [running in web]; otherwise, <c>false</c>.</value>
         public static bool RunningInWeb
         {
             get { return HttpContext.Current != null; }

@@ -39,10 +39,17 @@ namespace Rhino.Commons
 	/// </summary>
 	public class ThereBeDragonsAttribute : Attribute
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ThereBeDragonsAttribute"/> class.
+		/// </summary>
 		public ThereBeDragonsAttribute()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ThereBeDragonsAttribute"/> class.
+		/// </summary>
+		/// <param name="whyAreYouUsingThis">The why are you using this.</param>
 		public ThereBeDragonsAttribute(string whyAreYouUsingThis)
 		{
 

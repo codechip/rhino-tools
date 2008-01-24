@@ -26,17 +26,23 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Rhino.Commons.LocalDataImpl
 {
+	/// <summary>
+	/// Implementors of this interface are used to store data
+	/// in a local fashion
+	/// </summary>
     public interface ILocalData
     {
+		/// <summary>
+		/// Gets or sets the <see cref="System.Object"/> with the specified key.
+		/// </summary>
+		/// <value></value>
         object this[object key] { get; set; }
 
+		/// <summary>
+		/// Clears this instance.
+		/// </summary>
         void Clear();
     }
 }
