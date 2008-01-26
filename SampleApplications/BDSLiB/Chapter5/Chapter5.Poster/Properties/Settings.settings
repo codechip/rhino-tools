@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Chapter5.Poster.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:24640/JSON.EndPoint.ashx</Value>
+    </Setting>
+    <Setting Name="Data" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{
+	type: "NewOrder",
+	customer_id: 15,
+	type: "fast",
+	order_lines: 
+		[
+			{ product: 3, qty: 5 },
+			{ product: 8, qty: 6 },
+			{ product: 2, qty: 3 },
+		]
+}</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,152 @@
+<Configuration>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Qualified:System.Web.HttpContext">
+      <Item value="Request" priority="4" />
+      <Item value="Response" priority="3" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Web.HttpRequest">
+      <Item value="HttpMethod" priority="0" />
+      <Item value="RequestType" priority="0" />
+      <Item value="BinaryRead" priority="0" />
+      <Item value="TotalBytes" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Web.HttpResponse">
+      <Item value="Write" priority="2" />
+      <Item value="StatusCode" priority="0" />
+      <Item value="StatusDescription" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Windows.Forms.TextBox">
+      <Item value="AcceptsReturn" priority="0" />
+      <Item value="Text" priority="3" />
+      <Item value="LostFocus" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Poster.Properties.Settings.Default">
+      <Item value="URL" priority="0" />
+      <Item value="Save" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.WebRequest">
+      <Item value="Method" priority="0" />
+      <Item value="GetRequestStream" priority="0" />
+      <Item value="GetResponse" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IO.StreamWriter">
+      <Item value="Write" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.WebResponse">
+      <Item value="GetResponseStream" priority="1" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IO.StreamReader">
+      <Item value="ReadToEnd" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Net.WebException">
+      <Item value="Response" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Text.Encoding.UTF8">
+      <Item value="GetString" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Newtonsoft.Json.JsonSerializer">
+      <Item value="Deserialize" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Rhino.DSL">
+      <Item value="DslEngine" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerPipeline">
+      <Item value="Insert" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Chapter5.MessageRouting.Handlers.IMessageHandler">
+      <Item value="Handle" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Newtonsoft.Json.JavaScriptArray">
+      <Item value="CopyTo" priority="0" />
+      <Item value="ConvertAll" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Router.dslFactory">
+      <Item value="Register" priority="0" />
+      <Item value="Create" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Properties.Settings">
+      <Item value="Default" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Properties.Settings.Default">
+      <Item value="RoutingScriptsDirectoryScriptsDirectory" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@">
+      <Item value="Route" priority="0" />
+      <Item value="Initialize" priority="0" />
+      <Item value="Result" priority="1" />
+      <Item value="Append" priority="0" />
+      <Item value="AppendLine" priority="0" />
+      <Item value="GetType" priority="0" />
+      <Item value="ToString" priority="0" />
+      <Item value="Length" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.BooCompiler">
+      <Item value="Parameters" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerParameters">
+      <Item value="Ducky" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.String">
+      <Item value="Format" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Chapter5.MessageRouting.Messages.NewOrderMessage">
+      <Item value="CustomerId" priority="0" />
+      <Item value="OrderLines" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Chapter5.MessageRouting.Messages.OrderLine[]">
+      <Item value="Equals" priority="0" />
+      <Item value="Length" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <EditorManager>
+    <RecentFiles>
+      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx" caret="94" scrollPosition="0|0" />
+      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/f:PostUrlData.Designer.cs" caret="0" scrollPosition="0|0" />
+      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/d:Properties/f:Settings.Designer.cs" caret="968" scrollPosition="0|8" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Properties/f:Settings.Designer.cs" caret="1390" scrollPosition="0|11" />
+      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/f:PostUrlData.cs" caret="625" scrollPosition="0|6" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="627" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:IMessageHandler.cs" caret="106" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/f:Router.cs" caret="806" scrollPosition="0|11" />
+      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JsonMessageAdapter.cs" caret="369" scrollPosition="0|6" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Messages/f:NewOrderMessage.cs" caret="726" scrollPosition="0|5" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="656" scrollPosition="0|1" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:AbstractHandler.cs" caret="222" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="318" scrollPosition="0|0" />
+      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx.cs" caret="1098" scrollPosition="0|4" />
+    </RecentFiles>
+  </EditorManager>
+  <FileStructureView>
+    <AutoScrollToSource>False</AutoScrollToSource>
+    <TrackCaretLocation>False</TrackCaretLocation>
+  </FileStructureView>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <ReFormatCode>
+    <ReorderMembers>True</ReorderMembers>
+    <OptimizeUsings>True</OptimizeUsings>
+    <RemoveRedundantThis>True</RemoveRedundantThis>
+    <ShortenReferences>True</ShortenReferences>
+  </ReFormatCode>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <SharedSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </SharedSolutionDisabledTemplatesManager>
+  <UnitTestRunner>
+    <CustomStartDirectory>
+    </CustomStartDirectory>
+    <UseShadowCopy>True</UseShadowCopy>
+    <UseCustomFolder>False</UseCustomFolder>
+    <Providers />
+  </UnitTestRunner>
+  <UserSolutionDisabledTemplatesManager>
+    <DisabledTemplates />
+  </UserSolutionDisabledTemplatesManager>
+</Configuration>
