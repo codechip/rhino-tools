@@ -3,12 +3,14 @@ namespace Chapter5.EndPoints
     using System.IO;
     using System.Text;
     using System.Web;
+    using MessageRouting;
     using Newtonsoft.Json;
 
     public class JSONEndPoint : IHttpHandler
     {
         public void ProcessRequest(HttpContext context)
         {
+            //verify that we only allow POST http calls
             if (context.Request.RequestType != "POST")
             {
                 context.Response.StatusCode = 400;

@@ -1,5 +1,6 @@
 {
 	type: "NewOrder",
+	version: "1.0",
 	customer_id: 15,
 	type: "fast",
 	order_lines: 

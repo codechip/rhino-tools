@@ -25,10 +25,20 @@ namespace Chapter5.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\OSS\\rhino-tools\\SampleApplications\\BDSLiB\\BSDLiB\\Chapter5.Scripts\\Routing")]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\OSS\\rhino-tools\\SampleApplications\\BDSLiB\\Chapter5\\Chapter5.Scripts\\Routing")]
         public string RoutingScriptsDirectory {
             get {
                 return ((string)(this["RoutingScriptsDirectory"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\OSS\\rhino-tools\\SampleApplications\\BDSLiB\\Chapter5\\Chapter5.Scripts\\Authorizat" +
+            "ion")]
+        public string AuthorizationScriptsDirectory {
+            get {
+                return ((string)(this["AuthorizationScriptsDirectory"]));
             }
         }
     }

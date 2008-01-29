@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5", "Chapter5\Chapter5.csproj", "{D2DD67AB-161E-4661-9AFD-F9E63EEC770F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5.EndPoints", "Chapter5.EndPoints\Chapter5.EndPoints.csproj", "{0AC629C4-A827-4608-8883-6D590EF42E67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5.MessageRouting.EndPoints", "Chapter5.EndPoints\Chapter5.MessageRouting.EndPoints.csproj", "{0AC629C4-A827-4608-8883-6D590EF42E67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5.Poster", "Chapter5.Poster\Chapter5.Poster.csproj", "{EDC72FFE-A15E-43DB-9143-7A13048B0790}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5.MessageRouting.Poster", "Chapter5.Poster\Chapter5.MessageRouting.Poster.csproj", "{EDC72FFE-A15E-43DB-9143-7A13048B0790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter5.Security", "Chapter5.Security\Chapter5.Security.csproj", "{B911A87E-2918-4B33-9620-ED17A42947AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{EDC72FFE-A15E-43DB-9143-7A13048B0790}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDC72FFE-A15E-43DB-9143-7A13048B0790}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDC72FFE-A15E-43DB-9143-7A13048B0790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B911A87E-2918-4B33-9620-ED17A42947AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B911A87E-2918-4B33-9620-ED17A42947AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B911A87E-2918-4B33-9620-ED17A42947AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B911A87E-2918-4B33-9620-ED17A42947AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

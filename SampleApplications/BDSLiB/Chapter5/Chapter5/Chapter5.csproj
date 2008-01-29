@@ -57,10 +57,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Router.cs" />
+    <Compile Include="MessageRouting\Router.cs" />
+    <Compile Include="Security\OperationMacro.cs" />
+    <Compile Include="Security\Authorization.cs" />
+    <Compile Include="Security\AuthorizationDslEngine.cs" />
+    <Compile Include="Security\AuthorizationRule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

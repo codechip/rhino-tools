@@ -7,13 +7,22 @@ namespace Chapter5.MessageRouting
 
     public class RoutingDslEngine : DslEngine
     {
-        protected override void CustomizeCompiler(BooCompiler compiler,
-                                                  CompilerPipeline pipeline, Uri[] urls)
+        protected override void CustomizeCompiler(
+            BooCompiler compiler,
+            CompilerPipeline pipeline, 
+            Uri[] urls)
         {
+            // The compiler should allow late bound semantics
             compiler.Parameters.Ducky = true;
-            pipeline.Insert(1, new AnonymousBaseClassCompilerStep(typeof (RoutingBase), "Route",
-                "Chapter5.MessageRouting.Handlers",
-                "Chapter5.MessageRouting.Messages"));
+            pipeline.Insert(1, 
+                new AnonymousBaseClassCompilerStep(
+                    // the base type
+                    typeof (RoutingBase), 
+                    // the method to override
+                    "Route",
+                    // import the following namespaces
+                    "Chapter5.MessageRouting.Handlers",
+                    "Chapter5.MessageRouting.Messages"));
         }
     }
 }

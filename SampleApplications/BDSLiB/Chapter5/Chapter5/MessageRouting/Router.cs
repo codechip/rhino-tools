@@ -1,12 +1,15 @@
-namespace Chapter5
+namespace Chapter5.MessageRouting
 {
     using System.Text;
     using Boo.Lang;
-    using Chapter5.MessageRouting.DSL;
-    using MessageRouting;
+    using DSL;
     using Properties;
     using Rhino.DSL;
 
+    /// <summary>
+    /// This is a static gateway that dispatch messages using DSL
+    /// to their appropriate handlers in the 
+    /// </summary>
     public static class Router
     {
         private static readonly DslFactory dslFactory;
@@ -20,16 +23,13 @@ namespace Chapter5
         public static string Route(IQuackFu msg)
         {
             StringBuilder messages = new StringBuilder();
-            RoutingBase[] routings = dslFactory.CreateAll<RoutingBase>(Settings.Default.RoutingScriptsDirectory);
+            RoutingBase[] routings = dslFactory.CreateAll<RoutingBase>(
+                Settings.Default.RoutingScriptsDirectory
+                );
             foreach (RoutingBase routing in routings)
             {
                 routing.Initialize(msg);
                 routing.Route();
-                if(routing.Result!=null)
-                {
-                    messages.AppendLine(routing.GetType().Name)
-                        .AppendLine(routing.Result);
-                }
             }
             if(messages.Length==0)
             {

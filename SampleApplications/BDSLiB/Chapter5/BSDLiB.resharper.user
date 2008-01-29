@@ -69,6 +69,7 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@Chapter5.Properties.Settings.Default">
       <Item value="RoutingScriptsDirectoryScriptsDirectory" priority="0" />
+      <Item value="AuthorizationScriptsDirectory" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:@">
       <Item value="Route" priority="0" />
@@ -79,6 +80,13 @@
       <Item value="GetType" priority="0" />
       <Item value="ToString" priority="0" />
       <Item value="Length" priority="0" />
+      <Item value="Operation" priority="1" />
+      <Item value="CheckAuthorization" priority="0" />
+      <Item value="Allowed" priority="1" />
+      <Item value="Message" priority="0" />
+      <Item value="Name" priority="0" />
+      <Item value="Id" priority="0" />
+      <Item value="TotalOrders" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.BooCompiler">
       <Item value="Parameters" priority="0" />
@@ -88,6 +96,8 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@System.String">
       <Item value="Format" priority="0" />
+      <Item value="Compare" priority="0" />
+      <Item value="Equals" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Chapter5.MessageRouting.Messages.NewOrderMessage">
       <Item value="CustomerId" priority="0" />
@@ -97,6 +107,21 @@
       <Item value="Equals" priority="0" />
       <Item value="Length" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Security.Authorization.dslFactory">
+      <Item value="CreateAll" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Nullable&lt;bool&gt;">
+      <Item value="Value" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5">
+      <Item value="Authorization" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.Security.Authorization">
+      <Item value="IsAllowed" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Security.Principal.WindowsIdentity">
+      <Item value="GetCurrent" priority="1" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
@@ -105,15 +130,20 @@
       <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/d:Properties/f:Settings.Designer.cs" caret="968" scrollPosition="0|8" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Properties/f:Settings.Designer.cs" caret="1390" scrollPosition="0|11" />
       <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/f:PostUrlData.cs" caret="625" scrollPosition="0|6" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="627" scrollPosition="0|0" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:IMessageHandler.cs" caret="106" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/f:Router.cs" caret="806" scrollPosition="0|11" />
-      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JsonMessageAdapter.cs" caret="369" scrollPosition="0|6" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Messages/f:NewOrderMessage.cs" caret="726" scrollPosition="0|5" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="656" scrollPosition="0|1" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:AbstractHandler.cs" caret="222" scrollPosition="0|0" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="318" scrollPosition="0|0" />
-      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx.cs" caret="1098" scrollPosition="0|4" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="0" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="0" scrollPosition="0|0" />
+      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx.cs" caret="0" scrollPosition="0|0" />
+      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JsonMessageAdapter.cs" caret="972" scrollPosition="0|9" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:AuthorizationRule.cs" caret="454" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/f:Router.cs" caret="681" scrollPosition="0|8" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:Authorization.cs" caret="2802" scrollPosition="0|74" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:ActionMacro.cs" caret="73" scrollPosition="0|0" />
+      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Customer.cs" caret="49" scrollPosition="0|0" />
+      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Program.cs" caret="817" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

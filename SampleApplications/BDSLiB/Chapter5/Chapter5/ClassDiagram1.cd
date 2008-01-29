@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="Chapter5.Security.AuthorizationRule">
+    <Position X="3" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <FileName>Security\AuthorizationRule.cs</FileName>
+      <HashCode>EAAQABAAAAAgAAAAIgAAAAAAAAAAAAAAAAEAIABAECA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="allowed" Hidden="true" />
+      <Method Name="AuthorizationRule" Hidden="true" />
+      <Field Name="entity" Hidden="true" />
+      <Field Name="message" Hidden="true" />
+      <Field Name="principal" Hidden="true" />
+    </Members>
+  </Class>
+  <Class Name="Chapter5.Security.Authorization">
+    <Position X="3.25" Y="3.5" Width="5.75" />
+    <TypeIdentifier>
+      <FileName>Security\Authorization.cs</FileName>
+      <HashCode>AAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Method Name="Authorization" Hidden="true" />
+      <Field Name="dslFactory" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Chapter5.Security.Authorization.AuthorizationResult">
+        <TypeIdentifier>
+          <NewMemberFileName>Security\Authorization.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Members>
+          <Method Name="AuthorizationResult" Hidden="true" />
+        </Members>
+      </Class>
+    </NestedTypes>
+  </Class>
+</ClassDiagram>
