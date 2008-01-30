@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project
 	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
+	
 
 	<PropertyGroup>
 		<ProjectName>Rhino.Testing</ProjectName>
@@ -21,8 +21,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!--<TestAssembly Include="$(MSBuildProjectDirectory)\Rhino.Testing.Tests\bin\$(Configuration)\Rhino.Testing.Tests.dll"/>-->
 		<TestAssembly Include="$(OutDir)\Rhino.Testing.Tests.dll"/>
 	</ItemGroup>
-	
+
+	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>	
 </Project>
