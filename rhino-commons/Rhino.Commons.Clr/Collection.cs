@@ -55,6 +55,25 @@ namespace Rhino.Commons
 		}
 
 		/// <summary>
+		/// Determines whether an element matching a predicate exists
+		/// in the collection.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection.</param>
+		/// <param name="predicate">The predicate to test.</param>
+		/// <returns></returns>
+		public static bool Exists<T>(IEnumerable<T> collection, Predicate<T> predicate)
+		{
+			foreach (T item in collection)
+			{
+				if (predicate(item))
+					return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Get the first item in the collection, if it exists
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
@@ -319,9 +338,9 @@ namespace Rhino.Commons
 		}
 
 		/// <summary>
-		/// Delegate for accumelating the values
+		/// Delegate for accumulating the values
 		/// </summary>
-		public delegate TResult Accumelator<TSource, TResult>(TSource source, TResult result);
+		public delegate TResult Accumulator<TSource, TResult>(TSource source, TResult result);
 
 		/// <summary>
 		/// Reduces the specified source from a collection to the <typeparamref name="TResult"/>
@@ -334,7 +353,7 @@ namespace Rhino.Commons
 		/// <returns></returns>
 		public static TResult Reduce<TSource, TResult>(
 			IEnumerable<TSource> source, TResult startValue,
-			Accumelator<TSource, TResult> accumulator)
+			Accumulator<TSource, TResult> accumulator)
 		{
 			TResult result = startValue;
 			if (source != null)
