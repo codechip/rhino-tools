@@ -82,6 +82,8 @@ namespace Rhino.Commons.ForTesting
                     return new MsSqlCeUnitOfWorkTestContextDbStrategy(databaseName);
                 case DatabaseEngine.MsSql2005:
                     return new MsSql2005UnitOfWorkTestContextDbStrategy(databaseName);
+                case DatabaseEngine.MsSql2005Express:
+                    return new MsSql2005ExpressUnitOfWorkTestContextDbStrategy(databaseName);
                 default:
                     throw new ArgumentOutOfRangeException("databaseEngine");
             }
@@ -245,7 +247,7 @@ namespace Rhino.Commons.ForTesting
             }
 
 
-            private string ConnectionStringFor(string databaseName)
+            protected virtual string ConnectionStringFor(string databaseName)
             {
                 return string.Format("Server=(local);initial catalog={0};Integrated Security=SSPI", databaseName);
             }
@@ -264,7 +266,7 @@ namespace Rhino.Commons.ForTesting
             }
 
 
-            private string GetSqlServerDataDirectory()
+            protected virtual string GetSqlServerDataDirectory()
             {
                 string sqlServerRegKey = @"SOFTWARE\Microsoft\Microsoft SQL Server\";
                 string sqlServerInstanceName =
@@ -279,7 +281,40 @@ namespace Rhino.Commons.ForTesting
             }
         }
 
+        private class MsSql2005ExpressUnitOfWorkTestContextDbStrategy : MsSql2005UnitOfWorkTestContextDbStrategy
+        {
+            public MsSql2005ExpressUnitOfWorkTestContextDbStrategy(string databaseName)
+                : base(databaseName)
+            { }
 
+            public override DatabaseEngine DatabaseEngine
+            {
+                get
+                {
+                    return DatabaseEngine.MsSql2005Express;
+                }
+            }
+
+            protected override string ConnectionStringFor(string databaseName)
+            {
+                return string.Format(@"Server=(local)\SqlExpress;initial catalog={0};Integrated Security=SSPI", databaseName);
+            }
+
+            protected override string GetSqlServerDataDirectory()
+            {
+                string sqlServerRegKey = @"SOFTWARE\Microsoft\Microsoft SQL Server\";
+                string sqlServerInstanceName =
+                    (string)Registry.LocalMachine
+                                 .OpenSubKey(sqlServerRegKey + @"Instance Names\SQL")
+                                 .GetValue("SQLEXPRESS");
+                string sqlServerInstanceSetupRegKey = sqlServerRegKey + sqlServerInstanceName + @"\Setup";
+                return
+                    (string)Registry.LocalMachine
+                                 .OpenSubKey(sqlServerInstanceSetupRegKey)
+                                 .GetValue("SQLDataRoot") + @"\Data\";
+            }
+
+        }
 
         private class SQlLiteUnitOfWorkTestContextDbStrategy : UnitOfWorkTestContextDbStrategy
         {

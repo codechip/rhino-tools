@@ -40,7 +40,8 @@ namespace Rhino.Commons.ForTesting
     {
         SQLite,
         MsSqlCe,
-        MsSql2005
+        MsSql2005,
+        MsSql2005Express
     }
 
     public enum PersistenceFramework
