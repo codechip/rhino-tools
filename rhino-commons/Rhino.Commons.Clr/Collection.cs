@@ -115,6 +115,25 @@ namespace Rhino.Commons
 		}
 
 		/// <summary>
+		/// Selects the items in the collection in the specified range.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="collection">The collection to get a range of elements from.</param>
+		/// <param name="index">The index at which to start collecting elements.</param>
+		/// <param name="count">The number of elements to collect.</param>
+		/// <returns></returns>
+		public static ICollection<T> Range<T>(IEnumerable<T> collection, int index, int count)
+		{
+			List<T> list = new List<T>(collection);
+
+			Guard.Against<ArgumentOutOfRangeException>(list.Count == 0, "collection is empty");
+			Guard.Against<ArgumentOutOfRangeException>(index < 0 || index > list.Count - 1, "index is out of range");
+			Guard.Against<ArgumentOutOfRangeException>(count < 1 || count > list.Count - index, "count is out of range");
+
+			return list.GetRange(index, count);
+		}
+
+		/// <summary>
 		/// Selects all the items in the collection 
 		/// that match the specified predicate
 		/// </summary>
