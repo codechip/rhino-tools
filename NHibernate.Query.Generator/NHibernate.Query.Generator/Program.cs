@@ -41,47 +41,38 @@ namespace NHibernate.Query.Generator
 {
     internal class Program
     {
+		private static ApplicationOptions options;
         private static string targetExtention;
-        private static string outputDir;
         private static CodeDomProvider provider = null;
+		private static IQueryWriter queryWriter = null;
 
         private static void Main(string[] args)
         {
-            ApplicationOptions options = new ApplicationOptions();
+            options = new ApplicationOptions();
             if (Parser.ParseArgumentsWithUsage(args, options)==false)
                 Environment.Exit(2);
-            string inputFilePattern = options.InputFilePattern;
             targetExtention = options.Lang.ToString().ToLower();
-            outputDir = options.OutputDirectory;
-
             try
             {
+				SetupCodeProvider();
+
 				if (options.SingleOutput)
 				{
-					string genFile = Path.Combine(outputDir, "Where." + targetExtention);
-					File.Delete(genFile);
-				}
-				
-                SetupCodeProvider();
-
-				string[] inputDirectories = inputFilePattern.Split('|');
-
-            	foreach(string inputDirectory in inputDirectories)
-            	{
-					string directoryName = Path.GetDirectoryName(inputDirectory);
-
-					if (string.IsNullOrEmpty(directoryName))
-						directoryName = ".";
-
-					string fileName = Path.GetFileName(inputFilePattern);
-					
-					foreach (string file in Directory.GetFiles(directoryName, fileName))
+					string targetFile = Path.Combine(options.OutputDirectory, "Where." + targetExtention);
+					using (StreamWriter outputStream = File.CreateText(targetFile))
 					{
-						OutputFile(file, options.BaseNamespace, options.SingleOutput);
+						queryWriter = new SingleFileQueryWriter(outputStream);
+						OutputFiles(options.InputFilePattern);
+						Console.WriteLine("Successfuly created file {0}", targetFile);
 					}
-            	}
+				}
+				else
+				{
+					queryWriter = new MultiFileQueryWriter(options.OutputDirectory, targetExtention);
+					OutputFiles(options.InputFilePattern);
+				}
 
-				OutputQueryBuilder(options.BaseNamespace);		
+				OutputQueryBuilder();
             }
             catch (ReflectionTypeLoadException e)
             {
@@ -104,40 +95,56 @@ namespace NHibernate.Query.Generator
             }
         }
 
-        private static void OutputFile(string file, string baseNamespace, bool singleOutput)
+		private static void OutputFiles(string inputFilePattern)
+		{
+			string[] inputDirectories = inputFilePattern.Split('|');
+
+			foreach (string inputDirectory in inputDirectories)
+			{
+				string directoryName = Path.GetDirectoryName(inputDirectory);
+
+				if (string.IsNullOrEmpty(directoryName))
+					directoryName = ".";
+
+				string fileName = Path.GetFileName(inputFilePattern);
+
+				foreach (string file in Directory.GetFiles(directoryName, fileName))
+				{
+					OutputFile(file);
+				}
+			}
+		}
+
+        private static void OutputFile(string file)
         {
             string fileExt = Path.GetExtension(file);
-            string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(file) + "." + targetExtention);
-			if (singleOutput)
-			{
-				outputFile = Path.Combine(outputDir, "Where." + targetExtention);
-			}
+            string modelName = Path.GetFileNameWithoutExtension(file);
 			
             // hbm file
             if (fileExt.EndsWith("xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                GenerateSingleFile(File.OpenText(file), outputFile, baseNamespace, singleOutput);
+                GenerateSingleFile(File.OpenText(file), modelName);
             }
             else if (fileExt.EndsWith("exe", StringComparison.InvariantCultureIgnoreCase) ||
                      fileExt.EndsWith("dll", StringComparison.InvariantCultureIgnoreCase)) // Active Record...
             {
-                GenerateFromActiveRecordAssembly(file, baseNamespace, singleOutput);
+                GenerateFromActiveRecordAssembly(file);
             }
         }
 
-        private static void OutputQueryBuilder(string baseNamespace)
+        private static void OutputQueryBuilder()
         {
             //write query builders so user can just include the whole directory.
             Stream namedExp =
                 typeof(Program).Assembly.GetManifestResourceStream("NHibernate.Query.Generator.QueryBuilders.QueryBuilder." +
                                                                     targetExtention);
-            string code = new StreamReader(namedExp).ReadToEnd().Replace("QueryNamespace", baseNamespace);
-            string filename = Path.Combine(outputDir, "QueryBuilder." + targetExtention);
+            string code = new StreamReader(namedExp).ReadToEnd().Replace("QueryNamespace", options.BaseNamespace);
+            string filename = Path.Combine(options.OutputDirectory, "QueryBuilder." + targetExtention);
             File.WriteAllText(filename, code);
-            Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", outputDir, targetExtention);
+            Console.WriteLine("Successfuly created file: {0}\\QueryBuilder.{1}", options.OutputDirectory, targetExtention);
         }
 
-        private static void GenerateFromActiveRecordAssembly(string file, string baseNamespace, bool singleOutput)
+        private static void GenerateFromActiveRecordAssembly(string file)
         {
             string fullPath = Path.GetFullPath(file);
             RegisterAssemblyResolver(fullPath);
@@ -192,13 +199,7 @@ namespace NHibernate.Query.Generator
 
                     System.Type type = (System.Type)Get(model, "Type");
                 		string typeName = type.Name.Split('`')[0]; // Handle generic types
-                    string genFile = "Where." + typeName;
-					if (singleOutput)
-					{
-						genFile = "Where";
-					}
-	                genFile = Path.Combine(outputDir, genFile + "." + targetExtention);
-					GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), genFile, baseNamespace, singleOutput);
+					GenerateSingleFile(new StringReader((string)Get(xmlVisitor, "Xml")), typeName);
                 }
             }
 
@@ -211,17 +212,12 @@ namespace NHibernate.Query.Generator
             int i = 0;
             foreach (string xml in xmls)
             {
-                string genFile = "Where." + asm.GetName().Name;
+                string typeName = asm.GetName().Name;
                 if (i > 0)
                 {
-                    genFile += i.ToString();
+					typeName += i.ToString();
                 }
-				if (singleOutput)
-				{
-					genFile = "Where";
-				}
-                genFile += "." + targetExtention;
-                GenerateSingleFile(new StringReader(xml), Path.Combine(outputDir, genFile), baseNamespace, singleOutput);
+				GenerateSingleFile(new StringReader(xml), typeName);
                 i += 1;
             }
 
@@ -286,18 +282,10 @@ namespace NHibernate.Query.Generator
             };
         }
 
-        private static void GenerateSingleFile(TextReader input, string destinationFile, string baseNamespace, bool singleOutput)
+        private static void GenerateSingleFile(TextReader input, string modelName)
         {
-			if (!singleOutput)
-			{
-				File.Delete(destinationFile);
-			}
-            QueryGenerator generator = new QueryGenerator(input, provider, baseNamespace, null);
-            using (StreamWriter outputStream = File.AppendText(destinationFile))
-            {
-                generator.Generate(outputStream);
-            }
-            Console.WriteLine("Successfuly written to file {0}", destinationFile);
+            QueryGenerator generator = new QueryGenerator(input, provider, options.BaseNamespace, null);
+			queryWriter.WriteModel(generator, modelName);
         }
 
         private static void SetupCodeProvider()
