@@ -33,7 +33,7 @@
 				  DestinationFiles="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')"/>
 		<FileUpdate Regex="REAL_VERSION" 
 					Files="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')" 
-					ReplacementText="$(Version).$(Revision).0" />
+					ReplacementText="$(Version).0.0" />
 		<MsBuild Projects="$(MSBuildProjectFile)"
 				  Targets="BuildAll"/>
 	</Target>
