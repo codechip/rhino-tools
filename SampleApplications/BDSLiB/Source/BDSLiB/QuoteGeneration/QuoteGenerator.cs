@@ -1,4 +1,4 @@
-namespace Chapter5.QuoteGeneration
+namespace BDSLiB.QuoteGeneration
 {
     using Rhino.DSL;
 
@@ -12,9 +12,9 @@ namespace Chapter5.QuoteGeneration
             dslFactory.Register<QuoteGeneratorRule>(new QuoteGenerationDslEngine());
         }
 
-        public static void Generate()
+        public static void Generate(string url)
         {
-            QuoteGeneratorRule rule = dslFactory.Create<QuoteGeneratorRule>(@"D:\OSS\rhino-tools\SampleApplications\BDSLiB\Chapter5\Chapter5.Scripts\QuoteGenerator\sample.boo", new RequirementsInformation(200,"Vacation"));
+            QuoteGeneratorRule rule = dslFactory.Create<QuoteGeneratorRule>(url, new RequirementsInformation(200,"Vacation"));
             rule.Evaluate();
         }
     }

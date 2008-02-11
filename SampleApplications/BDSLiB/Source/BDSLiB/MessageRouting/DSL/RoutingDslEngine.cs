@@ -1,4 +1,4 @@
-namespace Chapter5.MessageRouting
+namespace BDSLiB.MessageRouting
 {
     using System;
     using Boo.Lang.Compiler;

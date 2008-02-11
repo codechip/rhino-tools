@@ -1,4 +1,4 @@
-namespace Chapter5.QuoteGeneration
+namespace BDSLiB.QuoteGeneration
 {
     using System.Collections.Generic;
 

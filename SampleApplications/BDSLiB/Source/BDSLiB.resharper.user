@@ -135,35 +135,35 @@
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
-      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx" caret="94" scrollPosition="0|0" />
-      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/f:PostUrlData.Designer.cs" caret="0" scrollPosition="0|0" />
-      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/d:Properties/f:Settings.Designer.cs" caret="968" scrollPosition="0|8" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Properties/f:Settings.Designer.cs" caret="1390" scrollPosition="0|11" />
-      <File id="EDC72FFE-A15E-43DB-9143-7A13048B0790/f:PostUrlData.cs" caret="625" scrollPosition="0|6" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:IMessageHandler.cs" caret="106" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Messages/f:NewOrderMessage.cs" caret="726" scrollPosition="0|5" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:AbstractHandler.cs" caret="222" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="318" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="0" scrollPosition="0|0" />
-      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx.cs" caret="0" scrollPosition="0|0" />
-      <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JsonMessageAdapter.cs" caret="972" scrollPosition="0|9" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:AuthorizationRule.cs" caret="454" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/f:Router.cs" caret="681" scrollPosition="0|8" />
-      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Order.cs" caret="0" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="0" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:OperationMacro.cs" caret="0" scrollPosition="0|0" />
-      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Program.cs" caret="0" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:AuthorizationDslEngine.cs" caret="793" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:RequirementsInformation.cs" caret="56" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:Authorization.cs" caret="448" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:DslEngine.cs" caret="2461" scrollPosition="0|34" />
-      <File id="d:Miscellaneous Files/f:DslFactory.cs" caret="4083" scrollPosition="0|63" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGenerationDslEngine.cs" caret="494" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:SystemModule.cs" caret="421" scrollPosition="0|0" />
-      <File id="9B37CCB9-BACF-4220-8AD9-03D7C07633E7/f:Program.cs" caret="327" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGeneratorRule.cs" caret="837" scrollPosition="0|6" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGenerator.cs" caret="668" scrollPosition="0|0" />
-      <File id="d:Miscellaneous Files/f:sample.boo" caret="159" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:OperationMacro.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:AuthorizationRule.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Messages/f:NewOrderMessage.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Handlers/f:IMessageHandler.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Handlers/f:AbstractHandler.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:SystemModule.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:RequirementsInformation.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGeneratorRule.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Properties/f:Settings.Designer.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/f:Router.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:Authorization.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/f:app.config" caret="493" scrollPosition="0|0" />
+      <File id="E9B0AB24-FAF9-4000-86A2-E25A1018A248/f:JSON.EndPoint.ashx.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Properties/f:AssemblyInfo.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGenerationDslEngine.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:AuthorizationDslEngine.cs" caret="0" scrollPosition="0|0" />
+      <File id="E9B0AB24-FAF9-4000-86A2-E25A1018A248/d:Properties/f:AssemblyInfo.cs" caret="0" scrollPosition="0|0" />
+      <File id="E9B0AB24-FAF9-4000-86A2-E25A1018A248/f:JsonMessageAdapter.cs" caret="50" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/f:Program.cs" caret="115" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/d:Properties/f:Settings.Designer.cs" caret="0" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/d:Properties/f:Resources.Designer.cs" caret="0" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/f:PostUrlData.Designer.cs" caret="0" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/f:PostUrlData.cs" caret="0" scrollPosition="0|0" />
+      <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/d:Properties/f:AssemblyInfo.cs" caret="0" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGenerator.cs" caret="411" scrollPosition="0|3" />
+      <File id="D57F6C9A-074E-4E75-A172-F45B232510F8/f:Program.cs" caret="364" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

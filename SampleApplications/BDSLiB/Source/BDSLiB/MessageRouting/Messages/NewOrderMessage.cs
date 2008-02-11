@@ -1,4 +1,4 @@
-namespace Chapter5.MessageRouting.Messages
+namespace BDSLiB.MessageRouting.Messages
 {
     public class NewOrderMessage
     {

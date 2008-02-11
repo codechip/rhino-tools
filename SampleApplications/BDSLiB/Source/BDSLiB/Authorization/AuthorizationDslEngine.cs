@@ -1,4 +1,4 @@
-namespace Chapter5.Security
+namespace BDSLiB.Authorization
 {
     using System;
     using Boo.Lang.Compiler;

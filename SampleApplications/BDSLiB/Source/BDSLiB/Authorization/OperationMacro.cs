@@ -1,4 +1,4 @@
-namespace Chapter5.Security
+namespace BDSLiB.Authorization
 {
     using Rhino.DSL;
 

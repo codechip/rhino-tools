@@ -1,9 +1,9 @@
-namespace Chapter5.MessageRouting
+namespace BDSLiB.MessageRouting
 {
     using System.Text;
     using Boo.Lang;
+    using BDSLiB.Properties;
     using DSL;
-    using Properties;
     using Rhino.DSL;
 
     /// <summary>

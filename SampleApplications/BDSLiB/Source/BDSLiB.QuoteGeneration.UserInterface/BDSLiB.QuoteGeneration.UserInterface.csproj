@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9B37CCB9-BACF-4220-8AD9-03D7C07633E7}</ProjectGuid>
+    <ProjectGuid>{D57F6C9A-074E-4E75-A172-F45B232510F8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Chapter5.QuoteGeneration</RootNamespace>
-    <AssemblyName>Chapter5.QuoteGeneration</AssemblyName>
+    <RootNamespace>BDSLiB.QuoteGeneration.UserInterface</RootNamespace>
+    <AssemblyName>BDSLiB.QuoteGeneration.UserInterface</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -68,9 +69,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chapter5\Chapter5.csproj">
-      <Project>{D2DD67AB-161E-4661-9AFD-F9E63EEC770F}</Project>
-      <Name>Chapter5</Name>
+    <ProjectReference Include="..\BDSLiB\BDSLiB.csproj">
+      <Project>{0E99CBED-91A9-4380-B194-BCB9EC304B0D}</Project>
+      <Name>BDSLiB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

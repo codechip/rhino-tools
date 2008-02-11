@@ -1,4 +1,4 @@
-namespace Chapter5.EndPoints
+namespace BDSLiB.EndPoints
 {
     using Boo.Lang;
     using Newtonsoft.Json;

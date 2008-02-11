@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Chapter5.Poster
+namespace BDSLiB.JsonMessagePoster
 {
     using System.IO;
     using System.Net;

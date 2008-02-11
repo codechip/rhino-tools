@@ -1,4 +1,4 @@
-namespace Chapter5.MessageRouting.Handlers
+namespace BDSLiB.MessageRouting.Handlers
 {
     using Messages;
 

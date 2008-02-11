@@ -1,4 +1,4 @@
-namespace Chapter5.EndPoints
+namespace BDSLiB.EndPoints
 {
     using System.IO;
     using System.Text;

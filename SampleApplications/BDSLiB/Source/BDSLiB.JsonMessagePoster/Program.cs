@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Chapter5.Poster
+namespace BDSLiB.JsonMessagePoster
 {
     static class Program
     {

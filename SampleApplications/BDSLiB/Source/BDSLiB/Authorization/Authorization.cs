@@ -1,9 +1,9 @@
-namespace Chapter5.Security
+namespace BDSLiB.Authorization
 {
     using System;
     using System.Security.Principal;
-    using MessageRouting;
-    using Properties;
+    using BDSLiB.Properties;
+    using BDSLiB.Authorization;
     using Rhino.DSL;
 
     public static class Authorization

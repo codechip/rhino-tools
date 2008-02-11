@@ -1,4 +1,4 @@
-namespace Chapter5.Poster
+namespace BDSLiB.JsonMessagePoster
 {
     partial class PostUrlData
     {
