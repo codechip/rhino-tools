@@ -51,7 +51,7 @@
       <Item value="DslEngine" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.CompilerPipeline">
-      <Item value="Insert" priority="0" />
+      <Item value="Insert" priority="1" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Chapter5.MessageRouting.Handlers.IMessageHandler">
       <Item value="Handle" priority="0" />
@@ -87,6 +87,7 @@
       <Item value="Name" priority="0" />
       <Item value="Id" priority="0" />
       <Item value="TotalOrders" priority="0" />
+      <Item value="Evaluate" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:Boo.Lang.Compiler.BooCompiler">
       <Item value="Parameters" priority="0" />
@@ -122,6 +123,15 @@
     <ItemStatistics item="Qualified:@System.Security.Principal.WindowsIdentity">
       <Item value="GetCurrent" priority="1" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List&lt;Chapter5.QouteGeneration.SystemModule&gt;">
+      <Item value="Add" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Rhino.DSL.DslFactory">
+      <Item value="CreateAll" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@Chapter5.QuoteGeneration.QuoteGenerator">
+      <Item value="Generate" priority="0" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
@@ -135,15 +145,25 @@
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:AbstractHandler.cs" caret="222" scrollPosition="0|0" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="318" scrollPosition="0|0" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingBase.cs" caret="0" scrollPosition="0|0" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="0" scrollPosition="0|0" />
       <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JSON.EndPoint.ashx.cs" caret="0" scrollPosition="0|0" />
       <File id="0AC629C4-A827-4608-8883-6D590EF42E67/f:JsonMessageAdapter.cs" caret="972" scrollPosition="0|9" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:AuthorizationRule.cs" caret="454" scrollPosition="0|0" />
       <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/f:Router.cs" caret="681" scrollPosition="0|8" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:Authorization.cs" caret="2802" scrollPosition="0|74" />
-      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:ActionMacro.cs" caret="73" scrollPosition="0|0" />
-      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Customer.cs" caret="49" scrollPosition="0|0" />
-      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Program.cs" caret="817" scrollPosition="0|0" />
+      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Order.cs" caret="0" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:MessageRouting/d:DSL/f:RoutingDslEngine.cs" caret="0" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:OperationMacro.cs" caret="0" scrollPosition="0|0" />
+      <File id="B911A87E-2918-4B33-9620-ED17A42947AF/f:Program.cs" caret="0" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:AuthorizationDslEngine.cs" caret="793" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:RequirementsInformation.cs" caret="56" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:Security/f:Authorization.cs" caret="448" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:DslEngine.cs" caret="2461" scrollPosition="0|34" />
+      <File id="d:Miscellaneous Files/f:DslFactory.cs" caret="4083" scrollPosition="0|63" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGenerationDslEngine.cs" caret="494" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:SystemModule.cs" caret="421" scrollPosition="0|0" />
+      <File id="9B37CCB9-BACF-4220-8AD9-03D7C07633E7/f:Program.cs" caret="327" scrollPosition="0|0" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGeneratorRule.cs" caret="837" scrollPosition="0|6" />
+      <File id="D2DD67AB-161E-4661-9AFD-F9E63EEC770F/d:QuoteGeneration/f:QuoteGenerator.cs" caret="668" scrollPosition="0|0" />
+      <File id="d:Miscellaneous Files/f:sample.boo" caret="159" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

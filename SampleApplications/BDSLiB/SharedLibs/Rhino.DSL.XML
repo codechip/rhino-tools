@@ -23,6 +23,15 @@
             <param name="parameters">optional ctor parameters</param>
             <returns>The dsl instance</returns>
         </member>
+        <member name="M:Rhino.DSL.DslFactory.TryCreate``1(System.String,System.Object[])">
+            <summary>
+            Create a new DSL instance
+            </summary>
+            <typeparam name="TDslBase">The base type of the DSL</typeparam>
+            <param name="url">The url to read the DSL file from</param>
+            <param name="parameters">optional ctor parameters</param>
+            <returns>The dsl instance</returns>
+        </member>
         <member name="M:Rhino.DSL.DslFactory.CreateAll``1(System.String,System.Object[])">
             <summary>
             Creates instances of all the DSL that are located directly under the parent URL.
@@ -35,6 +44,16 @@
         <member name="M:Rhino.DSL.DslFactory.Create``1(System.Uri,System.Object[])">
             <summary>
             Create a new DSL instance
+            </summary>
+            <typeparam name="TDslBase">The base type of the DSL</typeparam>
+            <param name="url">The url to read the DSL file from</param>
+            <param name="parameters">optional ctor parameters</param>
+            <returns>The dsl instance</returns>
+        </member>
+        <member name="M:Rhino.DSL.DslFactory.TryCreate``1(System.Uri,System.Object[])">
+            <summary>
+            Tries to create a new DSL instance, if it exists.
+            If it doesn't, return null.
             </summary>
             <typeparam name="TDslBase">The base type of the DSL</typeparam>
             <param name="url">The url to read the DSL file from</param>
@@ -146,6 +165,24 @@
             The file name format of this DSL
             </summary>
         </member>
+        <member name="T:Rhino.DSL.GeneratePropertyMacro">
+            <summary>
+            This class allows to easily define property generation macros
+            </summary>
+        </member>
+        <member name="M:Rhino.DSL.GeneratePropertyMacro.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.DSL.GeneratePropertyMacro"/> class.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Rhino.DSL.GeneratePropertyMacro.Expand(Boo.Lang.Compiler.Ast.MacroStatement)">
+            <summary>
+            Expands the specified macro.
+            </summary>
+            <param name="macro">The macro.</param>
+            <returns></returns>
+        </member>
         <member name="T:Rhino.DSL.AnonymousBaseClassCompilerStep">
             <summary>
             Takes all the code that exists in a module's global section and put it in a specificied
@@ -169,6 +206,24 @@
             <summary>
             Allow a derived class to perform additional operations on the newly created type definition.
             </summary>
+        </member>
+        <member name="T:Rhino.DSL.UseSymbolsStep">
+            <summary>
+            Translate all @foo reference expression to "foo" string literals.
+            In essense, add symbols to the language
+            </summary>
+        </member>
+        <member name="M:Rhino.DSL.UseSymbolsStep.Run">
+            <summary>
+            Runs this instance.
+            </summary>
+        </member>
+        <member name="M:Rhino.DSL.UseSymbolsStep.OnReferenceExpression(Boo.Lang.Compiler.Ast.ReferenceExpression)">
+            <summary>
+            Called when visting a reference expression.
+            Will turn reference expressions with initial @ to string literals
+            </summary>
+            <param name="node">The node.</param>
         </member>
         <member name="T:Rhino.DSL.AutoImportCompilerStep">
             <summary>
@@ -254,24 +309,6 @@
             <summary>
             Run the current compiler step
             </summary>
-        </member>
-        <member name="T:Rhino.DSL.GeneratePropertyMacro">
-            <summary>
-            This class allows to easily define property generation macros
-            </summary>
-        </member>
-        <member name="M:Rhino.DSL.GeneratePropertyMacro.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Rhino.DSL.GeneratePropertyMacro"/> class.
-            </summary>
-            <param name="propertyName">Name of the property.</param>
-        </member>
-        <member name="M:Rhino.DSL.GeneratePropertyMacro.Expand(Boo.Lang.Compiler.Ast.MacroStatement)">
-            <summary>
-            Expands the specified macro.
-            </summary>
-            <param name="macro">The macro.</param>
-            <returns></returns>
         </member>
     </members>
 </doc>

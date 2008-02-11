@@ -58,6 +58,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="MessageRouting\Router.cs" />
+    <Compile Include="QuoteGeneration\QuoteGenerationDslEngine.cs" />
+    <Compile Include="QuoteGeneration\QuoteGeneratorRule.cs" />
+    <Compile Include="QuoteGeneration\QuoteGenerator.cs" />
+    <Compile Include="QuoteGeneration\RequirementsInformation.cs" />
+    <Compile Include="QuoteGeneration\SystemModule.cs" />
     <Compile Include="Security\OperationMacro.cs" />
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="Security\AuthorizationDslEngine.cs" />

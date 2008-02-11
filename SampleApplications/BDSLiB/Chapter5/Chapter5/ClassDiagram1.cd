@@ -39,4 +39,23 @@
       </Class>
     </NestedTypes>
   </Class>
+  <Class Name="Chapter5.QuoteGeneration.QuoteGeneratorRule">
+    <Position X="2.5" Y="8" Width="3.75" />
+    <TypeIdentifier>
+      <FileName>QuoteGeneration\QuoteGeneratorRule.cs</FileName>
+      <HashCode>AAAAAAEAEBAAAAAAAAAAAgQSAAAAAAAAAAIAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Members>
+      <Field Name="currentModule" Hidden="true" />
+      <Field Name="information" Hidden="true" />
+      <Field Name="Modules" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Delegate Name="Chapter5.QuoteGeneration.QuoteGeneratorRule.Action" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>QuoteGeneration\QuoteGeneratorRule.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+  </Class>
 </ClassDiagram>
