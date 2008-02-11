@@ -40,5 +40,15 @@ namespace BDSLiB.Properties {
                 return ((string)(this["AuthorizationScriptsDirectory"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\OSS\\rhino-tools\\SampleApplications\\BDSLiB\\Source\\Scripts\\QuoteGenerator\\sample" +
+            ".boo")]
+        public string QuoteGenerationScript {
+            get {
+                return ((string)(this["QuoteGenerationScript"]));
+            }
+        }
     }
 }

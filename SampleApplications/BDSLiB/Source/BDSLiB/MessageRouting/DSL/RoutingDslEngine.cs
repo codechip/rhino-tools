@@ -1,8 +1,7 @@
-namespace BDSLiB.MessageRouting
+namespace BDSLiB.MessageRouting.DSL
 {
     using System;
     using Boo.Lang.Compiler;
-    using DSL;
     using Rhino.DSL;
 
     public class RoutingDslEngine : DslEngine
@@ -15,14 +14,14 @@ namespace BDSLiB.MessageRouting
             // The compiler should allow late bound semantics
             compiler.Parameters.Ducky = true;
             pipeline.Insert(1, 
-                new AnonymousBaseClassCompilerStep(
-                    // the base type
-                    typeof (RoutingBase), 
-                    // the method to override
-                    "Route",
-                    // import the following namespaces
-                    "Chapter5.MessageRouting.Handlers",
-                    "Chapter5.MessageRouting.Messages"));
+                            new AnonymousBaseClassCompilerStep(
+                                // the base type
+                                typeof (RoutingBase), 
+                                // the method to override
+                                "Route",
+                                // import the following namespaces
+                                "BDSLiB.MessageRouting.Handlers",
+                                "BDSLiB.MessageRouting.Messages"));
         }
     }
 }

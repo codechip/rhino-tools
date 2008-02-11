@@ -20,7 +20,7 @@ namespace BDSLiB.Authorization
                 // the method to override
                     "CheckAuthorization",
                 // import the following namespaces
-                    "Chapter5.Security"));
+                    "BDSLiB.Authorization"));
         }
     }
 }

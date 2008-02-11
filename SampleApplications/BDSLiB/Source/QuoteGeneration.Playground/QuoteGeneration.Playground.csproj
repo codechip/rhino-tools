@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B911A87E-2918-4B33-9620-ED17A42947AF}</ProjectGuid>
+    <ProjectGuid>{515EAF8A-088A-4F6C-8485-EA304B9F02CB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Chapter5.Security</RootNamespace>
-    <AssemblyName>Chapter5.Security</AssemblyName>
+    <RootNamespace>QuoteGeneration.Playground</RootNamespace>
+    <AssemblyName>QuoteGeneration.Playground</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,14 +33,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Order.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chapter5\Chapter5.csproj">
-      <Project>{D2DD67AB-161E-4661-9AFD-F9E63EEC770F}</Project>
-      <Name>Chapter5</Name>
+    <ProjectReference Include="..\BDSLiB\BDSLiB.csproj">
+      <Project>{0E99CBED-91A9-4380-B194-BCB9EC304B0D}</Project>
+      <Name>BDSLiB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

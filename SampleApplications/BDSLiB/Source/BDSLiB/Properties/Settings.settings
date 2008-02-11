@@ -8,5 +8,8 @@
     <Setting Name="AuthorizationScriptsDirectory" Type="System.String" Scope="Application">
       <Value Profile="(Default)">D:\OSS\rhino-tools\SampleApplications\BDSLiB\Source\Scripts\Authorization</Value>
     </Setting>
+    <Setting Name="QuoteGenerationScript" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\OSS\rhino-tools\SampleApplications\BDSLiB\Source\Scripts\QuoteGenerator\sample.boo</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

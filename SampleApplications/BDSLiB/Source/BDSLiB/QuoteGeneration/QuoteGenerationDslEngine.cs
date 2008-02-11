@@ -15,7 +15,7 @@ namespace BDSLiB.QuoteGeneration
                 new AnonymousBaseClassCompilerStep(
                     typeof(QuoteGeneratorRule),
                     "Evaluate",
-                    "Chapter5.QuoteGeneration"));
+                    "BDSLiB.QuoteGeneration"));
             pipeline.Insert(2, new UseSymbolsStep());
         }
     }

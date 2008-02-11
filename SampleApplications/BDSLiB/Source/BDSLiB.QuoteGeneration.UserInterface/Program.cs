@@ -14,8 +14,6 @@ namespace BDSLiB.QuoteGeneration.UserInterface
         [STAThread]
         static void Main()
         {
-            QuoteGenerator.Generate(@"D:\OSS\rhino-tools\SampleApplications\BDSLiB\Chapter5\Chapter5.Scripts\QuoteGenerator\sample.boo");
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

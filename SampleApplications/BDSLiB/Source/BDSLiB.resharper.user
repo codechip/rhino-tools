@@ -132,11 +132,15 @@
     <ItemStatistics item="Qualified:@Chapter5.QuoteGeneration.QuoteGenerator">
       <Item value="Generate" priority="0" />
     </ItemStatistics>
+    <ItemStatistics item="Qualified:@BDSLiB">
+      <Item value="Authorization" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@BDSLiB.Authorization">
+      <Item value="Authorization" priority="0" />
+    </ItemStatistics>
   </CompletionStatisticsManager>
   <EditorManager>
     <RecentFiles>
-      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:OperationMacro.cs" caret="0" scrollPosition="0|0" />
-      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:AuthorizationRule.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Messages/f:NewOrderMessage.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Handlers/f:NewOrderHandler.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/d:Handlers/f:IMessageHandler.cs" caret="0" scrollPosition="0|0" />
@@ -145,7 +149,6 @@
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:SystemModule.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:RequirementsInformation.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGeneratorRule.cs" caret="0" scrollPosition="0|0" />
-      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Properties/f:Settings.Designer.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:MessageRouting/f:Router.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Authorization/f:Authorization.cs" caret="0" scrollPosition="0|0" />
       <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/f:app.config" caret="493" scrollPosition="0|0" />
@@ -162,8 +165,12 @@
       <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/f:PostUrlData.Designer.cs" caret="0" scrollPosition="0|0" />
       <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/f:PostUrlData.cs" caret="0" scrollPosition="0|0" />
       <File id="B8BEF432-B37D-4749-A6A3-4DC5E2D394EA/d:Properties/f:AssemblyInfo.cs" caret="0" scrollPosition="0|0" />
-      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGenerator.cs" caret="411" scrollPosition="0|3" />
+      <File id="08011452-27B0-4D82-B1AB-CCAC8B5411B7/f:Program.cs" caret="254" scrollPosition="0|0" />
+      <File id="08011452-27B0-4D82-B1AB-CCAC8B5411B7/f:Order.cs" caret="0" scrollPosition="0|0" />
       <File id="D57F6C9A-074E-4E75-A172-F45B232510F8/f:Program.cs" caret="364" scrollPosition="0|0" />
+      <File id="515EAF8A-088A-4F6C-8485-EA304B9F02CB/f:Program.cs" caret="264" scrollPosition="0|0" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:QuoteGeneration/f:QuoteGenerator.cs" caret="428" scrollPosition="0|3" />
+      <File id="0E99CBED-91A9-4380-B194-BCB9EC304B0D/d:Properties/f:Settings.Designer.cs" caret="0" scrollPosition="0|0" />
     </RecentFiles>
   </EditorManager>
   <FileStructureView>

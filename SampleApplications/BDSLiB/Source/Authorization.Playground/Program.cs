@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Chapter5.Security
+
+namespace Authorization.Playground
 {
     using System.Security.Principal;
+    using Chapter5.Security;
+    using Authorization = BDSLiB.Authorization.Authorization;
 
     class Program
     {
