@@ -50,13 +50,33 @@ namespace Rhino.Commons
 		private readonly AbstractCriterion expr;
 		private readonly string propertyName;
 		private readonly object[] values;
+        private readonly int maximumNumberOfParametersToNotUseXml = 100;
 
 		public static AbstractCriterion Create(string property, IEnumerable values)
 		{
 			return new XmlIn(property, values);
 		}
 
-		public XmlIn(string propertyName, IEnumerable values)
+
+        /// <summary>
+        /// Creates the specified property.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="maximumNumberOfParametersToNotUseXml">The maximum number of paramters allowed before the XmlIn creates an xml string.</param>
+        /// <returns></returns>
+        public static AbstractCriterion Create(string property, IEnumerable values, int maximumNumberOfParametersToNotUseXml)
+        {
+            return new XmlIn(property, values, maximumNumberOfParametersToNotUseXml);
+        }
+
+        public XmlIn(string propertyName, IEnumerable values, int maximumNumberOfParametersToNotUseXml)
+        : this(propertyName, values)
+        {
+            this.maximumNumberOfParametersToNotUseXml = maximumNumberOfParametersToNotUseXml;
+        }
+
+	    public XmlIn(string propertyName, IEnumerable values)
 		{
 			this.propertyName = propertyName;
 			ArrayList arrayList = new ArrayList();
@@ -76,7 +96,7 @@ namespace Rhino.Commons
 		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery, IDictionary<string,IFilter> enabledFilters)
 		{
 			//we only need this for SQL Server, and or large amount of values
-            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
+            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < maximumNumberOfParametersToNotUseXml)
 			{
 				return expr.ToSqlString(criteria, criteriaQuery, enabledFilters);
 			}
@@ -124,7 +144,7 @@ namespace Rhino.Commons
 		public override TypedValue[] GetTypedValues(ICriteria criteria, ICriteriaQuery criteriaQuery)
 		{
 			//we only need this for SQL Server, and or large amount of values
-			if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < 100)
+            if ((criteriaQuery.Factory.Dialect is MsSql2005Dialect) == false || values.Length < maximumNumberOfParametersToNotUseXml)
 			{
 				return expr.GetTypedValues(criteria, criteriaQuery);
 			}
