@@ -47,7 +47,7 @@
     <Reference Include="Rhino.Mocks, Version=3.1.0.615, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <!--<HintPath>..\..\rhino-mocks\Rhino.Mocks\bin\debug\Rhino.Mocks.dll</HintPath>-->
-	  <HintPath>..\..\Build\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\Build\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -57,6 +57,7 @@
     <Compile Include="AutoMocking\AutoMockingContainerTests.cs" />
     <Compile Include="AutoMocking\AutoMockingTests.cs" />
     <Compile Include="AutoMocking\ComponentBeingConfigured.cs" />
+    <Compile Include="AutoMocking\ComponentWithComplexProperty.cs" />
     <Compile Include="AutoMocking\DefaultCollectionOfServices.cs" />
     <Compile Include="AutoMocking\ICollectionOfServices.cs" />
     <Compile Include="AutoMocking\IReallyCoolService.cs" />

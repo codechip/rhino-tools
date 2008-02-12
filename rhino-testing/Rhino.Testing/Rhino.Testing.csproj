@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMocking\AbstractMockingStrategy.cs" />
+    <Compile Include="AutoMocking\AutoMockingComponentActivator.cs" />
     <Compile Include="AutoMocking\AutoMockingContainer.cs" />
     <Compile Include="AutoMocking\AutoMockingDependencyResolver.cs" />
     <Compile Include="AutoMocking\AutoMockingFacility.cs" />

@@ -8,7 +8,7 @@ namespace Rhino.Testing.Tests.AutoMocking
 	[TestFixture]
 	public class AutoMockingContainerTests : AutoMockingTests
 	{
-	    [Test]
+		[Test]
 		public void Resolving_ConditionalDependencyWithMockMissing_WillNotResolve()
 		{
 			container.MarkMissing<ICollectionOfServices>();
@@ -102,24 +102,32 @@ namespace Rhino.Testing.Tests.AutoMocking
 		}
 
 
-	    [Test]
-	    public void Create_SafeToCallMultipleTimes()
-	    {
-	        container.Create<ComponentBeingConfigured>();
-	        container.Create<ComponentBeingConfigured>();
-	    }
+		[Test]
+		public void Create_SafeToCallMultipleTimes()
+		{
+			container.Create<ComponentBeingConfigured>();
+			container.Create<ComponentBeingConfigured>();
+		}
 
 
-	    [Test]
-	    public void Get_ReturnsStubs_ThatAreReadyForRecording()
-	    {
-	        container.Mark<IReallyCoolService>().Stubbed();
-	        IReallyCoolService service = container.Get<IReallyCoolService>();
+		[Test]
+		public void Get_ReturnsStubs_ThatAreReadyForRecording()
+		{
+			container.Mark<IReallyCoolService>().Stubbed();
+			IReallyCoolService service = container.Get<IReallyCoolService>();
 
-	        SetupResult.For(service.GetName()).Return("Ayende");
-	        mocks.ReplayAll();
+			SetupResult.For(service.GetName()).Return("Ayende");
+			mocks.ReplayAll();
 
-	        Assert.AreEqual("Ayende", service.GetName());
-	    }
+			Assert.AreEqual("Ayende", service.GetName());
+		}
+
+		[Test]
+		public void Resolving_GetComponentWithComplexProperty_IgnoresProperties()
+		{
+			ComponentWithComplexProperty target = container.Create<ComponentWithComplexProperty>();
+			Assert.IsNull(target.ComplexProperty);
+		}
+
 	}
 }
