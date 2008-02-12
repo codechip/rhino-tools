@@ -15,8 +15,6 @@ namespace BDSLiB.Authorization
             this.principal = principal;
         }
 
-        public abstract string Operation { get; }
-
         protected IPrincipal Principal
         {
             get { return principal; }

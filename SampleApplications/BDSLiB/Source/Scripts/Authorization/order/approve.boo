@@ -1,5 +1,3 @@
-operation "/order/approve"
-
 if Principal.IsInRole("Managers"):
 	Allow("Managers can always approve orders")
 	return

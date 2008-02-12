@@ -1,5 +1,3 @@
-operation "/account/login"
-
 if Principal.IsInRole("Administrators"):
 	Allow("Administrators can always log in")
 	return

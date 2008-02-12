@@ -63,7 +63,6 @@
     <Compile Include="QuoteGeneration\QuoteGenerator.cs" />
     <Compile Include="QuoteGeneration\RequirementsInformation.cs" />
     <Compile Include="QuoteGeneration\SystemModule.cs" />
-    <Compile Include="Authorization\OperationMacro.cs" />
     <Compile Include="Authorization\Authorization.cs" />
     <Compile Include="Authorization\AuthorizationDslEngine.cs" />
     <Compile Include="Authorization\AuthorizationRule.cs" />

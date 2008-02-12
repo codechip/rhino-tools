@@ -1,6 +1,7 @@
 namespace BDSLiB.Authorization
 {
     using System;
+    using System.IO;
     using System.Security.Principal;
     using BDSLiB.Properties;
     using BDSLiB.Authorization;
@@ -42,30 +43,19 @@ namespace BDSLiB.Authorization
             string operation,
             object entity)
         {
-            AuthorizationRule[] authorizationRules = dslFactory.CreateAll<AuthorizationRule>(
-                Settings.Default.AuthorizationScriptsDirectory,
-                principal, entity);
-            foreach (AuthorizationRule rule in authorizationRules)
+            //assume that operations starts with '/'
+            string operationUnrooted = operation.Substring(1);
+            string script = Path.Combine(Settings.Default.AuthorizationScriptsDirectory, operationUnrooted+".boo");
+            AuthorizationRule authorizationRule =
+                dslFactory.TryCreate<AuthorizationRule>(script, principal, entity);
+            if(authorizationRule == null)
             {
-                bool operationMatched = string.Equals(
-                    rule.Operation, operation,
-                    StringComparison.InvariantCultureIgnoreCase);
-
-                if (operationMatched == false)
-                    continue;
-
-                rule.CheckAuthorization();
-                if (rule.Allowed != null)
-                {
-                    return new AuthorizationResult(
-                        rule.Allowed, 
-                        rule.Message
-                        );
-                }
+                return new AuthorizationResult(false, "No rule allow this operation");
             }
+            authorizationRule.CheckAuthorization();
             return new AuthorizationResult(
-                null, 
-                "No rule allowed this operation"
+                authorizationRule.Allowed,
+                authorizationRule.Message
                 );
         }
 
@@ -76,10 +66,10 @@ namespace BDSLiB.Authorization
             public bool? Allowed;
             public string Message;
 
-            public AuthorizationResult(bool? allowed, string mEssage)
+            public AuthorizationResult(bool? allowed, string message)
             {
                 Allowed = allowed;
-                Message = mEssage;
+                Message = message;
             }
         }
 
