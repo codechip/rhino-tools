@@ -406,7 +406,16 @@ namespace Rhino.Igloo
             string clientIp = context.Request.UserHostAddress;
             foreach (string ip in listOfIps)
             {
-                if(clientIp.StartsWith(ip))
+                string ipWithDot = ip;
+                if (!ipWithDot.EndsWith("."))
+                {
+                    string[] split = ipWithDot.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (split.Length != 4)
+                    {
+                        ipWithDot = ipWithDot + ".";
+                    }
+                }
+                if (clientIp.StartsWith(ipWithDot))
                     return true;
             }
             return false;
