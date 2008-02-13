@@ -75,6 +75,7 @@ namespace NHibernate.Query.Generator.Tests
             app3op2.Description = "Allows the user make tea";
             app3.Operations.Add(app3op2);
 
+
             session = sf.OpenSession();
             ITransaction tx = session.BeginTransaction();
 
@@ -83,7 +84,21 @@ namespace NHibernate.Query.Generator.Tests
             session.Save(app3);
             session.Save(app3op1);
             session.Save(app3op2);
+					
+					UserSetting app3us1 = new UserSetting(app3, "country", "usa");
+						UserSetting app3us2 = new UserSetting(app3, "lang", "english");
+						GlobalSetting app3gs1 = new GlobalSetting(app3, "title", "Ultra Super Mega App");
+						GlobalSetting app3gs2 = new GlobalSetting(app3, "security", "active directory"); 
+					app3.Settings.UserSettings.Add(app3us1);
+						app3.Settings.UserSettings.Add(app3us2);
+						app3.Settings.GlobalSettings.Add(app3gs1);
+						app3.Settings.GlobalSettings.Add(app3gs2);
 
+					session.Save(app3us1);
+					session.Save(app3us2);
+					session.Save(app3gs1);
+					session.Save(app3gs2);
+        	session.Update(app3);
             tx.Commit();
             session.Close();
         }
@@ -170,5 +185,26 @@ namespace NHibernate.Query.Generator.Tests
             Assert.AreEqual(1, applications[0].Operations.Count);
             Assert.IsTrue(applications[0].Operations.Contains(app3op1));
         }
+
+			[Test]
+			public void ShouldFetchJoinComponentCollectionsOnRootAndJoin()
+			{
+				session = sf.OpenSession();
+
+				DetachedCriteria where =
+						Where.Application.Id == app3.Id &&
+						Where.Application.Settings.GlobalSettings.With(JoinType.LeftOuterJoin, FetchMode.Join);
+
+				IList<Application> applications =
+						where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity)
+								.List<Application>();
+
+				session.Close();
+
+				Assert.IsNotNull(applications);
+				Assert.AreEqual(1, applications.Count);
+				Assert.AreEqual(app3, applications[0]);
+				Assert.AreEqual(2, applications[0].Settings.GlobalSettings.Count);
+			}
     }
 }

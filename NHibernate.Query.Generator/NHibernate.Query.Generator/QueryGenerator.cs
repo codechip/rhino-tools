@@ -567,7 +567,6 @@ namespace NHibernate.Query.Generator
                     GenerateWithMethods(collectionDerived, innerClass, collectionClassName);
 
                     innerClass.Members.Add(collectionDerived);
-
                     CodeMemberProperty col = new CodeMemberProperty();
                     col.Name = collectionName;
                     col.Attributes = MemberAttributes.Public;
@@ -580,13 +579,15 @@ namespace NHibernate.Query.Generator
                         new CodeVariableReferenceExpression("temp"),
                         new CodeBinaryOperatorExpression(
                             new CodeVariableReferenceExpression("temp"),
-                            CodeBinaryOperatorType.Add,
-                            new CodePrimitiveExpression("."+collectionName))
+                            CodeBinaryOperatorType.Add, 
+															(classNode.Name.Equals("component")) ? 
+																new CodePrimitiveExpression("." +classNode.Attributes["name"].Value + "." + collectionName) :
+																new CodePrimitiveExpression("."+collectionName))
                         );
                     col.GetStatements.Add(var);
                     col.GetStatements.Add(assign);
                     result.Expression = new CodeObjectCreateExpression(col.Type,
-                                                                        new CodeThisReferenceExpression(),
+											(classNode.Name.Equals("component")) ? (CodeExpression)new CodeVariableReferenceExpression("myQueryParent") : (CodeExpression)new CodeThisReferenceExpression(),
                                                                        new CodePrimitiveExpression(col.Name),
                                                                        new CodeVariableReferenceExpression(var.Name));
                     col.GetStatements.Add(result);

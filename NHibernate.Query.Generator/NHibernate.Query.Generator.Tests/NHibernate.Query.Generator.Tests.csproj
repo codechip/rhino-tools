@@ -110,6 +110,7 @@
     <Compile Include="WithEagerFetch\Application.hbm.cs" />
     <Compile Include="WithEagerFetch\KeyedDomainObject.cs" />
     <Compile Include="WithEagerFetch\Operation.cs" />
+    <Compile Include="WithEagerFetch\Settings.cs" />
     <Compile Include="WithTopLevelAssemblySpecification.hbm.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <PostBuildEvent>rem "$(TargetDir)NHQG.exe" /lang:cs /files:"$(TargetDir)NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
 rem "$(TargetDir)NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir)"</PostBuildEvent>
     <PreBuildEvent>"$(SolutionDir)..\Build\NHibernate.Query.Generator\NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Model\obj\$(ConfigurationName)\NHibernate.Query.Generator.Model.dll" /out:"$(ProjectDir)ActiveRecordModel"
-"$(SolutionDir)..\Build\NHibernate.Query.Generator\NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir)ActiveRecordModel\.."</PreBuildEvent>
+"$(SolutionDir)..\Build\NHibernate.Query.Generator\NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\*.hbm.xml" /out:"$(ProjectDir)ActiveRecordModel\.."
+"$(SolutionDir)..\Build\NHibernate.Query.Generator\NHQG.exe" /lang:cs /files:"$(SolutionDir)NHibernate.Query.Generator.Tests\WithEagerFetch\*.hbm.xml" /out:"$(ProjectDir)WithEagerFetch"</PreBuildEvent>
   </PropertyGroup>
 </Project>

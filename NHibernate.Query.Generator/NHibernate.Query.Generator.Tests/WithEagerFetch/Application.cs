@@ -9,13 +9,12 @@ namespace NHibernate.Query.Generator.Tests.WithEagerFetch
     /// </summary>
     public class Application : KeyedDomainObject<Guid>
     {
-        private string _name;
-        private string _description;
-        private bool _obsolete;
-        private ISet<Operation> _operations = new HashedSet<Operation>();
+       private string _name;
+       private string _description;
+       private bool _obsolete;
+       private ISet<Operation> _operations = new HashedSet<Operation>();
+       private Settings _settings = new Settings();
 
-        
-        
         /// <summary>
         /// The name of role.
         /// </summary>
@@ -24,8 +23,6 @@ namespace NHibernate.Query.Generator.Tests.WithEagerFetch
             get { return _name; }
             set { _name = value; }
         }
-
-
 
         /// <summary>
         /// A description for the role that may be set by the administrator.
@@ -36,8 +33,6 @@ namespace NHibernate.Query.Generator.Tests.WithEagerFetch
             set { _description = value; }
         }
 
-
-
         /// <summary>
         /// All operations defined by this application.
         /// </summary>
@@ -47,8 +42,6 @@ namespace NHibernate.Query.Generator.Tests.WithEagerFetch
             protected set { _operations = value; }
         }
 
-
-
         /// <summary>
         /// Indicated that the application is no longer in use.
         /// </summary>
@@ -56,6 +49,15 @@ namespace NHibernate.Query.Generator.Tests.WithEagerFetch
         {
             get { return _obsolete; }
             set { _obsolete = value; }
+        }
+
+        /// <summary>
+        /// Indicated that the application is no longer in use.
+        /// </summary>
+        public virtual Settings Settings
+        {
+            get { return _settings; }
+            set { _settings = value; }
         }
     }
 }
