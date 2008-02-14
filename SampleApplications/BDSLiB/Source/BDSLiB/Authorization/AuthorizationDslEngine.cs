@@ -2,6 +2,7 @@ namespace BDSLiB.Authorization
 {
     using System;
     using Boo.Lang.Compiler;
+    using Boo.Lang.Compiler.Pipelines;
     using Rhino.DSL;
 
     public class AuthorizationDslEngine : DslEngine
@@ -21,6 +22,7 @@ namespace BDSLiB.Authorization
                     "CheckAuthorization",
                 // import the following namespaces
                     "BDSLiB.Authorization"));
+            pipeline.Insert(2, new AutoReferenceFilesCompilerStep());
         }
     }
 }

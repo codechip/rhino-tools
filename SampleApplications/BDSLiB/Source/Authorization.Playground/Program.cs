@@ -14,7 +14,12 @@ namespace Authorization.Playground
             try
             {
                 WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                bool? allowed = Authorization.IsAllowed(principal, "/account/login");
+                bool? allowed = Authorization.IsAllowed(principal, "/account/login_with_reference");
+                Console.WriteLine("Allowed login: {0}", allowed);
+                Console.WriteLine(Authorization.WhyAllowed(principal, "/account/login_with_reference"));
+
+
+                allowed = Authorization.IsAllowed(principal, "/account/login");
                 Console.WriteLine("Allowed login: {0}", allowed);
                 Console.WriteLine(Authorization.WhyAllowed(principal, "/account/login"));
 

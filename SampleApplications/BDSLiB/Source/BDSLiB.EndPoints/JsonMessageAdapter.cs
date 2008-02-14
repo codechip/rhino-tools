@@ -14,6 +14,8 @@ public class JsonMessageAdapter : IQuackFu
 
     public object QuackGet(string name, object[] parameters)
     {
+        if(js.ContainsKey(name)==false)
+            return null;
         object value = js[name];
         JavaScriptArray array = value as JavaScriptArray;
         if(array!=null)
