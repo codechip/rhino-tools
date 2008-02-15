@@ -8,8 +8,8 @@ namespace BDSLiB.MessageRouting.DSL
     {
         protected override void CustomizeCompiler(
             BooCompiler compiler,
-            CompilerPipeline pipeline, 
-            Uri[] urls)
+            CompilerPipeline pipeline,
+            string[] urls)
         {
             // The compiler should allow late bound semantics
             compiler.Parameters.Ducky = true;

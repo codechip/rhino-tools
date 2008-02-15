@@ -286,7 +286,7 @@
             Where the scripts are located, when they are refreshed, etc
             </summary>
         </member>
-        <member name="M:Rhino.DSL.IDslEngineStorage.GetMatchingUrlsIn(System.String,System.String)">
+        <member name="M:Rhino.DSL.IDslEngineStorage.GetMatchingUrlsIn(System.String,System.String@)">
             <summary>
             Will retrieve all the _canonised_ urls from the given directory that
             this Dsl Engine can process.
@@ -313,16 +313,18 @@
             in the given parent path
             </summary>
             <param name="urls">The urls.</param>
-            <param name="parentOath">The parent oath.</param>
+            <param name="parentPath">The parent oath.</param>
             <param name="url">The URL.</param>
             <returns>
             	<c>true</c> if [is URL include in] [the specified urls]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="P:Rhino.DSL.IDslEngineStorage.FileNameFormat">
+        <member name="M:Rhino.DSL.IDslEngineStorage.GetTypeNameFromUrl(System.String)">
             <summary>
-            The file name format of this DSL
+            Gets the type name from URL.
             </summary>
+            <param name="url">The URL.</param>
+            <returns></returns>
         </member>
         <member name="T:Rhino.DSL.FileSystemDslEngineStorage">
             <summary>
@@ -336,7 +338,7 @@
             <param name="url">The url</param>
             <returns>The compiler input</returns>
         </member>
-        <member name="M:Rhino.DSL.FileSystemDslEngineStorage.GetMatchingUrlsIn(System.String,System.String)">
+        <member name="M:Rhino.DSL.FileSystemDslEngineStorage.GetMatchingUrlsIn(System.String,System.String@)">
             <summary>
             Will retrieve all the _canonised_ urls from the given directory that
             this Dsl Engine can process.
@@ -364,11 +366,18 @@
             in the given parent path
             </summary>
             <param name="urls">The urls.</param>
-            <param name="parentOath">The parent oath.</param>
+            <param name="parentPath">The parent oath.</param>
             <param name="url">The URL.</param>
             <returns>
             	<c>true</c> if [is URL include in] [the specified urls]; otherwise, <c>false</c>.
             </returns>
+        </member>
+        <member name="M:Rhino.DSL.FileSystemDslEngineStorage.GetTypeNameFromUrl(System.String)">
+            <summary>
+            Gets the type name from URL.
+            </summary>
+            <param name="url">The URL.</param>
+            <returns></returns>
         </member>
         <member name="M:Rhino.DSL.FileSystemDslEngineStorage.Dispose">
             <summary>

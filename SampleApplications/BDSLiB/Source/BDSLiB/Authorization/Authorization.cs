@@ -45,9 +45,8 @@ namespace BDSLiB.Authorization
         {
             //assume that operations starts with '/'
             string operationUnrooted = operation.Substring(1);
-            string script = Path.Combine(Settings.Default.AuthorizationScriptsDirectory, operationUnrooted+".boo");
             AuthorizationRule authorizationRule =
-                dslFactory.TryCreate<AuthorizationRule>(script, principal, entity);
+                dslFactory.TryCreate<AuthorizationRule>(operation, principal, entity);
             if(authorizationRule == null)
             {
                 return new AuthorizationResult(false, "No rule allow this operation");

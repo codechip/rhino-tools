@@ -9,7 +9,7 @@ namespace BDSLiB.QuoteGeneration
         protected override void CustomizeCompiler(
           BooCompiler compiler,
           CompilerPipeline pipeline,
-          Uri[] urls)
+          string[] urls)
         {
             pipeline.Insert(1,
                 new AnonymousBaseClassCompilerStep(

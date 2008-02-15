@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\XmlFileDslEngineStorage.cs" />
     <Compile Include="MessageRouting\DSL\RoutingBase.cs" />
     <Compile Include="MessageRouting\DSL\RoutingDslEngine.cs" />
     <Compile Include="MessageRouting\Handlers\AbstractHandler.cs" />
@@ -72,6 +73,11 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Authorization\AuthorizationRules.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,16 +1,23 @@
 namespace BDSLiB.Authorization
 {
     using System;
+    using System.Collections.Generic;
     using Boo.Lang.Compiler;
     using Boo.Lang.Compiler.Pipelines;
+    using Boo.Lang.Compiler.Steps;
     using Rhino.DSL;
 
     public class AuthorizationDslEngine : DslEngine
     {
+        public AuthorizationDslEngine()
+        {
+            Storage = new XmlFileDslEngineStorage(@"Authorization/AuthorizationRules.xml");
+        }
+
         protected override void CustomizeCompiler(
            BooCompiler compiler,
            CompilerPipeline pipeline,
-           Uri[] urls)
+           string[] urls)
         {
             // The compiler should allow late bound semantics
             compiler.Parameters.Ducky = true;
