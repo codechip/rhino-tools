@@ -38,10 +38,10 @@ namespace Rhino.Commons.Binsor.Macros
 	public class ComponentMethodVisitor : DepthFirstVisitor
 	{
 		private bool _found;
-		private ReferenceExpression _component;
+		private Expression _component;
 		private StringLiteralExpression _method;
 
-		public ReferenceExpression Component
+		public Expression Component
 		{
 			get { return _component; }
 		}
@@ -64,19 +64,16 @@ namespace Rhino.Commons.Binsor.Macros
 			{
 				_component = (ReferenceExpression) node.Target;
 			}
-			else if (node.Target is StringLiteralExpression)
-			{
-				StringLiteralExpression name = (StringLiteralExpression) node.Target;
-				_component = new ReferenceExpression(name.Value);
-			}
 			else
 			{
-				return;
+				_component = AstUtil.CreateMethodInvocationExpression(
+					AstUtil.CreateReferenceExpression(typeof(ComponentReference).FullName),
+					node.Target
+					);
 			}
 
 			_method = new StringLiteralExpression(node.Name);
-
-			_found = _component.Name.StartsWith("@");
+			_found = true;
 		}
 
 		public override void OnMethodInvocationExpression(MethodInvocationExpression node)
