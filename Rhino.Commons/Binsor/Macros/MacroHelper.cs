@@ -48,7 +48,6 @@ namespace Rhino.Commons.Binsor.Macros
 			return (assign != null && assign.Operator == BinaryOperatorType.Assign);
 		}
 
-
 		public static bool IsCompoundAssignment(Expression expression,
 												out ArrayLiteralExpression assignments)
 		{
