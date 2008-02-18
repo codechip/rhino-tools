@@ -76,7 +76,7 @@ facility ActiveRecordFacility:
 	
 # generic type registration
 
-component 'defualt_repository', IRepository, NHRepository:
+component 'default_repository', IRepository, NHRepository:
 	lifestyle Transient
 
 component 'disposable', System.IDisposable, MyDisposable.Impl
@@ -85,7 +85,7 @@ component 'customer_repository', IRepository of Fubar, FakeRepository of Fubar:
 	inner = @NHRepository
 
 component 'fubar_repository', IRepository of Fubar, FakeRepository of Fubar:
-	inner = @defualt_repository
+	inner = @default_repository
 
 component 'email_sender', ISender, EmailSender:
 	Host = 'example.dot.org', To = ( 'Kaitlyn', 'Matthew', 'Lauren' )
@@ -132,13 +132,22 @@ component 'email_sender3', ISender, EmailSender:
 				}
 
 
-
 component ISender, EmailSender:
 	@startable = true
 	createUsing @EmailSenderFactory.Create
 	wireEvent Sent:
 		to @EmailListener.OnSent
 
+
+for itemName in ["a", "b"]:
+	component "someListener.${itemName}", EmailListener
+	component "somePublisher.${itemName}", ISender, EmailSender:
+		@startable = true
+		createUsing @EmailSenderFactory.Create
+		wireEvent Sent:
+			to "someListener.${itemName}".OnSent
+     
+     
 if Environment == "Binsor2":
 	component 'foo_bar', Fubar:
 		foo = Environment

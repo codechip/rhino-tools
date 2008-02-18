@@ -39,11 +39,11 @@ Facility("loggerFacility", LoggingFacility,
 	) 
 	
 # generic type registration
-Component("defualt_repository", IRepository, NHRepository, LifestyleType.Transient)
+Component("default_repository", IRepository, NHRepository, LifestyleType.Transient)
 
 customer_repository = Component("customer_repository", 
 	IRepository of Fubar,  FakeRepository of Fubar,
-	inner: @defualt_repository)
+	inner: @default_repository)
 
 
 email = Component("email_sender", ISender, EmailSender,

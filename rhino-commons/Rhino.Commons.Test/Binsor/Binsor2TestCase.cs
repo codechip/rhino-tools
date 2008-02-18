@@ -177,7 +177,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void CanSpecifyLifeStyle()
 		{
-			IHandler handler = _container.Kernel.GetHandler("defualt_repository");
+			IHandler handler = _container.Kernel.GetHandler("default_repository");
 			Assert.AreEqual(LifestyleType.Transient, handler.ComponentModel.LifestyleType);
 		}
 
@@ -297,6 +297,23 @@ namespace Rhino.Commons.Test.Binsor
 			Assert.AreEqual("Events are alive!", listener.Message);
 		}
 
+		[Test]
+		public void CanDefineConfigurationsForEventWiringFacilityWithDynamicListeners()
+		{
+			foreach ( string s in new string[] { "a", "b" } )
+			{
+				EmailListener listener = _container.Resolve<EmailListener>( "someListener." + s );
+				Assert.IsNotNull( listener );
+				Assert.IsNull( listener.Message );
+
+				ISender sender = _container.Resolve<ISender>("somePublisher." + s );
+				Assert.IsNotNull( sender );
+
+				sender.Send( "Events are alive!" );
+				Assert.AreEqual( "Events are alive!", listener.Message );				
+			}
+		}
+		
 		[Test]
 		public void CanUseEnvironmentInfoPassedInToContainer()
 		{

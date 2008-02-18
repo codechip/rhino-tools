@@ -73,7 +73,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void CanSpecifyLifeStyle()
 		{
-			IHandler handler = _container.Kernel.GetHandler("defualt_repository");
+			IHandler handler = _container.Kernel.GetHandler("default_repository");
 			Assert.AreEqual(LifestyleType.Transient, handler.ComponentModel.LifestyleType);
 		}
 
