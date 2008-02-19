@@ -60,9 +60,11 @@ namespace Rhino.Commons.Binsor.Macros
 
 		public override void OnMemberReferenceExpression(MemberReferenceExpression node)
 		{
-			if (node.Target is ReferenceExpression)
+			ReferenceExpression reference = node.Target as ReferenceExpression;
+
+			if (reference != null && reference.Name.StartsWith("@"))
 			{
-				_component = (ReferenceExpression) node.Target;
+				_component = reference;
 			}
 			else
 			{

@@ -107,13 +107,20 @@ namespace Rhino.Commons.Binsor
 
 		public static void Execute(IWindsorContainer container, IConfigurationRunner configuration)
 		{
-			using (IoC.UseLocalContainer(container))
+			try
 			{
-				configuration.Run();
-				foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+				using(IoC.UseLocalContainer(container))
 				{
-					needSecondPassRegistration.RegisterSecondPass();
+					configuration.Run();
+					foreach(INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+					{
+						needSecondPassRegistration.RegisterSecondPass();
+					}
 				}
+			}
+			finally
+			{
+				NeedSecondPassRegistrations = null;
 			}
 		}
 
@@ -153,8 +160,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-
-		private static IConfigurationRunner GetConfigurationInstanceFromFile(
+		public static IConfigurationRunner GetConfigurationInstanceFromFile(
 			string fileName, string environment, IWindsorContainer container,
 			GenerationOptions generationOptions)
 		{
@@ -170,7 +176,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		private static IConfigurationRunner GetConfigurationInstanceFromStream(
+		public static IConfigurationRunner GetConfigurationInstanceFromStream(
 			string name, string environment, IWindsorContainer container, Stream stream,
 			GenerationOptions generationOptions)
 		{
