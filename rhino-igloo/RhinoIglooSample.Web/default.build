@@ -10,7 +10,7 @@
 
 	<target name="init" depends="common.init">
 		<property name="assembly.version" value="2.0.0.0" />
-		<property name="assembly.description" value="Rhino Commons - Support and extension for many advance usecases" />
+		<property name="assembly.description" value="Rhino Igloo - MVC and DI for Web Forms" />
 
 		<assemblyfileset id="project.references" basedir="${build.dir}">
 			<include name="Boo.Lang.dll"/>
@@ -39,7 +39,7 @@
 		</assemblyfileset>
 	</target>
 
-	<target name="generate-assemblyinfo" depends="init common.generate-assemblyinfo" />I
-	<target name="build" description="Build ${project::get-name()}" depends="generate-assemblyinfo common.compile-dll" />
+	<target name="generate-assemblyinfo" depends="init common.generate-assemblyinfo" />
+	<target name="build" description="Build ${project::get-name()}" depends="generate-assemblyinfo common.compile-website" />
 
 </project>

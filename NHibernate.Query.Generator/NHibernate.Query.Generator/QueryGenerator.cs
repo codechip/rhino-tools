@@ -1022,9 +1022,9 @@ namespace NHibernate.Query.Generator
         /// <summary>
         /// Generates the property, using the parameters passed.
         /// This is a complex issue, because we have many options here.
-        /// The most important one is <param name="associationBehavior"/> which controls
+        /// The most important one is associationBehavior which controls
         /// the way the association paths are used.
-        /// If <param name="propertyType"/> is equals to <see cref="UseTheQueryClass"/> the Query_{0} idiom
+        /// If propertyType is equals to <see cref="UseTheQueryClass"/> the Query_{0} idiom
         /// is used.
         /// </summary>
         private void GenerateProperty(
@@ -1179,7 +1179,7 @@ namespace NHibernate.Query.Generator
 
         private static string GetFullNameOfBaseClass(XmlNode node)
         {
-            if (node.Attributes["extends"] == null) ///does it extends anything explicitly?
+            if (node.Attributes["extends"] == null) //does it extends anything explicitly?
             {
                 if (Array.IndexOf(classes, node.ParentNode.Name) != -1)
                 {

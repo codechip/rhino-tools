@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliantAttribute(true)]
 [assembly: ComVisibleAttribute(false)]
 [assembly: AssemblyTitleAttribute("RhinoIglooSample.Model for Microsoft .NET Framework 3.5")]
-[assembly: AssemblyDescriptionAttribute("Rhino Commons - Support and extension for many advance usecases")]
+[assembly: AssemblyDescriptionAttribute("Rhino Igloo - MVC and DI for Web Forms")]
 [assembly: AssemblyCompanyAttribute("Rhino Tools Project")]
 [assembly: AssemblyProductAttribute("RhinoIglooSample.Model")]
 [assembly: AssemblyCopyrightAttribute("Rhino Tools Project, original author or authors")]

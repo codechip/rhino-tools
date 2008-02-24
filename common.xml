@@ -178,6 +178,8 @@
 
 		<fileset id="project.sources" failonempty="true">
 			<include name="${src.dir}/**/*.cs" />
+			<exclude name="${src.dir}/obj/**/*.cs" />
+			<exclude name="${src.dir}/bin/**/*.cs" />
 		</fileset>
 		<resourcefileset id="project.resources" />
 	</target>
