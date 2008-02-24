@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='iso-8859-1' ?>
 <project
-	name="Rhino.Commons.NHibernate"
+	name="Rhino.Commons.ActiveRecord"
 	default="build"
 	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
 >
@@ -18,15 +18,15 @@
 			<include name="Boo.Lang.Parser.dll"/>
 			<include name="Castle.Windsor.dll"/>
 			<include name="Castle.MicroKernel.dll"/>
-			<include name="Castle.Services.Transaction.dll"/>
-			<include name="Castle.Facilities.AutomaticTransactionManagement.dll"/>
 			<include name="Castle.Core.dll"/>
+			<include name="Castle.ActiveRecord.dll"/>
+			<include name="Castle.Facilities.AutomaticTransactionManagement.dll"/>
 			<include name="log4net.dll"/>
 			<include name="NHibernate.dll"/>
 			<include name="Rhino.Dsl.dll"/>
-			<include name="Rhino.Commons.dll"/>
-			
 			<include name="Rhino.Commons.Clr.dll"/>
+			<include name="Rhino.Commons.dll"/>
+			<include name="Rhino.Commons.NHibernate.dll"/>
 			<include name="${clr.dir}/Microsoft.Build.Utilities.dll"/>
 			<include name="${clr.dir}/Microsoft.Build.Framework.dll"/>
 			<include name="System"/>

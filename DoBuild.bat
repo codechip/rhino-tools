@@ -1,2 +1,2 @@
-msbuild buildall.build >BuildLog.txt
+SharedLibs\Tools\Nant\nant -f:default.build >BuildLog.txt
 PAUSE

@@ -1,2 +1,2 @@
-msbuild buildall.build /verbosity:detailed >BuildLog.txt
+SharedLibs\Tools\Nant\nant -f:default.build -v >BuildLog.txt
 PAUSE

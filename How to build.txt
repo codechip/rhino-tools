@@ -7,13 +7,13 @@ The reason for that is that the build is generating updated AssemblyInfo.cs file
 with the correct version and revision notes.
 
 You need to run:
- > msbuild buildall.build 
+ > nant
  
 from the command line before you can build in visual studio.
 
 You can also run:
 
-> msbuild default.build
+> nant
 
 from a specific project directory, if you want to build just it
 
@@ -33,7 +33,7 @@ Building From NHibernate and Castle Trunks
    * in the BuildFromTrunk-Config.build file.
 
 4) From a command prompt with administrative access run the following command from the Rhino-Toosl root.
-   >msbuild BuildFromTrunk.build /t:Build-All
+   >nant -f:BuildFromTrunk.build
 
 
 Customizing A Trunk Build

@@ -14,7 +14,7 @@
 		<include name="Rhino.Commons/default.build" />
 		<include name="Rhino.Commons.NHibernate/default.build" />
 		<include name="Rhino.Commons.ActiveRecord/default.build" />
-		<include name="Rhino.Commons.Tests/default.build" if="${common.testrunner.enabled}"/>
+		<include name="Rhino.Commons.Test/default.build" if="${common.testrunner.enabled}"/>
 	</fileset>
 
 	<target name="build" depends="common.build" />

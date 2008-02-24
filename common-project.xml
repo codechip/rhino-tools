@@ -262,7 +262,7 @@
 			<exec
 				program="${mbunit-console}" 
 				workingdir="${build.dir}"
-				commandline="${project::get-name()}.dll /rf:${testresults.dir} /rnf:${project::get-name()}.dll-results /rt:Xml /rt:Html"
+				commandline="${project::get-name()}.dll /rf:${testresults.dir} /rnf:${project::get-name()}.dll-results /rt:Html /rt:Xml"
 				failonerror="${common.testrunner.failonerror}"
 			/>
 			
