@@ -12,6 +12,7 @@
 		<include name="rhino-mocks/default.build" />
 		<include name="rhino-dsl/default.build" />
 		<include name="rhino-commons/default.build" />
+		<include name="rhino-etl/default.build" />
 	</fileset>
 
 	<target name="debug" description="Selects the debug build configuration">
