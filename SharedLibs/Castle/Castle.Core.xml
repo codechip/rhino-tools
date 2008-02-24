@@ -2547,6 +2547,12 @@
             that can be used to iterate through the collection.
             </returns>
         </member>
+        <member name="M:Castle.Core.InterceptorReferenceCollection.AddIfNotInCollection(Castle.Core.InterceptorReference)">
+            <summary>
+            Adds the interceptor to the end of the interceptors list if it does not exist already.
+            </summary>
+            <param name="interceptorReference">The interceptor reference.</param>
+        </member>
         <member name="P:Castle.Core.InterceptorReferenceCollection.HasInterceptors">
             <summary>
             Gets a value indicating whether this instance has interceptors.

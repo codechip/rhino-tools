@@ -1,6 +1,7 @@
 namespace Rhino.Security
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
     using Castle.ActiveRecord;
@@ -34,55 +35,40 @@ namespace Rhino.Security
         public static void PrepareForActiveRecordInitialization<TUser>(SecurityTableStructure tableStructure)
             where TUser : IUser
         {
-            ActiveRecordStarter.ModelsValidated +=
-                delegate(ActiveRecordModelCollection models, IConfigurationSource source)
+            ActiveRecordStarter.ModelsValidated += delegate(ActiveRecordModelCollection models, IConfigurationSource source)
                 {
-                    Type userType = typeof(TUser);
                     foreach (ActiveRecordModel model in models)
                     {
                         if (model.Type.Assembly != typeof(IUser).Assembly)
                             continue;
-                        model.ActiveRecordAtt.Cache = CacheEnum.ReadWrite;
-                        if (tableStructure==SecurityTableStructure.Schema)
-                            model.ActiveRecordAtt.Schema = "security";
-                        else
-                            model.ActiveRecordAtt.Table = "security_" + model.ActiveRecordAtt.Table;
-                        foreach (BelongsToModel belongsToModel in model.BelongsTo)
-                        {
-                            if (belongsToModel.Property.PropertyType == typeof(IUser))
-                            {
-                                belongsToModel.BelongsToAtt.Type = userType;
-                            }
-                        }
-                        foreach (HasAndBelongsToManyModel hasAndBelongsToManyModel in model.HasAndBelongsToMany)
-                        {
-                            hasAndBelongsToManyModel.HasManyAtt.Cache = CacheEnum.ReadWrite;
-
-                            if (tableStructure == SecurityTableStructure.Schema)
-                            {
-                                hasAndBelongsToManyModel.HasManyAtt.Schema = "security";
-                            }
-                            else
-                            {
-                                hasAndBelongsToManyModel.HasManyAtt.Table = "security_" +
-                                                                            hasAndBelongsToManyModel.HasManyAtt.Table;
-                            }
-                            if (hasAndBelongsToManyModel.HasManyAtt.MapType == typeof(IUser))
-                            {
-                                hasAndBelongsToManyModel.HasManyAtt.MapType = userType;
-                            }
-                        }
-                        foreach (HasManyModel hasManyModel in model.HasMany)
-                        {
-                            hasManyModel.HasManyAtt.Cache = CacheEnum.ReadWrite;
-
-                            if (hasManyModel.HasManyAtt.MapType == typeof(IUser))
-                            {
-                                hasManyModel.HasManyAtt.MapType = userType;
-                            }
-                        }
+                        model.Accept(new AddCachingVisitor());
+                        model.Accept(new ReplaceUserVisitor(typeof(TUser)));
+                        model.Accept(new ChangeSchemaVisitor(tableStructure));
                     }
                 };
+        }
+
+        /// <summary>
+        /// Prepares to change all internal reference in the security system
+        /// from IUser to the user implementation of the project when the user
+        /// is not an entity in the model, but an external cocnept
+        /// </summary>
+        /// <typeparam name="TExternalUser">The type of the external user.</typeparam>
+        /// <param name="tableStructure">The table structure.</param>
+        public static void PrepareForActiveRecordInitializationWithExternalUser<TExternalUser>(SecurityTableStructure tableStructure)
+            where TExternalUser:IExternalUser, new()
+        {
+            ActiveRecordStarter.ModelsValidated += delegate(ActiveRecordModelCollection models, IConfigurationSource source)
+                  {
+                      foreach (ActiveRecordModel model in models)
+                      {
+                          if (model.Type.Assembly != typeof(IUser).Assembly)
+                              continue;
+                          model.Accept(new AddCachingVisitor());
+                          model.Accept(new ReplaceUserWithExternalVisitor<TExternalUser>());
+                          model.Accept(new ChangeSchemaVisitor(tableStructure));
+                      }
+                  };
         }
 
         /// <summary>
@@ -152,6 +138,4 @@ namespace Rhino.Security
         private readonly static Dictionary<Type, Func<string>> GetSecurityKeyPropertyCache = new Dictionary<Type, Func<string>>();
         private readonly static MethodInfo getSecurityKeyMethod = typeof(Security).GetMethod("GetSecurityKeyPropertyInternal", BindingFlags.NonPublic | BindingFlags.Static);
     }
-
-    // <summary>
 }

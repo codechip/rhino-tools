@@ -76,14 +76,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddCachingInterceptor.cs" />
+    <Compile Include="AddCachingVisitor.cs" />
     <Compile Include="AuthorizationRepository.cs" />
     <Compile Include="AuthorizationInformation.cs" />
     <Compile Include="AuthorizationService.cs" />
+    <Compile Include="ChangeSchemaVisitor.cs" />
     <Compile Include="EntitiesGroup.cs" />
     <Compile Include="EntityReference.cs" />
+    <Compile Include="ExternalUserType.cs" />
     <Compile Include="IAuthorizationRepository.cs" />
     <Compile Include="IAuthorizationService.cs" />
     <Compile Include="IEntityInformationExtractor.cs" />
+    <Compile Include="IExternalUser.cs" />
     <Compile Include="IForPermissionBuilder.cs" />
     <Compile Include="IIDentifiable.cs" />
     <Compile Include="ILevelPermissionBuilder.cs" />
@@ -99,6 +103,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ReplaceUserVisitor.cs" />
+    <Compile Include="ReplaceUserWithExternalVisitor.cs" />
     <Compile Include="RhinoSecurityFacility.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="EntityType.cs" />

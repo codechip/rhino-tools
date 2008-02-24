@@ -1006,7 +1006,7 @@
             </summary>
             <param name="model"></param>
         </member>
-        <member name="M:Castle.MicroKernel.Handlers.DefaultGenericHandler.CloneParentProperties(Castle.MicroKernel.CreationContext,Castle.Core.ComponentModel)">
+        <member name="M:Castle.MicroKernel.Handlers.DefaultGenericHandler.CloneParentProperties(Castle.Core.ComponentModel)">
             <summary>
             Clone some of the parent componentmodel properties to the generic subhandler.
             </summary>
@@ -1021,7 +1021,6 @@
             </item>
             </list>
             </remarks>
-            <param name="context">The parent context</param>
             <param name="newModel">the subhandler</param>
         </member>
         <member name="T:Castle.MicroKernel.Handlers.DefaultHandler">

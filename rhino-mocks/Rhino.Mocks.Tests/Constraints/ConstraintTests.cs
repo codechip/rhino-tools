@@ -49,8 +49,8 @@ namespace Rhino.Mocks.Tests.Constraints
 			mocks = new MockRepository();
 			demo = (IDemo) this.mocks.CreateMock(typeof (IDemo));
 		}
-#if dotNet2
-		[Test]
+
+        [Test]
 		public void UsingPredicate()
 		{
 			demo.VoidStringArg(null);
@@ -123,7 +123,7 @@ namespace Rhino.Mocks.Tests.Constraints
 		{
 			return false;
 		}
-#endif
+
         [Test]
         public void AndSeveralConstraings()
         {
