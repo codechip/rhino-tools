@@ -210,7 +210,7 @@
 		depends="common.init common.set-assembly-attribute-values"
 		description="Generate AssemblyInfo.cs using assembly.* properties."
 	>
-		<property name="assemblyinfo.cs" value="${path::combine(src.dir,'AssemblyInfo.cs')}" />
+		<property name="assemblyinfo.cs" value="${path::combine(prop.dir,'AssemblyInfo.cs')}" />
 		<attrib file="${assemblyinfo.cs}" readonly="false" />
 		<asminfo output="${assemblyinfo.cs}" language="CSharp">
 			<imports>

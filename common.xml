@@ -21,7 +21,7 @@
 		Path to the folder that contain the external assemblies.  For net-2.0 the values will
 		be lib, lib/net, and lib/net/2.0 respectively.
 	-->
-	<property name="lib.dir" value="SharedLibs" dynamic="true" />
+	<property name="lib.dir" value="${path::get-full-path(root.dir)}/SharedLibs" dynamic="true" />
 	<property name="lib.family.dir" value="${path::combine(lib.dir, framework::get-family(framework::get-target-framework()))}" dynamic="true" />
 	<property name="lib.framework.dir" value="${path::combine(lib.family.dir, version::to-string(framework::get-version(framework::get-target-framework())))}" dynamic="true" />
 
@@ -74,6 +74,7 @@
 		<call target="set-${project.config}-project-configuration" />
 
 		<property name="src.dir" 			value="${path::get-full-path(project::get-base-directory())}" />
+		<property name="prop.dir" 			value="${src.dir}/Properties" />
 		<property name="build.base.dir"		value="${path::get-full-path(root.dir)}/build" />
 		<property name="build.family.dir"	value="${build.base.dir}/${nant.settings.currentframework}" />
 		<property name="build.dir" 			value="${path::get-full-path(path::combine(build.family.dir,project.config))}" dynamic="true" />
