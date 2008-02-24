@@ -1,95 +1,24 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Project
-	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="rhino-commons"
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+	>
 
-	<PropertyGroup>
-		<ProjectName>Rhino.Commons</ProjectName>
-		<ShortName>rhino-commons</ShortName>
-		<SolutionFile>Rhino.Commons.sln</SolutionFile>
-		<FlattenZipFile>True</FlattenZipFile>
-		<SectionId>-1</SectionId>
-		<Version>1.5</Version>
-		<MergeAssemblies>False</MergeAssemblies>
-	</PropertyGroup>
-	<ItemGroup>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Commons.Clr\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Commons\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Commons.ActiveRecord\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Commons.Test\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-	</ItemGroup>
+	<property name="root.dir" value=".." />
+	<include buildfile="${root.dir}/common-project.xml" />
 
-	<ItemGroup>
-		<TestAssembly Include="$(OutDir)\Rhino.Commons.Test.dll"/>
-	</ItemGroup>
+	<fileset id="buildfiles.all">
+		<!-- Files have to be in dependency order -->
+		<include name="Rhino.Commons.Clr/default.build" />
+		<include name="Rhino.Commons/default.build" />
+		<include name="Rhino.Commons.NHibernate/default.build" />
+		<include name="Rhino.Commons.ActiveRecord/default.build" />
+		<include name="Rhino.Commons.Tests/default.build" if="${common.testrunner.enabled}"/>
+	</fileset>
+
+	<target name="build" depends="common.build" />
 	
-	<Target Name="BeforeTest" Condition="$(MergeAssemblies)">
-	
-	 <MakeDir Directories= "$(OutDir)\rhino-core"/>
-	 <MakeDir Directories= "$(OutDir)\rhino-nhibernate"/>	 
- 	 <MakeDir Directories= "$(OutDir)\rhino-activerecord"/>	 
- 	 
-	 <CreateItem Include="$(OutDir)\*.dll"
-						 Exclude="$(OutDir)\Rhino.Commons.dll;
-$(OutDir)\NHibernate.dll;
-$(OutDir)\log4net.dll;
-$(OutDir)\System.Data.Sqlite.dll;
-$(OutDir)\Iesi.Collections.dll;
-$(OutDir)\Castle.DynamicProxy.dll;" >
-		<Output TaskParameter="Include" ItemName = "MergeAssemblies" /> 
-	</CreateItem>
-			
-	<ILMerge
-				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies)"
-				 ExcludeFile="$(excludeFile)"
-				 OutputFile="$(OutDir)\rhino-core\Rhino.Commons.dll"
-				 LogFile="$(logFile)"
-				 DebugInfo="true"
-				 XmlDocumentation="true"
-				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
-				  />
+	<target name="generate-assemblyinfo" depends="common.assemblyinfo" />
 
-	<ILMerge
-				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies);
-										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll"
-				 OutputFile="$(OutDir)\rhino-nhibernate\Rhino.Commons.dll"
-				 LogFile="$(logFile)"
-				 DebugInfo="true"
-				 XmlDocumentation="true"
-				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
-				  />
-
-	<ILMerge
-				ToolPath="$(SharedLibsDir)\Tools\"
-				InputAssemblies="$(OutDir)\Rhino.Commons.dll;@(MergeAssemblies);
-										$(MSBuildProjectDirectory)\Rhino.Commons.NHibernate\bin\$(Configuration)\Rhino.Commons.NHibernate.dll;
-										$(MSBuildProjectDirectory)\Rhino.Commons.ActiveRecord\bin\$(Configuration)\Rhino.Commons.ActiveRecord.dll"
-				 OutputFile="$(OutDir)\rhino-activerecord\Rhino.Commons.dll"
-				 LogFile="$(logFile)"
-				 DebugInfo="true"
-				 XmlDocumentation="true"
-				 KeyFile="$(SharedLibsDir)\..\ayende-open-source.snk"
-				  />
-				  				  				  				  				  				  				  
-		<!-- <Delete Files="@(MergeAssemblies)" /> -->
-		<CreateItem Include="$(OutDir)\*.dll;" >
-				<Output TaskParameter="Include" ItemName = "ZipFiles"/>
-	</CreateItem>
-	
-	</Target>
-	
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
-
-</Project>
+</project>

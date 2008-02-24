@@ -17,6 +17,8 @@
 	<property name="current.nant-version" value="${assemblyname::get-version(assembly::get-name(nant::get-assembly()))}" />
 	<property name="required.nant-version" value="0.85.2478.0" /> <!-- Nant 0.85 release version -->
 
+	<property name="clr.dir" value="${framework::get-assembly-directory( framework::get-runtime-framework () )}"/>
+
 	<!-- 
 		Path to the folder that contain the external assemblies.  For net-2.0 the values will
 		be lib, lib/net, and lib/net/2.0 respectively.

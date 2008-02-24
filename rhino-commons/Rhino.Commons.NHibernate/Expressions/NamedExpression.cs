@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NHibernate.Expression;
+using NHibernate.Expressions;
 
 namespace Query
 {
