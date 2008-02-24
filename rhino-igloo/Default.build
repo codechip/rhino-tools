@@ -1,41 +1,23 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Project 
-		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="rhino-iglo"
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+	>
 
-	<PropertyGroup>
-		<ProjectName>Rhino.Igloo</ProjectName>
-		<ShortName>rhino-Igloo</ShortName>
-		<SolutionFile>Rhino.Igloo.sln</SolutionFile>
-		<FlattenZipFile>True</FlattenZipFile>
-		<SectionId>-2</SectionId>
-		<Version>0.7.0</Version>
-		<ExtraInfo></ExtraInfo>
-	
-	</PropertyGroup>
-	
-	<ItemGroup>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Igloo\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-	</ItemGroup>
-	
-	
-	
-	
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
-	
-	
-	<Target Name="BeforeZip">
-		<CreateItem Include="$(OutDir)\*.dll;">
-				<Output TaskParameter="Include" ItemName="ZipFiles"/>
-		</CreateItem>
-	</Target>
-	
-	<PropertyGroup>
-			<EnableTest>False</EnableTest>
-	</PropertyGroup>
-	
-	
-	
+	<property name="root.dir" value=".." />
+	<include buildfile="${root.dir}/common-project.xml" />
 
-</Project>
+	<fileset id="buildfiles.all">
+		<!-- Files have to be in dependency order -->
+		<include name="Rhino.Igloo/default.build" />
+		<include name="RhinoIglooSample.Controllers/default.build" />
+		<include name="RhinoIglooSample.Model/default.build" />
+		<include name="RhinoIglooSample.Web/default.build" />
+	</fileset>
+
+	<target name="build" depends="common.build" />
+	
+	<target name="generate-assemblyinfo" depends="common.assemblyinfo" />
+
+</project>
