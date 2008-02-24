@@ -119,11 +119,11 @@ namespace Rhino.Security
         {
             lock(GetSecurityKeyPropertyCache)
             {
-                Func<string> func;
+                Rhino.Commons.Func<string> func;
                 if (GetSecurityKeyPropertyCache.TryGetValue(entityType, out func))
                     return func();
-                func = (Func<string>)
-                    Delegate.CreateDelegate(typeof (Func<string>), 
+                func = (Rhino.Commons.Func<string>)
+                    Delegate.CreateDelegate(typeof (Rhino.Commons.Func<string>), 
                         getSecurityKeyMethod.MakeGenericMethod(entityType));
                 GetSecurityKeyPropertyCache[entityType] = func;
                 return func();
@@ -135,7 +135,7 @@ namespace Rhino.Security
             return IoC.Resolve<IEntityInformationExtractor<TEntity>>().SecurityKeyPropertyName;
         }
 
-        private readonly static Dictionary<Type, Func<string>> GetSecurityKeyPropertyCache = new Dictionary<Type, Func<string>>();
+        private readonly static Dictionary<Type, Rhino.Commons.Func<string>> GetSecurityKeyPropertyCache = new Dictionary<Type, Rhino.Commons.Func<string>>();
         private readonly static MethodInfo getSecurityKeyMethod = typeof(Security).GetMethod("GetSecurityKeyPropertyInternal", BindingFlags.NonPublic | BindingFlags.Static);
     }
 }
