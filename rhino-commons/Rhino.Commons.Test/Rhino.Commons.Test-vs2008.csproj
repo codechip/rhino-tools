@@ -1,0 +1,311 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EE98519D-104D-4A31-ADD8-82C5F836018C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.Commons.Test</RootNamespace>
+    <AssemblyName>Rhino.Commons.Test</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Start|AnyCPU' ">
+    <OutputPath>bin\Start\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Boo.Lang, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Compiler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.Compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Boo\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.ActiveRecord, Version=0.0.1.3, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.ActiveRecordIntegration, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.ActiveRecordIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.AutomaticTransactionManagement, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.AutomaticTransactionManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.MicroKernel, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\NHibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit.Framework, Version=1.0.2531.41788, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Tools\MbUnit\MbUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\SqLite.Net\System.Data.SQLite.DLL</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.0.0, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binsor\BinsorTestCase.cs" />
+    <Compile Include="Binsor\EmailSender.cs" />
+    <Compile Include="Binsor\FakeRepository.cs" />
+    <Compile Include="CollectionTests.cs" />
+    <Compile Include="DateRangeTests.cs" />
+    <Compile Include="DateUtilTests.cs" />
+    <Compile Include="DisposableActionTests.cs" />
+    <Compile Include="IndexersTests.cs" />
+    <Compile Include="IoC\IoCFitxture.cs" />
+    <Compile Include="LocalDataTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Binsor\Fubar.cs" />
+    <Compile Include="StaticReflectionTests.cs" />
+    <Compile Include="ValidationTests.cs" />
+    <Compile Include="CountdownLatchTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ayende-open-source.snk">
+      <Link>ayende-open-source.snk</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="Binsor\Calculator.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Binsor\MultiFileConfig_Main2.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Imports.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\MultiFileConfig_Extension.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\MultiFileConfig_Main.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\UsingAllTypes.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Windsor2.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Binsor\disposable.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Binsor\Facilities.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Windsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\AnotherWindsor-NH.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\AnotherWindsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\Windsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ForTesting\Windsor-NH.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Logging\BulkInsert.config">
+      <SubType>Form</SubType>
+    </EmbeddedResource>
+    <None Include="Repository\Windsor-AR.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Repository\Windsor.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="UoW\Windsor.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Windsor.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binsor\Windsor.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="ForTesting\AREntity.hbm.xml" />
+    <EmbeddedResource Include="Repository\Child.hbm.xml" />
+    <EmbeddedResource Include="Repository\Parent.hbm.xml" />
+    <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
+    <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
+    <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
+    <Compile Include="Binsor\BinsorStreamTestCase.cs" />
+    <Compile Include="Binsor\Calculator.cs" />
+    <Compile Include="Binsor\CalculatorTestCase.cs" />
+    <Compile Include="Binsor\Binsor2TestCase.cs" />
+    <Compile Include="Binsor\BinsorImportsTestCase.cs" />
+    <Compile Include="Binsor\ConfigurationAsserts.cs" />
+    <Compile Include="Binsor\MultiFileTestCase.cs" />
+    <Compile Include="Binsor\TestEnvironmentInfo.cs" />
+    <Compile Include="Binsor\UsingAllTypesFixture.cs" />
+    <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
+    <Compile Include="BaseTest.cs" />
+    <Compile Include="HttpModules\UnitOfWorkApplicationFixture.cs" />
+    <Compile Include="Logging\AsyncBulkInsertAppenderTestFixture.cs" />
+    <Compile Include="Logging\RollingSqCEAppenderTestFixture.cs" />
+    <Compile Include="NHibernate\EmbeddedDBTests.cs" />
+    <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
+    <Compile Include="NHibernate\FutureQueryOfFixture.cs" />
+    <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
+    <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
+    <Compile Include="Repository\NHibernateRepositoryTests.cs" />
+    <Compile Include="Repository\RepositoryProjectionTests.cs" />
+    <Compile Include="Repository\RepositoryTests.cs" />
+    <Compile Include="Repository\RepositoryTestsBase.cs" />
+    <Compile Include="RhinoThreadPoolFixture.cs" />
+    <Compile Include="UoW\TransactionalFlush.cs" />
+    <Compile Include="With\With.Caching.cs" />
+    <Compile Include="With\With.Log.cs" />
+    <Compile Include="With\With.PerformanceCounter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
+      <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
+      <Name>Rhino.Commons.ActiveRecord</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+      <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
+      <Name>Rhino.Commons.Clr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate-v2008.csproj">
+      <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
+      <Name>Rhino.Commons.NHibernate-v2008</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons\Rhino.Commons.csproj">
+      <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
+      <Name>Rhino.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
