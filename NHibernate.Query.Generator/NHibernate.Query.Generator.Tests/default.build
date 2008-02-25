@@ -19,6 +19,7 @@
 			<include name="Iesi.Collections.dll" />
 			<include name="log4net.dll" />
 			<include name="Rhino.Mocks.dll" />
+			<include name="NHQG.exe" />
 			<include name="NHibernate.Query.Generator.Model.dll"/>
 			
 		</assemblyfileset>

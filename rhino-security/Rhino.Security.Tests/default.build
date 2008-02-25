@@ -41,7 +41,7 @@
 		</resourcefileset>
 		
 		<!-- copy the config files -->
-		<copy todir="${build.dir}">
+		<copy todir="${build.dir}" overwrite="true">
 			<fileset basedir="${src.dir}">
 				<include name="**/*.boo"/>
 				<include name="**/*.xml"/>

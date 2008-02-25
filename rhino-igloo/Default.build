@@ -11,8 +11,8 @@
 	<fileset id="buildfiles.all">
 		<!-- Files have to be in dependency order -->
 		<include name="Rhino.Igloo/default.build" />
-		<include name="RhinoIglooSample.Controllers/default.build" />
 		<include name="RhinoIglooSample.Model/default.build" />
+		<include name="RhinoIglooSample.Controllers/default.build" />
 		<include name="RhinoIglooSample.Web/default.build" />
 	</fileset>
 
