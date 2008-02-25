@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Testing.Tests-vs2008", "Rhino.Testing.Tests\Rhino.Testing.Tests-vs2008.csproj", "{7008AEF6-89F9-49A7-8329-A241D3518790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Testing-v2008", "Rhino.Testing\Rhino.Testing-v2008.csproj", "{5B6AA90A-6266-48C3-B4E7-F248C9403797}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7008AEF6-89F9-49A7-8329-A241D3518790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7008AEF6-89F9-49A7-8329-A241D3518790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7008AEF6-89F9-49A7-8329-A241D3518790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7008AEF6-89F9-49A7-8329-A241D3518790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B6AA90A-6266-48C3-B4E7-F248C9403797}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B6AA90A-6266-48C3-B4E7-F248C9403797}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B6AA90A-6266-48C3-B4E7-F248C9403797}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B6AA90A-6266-48C3-B4E7-F248C9403797}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
