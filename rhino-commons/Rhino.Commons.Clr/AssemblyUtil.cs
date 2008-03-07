@@ -1,5 +1,4 @@
 ﻿#region license
-
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -25,57 +24,49 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
 using System;
 using System.IO;
-using System.Text;
 using System.Reflection;
 
-namespace Rhino.Commons.Binsor
+namespace Rhino.Commons
 {
-	public static class BinsorScript
+	/// <summary>
+	/// Assembly helpers.
+	/// </summary>
+	public static class AssemblyUtil
 	{
-		public static BinsorFileInstaller FromFile(string fileName)
+		/// <summary>
+		/// Loads the assembly with the supplied assembly name.
+		/// </summary>
+		/// <param name="assemblyName">The assembly name.</param>
+		/// <returns>The loaded assembly.</returns>
+		public static Assembly LoadAssembly(string assemblyName)
 		{
-			return new BinsorFileInstaller(fileName);
-		}
+			Assembly assembly;
+			String extension = Path.GetExtension(assemblyName);
 
-		public static BinsorStreamInstaller FromStream(Stream stream)
-		{
-			return new BinsorStreamInstaller(stream);
-		}
-
-		public static BinsorStreamInstaller Inline(string script)
-		{
-			return FromStream(new MemoryStream(ASCIIEncoding.ASCII.GetBytes(script)));
-		}		
-		
-		public static BinsorRunnerInstaller FromCompiledAssembly(string assemblyName)
-		{
-			return FromCompiledAssembly(AssemblyUtil.LoadAssembly(assemblyName));
-		}
-
-		public static BinsorRunnerInstaller FromCompiledAssembly(Assembly assembly)
-		{
-			foreach(Type type in assembly.GetExportedTypes())
+			if (extension == ".dll" || extension == ".exe")
 			{
-				if (typeof(IConfigurationRunner).IsAssignableFrom(type))
+				string path = Path.GetDirectoryName(assemblyName);
+				
+				if (path == string.Empty || !Path.IsPathRooted(path) ||
+					path == AppDomain.CurrentDomain.BaseDirectory)
 				{
-					IConfigurationRunner runner = (IConfigurationRunner) Activator.CreateInstance(type);
-					return FromRunner(runner);
+					assembly = Assembly.Load(Path.GetFileNameWithoutExtension(assemblyName));
+				}
+				else
+				{
+					assembly = Assembly.LoadFile(assemblyName);
 				}
 			}
-			
-			throw new ArgumentException(
-				string.Format("Assembly {0} does not appear to be a Binsor assembly",
-				assembly.FullName));
-		}
+			else
+			{
+				assembly = Assembly.Load(assemblyName);
+			}
 
-		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
-		{
-			return new BinsorRunnerInstaller(runner);
-		}	
+			return assembly;
+		}
 	}
 }
