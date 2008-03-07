@@ -29,7 +29,7 @@
 
 using System.Data;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 
 namespace Rhino.Commons
 {

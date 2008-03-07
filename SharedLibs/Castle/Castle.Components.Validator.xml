@@ -356,6 +356,33 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Castle.Components.Validator.ValidateIsGreaterAttribute">
+            <summary>
+            Validate a field value is greater than another one.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Validator.ValidateIsGreaterAttribute.#ctor(Castle.Components.Validator.IsGreaterValidationType,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Validator.ValidateIsGreaterAttribute"/> class.
+            </summary>
+            <param name="type"></param>
+            <param name="propertyToCompare">Target property to compare</param>
+        </member>
+        <member name="M:Castle.Components.Validator.ValidateIsGreaterAttribute.#ctor(Castle.Components.Validator.IsGreaterValidationType,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Components.Validator.ValidateIsGreaterAttribute"/> class.
+            </summary>
+            <param name="type"><see cref="T:Castle.Components.Validator.IsGreaterValidationType"/>type</param>
+            <param name="propertyToCompare">Target property to compare</param>
+            <param name="errorMessage">The error message.</param>
+        </member>
+        <member name="M:Castle.Components.Validator.ValidateIsGreaterAttribute.Build">
+            <summary>
+            Constructs and configures an <see cref="T:Castle.Components.Validator.IValidator"/>
+            instance based on the properties set on the attribute instance.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Castle.Components.Validator.ValidateLengthAttribute">
             <summary>
             Validate that this property has the required length (either exact or in a range)
@@ -1551,6 +1578,67 @@
             Returns the key used to internationalize error messages
             </summary>
             <value></value>
+        </member>
+        <member name="T:Castle.Components.Validator.IsGreaterValidationType">
+            <summary>
+            Specifies the data type the <see cref="T:Castle.Components.Validator.IsGreaterValidator"/>
+            is dealing with.
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Validator.IsGreaterValidationType.Integer">
+            <summary>
+            Value compare as Integer
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Validator.IsGreaterValidationType.Decimal">
+            <summary>
+            Value compare as Decimal
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Validator.IsGreaterValidationType.Date">
+            <summary>
+            Value compare as Date
+            </summary>
+        </member>
+        <member name="F:Castle.Components.Validator.IsGreaterValidationType.DateTime">
+            <summary>
+            Value compare as DateTime
+            </summary>
+        </member>
+        <member name="T:Castle.Components.Validator.IsGreaterValidator">
+            <summary>
+            Comparing properties value and make sure it greater than one another.
+            </summary>
+        </member>
+        <member name="M:Castle.Components.Validator.IsGreaterValidator.#ctor(Castle.Components.Validator.IsGreaterValidationType,System.String)">
+            <summary>
+            Initializes a IsGreaterValidator of the given type and target property.
+            </summary>
+            <param name="type"></param>
+            <param name="propertyToCompare"></param>
+        </member>
+        <member name="M:Castle.Components.Validator.IsGreaterValidator.IsValid(System.Object,System.Object)">
+            <summary>
+            Validate that the property value greater than the value requirements.
+            </summary>
+            <param name="instance"></param>
+            <param name="fieldValue"><c>true</c> if the field value is greater than the target property</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.Components.Validator.IsGreaterValidator.PropertyToCompare">
+            <summary>
+            Target Property to compare
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Validator.IsGreaterValidator.ValidationType">
+            <summary>
+            Gets or sets the validation type for this validator. 
+            </summary>
+        </member>
+        <member name="P:Castle.Components.Validator.IsGreaterValidator.SupportsBrowserValidation">
+            <summary>
+            Browser validation support
+            </summary>
         </member>
         <member name="T:Castle.Components.Validator.NotSameAsValidator">
             <summary>

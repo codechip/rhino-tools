@@ -48,7 +48,7 @@ namespace Rhino.Security
 		public static void PrepareForActiveRecordInitialization<TUser>(SecurityTableStructure tableStructure)
 			where TUser : IUser
 		{
-			ModelsCreatedDelegate validated = null;
+			ModelsDelegate validated = null;
 			validated = delegate(ActiveRecordModelCollection models, IConfigurationSource source)
 		    {
 				ActiveRecordStarter.ModelsValidated -= validated;
@@ -74,7 +74,7 @@ namespace Rhino.Security
 			where TEntity : class
 		{
 			Guard.Against<ArgumentNullException>(entity == null, "Entity cannot be null");
-			var extractor = IoC.Resolve<IEntityInformationExtractor<TEntity>>();
+			IEntityInformationExtractor<TEntity> extractor = IoC.Resolve<IEntityInformationExtractor<TEntity>>();
 			return extractor.GetSecurityKeyFor(entity);
 		}
 
@@ -86,7 +86,7 @@ namespace Rhino.Security
 		/// <returns></returns>
 		public static string GetDescription<TEntity>(TEntity entity) where TEntity : class
 		{
-			var extractor = IoC.Resolve<IEntityInformationExtractor<TEntity>>();
+			IEntityInformationExtractor<TEntity> extractor = IoC.Resolve<IEntityInformationExtractor<TEntity>>();
 			return extractor.GetDescription(ExtractKey(entity));
 		}
 

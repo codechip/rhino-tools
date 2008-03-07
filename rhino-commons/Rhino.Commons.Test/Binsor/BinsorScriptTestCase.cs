@@ -26,28 +26,51 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
+using System.IO;
+using Castle.Windsor;
+using MbUnit.Framework;
+using Rhino.Commons;
+using Rhino.Commons.Binsor;
 
-using NHibernate.Criterion;
-
-namespace Query
+namespace Rhino.Commons.Test.Binsor
 {
-	public class ManyToOneNamedExpression
+	[TestFixture]
+	public class BinsorScriptTestCase : ConfigurationAsserts
 	{
-		string name;
+		private IWindsorContainer _container;
 
-		public ManyToOneNamedExpression(string name)
+		[SetUp]
+		public override void TestInitialize()
 		{
-			this.name = name;
+            base.TestInitialize();
+
+			_container = new WindsorContainer();
 		}
 
-		public SimpleExpression Eq(object value)
+		[Test]
+		public void CanInstallBinsorScriptFromFile()
 		{
-			return Expression.Eq(name, value);
+			_container.Install(BinsorScript
+				.FromFile(Path.GetFullPath(@"Binsor\Windsor2.boo"))
+				);
+
+			bool has_repos = _container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");
 		}
-		
-		public AbstractCriterion IdIs(object value)
+
+		[Test]
+		public void CanInstallBinsorScriptFromRunner()
 		{
-			return Expression.Eq(string.Format("{0}.id", name), value);
-		}
+			IConfigurationRunner runner = BooReader.GetConfigurationInstanceFromFile(
+				Path.GetFullPath(@"Binsor\Windsor2.boo"), "", _container, 
+				BooReader.GenerationOptions.Memory);
+			
+			_container.Install(BinsorScript.FromRunner(runner));
+
+			bool has_repos = _container.Kernel.HasComponent( typeof( IRepository<> ) );
+			Assert.IsTrue( has_repos, "should have generic repository!" );
+		}	
 	}
 }
+

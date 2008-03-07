@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,30 +25,28 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
+using System.IO;
 
-using NHibernate.Criterion;
-
-namespace Query
+namespace Rhino.Commons.Binsor
 {
-	public class ManyToOneNamedExpression
+	public static class BinsorScript
 	{
-		string name;
-
-		public ManyToOneNamedExpression(string name)
+		public static BinsorFileInstaller FromFile(string fileName)
 		{
-			this.name = name;
+			return new BinsorFileInstaller(fileName);
 		}
 
-		public SimpleExpression Eq(object value)
+		public static BinsorStreamInstaller FromStream(Stream stream)
 		{
-			return Expression.Eq(name, value);
+			return new BinsorStreamInstaller(stream);
 		}
-		
-		public AbstractCriterion IdIs(object value)
+
+		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
 		{
-			return Expression.Eq(string.Format("{0}.id", name), value);
+			return new BinsorRunnerInstaller(runner);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Rhino.Commons
 	using global::NHibernate;
 	using global::NHibernate.Dialect;
 	using global::NHibernate.Engine;
-	using global::NHibernate.Expressions;
+	using global::NHibernate.Criterion;
 	using global::NHibernate.SqlCommand;
 	using global::NHibernate.SqlTypes;
 	using global::NHibernate.Type;
@@ -175,7 +175,9 @@ namespace Rhino.Commons
 			writer.Flush();
 			string xmlString = sw.GetStringBuilder().ToString();
 
-			return new TypedValue[] { new TypedValue(new CustomType(typeof(XmlType), new Hashtable()), xmlString), };
+			return new TypedValue[] { 
+				new TypedValue(new CustomType(typeof(XmlType), 
+				new Hashtable()), xmlString, EntityMode.Poco), };
 		}
 
 		private class XmlType : IUserType

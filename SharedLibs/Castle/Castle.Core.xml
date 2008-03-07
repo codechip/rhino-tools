@@ -2454,7 +2454,7 @@
             </summary>
             <param name="serviceType">Type of the service.</param>
         </member>
-        <member name="M:Castle.Core.InterceptorReference.WithKey(System.String)">
+        <member name="M:Castle.Core.InterceptorReference.ForKey(System.String)">
             <summary>
             Gets an <see cref="T:Castle.Core.InterceptorReference"/> for the component key.
             </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MbUnit.Framework;
 using NHibernate;
 using NHibernate.Cfg;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using NHibernate.Query.Generator.Tests.CompositeIds;
 using NHibernate.SqlCommand;
 using Query;

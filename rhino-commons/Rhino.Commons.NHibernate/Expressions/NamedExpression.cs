@@ -30,7 +30,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 
 namespace Query
 {
@@ -50,39 +50,39 @@ namespace Query
 
 		public AbstractCriterion Between(object lo, object hi)
 		{
-			return new BetweenExpression(name, lo, hi);
+			return Expression.Between(name, lo, hi);
 		}
 
 		public AbstractCriterion EqProperty(string otherPropertyName)
 		{
-			return new EqPropertyExpression(name, otherPropertyName);
+			return Expression.EqProperty(name, otherPropertyName);
 		}
 
 
 		public SimpleExpression Ge(object value)
 		{
-			return new GeExpression(name, value);
+			return Expression.Ge(name, value);
 		}
 
 		public SimpleExpression Gt(object value)
 		{
-			return new GtExpression(name, value);
+			return Expression.Gt(name, value);
 		}
 
 		public AbstractCriterion In(ICollection values)
 		{
-			return new InExpression(name, ToArray(values));
+			return Expression.In(name, ToArray(values));
 		}
 
 		public AbstractCriterion In(object[] values)
 		{
-			return new InExpression(name, values);
+			return Expression.In(name, values);
 		}
 
 		public AbstractCriterion In<T>(ICollection<T> values)
 		{
 			object[] arr = ToArrayGeneric(values);
-			return new InExpression(name, arr);
+			return Expression.In(name, arr);
 		}
 		
 		private static object[] ToArray(ICollection values)
@@ -106,7 +106,7 @@ namespace Query
 
 		public AbstractCriterion InsensitiveLike(string value, MatchMode matchMode)
 		{
-			return new InsensitiveLikeExpression(name, value, matchMode);
+			return new InsensitiveLikeExpression( name, value, matchMode);
 		}
 
 		public AbstractCriterion IsNotNull()
@@ -121,32 +121,32 @@ namespace Query
 
 		public SimpleExpression Le(object value)
 		{
-			return new LeExpression(name, value);
+			return Expression.Le(name, value);
 		}
 
 		public AbstractCriterion LeProperty(string otherPropertyName)
 		{
-			return new LePropertyExpression(name, otherPropertyName);
+			return Expression.LeProperty(name, otherPropertyName);
 		}
 
 		public SimpleExpression Like(object value)
 		{
-			return new LikeExpression(name, value);
+			return Expression.Like(name, value);
 		}
 
 		public SimpleExpression Like(string value, MatchMode matchMode)
 		{
-			return new LikeExpression(name, value, matchMode);
+			return Expression.Like(name, value, matchMode);
 		}
 
 		public SimpleExpression Lt(object value)
 		{
-			return new LtExpression(name, value);
+			return Expression.Lt(name, value);
 		}
 
 		public AbstractCriterion LtProperty(string otherPropertyName)
 		{
-			return new LtPropertyExpression(name, otherPropertyName);
+			return Expression.LtProperty(name, otherPropertyName);
 		}
 	}
 }

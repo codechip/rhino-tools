@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,30 +25,39 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
+using Castle.MicroKernel;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
 
-using NHibernate.Criterion;
-
-namespace Query
+namespace Rhino.Commons.Binsor
 {
-	public class ManyToOneNamedExpression
+	public abstract class BinsorScriptInstaller : IWindsorInstaller
 	{
-		string name;
-
-		public ManyToOneNamedExpression(string name)
-		{
-			this.name = name;
-		}
-
-		public SimpleExpression Eq(object value)
-		{
-			return Expression.Eq(name, value);
-		}
+		private EnvironmentDelegate environment;
 		
-		public AbstractCriterion IdIs(object value)
+		public BinsorScriptInstaller Environment(EnvironmentDelegate environment)
 		{
-			return Expression.Eq(string.Format("{0}.id", name), value);
+			this.environment = environment;
+			return this;
+		}
+
+		#region IWindsorInstaller Members
+
+		void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
+		{
+			InstallInto(container);
+		}
+
+		#endregion
+
+		protected abstract void InstallInto(IWindsorContainer container);
+		
+		protected string GetEnvironment()
+		{
+			return (environment != null) ? environment() : null;
 		}
 	}
 }

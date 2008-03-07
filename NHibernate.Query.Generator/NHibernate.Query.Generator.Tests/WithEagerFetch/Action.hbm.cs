@@ -275,36 +275,36 @@ namespace Query {
             /// <summary>
             /// Query helper for member Action.Name
             /// </summary>
-            public static NHibernate.Expressions.IProjection Name {
+            public static NHibernate.Criterion.IProjection Name {
                 get {
-                    return NHibernate.Expressions.Projections.GroupProperty("Name");
+                    return NHibernate.Criterion.Projections.GroupProperty("Name");
                 }
             }
             
             /// <summary>
             /// Query helper for member Action.Description
             /// </summary>
-            public static NHibernate.Expressions.IProjection Description {
+            public static NHibernate.Criterion.IProjection Description {
                 get {
-                    return NHibernate.Expressions.Projections.GroupProperty("Description");
+                    return NHibernate.Criterion.Projections.GroupProperty("Description");
                 }
             }
             
             /// <summary>
             /// Query helper for member Action.Obsolete
             /// </summary>
-            public static NHibernate.Expressions.IProjection Obsolete {
+            public static NHibernate.Criterion.IProjection Obsolete {
                 get {
-                    return NHibernate.Expressions.Projections.GroupProperty("Obsolete");
+                    return NHibernate.Criterion.Projections.GroupProperty("Obsolete");
                 }
             }
             
             /// <summary>
             /// Query helper for member Action.Id
             /// </summary>
-            public static NHibernate.Expressions.IProjection Id {
+            public static NHibernate.Criterion.IProjection Id {
                 get {
-                    return NHibernate.Expressions.Projections.GroupProperty("Id");
+                    return NHibernate.Criterion.Projections.GroupProperty("Id");
                 }
             }
         }

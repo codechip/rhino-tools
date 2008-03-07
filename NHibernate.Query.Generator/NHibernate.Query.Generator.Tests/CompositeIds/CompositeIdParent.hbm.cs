@@ -166,9 +166,9 @@ namespace Query {
             /// <summary>
             /// Query helper for member CompositeIdParent.Id
             /// </summary>
-            public static NHibernate.Expressions.IProjection Id {
+            public static NHibernate.Criterion.IProjection Id {
                 get {
-                    return NHibernate.Expressions.Projections.GroupProperty("Id");
+                    return NHibernate.Criterion.Projections.GroupProperty("Id");
                 }
             }
         }

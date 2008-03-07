@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,30 +25,39 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
+using System;
+using System.IO;
+using Castle.Windsor;
 
-using NHibernate.Criterion;
-
-namespace Query
+namespace Rhino.Commons.Binsor
 {
-	public class ManyToOneNamedExpression
-	{
-		string name;
+	public class BinsorStreamInstaller : BinsorScriptInstaller
+	{	
+		private string name;
+		private readonly Stream stream;
 
-		public ManyToOneNamedExpression(string name)
+		public BinsorStreamInstaller(Stream stream)
+		{
+			this.stream = stream;
+		}
+
+		public BinsorStreamInstaller Named(string name)
 		{
 			this.name = name;
-		}
-
-		public SimpleExpression Eq(object value)
-		{
-			return Expression.Eq(name, value);
+			return this;
 		}
 		
-		public AbstractCriterion IdIs(object value)
+		protected override void InstallInto(IWindsorContainer container)
 		{
-			return Expression.Eq(string.Format("{0}.id", name), value);
+			BooReader.Read(container, stream, GetName(), GetEnvironment());
+		}
+		
+		private string GetName()
+		{
+			return name ?? Guid.NewGuid().ToString();
 		}
 	}
 }
