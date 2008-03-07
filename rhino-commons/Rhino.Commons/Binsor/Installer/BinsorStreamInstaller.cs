@@ -55,9 +55,13 @@ namespace Rhino.Commons.Binsor
 			BooReader.Read(container, stream, GetName(), GetEnvironment());
 		}
 		
-		private string GetName()
+		protected string GetName()
 		{
-			return name ?? Guid.NewGuid().ToString();
+			if (string.IsNullOrEmpty(name))
+			{
+				return "Binsor" + Guid.NewGuid();
+			}
+			return name;
 		}
 	}
 }

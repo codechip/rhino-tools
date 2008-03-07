@@ -29,6 +29,7 @@
 #endregion
 
 using System.IO;
+using System.Text;
 
 namespace Rhino.Commons.Binsor
 {
@@ -48,5 +49,10 @@ namespace Rhino.Commons.Binsor
 		{
 			return new BinsorRunnerInstaller(runner);
 		}
+
+		public static BinsorStreamInstaller Inline(string script)
+		{
+			return FromStream(new MemoryStream(ASCIIEncoding.ASCII.GetBytes(script)));
+		}		
 	}
 }
