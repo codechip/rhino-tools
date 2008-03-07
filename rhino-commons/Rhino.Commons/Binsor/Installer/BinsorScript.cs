@@ -61,7 +61,8 @@ namespace Rhino.Commons.Binsor
 		{
 			foreach(Type type in assembly.GetExportedTypes())
 			{
-				if (typeof(IConfigurationRunner).IsAssignableFrom(type))
+				if (type.IsClass && !type.IsAbstract &&
+					typeof(IConfigurationRunner).IsAssignableFrom(type))
 				{
 					IConfigurationRunner runner = (IConfigurationRunner) Activator.CreateInstance(type);
 					return FromRunner(runner);

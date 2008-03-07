@@ -28,6 +28,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using Castle.Windsor;
 using MbUnit.Framework;
 using Rhino.Commons;
@@ -97,6 +98,14 @@ namespace Rhino.Commons.Test.Binsor
 				
 			bool has_repos = container.Kernel.HasComponent(typeof(IRepository<>));
 			Assert.IsTrue(has_repos, "should have generic repository!");
+		}
+
+		[Test, ExpectedArgumentException]
+		public void InstallBinsorScriptFromInvalidAssembly_ThrowsException()
+		{
+			_container.Install(BinsorScript.FromCompiledAssembly(
+				Assembly.GetExecutingAssembly())
+				);
 		}
 		
 		[Test]
