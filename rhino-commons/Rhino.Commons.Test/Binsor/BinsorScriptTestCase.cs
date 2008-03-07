@@ -60,17 +60,57 @@ namespace Rhino.Commons.Test.Binsor
 		}
 
 		[Test]
+		public void CanInstallBinsorInlineScript()
+		{
+			_container.Install(BinsorScript.Inline(
+				@"component 'default_repository', IRepository, NHRepository:
+					lifestyle Transient"
+				));
+
+			bool has_repos = _container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");				
+		}
+
+		[Test]
+		public void CanInstallBinsorScriptFromFileAndGenerateAssembly()
+		{
+			_container.Install(BinsorScript
+				.FromFile(Path.GetFullPath(@"Binsor\Windsor2.boo"))
+				.GenerateAssembly()
+				);
+
+			bool has_repos = _container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");
+		}
+
+		[Test]
+		public void CanInstallBinsorScriptFromGeneratedAssembly()
+		{
+			_container.Install(BinsorScript
+				.FromFile(Path.GetFullPath(@"Binsor\Windsor2.boo"))
+				.GenerateAssembly()
+				);
+
+			IWindsorContainer container = new WindsorContainer()
+				.Install(BinsorScript.FromCompiledAssembly("Windsor2.dll")
+				);
+				
+			bool has_repos = container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");
+		}
+		
+		[Test]
 		public void CanInstallBinsorScriptFromRunner()
 		{
 			IConfigurationRunner runner = BooReader.GetConfigurationInstanceFromFile(
-				Path.GetFullPath(@"Binsor\Windsor2.boo"), "", _container, 
+				Path.GetFullPath(@"Binsor\Windsor2.boo"), "", _container,
 				BooReader.GenerationOptions.Memory);
-			
+
 			_container.Install(BinsorScript.FromRunner(runner));
 
-			bool has_repos = _container.Kernel.HasComponent( typeof( IRepository<> ) );
-			Assert.IsTrue( has_repos, "should have generic repository!" );
-		}	
+			bool has_repos = _container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");
+		}		
 	}
 }
 

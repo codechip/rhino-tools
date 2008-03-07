@@ -32,7 +32,7 @@ using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-	public class BinsorRunnerInstaller : BinsorScriptInstaller
+	public class BinsorRunnerInstaller : BinsorScriptInstaller<BinsorRunnerInstaller>
 	{
 		private readonly IConfigurationRunner runner;
 

@@ -34,16 +34,42 @@ using Castle.Windsor.Installer;
 
 namespace Rhino.Commons.Binsor
 {
-	public abstract class BinsorScriptInstaller : IWindsorInstaller
+	public abstract class BinsorScriptInstaller<T> : IWindsorInstaller
+		where T : BinsorScriptInstaller<T>
 	{
 		private EnvironmentDelegate environment;
+		private BooReader.GenerationOptions options;
 		
-		public BinsorScriptInstaller Environment(EnvironmentDelegate environment)
+		public BinsorScriptInstaller()
+		{
+			options = BooReader.GenerationOptions.Memory;
+		}
+		
+		public T GenerateAssembly()
+		{
+			options = BooReader.GenerationOptions.File;
+			return (T)this;
+		}
+		
+		public T Environment(EnvironmentDelegate environment)
 		{
 			this.environment = environment;
-			return this;
+			return (T)this;
 		}
-
+		
+		protected BooReader.GenerationOptions GenerationOptions
+		{
+			get { return options; }
+		}
+		
+		protected string EnvironmentName
+		{
+			get
+			{
+				return ( environment != null ) ? environment() : null;
+			}
+		}
+		
 		#region IWindsorInstaller Members
 
 		void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
@@ -54,10 +80,5 @@ namespace Rhino.Commons.Binsor
 		#endregion
 
 		protected abstract void InstallInto(IWindsorContainer container);
-		
-		protected string GetEnvironment()
-		{
-			return (environment != null) ? environment() : null;
-		}
 	}
 }

@@ -34,7 +34,7 @@ using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-	public class BinsorStreamInstaller : BinsorScriptInstaller
+	public class BinsorStreamInstaller : BinsorScriptInstaller<BinsorStreamInstaller>
 	{	
 		private string name;
 		private readonly Stream stream;
@@ -52,7 +52,7 @@ namespace Rhino.Commons.Binsor
 		
 		protected override void InstallInto(IWindsorContainer container)
 		{
-			BooReader.Read(container, stream, GetName(), GetEnvironment());
+			BooReader.Read(container, stream, GenerationOptions, GetName(), EnvironmentName);
 		}
 		
 		protected string GetName()

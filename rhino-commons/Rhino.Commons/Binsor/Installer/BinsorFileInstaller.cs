@@ -32,7 +32,7 @@ using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-	public class BinsorFileInstaller : BinsorScriptInstaller
+	public class BinsorFileInstaller : BinsorScriptInstaller<BinsorFileInstaller>
 	{
 		private readonly string fileName;
 
@@ -43,7 +43,7 @@ namespace Rhino.Commons.Binsor
 
 		protected override void InstallInto(IWindsorContainer container)
 		{
-			BooReader.Read(container, fileName, GetEnvironment());
+			BooReader.Read(container, fileName, EnvironmentName, GenerationOptions);
 		}
 	}
 }

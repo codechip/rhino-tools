@@ -28,8 +28,10 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Text;
+using System.Reflection;
 
 namespace Rhino.Commons.Binsor
 {
@@ -45,14 +47,35 @@ namespace Rhino.Commons.Binsor
 			return new BinsorStreamInstaller(stream);
 		}
 
-		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
-		{
-			return new BinsorRunnerInstaller(runner);
-		}
-
 		public static BinsorStreamInstaller Inline(string script)
 		{
 			return FromStream(new MemoryStream(ASCIIEncoding.ASCII.GetBytes(script)));
 		}		
+		
+		public static BinsorRunnerInstaller FromCompiledAssembly(string assemblyName)
+		{
+			return FromCompiledAssembly(Assembly.Load(assemblyName));
+		}
+
+		public static BinsorRunnerInstaller FromCompiledAssembly(Assembly assembly)
+		{
+			foreach(Type type in assembly.GetExportedTypes())
+			{
+				if (typeof(IConfigurationRunner).IsAssignableFrom(type))
+				{
+					IConfigurationRunner runner = (IConfigurationRunner) Activator.CreateInstance(type);
+					return FromRunner(runner);
+				}
+			}
+			
+			throw new ArgumentException(
+				string.Format("Assembly {0} does not appear to be a Binsor assembly",
+				assembly.FullName));
+		}
+
+		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
+		{
+			return new BinsorRunnerInstaller(runner);
+		}	
 	}
 }
