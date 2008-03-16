@@ -14,6 +14,11 @@ namespace Rhino.Testing.AutoMocking
         void SetMockingStrategy(Type type, IMockingStrategy strategy);
         void MarkMissing(Type type);
         void AddService(Type type, object service);
+        /// <summary>
+        /// Call this method to select the mock type (dynamic, stub, etc) that the container should use
+        /// when resolving instances of the specfied <paramref name="type"/>
+        /// </summary>
+        /// <returns><see cref="TypeMarker"/> that you can then used to select the mock type</returns>
         TypeMarker Mark(Type type);
     	bool CanResolveFromMockRepository(Type service);
     }

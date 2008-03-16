@@ -75,18 +75,50 @@ namespace Rhino.Testing.AutoMocking
 				AddComponent(targetType.FullName, targetType);
 		}
 
+        /// <summary>
+        /// Create an instance of type <typeparamref name="T"/> with its constructor declared
+        /// dependencies resolved as mocks
+        /// </summary>
+        /// <remarks>
+        /// For each constructor dependency that <typeparamref name="T"/> declares, use <see
+        /// cref="Mark"/> to determine the type of mock (stub, dynamic mock, etc) that will be
+        /// injected into the instance. The default is to inject a dynmaic mock.
+        /// <para>
+        /// Use <see cref="MarkMissing"/> for a constructor dependency that you do not want the
+        /// container to resolve. 
+        /// </para>
+        /// <para>
+        /// If you want a dependency to be resolved as an explicit type rather than as a mock, use
+        /// <see cref="IWindsorContainer.AddComponent(string,Type,Type)"/> to register the explict
+        /// type that the container should use before calling this method.
+        /// </para>
+        /// </remarks>
 		public T Create<T>()
 		{
 			AddComponentIfMissing<T>();
 			return Resolve<T>();
 		}
 
+        /// <summary>
+        /// See <see cref="Create{T}()"/>
+        /// </summary>
 		public T Create<T>(IDictionary parameters)
 		{
 			AddComponentIfMissing<T>();
 			return Resolve<T>(parameters);
 		}
 
+
+        /// <summary>
+        /// Returns a mock of the specified <paramref name="type"/>
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="Mark"/> to determine the type of mock (stub, dynamic mock, etc) that will be
+        /// returned. A dynamic mock will be returned by default
+        /// <para>
+        /// Only a single instance of the specified <paramref name="type"/> will be created and returned
+        /// </para>
+        /// </remarks>
 		public object Get(Type type)
 		{
 			if (type == typeof(IKernel))
@@ -100,6 +132,9 @@ namespace Rhino.Testing.AutoMocking
 			return instance;
 		}
 
+        /// <summary>
+        /// See <see cref="Get"/>
+        /// </summary>
 		public T Get<T>() where T : class
 		{
 			return (T) Get(typeof (T));
@@ -125,6 +160,9 @@ namespace Rhino.Testing.AutoMocking
 			AddService(typeof (T), service);
 		}
 
+        /// <summary>
+        /// See <see cref="IAutoMockingRepository.Mark"/>
+        /// </summary>
 		public TypeMarker Mark(Type type)
 		{
 			return new TypeMarker(type, this);
@@ -136,16 +174,26 @@ namespace Rhino.Testing.AutoMocking
 				GetMockingStrategy(service).GetType() != typeof (NonMockedStrategy);
 		}
 
+        /// <summary>
+        /// See <see cref="IAutoMockingRepository.Mark"/>
+        /// </summary>
 		public TypeMarker Mark<T>()
 		{
 			return Mark(typeof (T));
 		}
 
+        /// <summary>
+        /// See <see cref="MarkMissing"/>
+        /// </summary>
 		public void MarkMissing<T>()
 		{
 			MarkMissing(typeof (T));
 		}
 
+        /// <summary>
+        /// Indictate that instances of <paramref name="type"/> should not be resolved by the container
+        /// <seealso cref="Create{T}()"/>
+        /// </summary>
 		public void MarkMissing(Type type)
 		{
 			_markMissing.Add(type);

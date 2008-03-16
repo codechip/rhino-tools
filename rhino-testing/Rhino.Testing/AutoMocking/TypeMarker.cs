@@ -4,6 +4,11 @@ using System.Text;
 
 namespace Rhino.Testing.AutoMocking
 {
+    /// <summary>
+    /// Syntax sugar. Used in conjuction with <see cref="IAutoMockingRepository.Mark"/> to indicate
+    /// which type of mock (if any) should be created when the auto mocking container needs to resolve
+    /// dependencies
+    /// </summary>
     public class TypeMarker
     {
         private readonly IAutoMockingRepository _repository;
