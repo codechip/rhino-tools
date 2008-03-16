@@ -16,5 +16,12 @@ namespace Rhino.Testing.Tests.AutoMocking
             container = new AutoMockingContainer(mocks);
             container.Initialize();
         }
+
+
+        [TearDown]
+        public void TestCleanup()
+        {
+            if (container != null) container.Dispose();
+        }
     }
 }
