@@ -219,7 +219,7 @@ namespace Rhino.Mocks.Tests.Constraints
 		public void AddConstraintAndThenTryToIgnoreArgs()
 		{
 			this.demo.VoidStringArg("Ayende");
-			LastCall.On(this.demo).Constraints(Text.Contains("World")).Callback(new DelegateDefinations.StringDelegate("".StartsWith));
+			LastCall.On(this.demo).Constraints(Text.Contains("World")).Callback<string>("".StartsWith);
 		}
 
 	}
