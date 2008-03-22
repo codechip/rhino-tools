@@ -1,28 +1,21 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Project
-	xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="rhino-testing"
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+	>
+
+	<property name="root.dir" value=".." />
+	<include buildfile="${root.dir}/common-project.xml" />
+
+	<fileset id="buildfiles.all">
+		<!-- Files have to be in dependency order -->
+		<include name="Rhino.Testing/default.build" />
+		<include name="Rhino.Testing.Test/default.build" if="${common.testrunner.enabled}"/>
+	</fileset>
+
+	<target name="build" depends="common.build" />
 	
+	<target name="generate-assemblyinfo" depends="common.assemblyinfo" />
 
-	<PropertyGroup>
-		<ProjectName>Rhino.Testing</ProjectName>
-		<ShortName>rhino-testing</ShortName>
-		<SolutionFile>Rhino.Testing.sln</SolutionFile>
-		<FlattenZipFile>True</FlattenZipFile>
-		<SectionId>-1</SectionId>
-		<Version>1.0</Version>
-	</PropertyGroup>
-	<ItemGroup>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Testing\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-		<AssemblyInfo Include="Item">
-			<File>$(MSBuildProjectDirectory)\Rhino.Testing.Tests\Properties\AssemblyInfo.cs</File>
-		</AssemblyInfo>
-	</ItemGroup>
-
-	<ItemGroup>
-		<TestAssembly Include="$(OutDir)\Rhino.Testing.Tests.dll"/>
-	</ItemGroup>
-
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>	
-</Project>
+</project>

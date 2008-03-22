@@ -1,53 +1,23 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Project 
-		DefaultTargets="Init"
-		 xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="nhibernate-query-generator"
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+	>
 
-	<PropertyGroup>
-		<ProjectName>NHibernate.Query.Generator</ProjectName>
-		<ShortName>NQG</ShortName>
-		<SolutionFile>NHibernate.Query.Generator.sln</SolutionFile>
-		<FlattenZipFile>True</FlattenZipFile>
-		<SectionId>87</SectionId>
-		<Version>1.9</Version>
-	</PropertyGroup>
-	<ItemGroup>
-			<AssemblyInfo Include="Item">
-				<File>NHibernate.Query.Generator\Properties\AssemblyInfo.cs</File>
-			</AssemblyInfo>
-			<AssemblyInfo Include="Item">
-				<File>NHibernate.Query.Generator.Tests\Properties\AssemblyInfo.cs</File>
-			</AssemblyInfo>	
-	</ItemGroup>
+	<property name="root.dir" value=".." />
+	<include buildfile="${root.dir}/common-project.xml" />
+
+	<fileset id="buildfiles.all">
+		<!-- Files have to be in dependency order -->
+		<include name="NHibernate.Query.Generator/default.build" />
+		<include name="NHibernate.Query.Generator.Model/default.build" />
+		<include name="NHibernate.Query.Generator.Tests/default.build" if="${common.testrunner.enabled}"/>
+		<include name="NHibernate.Query.Generator.Setup/default.build" />
+	</fileset>
+
+	<target name="build" depends="common.build" />
 	
-	<ItemGroup>
-		<SetupProject Include="NHibernate.Query.Generator.Setup\Product.wxs"/>
-	</ItemGroup>
-	
-	<Target Name="Init">
-		<SvnVersion LocalPath="." ToolPath="$(SharedLibsDir)\Tools\Subversion">
-			<Output TaskParameter="Revision"
-					PropertyName="Revision" />
-		</SvnVersion>
-		<Copy SourceFiles="@(SetupProject)"
-				  DestinationFiles="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')"/>
-		<FileUpdate Regex="REAL_VERSION" 
-					Files="@(SetupProject->'NHibernate.Query.Generator.Setup\%(Filename).g%(Extension)')" 
-					ReplacementText="$(Version).0.0" />
-		<MsBuild Projects="$(MSBuildProjectFile)"
-				  Targets="BuildAll"/>
-	</Target>
+	<target name="generate-assemblyinfo" depends="common.assemblyinfo" />
 
-	<ItemGroup>
-		<TestAssembly Include="$(OutDir)\NHibernate.Query.Generator.Tests.dll"/>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ZipFiles Include="$(OutDir)\*.dll"/>
-		<ZipFiles Include="$(OutDir)\*.exe"/>
-		<ZipFiles Include="$(OutDir)\*.config"/>
-	</ItemGroup>
-
-	<Import Project="$(MSBuildProjectDirectory)\..\Common.build.xml"/>
-
-</Project>
+</project>

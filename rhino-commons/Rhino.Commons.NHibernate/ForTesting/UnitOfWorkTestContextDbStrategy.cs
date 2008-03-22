@@ -27,7 +27,7 @@
 #endregion
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Win32;
@@ -121,7 +121,7 @@ namespace Rhino.Commons.ForTesting
             get { return databaseName; }
         }
 
-        public abstract Hashtable NHibernateProperties { get; }
+        public abstract IDictionary<string,string> NHibernateProperties { get; }
 
 
         public UnitOfWorkTestContext TestContext
@@ -167,11 +167,11 @@ namespace Rhino.Commons.ForTesting
             }
 
 
-            public override Hashtable NHibernateProperties
+            public override IDictionary<string,string> NHibernateProperties
             {
                 get
                 {
-                    Hashtable properties = new Hashtable();
+                    Dictionary<string,string> properties = new Dictionary<string,string>();
                     properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlServerCeDriver");
                     properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSqlCeDialect");
                     properties.Add(Environment.ConnectionProvider,
@@ -209,11 +209,11 @@ namespace Rhino.Commons.ForTesting
             }
 
 
-            public override Hashtable NHibernateProperties
+            public override IDictionary<string,string> NHibernateProperties
             {
                 get
                 {
-                    Hashtable properties = new Hashtable();
+                    Dictionary<string,string> properties = new Dictionary<string,string>();
                     properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlClientDriver");
                     properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSql2005Dialect");
                     properties.Add(Environment.ConnectionProvider,
@@ -325,11 +325,11 @@ namespace Rhino.Commons.ForTesting
                 get { return DatabaseEngine.SQLite; }
             }
 
-            public override Hashtable NHibernateProperties
+            public override IDictionary<string,string> NHibernateProperties
             {
                 get
                 {
-                    Hashtable properties = new Hashtable();
+                    Dictionary<string,string> properties = new Dictionary<string,string>();
                     properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SQLite20Driver");
                     properties.Add(Environment.Dialect, "NHibernate.Dialect.SQLiteDialect");
                     properties.Add(Environment.ConnectionProvider,

@@ -30,7 +30,7 @@
 using System;
 using Castle.ActiveRecord;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 
 namespace Rhino.Commons
 {

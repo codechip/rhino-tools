@@ -62,10 +62,9 @@ namespace Rhino.Testing.AutoMocking
 
 		void Kernel_ComponentModelCreated(Castle.Core.ComponentModel model)
 		{
-			if (model.CustomComponentActivator == null)
-			{
-				model.CustomComponentActivator = typeof(AutoMockingComponentActivator);
-			}
+			if (model.CustomComponentActivator!=null)
+				return;
+			model.CustomComponentActivator = typeof(AutoMockingComponentActivator);
 		}
 
 		private void AddComponentIfMissing<T>()

@@ -1006,7 +1006,7 @@
             </summary>
             <param name="model"></param>
         </member>
-        <member name="M:Castle.MicroKernel.Handlers.DefaultGenericHandler.CloneParentProperties(Castle.MicroKernel.CreationContext,Castle.Core.ComponentModel)">
+        <member name="M:Castle.MicroKernel.Handlers.DefaultGenericHandler.CloneParentProperties(Castle.Core.ComponentModel)">
             <summary>
             Clone some of the parent componentmodel properties to the generic subhandler.
             </summary>
@@ -1021,7 +1021,6 @@
             </item>
             </list>
             </remarks>
-            <param name="context">The parent context</param>
             <param name="newModel">the subhandler</param>
         </member>
         <member name="T:Castle.MicroKernel.Handlers.DefaultHandler">
@@ -1681,160 +1680,443 @@
             <param name="createOnDemand">true if the options should be created if not present.</param>
             <returns>The associated proxy options for the component model.</returns>
         </member>
-        <member name="T:Castle.MicroKernel.Registration.ComponentRegistration`2">
+        <member name="T:Castle.MicroKernel.Registration.AllTypesOf`1">
             <summary>
-            
+            Describes a set of components to register in the kernel.
             </summary>
-            <typeparam name="S">The service type</typeparam>
-            <typeparam name="T">The chaining type</typeparam>
+            <typeparam name="T">The base type to match against.</typeparam>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.#ctor(Castle.MicroKernel.IKernel,`1)">
+        <member name="M:Castle.MicroKernel.Registration.AllTypesOf`1.FromAssembly(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/> class.
+            Prepares to register types from an assembly.
+            </summary>
+            <param name="assemblyName">The assembly name.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.TypesDescriptor`1"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypesOf`1.FromAssembly(System.Reflection.Assembly)">
+            <summary>
+            Prepares to register types from an assembly.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.TypesDescriptor`1"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypesOf`1.From(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Prepares to register types from a list of types.
+            </summary>
+            <param name="types">The list of types.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.TypesDescriptor`1"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypesOf`1.Pick(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Prepares to register types from a list of types.
+            </summary>
+            <param name="types">The list of types.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.TypesDescriptor`1"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypesOf`1.From(System.Type[])">
+            <summary>
+            Prepares to register types from a list of types.
+            </summary>
+            <param name="types">The list of types.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.TypesDescriptor`1"/></returns>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.AllTypes">
+            <summary>
+            Describes a set of components to register in the kernel.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.ServiceDescriptor`1">
+            <summary>
+            Describes how to select a types service.
+            </summary>
+            <typeparam name="T">The base type to match against.</typeparam>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor`1.Base">
+            <summary>
+            Uses the base type matched on.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor`1.FirstInterface">
+            <summary>
+            Uses the first interface of a type.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor`1.Select(Castle.MicroKernel.Registration.ServiceDescriptor{`0}.ServiceSelector)">
+            <summary>
+            Assigns a custom service selection strategy.
+            </summary>
+            <param name="selector"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.TypesDescriptor`1">
+            <summary>
+            Describes how to register a group of types.
+            </summary>
+            <typeparam name="T">The The base type to match against.</typeparam>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.IRegistration">
+            <summary>
+            The contract for all registrations with the kernel.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.IRegistration.Register(Castle.MicroKernel.IKernel)">
+            <summary>
+            Performs the registration in the <see cref="T:Castle.MicroKernel.IKernel"/>.
             </summary>
             <param name="kernel">The kernel.</param>
-            <param name="chain">The chain</param>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithOverwrite">
+        <member name="M:Castle.MicroKernel.Registration.TypesDescriptor`1.#ctor(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Initializes a new instance of the TypesDescriptor.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.TypesDescriptor`1.If(System.Predicate{System.Type})">
+            <summary>
+            Assigns a conditional predication which must be satisfied.
+            </summary>
+            <param name="ifFilter">The predicate to satisfy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.TypesDescriptor`1.Unless(System.Predicate{System.Type})">
+            <summary>
+            Assigns a conditional predication which must not be satisfied. 
+            </summary>
+            <param name="unlessFilter">The predicate not to satisify.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.TypesDescriptor`1.Configure(System.Action{Castle.MicroKernel.Registration.ComponentRegistration})">
+            <summary>
+            Allows customized configurations of each matching type.
+            </summary>
+            <param name="configurer">The configuration action.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.TypesDescriptor`1.WithService">
+            <summary>
+            Gets the service descriptor.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.For(System.Type)">
+            <summary>
+            Creates a component registration for the <paramref name="serviceType"/>
+            </summary>
+            <param name="serviceType">Type of the service.</param>
+            <returns>The component registration.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.For``1">
+            <summary>
+            Creates a component registration for the service type.
+            </summary>
+            <returns>The component registration.</returns>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.ComponentRegistration`1">
+            <summary>
+            Registration for a single component with the kernel.
+            </summary>
+            <typeparam name="S">The service type</typeparam>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.OverWrite">
             <summary>
             With the overwrite.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithName(System.String)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Named(System.String)">
             <summary>
             With the name.
             </summary>
             <param name="name">The name.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithInstance(`0)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Instance(`0)">
             <summary>
             With the instance.
             </summary>
             <param name="instance">The instance.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithActivator``1">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Activator``1">
             <summary>
             With the activator.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithExtendedProperties(Castle.MicroKernel.Registration.Property[])">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ExtendedProperties(Castle.MicroKernel.Registration.Property[])">
             <summary>
             With the extended properties.
             </summary>
             <param name="properties">The properties.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithExtendedProperties(System.Object)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ExtendedProperties(System.Object)">
             <summary>
             With the extended properties.
             </summary>
             <param name="anonymous">The properties.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(Castle.MicroKernel.Registration.Property[])">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.CustomDependencies(Castle.MicroKernel.Registration.Property[])">
             <summary>
             With the custom dependencies.
             </summary>
             <param name="dependencies">The dependencies.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(System.Collections.IDictionary)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.CustomDependencies(System.Collections.IDictionary)">
             <summary>
             With the custom dependencies.
             </summary>
             <param name="dependencies">The dependencies.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithCustomDependencies(System.Object)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.CustomDependencies(System.Object)">
             <summary>
             With the custom dependencies.
             </summary>
             <param name="anonymous">The dependencies.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(Castle.MicroKernel.Registration.ServiceOverride[])">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ServiceOverrides(Castle.MicroKernel.Registration.ServiceOverride[])">
             <summary>
             With the service overrides.
             </summary>
             <param name="overrides">The overrides.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(System.Collections.IDictionary)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ServiceOverrides(System.Collections.IDictionary)">
             <summary>
             With the service overrides.
             </summary>
             <param name="overrides">The overrides.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithServiceOverrides(System.Object)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ServiceOverrides(System.Object)">
             <summary>
             With the service overrides.
             </summary>
             <param name="anonymous">The overrides.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.WithInterceptors(Castle.Core.InterceptorReference[])">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Parameters(Castle.MicroKernel.Registration.Parameter[])">
+            <summary>
+            With the configuration parameters.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Interceptors(Castle.Core.InterceptorReference[])">
             <summary>
             With the interceptors.
             </summary>
             <param name="interceptors">The interceptors.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AsStartable">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Startable">
             <summary>
             Ases the startable.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddComponentEx``1">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Castle#MicroKernel#Registration#IRegistration#Register(Castle.MicroKernel.IKernel)">
             <summary>
-            Registers the current component and add another.
+            Registers this component with the <see cref="T:Castle.MicroKernel.IKernel"/>.
             </summary>
-            <typeparam name="SS"></typeparam>
-            <returns></returns>
+            <param name="kernel">The kernel.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.Register">
-            <summary>
-            Registers this instance.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.BuildComponentModel">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.BuildComponentModel(Castle.MicroKernel.IKernel)">
             <summary>
             Builds the component model.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddAttributeDescriptor(System.String,System.String)">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.AddAttributeDescriptor(System.String,System.String)">
             <summary>
             Adds the attribute descriptor.
             </summary>
-            <param name="name">The name.</param>
+            <param name="key">The key.</param>
             <param name="value">The value.</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`2.AddDescriptor(Castle.MicroKernel.Registration.ComponentDescriptor{`0,`1})">
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.AddDescriptor(Castle.MicroKernel.Registration.ComponentDescriptor{`0})">
             <summary>
             Adds the descriptor.
             </summary>
             <param name="descriptor">The descriptor.</param>
             <returns></returns>
         </member>
-        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`2.Proxy">
+        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`1.Proxy">
             <summary>
             Gets the proxy.
             </summary>
             <value>The proxy.</value>
         </member>
-        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`2.WithLifestyle">
+        <member name="P:Castle.MicroKernel.Registration.ComponentRegistration`1.LifeStyle">
             <summary>
             Gets the with lifestyle.
             </summary>
             <value>The with lifestyle.</value>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.Parameter">
+            <summary>
+            Represents a configuration parameter.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Parameter.ForKey(System.String)">
+            <summary>
+            Create a <see cref="T:Castle.MicroKernel.Registration.ParameterKey"/> with key.
+            </summary>
+            <param name="key">The parameter key.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ParameterKey"/></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.Parameter.Key">
+            <summary>
+            Gets the parameter key.
+            </summary>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.Parameter.Value">
+            <summary>
+            Gets the parameter value.
+            </summary>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.Parameter.ConfigNode">
+            <summary>
+            Gets the parameter configuration.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.ParameterKey">
+            <summary>
+            Represents a parameter key.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ParameterKey.Eq(System.String)">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.Parameter"/> with key/value.
+            </summary>
+            <param name="value">The parameter value.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.Parameter"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ParameterKey.Eq(Castle.Core.Configuration.IConfiguration)">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.Parameter"/> with key/config.
+            </summary>
+            <param name="configNode">The parameter configuration.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.Parameter"/></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.ParameterKey.Name">
+            <summary>
+            The parameter key name.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.Property">
+            <summary>
+            Represents a key/value pair.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Property.ForKey(System.String)">
+            <summary>
+            Create a <see cref="T:Castle.MicroKernel.Registration.PropertyKey"/> with key.
+            </summary>
+            <param name="key">The property key.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.PropertyKey"/></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.Property.Key">
+            <summary>
+            Gets the property key.
+            </summary>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.Property.Value">
+            <summary>
+            Gets the property value.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.PropertyKey">
+            <summary>
+            Represents a property key.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.PropertyKey.Eq(System.Object)">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.Property"/> with key/value.
+            </summary>
+            <param name="value">The property value.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.Property"/></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.PropertyKey.Name">
+            <summary>
+            The property key name.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.ServiceOverride">
+            <summary>
+            Represents a service override.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverride.ForKey(System.String)">
+            <summary>
+            Creates a <see cref="T:Castle.MicroKernel.Registration.ServiceOverrideKey"/> with key.
+            </summary>
+            <param name="key">The service override key.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverrideKey"/></returns>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.ServiceOverride.Type">
+            <summary>
+            Gets the optional value type specifier.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.ServiceOverrideKey">
+            <summary>
+            Represents a service override key.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverrideKey.Eq(System.String)">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/> with key/value.
+            </summary>
+            <param name="value">The service overeride value.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverrideKey.Eq(System.String[])">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/> with key/values.
+            </summary>
+            <param name="value">The service overeride values.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverrideKey.Eq``1(System.String[])">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/> with key/values.
+            </summary>
+            <param name="value">The service overeride values.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/></returns>
+            <typeparam name="V">The value type.</typeparam>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverrideKey.Eq(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/> with key/values.
+            </summary>
+            <param name="value">The service overeride values.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceOverrideKey.Eq``1(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/> with key/values.
+            </summary>
+            <param name="value">The service overeride values.</param>
+            <returns>The new <see cref="T:Castle.MicroKernel.Registration.ServiceOverride"/></returns>
+            <typeparam name="V">The value type.</typeparam>
+        </member>
+        <member name="P:Castle.MicroKernel.Registration.ServiceOverrideKey.Name">
+            <summary>
+            Gets the service override key name.
+            </summary>
         </member>
         <member name="T:Castle.MicroKernel.Releasers.AllComponentsReleasePolicy">
             <summary>
@@ -3169,21 +3451,13 @@
             <param name="instance"></param>
             <param name="classType"></param>
         </member>
-        <member name="M:Castle.MicroKernel.IKernel.AddComponentEx(System.Type)">
+        <member name="M:Castle.MicroKernel.IKernel.Register(Castle.MicroKernel.Registration.IRegistration[])">
             <summary>
-            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
-            using a fluent interface.
+            Registers the components provided by the <see cref="T:Castle.MicroKernel.Registration.IRegistration"/>s
+            with the <see cref="T:Castle.MicroKernel.IKernel"/>.
+            <param name="registrations">The component registrations.</param>
+            <returns>The kernel.</returns>
             </summary>
-            <param name="serviceType">The service type.</param>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
-        </member>
-        <member name="M:Castle.MicroKernel.IKernel.AddComponentEx``1">
-            <summary>
-            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
-            using a fluent interface.
-            </summary>
-            <typeparam name="S">The service <see cref="T:System.Type"/> to manage.</typeparam>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
         <member name="M:Castle.MicroKernel.IKernel.RemoveComponent(System.String)">
             <summary>
@@ -3795,21 +4069,13 @@
             <param name="serviceType"></param>
             <param name="instance"></param>
         </member>
-        <member name="M:Castle.MicroKernel.DefaultKernel.AddComponentEx(System.Type)">
+        <member name="M:Castle.MicroKernel.DefaultKernel.Register(Castle.MicroKernel.Registration.IRegistration[])">
             <summary>
-            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
-            using a fluent interface.
+            Registers the components described by the <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`1"/>s
+            with the <see cref="T:Castle.MicroKernel.IKernel"/>.
+            <param name="registrations">The component registrations.</param>
+            <returns>The kernel.</returns>
             </summary>
-            <param name="serviceType">The service type.</param>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
-        </member>
-        <member name="M:Castle.MicroKernel.DefaultKernel.AddComponentEx``1">
-            <summary>
-            Adds a component to be registered with the <see cref="T:Castle.MicroKernel.IKernel"/> 
-            using a fluent interface.
-            </summary>
-            <typeparam name="S">The service <see cref="T:System.Type"/> to manage.</typeparam>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
         <member name="M:Castle.MicroKernel.DefaultKernel.Resolve``1(System.Collections.IDictionary)">
             <summary>

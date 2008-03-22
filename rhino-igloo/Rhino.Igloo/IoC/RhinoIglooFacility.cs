@@ -39,7 +39,7 @@ using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using log4net;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 
 namespace Rhino.Igloo
 {

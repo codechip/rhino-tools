@@ -27,14 +27,13 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
 using Castle.ActiveRecord.Queries;
 using NHibernate.Cfg;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using NHibernate.Query.Generator.Tests.ActiveRecord;
 using NHibernate.SqlCommand;
 using NHibernate.Tool.hbm2ddl;
@@ -474,7 +473,7 @@ namespace NHibernate.Query.Generator.Tests
 		{
 			InPlaceConfigurationSource source = new LazyInPlaceConfigurationSource();
 
-			Hashtable properties = new Hashtable();
+			Dictionary<string,string> properties = new Dictionary<string,string>();
 
 			properties.Add("show_sql", "true");
 

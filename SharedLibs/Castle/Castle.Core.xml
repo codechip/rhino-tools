@@ -2454,7 +2454,7 @@
             </summary>
             <param name="serviceType">Type of the service.</param>
         </member>
-        <member name="M:Castle.Core.InterceptorReference.WithKey(System.String)">
+        <member name="M:Castle.Core.InterceptorReference.ForKey(System.String)">
             <summary>
             Gets an <see cref="T:Castle.Core.InterceptorReference"/> for the component key.
             </summary>
@@ -2546,6 +2546,12 @@
             An <see cref="T:System.Collections.IEnumerator"/>
             that can be used to iterate through the collection.
             </returns>
+        </member>
+        <member name="M:Castle.Core.InterceptorReferenceCollection.AddIfNotInCollection(Castle.Core.InterceptorReference)">
+            <summary>
+            Adds the interceptor to the end of the interceptors list if it does not exist already.
+            </summary>
+            <param name="interceptorReference">The interceptor reference.</param>
         </member>
         <member name="P:Castle.Core.InterceptorReferenceCollection.HasInterceptors">
             <summary>

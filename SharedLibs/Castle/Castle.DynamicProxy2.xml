@@ -315,6 +315,11 @@
             that the whole process is completed.
             </summary>
         </member>
+        <member name="T:Castle.DynamicProxy.CacheMappingsAttribute">
+            <summary>
+            Applied to the assemblies saved by <see cref="T:Castle.DynamicProxy.ModuleScope"/> in order to persist the cache data included in the persisted assembly.
+            </summary>
+        </member>
         <member name="T:Castle.DynamicProxy.IProxyBuilder">
             <summary>
             Abstracts the implementation of proxy constructions
@@ -507,6 +512,17 @@
             <exception cref="T:System.InvalidOperationException">No assembly has been generated that matches the <paramref name="strongNamed"/> parameter.
             </exception>
             <returns>The path of the generated assembly file, or null if no file has been generated.</returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.ModuleScope.LoadAssemblyIntoCache(System.Reflection.Assembly)">
+            <summary>
+            Loads the generated types from the given assembly into this <see cref="T:Castle.DynamicProxy.ModuleScope"/>'s cache.
+            </summary>
+            <param name="assembly">The assembly to load types from. This assembly must have been saved via <see cref="M:Castle.DynamicProxy.ModuleScope.SaveAssembly(System.Boolean)"/> or
+            <see cref="M:Castle.DynamicProxy.ModuleScope.SaveAssembly"/>, or it must have the <see cref="T:Castle.DynamicProxy.CacheMappingsAttribute"/> manually applied.</param>
+            <remarks>
+            This method can be used to load previously generated and persisted proxy types from disk into this scope's type cache, eg. in order
+            to avoid the performance hit associated with proxy generation.
+            </remarks>
         </member>
         <member name="P:Castle.DynamicProxy.ModuleScope.RWLock">
             <summary>

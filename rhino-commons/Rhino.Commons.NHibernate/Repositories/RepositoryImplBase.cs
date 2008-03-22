@@ -31,7 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using NHibernate.Transform;
 
 namespace Rhino.Commons

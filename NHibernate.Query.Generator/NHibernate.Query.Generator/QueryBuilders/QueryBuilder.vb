@@ -1,4 +1,4 @@
-Imports NHibernate.Expressions
+Imports NHibernate.Criterion
 Imports System
 Imports System.Collections
 Imports System.Collections.Generic

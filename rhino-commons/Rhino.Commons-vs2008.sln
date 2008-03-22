@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons-vs2008", "Rhino.Commons\Rhino.Commons-vs2008.csproj", "{F6321543-E1EC-4999-A562-D9F060C8E3DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Test-vs2008", "Rhino.Commons.Test\Rhino.Commons.Test-vs2008.csproj", "{EE98519D-104D-4A31-ADD8-82C5F836018C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.ActiveRecord-vs2008", "Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord-vs2008.csproj", "{2B796A66-19FC-4E72-BB02-DC16D878725A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Clr-vs2008", "Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj", "{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.NHibernate-v2008", "Rhino.Commons.NHibernate\Rhino.Commons.NHibernate-v2008.csproj", "{BF4E220E-5AF8-4448-ABA9-981D69AB8775}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Start|Any CPU = Start|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.Build.0 = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Start|Any CPU.ActiveCfg = Start|Any CPU
+		{EE98519D-104D-4A31-ADD8-82C5F836018C}.Start|Any CPU.Build.0 = Start|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{2B796A66-19FC-4E72-BB02-DC16D878725A}.Start|Any CPU.Build.0 = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.Build.0 = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

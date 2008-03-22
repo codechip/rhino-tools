@@ -14,6 +14,7 @@ namespace Rhino.Commons.Test.Binsor
 	public class BinsorStreamTestCase 
 	{
 		private IWindsorContainer _container;
+		
 		[SetUp]
 		public void TestInitialize()
 		{

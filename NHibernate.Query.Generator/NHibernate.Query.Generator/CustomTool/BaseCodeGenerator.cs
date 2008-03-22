@@ -107,7 +107,7 @@ namespace CustomToolGenerator {
         /// main method that the VS shell calls to do the generation
         /// </summary>
         /// <param name="wszInputFilePath">path to the input file</param>
-        /// <param name="bstrInputFileContents">contents of the input file as a string (shell handles UTF-8 to Unicode & those types of conversions)</param>
+        /// <param name="bstrInputFileContents">contents of the input file as a string (shell handles UTF-8 to Unicode and those types of conversions)</param>
         /// <param name="wszDefaultNamespace">default namespace for the generated code file</param>
         /// <param name="rgbOutputFileContents">byte-array of output file contents</param>
         /// <param name="pcbOutput">count of bytes in the output byte-array</param>

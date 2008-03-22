@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyUtil.cs" />
     <Compile Include="Collection.cs" />
     <Compile Include="DateUtil.cs" />
     <Compile Include="DelegateDefinations.cs" />

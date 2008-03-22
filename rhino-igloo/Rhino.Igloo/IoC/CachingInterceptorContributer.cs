@@ -34,7 +34,7 @@ using Castle.Core;
 using Castle.Core.Interceptor;
 using Castle.MicroKernel;
 using Castle.MicroKernel.ModelBuilder;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using Rhino.Commons;
 
 namespace Rhino.Igloo

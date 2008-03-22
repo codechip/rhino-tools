@@ -94,7 +94,7 @@ namespace NHibernate.Query.Generator.Tests
 								   (Where.Canistar.State == CanistarState.Packager &&
 									Where.Canistar.DateOffset < new DateTime(2007, 12, 20)
 								   );
-			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration<12/20/2007 00:00:00) or (State = Packager and DateOffset<12/20/2007 00:00:00)))";
+			string expected = "DetachableCriteria(((State = Packager and Lot.Expiration < 12/20/2007 00:00:00) or (State = Packager and DateOffset < 12/20/2007 00:00:00)))";
 			Assert.AreEqual(expected, builder.ToDetachedCriteria().ToString());
 		}
 	}

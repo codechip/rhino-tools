@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using MbUnit.Framework;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
