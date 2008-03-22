@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -29,61 +29,54 @@
 #endregion
 
 using System;
-using System.Collections;
-using Castle.ActiveRecord;
-using NHibernate;
-using NHibernate.Criterion;
+using System.IO;
+using System.Text;
+using System.Reflection;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.Binsor
 {
-	public class ActiveRecordCriteriaBatch : CriteriaBatch, IActiveRecordQuery<IList>
+	public static class BinsorScript
 	{
-		private Type rootType = null;
-
-		public Type RootType
+		public static BinsorFileInstaller FromFile(string fileName)
 		{
-			get { return rootType; }
+			return new BinsorFileInstaller(fileName);
 		}
 
-		public override CriteriaBatch Add(DetachedCriteria criteria)
+		public static BinsorStreamInstaller FromStream(Stream stream)
 		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria);
+			return new BinsorStreamInstaller(stream);
 		}
 
-		public override CriteriaBatch Add(DetachedCriteria criteria,
-		                                  Order order)
+		public static BinsorStreamInstaller Inline(string script)
 		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria, order);
+			return FromStream(new MemoryStream(ASCIIEncoding.ASCII.GetBytes(script)));
+		}		
+		
+		public static BinsorRunnerInstaller FromCompiledAssembly(string assemblyName)
+		{
+			return FromCompiledAssembly(AssemblyUtil.LoadAssembly(assemblyName));
 		}
 
-		public override IList Execute()
+		public static BinsorRunnerInstaller FromCompiledAssembly(Assembly assembly)
 		{
-			return (IList) ActiveRecordBase.ExecuteQuery(this);
-		}
-
-		IList IActiveRecordQuery<IList>.Execute(ISession session)
-		{
-			return base.Execute(session);
-		}
-
-		public new object Execute(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		public IEnumerable Enumerate(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		private void EnsureRootTypeIsAvailable(DetachedCriteria criteria)
-		{
-			if (rootType == null)
+			foreach(Type type in assembly.GetExportedTypes())
 			{
-				rootType = criteria.CriteriaClass;
+				if (type.IsClass && !type.IsAbstract &&
+					typeof(IConfigurationRunner).IsAssignableFrom(type))
+				{
+					IConfigurationRunner runner = (IConfigurationRunner) Activator.CreateInstance(type);
+					return FromRunner(runner);
+				}
 			}
+			
+			throw new ArgumentException(
+				string.Format("Assembly {0} does not appear to be a Binsor assembly",
+				assembly.FullName));
 		}
+
+		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
+		{
+			return new BinsorRunnerInstaller(runner);
+		}	
 	}
 }

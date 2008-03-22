@@ -1,4 +1,5 @@
 ﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,55 +25,43 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
-
 using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+using System.IO;
+using Castle.Windsor;
 
-namespace Rhino.Commons.Test
+namespace Rhino.Commons.Binsor
 {
-	[TestFixture]
-	public class UnitOfWorkTests
-	{
-		[Test]
-		public void CanNestUnitOfWork()
+	public class BinsorStreamInstaller : BinsorScriptInstaller<BinsorStreamInstaller>
+	{	
+		private string name;
+		private readonly Stream stream;
+
+		public BinsorStreamInstaller(Stream stream)
 		{
-			IUnitOfWork first = UnitOfWork.Start();
-			Assert.AreEqual(first, UnitOfWork.Current);
-			Assert.AreEqual(((NHibernateUnitOfWorkAdapter)first).Session,
-			                UnitOfWork.CurrentNHibernateSession);
-			
-			IUnitOfWork second = UnitOfWork.Start(UnitOfWorkNestingOptions.CreateNewOrNestUnitOfWork);
-			Assert.AreEqual(second, UnitOfWork.Current);
-			Assert.AreEqual(((NHibernateUnitOfWorkAdapter)second).Session,
-			                UnitOfWork.CurrentNHibernateSession);
-			
-			second.Dispose();
-			Assert.AreEqual(first, UnitOfWork.Current);
-			Assert.AreEqual(((NHibernateUnitOfWorkAdapter)first).Session,
-							UnitOfWork.CurrentNHibernateSession);
-			first.Dispose();
-			Assert.IsNull(Local.Data[UnitOfWork.CurrentNHibernateSessionKey]);
+			this.stream = stream;
 		}
 
-		[Test]
-		public void CanUseUnitOfWorkInMultiplyStarts()
+		public BinsorStreamInstaller Named(string name)
 		{
-			using(IUnitOfWork first = UnitOfWork.Start())
-			{
-				Assert.AreEqual(first, UnitOfWork.Current);
-			
-				using(UnitOfWork.Start())
-				{
-					Assert.AreEqual(first, UnitOfWork.Current);
-				}
-				Assert.AreEqual(first, UnitOfWork.Current);
-			}
-			Assert.IsNull(Local.Data[UnitOfWork.CurrentNHibernateSessionKey]);
+			this.name = name;
+			return this;
+		}
 		
+		protected override void InstallInto(IWindsorContainer container)
+		{
+			BooReader.Read(container, stream, GenerationOptions, GetName(), EnvironmentName);
+		}
+		
+		protected string GetName()
+		{
+			if (string.IsNullOrEmpty(name))
+			{
+				return "Binsor" + Guid.NewGuid();
+			}
+			return name;
 		}
 	}
 }

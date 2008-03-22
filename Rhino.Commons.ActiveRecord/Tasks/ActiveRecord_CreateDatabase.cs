@@ -90,7 +90,7 @@ namespace Rhino.Commons.Tasks
 			try
 			{
 				InPlaceConfigurationSource src = new InPlaceConfigurationSource();
-				Hashtable cfg = new Hashtable();
+				IDictionary<string,string> cfg = new Dictionary<string,string>();
 				cfg[Environment.Dialect] = dialect;
 				cfg[Environment.ConnectionDriver] = driver;
 				cfg[Environment.ConnectionString] = connectionString;

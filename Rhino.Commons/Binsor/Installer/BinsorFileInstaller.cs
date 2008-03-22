@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -28,62 +28,22 @@
 
 #endregion
 
-using System;
-using System.Collections;
-using Castle.ActiveRecord;
-using NHibernate;
-using NHibernate.Criterion;
+using Castle.Windsor;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.Binsor
 {
-	public class ActiveRecordCriteriaBatch : CriteriaBatch, IActiveRecordQuery<IList>
+	public class BinsorFileInstaller : BinsorScriptInstaller<BinsorFileInstaller>
 	{
-		private Type rootType = null;
+		private readonly string fileName;
 
-		public Type RootType
+		public BinsorFileInstaller(string fileName)
 		{
-			get { return rootType; }
+			this.fileName = fileName;
 		}
 
-		public override CriteriaBatch Add(DetachedCriteria criteria)
+		protected override void InstallInto(IWindsorContainer container)
 		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria);
-		}
-
-		public override CriteriaBatch Add(DetachedCriteria criteria,
-		                                  Order order)
-		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria, order);
-		}
-
-		public override IList Execute()
-		{
-			return (IList) ActiveRecordBase.ExecuteQuery(this);
-		}
-
-		IList IActiveRecordQuery<IList>.Execute(ISession session)
-		{
-			return base.Execute(session);
-		}
-
-		public new object Execute(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		public IEnumerable Enumerate(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		private void EnsureRootTypeIsAvailable(DetachedCriteria criteria)
-		{
-			if (rootType == null)
-			{
-				rootType = criteria.CriteriaClass;
-			}
+			BooReader.Read(container, fileName, EnvironmentName, GenerationOptions);
 		}
 	}
 }

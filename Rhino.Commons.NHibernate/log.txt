@@ -1,0 +1,56 @@
+NAnt 0.86 (Build 0.86.2898.0; beta1; 08/12/2007)
+Copyright (C) 2001-2007 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///F:/OSS/rhino-tools/rhino-commons/Rhino.Commons.NHibernate/default.build
+Target framework: Microsoft .NET Framework 3.5
+Target(s) specified: build 
+
+
+common.check-nant-version:
+
+
+common.find-tools:
+
+
+set-framework-configuration:
+
+
+set-net-3.5-framework-configuration:
+
+
+set-project-configuration:
+
+
+set-debug-project-configuration:
+
+
+common.init:
+
+
+init:
+
+
+common.set-assembly-attribute-values:
+
+
+common.generate-assemblyinfo:
+
+   [attrib] Setting file attributes for 1 files to Normal.
+  [asminfo] Generated file 'F:\OSS\rhino-tools\rhino-commons\Rhino.Commons.NHibernate\Properties\AssemblyInfo.cs'.
+
+generate-assemblyinfo:
+
+
+common.compile-dll:
+
+      [csc] Compiling 40 files to 'F:\OSS\rhino-tools\build\net-3.5\debug\Rhino.Commons.dll'.
+      [csc] error CS0016: Could not write to output file 'f:\OSS\rhino-tools\build\net-3.5\debug\Rhino.Commons.dll' -- '??Œš„Œ‰Š €‰ €”™˜…š ‚‰™„ Œ—…• €‡˜ ™„…€ –€ ™‰…™ ’Œ-‰ƒ‰ š„Œ‰Š €‡˜. '
+
+BUILD FAILED
+
+F:\OSS\rhino-tools\common-project.xml(127,5):
+External Program Failed: C:\WINDOWS\Microsoft.NET\Framework\v3.5\csc.exe (return code was 1)
+
+Total time: 1.6 seconds.
+

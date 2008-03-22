@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -28,62 +28,57 @@
 
 #endregion
 
-using System;
-using System.Collections;
-using Castle.ActiveRecord;
-using NHibernate;
-using NHibernate.Criterion;
+using Castle.MicroKernel;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.Binsor
 {
-	public class ActiveRecordCriteriaBatch : CriteriaBatch, IActiveRecordQuery<IList>
+	public abstract class BinsorScriptInstaller<T> : IWindsorInstaller
+		where T : BinsorScriptInstaller<T>
 	{
-		private Type rootType = null;
-
-		public Type RootType
+		private EnvironmentDelegate environment;
+		private BooReader.GenerationOptions options;
+		
+		public BinsorScriptInstaller()
 		{
-			get { return rootType; }
+			options = BooReader.GenerationOptions.Memory;
 		}
-
-		public override CriteriaBatch Add(DetachedCriteria criteria)
+		
+		public T GenerateAssembly()
 		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria);
+			options = BooReader.GenerationOptions.File;
+			return (T)this;
 		}
-
-		public override CriteriaBatch Add(DetachedCriteria criteria,
-		                                  Order order)
+		
+		public T Environment(EnvironmentDelegate environment)
 		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria, order);
+			this.environment = environment;
+			return (T)this;
 		}
-
-		public override IList Execute()
+		
+		protected BooReader.GenerationOptions GenerationOptions
 		{
-			return (IList) ActiveRecordBase.ExecuteQuery(this);
+			get { return options; }
 		}
-
-		IList IActiveRecordQuery<IList>.Execute(ISession session)
+		
+		protected string EnvironmentName
 		{
-			return base.Execute(session);
-		}
-
-		public new object Execute(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		public IEnumerable Enumerate(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		private void EnsureRootTypeIsAvailable(DetachedCriteria criteria)
-		{
-			if (rootType == null)
+			get
 			{
-				rootType = criteria.CriteriaClass;
+				return ( environment != null ) ? environment() : null;
 			}
 		}
+		
+		#region IWindsorInstaller Members
+
+		void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
+		{
+			InstallInto(container);
+		}
+
+		#endregion
+
+		protected abstract void InstallInto(IWindsorContainer container);
 	}
 }

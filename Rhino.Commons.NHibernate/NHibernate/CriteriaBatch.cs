@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NHibernate;
-using NHibernate.Expressions;
+using NHibernate.Criterion;
 using System.Collections;
 
 namespace Rhino.Commons

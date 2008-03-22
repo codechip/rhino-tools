@@ -28,7 +28,7 @@
 
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using Castle.ActiveRecord;
@@ -108,9 +108,9 @@ namespace Rhino.Commons.ForTesting
 			}
 		}
 
-		protected virtual Hashtable CreateProperties()
+		protected virtual IDictionary<string,string> CreateProperties()
 		{
-			Hashtable properties = new Hashtable();
+			Dictionary<string,string> properties = new Dictionary<string,string>();
 			properties.Add("hibernate.connection.driver_class", "NHibernate.Driver.SQLite20Driver");
 			properties.Add("hibernate.dialect", "NHibernate.Dialect.SQLiteDialect");
 			properties.Add("hibernate.connection.provider", "NHibernate.Connection.DriverConnectionProvider");

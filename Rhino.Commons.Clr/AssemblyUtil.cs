@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -25,65 +24,49 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #endregion
 
 using System;
-using System.Collections;
-using Castle.ActiveRecord;
-using NHibernate;
-using NHibernate.Criterion;
+using System.IO;
+using System.Reflection;
 
 namespace Rhino.Commons
 {
-	public class ActiveRecordCriteriaBatch : CriteriaBatch, IActiveRecordQuery<IList>
+	/// <summary>
+	/// Assembly helpers.
+	/// </summary>
+	public static class AssemblyUtil
 	{
-		private Type rootType = null;
-
-		public Type RootType
+		/// <summary>
+		/// Loads the assembly with the supplied assembly name.
+		/// </summary>
+		/// <param name="assemblyName">The assembly name.</param>
+		/// <returns>The loaded assembly.</returns>
+		public static Assembly LoadAssembly(string assemblyName)
 		{
-			get { return rootType; }
-		}
+			Assembly assembly;
+			String extension = Path.GetExtension(assemblyName);
 
-		public override CriteriaBatch Add(DetachedCriteria criteria)
-		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria);
-		}
-
-		public override CriteriaBatch Add(DetachedCriteria criteria,
-		                                  Order order)
-		{
-			EnsureRootTypeIsAvailable(criteria);
-			return base.Add(criteria, order);
-		}
-
-		public override IList Execute()
-		{
-			return (IList) ActiveRecordBase.ExecuteQuery(this);
-		}
-
-		IList IActiveRecordQuery<IList>.Execute(ISession session)
-		{
-			return base.Execute(session);
-		}
-
-		public new object Execute(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		public IEnumerable Enumerate(ISession session)
-		{
-			return ((IActiveRecordQuery<IList>) this).Execute(session);
-		}
-
-		private void EnsureRootTypeIsAvailable(DetachedCriteria criteria)
-		{
-			if (rootType == null)
+			if (extension == ".dll" || extension == ".exe")
 			{
-				rootType = criteria.CriteriaClass;
+				string path = Path.GetDirectoryName(assemblyName);
+				
+				if (path == string.Empty || !Path.IsPathRooted(path) ||
+					path == AppDomain.CurrentDomain.BaseDirectory)
+				{
+					assembly = Assembly.Load(Path.GetFileNameWithoutExtension(assemblyName));
+				}
+				else
+				{
+					assembly = Assembly.LoadFile(assemblyName);
+				}
 			}
+			else
+			{
+				assembly = Assembly.Load(assemblyName);
+			}
+
+			return assembly;
 		}
 	}
 }

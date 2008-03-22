@@ -1,9 +1,9 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <SharedLibsDir>$(MSBuildProjectDirectory)\..\..\SharedLibs</SharedLibsDir>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -20,6 +20,26 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,7 +86,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Windsor.dll</HintPath>
     </Reference>
@@ -111,10 +131,13 @@
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
+    <Compile Include="Binsor\Installer\BinsorScript.cs" />
     <Compile Include="Binsor\BinsorGlobalMethods.cs" />
     <Compile Include="Binsor\ComponentReference.cs" />
     <Compile Include="Binsor\Configuration\AttributeBuilder.cs" />
     <Compile Include="Binsor\Configuration\ChildBuilder.cs" />
+    <Compile Include="Binsor\Installer\BinsorScriptInstaller.cs" />
+    <Compile Include="Binsor\Installer\BinsorFileInstaller.cs" />
     <Compile Include="Binsor\Extend.cs" />
     <Compile Include="Binsor\Extensions\ConfigurationExtension.cs" />
     <Compile Include="Binsor\Configuration\ConfigurationHelper.cs" />
@@ -130,6 +153,8 @@
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
     <Compile Include="Binsor\IComponentExtension.cs" />
     <Compile Include="Binsor\INeedSecondPassRegistration.cs" />
+    <Compile Include="Binsor\Installer\BinsorStreamInstaller.cs" />
+    <Compile Include="Binsor\Installer\BinsorRunnerInstaller.cs" />
     <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorToplevelMacro.cs" />
@@ -171,9 +196,26 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
-      <Name>Rhino.Commons.Clr</Name>
+      <Name>Rhino.Commons.Clr-vs2008</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />

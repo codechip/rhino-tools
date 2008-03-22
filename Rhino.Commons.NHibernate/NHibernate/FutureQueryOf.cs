@@ -3,7 +3,7 @@ namespace Rhino.Commons
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
-	using global::NHibernate.Expressions;
+	using global::NHibernate.Criterion;
 
 	/// <summary>
 	/// Hold the future of a query, when you try to iterate over

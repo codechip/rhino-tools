@@ -3,7 +3,7 @@ namespace Rhino.Commons.Test.NHibernate
 {
 	using System;
 	using System.IO;
-	using global::NHibernate.Expressions;
+	using global::NHibernate.Criterion;
 	using MbUnit.Framework;
 	using Repository;
 	using Rhino.Commons.ForTesting;

@@ -27,7 +27,7 @@
 #endregion
 
 
-using NHibernate.Expression;
+using NHibernate.Criterion;
 
 namespace Query
 {
