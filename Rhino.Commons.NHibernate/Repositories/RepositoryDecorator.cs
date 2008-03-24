@@ -290,5 +290,16 @@ namespace Rhino.Commons
 		{
 			return inner.CreateDetachedCriteria(alias);
 		}
+
+
+		public FutureValue<T> FutureGet(object id)
+		{
+			return inner.FutureGet(id);
+		}
+
+		public FutureValue<T> FutureLoad(object id)
+		{
+			return inner.FutureLoad(id);
+		}
 	}
 }

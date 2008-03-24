@@ -47,7 +47,7 @@ namespace Rhino.Commons
 			return (T)ActiveRecordMediator.FindByPrimaryKey(typeof(T),id, false);
 		}
 
-		/// <summary>
+    	/// <summary>
 		/// Load the entity from the persistance store
 		/// Will throw an exception if there isn't an entity that matches
 		/// the id.
