@@ -42,12 +42,12 @@ namespace Rhino.Commons
 
 		public T Get(object id)
 		{
-			return (T)Session.Get(typeof(T), id);
+			return (T)Session.Get(ConcreteType, id);
 		}
 
 		public T Load(object id)
 		{
-			return (T)Session.Load(typeof(T), id);
+			return (T)Session.Load(ConcreteType, id);
 		}
 
 		public void Delete(T entity)
@@ -57,7 +57,7 @@ namespace Rhino.Commons
 
 		public void DeleteAll()
 		{
-			Session.Delete(String.Format("from {0}", typeof(T).Name));
+			Session.Delete(String.Format("from {0}", ConcreteType.Name));
 		}
 
 		public void DeleteAll(DetachedCriteria where)

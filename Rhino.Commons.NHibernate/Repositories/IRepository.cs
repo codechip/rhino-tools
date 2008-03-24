@@ -418,5 +418,12 @@ namespace Rhino.Commons
 		/// <param name="alias">the alias</param>
 		/// <returns>The <see cref="DetachedCriteria"/></returns>
 		DetachedCriteria CreateDetachedCriteria(string alias);
+
+		/// <summary>
+		/// Create an instance of <typeparamref name="T"/>, mapping it to the concrete class 
+		/// if needed
+		/// </summary>
+		/// <returns></returns>
+    	T Create(); 
     }
 }

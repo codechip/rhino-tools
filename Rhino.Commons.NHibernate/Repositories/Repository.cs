@@ -506,5 +506,16 @@ namespace Rhino.Commons
 		{
 			return InternalRepository.CreateDetachedCriteria(alias);
 		}
+
+
+		/// <summary>
+		/// Create an instance of <typeparamref name="T"/>, mapping it to the concrete class 
+		/// if needed
+		/// </summary>
+		/// <returns></returns>
+		public static T Create()
+    	{
+    		return InternalRepository.Create();
+    	}
     }
 }

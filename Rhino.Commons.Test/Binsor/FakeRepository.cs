@@ -363,5 +363,15 @@ namespace Rhino.Commons.Test.Binsor
 		{
 			return DetachedCriteria.For<T>(alias);
 		}
+
+		public K Create<K>()
+		{
+			throw new NotImplementedException();
+		}
+
+		public T Create()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
