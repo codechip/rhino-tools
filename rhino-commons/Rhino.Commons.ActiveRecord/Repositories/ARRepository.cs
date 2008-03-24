@@ -44,7 +44,7 @@ namespace Rhino.Commons
 		/// <returns>Either the entity that matches the id, or a null</returns>
 		public virtual T Get(object id)
 		{
-			return (T)ActiveRecordMediator.FindByPrimaryKey(typeof(T),id, false);
+			return (T)ActiveRecordMediator.FindByPrimaryKey(ConcreteType,id, false);
 		}
 
     	/// <summary>
@@ -56,7 +56,7 @@ namespace Rhino.Commons
 		/// <returns>The entity that matches the id</returns>
 		public virtual T Load(object id)
 		{
-			return (T)ActiveRecordMediator.FindByPrimaryKey(typeof(T),id, true);
+			return (T)ActiveRecordMediator.FindByPrimaryKey(ConcreteType,id, true);
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace Rhino.Commons
 		/// </summary>
 		public virtual void DeleteAll()
 		{
-			ActiveRecordMediator.DeleteAll(typeof (T));
+			ActiveRecordMediator.DeleteAll(ConcreteType);
 		}
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Rhino.Commons
         /// <param name="where">criteria condition to select the rows to be deleted</param>
         public void DeleteAll(DetachedCriteria where)
 		{
-            foreach (T entity in ActiveRecordMediator.FindAll(typeof(T), where))
+            foreach (T entity in ActiveRecordMediator.FindAll(ConcreteType, where))
             {
                 ActiveRecordMediator.Delete(entity);
             }
@@ -141,13 +141,13 @@ namespace Rhino.Commons
 
 		private ISession OpenSession()
 		{
-			return ActiveRecordMediator.GetSessionFactoryHolder().CreateSession(typeof (T));
+			return ActiveRecordMediator.GetSessionFactoryHolder().CreateSession(ConcreteType);
 		}
 
 
         protected override ISessionFactory SessionFactory
         {
-            get { return ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof (T)); }
+            get { return ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(ConcreteType); }
         }
 
 

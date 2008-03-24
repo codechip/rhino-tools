@@ -147,9 +147,29 @@ namespace Rhino.Commons.Test.Repository
         }
     }
 
-    [ActiveRecord]
-    public class Parent
-    {
+	public interface IParent
+	{
+		[PrimaryKey(PrimaryKeyType.Assigned)]
+		Guid Id { get; set; }
+
+		[Version(UnsavedValue = "-1")]
+		int Version { get; set; }
+
+		[Property]
+		int Age { get; set; }
+
+		[Property]
+		string Name { get; set; }
+
+		[HasMany(Cascade = ManyRelationCascadeEnum.AllDeleteOrphan, Fetch = FetchEnum.Join)]
+		IList<Child> Children { get; set; }
+
+		string ToString();
+	}
+
+	[ActiveRecord]
+    public class Parent : IParent
+	{
         private Guid id = Guid.NewGuid();
         private int version = -1;
         private string name;

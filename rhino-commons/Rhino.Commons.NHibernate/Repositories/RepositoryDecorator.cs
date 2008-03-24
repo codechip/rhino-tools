@@ -291,13 +291,17 @@ namespace Rhino.Commons
 			return inner.CreateDetachedCriteria(alias);
 		}
 
+		public virtual T Create()
+		{
+			return inner.Create();
+		}
 
-		public FutureValue<T> FutureGet(object id)
+		public virtual FutureValue<T> FutureGet(object id)
 		{
 			return inner.FutureGet(id);
 		}
 
-		public FutureValue<T> FutureLoad(object id)
+		public virtual FutureValue<T> FutureLoad(object id)
 		{
 			return inner.FutureLoad(id);
 		}

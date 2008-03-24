@@ -319,6 +319,21 @@ namespace Rhino.Commons.Test.Repository
             Assert.IsTrue(Repository<Parent>.Exists(WhereNameEquals(parentsInDb[0].Name)));
         }
 
+		[Test]
+		public void CanUseRepositoryToCreateInstanceOfType()
+		{
+			Parent parent = Repository<Parent>.Create();	
+			Assert.IsNotNull(parent);
+		}
+
+		[Test]
+		public void CanUseRepositoryToCreateInstanceOfType_MappedToAbstract()
+		{
+			IoC.Container.Kernel.GetHandler(typeof (IRepository<IParent>))
+				.AddCustomDependencyValue("ConcreteType", typeof (Parent));
+			Parent parent = Repository<IParent>.Create() as Parent;
+			Assert.IsNotNull(parent);
+		}
 
         private Order OrderByNameDecending
         {
