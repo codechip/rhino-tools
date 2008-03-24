@@ -44,6 +44,28 @@ namespace Rhino.Commons
             }
         }
 
+		/// <summary>
+		/// Get the entity from the persistance store, or return null
+		/// if it doesn't exist.
+		/// </summary>
+		/// <param name="id">The entity's id</param>
+		/// <returns>Either the entity that matches the id, or a null</returns>
+		public static FutureValue<T> FutureGet(object id)
+    	{
+    		return InternalRepository.FutureGet(id);
+    	}
+
+		/// <summary>
+		/// Get a future entity from the persistance store, or return null
+		/// if it doesn't exist.
+		/// Note that the null will be there when you resolve the FutureValue.Value property
+		/// </summary>
+		/// <param name="id">The entity's id</param>
+		/// <returns>A future for the value</returns>
+		public static FutureValue<T> FutureLoad(object id)
+    	{
+    		return InternalRepository.FutureLoad(id);
+    	}
 
     	/// <summary>
     	/// Get the entity from the persistance store, or return null

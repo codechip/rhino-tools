@@ -111,6 +111,20 @@ namespace Rhino.Commons.Test.Binsor
 			throw new NotImplementedException();
 		}
 
+		#region IRepository<T> Members
+
+		public FutureValue<T> FutureGet(object id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public FutureValue<T> FutureLoad(object id)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Load the entity from the persistance store
 		/// Will throw an exception if there isn't an entity that matches

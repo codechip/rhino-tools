@@ -71,13 +71,7 @@ namespace Rhino.Commons
 
         public virtual IList Execute()
         {
-            if (session == null)
-            {
-                throw new InvalidOperationException(
-                    "Session instance variable is null, you must use the Execute(ISession) overload instead");
-            }
-
-            return Execute(session);
+            return Execute(session ?? UnitOfWork.CurrentSession);
         }
 
         public virtual IList Execute(ISession theSession)

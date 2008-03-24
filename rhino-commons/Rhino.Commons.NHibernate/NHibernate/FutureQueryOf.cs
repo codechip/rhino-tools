@@ -13,9 +13,8 @@ namespace Rhino.Commons
 	/// their results are loaded in a single round trip.
 	/// </summary>
 	/// <typeparam name="TEntity"></typeparam>
-	public class FutureQueryOf<TEntity> : IEnumerable<TEntity>
+	public class FutureQueryOf<TEntity> : FutureBase, IEnumerable<TEntity>
 	{
-		private const string cacheKey = "future.of.entity.batch.key";
 		private ICollection<TEntity> results;
 		private int? totalCount;
 
@@ -39,16 +38,18 @@ namespace Rhino.Commons
 			switch (options)
 			{
 				case FutureQueryOptions.None:
-					criteriaBatch.OnRead<TEntity>(delegate(ICollection<TEntity> entities)
+					criteriaBatch.OnRead(delegate(ICollection<TEntity> entities)
 					{
 						results = entities;
+						WasLoaded = true;
 					});
 					break;
 				case FutureQueryOptions.WithTotalCount:
-					criteriaBatch.OnRead<TEntity>(delegate(ICollection<TEntity> entities, int count)
+					criteriaBatch.OnRead(delegate(ICollection<TEntity> entities, int count)
 					{
 						results = entities;
 						totalCount = count;
+						WasLoaded = true;
 					});
 					break;
 				default:
@@ -60,8 +61,8 @@ namespace Rhino.Commons
 		{
 			get
 			{
-				if (totalCount == null)
-					LoadBatchQuery();
+				if (WasLoaded == false)
+					ExecuteBatchQuery();
 				if (totalCount == null)
 					throw new InvalidOperationException("The future was not asked to load the total query as well, can't satisfy this requirement");
 				return totalCount.Value;
@@ -72,20 +73,9 @@ namespace Rhino.Commons
 		{
 			get
 			{
-				if (results == null)
-					LoadBatchQuery();
+				if (WasLoaded == false)
+					ExecuteBatchQuery();
 				return results;
-			}
-		}
-
-		private static CriteriaBatch Batcher
-		{
-			get
-			{
-				CriteriaBatch current = (CriteriaBatch) Local.Data[cacheKey];
-				if (current == null)
-					Local.Data[cacheKey] = current = new CriteriaBatch();
-				return current;
 			}
 		}
 
@@ -98,20 +88,9 @@ namespace Rhino.Commons
 
 		public IEnumerator GetEnumerator()
 		{
-			return ((IEnumerable<TEntity>) this).GetEnumerator();
+			return ((IEnumerable<TEntity>)this).GetEnumerator();
 		}
 
 		#endregion
-
-		private static void LoadBatchQuery()
-		{
-			Batcher.Execute(UnitOfWork.CurrentSession);
-			ClearBatcher();
-		}
-
-		private static void ClearBatcher()
-		{
-			Local.Data[cacheKey] = null;
-		}
 	}
 }

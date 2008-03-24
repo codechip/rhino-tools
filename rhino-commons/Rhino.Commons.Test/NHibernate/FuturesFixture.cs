@@ -9,7 +9,7 @@ namespace Rhino.Commons.Test.NHibernate
 	using Rhino.Commons.ForTesting;
 
 	[TestFixture]
-	public class FutureQueryOfFixture : TestFixtureBase
+	public class FuturesFixture : TestFixtureBase
 	{
 		[SetUp]
 		public void TestInitialize()
@@ -34,6 +34,21 @@ namespace Rhino.Commons.Test.NHibernate
 			CurrentContext.DisposeUnitOfWork();
 
 			Assert.AreEqual(0,  futureQueryOfChildren.Results.Count);
+		}
+
+		[Test]
+		public void CanGetFutureEntities()
+		{
+			FutureValue<Parent> futureParent = Repository<Parent>.FutureGet(Guid.NewGuid());
+			FutureValue<Child> futureChild = Repository<Child>.FutureGet(Guid.NewGuid());
+
+			Assert.IsNull(futureChild.Value);
+			//This also kills the database, because we use an in
+			// memory one ,so we ensure that the code is not 
+			// executing a second query
+			CurrentContext.DisposeUnitOfWork();
+
+			Assert.IsNull(futureParent.Value);
 		}
 	}
 }

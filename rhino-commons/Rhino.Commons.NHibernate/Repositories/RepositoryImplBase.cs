@@ -41,6 +41,31 @@ namespace Rhino.Commons
         private static readonly Order[] NullOrderArray = null;
 
 		/// <summary>
+		/// Get a future entity from the persistance store, or return null
+		/// if it doesn't exist.
+		/// Note that the null will be there when you resolve the FutureValue.Value property
+		/// </summary>
+		/// <param name="id">The entity's id</param>
+		/// <returns>A future for the value</returns>
+		public FutureValue<T> FutureGet(object id)
+		{
+			return new FutureValue<T>(id, FutureValueOptions.NullIfNotFound);
+		}
+
+		/// <summary>
+		/// A future of the entity loaded from the persistance store
+		/// Will throw an exception if there isn't an entity that matches
+		/// the id.
+		/// </summary>
+		/// <param name="id">The entity's id</param>
+		/// <returns>The entity that matches the id</returns>
+		public FutureValue<T> FutureLoad(object id)
+		{
+			return new FutureValue<T>(id, FutureValueOptions.ThrowIfNotFound);
+		}
+
+
+		/// <summary>
 		/// Creates a <see cref="DetachedCriteria"/> compatible with this Repository
 		/// </summary>
 		/// <returns>The <see cref="DetachedCriteria"/></returns>
