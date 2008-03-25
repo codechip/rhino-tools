@@ -26,7 +26,7 @@ namespace Rhino.Commons
 			this.options = options;
 			CriteriaBatch criteriaBatch = Batcher.Add(DetachedCriteria.For<TEntity>().Add(Restrictions.IdEq(id)));
 
-			criteriaBatch.OnRead(delegate(TEntity entity) 
+			criteriaBatch.OnRead<TEntity>(delegate(TEntity entity) 
 			{ 
 				value = entity;
 			    WasLoaded = true; 
