@@ -38,14 +38,14 @@ namespace Rhino.Commons
 			switch (options)
 			{
 				case FutureQueryOptions.None:
-					criteriaBatch.OnRead(delegate(ICollection<TEntity> entities)
+					criteriaBatch.OnRead<TEntity>(delegate(ICollection<TEntity> entities)
 					{
 						results = entities;
 						WasLoaded = true;
 					});
 					break;
 				case FutureQueryOptions.WithTotalCount:
-					criteriaBatch.OnRead(delegate(ICollection<TEntity> entities, int count)
+					criteriaBatch.OnRead<TEntity>(delegate(ICollection<TEntity> entities, int count)
 					{
 						results = entities;
 						totalCount = count;

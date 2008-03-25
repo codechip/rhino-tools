@@ -122,7 +122,7 @@ namespace Rhino.Commons
 		/// <returns>All the entities that match the criteria</returns>
 		public ICollection<T> FindAll(Order order, params ICriterion[] criteria)
 		{
-			return FindAll(new[] {order}, criteria);
+			return FindAll(new Order[] {order}, criteria);
 		}
 
 		/// <summary>
@@ -205,7 +205,7 @@ namespace Rhino.Commons
 		/// </summary>
 		public ICollection<T> FindAll(int firstResult, int numberOfResults, Order selectionOrder, params ICriterion[] criteria)
 		{
-			return FindAll(firstResult, numberOfResults, new[] {selectionOrder}, criteria);
+			return FindAll(firstResult, numberOfResults, new Order[] {selectionOrder}, criteria);
 		}
 
 
