@@ -29,7 +29,7 @@ namespace Rhino.Commons
 		{
 			get
 			{
-				var current = (CriteriaBatch) Local.Data[cacheKey];
+				CriteriaBatch current = (CriteriaBatch)Local.Data[cacheKey];
 				if (current == null)
 					Local.Data[cacheKey] = current = new CriteriaBatch();
 				return current;
