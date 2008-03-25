@@ -38,6 +38,7 @@ using Rhino.Commons.Binsor.Configuration;
 namespace Rhino.Commons.Binsor
 {
 	using System.Collections.Generic;
+	using Castle.MicroKernel.Registration;
 
 	public class Component : IQuackFu, INeedSecondPassRegistration, IConfigurationFormatter
 	{
@@ -136,14 +137,18 @@ namespace Rhino.Commons.Binsor
 				kernel.ConfigurationStore.AddComponentConfiguration(_name, _configuration);
 			}
 
+			ComponentRegistration<object> component = new ComponentRegistration(_service)
+				.Named(_name).ImplementedBy(_impl)
+				.CustomDependencies(_dependencies);
+
 			if (_lifestyle.HasValue)
 			{
-				kernel.AddComponent(_name, _service, _impl, _lifestyle.Value);
+				component.LifeStyle.Is(_lifestyle.Value);
 			}
-			else
-			{
-				kernel.AddComponent(_name, _service, _impl);
-			}
+
+			kernel.Register(component);
+
+			_dependencies.Clear();
 
         	return this;
 		}
@@ -162,7 +167,7 @@ namespace Rhino.Commons.Binsor
 
 		public void RegisterSecondPass()
         {
-            kernel.RegisterCustomDependencies(_name, _dependencies);
+			kernel.RegisterCustomDependencies(_name, _dependencies);
         }
 
 		public object QuackGet(string name, object[] property_dependencies)
