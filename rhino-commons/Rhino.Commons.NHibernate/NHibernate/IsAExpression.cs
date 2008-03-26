@@ -65,13 +65,13 @@ namespace Rhino.Commons
 			{
 				alias = criteriaQuery.GetSQLAlias(criteria);
 				string entityName = criteriaQuery.GetEntityName(criteria);
-				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).MappedClass;
+				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).GetMappedClass(EntityMode.Poco);
 			}
 			else if ((aliasedCriteria = criteria.GetCriteriaByAlias(_propertyNameOrAlias)) != null)
 			{
 				alias = criteriaQuery.GetSQLAlias(aliasedCriteria);
 				string entityName = criteriaQuery.GetEntityName(aliasedCriteria);
-				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).MappedClass;
+				targetType = criteriaQuery.Factory.GetEntityPersister(entityName).GetMappedClass(EntityMode.Poco);
 			}
 			else 
 			{
@@ -92,7 +92,7 @@ namespace Rhino.Commons
 			}
 
 			IQueryable queryable = ObtainQueryable(criteriaQuery);
-			SqlString condition = queryable.QueryWhereFragment(alias, true, true);
+			SqlString condition = queryable.WhereJoinFragment(alias, true, true);
 
 			if (condition.IndexOfCaseInsensitive(" and ") == 0)
 			{

@@ -2995,6 +2995,41 @@
             </summary>
             <value>The type of the composite user.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.PropertyDictionary">
+            <summary>
+            Gets the property dictionary. Used to provide fast access 
+            to a <see cref="T:Castle.ActiveRecord.Framework.Internal.PropertyModel"/> based on the property name.
+            </summary>
+            <value>The property dictionary.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.BelongsToDictionary">
+            <summary>
+            Gets the belongs to dictionary. Used to provide fast access 
+            to a <see cref="T:Castle.ActiveRecord.Framework.Internal.BelongsToModel"/> based on the property name.
+            </summary>
+            <value>The belongs to dictionary.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.HasManyToAnyDictionary">
+            <summary>
+            Gets the has many to any dictionary. Used to provide fast access 
+            to a <see cref="T:Castle.ActiveRecord.Framework.Internal.HasManyToAnyModel"/> based on the property name.
+            </summary>
+            <value>The has many to any dictionary.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.HasManyDictionary">
+            <summary>
+            Gets the has many dictionary. Used to provide fast access 
+            to a <see cref="T:Castle.ActiveRecord.Framework.Internal.HasManyModel"/> based on the property name.
+            </summary>
+            <value>The has many dictionary.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.HasAndBelongsToManyDictionary">
+            <summary>
+            Gets the has and belongs to many dictionary. Used to provide fast access 
+            to a <see cref="T:Castle.ActiveRecord.Framework.Internal.HasAndBelongsToManyModel"/> based on the property name.
+            </summary>
+            <value>The has and belongs to many dictionary.</value>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.AnyModel">
             <summary>
             Model for [Any] association, a polymorphic association without common base class
@@ -8364,6 +8399,12 @@
             Intended to be used only by test cases
             </summary>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.GetRegisteredTypes">
+            <summary>
+            Retrieves a copy of the types registered within ActiveRecord
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.IsActiveRecordType(System.Reflection.ICustomAttributeProvider)">
             <summary>
             Return true if the type has a [ActiveRecord] attribute
@@ -8420,6 +8461,14 @@
             Allows other frameworks to modify the ActiveRecordModel
             before the generation of the NHibernate XML configuration.
             </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordStarter.IsInitialized">
+            <summary>
+            Gets a value indicating whether ActiveRecord was initialized properly (see the Initialize method).
+            </summary>
+            <value>
+            	<c>true</c> if it is initialized; otherwise, <c>false</c>.
+            </value>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordValidationBase">
             <summary>
@@ -8868,21 +8917,6 @@
             </summary>
             <param name="entities">The entitites</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.HookDispatcher.IsUnsaved(System.Object)">
-            <summary>
-            Called when a transient entity is passed to <c>SaveOrUpdate</c>.
-            </summary>
-            <remarks>
-            The return value determines if the object is saved
-            <list>
-            	<item><c>true</c> - the entity is passed to <c>Save()</c>, resulting in an <c>INSERT</c></item>
-            	<item><c>false</c> - the entity is passed to <c>Update()</c>, resulting in an <c>UPDATE</c></item>
-            	<item><c>null</c> - Hibernate uses the <c>unsaved-value</c> mapping to determine if the object is unsaved</item>
-            </list>
-            </remarks>
-            <param name="entity">A transient entity</param>
-            <returns></returns>
-        </member>
         <member name="M:Castle.ActiveRecord.Framework.HookDispatcher.FindDirty(System.Object,System.Object,System.Object[],System.Object[],System.String[],NHibernate.Type.IType[])">
             <summary>
             Called from <c>Flush()</c>. The return value determines whether the entity is updated
@@ -8902,14 +8936,19 @@
             <param name="types"></param>
             <returns>An array of dirty property indicies or <c>null</c> to choose default behavior</returns>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.HookDispatcher.Instantiate(System.Type,System.Object)">
+        <member name="M:Castle.ActiveRecord.Framework.HookDispatcher.Instantiate(System.String,NHibernate.EntityMode,System.Object)">
             <summary>
-            Instantiate the entity class. Return <c>null</c> to indicate that Hibernate should use the default
+            Instantiate the entity class. Return <see langword="null" /> to indicate that Hibernate should use the default
             constructor of the class
             </summary>
-            <param name="type">A mapped type</param>
-            <param name="id">The identifier of the new instance</param>
-            <returns>An instance of the class, or <c>null</c> to choose default behaviour</returns>
+            <param name="entityName">the name of the entity </param>
+            <param name="entityMode">The type of entity instance to be returned. </param>
+            <param name="id">the identifier of the new instance </param>
+            <returns>An instance of the class, or <see langword="null" /> to choose default behaviour</returns>
+            <remarks>
+            The identifier property of the returned instance
+            should be initialized with the given identifier.
+            </remarks>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.HookDispatcher.Instance">
             <summary>

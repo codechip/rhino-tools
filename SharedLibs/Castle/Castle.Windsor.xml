@@ -448,6 +448,63 @@
             </summary>
             <value>The kernel.</value>
         </member>
+        <member name="M:Castle.Windsor.Installer.Configuration.FromAppConfig">
+            <summary>
+            Installs all the components from the App.Config file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.Installer.Configuration.FromXmlFile(System.String)">
+            <summary>
+            Installs all the component from the xml configuration file.
+            </summary>
+            <param name="file">The xml configuration file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.Installer.Configuration.FromXml(Castle.Core.Resource.IResource)">
+            <summary>
+            Installs all the component from the xml configuration.
+            </summary>
+            <param name="resource">The xml configuration resource.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Castle.Windsor.Installer.EnvironmentDelegate">
+            <summary>
+            Delegate to provide environment name.
+            </summary>
+            <returns>The environment name.</returns>
+        </member>
+        <member name="T:Castle.Windsor.IWindsorInstaller">
+            <summary>
+            The contract to install components in the container.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorInstaller.Install(Castle.Windsor.IWindsorContainer,Castle.MicroKernel.IConfigurationStore)">
+            <summary>
+            Performs the installation in the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
+            </summary>
+            <param name="container">The container.</param>
+            <param name="store">The configuration store.</param>
+        </member>
+        <member name="M:Castle.Windsor.Installer.ConfigurationInstaller.#ctor(Castle.Windsor.Configuration.IConfigurationInterpreter)">
+            <summary>
+            Initializes a new instance of the ConfigurationInstaller class.
+            </summary>
+        </member>
+        <member name="M:Castle.Windsor.Installer.ConfigurationInstaller.Environment(System.String)">
+            <summary>
+            Sets the configuration environment name.
+            </summary>
+            <param name="environmentName">The environment name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.Installer.ConfigurationInstaller.Environment(Castle.Windsor.Installer.EnvironmentDelegate)">
+            <summary>
+            Set the configuration environment strategy.
+            </summary>
+            <param name="environment">The environment strategy.</param>
+            <returns></returns>
+        </member>
         <member name="T:Castle.Windsor.Installer.DefaultComponentInstaller">
             <summary>
             Default <see cref="T:Castle.Windsor.IComponentsInstaller"/> implementation.
@@ -543,10 +600,25 @@
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.AddFacility(System.String,Castle.MicroKernel.IFacility)">
             <summary>
-            Registers a facility within the kernel.
+            Registers a facility within the container.
             </summary>
             <param name="key">The key by which the <see cref="T:Castle.MicroKernel.IFacility"/> gets indexed.</param>
             <param name="facility">The <see cref="T:Castle.MicroKernel.IFacility"/> to add to the container.</param>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1(System.String)">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <returns></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.AddComponent(System.String,System.Type)">
             <summary>
@@ -563,7 +635,7 @@
             <param name="serviceType">The service <see cref="T:System.Type"/> that the component implements.</param>
             <param name="classType">The <see cref="T:System.Type"/> to manage.</param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle(System.String,System.Type,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle(System.String,System.Type,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -571,7 +643,7 @@
             <param name="classType">The <see cref="T:System.Type"/> to manage.</param>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle(System.String,System.Type,System.Type,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle(System.String,System.Type,System.Type,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -614,7 +686,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="key">The key by which the component gets indexed.</param>		
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``1(Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``1(Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container.
             The key to obtain the component will be the FullName of the type.
@@ -622,7 +694,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``1(System.String,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``1(System.String,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -646,7 +718,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="key">The key by which the component gets indexed.</param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             The key to obtain the component will be the FullName of the type.
@@ -655,7 +727,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.String,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(System.String,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -682,7 +754,7 @@
             <param name="key"></param>		
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -693,7 +765,7 @@
             <typeparam name="T"></typeparam>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentWithLifestyle``2(System.String,System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(System.String,System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -704,19 +776,21 @@
             <param name="key"></param>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentEx(System.Type)">
+        <member name="M:Castle.Windsor.IWindsorContainer.Register(Castle.MicroKernel.Registration.IRegistration[])">
             <summary>
-            Adds a component to be registered in the container using a fluent interface.
+            Registers the components provided by the <see cref="T:Castle.MicroKernel.Registration.IRegistration"/>s
+            with the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
+            <param name="registrations">The component registrations.</param>
+            <returns>The container.</returns>
             </summary>
-            <param name="serviceType">The service type.</param>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentEx``1">
+        <member name="M:Castle.Windsor.IWindsorContainer.Install(Castle.Windsor.IWindsorInstaller[])">
             <summary>
-            Adds a component to be registered in the container using a fluent interface.
+            Installs the components provided by the <see cref="T:Castle.Windsor.IWindsorInstaller"/>s
+            with the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
+            <param name="installers">The component installers.</param>
+            <returns>The container.</returns>
             </summary>
-            <typeparam name="S">The <see cref="T:System.Type"/> to manage.</typeparam>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Resolve(System.String)">
             <summary>
@@ -1032,6 +1106,21 @@
             <param name="key"></param>
             <param name="facility"></param>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1(System.String)">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <returns></returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.AddComponent(System.String,System.Type)">
             <summary>
             Adds a component to be managed by the container
@@ -1047,7 +1136,7 @@
             <param name="serviceType"></param>
             <param name="classType"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle(System.String,System.Type,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle(System.String,System.Type,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -1055,7 +1144,7 @@
             <param name="classType">The <see cref="T:System.Type"/> to manage.</param>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle(System.String,System.Type,System.Type,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle(System.String,System.Type,System.Type,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -1078,7 +1167,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="key">The key by which the component gets indexed.</param>		
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``1(Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``1(Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container.
             The key to obtain the component will be the FullName of the type.
@@ -1094,7 +1183,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="key">The key by which the component gets indexed.</param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             The key to obtain the component will be the FullName of the type.
@@ -1103,7 +1192,7 @@
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
             <param name="lifestyle">The <see cref="T:Castle.Core.LifestyleType"/> with which to manage the component.</param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``1(System.String,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``1(System.String,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -1119,7 +1208,7 @@
             <typeparam name="I">The service <see cref="T:System.Type"/> that the component implements.</typeparam>
             <typeparam name="T">The <see cref="T:System.Type"/> to manage.</typeparam>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.String,Castle.Core.LifestyleType)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(System.String,Castle.Core.LifestyleType)">
             <summary>
             Adds a component to be managed by the container
             </summary>
@@ -1146,7 +1235,7 @@
             <param name="key"></param>		
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -1157,7 +1246,7 @@
             <typeparam name="T"></typeparam>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentWithLifestyle``2(System.String,System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(System.String,System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -1168,19 +1257,21 @@
             <param name="key"></param>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentEx(System.Type)">
+        <member name="M:Castle.Windsor.WindsorContainer.Register(Castle.MicroKernel.Registration.IRegistration[])">
             <summary>
-            Adds a component to be registered in the container using a fluent interface.
+            Registers the components described by the <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`1"/>s
+            with the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
+            <param name="registrations">The component registrations.</param>
+            <returns>The container.</returns>
             </summary>
-            <param name="serviceType">The service type.</param>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentEx``1">
+        <member name="M:Castle.Windsor.WindsorContainer.Install(Castle.Windsor.IWindsorInstaller[])">
             <summary>
-            Adds a component to be registered in the container using a fluent interface.
+            Installs the components provided by the <see cref="T:Castle.Windsor.IWindsorInstaller"/>s
+            with the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
+            <param name="installers">The component installers.</param>
+            <returns>The container.</returns>
             </summary>
-            <typeparam name="S">The <see cref="T:System.Type"/> to manage.</typeparam>
-            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`2"/></returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.Resolve(System.String)">
             <summary>

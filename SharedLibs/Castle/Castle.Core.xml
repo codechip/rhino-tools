@@ -525,6 +525,11 @@
             plus the 'log' extension.
             </summary>
         </member>
+        <member name="T:Castle.Core.Logging.TraceLoggerFactory">
+            <summary>
+            Used to create the TraceLogger implementation of ILogger interface. See <see cref="T:Castle.Core.Logging.TraceLogger"/>. 
+            </summary>
+        </member>
         <member name="T:Castle.Core.Logging.ConsoleLogger">
             <summary>
             The Logger sending everything to the standard output streams.
@@ -1761,6 +1766,46 @@
             <param name="name">The name of the log.</param>
             <param name="writer">The <c>StreamWriter</c> the log will write to.</param>
         </member>
+        <member name="T:Castle.Core.Logging.TraceLogger">
+            <summary>
+            The TraceLogger sends all logging to the System.Diagnostics.TraceSource
+            built into the .net framework. 
+            </summary>
+            <remarks>
+            Logging can be configured in the system.diagnostics configuration 
+            section. 
+            
+            If logger doesn't find a source name with a full match it will
+            use source names which match the namespace partially. For example you can
+            configure from all castle components by adding a source name with the
+            name "Castle". 
+            
+            If no portion of the namespace matches the source named "Default" will
+            be used.
+            </remarks>
+        </member>
+        <member name="M:Castle.Core.Logging.TraceLogger.#ctor(System.String)">
+            <summary>
+            Build a new trace logger based on the named TraceSource
+            </summary>
+            <param name="name">The name used to locate the best TraceSource. In most cases comes from the using type's fullname.</param>
+        </member>
+        <member name="M:Castle.Core.Logging.TraceLogger.#ctor(System.String,Castle.Core.Logging.LoggerLevel)">
+            <summary>
+            Build a new trace logger based on the named TraceSource
+            </summary>
+            <param name="name">The name used to locate the best TraceSource. In most cases comes from the using type's fullname.</param>
+            <param name="level">The default logging level at which this source should write messages. In almost all cases this
+            default value will be overridden in the config file. </param>
+        </member>
+        <member name="M:Castle.Core.Logging.TraceLogger.CreateChildLogger(System.String)">
+            <summary>
+            Create a new child logger.
+            The name of the child logger is [current-loggers-name].[passed-in-name]
+            </summary>
+            <param name="name">The Subname of this logger.</param>
+            <returns>The New ILogger instance.</returns> 
+        </member>
         <member name="T:Castle.Core.Logging.WebLogger">
             <summary>
             The WebLogger sends everything to the HttpContext.Trace 
@@ -2461,11 +2506,18 @@
             <param name="key">The component key.</param>
             <returns>The <see cref="T:Castle.Core.InterceptorReference"/></returns>
         </member>
-        <member name="M:Castle.Core.InterceptorReference.WithType(System.Type)">
+        <member name="M:Castle.Core.InterceptorReference.ForType(System.Type)">
             <summary>
             Gets an <see cref="T:Castle.Core.InterceptorReference"/> for the service.
             </summary>
             <param name="service">The service.</param>
+            <returns>The <see cref="T:Castle.Core.InterceptorReference"/></returns>
+        </member>
+        <member name="M:Castle.Core.InterceptorReference.ForType``1">
+            <summary>
+            Gets an <see cref="T:Castle.Core.InterceptorReference"/> for the service.
+            </summary>
+            <typeparam name="T">The service type.</typeparam>
             <returns>The <see cref="T:Castle.Core.InterceptorReference"/></returns>
         </member>
         <member name="P:Castle.Core.InterceptorReference.ServiceType">
