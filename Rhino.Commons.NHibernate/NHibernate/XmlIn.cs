@@ -165,7 +165,7 @@ namespace Rhino.Commons
 					continue;
 				object valToWrite;
 				if (persister != null)
-					valToWrite = persister.GetIdentifier(value);
+					valToWrite = persister.GetIdentifier(value, EntityMode.Poco);
 				else
 					valToWrite = value;
 				writer.WriteElementString("val", valToWrite.ToString());
