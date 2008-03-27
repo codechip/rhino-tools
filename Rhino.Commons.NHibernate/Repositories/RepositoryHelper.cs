@@ -30,6 +30,7 @@
 using System.Data;
 using NHibernate;
 using NHibernate.Criterion;
+using Rhino.Commons.NHibernate.Repositories;
 
 namespace Rhino.Commons
 {
@@ -74,7 +75,7 @@ namespace Rhino.Commons
 			{
 				executableCriteria = session.CreateCriteria(typeof (T));
 			}
-
+			executableCriteria = ApplyFetchingStrategies(executableCriteria);
 			AddCaching(executableCriteria);
 			if (orders != null)
 			{
@@ -82,6 +83,16 @@ namespace Rhino.Commons
 				{
 					executableCriteria.AddOrder(order);
 				}
+			}
+			return executableCriteria;
+		}
+
+		private static ICriteria ApplyFetchingStrategies(ICriteria executableCriteria)
+		{
+			IFetchingStrategy<T>[] fetchingStrategies = IoC.ResolveAll<IFetchingStrategy<T>>();
+			foreach (IFetchingStrategy<T> strategy in fetchingStrategies)
+			{
+				executableCriteria = strategy.Apply(executableCriteria);
 			}
 			return executableCriteria;
 		}
@@ -108,6 +119,7 @@ namespace Rhino.Commons
 					continue;
 				crit.Add(criterion);
 			}
+			crit = ApplyFetchingStrategies(crit); 
 			AddCaching(crit);
             if (orders != null)
             {

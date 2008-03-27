@@ -27,42 +27,12 @@
 #endregion
 
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
+using NHibernate;
 
-namespace Rhino.Commons.Helpers
+namespace Rhino.Commons.NHibernate.Repositories
 {
-	/// <summary>
-	/// this class is here so I can avoid having a reference to the System.Data.SqlServerCe.dll if I don't need it.
-	/// </summary>
-	public static class SqlCEDbHelper
+	public interface IFetchingStrategy<T>
 	{
-		private static string engineTypeName = "System.Data.SqlServerCe.SqlCeEngine, System.Data.SqlServerCe";
-		private static Type type;
-		private static PropertyInfo localConnectionString;
-		private static MethodInfo createDatabase;
-
-
-	    public static void CreateDatabaseFile(string filename)
-		{
-			if (File.Exists(filename))
-				File.Delete(filename);
-			if (type == null)
-			{
-				type = Type.GetType(engineTypeName);
-				if(type==null)
-					throw new InvalidOperationException("Could not load SqlCeEngine, ensure that you have the System.Data.SqlServerCe assembly in the application base path");
-				localConnectionString = type.GetProperty("LocalConnectionString");
-				createDatabase = type.GetMethod("CreateDatabase");
-			}
-			object engine = Activator.CreateInstance(type);
-			localConnectionString
-				.SetValue(engine, string.Format("Data Source='{0}';", filename), null);
-			createDatabase
-				.Invoke(engine, new object[0]);
-		}
+		ICriteria Apply(ICriteria criteria);
 	}
 }

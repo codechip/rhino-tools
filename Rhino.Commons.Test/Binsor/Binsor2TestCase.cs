@@ -48,7 +48,6 @@ namespace Rhino.Commons.Test.Binsor
 		public override void TestInitialize()
 		{
             base.TestInitialize();
-
 			string path = Path.GetFullPath(@"Binsor\Windsor2.boo");
 			_container = new RhinoContainer(path);
 		}

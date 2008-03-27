@@ -31,7 +31,7 @@ import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons from Rhino.Commons.NHibernate
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
-import Castle.Facilities.ActiveRecordIntegration
+import Castle.Facilities.ActiveRecordIntegration from Castle.Facilities.ActiveRecordIntegration
 import Castle.Facilities.FactorySupport from Castle.MicroKernel
 import Castle.Facilities.Startable from Castle.MicroKernel
 import Castle.Facilities.EventWiring from Castle.MicroKernel

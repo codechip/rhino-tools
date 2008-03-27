@@ -95,6 +95,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\EntitiesToRepositories.cs" />
+    <Compile Include="Repositories\IFetchingStrategy.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\NHRepository.cs" />
     <Compile Include="Repositories\Parameter.cs" />

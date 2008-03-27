@@ -10,6 +10,7 @@
 	<include buildfile="${root.dir}/common-project.xml" />
 
 	<target name="init" depends="common.init">
+	
 		<assemblyfileset id="project.references" basedir="${build.dir}">
 			<include name="MbUnit.Framework.dll"/>
 			<include name="Rhino.DSL.dll" />
@@ -31,7 +32,8 @@
 			<include name="Boo.Lang.dll" />
 			<include name="Boo.Lang.Compiler.dll" />
 			<include name="Boo.Lang.Parser.dll" />
-			
+			<include name="System.Data.SqlServerCe.dll" />
+			<include name="System.Data.SQLite.dll"/>
 		</assemblyfileset>
 
 		<resourcefileset id="project.resources" prefix="Rhino.Commons.Test" dynamicprefix="true" basedir="${src.dir}">
