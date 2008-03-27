@@ -357,8 +357,9 @@ namespace Rhino.Commons.ForTesting
 
             public override void IntialiseContainerAndUowFactory()
             {
-                if (IoC.IsInitialized) IoC.Reset();
-
+                if (IoC.IsInitialized) 
+					IoC.Reset();
+            	ResetRhinoContainer();
                 if (RhinoContainer != null)
                 {
                     IoC.Initialize(RhinoContainer);
@@ -367,6 +368,11 @@ namespace Rhino.Commons.ForTesting
                     hibernateUnitOfWorkFactory.RegisterSessionFactory(SessionFactory);
                 }
             }
+
+        	protected void ResetRhinoContainer()
+        	{
+        		rhinoContainer = null;
+        	}
         }
     }
 }

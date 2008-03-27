@@ -184,5 +184,10 @@ namespace Rhino.Commons
 			IWindsorContainer windsorContainer = LocalContainer ?? GlobalContainer;
 			Reset(windsorContainer);
 		}
+
+    	public static T[] ResolveAll<T>()
+    	{
+    		return Container.ResolveAll<T>();
+    	}
     }
 }
