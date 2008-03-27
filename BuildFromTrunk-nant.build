@@ -71,11 +71,6 @@
 			<include name="Castle.MonoRail.WindsorExtension.???"/>
 			<include name="Castle.MonoRail.TransformFilters	.???"/>
 		</fileset>
-
-		<fileset id="castle.deps.for.nhibernate" basedir="${nhibernate.lib.dir}">
-			<include name="Castle.Core.*"/>
-			<include name="Castle.DynamicProxy2.*"/>
-		</fileset>
 	</target>
 	
 	<target name="build"
@@ -129,10 +124,13 @@
 		
 	</target>
 	
-	<target name="update-castle-dependencies-in-nhibernate">
+	<target name="update-castle-dependencies-in-nhibernate" depends="init">
 	
 		<delete>
-			<fileset refid="castle.deps.for.nhibernate"/>
+			<fileset basedir="${nhibernate.lib.dir}">
+				<include name="Castle.Core.*"/>
+				<include name="Castle.DynamicProxy2.*"/>
+			</fileset>
 		</delete>
 		
 		<nant buildfile="${castle.dir}\default.build" target="clean init copy-referenced-assemblies">
@@ -157,7 +155,10 @@
 		</nant>
 		
 		<copy todir="${nhibernate.lib.dir}">
-			<fileset refid="castle.deps.for.nhibernate"/>
+			<fileset basedir="${castle.build.dir}">
+				<include name="Castle.Core.???"/>
+				<include name="Castle.DynamicProxy2.???"/>
+			</fileset>
 		</copy>
 		
 	</target>
