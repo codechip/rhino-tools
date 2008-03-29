@@ -139,7 +139,7 @@ namespace Rhino.Commons.Binsor
 
 			ComponentRegistration<object> component = new ComponentRegistration(_service)
 				.Named(_name).ImplementedBy(_impl)
-				.CustomDependencies(_dependencies);
+				.DependsOn(_dependencies);
 
 			if (_lifestyle.HasValue)
 			{
