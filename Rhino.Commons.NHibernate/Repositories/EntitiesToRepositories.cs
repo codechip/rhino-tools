@@ -47,7 +47,7 @@ namespace Rhino.Commons.NHibernate.Repositories
 					windsorContainer.Register(
 						Component.For(typeof(IRepository<>).MakeGenericType(interfaceType))
 							.ImplementedBy(repository.MakeGenericType(interfaceType))
-							.CustomDependencies(Property.ForKey("ConcreteType").Eq(mappedClass))
+							.DependsOn(Property.ForKey("ConcreteType").Eq(mappedClass))
 						);
 				}
 			}
