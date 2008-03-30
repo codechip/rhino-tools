@@ -1898,6 +1898,27 @@
             <param name="anonymous">The properties.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.DependsOn(Castle.MicroKernel.Registration.Property[])">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.DependsOn(System.Collections.IDictionary)">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.DependsOn(System.Object)">
+            <summary>
+            With the custom dependencies.
+            </summary>
+            <param name="anonymous">The dependencies.</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.CustomDependencies(Castle.MicroKernel.Registration.Property[])">
             <summary>
             With the custom dependencies.
@@ -1916,7 +1937,7 @@
             <summary>
             With the custom dependencies.
             </summary>
-            <param name="anonymous">The dependencies.</param>
+            <param name="dependencies">The dependencies.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ServiceOverrides(Castle.MicroKernel.Registration.ServiceOverride[])">
@@ -1965,6 +1986,13 @@
             <summary>
             Ases the startable.
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.ActAs(System.Object[])">
+            <summary>
+            Marks the components with one or more actors.
+            </summary>
+            <param name="actors">The component actors.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Castle#MicroKernel#Registration#IRegistration#Register(Castle.MicroKernel.IKernel)">

@@ -2995,6 +2995,13 @@
             </summary>
             <value>The type of the composite user.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.ExtendedProperties">
+            <summary>
+            Gets the extended properties. Used to store/retrieve information collected by model builder extensions.
+            <seealso cref="T:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension"/>
+            </summary>
+            <value>The extended properties.</value>
+        </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.PropertyDictionary">
             <summary>
             Gets the property dictionary. Used to provide fast access 
@@ -4377,6 +4384,12 @@
             <param name="type">The type.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.SetExtension(Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension)">
+            <summary>
+            Sets the extension.
+            </summary>
+            <param name="extension">The extension.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.PopulateModel(Castle.ActiveRecord.Framework.Internal.ActiveRecordModel,System.Type)">
             <summary>
             Populates the model from tye type
@@ -4458,6 +4471,66 @@
             If it can't find relevant attributes, returns null.
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension">
+            <summary>
+            Gives a chance to external frameworks to plug into 
+            the AR model builder process. Particularly useful to 
+            inspect attributes and conventions outside the AR domain.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessClass(System.Type,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the class.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessProperty(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the property.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessField(System.Reflection.FieldInfo,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the field.
+            </summary>
+            <param name="fi">The field info reflection object.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessBelongsTo(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.BelongsToModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the BelongsTo.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="belongsToModel">The belongs to model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessHasMany(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasManyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the HasMany.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasManyModel">The has many model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessHasManyToAny(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasManyToAnyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the HasManyToAny.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasManyModel">The has many model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension.ProcessHasAndBelongsToMany(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasAndBelongsToManyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Gives implementors a chance to process the HasAndBelongsToMany.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasAndBelongManyModel">The has and belong many model.</param>
+            <param name="model">The model.</param>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.Inflector">
             <summary>
             The Inflector class transforms words from one 
@@ -4484,6 +4557,70 @@
             </summary>
             <param name="word">The word to be capitalized.</param>
             <returns><paramref name="word"/> capitalized.</returns>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite">
+            <summary>
+            Dispatches the extension invocations to the inner extension list.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.#ctor(System.Collections.Generic.IList{Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite"/> class.
+            </summary>
+            <param name="extensions">The extensions.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessClass(System.Type,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="type">The type.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessProperty(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessField(System.Reflection.FieldInfo,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="fi">The field info reflection object.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessBelongsTo(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.BelongsToModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="belongsToModel">The belongs to model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessHasMany(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasManyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasManyModel">The has many model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessHasManyToAny(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasManyToAnyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasManyModel">The has many model.</param>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ModelBuilderExtensionComposite.ProcessHasAndBelongsToMany(System.Reflection.PropertyInfo,Castle.ActiveRecord.Framework.Internal.HasAndBelongsToManyModel,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
+            <summary>
+            Dispatches the call to the extensions.
+            </summary>
+            <param name="pi">The property info reflection object.</param>
+            <param name="hasAndBelongManyModel">The has and belong many model.</param>
+            <param name="model">The model.</param>
         </member>
         <member name="T:Castle.ActiveRecord.Queries.Modifiers.IQueryModifier">
             <summary>
@@ -8404,6 +8541,12 @@
             Retrieves a copy of the types registered within ActiveRecord
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.RegisterExtension(Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension)">
+            <summary>
+            Registers a builder extension.
+            </summary>
+            <param name="extension">The extension.</param>
         </member>
         <member name="M:Castle.ActiveRecord.ActiveRecordStarter.IsActiveRecordType(System.Reflection.ICustomAttributeProvider)">
             <summary>
