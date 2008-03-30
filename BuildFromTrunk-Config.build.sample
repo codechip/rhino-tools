@@ -1,29 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Update-All;Build-All;Copy-To-Artifact-Dir" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- Configuration -->
-	<PropertyGroup>
-		<Configuration>debug</Configuration>
-		<Enable-Tests>false</Enable-Tests>
-
-		<!-- User Settings -->
-		<Dest-Dir></Dest-Dir>
-		<Dest-Lib-Dir>$(Dest-Dir)\lib\$(Configuration)</Dest-Lib-Dir>
-		<Dest-Tool-Dir>$(Dest-Dir)\tools</Dest-Tool-Dir>
-
-		<Tools-Dir>$(MSBuildProjectDirectory)\SharedLibs\Tools</Tools-Dir>
-		<NH-Dir>$(MSBuildProjectDirectory)..\NHibernate-Trunk\nhibernate</NH-Dir>
-		<Castle-Dir>$(MSBuildProjectDirectory)..\Castle-Trunk</Castle-Dir>
-		<Rhino-Dir>$(MSBuildProjectDirectory)</Rhino-Dir>
-		<Artifact-Dir>$(MSBuildProjectDirectory)\Trunk-Artifacts</Artifact-Dir>
-
-		<MSBuildCommunityTasksPath>$(Tools-Dir)</MSBuildCommunityTasksPath>
-		<Svn-Dir>$(Tools-Dir)\Subversion</Svn-Dir>
-		<Castle-TestFramework>nunit</Castle-TestFramework>
-		<Castle-Tester-Console>C:\Program Files (x86)\NUnit 2.4\bin\nunit-console.exe</Castle-Tester-Console>
-		
-		<Castle-Contrib-Dir>$(MSBuildProjectDirectory)\..\Castle-Contrib</Castle-Contrib-Dir>
-		<Castle-Contrib-CodeGen-Dir>$(Castle-Contrib-Dir)\codegenerator\trunk</Castle-Contrib-CodeGen-Dir>
-		<Castle-Contrib-AspView-Dir>$(Castle-Contrib-Dir)\viewengines\aspview\trunk</Castle-Contrib-AspView-Dir>
-		<Castle-Contrib-ViewComponents-Dir>$(Castle-Contrib-Dir)\viewcomponents\trunk</Castle-Contrib-ViewComponents-Dir>
-	</PropertyGroup>
-</Project>
+<?xml version="1.0" encoding='iso-8859-1' ?>
+<project
+	name="rhino.tools"
+	default="build"
+	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
+>
+	<property name="nhibernate.dir" value="${root.dir}/../nhibernate"/>
+	<property name="castle.dir" value="${root.dir}/../castle"/>
+	<property name="rhino.dir" value="${root.dir}/../rhino-tools"/>
+	
+</project>
