@@ -29,7 +29,8 @@
 			<include name="Rhino.Commons.NHibernate.dll"/>
 			<include name="Rhino.Commons.ActiveRecord.dll"/>
 			<include name="System"/>
-			<include name="System.Web.Extensions"/>
+			<include name="System.Web.Extensions.dll" if="${nant.settings.currentframework == 'net-2.0' }"/>
+			<include name="System.Web.Extensions" unless="${nant.settings.currentframework == 'net-2.0' }"/>
 			<include name="System.Web"/>
 		</assemblyfileset>
 	</target>
