@@ -20,19 +20,19 @@ namespace Rhino.Commons.NHibernate.Repositories
 		/// <param name="windsorContainer">The windsor container.</param>
 		/// <param name="sessionFactory">The session factory.</param>
 		/// <param name="repository">The repository type to map to <seealso cref="IRepository{T}"/>.</param>
-		/// <param name="assemblies">The assemblies in which domain interfaces are defined</param>
+		/// <param name="isCandidateForRepository">The is candidate for repository.</param>
 		/// <remarks>
-		/// The reason that we have the <paramref name="assemblies"/> collection is to avoid registering services
+		/// The reason that we have the <paramref name="isCandidateForRepository"/> is to avoid registering services
 		/// for interfaces that are not related to the domain (INotifyPropertyChanged, as a good example).
 		/// </remarks>
 		public static void Register(
 			IWindsorContainer windsorContainer,
 			ISessionFactory sessionFactory,
 			Type repository,
-			params Assembly[] assemblies
+			Predicate<Type> isCandidateForRepository
 			)
 		{
-			if(typeof(IRepository<>).IsAssignableFrom(repository))
+			if (ImplementsOpenIRepository(repository) == false)
 				throw new ArgumentException("Repository must be a type inheriting from IRepository<T>, and must be an open generic type. Sample: typeof(NHRepository<>).");
 
 			foreach (IClassMetadata meta in sessionFactory.GetAllClassMetadata().Values)
@@ -42,7 +42,7 @@ namespace Rhino.Commons.NHibernate.Repositories
 					continue;
 				foreach (Type interfaceType in mappedClass.GetInterfaces())
 				{
-					if(IsDefinedInAssemblies(interfaceType, assemblies)==false)
+					if (isCandidateForRepository(interfaceType) == false)
 						continue;
 					windsorContainer.Register(
 						Component.For(typeof(IRepository<>).MakeGenericType(interfaceType))
@@ -53,9 +53,19 @@ namespace Rhino.Commons.NHibernate.Repositories
 			}
 		}
 
-		private static bool IsDefinedInAssemblies(Type type, Assembly[] assemblies)
+		/// <summary>
+		/// I hate open generic types in the CLR
+		/// </summary>
+		private static bool ImplementsOpenIRepository(Type repository)
 		{
-			return Array.IndexOf(assemblies, type.Assembly) != -1;
+			if (repository.IsGenericTypeDefinition == false)
+				return false;
+			foreach (Type type in repository.GetInterfaces())
+			{
+				if (type.GetGenericTypeDefinition() == typeof(IRepository<>))
+					return true;
+			}
+			return false;
 		}
 	}
 }
