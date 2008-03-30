@@ -199,17 +199,21 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CanUseOrderringOnCompositeProperties()
 		{
-			WeirdClass weird = new WeirdClass();
-			weird.Key.Department = "Foo";
-			weird.Key.Level = 3;
-			weird.Address.Street = "NHibernate == Fun";
-			weird.Create();
+			WeirdClass weird, weird2;
+			using(new TransactionScope(OnDispose.Commit))
+			{
+				weird = new WeirdClass();
+				weird.Key.Department = "Foo";
+				weird.Key.Level = 3;
+				weird.Address.Street = "NHibernate == Fun";
+				weird.Create();
 
-			WeirdClass weird2 = new WeirdClass();
-			weird2.Key.Department = "XYZ";
-			weird2.Key.Level = 5;
-			weird2.Address.Street = "Active Record == Easy Fun";
-			weird2.Create();
+				weird2 = new WeirdClass();
+				weird2.Key.Department = "XYZ";
+				weird2.Key.Level = 5;
+				weird2.Address.Street = "Active Record == Easy Fun";
+				weird2.Create();
+			}
 
 			WeirdClass[] findAll = WeirdClass.FindAll(OrderBy.WeirdClass.Address.Street);
 			Assert.AreEqual(weird2.Address.Street, findAll[0].Address.Street);
@@ -223,11 +227,14 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CanQueryByCompositeIdNestedType()
 		{
-			WeirdClass weird = new WeirdClass();
-			weird.Key.Department = "Foo";
-			weird.Key.Level = 3;
+			using(new TransactionScope(OnDispose.Commit))
+			{
+				WeirdClass weird = new WeirdClass();
+				weird.Key.Department = "Foo";
+				weird.Key.Level = 3;
 
-			weird.Create();
+				weird.Create();
+			}
 
 			WeirdClass item = WeirdClass.FindOne(Where.WeirdClass.Key.Department == "Foo");
 
@@ -237,18 +244,21 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CanUseOrderringOnComponentProperties()
 		{
-			WeirdClass weird = new WeirdClass();
-			weird.Key.Department = "Foo";
-			weird.Key.Level = 3;
+			using(new TransactionScope(OnDispose.Commit))
+			{
+				WeirdClass weird = new WeirdClass();
+				weird.Key.Department = "Foo";
+				weird.Key.Level = 3;
 
-			weird.Create();
+				weird.Create();
 
-			WeirdClass weird2 = new WeirdClass();
-			weird2.Key.Department = "Bar";
-			weird2.Key.Level = 5;
+				WeirdClass weird2 = new WeirdClass();
+				weird2.Key.Department = "Bar";
+				weird2.Key.Level = 5;
 
-			weird2.Create();
+				weird2.Create();
 
+			}
 
 			WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
 			//WeirdClass[] weirds = WeirdClass.FindAll(new OrderByClause("this.Key.Department")); 
@@ -259,31 +269,34 @@ namespace NHibernate.Query.Generator.Tests
 		[Test]
 		public void CanUseOrderringOnComponentPropertiesByDetachedCriteria()
 		{
-			WeirdPropertyClass property = new WeirdPropertyClass();
-			property.IntegerProperty = 10;
-			property.StringProperty = "cdef";
-			property.Create();
+			using(new TransactionScope(OnDispose.Commit))
+			{
+				WeirdPropertyClass property = new WeirdPropertyClass();
+				property.IntegerProperty = 10;
+				property.StringProperty = "cdef";
+				property.Create();
 
-			OtherWeirdClass weird = new OtherWeirdClass();
-			weird.Key.Department = "Foo";
-			weird.Key.Level = 3;
-			weird.Address.Street = "Active Record == Easy Fun";
-			weird.Property = property;
+				OtherWeirdClass weird = new OtherWeirdClass();
+				weird.Key.Department = "Foo";
+				weird.Key.Level = 3;
+				weird.Address.Street = "Active Record == Easy Fun";
+				weird.Property = property;
 
-			weird.Create();
+				weird.Create();
 
-			WeirdPropertyClass property2 = new WeirdPropertyClass();
-			property2.IntegerProperty = 5;
-			property2.StringProperty = "abcd";
-			property2.Create();
+				WeirdPropertyClass property2 = new WeirdPropertyClass();
+				property2.IntegerProperty = 5;
+				property2.StringProperty = "abcd";
+				property2.Create();
 
-			OtherWeirdClass weird2 = new OtherWeirdClass();
-			weird2.Key.Department = "Bar";
-			weird2.Key.Level = 5;
-			weird2.Address.Street = "Active Record == Easy Fun";
-			weird2.Property = property2;
+				OtherWeirdClass weird2 = new OtherWeirdClass();
+				weird2.Key.Department = "Bar";
+				weird2.Key.Level = 5;
+				weird2.Address.Street = "Active Record == Easy Fun";
+				weird2.Property = property2;
 
-			weird2.Create();
+				weird2.Create();
+			}
 
 			// normally we'do it this way:
 			//WeirdClass[] weirds = WeirdClass.FindAll(OrderBy.WeirdClass.Key.Department);
@@ -516,53 +529,57 @@ namespace NHibernate.Query.Generator.Tests
 			SchemaExport export = new SchemaExport(configuration);
 			export.Execute(false, true, false, false, session.Connection, null);
 
-			User ayende = new User();
-			ayende.Name = "Ayende";
-			ayende.Email = "Ayende at ayende dot com";
-			ayende.Save();
+			using(new TransactionScope(OnDispose.Commit))
+			{
 
-			Role role = new Role();
-			role.Name = "Administrator";
-			role.Users.Add(ayende);
-			role.Save();
+				User ayende = new User();
+				ayende.Name = "Ayende";
+				ayende.Email = "Ayende at ayende dot com";
+				ayende.Save();
 
-			Blog blog = new Blog();
-			blog.Name = "Ayende @ Blog";
-			blog.Author = ayende;
-			blog.Save();
+				Role role = new Role();
+				role.Name = "Administrator";
+				role.Users.Add(ayende);
+				role.Save();
 
-			Post post = new Post();
-			post.Title = "I love Active Record";
-			post.Contnet = "Indeed I do!";
-			post.Blog = blog;
-			post.Save();
+				Blog blog = new Blog();
+				blog.Name = "Ayende @ Blog";
+				blog.Author = ayende;
+				blog.Save();
 
-			Comment comment = new Comment();
-			comment.Author = "Stranger";
-			comment.Content = "Active Record Rocks!";
-			comment.Post = post;
-			comment.Save();
+				Post post = new Post();
+				post.Title = "I love Active Record";
+				post.Contnet = "Indeed I do!";
+				post.Blog = blog;
+				post.Save();
 
-			Cat cat = new Cat();
-			cat.Save();
+				Comment comment = new Comment();
+				comment.Author = "Stranger";
+				comment.Content = "Active Record Rocks!";
+				comment.Post = post;
+				comment.Save();
 
-			DomesticCat domesticCat = new DomesticCat();
-			domesticCat.Name = "Domestic Cat";
-			domesticCat.Save();
+				Cat cat = new Cat();
+				cat.Save();
 
-			Componnet componnet = new Componnet("v1.0");
-			componnet.Save();
-			InstalledComponnet ic = new InstalledComponnet(componnet);
-			ic.Save();
+				DomesticCat domesticCat = new DomesticCat();
+				domesticCat.Name = "Domestic Cat";
+				domesticCat.Save();
 
-			new Project(ic).Save();
+				Componnet componnet = new Componnet("v1.0");
+				componnet.Save();
+				InstalledComponnet ic = new InstalledComponnet(componnet);
+				ic.Save();
 
-			PatientRecord record1 = new PatientRecord(new Name("Ayende", "Rahien"), new DateTime(1980, 1, 1));
-			PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
-			Patient patient = new Patient(new PatientRecord[] { record1, record2 });
-			patient.Save();
+				new Project(ic).Save();
 
-			patientRecordId1 = record1.Id;
+				PatientRecord record1 = new PatientRecord(new Name("Ayende", "Rahien"), new DateTime(1980, 1, 1));
+				PatientRecord record2 = new PatientRecord(new Name("Bob", "Barker"), new DateTime(1923, 12, 12));
+				Patient patient = new Patient(new PatientRecord[] { record1, record2 });
+				patient.Save();
+
+				patientRecordId1 = record1.Id;
+			}
 		}
 
 		[Test]
