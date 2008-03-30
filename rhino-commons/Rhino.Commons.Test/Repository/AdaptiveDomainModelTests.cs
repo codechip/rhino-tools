@@ -55,7 +55,10 @@ namespace Rhino.Commons.Test.Repository
 				IoC.Container, 
 				UnitOfWork.CurrentSession.SessionFactory, 
 				typeof (NHRepository<>),
-			    typeof (IParent).Assembly);
+			    delegate(Type type)
+			    {
+			    	return typeof (IParent).Assembly == type.Assembly;
+			    });
 			MyFetchingStrategy.Apply_Called = false;
 		}
 
@@ -64,6 +67,30 @@ namespace Rhino.Commons.Test.Repository
 		{
 			CurrentContext.DisposeUnitOfWork();
 			IoC.Reset();
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException),
+			"Repository must be a type inheriting from IRepository<T>, and must be an open generic type. Sample: typeof(NHRepository<>).")]
+		public void ShouldThrowIfPassedNonRepositoryType()
+		{
+			EntitiesToRepositories.Register(
+				IoC.Container,
+				UnitOfWork.CurrentSession.SessionFactory,
+				typeof(int),
+				delegate(Type type) { return false; });
+		}
+
+		[Test]
+		[ExpectedException(typeof(ArgumentException),
+			"Repository must be a type inheriting from IRepository<T>, and must be an open generic type. Sample: typeof(NHRepository<>).")]
+		public void ShouldThrowIfPassedOpenRepositoryType()
+		{
+			EntitiesToRepositories.Register(
+				IoC.Container,
+				UnitOfWork.CurrentSession.SessionFactory,
+				typeof(NHRepository<Parent>),
+				delegate(Type type) { return false; });
 		}
 
 		[Test]
