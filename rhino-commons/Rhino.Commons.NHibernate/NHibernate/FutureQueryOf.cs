@@ -79,6 +79,21 @@ namespace Rhino.Commons
 			}
 		}
 
+		public TEntity SingleResult
+		{
+			get
+			{
+				ICollection<TEntity> results = Results;
+				if (results.Count == 0)
+					return default(TEntity);
+				if (results.Count > 1)
+					throw new InvalidOperationException("Results do not have exactly one item");
+				IEnumerator<TEntity> enumerator = results.GetEnumerator();
+				enumerator.MoveNext();
+				return enumerator.Current;
+			}
+		}
+
 		#region IEnumerable<TEntity> Members
 
 		IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()

@@ -8,11 +8,11 @@
 	
 	<include buildfile="${root.dir}/BuildFromTrunk-Config.build" />
 	
-	<property name="configuration" value="debug"/>
-	<property name="svn.path" value="svn.exe"/>
-	<property name="castle.test.framework" value="nunit"/>
-	<property name="castle.test.console" value="nunit-console"/>
-	<property name="enable.tests" value="true"/>
+	<property name="configuration" value="debug" overwrite="false"/>
+	<property name="svn.path" value="svn.exe" overwrite="false"/>
+	<property name="castle.test.framework" value="nunit" overwrite="false"/>
+	<property name="castle.test.console" value="nunit-console" overwrite="false"/>
+	<property name="enable.tests" value="true" overwrite="false"/>
 
 	<property name="nhibernate.lib.dir" value="${nhibernate.dir}\lib\net\2.0"/>
 	<property name="nhibernate.build.dir" value="${nhibernate.dir}\build\NHibernate-2.0.0.Alpha1\bin\${nant.settings.currentframework}"/>
@@ -77,11 +77,6 @@
 	<target name="build"
 		depends="init customise update-all build-all"
 		description="Builds rhino.tools and all related dependencies">
-
-		<nant target="build">
-			<buildfiles refid="buildfiles.all" />
-		</nant>
-
 	</target>
 	
 	<target name="customise">
@@ -165,17 +160,13 @@
 	</target>
 	
 	<target name="build-castle" depends="update-nhibernate-in-castle">
-		<nant buildfile="${castle.dir}\default.build" target="clean build" unless="${enable.tests}">
-			<properties>
-				<property name="project.config" value="${configuration}"/>
-			</properties>
-		</nant>
-		
+
 		<nant buildfile="${castle.dir}\default.build" target="clean build">
 			<properties>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
+				<property name="${castle.test.framework}-console" value="${castle.test.console}"
+							 if="${enable.tests}"/>
 				<property name="project.config" value="${configuration}"/>
-				<property name="${castle.test.framework}-console" value="${castle.test.console}"/>
 			</properties>
 		</nant>
 	</target>
@@ -188,14 +179,9 @@
 	</target>
 	
 	<target name="build-rhino" depends="update-rhino-dependencies">
-		<nant buildfile="${nhibernate.dir}\default.build" target="clean build" unless="${enable.tests}">
+		<nant buildfile="${rhino.dir}\default.build" target="clean build">
 			<properties>
-				<property name="project.config" value="${configuration}"/>
-			</properties>
-		</nant>
-		
-		<nant buildfile="${rhino.dir}\default.build" target="clean build" >
-			<properties>
+				<property name="common.testrunner.enabled" value="${enable.tests}"/>
 				<property name="project.config" value="${configuration}"/>
 			</properties>
 		</nant>
