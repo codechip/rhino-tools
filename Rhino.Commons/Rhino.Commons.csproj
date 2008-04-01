@@ -66,7 +66,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.MicroKernel.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Windsor.dll</HintPath>
     </Reference>
@@ -111,10 +111,13 @@
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
+    <Compile Include="Binsor\Installer\BinsorScript.cs" />
     <Compile Include="Binsor\BinsorGlobalMethods.cs" />
     <Compile Include="Binsor\ComponentReference.cs" />
     <Compile Include="Binsor\Configuration\AttributeBuilder.cs" />
     <Compile Include="Binsor\Configuration\ChildBuilder.cs" />
+    <Compile Include="Binsor\Installer\BinsorScriptInstaller.cs" />
+    <Compile Include="Binsor\Installer\BinsorFileInstaller.cs" />
     <Compile Include="Binsor\Extend.cs" />
     <Compile Include="Binsor\Extensions\ConfigurationExtension.cs" />
     <Compile Include="Binsor\Configuration\ConfigurationHelper.cs" />
@@ -130,6 +133,8 @@
     <Compile Include="Binsor\Extensions\StartableExtension.cs" />
     <Compile Include="Binsor\IComponentExtension.cs" />
     <Compile Include="Binsor\INeedSecondPassRegistration.cs" />
+    <Compile Include="Binsor\Installer\BinsorStreamInstaller.cs" />
+    <Compile Include="Binsor\Installer\BinsorRunnerInstaller.cs" />
     <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
     <Compile Include="Binsor\Macros\BaseBinsorToplevelMacro.cs" />
