@@ -93,7 +93,7 @@ namespace Rhino.Testing.Tests.AutoMocking
 	    public void Create_CanReturnTransientInstances()
 	    {
 	        Type targetType = typeof (ComponentBeingConfigured);
-	        container.AddComponentWithLifestyle(targetType.FullName, targetType, LifestyleType.Transient);
+            container.AddComponentLifeStyle(targetType.FullName, targetType, LifestyleType.Transient);
 
 	        ComponentBeingConfigured target1 = container.Create<ComponentBeingConfigured>();
 	        ComponentBeingConfigured target2 = container.Create<ComponentBeingConfigured>();
@@ -105,7 +105,7 @@ namespace Rhino.Testing.Tests.AutoMocking
 	    public void Create_ReturningTransientInstances_WillResolveDependenciesToTheSameMockObjects()
 	    {
 	        Type targetType = typeof (ComponentBeingConfigured);
-	        container.AddComponentWithLifestyle(targetType.FullName, targetType, LifestyleType.Transient);
+	        container.AddComponentLifeStyle(targetType.FullName, targetType, LifestyleType.Transient);
 
 	        ComponentBeingConfigured target1 = container.Create<ComponentBeingConfigured>();
 	        ComponentBeingConfigured target2 = container.Create<ComponentBeingConfigured>();
@@ -118,10 +118,10 @@ namespace Rhino.Testing.Tests.AutoMocking
 	    {
             //make sure that container will create two instances of ComponentBeingConfigured
             Type targetType = typeof(ComponentBeingConfigured);
-            container.AddComponentWithLifestyle(targetType.FullName, targetType, LifestyleType.Transient);
+            container.AddComponentLifeStyle(targetType.FullName, targetType, LifestyleType.Transient);
 
             //explictly register dependency to be resolved as transient
-            container.AddComponentWithLifestyle("DefaultCollectionOfServices", typeof(ICollectionOfServices),
+            container.AddComponentLifeStyle("DefaultCollectionOfServices", typeof(ICollectionOfServices),
                                    typeof(DefaultCollectionOfServices), LifestyleType.Transient);
 
 	        ComponentBeingConfigured target1 = container.Create<ComponentBeingConfigured>();
