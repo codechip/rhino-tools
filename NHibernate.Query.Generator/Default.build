@@ -13,7 +13,7 @@
 		<include name="NHibernate.Query.Generator/default.build" />
 		<include name="NHibernate.Query.Generator.Model/default.build" />
 		<include name="NHibernate.Query.Generator.Tests/default.build" if="${common.testrunner.enabled}"/>
-		<include name="NHibernate.Query.Generator.Setup/default.build" />
+		<!--<include name="NHibernate.Query.Generator.Setup/default.build" />-->
 	</fileset>
 
 	<target name="build" depends="common.build" />
