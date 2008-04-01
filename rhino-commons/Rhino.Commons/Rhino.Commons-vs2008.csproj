@@ -96,10 +96,6 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities" />
-    <Reference Include="Rhino.DSL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\build\net-3.5\debug\Rhino.DSL.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -213,9 +209,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
+      <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
+      <Name>Rhino.DSL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
-      <Name>Rhino.Commons.Clr-vs2008</Name>
+      <Name>Rhino.Commons.Clr</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SharedLibsDir)\Tools\MSBuild.Community.Tasks.Targets" />
