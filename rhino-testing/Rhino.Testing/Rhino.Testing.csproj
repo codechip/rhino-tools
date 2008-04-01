@@ -50,7 +50,7 @@
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.3.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Build\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
+      <HintPath>..\..\Build\net-2.0\debug\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
