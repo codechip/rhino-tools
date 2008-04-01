@@ -31,6 +31,7 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -79,6 +80,7 @@ namespace NHibernate.Query.Generator
         private readonly XmlDocument hbm = new XmlDocument();
         private XmlNamespaceManager nsMgr;
         private string hbmCodeNameSpace;
+		private readonly IList _markedAsGenerated = new ArrayList();
 
         /// <summary>
         /// This is used to avoid name collisions when generating the generic query types.
@@ -126,7 +128,7 @@ namespace NHibernate.Query.Generator
 
             CreateGroupBy(queryNameSpace, hbm);
 
-            _provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());
+			_provider.GenerateCodeFromCompileUnit(unit, writer, new CodeGeneratorOptions());
         }
 
         /// <summary>
@@ -204,6 +206,7 @@ namespace NHibernate.Query.Generator
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration groupableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
 			AddNotClsCompliant(groupableClassDeclaration);
+        	AddGeneratedCodeAttribute(groupableClassDeclaration);
             groupableClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -297,6 +300,7 @@ namespace NHibernate.Query.Generator
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration orderableClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
         	AddNotClsCompliant(orderableClassDeclaration);
+        	AddGeneratedCodeAttribute(orderableClassDeclaration);
             orderableClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -408,6 +412,7 @@ namespace NHibernate.Query.Generator
                 typeNameForDisplay = "dummy";
             CodeTypeDeclaration projectByForClassDeclaration = new CodeTypeDeclaration(typeNameForDisplay);
         	AddNotClsCompliant(projectByForClassDeclaration);
+			AddGeneratedCodeAttribute(projectByForClassDeclaration);
             projectByForClassDeclaration.IsPartial = true;
             if (addPrefix) prefix = GetPath(prefix, typeNameForDisplay);
 
@@ -548,6 +553,7 @@ namespace NHibernate.Query.Generator
                     CodeTypeDeclaration collectionDerived =
                         new CodeTypeDeclaration("Query_Collection_" + collectionName);
                 	AddNotClsCompliant(collectionDerived);
+					AddGeneratedCodeAttribute(collectionDerived);
                     collectionDerived.BaseTypes.Add(type);
 
                     CodeConstructor ctor = new CodeConstructor();
@@ -858,12 +864,14 @@ namespace NHibernate.Query.Generator
             // Root_Query_Blog
             CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Root_Query_" + display);
         	AddNotClsCompliant(innerClass);
+			AddGeneratedCodeAttribute(innerClass);
             innerClass.BaseTypes.Add(new CodeTypeReference("Query_" + display, new CodeTypeReference(entityType)));
             innerClass.IsPartial = true;
 
             // proeprty 
             CodeMemberProperty prop = new CodeMemberProperty();
 			AddNotClsCompliant(prop);
+			AddGeneratedCodeAttribute(prop);
             prop.Name = display;
             prop.Type = new CodeTypeReference(innerClass.Name);
             prop.Attributes = MemberAttributes.Public | MemberAttributes.Static;
@@ -886,11 +894,13 @@ namespace NHibernate.Query.Generator
             // Query_Blog<T1> : Query.QueryBuilder<T1>
             CodeTypeDeclaration innerClass = new CodeTypeDeclaration("Query_" + display);
         	AddNotClsCompliant(innerClass);
+			AddGeneratedCodeAttribute(innerClass);
             innerClass.IsPartial = true;
             string genericParameterName = GetGenericParameterName();
             innerClass.TypeParameters.Add(genericParameterName);
 
 			AddNotClsCompliant(innerClass);
+			AddGeneratedCodeAttribute(innerClass);
 
         	string classname;
             if (extends == null)
@@ -949,6 +959,20 @@ namespace NHibernate.Query.Generator
     			);
     		innerClass.CustomAttributes.Add(notCLSComliant);
     	}
+
+		private void AddGeneratedCodeAttribute(CodeTypeMember member)
+		{
+			if(_markedAsGenerated.Contains(member))
+				return;
+			_markedAsGenerated.Add(member);
+			CodeAttributeDeclaration generated = new CodeAttributeDeclaration(
+				typeof(GeneratedCodeAttribute).FullName,
+				new CodeAttributeArgument(new CodePrimitiveExpression("NHibernate.Query.Generator")),
+				new CodeAttributeArgument(new CodePrimitiveExpression("0.0.0.0"))
+				);
+
+			member.CustomAttributes.Add(generated);
+		}
 
     	/// <summary>
         /// Gets the name of the next generic parameter.

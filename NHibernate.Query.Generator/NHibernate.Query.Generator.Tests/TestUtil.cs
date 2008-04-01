@@ -72,6 +72,7 @@ namespace NHibernate.Query.Generator.Tests
 			CompilerParameters cp = new CompilerParameters();
 			cp.GenerateInMemory = true;
 			cp.OutputAssembly = "Generated.Context";
+		  cp.ReferencedAssemblies.Add(typeof(System.CodeDom.Compiler.GeneratedCodeAttribute).Assembly.Location);
 			cp.ReferencedAssemblies.Add(typeof(ISession).Assembly.Location);
 			cp.ReferencedAssemblies.Add(typeof(QueryBuilder<>).Assembly.Location);
 
