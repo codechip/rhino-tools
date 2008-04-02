@@ -1,4 +1,5 @@
-#region license
+﻿#region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,19 +25,12 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#endregion
 
+#endregion
 
 using NHibernate;
 
 namespace Rhino.Commons
 {
-	public interface IFetchingStrategy
-	{
-		ICriteria Apply(ICriteria criteria);
-	}
-
-	public interface IFetchingStrategy<T> : IFetchingStrategy
-	{
-	}
+	public delegate ICriteria ProcessCriteriaDelegate(ICriteria criteria);
 }

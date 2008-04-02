@@ -40,9 +40,9 @@ namespace Rhino.Commons
 {
 	public abstract class RepositoryImplBase<T>
 	{
-		private static readonly Order[] NullOrderArray = null;
-
 		private Type concreteType;
+
+		private static readonly Order[] NullOrderArray = null;
 
 		/// <summary>
 		/// Gets or sets the concrete type of this repository
@@ -112,7 +112,6 @@ namespace Rhino.Commons
 			return FindAll(NullOrderArray, criteria);
 		}
 
-
 		/// <summary>
 		/// Loads all the entities that match the criteria
 		/// by order
@@ -153,7 +152,8 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, 
+					                                                       CreateCriteria, orders);
 				return crit.List<T>();
 			}
 		}
@@ -172,7 +172,8 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, 
+					                                                       CreateCriteria, orders);
 				crit.SetFirstResult(firstResult)
 					.SetMaxResults(maxResults);
 				return crit.List<T>();
@@ -278,7 +279,7 @@ namespace Rhino.Commons
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
 				ICriteria crit =
-					RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
+					RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria);
 				return crit.UniqueResult<T>();
 			}
 		}
@@ -295,7 +296,7 @@ namespace Rhino.Commons
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
 				ICriteria crit =
-					RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+					RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, CreateCriteria);
 				return crit.UniqueResult<T>();
 			}
 		}
@@ -339,7 +340,8 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, 
+					                                                       CreateCriteria, orders);
 				crit.SetFirstResult(0);
 				crit.SetMaxResults(1);
 				return (T) crit.UniqueResult();
@@ -351,7 +353,8 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria,
+					                                                       CreateCriteria);
 				return DoReportOne<ProjT>(crit, projectionList);
 			}
 		}
@@ -361,7 +364,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria);
 				return DoReportOne<ProjT>(crit, projectionList);
 			}
 		}
@@ -378,7 +381,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -388,7 +391,8 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null, orders);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null, 
+					                                                       CreateCriteria, orders);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -398,7 +402,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, null, CreateCriteria);
 				return DoReportAll<ProjT>(crit, projectionList, distinctResults);
 			}
 		}
@@ -408,7 +412,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, CreateCriteria);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -418,7 +422,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, CreateCriteria);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -429,7 +433,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, orders);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, CreateCriteria, orders);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -439,7 +443,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, CreateCriteria);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -449,7 +453,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, orders);
+				ICriteria crit = RepositoryHelper<T>.CreateCriteriaFromArray(action.Value, criteria, CreateCriteria, orders);
 				return DoReportAll<ProjT>(crit, projectionList);
 			}
 		}
@@ -472,7 +476,7 @@ namespace Rhino.Commons
 		{
 			using (DisposableAction<ISession> action = ActionToBePerformedOnSessionUsedForDbFetches)
 			{
-				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, null);
+				ICriteria crit = RepositoryHelper<T>.GetExecutableCriteria(action.Value, criteria, CreateCriteria);
 				crit.SetProjection(Projections.RowCount());
 				object countMayBe_Int32_Or_Int64_DependingOnDatabase = crit.UniqueResult();
 				return Convert.ToInt64(countMayBe_Int32_Or_Int64_DependingOnDatabase);
@@ -608,6 +612,11 @@ namespace Rhino.Commons
 		public T Create()
 		{
 			return (T) Activator.CreateInstance(ConcreteType);
+		}
+
+		private ICriteria CreateCriteria(ISession session)
+		{
+			return CreateDetachedCriteria().GetExecutableCriteria(session);
 		}
 
 		#region Nested type: TypedResultTransformer

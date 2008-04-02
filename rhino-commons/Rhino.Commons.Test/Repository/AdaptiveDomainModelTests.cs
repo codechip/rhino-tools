@@ -28,11 +28,11 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using MbUnit.Framework;
 using NHibernate;
 using NHibernate.Criterion;
 using Rhino.Commons.ForTesting;
-using Rhino.Commons.NHibernate.Repositories;
 
 namespace Rhino.Commons.Test.Repository
 {
@@ -60,12 +60,14 @@ namespace Rhino.Commons.Test.Repository
 			    	return typeof (IParent).Assembly == type.Assembly;
 			    });
 			MyFetchingStrategy.Apply_Called = false;
+			CriteriaBatch.ProcessCriteria += RepositoryFetchingStrategy.ApplyFetchingRules;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			CurrentContext.DisposeUnitOfWork();
+			CriteriaBatch.ProcessCriteria -= RepositoryFetchingStrategy.ApplyFetchingRules;
 			IoC.Reset();
 		}
 
@@ -115,7 +117,6 @@ namespace Rhino.Commons.Test.Repository
 		[Test]
 		public void WillCallFetchingStrategyWhenTheyExists_ICriterion()
 		{
-
 			IRepository<IParent> repository = IoC.Resolve<IRepository<IParent>>();
 			repository.FindAll(Restrictions.IdEq(new Guid()));
 			Assert.IsTrue(MyFetchingStrategy.Apply_Called);
@@ -126,6 +127,22 @@ namespace Rhino.Commons.Test.Repository
 		{
 			IRepository<IParent> repository = IoC.Resolve<IRepository<IParent>>();
 			repository.FindAll(repository.CreateDetachedCriteria());
+			Assert.IsTrue(MyFetchingStrategy.Apply_Called);
+		}
+
+		[Test]
+		public void WillCallFetchingStrategyWhenTheyExists_CriteriaBatch()
+		{
+			IRepository<IParent> repository = IoC.Resolve<IRepository<IParent>>();
+
+			bool gotResults = false;
+			CriteriaBatch batch = new CriteriaBatch();
+			batch.Add(repository.CreateDetachedCriteria())
+				.OnRead<IParent>(delegate(ICollection<IParent> parents)
+			{
+				gotResults = true;
+			}).Execute(UnitOfWork.CurrentSession);
+			Assert.IsTrue(gotResults);
 			Assert.IsTrue(MyFetchingStrategy.Apply_Called);
 		}
 	}

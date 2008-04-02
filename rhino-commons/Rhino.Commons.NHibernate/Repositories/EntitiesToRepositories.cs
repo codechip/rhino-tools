@@ -36,7 +36,7 @@ using NHibernate.Metadata;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 
-namespace Rhino.Commons.NHibernate.Repositories
+namespace Rhino.Commons
 {
 	/// <summary>
 	/// This class takes the responsability of inspecting NHibernate's entities

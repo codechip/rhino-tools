@@ -16,15 +16,17 @@ namespace Rhino.Commons
         private readonly List<Proc<IList, int>> collectionAndCountDelegate = new List<Proc<IList, int>>();
         readonly List<DetachedCriteria> criteriaList = new List<DetachedCriteria>();
 
+		public static event ProcessCriteriaDelegate ProcessCriteria;
+
+		public CriteriaBatch()
+		{
+		}
+
         public CriteriaBatch(ISession session)
         {
             this.session = session;
         }
-
-        public CriteriaBatch()
-        {
-        }
-
+		
         public virtual CriteriaBatch Add(DetachedCriteria criteria, Order order)
         {
             return Add(criteria.AddOrder(order));
@@ -81,7 +83,7 @@ namespace Rhino.Commons
             IMultiCriteria multiCriteria = theSession.CreateMultiCriteria();
             foreach (DetachedCriteria detachedCriteria in criteriaList)
             {
-                multiCriteria.Add(detachedCriteria);
+				multiCriteria.Add(CreateCriteria(theSession, detachedCriteria));
             }
 
             IList list = multiCriteria.List();
@@ -118,5 +120,18 @@ namespace Rhino.Commons
             currentCriteria.SetMaxResults(maxResults);
             return this;
         }
+
+		private ICriteria CreateCriteria(ISession theSession, DetachedCriteria detachedCriteria)
+		{
+			ICriteria criteria = detachedCriteria.GetExecutableCriteria(theSession);
+			if (ProcessCriteria != null)
+			{
+				foreach (ProcessCriteriaDelegate process in ProcessCriteria.GetInvocationList())
+				{
+					criteria = process(criteria);
+				}
+			}
+			return criteria;
+		}
     }
 }

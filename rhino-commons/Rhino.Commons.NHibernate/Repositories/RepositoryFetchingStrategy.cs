@@ -26,17 +26,22 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
+using System;
 using NHibernate;
 
 namespace Rhino.Commons
 {
-	public interface IFetchingStrategy
+	public static class RepositoryFetchingStrategy
 	{
-		ICriteria Apply(ICriteria criteria);
-	}
-
-	public interface IFetchingStrategy<T> : IFetchingStrategy
-	{
+		public static ICriteria ApplyFetchingRules(ICriteria criteria)
+		{
+			Type rules = typeof(IFetchingStrategy<>).MakeGenericType(criteria.CriteriaClass);
+			IFetchingStrategy[] fetchingStrategies = (IFetchingStrategy[]) IoC.ResolveAll(rules);
+			foreach (IFetchingStrategy strategy in fetchingStrategies)
+			{
+				criteria = strategy.Apply(criteria);
+			}
+			return criteria;
+		}
 	}
 }

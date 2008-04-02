@@ -30,12 +30,13 @@
 using System.Data;
 using NHibernate;
 using NHibernate.Criterion;
-using Rhino.Commons.NHibernate.Repositories;
 
 namespace Rhino.Commons
 {
 	internal class RepositoryHelper<T>
 	{
+		public delegate ICriteria CriteriaCreator(ISession session);
+
 		public static void AddCaching(IQuery query)
 		{
 			if (With.Caching.ShouldForceCacheRefresh == false && With.Caching.Enabled)
@@ -64,7 +65,15 @@ namespace Rhino.Commons
 			return query;
 		}
 
-		public static ICriteria GetExecutableCriteria(ISession session, DetachedCriteria criteria, Order[] orders)
+		public static ICriteria GetExecutableCriteria(ISession session, DetachedCriteria criteria, 
+			                                          params Order[] orders)
+		{
+			return GetExecutableCriteria(session, criteria,
+				delegate { return session.CreateCriteria(typeof (T)); }, orders);
+		}
+
+		public static ICriteria GetExecutableCriteria(ISession session, DetachedCriteria criteria, 
+			                                          CriteriaCreator creator, params Order[] orders)
 		{
 			ICriteria executableCriteria;
 			if (criteria != null)
@@ -73,11 +82,11 @@ namespace Rhino.Commons
 			}
 			else
 			{
-				executableCriteria = session.CreateCriteria(typeof (T));
+				executableCriteria = creator(session);
 			}
 			executableCriteria = ApplyFetchingStrategies(executableCriteria);
 			AddCaching(executableCriteria);
-			if (orders != null)
+			if (orders != null && orders.Length > 0)
 			{
 				foreach (Order order in orders)
 				{
@@ -108,7 +117,15 @@ namespace Rhino.Commons
 			}
 		}
 
-		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria, Order[] orders)
+		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria,
+			                                            params Order[] orders)
+		{
+			return CreateCriteriaFromArray(session, criteria,
+				delegate { return session.CreateCriteria(typeof(T)); }, orders);
+		}
+
+		public static ICriteria CreateCriteriaFromArray(ISession session, ICriterion[] criteria, 
+			                                            CriteriaCreator creator, params Order[] orders)
 		{
 			ICriteria crit = session.CreateCriteria(typeof (T));
 			foreach (ICriterion criterion in criteria)
