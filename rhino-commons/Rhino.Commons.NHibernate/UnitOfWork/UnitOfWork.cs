@@ -95,9 +95,10 @@ namespace Rhino.Commons
 
 
         /// <summary>
-        /// Mostly intended to support mocking of the unit of work.
-        /// NOT thread safe!
-        /// </summary>
+        /// NOT thread safe! Mostly intended to support mocking of the unit of work. 
+		/// You must pass a null argument when finished  to ensure atomic units of work UnitOfWorkRegisterGlobalUnitOfWork(null);
+		/// You can also call Dispose() on the result of this method, or put it in a using statement (preferred)
+		/// </summary>
         public static IDisposable RegisterGlobalUnitOfWork(IUnitOfWork global)
         {
             globalNonThreadSafeUnitOfwork = global;
