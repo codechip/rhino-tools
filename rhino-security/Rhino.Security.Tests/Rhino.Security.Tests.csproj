@@ -87,6 +87,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="windsorAR.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="windsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -115,6 +118,14 @@
     <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
       <Name>Rhino.DSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Security.ActiveRecord\Rhino.Security.ActiveRecord.csproj">
+      <Project>{8F5AB80C-54DF-4A05-9B12-BF813A33EBA3}</Project>
+      <Name>Rhino.Security.ActiveRecord</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Security.NHibernate\Rhino.Security.NHibernate.csproj">
+      <Project>{A022FF3B-ECEB-4A3E-806D-4C4F88D86CE9}</Project>
+      <Name>Rhino.Security.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Security\Rhino.Security.csproj">
       <Project>{DBA372FE-3D52-45B3-AF82-B37696328764}</Project>

@@ -1,3 +1,6 @@
+using Rhino.Security.AR;
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
 	using System.Data;

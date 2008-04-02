@@ -1,3 +1,5 @@
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
 	using Commons;
@@ -9,7 +11,7 @@ namespace Rhino.Security.Tests
 		[Test]
 		public void RepositoryIsNotProxied()
 		{
-			bool isProxy = IoC.Resolve<IRepository<Operation>>()
+			bool isProxy = IoC.Resolve<IRepository<IOperation>>()
 				.GetType().FullName.Contains("Proxy");
 			Assert.IsFalse(isProxy);
 		}

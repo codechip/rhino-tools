@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Castle.ActiveRecord;
-using Castle.ActiveRecord.Framework;
-using Castle.ActiveRecord.Framework.Internal;
 using Castle.Core.Logging;
 using Rhino.Commons;
+using Rhino.Security.Configuration;
+using Rhino.Security.Framework;
 
 namespace Rhino.Security
 {
@@ -14,6 +13,7 @@ namespace Rhino.Security
 	/// </summary>
 	public class Security
 	{
+
 		private static readonly MethodInfo getSecurityKeyMethod = typeof (Security).GetMethod(
 			"GetSecurityKeyPropertyInternal", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -27,41 +27,6 @@ namespace Rhino.Security
 		public static ILogger Logger
 		{
 			get { return IoC.TryResolve<ILogger>(new NullLogger()); }
-		}
-
-		/// <summary>
-		/// Prepares to change all internal reference in the security system
-		/// from IUser to the user implementation of the project
-		/// </summary>
-		public static void PrepareForActiveRecordInitialization<TUser>()
-			where TUser : IUser
-		{
-			PrepareForActiveRecordInitialization<TUser>(SecurityTableStructure.Schema);
-		}
-
-		/// <summary>
-		/// Prepares to change all internal reference in the security system
-		/// from IUser to the user implementation of the project
-		/// </summary>
-		/// <typeparam name="TUser">The type of the user.</typeparam>
-		/// <param name="tableStructure">The table structure.</param>
-		public static void PrepareForActiveRecordInitialization<TUser>(SecurityTableStructure tableStructure)
-			where TUser : IUser
-		{
-			ModelsDelegate validated = null;
-			validated = delegate(ActiveRecordModelCollection models, IConfigurationSource source)
-		    {
-				ActiveRecordStarter.ModelsValidated -= validated;
-      			foreach (ActiveRecordModel model in models)
-      			{
-      				if (model.Type.Assembly != typeof (IUser).Assembly)
-      					continue;
-      				model.Accept(new AddCachingVisitor());
-      				model.Accept(new ReplaceUserVisitor(typeof (TUser)));
-      				model.Accept(new ChangeSchemaVisitor(tableStructure));
-           		}
-		    };
-			ActiveRecordStarter.ModelsValidated += validated;
 		}
 
 		/// <summary>

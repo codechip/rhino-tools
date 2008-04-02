@@ -30,14 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.ActiveRecord, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.ActiveRecord.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Components.Validator, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Castle\Castle.Components.Validator.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\Castle\Castle.Core.dll</HintPath>
@@ -59,49 +51,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddCachingInterceptor.cs" />
-    <Compile Include="AddCachingVisitor.cs" />
-    <Compile Include="AuthorizationRepository.cs" />
-    <Compile Include="AuthorizationInformation.cs" />
-    <Compile Include="AuthorizationService.cs" />
-    <Compile Include="ChangeSchemaVisitor.cs" />
-    <Compile Include="EntitiesGroup.cs" />
-    <Compile Include="EntityReference.cs" />
-    <Compile Include="IAuthorizationRepository.cs" />
-    <Compile Include="IAuthorizationService.cs" />
-    <Compile Include="IEntityInformationExtractor.cs" />
-    <Compile Include="IForPermissionBuilder.cs" />
-    <Compile Include="IIDentifiable.cs" />
-    <Compile Include="ILevelPermissionBuilder.cs" />
-    <Compile Include="InvalidEntityException.cs" />
-    <Compile Include="IOnPermissionBuilder.cs" />
-    <Compile Include="IPermissionBuilder.cs" />
-    <Compile Include="IPermissionsBuilderService.cs" />
-    <Compile Include="IPermissionsService.cs" />
-    <Compile Include="PermissionsBuilderService.cs" />
-    <Compile Include="PermissionsService.cs" />
+    <Compile Include="Framework\AuthorizationInformation.cs" />
+    <Compile Include="Framework\IEntityReference.cs" />
+    <Compile Include="Engine\Services\IAuthorizationRepository.cs" />
+    <Compile Include="Framework\IAuthorizationService.cs" />
+    <Compile Include="Framework\IEntityInformationExtractor.cs" />
+    <Compile Include="Framework\Builders\IForPermissionBuilder.cs" />
+    <Compile Include="Framework\IEntitiesGroup.cs" />
+    <Compile Include="Framework\IGloballyIdentifiable.cs" />
+    <Compile Include="Framework\Builders\ILevelPermissionBuilder.cs" />
+    <Compile Include="Framework\InvalidEntityException.cs" />
+    <Compile Include="Framework\Builders\IOnPermissionBuilder.cs" />
+    <Compile Include="Framework\Builders\IPermissionBuilder.cs" />
+    <Compile Include="Framework\Builders\IPermissionsBuilderService.cs" />
+    <Compile Include="Framework\IPermissionsService.cs" />
+    <Compile Include="Framework\INamedEntity.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ReplaceUserVisitor.cs" />
-    <Compile Include="RhinoSecurityFacility.cs" />
+    <Compile Include="Configuration\AbstractSecurityFacility.cs" />
     <Compile Include="Security.cs" />
-    <Compile Include="EntityType.cs" />
-    <Compile Include="EqualityAndHashCodeProvider.cs" />
-    <Compile Include="NamedEntity.cs" />
-    <Compile Include="SecurityInfo.cs" />
-    <Compile Include="SecurityKeyType.cs" />
-    <Compile Include="SecurityTableStructure.cs" />
-    <Compile Include="Strings.cs" />
-    <Compile Include="UsersGroup.cs" />
-    <Compile Include="IUser.cs" />
-    <Compile Include="Operation.cs" />
-    <Compile Include="Permission.cs" />
+    <Compile Include="Framework\IEntityType.cs" />
+    <Compile Include="Engine\EqualityAndHashCodeProvider.cs" />
+    <Compile Include="Engine\NamedEntity.cs" />
+    <Compile Include="Framework\SecurityInfo.cs" />
+    <Compile Include="Configuration\SecurityKeyType.cs" />
+    <Compile Include="Configuration\SecurityTableStructure.cs" />
+    <Compile Include="Engine\Services\GenericSecurityModelFactory.cs" />
+    <Compile Include="Engine\Services\ISecurityModelFactory.cs" />
+    <Compile Include="Engine\SecurityStringHelper.cs" />
+    <Compile Include="Framework\IUsersGroup.cs" />
+    <Compile Include="Framework\IUser.cs" />
+    <Compile Include="Framework\IOperation.cs" />
+    <Compile Include="Framework\IPermission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidateIsUniqueInSameTransactionAttribute.cs" />
-    <Compile Include="ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -117,17 +102,9 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
-      <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
-      <Name>Rhino.Commons.ActiveRecord-vs2008</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
       <Name>Rhino.Commons.Clr</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj">
-      <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
-      <Name>Rhino.Commons.NHibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\rhino-commons\Rhino.Commons\Rhino.Commons.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>

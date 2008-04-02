@@ -1,4 +1,8 @@
 using System;
+using Rhino.Security.Configuration;
+using Rhino.Security.Engine.Services;
+using Rhino.Security.Framework;
+using Rhino.Security.Framework.Builders;
 
 namespace Rhino.Security.Tests
 {
@@ -18,9 +22,9 @@ namespace Rhino.Security.Tests
 		[SetUp]
 		public virtual void SetUp()
 		{
-			Security.PrepareForActiveRecordInitialization<User>(SecurityTableStructure.Prefix);
-			MappingInfo from = MappingInfo.From(typeof(IUser).Assembly, typeof(User).Assembly);
-			FixtureInitialize(PersistenceFramework.ActiveRecord, "windsor.boo", GetDatabaseEngine(), from);
+			//Security.PrepareForActiveRecordInitialization<User>(SecurityTableStructure.Prefix);
+			MappingInfo from = MappingInfo.From(typeof(AR.Permission).Assembly, typeof(User).Assembly);
+			FixtureInitialize(PersistenceFramework.ActiveRecord, "windsorAR.boo", GetDatabaseEngine(), from);
 			CurrentContext.CreateUnitOfWork();
 
 			SetupEntities();
@@ -28,7 +32,7 @@ namespace Rhino.Security.Tests
 
 		protected virtual DatabaseEngine GetDatabaseEngine()
 		{
-			return DatabaseEngine.SQLite;
+			return DatabaseEngine.MsSql2005;
 		}
 
 		[TearDown]

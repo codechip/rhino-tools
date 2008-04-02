@@ -1,3 +1,5 @@
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
     using System;
@@ -10,7 +12,7 @@ namespace Rhino.Security.Tests
         [Test]
         public void DeeplyNestedUsersGroup()
         {
-            UsersGroup group = authorizationRepository.CreateUsersGroup("Root");
+            IUsersGroup group = authorizationRepository.CreateUsersGroup("Root");
             UnitOfWork.Current.Flush();
             for (int j = 0; j < 50; j++)
             {
@@ -21,7 +23,7 @@ namespace Rhino.Security.Tests
 
             authorizationRepository.AssociateUserWith(user, "Child #49");
             UnitOfWork.Current.TransactionalFlush();
-            UsersGroup[] groups = authorizationRepository.GetAncestryAssociation(user, "Root");
+            IUsersGroup[] groups = authorizationRepository.GetAncestryAssociation(user, "Root");
             Assert.AreEqual(51, groups.Length);
         }
 
@@ -29,7 +31,7 @@ namespace Rhino.Security.Tests
         public void CanOnlyAssignAccountsThatAreAssignedToMe()
         {
             // during first deploy
-            Operation operation = authorizationRepository.CreateOperation("/Account/Assign");
+            IOperation operation = authorizationRepository.CreateOperation("/Account/Assign");
 
             User secondUser = new User();
             secondUser.Name = "Second user";
@@ -72,9 +74,9 @@ namespace Rhino.Security.Tests
         public void CanOnlyViewAccountsThatUserBelongsTo()
         {
             // on first deploy
-            Operation operation = authorizationRepository.CreateOperation("/Account/View");
+            IOperation operation = authorizationRepository.CreateOperation("/Account/View");
             // when creating account
-            UsersGroup group = authorizationRepository.CreateUsersGroup("Belongs to " + account.Name);
+            IUsersGroup group = authorizationRepository.CreateUsersGroup("Belongs to " + account.Name);
             UnitOfWork.Current.TransactionalFlush();
 
             // setting permission so only associated users can view
@@ -94,9 +96,9 @@ namespace Rhino.Security.Tests
             Assert.IsTrue(allowed);
         }
 
-        private void AddDefaultPermissions(Operation operation, User toUser)
+        private void AddDefaultPermissions(IOperation operation, User toUser)
         {
-            EntitiesGroup group = authorizationRepository.CreateEntitiesGroup("Assigned to " + toUser.Name);
+            IEntitiesGroup group = authorizationRepository.CreateEntitiesGroup("Assigned to " + toUser.Name);
             permissionsBuilderService
                 .Allow(operation)
                 .For(toUser)

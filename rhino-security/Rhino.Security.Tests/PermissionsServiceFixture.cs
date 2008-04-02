@@ -1,3 +1,6 @@
+using Rhino.Security.AR;
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
     using System.Collections.Generic;
@@ -10,7 +13,7 @@ namespace Rhino.Security.Tests
         [Test]
         public void CanCreatePermission()
         {
-            Permission permission = permissionsBuilderService
+            IPermission permission = permissionsBuilderService
                 .Allow("/Account/Edit")
                 .For(user)
                 .On(account)
@@ -34,7 +37,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user);
+            IPermission[] permissions = permissionService.GetPermissionsFor(user);
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -49,7 +52,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user);
+            IPermission[] permissions = permissionService.GetPermissionsFor(user);
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -64,7 +67,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(account);
+            IPermission[] permissions = permissionService.GetPermissionsFor(account);
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -79,7 +82,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(account);
+            IPermission[] permissions = permissionService.GetPermissionsFor(account);
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -94,7 +97,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, account);
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, account);
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -109,7 +112,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -124,7 +127,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -139,7 +142,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -172,7 +175,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user);
+            IPermission[] permissions = permissionService.GetPermissionsFor(user);
             Assert.AreEqual(4, permissions.Length);
 
             Assert.AreEqual(20, permissions[0].Level);
@@ -199,7 +202,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
         }
 
@@ -221,14 +224,14 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
         }
 
         [Test]
         public void CanRemovePermission()
         {
-            Permission permission = permissionsBuilderService
+            IPermission permission = permissionsBuilderService
                 .Allow("/Account/Edit")
                 .For("Administrators")
                 .On("Important Accounts")
@@ -236,7 +239,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
 
-            Permission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
+            IPermission[] permissions = permissionService.GetPermissionsFor(user, account, "/Account/Edit");
             Assert.AreEqual(1, permissions.Length);
 
             authorizationRepository.RemovePermission(permission);
