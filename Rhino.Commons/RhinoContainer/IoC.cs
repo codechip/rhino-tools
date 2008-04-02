@@ -185,6 +185,11 @@ namespace Rhino.Commons
 			Reset(windsorContainer);
 		}
 
+		public static Array ResolveAll(Type service)
+		{
+			return Container.ResolveAll(service);
+		}
+
     	public static T[] ResolveAll<T>()
     	{
     		return Container.ResolveAll<T>();
