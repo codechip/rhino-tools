@@ -79,7 +79,12 @@ namespace Rhino.Commons
 
         public static bool IsStarted
         {
-            get { return Local.Data[CurrentUnitOfWorkKey] != null; }
+            get 
+			{ 
+				if(globalNonThreadSafeUnitOfwork != null)
+					return true;
+				return Local.Data[CurrentUnitOfWorkKey] != null; 
+			}
         }
 
         internal static Guid? CurrentLongConversationId
@@ -90,12 +95,17 @@ namespace Rhino.Commons
 
 
         /// <summary>
-        /// Mostly intended to support mocking of the unit of work.
-        /// NOT thread safe!
-        /// </summary>
-        public static void RegisterGlobalUnitOfWork(IUnitOfWork global)
+        /// NOT thread safe! Mostly intended to support mocking of the unit of work. 
+		/// You must pass a null argument when finished  to ensure atomic units of work UnitOfWorkRegisterGlobalUnitOfWork(null);
+		/// You can also call Dispose() on the result of this method, or put it in a using statement (preferred)
+		/// </summary>
+        public static IDisposable RegisterGlobalUnitOfWork(IUnitOfWork global)
         {
             globalNonThreadSafeUnitOfwork = global;
+        	return new DisposableAction(delegate
+        	{
+        		globalNonThreadSafeUnitOfwork = null;
+        	});
         }
 
         public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
@@ -144,6 +154,8 @@ namespace Rhino.Commons
         {
             get
             {
+				if(globalNonThreadSafeUnitOfwork != null)
+					return globalNonThreadSafeUnitOfwork;
                 IUnitOfWork unitOfWork = (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
                 if (unitOfWork == null)
                     throw new InvalidOperationException("You are not in a unit of work");
