@@ -26,12 +26,19 @@ namespace Rhino.Security.Engine.Services
     where TIEntityReference : class, IEntityReference, new()
     where TIPermission : class, IPermission, new()
   {
+    /// <summary>TODO: Documentation</summary>
     protected readonly ISecurityModelFactory modelFactory;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIEntitiesGroup> entitiesGroupRepository;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIEntityReference> entityReferenceRepository;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIEntityType> entityTypesRepository;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIOperation> operationsRepository;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIPermission> permissionsRepository;
+    /// <summary>TODO: Documentation</summary>
     protected readonly IRepository<TIUsersGroup> usersGroupRepository;
 
     /// <summary>

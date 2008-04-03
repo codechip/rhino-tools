@@ -30,6 +30,7 @@ namespace Rhino.Security.Configuration
     where TIPermission : class, IPermission, new()
   {
 
+    /// <summary>TODO: Documentation</summary>
     protected override void RegisterSecurityModelFactory()
     {
       Kernel.Register(
@@ -43,6 +44,7 @@ namespace Rhino.Security.Configuration
           TIPermission>>());
     }
 
+    /// <summary>TODO: Documentation</summary>
     protected override void RegisterDefaultServices()
     {
       Kernel.Register(

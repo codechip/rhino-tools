@@ -12,36 +12,40 @@ using Rhino.Security.Engine.Services;
 
 namespace Rhino.Security.Configuration
 {
+  /// <summary>TODO: Documentation</summary>
   public class ARSecurityFacility
     : RhinoSecurityFacility<EntityType, UsersGroup, EntitiesGroup, Operation, EntityReference, Permission>
   {
     private readonly Type userType;
     private readonly SecurityTableStructure tableStructure;
 
-
+    /// <summary>TODO: Documentation</summary>
     public ARSecurityFacility(Type userType)
       : this(userType, SecurityTableStructure.Schema)
     {
       this.userType = userType;
     }
 
-
+    /// <summary>TODO: Documentation</summary>
     public ARSecurityFacility(Type userType, SecurityTableStructure tableStructure)
     {
       this.tableStructure = tableStructure;
       this.userType = userType;
     }
 
+    /// <summary>TODO: Documentation</summary>
     public virtual Type UserType
     {
       get { return userType; }
     }
 
+    /// <summary>TODO: Documentation</summary>
     public virtual SecurityTableStructure TableStructure
     {
       get { return tableStructure; }
     }
 
+    /// <summary>TODO: Documentation</summary>
     protected override void RegisterDefaultServices()
     {
       PrepareForActiveRecordInitialization();
@@ -76,6 +80,7 @@ namespace Rhino.Security.Configuration
       ActiveRecordStarter.ModelsValidated += validated;
     }
 
+    /// <summary>TODO: Documentation</summary>
     protected override void RegisterValidationServices()
     {
       if (Kernel.HasComponent(typeof(IValidatorRegistry)) == false)

@@ -10,6 +10,7 @@ namespace Rhino.Security.AR
   public class NamedEntity<T> : Rhino.Security.Model.NamedEntity<T>
     where T : NamedEntity<T>
   {
+    /// <summary>TODO: Documentation</summary>
     [PrimaryKey(Generator = PrimaryKeyType.GuidComb)]
     public override Guid Id
     {

@@ -4,6 +4,7 @@ using Rhino.Security.Framework;
 
 namespace Rhino.Security.Engine.Services
 {
+  /// <summary>TODO: Documentation</summary>
   public class ARValidatingAuthorizationRepository<TIEntityType, TIUsersGroup, TIEntitiesGroup, TIOperation, TIEntityReference, TIPermission> 
     :  RhinoAuthorizationRepository< TIEntityType, TIUsersGroup, TIEntitiesGroup, TIOperation, TIEntityReference, TIPermission> 
       where TIEntityType : class, IEntityType, new()
@@ -15,6 +16,7 @@ namespace Rhino.Security.Engine.Services
   {
     private readonly ValidatorRunner validator;
 
+    /// <summary>TODO: Documentation</summary>
     public ARValidatingAuthorizationRepository(ISecurityModelFactory modelFactory,
                                                IRepository<TIUsersGroup> usersGroupRepository,
                                                IRepository<TIEntitiesGroup> entitiesGroupRepository,
@@ -28,6 +30,7 @@ namespace Rhino.Security.Engine.Services
       this.validator = validator;
     }
 
+    /// <summary>TODO: Documentation</summary>
     public override IEntitiesGroup CreateEntitiesGroup(string name)
     {
       TIEntitiesGroup eg = (TIEntitiesGroup)modelFactory.CreateEntitiesGroup(name);
@@ -40,6 +43,7 @@ namespace Rhino.Security.Engine.Services
       return eg;
     }
 
+    /// <summary>TODO: Documentation</summary>
     public override IUsersGroup CreateUsersGroup(string name)
     {
       IUsersGroup ug = modelFactory.CreateUsersGroup(name);

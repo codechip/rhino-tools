@@ -100,13 +100,15 @@
     <Compile Include="EnvironmentSetupFixture.cs" />
     <Compile Include="PermissionsServiceFixture.cs" />
     <Compile Include="DatabaseFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScenariosFixture.cs" />
     <Compile Include="SecrityInfoFixture.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="windsorAR.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="windsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -136,6 +138,14 @@
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
       <Name>Rhino.DSL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rhino.Security.ActiveRecord\Rhino.Security.ActiveRecord-vs2008.csproj">
+      <Project>{8F5AB80C-54DF-4A05-9B12-BF813A33EBA3}</Project>
+      <Name>Rhino.Security.ActiveRecord</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Security.NHibernate\Rhino.Security.NHibernate-vs2008.csproj">
+      <Project>{A022FF3B-ECEB-4A3E-806D-4C4F88D86CE9}</Project>
+      <Name>Rhino.Security.NHibernate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Security\Rhino.Security-vs2008.csproj">
       <Project>{DBA372FE-3D52-45B3-AF82-B37696328764}</Project>
       <Name>Rhino.Security</Name>
@@ -160,6 +170,9 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,14 +1,14 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DBA372FE-3D52-45B3-AF82-B37696328764}</ProjectGuid>
+    <ProjectGuid>{A022FF3B-ECEB-4A3E-806D-4C4F88D86CE9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rhino.Security</RootNamespace>
-    <AssemblyName>Rhino.Security</AssemblyName>
+    <AssemblyName>Rhino.Security.NHibernate</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,42 +51,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\AuthorizationInformation.cs" />
-    <Compile Include="Framework\IEntityReference.cs" />
-    <Compile Include="Engine\Services\IAuthorizationRepository.cs" />
-    <Compile Include="Framework\IAuthorizationService.cs" />
-    <Compile Include="Framework\IEntityInformationExtractor.cs" />
-    <Compile Include="Framework\Builders\IForPermissionBuilder.cs" />
-    <Compile Include="Framework\IEntitiesGroup.cs" />
-    <Compile Include="Framework\IGloballyIdentifiable.cs" />
-    <Compile Include="Framework\Builders\ILevelPermissionBuilder.cs" />
-    <Compile Include="Framework\InvalidEntityException.cs" />
-    <Compile Include="Framework\Builders\IOnPermissionBuilder.cs" />
-    <Compile Include="Framework\Builders\IPermissionBuilder.cs" />
-    <Compile Include="Framework\Builders\IPermissionsBuilderService.cs" />
-    <Compile Include="Framework\IPermissionsService.cs" />
-    <Compile Include="Framework\INamedEntity.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Configuration\NHSecurityFacility.cs" />
+    <Compile Include="Configuration\RhinoSecurityFacility.cs" />
+    <Compile Include="Engine\Services\AddCachingInterceptor.cs" />
+    <Compile Include="Engine\Services\RhinoAuthorizationRepository.cs" />
+    <Compile Include="Engine\Services\RhinoAuthorizationService.cs" />
+    <Compile Include="Engine\Services\RhinoPermissionsBuilderService.cs" />
+    <Compile Include="Engine\Services\RhinoPermissionsService.cs" />
+    <Compile Include="NH\EntitiesGroup.cs" />
+    <Compile Include="NH\EntityReference.cs" />
+    <Compile Include="NH\EntityType.cs" />
+    <Compile Include="NH\Operation.cs" />
+    <Compile Include="NH\Permission.cs" />
+    <Compile Include="NH\UsersGroup.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\AbstractSecurityFacility.cs" />
-    <Compile Include="Security.cs" />
-    <Compile Include="Framework\IEntityType.cs" />
-    <Compile Include="Engine\EqualityAndHashCodeProvider.cs" />
-    <Compile Include="Engine\NamedEntity.cs" />
-    <Compile Include="Framework\SecurityInfo.cs" />
-    <Compile Include="Configuration\SecurityKeyType.cs" />
-    <Compile Include="Configuration\SecurityTableStructure.cs" />
-    <Compile Include="Engine\Services\GenericSecurityModelFactory.cs" />
-    <Compile Include="Engine\Services\ISecurityModelFactory.cs" />
-    <Compile Include="Engine\SecurityStringHelper.cs" />
-    <Compile Include="Framework\IUsersGroup.cs" />
-    <Compile Include="Framework\IUser.cs" />
-    <Compile Include="Framework\IOperation.cs" />
-    <Compile Include="Framework\IPermission.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -96,23 +79,28 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
+    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
       <Name>Rhino.Commons.Clr</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons\Rhino.Commons.csproj">
+    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate-v2008.csproj">
+      <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
+      <Name>Rhino.Commons.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons\Rhino.Commons-vs2008.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
       <Name>Rhino.Commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
       <Name>Rhino.DSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Security\Rhino.Security-vs2008.csproj">
+      <Project>{DBA372FE-3D52-45B3-AF82-B37696328764}</Project>
+      <Name>Rhino.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -221,6 +221,7 @@
     <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
+    <Compile Include="Binsor\BinsorScriptTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
@@ -234,8 +235,8 @@
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
     <Compile Include="NHibernate\FuturesFixture.cs" />
-    <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
     <Compile Include="Repository\AdaptiveDomainModelTests.cs" />
+    <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryProjectionTests.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Repository\RepositoryTestsBase.cs" />
     <Compile Include="RhinoThreadPoolFixture.cs" />
     <Compile Include="UoW\TransactionalFlush.cs" />
+    <Compile Include="UoW\GlobalNonThreaSafeUnitOfWorkTest.cs" />
     <Compile Include="With\With.Caching.cs" />
     <Compile Include="With\With.Log.cs" />
     <Compile Include="With\With.PerformanceCounter.cs" />
@@ -263,9 +265,9 @@
       <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
       <Name>Rhino.Commons.NHibernate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rhino.Commons\Rhino.Commons-vs2008.csproj">
+    <ProjectReference Include="..\Rhino.Commons\Rhino.Commons.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
-      <Name>Rhino.Commons-vs2008</Name>
+      <Name>Rhino.Commons</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
