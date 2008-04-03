@@ -31,6 +31,8 @@
 			<include name="log4net.dll" />
 			<include name="Rhino.Mocks.dll" />
 			<include name="Rhino.Security.dll" />
+			<include name="Rhino.Security.NHibernate.dll" />
+			<include name="Rhino.Security.ActiveRecord.dll" />
 			
 		</assemblyfileset>
 
