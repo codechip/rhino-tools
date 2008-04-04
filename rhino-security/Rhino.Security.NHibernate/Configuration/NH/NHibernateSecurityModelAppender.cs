@@ -6,15 +6,12 @@ namespace Rhino.Security.Configuration.NH
   public class NHibernateSecurityModelAppender : INHibernateConfigurationModifier
   {
     private readonly SecurityModelMappingBuilder securityModelMappingBuilder;
-    private readonly INHibernateSecurityConfiguration configuration;
 
     /// <summary>Create a new <see cref="NHibernateSecurityModelAppender"/></summary>
-    /// <param name="configuration"></param>
     /// <param name="builder"></param>
-    public NHibernateSecurityModelAppender(INHibernateSecurityConfiguration configuration, SecurityModelMappingBuilder builder)
+    public NHibernateSecurityModelAppender(SecurityModelMappingBuilder builder)
     {
       securityModelMappingBuilder = builder;
-      this.configuration = configuration;
     }
 
     /// <summary>Adds the mapping document to the NHibernate configuration.</summary>
