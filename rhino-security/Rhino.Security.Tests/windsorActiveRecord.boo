@@ -1,5 +1,4 @@
 import System.Reflection
-import Rhino.Commons from Rhino.Commons.NHibernate as nh
 import Rhino.Security.Framework from Rhino.Security
 import Rhino.Security.Configuration from Rhino.Security
 import Rhino.Security.Configuration from Rhino.Security.ActiveRecord

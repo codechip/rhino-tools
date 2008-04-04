@@ -1,3 +1,5 @@
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
     using System.Data;
@@ -5,8 +7,25 @@ namespace Rhino.Security.Tests
     using MbUnit.Framework;
     using Rhino.Commons.ForTesting;
 
-    [TestFixture]
-    public class AuthorizationServiceWithSecondLevelCacheFixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_AuthorizationServiceWithSecondLevelCacheFixture
+    : AuthorizationServiceWithSecondLevelCacheFixture<User, AR.Operation>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_AuthorizationServiceWithSecondLevelCacheFixture
+    : AuthorizationServiceWithSecondLevelCacheFixture<User, NH.Operation>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+  public abstract class AuthorizationServiceWithSecondLevelCacheFixture<TUser, TOperation> : DatabaseFixture<TUser, TOperation>
+    where TUser : class, IUser
+    where TOperation : class, IOperation
     {
         // we need those to ensure that we aren't leaving the 2nd level
         // cache in an inconsistent state after deletion

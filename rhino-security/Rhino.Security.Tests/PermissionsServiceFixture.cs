@@ -1,3 +1,4 @@
+using Rhino.Commons.ForTesting;
 using Rhino.Security.AR;
 using Rhino.Security.Framework;
 
@@ -7,8 +8,27 @@ namespace Rhino.Security.Tests
     using Commons;
     using MbUnit.Framework;
 
-    [TestFixture]
-    public class PermissionsServiceFixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_PermissionsServiceFixture
+    : PermissionsServiceFixture<User, AR.Operation, AR.Permission>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_PermissionsServiceFixture
+    : PermissionsServiceFixture<User, NH.Operation, NH.Permission>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+
+  public abstract class PermissionsServiceFixture<TUser, TOperation, TPermission> : DatabaseFixture<TUser, TOperation>
+    where TUser : class, IUser
+    where TOperation : class, IOperation
+    where TPermission : class, IPermission
     {
         [Test]
         public void CanCreatePermission()
@@ -21,7 +41,7 @@ namespace Rhino.Security.Tests
                 .Save();
             UnitOfWork.Current.TransactionalFlush();
             UnitOfWork.CurrentSession.Evict(permission);
-            ICollection<Permission> all = Repository<Permission>.FindAll();
+            ICollection<TPermission> all = Repository<TPermission>.FindAll();
 
             Assert.AreEqual(1, all.Count);
         }

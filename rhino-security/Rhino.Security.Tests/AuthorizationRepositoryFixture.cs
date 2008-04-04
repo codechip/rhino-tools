@@ -1,4 +1,6 @@
+using Rhino.Commons.ForTesting;
 using Rhino.Security.AR;
+using Rhino.Security.NH;
 using Rhino.Security.Framework;
 
 namespace Rhino.Security.Tests
@@ -8,7 +10,26 @@ namespace Rhino.Security.Tests
     using MbUnit.Framework;
 
     [TestFixture]
-    public class AuthorizationRepositoryFixture : DatabaseFixture
+    public class ActiveRecord_AuthorizationRepositoryFixture 
+      : AuthorizationRepositoryFixture<User, AR.Operation, AR.UsersGroup, AR.EntitiesGroup>
+    {
+    }
+
+    [TestFixture]
+    public class NHibernate_AuthorizationRepositoryFixture 
+      : AuthorizationRepositoryFixture<User, NH.Operation, NH.UsersGroup, NH.EntitiesGroup>
+    {
+      protected override PersistenceFramework GetPersistenceFramework()
+      {
+        return PersistenceFramework.NHibernate;
+      }
+    }
+  
+    public abstract class AuthorizationRepositoryFixture<TUser, TOperation, TUsersGroup, TEntitiesGroup> : DatabaseFixture<TUser, TOperation>
+      where TUser : class, IUser
+      where TOperation : class, IOperation
+      where TUsersGroup : class, IUsersGroup
+      where TEntitiesGroup : class, IEntitiesGroup
     {
         [Test]
         public void CanSaveUser()
@@ -49,7 +70,7 @@ namespace Rhino.Security.Tests
 
             UnitOfWork.CurrentSession.Evict(group);
 
-            IUsersGroup groupFromDb = Repository<UsersGroup>.Get(group.Id);
+            IUsersGroup groupFromDb = Repository<TUsersGroup>.Get(group.Id);
             Assert.IsNotNull(groupFromDb);
             Assert.AreEqual(group.Name, groupFromDb.Name);
         }
@@ -62,12 +83,12 @@ namespace Rhino.Security.Tests
 
             UnitOfWork.CurrentSession.Evict(group);
 
-            IEntitiesGroup groupFromDb = Repository<EntitiesGroup>.Get(group.Id);
+            IEntitiesGroup groupFromDb = Repository<TEntitiesGroup>.Get(group.Id);
             Assert.IsNotNull(groupFromDb);
             Assert.AreEqual(group.Name, groupFromDb.Name);
         }
 
-        [Test]
+        [Test, Ignore("Move to ARValidatingRepository Tests")]
         [ExpectedException(typeof (ValidationException))]
         public void CannotCreateEntitiesGroupWithSameName()
         {
@@ -76,7 +97,7 @@ namespace Rhino.Security.Tests
             authorizationRepository.CreateEntitiesGroup("Admininstrators");
         }
 
-        [Test]
+        [Test, Ignore("Move to ARValidatingRepository Tests")]
         [ExpectedException(typeof (ValidationException))]
         public void CannotCreateUsersGroupsWithSameName()
         {

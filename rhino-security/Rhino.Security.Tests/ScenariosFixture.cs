@@ -1,3 +1,4 @@
+using Rhino.Commons.ForTesting;
 using Rhino.Security.Framework;
 
 namespace Rhino.Security.Tests
@@ -6,8 +7,25 @@ namespace Rhino.Security.Tests
     using Commons;
     using MbUnit.Framework;
 
-    [TestFixture]
-    public class ScenariosFixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_ScenariosFixture
+    : ScenariosFixture<User, AR.Operation>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_ScenariosFixture
+    : ScenariosFixture<User, NH.Operation>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+    public abstract class ScenariosFixture<TUser, TOperation> : DatabaseFixture<TUser, TOperation>
+      where TUser : class, IUser
+      where TOperation : class, IOperation
     {
         [Test]
         public void DeeplyNestedUsersGroup()

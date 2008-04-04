@@ -51,9 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\NH\INHibernateConfigurationModifier.cs" />
+    <Compile Include="Configuration\NH\INHibernateSecurityConfiguration.cs" />
+    <Compile Include="Configuration\NH\NHibernateSecurityConfiguration.cs" />
+    <Compile Include="Configuration\NH\NHibernateSecurityInitializer.cs" />
+    <Compile Include="Configuration\NH\NHibernateSecurityModelAppender.cs" />
     <Compile Include="Configuration\NHSecurityFacility.cs" />
+    <Compile Include="Configuration\NH\SecurityModelMappingBuilder.cs" />
     <Compile Include="Configuration\RhinoSecurityFacility.cs" />
     <Compile Include="Engine\Services\AddCachingInterceptor.cs" />
+    <Compile Include="Configuration\NH\INHibernateMappingBuilder.cs" />
     <Compile Include="Engine\Services\RhinoAuthorizationRepository.cs" />
     <Compile Include="Engine\Services\RhinoAuthorizationService.cs" />
     <Compile Include="Engine\Services\RhinoPermissionsBuilderService.cs" />

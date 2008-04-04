@@ -1,4 +1,5 @@
 using System;
+using NHibernate;
 using Rhino.Security.Configuration;
 using Rhino.Security.Engine.Services;
 using Rhino.Security.Framework;
@@ -10,7 +11,21 @@ namespace Rhino.Security.Tests
 	using MbUnit.Framework;
 	using Rhino.Commons.ForTesting;
 
-	public class DatabaseFixture : TestFixtureBase
+  public class TestNHibernateInitializer : INHibernateInitializationAware
+  {
+    public void Configured(NHibernate.Cfg.Configuration cfg)
+    {
+      IoC.Resolve<INHibernateInitializationAware>().Configured(cfg);
+    }
+
+    public void Initialized(NHibernate.Cfg.Configuration cfg, ISessionFactory sessionFactory)
+    {
+    }
+  }
+
+  public class DatabaseFixture<TUser, TOperation> : TestFixtureBase
+    where TUser : class, IUser
+    where TOperation : class, IOperation
 	{
 		protected Account account;
 		protected IAuthorizationRepository authorizationRepository;
@@ -23,12 +38,27 @@ namespace Rhino.Security.Tests
 		public virtual void SetUp()
 		{
 			//Security.PrepareForActiveRecordInitialization<User>(SecurityTableStructure.Prefix);
-			MappingInfo from = MappingInfo.From(typeof(AR.Permission).Assembly, typeof(User).Assembly);
-			FixtureInitialize(PersistenceFramework.ActiveRecord, "windsorAR.boo", GetDatabaseEngine(), from);
+			MappingInfo from = MappingInfo.From(typeof(TOperation).Assembly, typeof(TUser).Assembly);
+      if (GetPersistenceFramework() == PersistenceFramework.NHibernate)
+      {
+        // Need to find a better way for this
+        from.NHInitializationAware = new TestNHibernateInitializer();
+      }
+			FixtureInitialize(GetPersistenceFramework(), GetWindsorConfigFile(), GetDatabaseEngine(), from);
 			CurrentContext.CreateUnitOfWork();
 
 			SetupEntities();
 		}
+
+    protected virtual string GetWindsorConfigFile()
+    {
+      return "windsor" + GetPersistenceFramework().ToString() + ".boo";
+    }
+
+	  protected virtual PersistenceFramework GetPersistenceFramework()
+	  {
+	    return PersistenceFramework.ActiveRecord;
+	  }
 
 		protected virtual DatabaseEngine GetDatabaseEngine()
 		{

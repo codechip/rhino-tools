@@ -1,5 +1,6 @@
 using Castle.ActiveRecord;
 using Iesi.Collections.Generic;
+using NHibernate.Mapping;
 using Rhino.Security.Framework;
 
 namespace Rhino.Security.AR
@@ -21,7 +22,7 @@ namespace Rhino.Security.AR
     /// Gets or sets the users.
     /// </summary>
     /// <value>The users.</value>
-    [HasAndBelongsToMany(
+    [HasAndBelongsToMany(MapType=typeof(IUser),
       Table = "UsersToUsersGroups",
       ColumnKey = "GroupId",
       ColumnRef = "UserId"

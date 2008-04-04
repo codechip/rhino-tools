@@ -1,3 +1,6 @@
+using Rhino.Commons.ForTesting;
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
     using Commons;
@@ -5,8 +8,25 @@ namespace Rhino.Security.Tests
     using NHibernate;
     using NHibernate.Criterion;
 
-    [TestFixture]
-    public class AuthorizationService_Queries_Fixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_AuthorizationService_Queries_Fixture
+    : AuthorizationService_Queries_Fixture<User, AR.Operation>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_AuthorizationService_Queries_Fixture
+    : AuthorizationService_Queries_Fixture<User, NH.Operation>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+  public abstract class AuthorizationService_Queries_Fixture<TUser, TOperation> : DatabaseFixture<TUser, TOperation>
+    where TUser : class, IUser
+    where TOperation : class, IOperation
     {
         private ICriteria criteria;
 

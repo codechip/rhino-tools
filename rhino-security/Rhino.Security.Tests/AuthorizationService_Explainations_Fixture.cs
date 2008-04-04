@@ -1,10 +1,30 @@
+using Rhino.Commons.ForTesting;
+using Rhino.Security.Framework;
+
 namespace Rhino.Security.Tests
 {
     using Commons;
     using MbUnit.Framework;
 
-    [TestFixture]
-    public class AuthorizationService_Explainations_Fixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_AuthorizationRepository_Explainations_Fixture
+    : AuthorizationService_Explainations_Fixture<User, AR.Operation>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_AuthorizationRepository_Explainations_Fixture
+    : AuthorizationService_Explainations_Fixture<User, NH.Operation>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+  public abstract class AuthorizationService_Explainations_Fixture<TUser, TOperation> : DatabaseFixture<TUser, TOperation>
+    where TUser : class, IUser
+    where TOperation : class, IOperation
     {
         [Test]
         public void ExplainWhyAllowedWhenAllowedPermissionWasDefinedWithDenyPermissionWithLowerLevel()

@@ -1,3 +1,4 @@
+using Rhino.Commons.ForTesting;
 using Rhino.Security.AR;
 using Rhino.Security.Framework;
 
@@ -7,8 +8,25 @@ namespace Rhino.Security.Tests
 	using Commons;
 	using MbUnit.Framework;
 
-	[TestFixture]
-	public class AuthorizationServiceFixture : DatabaseFixture
+  [TestFixture]
+  public class ActiveRecord_AuthorizationServiceFixture
+    : AuthorizationService_Queries_Fixture<User, AR.Operation>
+  {
+  }
+
+  [TestFixture]
+  public class NHibernate_AuthorizationServiceFixture
+    : AuthorizationServiceFixture<User, NH.Operation>
+  {
+    protected override PersistenceFramework GetPersistenceFramework()
+    {
+      return PersistenceFramework.NHibernate;
+    }
+  }
+
+  public abstract class AuthorizationServiceFixture<TUser, TOperation> : DatabaseFixture<TUser, TOperation>
+    where TUser : class, IUser
+    where TOperation : class, IOperation
 	{
 		[Test]
 		public void WillReturnFalseIfNoPermissionHasBeenDefined()
