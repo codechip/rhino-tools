@@ -46,7 +46,7 @@ namespace Rhino.Commons.Test.NHibernate
         [TestFixtureSetUp]
         public void OneTimeTestInitialize()
         {
-            FixtureInitialize(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());
+            IntializeNHibernate(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());
         }
 
         [SetUp]
