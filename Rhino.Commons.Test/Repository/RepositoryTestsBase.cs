@@ -38,7 +38,7 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
 {
-    public class RepositoryTestsBase : TestFixtureBase
+    public class RepositoryTestsBase : DatabaseTestFixtureBase
     {
         public virtual void OneTimeTestInitialize()
         {

@@ -172,7 +172,7 @@ namespace Rhino.Commons.ForTesting
         /// using Rhino.Commons.ForTesting;
         /// 
         /// [TestFixture]
-        /// public class FooTest : TestFixtureBase
+        /// public class FooTest : DatabaseTestFixtureBase
         /// {
         ///		[TestFixtureSetup]
         ///		public void TestFixtureSetup()

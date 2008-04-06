@@ -76,7 +76,7 @@
     <Compile Include="ForTesting\MappingInfo.cs" />
     <Compile Include="ForTesting\NHibernateEmbeddedDBTestFixtureBase.cs" />
     <Compile Include="ForTesting\NHibernateInMemoryTestFixtureBase.cs" />
-    <Compile Include="ForTesting\TestFixtureBase.cs" />
+    <Compile Include="ForTesting\DatabaseTestFixtureBase.cs" />
     <Compile Include="ForTesting\UnitOfWorkTestContext.cs" />
     <Compile Include="ForTesting\UnitOfWorkTestContextDbStrategy.cs" />
     <Compile Include="HttpModules\EnsureMaxNumberOfQueriesPerRequestModule.cs" />

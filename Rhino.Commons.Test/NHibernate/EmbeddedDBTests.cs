@@ -38,7 +38,7 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.NHibernate
 {
     [TestFixture]
-    public class EmbeddedDBTests : TestFixtureBase
+    public class EmbeddedDBTests : DatabaseTestFixtureBase
     {
         private ISession session;
         private SMS sms;

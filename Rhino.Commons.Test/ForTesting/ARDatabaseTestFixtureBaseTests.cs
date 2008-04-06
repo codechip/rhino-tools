@@ -34,7 +34,7 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.ForTesting
 {
     [TestFixture]
-    public class ActiveRecordTestFixtureBaseTests : TestFixtureBaseTests
+    public class ARDatabaseTestFixtureBaseTests : DatabaseTestFixtureBaseTests
     {
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
