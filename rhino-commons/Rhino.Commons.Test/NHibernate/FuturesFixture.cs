@@ -15,7 +15,7 @@ namespace Rhino.Commons.Test.NHibernate
 		public void TestInitialize()
 		{
 			Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-			FixtureInitialize(PersistenceFramework.NHibernate,
+			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
 				Path.GetFullPath(@"Repository\Windsor.config"),
 				MappingInfo.FromAssemblyContaining<Parent>());
 			CurrentContext.CreateUnitOfWork();

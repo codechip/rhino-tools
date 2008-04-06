@@ -15,7 +15,7 @@ namespace Rhino.Commons.Test.Repository
             string path =
                 Path.GetFullPath(@"Repository\Windsor.config");
 
-            FixtureInitialize(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
+            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
 
 
