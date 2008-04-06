@@ -9,7 +9,7 @@ namespace Rhino.Commons.Test.NHibernate
 	using Rhino.Commons.ForTesting;
 
 	[TestFixture]
-	public class FuturesFixture : TestFixtureBase
+	public class FuturesFixture : DatabaseTestFixtureBase
 	{
 		[SetUp]
 		public void TestInitialize()

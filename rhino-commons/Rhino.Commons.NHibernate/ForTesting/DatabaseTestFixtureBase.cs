@@ -38,7 +38,7 @@ namespace Rhino.Commons.ForTesting
     /// Responsible for creating the <see cref="UnitOfWorkTestContext"/> that a test requires
     /// and ensuring this context is current for the execution of that test
     /// </summary>
-    public class TestFixtureBase
+    public class DatabaseTestFixtureBase
     {
         public static List<UnitOfWorkTestContext> Contexts = new List<UnitOfWorkTestContext>();
         public static UnitOfWorkTestContext CurrentContext;

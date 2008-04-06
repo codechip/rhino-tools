@@ -36,7 +36,7 @@ using NHibernate.Cfg;
 namespace Rhino.Commons.Test.ForTesting
 {
     [TestFixture]
-    public class NHibernateTestFixtureBaseTests : TestFixtureBaseTests
+    public class NHibernateDatabaseTestFixtureBaseTests : DatabaseTestFixtureBaseTests
     {
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()

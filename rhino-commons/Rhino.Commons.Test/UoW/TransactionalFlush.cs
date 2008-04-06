@@ -40,7 +40,7 @@ namespace Rhino.Commons.Test.UoW
     using Util;
 
     [TestFixture]
-    public class TransactionalFlush : TestFixtureBase
+    public class TransactionalFlush : DatabaseTestFixtureBase
     {
         const string TransactionLog = "NHibernate.Transaction.AdoTransaction";
 

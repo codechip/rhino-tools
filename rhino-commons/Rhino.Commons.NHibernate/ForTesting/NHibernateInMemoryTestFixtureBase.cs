@@ -33,7 +33,7 @@ using NHibernate;
 
 namespace Rhino.Commons.ForTesting
 {
-    [Obsolete("Use TestFixtureBase instead")]
+    [Obsolete("Use DatabaseTestFixtureBase instead")]
 	public class NHibernateInMemoryTestFixtureBase
 	{
 	    protected static UnitOfWorkTestContext context;

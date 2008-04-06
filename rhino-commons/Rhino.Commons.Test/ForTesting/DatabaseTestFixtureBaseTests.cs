@@ -38,7 +38,7 @@ namespace Rhino.Commons.Test.ForTesting
 {
     using Util;
 
-    public abstract class TestFixtureBaseTests : TestFixtureBase 
+    public abstract class DatabaseTestFixtureBaseTests : DatabaseTestFixtureBase 
     {
         [SetUp]
         public void TestInitialize()
