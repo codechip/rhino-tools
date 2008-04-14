@@ -48,10 +48,10 @@ namespace Rhino.Commons
 		private static readonly object lockObj = new object();
 		private static bool initialized = false;
 		private readonly IConfigurationSource configurationSource;
-		private INHibernateInitializationAware initializationAware;
+		private INHibernateInitializationAware[] initializationAware;
 
 
-		public INHibernateInitializationAware InitializationAware
+		public INHibernateInitializationAware[] InitializationAware
 		{
 			get { return initializationAware; }
 			set { initializationAware = value; }
@@ -118,9 +118,17 @@ namespace Rhino.Commons
 							holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
 							{
 								registerdTypes.Add(rootType);
+								if (InitializationAware == null)
+								{
+									if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+									{
+										InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+									}
+								}
 								if (InitializationAware != null)
 								{
-									InitializationAware.Configured(holder.GetConfiguration(rootType));
+									foreach(INHibernateInitializationAware initializer in InitializationAware)
+										initializer.Configured(holder.GetConfiguration(rootType));
 								}
 						
 							};
@@ -135,7 +143,8 @@ namespace Rhino.Commons
 							{
 								Configuration configuration = sessionFactoryHolder.GetConfiguration(type);
 								ISessionFactory factory = sessionFactoryHolder.GetSessionFactory(type);
-								InitializationAware.Initialized(configuration, factory);
+								foreach (INHibernateInitializationAware initializer in InitializationAware)
+									initializer.Initialized(configuration, factory);
 							}
 						}
 						initialized = true;

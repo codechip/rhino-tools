@@ -333,9 +333,18 @@ namespace Rhino.Commons.ForTesting
 
             public override ISessionFactory SessionFactory
             {
-                get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
+                get { return sessionFactory = sessionFactory ?? BuildSessionFactory(); }
             }
 
+            private ISessionFactory BuildSessionFactory()
+            {
+            	  ISessionFactory sessionFactory = Configuration.BuildSessionFactory();
+
+                foreach (INHibernateInitializationAware initializer in GetNHibernateInitializers())
+                    initializer.Initialized(configs, sessionFactory);
+
+                return sessionFactory;
+            }
 
             private Configuration CreateConfigs()
             {
@@ -348,18 +357,39 @@ namespace Rhino.Commons.ForTesting
                 foreach (Assembly assembly in MappingInfo.MappingAssemblies)
                     cfg.AddAssembly(assembly);
 
-				if (MappingInfo.NHInitializationAware != null)
-					MappingInfo.NHInitializationAware.Configured(cfg);
+                foreach (INHibernateInitializationAware initializer in GetNHibernateInitializers())
+                    initializer.Configured(cfg);
 
-				return cfg;
+                return cfg;
             }
 
+            private IEnumerable<INHibernateInitializationAware> GetNHibernateInitializers()
+            {
+                INHibernateInitializationAware[] initializers = new INHibernateInitializationAware[]{};
+                if (MappingInfo.NHInitializationAware != null)
+                {
+                    // locally configured initializer takes precendence over a container component
+                    initializers = new INHibernateInitializationAware[] {MappingInfo.NHInitializationAware};
+                }
+                else if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+                {
+                    initializers = IoC.ResolveAll<INHibernateInitializationAware>();
+                }
+
+                if (initializers.Length == 0)
+                    yield break;
+
+                foreach (INHibernateInitializationAware initializer in initializers)
+                    yield return initializer;
+            }
 
             public override void IntialiseContainerAndUowFactory()
             {
                 if (IoC.IsInitialized) 
-					IoC.Reset();
-            	ResetRhinoContainer();
+                    IoC.Reset();
+
+                ResetRhinoContainer();
+
                 if (RhinoContainer != null)
                 {
                     IoC.Initialize(RhinoContainer);
@@ -369,10 +399,10 @@ namespace Rhino.Commons.ForTesting
                 }
             }
 
-        	protected void ResetRhinoContainer()
-        	{
-        		rhinoContainer = null;
-        	}
+            protected void ResetRhinoContainer()
+            {
+                rhinoContainer = null;
+            }
         }
     }
 }
