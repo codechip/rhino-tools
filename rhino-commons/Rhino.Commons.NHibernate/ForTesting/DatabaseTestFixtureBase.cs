@@ -38,7 +38,7 @@ namespace Rhino.Commons.ForTesting
     /// Responsible for creating the <see cref="UnitOfWorkTestContext"/> that a test requires
     /// and ensuring this context is current for the execution of that test
     /// </summary>
-    public class TestFixtureBase
+    public class DatabaseTestFixtureBase
     {
         public static List<UnitOfWorkTestContext> Contexts = new List<UnitOfWorkTestContext>();
         public static UnitOfWorkTestContext CurrentContext;
@@ -64,11 +64,11 @@ namespace Rhino.Commons.ForTesting
         /// derived from the other parameters supplied will be created. See
         /// <see cref="DeriveDatabaseNameFrom(Assembly)"/> and <see cref="DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
         /// </remarks>
-        public static void FixtureInitialize(PersistenceFramework framework,
-                                             string rhinoContainerConfig,
-                                             DatabaseEngine databaseEngine,
-                                             string databaseName,
-                                             MappingInfo mappingInfo)
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
+                                                     string rhinoContainerConfig,
+                                                     DatabaseEngine databaseEngine,
+                                                     string databaseName,
+                                                     MappingInfo mappingInfo)
         {
             if (string.IsNullOrEmpty(databaseName))
             {
@@ -122,28 +122,28 @@ namespace Rhino.Commons.ForTesting
 
 
         /// <summary>
-        /// See <see cref="FixtureInitialize(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
         /// </summary>
-        public static void FixtureInitialize(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
         {
-            FixtureInitialize(framework, rhinoContainerConfig, DatabaseEngine.SQLite, null, mappingInfo);
+            IntializeNHibernateAndIoC(framework, rhinoContainerConfig, DatabaseEngine.SQLite, null, mappingInfo);
         }
 
         /// <summary>
-        /// See <see cref="FixtureInitialize(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
         /// </summary>
-        public static void FixtureInitialize(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
         {
-            FixtureInitialize(framework, rhinoContainerConfig, databaseEngine, null, mappingInfo);
+            IntializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, null, mappingInfo);
         }
 
 
         /// <summary>
-        /// See <see cref="FixtureInitialize(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
         /// </summary>
-        public static void FixtureInitialize(PersistenceFramework framework, MappingInfo mappingInfo)
+        public static void IntializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
         {
-            FixtureInitialize(framework, null, DatabaseEngine.SQLite, null, mappingInfo);
+            IntializeNHibernateAndIoC(framework, null, DatabaseEngine.SQLite, null, mappingInfo);
         }
 
 
@@ -179,7 +179,7 @@ namespace Rhino.Commons.ForTesting
         /// <summary>
         /// Throw away all <see cref="UnitOfWorkTestContext"/> objects within <see cref="Contexts"/>
         /// and referenced by <see cref="CurrentContext"/>. WARNING: Subsequent calls to  <see
-        /// cref="FixtureInitialize(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
         /// and all its overloads will now take considerably longer as the persistent framework will
         /// be initialised a fresh.
         /// </summary>

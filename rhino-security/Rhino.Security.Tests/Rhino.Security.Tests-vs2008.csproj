@@ -106,10 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="windsorNHibernate.boo">
+    <None Include="windsorActiveRecord.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="windsorActiveRecord.boo">
+    <None Include="windsorNHibernate.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -140,11 +140,11 @@
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Security.ActiveRecord\Rhino.Security.ActiveRecord-vs2008.csproj">
       <Project>{8F5AB80C-54DF-4A05-9B12-BF813A33EBA3}</Project>
-      <Name>Rhino.Security.ActiveRecord</Name>
+      <Name>Rhino.Security.ActiveRecord-vs2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Security.NHibernate\Rhino.Security.NHibernate-vs2008.csproj">
       <Project>{A022FF3B-ECEB-4A3E-806D-4C4F88D86CE9}</Project>
-      <Name>Rhino.Security.NHibernate</Name>
+      <Name>Rhino.Security.NHibernate-vs2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Security\Rhino.Security-vs2008.csproj">
       <Project>{DBA372FE-3D52-45B3-AF82-B37696328764}</Project>

@@ -54,6 +54,11 @@ namespace Rhino.Commons
 			_entityClass = entityClass;
 		}
 
+    public override IProjection[] GetProjections()
+    {
+      return null;
+    }
+
 		public override SqlString ToSqlString(ICriteria criteria, ICriteriaQuery criteriaQuery,
 											  IDictionary<string, IFilter> enabledFilters)
 		{

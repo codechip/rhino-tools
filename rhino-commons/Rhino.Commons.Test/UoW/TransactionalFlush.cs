@@ -40,7 +40,7 @@ namespace Rhino.Commons.Test.UoW
     using Util;
 
     [TestFixture]
-    public class TransactionalFlush : TestFixtureBase
+    public class TransactionalFlush : DatabaseTestFixtureBase
     {
         const string TransactionLog = "NHibernate.Transaction.AdoTransaction";
 
@@ -51,10 +51,10 @@ namespace Rhino.Commons.Test.UoW
             BasicConfigurator.Configure(new MemoryAppender());
 
             string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UoW\Windsor.config"));
-            FixtureInitialize(PersistenceFramework.NHibernate,
-                              path,
-                              DatabaseEngine.MsSqlCe,
-                              MappingInfo.FromAssemblyContaining<SimpleObject>());
+            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+                                      path,
+                                      DatabaseEngine.MsSqlCe,
+                                      MappingInfo.FromAssemblyContaining<SimpleObject>());
         }
 
 

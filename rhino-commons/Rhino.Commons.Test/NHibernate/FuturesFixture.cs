@@ -9,13 +9,13 @@ namespace Rhino.Commons.Test.NHibernate
 	using Rhino.Commons.ForTesting;
 
 	[TestFixture]
-	public class FuturesFixture : TestFixtureBase
+	public class FuturesFixture : DatabaseTestFixtureBase
 	{
 		[SetUp]
 		public void TestInitialize()
 		{
 			Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-			FixtureInitialize(PersistenceFramework.NHibernate,
+			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
 				Path.GetFullPath(@"Repository\Windsor.config"),
 				MappingInfo.FromAssemblyContaining<Parent>());
 			CurrentContext.CreateUnitOfWork();

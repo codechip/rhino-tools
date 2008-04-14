@@ -36,25 +36,25 @@ using NHibernate.Cfg;
 namespace Rhino.Commons.Test.ForTesting
 {
     [TestFixture]
-    public class NHibernateTestFixtureBaseTests : TestFixtureBaseTests
+    public class NHibernateDatabaseTestFixtureBaseTests : DatabaseTestFixtureBaseTests
     {
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
         {
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
 
-            FixtureInitialize(PersistenceFramework.NHibernate,
-                              NHibernateWindsorFilePath,
-                              DatabaseEngine.SQLite,
-                              "",
-                              mappingInfo);
+            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+                                      NHibernateWindsorFilePath,
+                                      DatabaseEngine.SQLite,
+                                      "",
+                                      mappingInfo);
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
-            FixtureInitialize(PersistenceFramework.ActiveRecord,
-                              ActiveRecordWindsorFilePath,
-                              DatabaseEngine.SQLite,
-                              "",
-                              mappingInfo);
+            IntializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
+                                      ActiveRecordWindsorFilePath,
+                                      DatabaseEngine.SQLite,
+                                      "",
+                                      mappingInfo);
             VerifyCanCreateUseAndDisposeUnitOfWork();
         }
 
@@ -93,14 +93,18 @@ namespace Rhino.Commons.Test.ForTesting
 		{
 			NHInitAwareMock mock = new NHInitAwareMock();
 			mock.ConfiguredWasCalled = 0;
-			FixtureInitialize(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
+			mock.InitializedWasCalled = 0;
+
+			IntializeNHibernateAndIoC(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
 				MappingInfo.From().SetNHInitializationAware(mock));
 			Assert.AreEqual(1, mock.ConfiguredWasCalled);
+			Assert.AreEqual(1, mock.InitializedWasCalled);
 		}
 
 		private class NHInitAwareMock : INHibernateInitializationAware
 		{
 			public int ConfiguredWasCalled = 0;
+			public int InitializedWasCalled = 0;
 
 			#region INHibernateInitializationAware Members
 
@@ -111,7 +115,7 @@ namespace Rhino.Commons.Test.ForTesting
 
 			public void Initialized(Configuration cfg, ISessionFactory sessionFactory)
 			{
-				throw new NotImplementedException();
+				InitializedWasCalled++;
 			}
 
 			#endregion

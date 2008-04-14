@@ -1,5 +1,4 @@
 using System;
-using NHibernate;
 using Rhino.Security.Configuration;
 using Rhino.Security.Engine.Services;
 using Rhino.Security.Framework;
@@ -11,19 +10,7 @@ namespace Rhino.Security.Tests
 	using MbUnit.Framework;
 	using Rhino.Commons.ForTesting;
 
-  public class TestNHibernateInitializer : INHibernateInitializationAware
-  {
-    public void Configured(NHibernate.Cfg.Configuration cfg)
-    {
-      IoC.Resolve<INHibernateInitializationAware>().Configured(cfg);
-    }
-
-    public void Initialized(NHibernate.Cfg.Configuration cfg, ISessionFactory sessionFactory)
-    {
-    }
-  }
-
-  public class DatabaseFixture<TUser, TOperation> : TestFixtureBase
+  public class DatabaseFixture<TUser, TOperation> : DatabaseTestFixtureBase
     where TUser : class, IUser
     where TOperation : class, IOperation
 	{
@@ -37,14 +24,8 @@ namespace Rhino.Security.Tests
 		[SetUp]
 		public virtual void SetUp()
 		{
-			//Security.PrepareForActiveRecordInitialization<User>(SecurityTableStructure.Prefix);
 			MappingInfo from = MappingInfo.From(typeof(TOperation).Assembly, typeof(TUser).Assembly);
-      if (GetPersistenceFramework() == PersistenceFramework.NHibernate)
-      {
-        // Need to find a better way for this
-        from.NHInitializationAware = new TestNHibernateInitializer();
-      }
-			FixtureInitialize(GetPersistenceFramework(), GetWindsorConfigFile(), GetDatabaseEngine(), from);
+			IntializeNHibernateAndIoC(GetPersistenceFramework(), GetWindsorConfigFile(), GetDatabaseEngine(), from);
 			CurrentContext.CreateUnitOfWork();
 
 			SetupEntities();
@@ -53,7 +34,7 @@ namespace Rhino.Security.Tests
     protected virtual string GetWindsorConfigFile()
     {
       return "windsor" + GetPersistenceFramework().ToString() + ".boo";
-    }
+		}
 
 	  protected virtual PersistenceFramework GetPersistenceFramework()
 	  {
@@ -62,13 +43,19 @@ namespace Rhino.Security.Tests
 
 		protected virtual DatabaseEngine GetDatabaseEngine()
 		{
-			return DatabaseEngine.MsSql2005;
+			return DatabaseEngine.SQLite;
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			CurrentContext.DisposeUnitOfWork();
+		}
+
+		[TestFixtureTearDown]
+		public void TestFixtureTearDown()
+		{
+			DisposeAndRemoveAllUoWTestContexts();
 		}
 
 		private void SetupEntities()

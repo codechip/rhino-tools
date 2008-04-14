@@ -42,7 +42,7 @@ namespace Rhino.Commons
         public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
         private ISessionFactory sessionFactory;
         private Configuration cfg;
-        private INHibernateInitializationAware initializationAware;
+        private INHibernateInitializationAware[] initializationAware;
         private readonly string configurationFileName;
 
         public NHibernateUnitOfWorkFactory()
@@ -55,7 +55,7 @@ namespace Rhino.Commons
             this.configurationFileName = configurationFileName;
         }
 
-        public INHibernateInitializationAware InitializationAware
+        public INHibernateInitializationAware[] InitializationAware
         {
             get { return initializationAware; }
             set { initializationAware = value; }
@@ -63,9 +63,16 @@ namespace Rhino.Commons
 
         public void Init()
         {
+            if (InitializationAware == null)
+            {
+                if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+                    InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+            }
+
             if (InitializationAware != null && cfg != null)
             {
-                InitializationAware.Initialized(cfg, NHibernateSessionFactory);
+                foreach (INHibernateInitializationAware initializer in InitializationAware)
+                    initializer.Initialized(cfg, NHibernateSessionFactory);
             }
         }
 
@@ -145,16 +152,26 @@ namespace Rhino.Commons
                         }
                         if (File.Exists(hibernateConfig))
                             cfg.Configure(new XmlTextReader(hibernateConfig));
+
+                        if (InitializationAware == null)
+                        {
+                            if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+                                InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+                        }
+
                         if (InitializationAware != null)
                         {
-                            InitializationAware.Configured(cfg);
+                            foreach (INHibernateInitializationAware initializer in InitializationAware)
+                                initializer.Configured(cfg);
                         }
+
                         sessionFactory = cfg.BuildSessionFactory();
                         if (InitializationAware != null)
                         {
-                          InitializationAware.Initialized(cfg, sessionFactory);
+                            foreach (INHibernateInitializationAware initializer in InitializationAware)
+                                initializer.Initialized(cfg, sessionFactory);
                         }
-                      }
+                    }
                 }
                 return sessionFactory;
             }

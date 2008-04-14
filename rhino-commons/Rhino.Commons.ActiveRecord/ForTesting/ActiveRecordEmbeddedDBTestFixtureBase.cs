@@ -42,7 +42,7 @@ using Rhino.Commons.Helpers;
 
 namespace Rhino.Commons.ForTesting
 {
-    [Obsolete("Use TestFixtureBase instead")]
+    [Obsolete("Use DatabaseTestFixtureBase instead")]
 	public class ActiveRecordEmbeddedDBTestFixtureBase
 	{
 		public static string DatabaseFilename = "TempDB.sdf";

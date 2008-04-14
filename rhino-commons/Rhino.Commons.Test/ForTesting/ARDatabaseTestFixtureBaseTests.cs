@@ -34,21 +34,21 @@ using Rhino.Commons.ForTesting;
 namespace Rhino.Commons.Test.ForTesting
 {
     [TestFixture]
-    public class ActiveRecordTestFixtureBaseTests : TestFixtureBaseTests
+    public class ARDatabaseTestFixtureBaseTests : DatabaseTestFixtureBaseTests
     {
         [Test]
         public void CanSwitchBetweenPersistentFrameworksWithinSameTest()
         {
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
 
-            FixtureInitialize(PersistenceFramework.ActiveRecord,
-                              ActiveRecordWindsorFilePath,
-                              DatabaseEngine.SQLite,
-                              "",
-                              mappingInfo);
+            IntializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
+                                      ActiveRecordWindsorFilePath,
+                                      DatabaseEngine.SQLite,
+                                      "",
+                                      mappingInfo);
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
-            FixtureInitialize(PersistenceFramework.NHibernate,
+            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
                   NHibernateWindsorFilePath,
                   DatabaseEngine.SQLite,
                   "",

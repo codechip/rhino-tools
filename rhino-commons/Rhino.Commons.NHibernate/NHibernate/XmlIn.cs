@@ -88,6 +88,11 @@ namespace Rhino.Commons
 			expr = Expression.In(propertyName, arrayList);
 		}
 
+      public override IProjection[] GetProjections()
+      {
+        return null;
+      }
+
 		public override string ToString()
 		{
 			return propertyName + " big in (" + StringHelper.ToString(values) + ')';

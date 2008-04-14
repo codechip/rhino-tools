@@ -130,7 +130,6 @@
     <Compile Include="IndexersTests.cs" />
     <Compile Include="IoC\IoCFitxture.cs" />
     <Compile Include="LocalDataTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Binsor\Fubar.cs" />
     <Compile Include="StaticReflectionTests.cs" />
     <Compile Include="ValidationTests.cs" />
@@ -225,9 +224,9 @@
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
-    <Compile Include="ForTesting\TestFixtureBaseTests.cs" />
-    <Compile Include="ForTesting\ActiveRecordTestFixtureBaseTests.cs" />
-    <Compile Include="ForTesting\NHibernateTestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
+    <Compile Include="ForTesting\NHibernateDatabaseTestFixtureBaseTests.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="HttpModules\UnitOfWorkApplicationFixture.cs" />
     <Compile Include="Logging\AsyncBulkInsertAppenderTestFixture.cs" />

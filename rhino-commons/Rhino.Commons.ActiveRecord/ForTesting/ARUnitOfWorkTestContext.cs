@@ -90,11 +90,14 @@ namespace Rhino.Commons.ForTesting
 
 			ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
 
-			if (IoC.IsInitialized)
+			if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
 			{
-				INHibernateInitializationAware initializationAware = IoC.TryResolve<INHibernateInitializationAware>();
+				INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
 				if (initializationAware != null)
-					initializationAware.Initialized(Configuration, SessionFactory);
+				{
+					foreach(INHibernateInitializationAware initializer in initializationAware)
+						initializer.Initialized(Configuration, SessionFactory);
+				}
 			}
 
 			ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
@@ -108,13 +111,14 @@ namespace Rhino.Commons.ForTesting
 				ActiveRecordStarter.SessionFactoryHolderCreated -= holderDelegate;
 				holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
 				{
-					if (IoC.IsInitialized)
+					if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
 					{
-						INHibernateInitializationAware initializationAware = IoC.TryResolve<INHibernateInitializationAware>();
+						INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
 						if (initializationAware != null)
 						{
 							Configuration configuration = holder.GetConfiguration(rootType);
-							initializationAware.Configured(configuration);
+							foreach(INHibernateInitializationAware initializer in initializationAware)
+								initializer.Configured(configuration);
 						}
 					}
 				};

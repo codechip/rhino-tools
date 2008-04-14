@@ -38,7 +38,7 @@ namespace Rhino.Commons.Test.ForTesting
 {
     using Util;
 
-    public abstract class TestFixtureBaseTests : TestFixtureBase 
+    public abstract class DatabaseTestFixtureBaseTests : DatabaseTestFixtureBase 
     {
         [SetUp]
         public void TestInitialize()
@@ -122,8 +122,8 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void EachUnitOfWorkContextConfigurationWillBeCreatedOnlyOnce()
         {
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             Assert.AreEqual(1, Contexts.Count);
         }
@@ -156,18 +156,18 @@ namespace Rhino.Commons.Test.ForTesting
         public virtual void SwitchingBetweenExistingContextsHasAcceptablePerformace()
         {
             //Creates SQLite context for the first time. Use context to touch all moving parts
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
             //Create another context and ensure all its component parts are used
             //We're doing this so that the SQLite context created above is no longer current
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.MsSqlCe, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.MsSqlCe, "");
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
             //Reinstate and use existing SQLite context.
             double timing = With.PerformanceCounter(delegate
             {
-                FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+                IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
                 VerifyCanCreateUseAndDisposeUnitOfWork();
             });
 
@@ -178,7 +178,7 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void CanCreateNestedUnitOfWork()
         {
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             VerifyCanCreateUseAndDisposeNestedUnitOfWork();
         }
@@ -187,7 +187,7 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void CallingCreateUnitOfWorkMoreThanOnceIsNotAllowed()
         {
-            FixtureInitialize(WindsorFilePath, DatabaseEngine.SQLite, "");
+            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             CurrentContext.CreateUnitOfWork();
             try
@@ -208,15 +208,15 @@ namespace Rhino.Commons.Test.ForTesting
         }
 
 
-        protected void FixtureInitialize(string rhinoContainerPath,
-                                         DatabaseEngine databaseEngine,
-                                         string databaseName)
+        protected void IntializeNHibernateAndIoC(string rhinoContainerPath,
+                                                 DatabaseEngine databaseEngine,
+                                                 string databaseName)
         {
-            FixtureInitialize(FrameworkToTest,
-                              rhinoContainerPath,
-                              databaseEngine,
-                              databaseName,
-                              MappingInfo.FromAssemblyContaining<AREntity>());
+            IntializeNHibernateAndIoC(FrameworkToTest,
+                                      rhinoContainerPath,
+                                      databaseEngine,
+                                      databaseName,
+                                      MappingInfo.FromAssemblyContaining<AREntity>());
         }
 
 
@@ -250,11 +250,11 @@ namespace Rhino.Commons.Test.ForTesting
 
             //creates the UnitOfWorkContext
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
-            FixtureInitialize(framework,
-                              rhinoContainerPath,
-                              databaseEngine,
-                              databaseName,
-                              mappingInfo);
+            IntializeNHibernateAndIoC(framework,
+                                      rhinoContainerPath,
+                                      databaseEngine,
+                                      databaseName,
+                                      mappingInfo);
 
             UnitOfWorkTestContext context = Contexts[nextContextPosition];
 
