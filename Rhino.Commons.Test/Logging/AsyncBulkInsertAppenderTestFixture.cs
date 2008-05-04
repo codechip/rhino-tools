@@ -9,9 +9,7 @@ namespace Rhino.Commons.Test.Logging
 	using System.Threading;
 	using log4net;
 	using log4net.Config;
-	using log4net.Core;
 	using MbUnit.Framework;
-	using Rhino.Commons.Logging;
 
 	[TestFixture]
 	public class AsyncBulkInsertAppenderTestFixture
@@ -53,15 +51,13 @@ CREATE TABLE test_logging
 		[Test]
 		public void CanWriteToDatabase()
 		{
-			DateTime start = DateTime.Now;
 			ILog logger = LogManager.GetLogger(GetType());
 			for (int i = 0; i < 1001; i++)
 			{
 				logger.Info(i);
 			}
-			TimeSpan duration = DateTime.Now - start;
-			Thread.Sleep(2500);
-			Assert.AreEqual(1001, GetRowCount());
+            int count = GetCount_TakeIntoAccountDelays();
+			Assert.AreEqual(1001, count);
 		}
 
 		[Test]
@@ -77,12 +73,25 @@ CREATE TABLE test_logging
 
 			// will never get here if we are blocked by the transaction
 			DisposeTransaction();
-			Thread.Sleep(2500);
-			Assert.AreEqual(1001, GetRowCount());
+		    int count = GetCount_TakeIntoAccountDelays();
+		    Assert.AreEqual(1001, count);
 
 		}
 
-		private void RecreateTable()
+	    private int GetCount_TakeIntoAccountDelays()
+	    {
+	        int count = 0;
+	        for (int i = 0; i < 5; i++)
+	        {
+	            Thread.Sleep(2500);
+	            count = GetRowCount();
+	            if(count!=0)
+	                break;
+	        }
+	        return count;
+	    }
+
+	    private void RecreateTable()
 		{
 			ExecuteInDb(delegate(SqlCommand command)
 			{
