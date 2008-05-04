@@ -49,7 +49,7 @@ namespace Rhino.Commons.Binsor
 
         //important, we need to get this when we create the facility, because we need
         //to support nested components
-        private readonly IKernel kernel = IoC.Container.Kernel;
+        private readonly IKernel kernel = AbstractConfigurationRunner.IoC.Container.Kernel;
 
 		public Facility(Type facility, params IFacilityExtension[] extensions)
 			: this(facility.FullName, facility, extensions)

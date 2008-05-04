@@ -1,8 +1,6 @@
 namespace Rhino.Commons.Binsor
 {
 	using System;
-	using Boo.Lang;
-	using Boo.Lang.Runtime;
 	using Castle.Core.Configuration;
 	using Configuration;
 
@@ -48,9 +46,9 @@ namespace Rhino.Commons.Binsor
 
 		public void RegisterSecondPass()
 		{
-			if (!IoC.Container.Kernel.HasComponent(_name))
+			if (!AbstractConfigurationRunner.IoC.Container.Kernel.HasComponent(_name))
 			{
-				IoC.Container.AddComponent(_name, _service);
+				AbstractConfigurationRunner.IoC.Container.AddComponent(_name, _service);
 			}
 		}
 	}

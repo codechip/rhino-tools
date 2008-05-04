@@ -62,9 +62,9 @@ namespace Rhino.Commons.Binsor
 			foreach(Type type in assembly.GetExportedTypes())
 			{
 				if (type.IsClass && !type.IsAbstract &&
-					typeof(IConfigurationRunner).IsAssignableFrom(type))
+					typeof(AbstractConfigurationRunner).IsAssignableFrom(type))
 				{
-					IConfigurationRunner runner = (IConfigurationRunner) Activator.CreateInstance(type);
+					AbstractConfigurationRunner runner = (AbstractConfigurationRunner) Activator.CreateInstance(type);
 					return FromRunner(runner);
 				}
 			}
@@ -74,7 +74,7 @@ namespace Rhino.Commons.Binsor
 				assembly.FullName));
 		}
 
-		public static BinsorRunnerInstaller FromRunner(IConfigurationRunner runner)
+		public static BinsorRunnerInstaller FromRunner(AbstractConfigurationRunner runner)
 		{
 			return new BinsorRunnerInstaller(runner);
 		}	
