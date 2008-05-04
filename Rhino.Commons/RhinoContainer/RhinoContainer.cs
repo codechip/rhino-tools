@@ -28,11 +28,11 @@
 
 #endregion
 
+
 namespace Rhino.Commons
 {
 	using System;
 	using System.IO;
-	using Binsor;
 	using Castle.Core.Resource;
 	using Castle.MicroKernel;
 	using Castle.MicroKernel.SubSystems.Conversion;
@@ -40,6 +40,7 @@ namespace Rhino.Commons
 	using Castle.Windsor.Configuration;
 	using Castle.Windsor.Configuration.Interpreters;
 	using Castle.Windsor.Installer;
+    using Binsor;
 
 	public class RhinoContainer : WindsorContainer
 	{

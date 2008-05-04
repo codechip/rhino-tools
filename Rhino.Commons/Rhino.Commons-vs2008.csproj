@@ -103,11 +103,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binsor\BinsorCompilerStep.cs" />
-    <Compile Include="Binsor\Component.cs" />
-    <Compile Include="Binsor\BooReader.cs" />
-    <Compile Include="Binsor\IConfigurationRunner.cs" />
-    <Compile Include="Binsor\TransformUnknownReferences.cs" />
     <Compile Include="BulkDeleter.cs" />
     <Compile Include="HttpModules\PagePerformanceModule.cs" />
     <Compile Include="Logging\WebLoggingHelper.cs" />
@@ -127,56 +122,12 @@
     <None Include="app.config" />
     <None Include="Diagrams\IoC.cd" />
     <None Include="Diagrams\Repository.cd" />
-    <Compile Include="Binsor\Installer\BinsorScript.cs" />
-    <Compile Include="Binsor\BinsorGlobalMethods.cs" />
-    <Compile Include="Binsor\ComponentReference.cs" />
-    <Compile Include="Binsor\Configuration\AttributeBuilder.cs" />
-    <Compile Include="Binsor\Configuration\ChildBuilder.cs" />
-    <Compile Include="Binsor\Installer\BinsorScriptInstaller.cs" />
-    <Compile Include="Binsor\Installer\BinsorFileInstaller.cs" />
-    <Compile Include="Binsor\Extend.cs" />
-    <Compile Include="Binsor\Extensions\ConfigurationExtension.cs" />
-    <Compile Include="Binsor\Configuration\ConfigurationHelper.cs" />
-    <Compile Include="Binsor\Configuration\IConfigurationBuilder.cs" />
-    <Compile Include="Binsor\Configuration\IConfigurationFormatter.cs" />
-    <Compile Include="Binsor\Configuration\KeyMapBuilder.cs" />
-    <Compile Include="Binsor\Configuration\KeyValuesBuilder.cs" />
-    <Compile Include="Binsor\Configuration\ListBuilder.cs" />
-    <Compile Include="Binsor\Extensions\EventWireExtension.cs" />
-    <Compile Include="Binsor\Extensions\FactorySupportExtension.cs" />
-    <Compile Include="Binsor\Extensions\ParametersExtension.cs" />
-    <Compile Include="Binsor\Facility.cs" />
-    <Compile Include="Binsor\Extensions\StartableExtension.cs" />
-    <Compile Include="Binsor\IComponentExtension.cs" />
-    <Compile Include="Binsor\INeedSecondPassRegistration.cs" />
-    <Compile Include="Binsor\Installer\BinsorStreamInstaller.cs" />
-    <Compile Include="Binsor\Installer\BinsorRunnerInstaller.cs" />
-    <Compile Include="Binsor\Macros\AbstractBinsorMacro.cs" />
-    <Compile Include="Binsor\Macros\BaseBinsorExtensionMacro.cs" />
-    <Compile Include="Binsor\Macros\BaseBinsorToplevelMacro.cs" />
-    <Compile Include="Binsor\Macros\ComponentMacro.cs" />
-    <Compile Include="Binsor\Macros\ComponentMethodVisitor.cs" />
-    <Compile Include="Binsor\Macros\BaseConfigurationMacro.cs" />
-    <Compile Include="Binsor\Extensions\LifestyleExtension.cs" />
-    <Compile Include="Binsor\Macros\ConfigurationNodeVisitor.cs" />
-    <Compile Include="Binsor\Macros\ConfigurationMacro.cs" />
-    <Compile Include="Binsor\Macros\ExtendMacro.cs" />
-    <Compile Include="Binsor\Macros\ParametersMacro.cs" />
-    <Compile Include="Binsor\Macros\StartMacro.cs" />
-    <Compile Include="Binsor\Macros\CreateUsingMacro.cs" />
-    <Compile Include="Binsor\Macros\FacilityMacro.cs" />
-    <Compile Include="Binsor\Macros\HashConfigurationBuilder.cs" />
-    <Compile Include="Binsor\Macros\LifestyleMacro.cs" />
-    <Compile Include="Binsor\Macros\MacroHelper.cs" />
-    <Compile Include="Binsor\Macros\WireEventMacro.cs" />
-    <Compile Include="Binsor\RegisterComponentAndFacilitiesAfterCreation.cs" />
     <Compile Include="Helpers\SqlCEDbHelper.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScope.cs" />
     <Compile Include="Logging\AsyncBulkInsertAppender.cs" />
     <Compile Include="Logging\RollingEmbeddedDatabaseAppender.cs" />
     <Compile Include="Logging\RollingSqlCEAppender.cs" />
     <Compile Include="Logging\RollingSqlliteAppender.cs" />
-    <Compile Include="Binsor\BooComponentInstaller.cs" />
     <Compile Include="Tasks\Boo.cs" />
     <Compile Include="Tasks\SqlBatchExecute.cs" />
     <Compile Include="Threading\ThreadPool\RhinoThreadPool.cs" />
@@ -212,6 +163,10 @@
     <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
       <Name>Rhino.DSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.Binsor\Rhino.Commons.Binsor.csproj">
+      <Project>{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}</Project>
+      <Name>Rhino.Commons.Binsor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
