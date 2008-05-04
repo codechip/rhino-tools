@@ -10,6 +10,7 @@ namespace Rhino.Testing.AutoMocking
         IKernel Kernel { get; }
         bool CanResolve(Type type);
         object Get(Type type);
+				IMockingStrategy DefaultMockingStrategy { get; set;}
         IMockingStrategy GetMockingStrategy(Type type);
         void SetMockingStrategy(Type type, IMockingStrategy strategy);
         void MarkMissing(Type type);

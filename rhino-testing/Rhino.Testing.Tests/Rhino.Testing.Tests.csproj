@@ -59,6 +59,7 @@
     <Compile Include="AutoMocking\ComponentBeingConfigured.cs" />
     <Compile Include="AutoMocking\ComponentWithComplexProperty.cs" />
     <Compile Include="AutoMocking\DefaultCollectionOfServices.cs" />
+    <Compile Include="AutoMocking\DefaultMockingStrategyTests.cs" />
     <Compile Include="AutoMocking\ICollectionOfServices.cs" />
     <Compile Include="AutoMocking\IReallyCoolService.cs" />
     <Compile Include="AutoMocking\NeedIKernel.cs" />

@@ -5,6 +5,7 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Naming;
 using Castle.Windsor;
 using Rhino.Mocks;
+using System.Diagnostics;
 
 namespace Rhino.Testing.AutoMocking
 {
@@ -33,6 +34,31 @@ namespace Rhino.Testing.AutoMocking
 			return null;
 		}
 
+		#region DefaultMockingStrategy
+		private IMockingStrategy m_DefaultMockingStrategy;
+		/// <summary>
+		/// Gets or sets the default mocking strategy., which will be returned, if a <see cref="Type"/> was not explicitly marked via a <see cref="TypeMarker"/>.
+		/// The default is the <see cref="DynamicMockingStrategy"/>,
+		/// which will always be returned, if no other was defined.
+		/// </summary>
+		/// <value>The default mocking strategy.</value>
+		public IMockingStrategy DefaultMockingStrategy
+		{
+			get
+			{
+				if (m_DefaultMockingStrategy == null)
+				{
+					m_DefaultMockingStrategy = new DynamicMockingStrategy(this);
+				}
+				return m_DefaultMockingStrategy;
+			}
+			set
+			{
+				m_DefaultMockingStrategy = value;
+			}
+		}
+		#endregion
+
 		public virtual IMockingStrategy GetMockingStrategy(Type type)
 		{
 			if (_strategies.ContainsKey(type))
@@ -53,6 +79,9 @@ namespace Rhino.Testing.AutoMocking
 		}
 		#endregion
 
+		/// <summary>
+		/// Initializes this instance. Must be called, before you can work with the instance.
+		/// </summary>
 		public void Initialize()
 		{
 			Kernel.AddSubSystem(SubSystemConstants.NamingKey,new AutoMockingNamingSubSystem(this));
@@ -190,12 +219,13 @@ namespace Rhino.Testing.AutoMocking
 		}
 
         /// <summary>
-        /// Indictate that instances of <paramref name="type"/> should not be resolved by the container
+        /// Indicate that instances of <paramref name="type"/> should not be resolved by the container
         /// <seealso cref="Create{T}()"/>
         /// </summary>
 		public void MarkMissing(Type type)
 		{
 			_markMissing.Add(type);
 		}
+
 	}
 }
