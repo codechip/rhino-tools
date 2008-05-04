@@ -14,15 +14,15 @@
 	<property name="castle.test.console" value="nunit-console" overwrite="false"/>
 	<property name="enable.tests" value="true" overwrite="false"/>
 
-	<property name="nhibernate.lib.dir" value="${nhibernate.dir}\lib\net\2.0"/>
-	<property name="nhibernate.build.dir" value="${nhibernate.dir}\build\NHibernate-2.0.0.Alpha1\bin\${nant.settings.currentframework}"/>
-	<property name="nhibernate.build.dir" value="${nhibernate.dir}\build\NHibernate-2.0.0.Alpha1-debug\bin\${nant.settings.currentframework}" if="${configuration == 'debug'} " />
+	<property name="nhibernate.lib.dir" value="${nhibernate.dir}/lib/net/2.0"/>
+	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.0.0.Alpha1/bin/${nant.settings.currentframework}"/>
+	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.0.0.Alpha1-debug/bin/${nant.settings.currentframework}" if="${configuration == 'debug'} " />
 	
-	<property name="castle.lib.dir" value="${castle.dir}\SharedLibs\net\2.0"/>
-	<property name="castle.build.dir" value="${castle.dir}\build\${nant.settings.currentframework}\${configuration}"/>
+	<property name="castle.lib.dir" value="${castle.dir}/SharedLibs/net/2.0"/>
+	<property name="castle.build.dir" value="${castle.dir}/build/${nant.settings.currentframework}/${configuration}"/>
 	
-	<property name="rhino.lib.dir" value="${rhino.dir}\SharedLibs"/>
-	<property name="rhino.build.dir" value="${rhino.dir}\build\${nant.settings.currentframework}\${configuration}"/>
+	<property name="rhino.lib.dir" value="${rhino.dir}/SharedLibs"/>
+	<property name="rhino.build.dir" value="${rhino.dir}/build/${nant.settings.currentframework}/${configuration}"/>
 
 	
 	<target name="init"
@@ -106,13 +106,13 @@
 	
 	<target name="build-nhibernate" depends="update-castle-dependencies-in-nhibernate">
 	
-		<nant buildfile="${nhibernate.dir}\default.build" target="clean build" unless="${enable.tests}">
+		<nant buildfile="${nhibernate.dir}/default.build" target="clean build" unless="${enable.tests}">
 			<properties>
 				<property name="project.config" value="${configuration}"/>
 			</properties>
 		</nant>
 		
-		<nant buildfile="${nhibernate.dir}\default.build" target="clean build test" if="${enable.tests}">
+		<nant buildfile="${nhibernate.dir}/default.build" target="clean build test" if="${enable.tests}">
 			<properties>
 				<property name="project.config" value="${configuration}"/>
 			</properties>
@@ -129,20 +129,20 @@
 			</fileset>
 		</delete>
 		
-		<nant buildfile="${castle.dir}\default.build" target="clean init copy-referenced-assemblies">
+		<nant buildfile="${castle.dir}/default.build" target="clean init copy-referenced-assemblies">
 			<properties>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
 				<property name="project.config" value="${configuration}"/>
 			</properties>
 		</nant>
-		<nant buildfile="${castle.dir}\Core\core.build" target="build">
+		<nant buildfile="${castle.dir}/Core/core.build" target="build">
 			<properties>
 				<property name="project.config" value="${configuration}"/>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
 				<property name="${castle.test.framework}-console" value="${castle.test.console}"/>
 			</properties>
 		</nant>
-		<nant buildfile="${castle.dir}\Tools\Castle.DynamicProxy2\Castle.DynamicProxy2.build" target="build">
+		<nant buildfile="${castle.dir}/Tools/Castle.DynamicProxy2/Castle.DynamicProxy2.build" target="build">
 			<properties>
 				<property name="project.config" value="${configuration}"/>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
@@ -161,7 +161,7 @@
 	
 	<target name="build-castle" depends="update-nhibernate-in-castle">
 
-		<nant buildfile="${castle.dir}\default.build" target="clean build">
+		<nant buildfile="${castle.dir}/default.build" target="clean build">
 			<properties>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
 				<property name="${castle.test.framework}-console" value="${castle.test.console}"
@@ -179,7 +179,7 @@
 	</target>
 	
 	<target name="build-rhino" depends="update-rhino-dependencies">
-		<nant buildfile="${rhino.dir}\default.build" target="clean build">
+		<nant buildfile="${rhino.dir}/default.build" target="clean build">
 			<properties>
 				<property name="common.testrunner.enabled" value="${enable.tests}"/>
 				<property name="project.config" value="${configuration}"/>
@@ -188,11 +188,11 @@
 	</target>
 	
 	<target name="update-rhino-dependencies" depends="init">
-		<copy todir="${rhino.lib.dir}\NHibernate">
+		<copy todir="${rhino.lib.dir}/NHibernate">
 			<fileset refid="nhibernate.assemblies"/>
 		</copy>
 		
-		<copy todir="${rhino.lib.dir}\Castle">
+		<copy todir="${rhino.lib.dir}/Castle">
 			<fileset refid="castle.assemblies"/>
 		</copy>
 	</target>
