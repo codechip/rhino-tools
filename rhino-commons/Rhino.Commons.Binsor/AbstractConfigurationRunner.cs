@@ -26,11 +26,27 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
+using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
 {
-	public interface IConfigurationRunner
+	public abstract class AbstractConfigurationRunner
 	{
-		void Run();
+        [ThreadStatic]
+	    private static IWindsorContainer localContainer;
+
+        public static ContainerAdapter IoC
+	    {
+            get { return new ContainerAdapter(localContainer); }
+	    } 
+
+        public static IDisposable UseLocalContainer(IWindsorContainer container)
+        {
+            localContainer = container;
+            return new DisposableAction(delegate { localContainer = null; });
+        }
+
+		public abstract void Run();
 	}
 }

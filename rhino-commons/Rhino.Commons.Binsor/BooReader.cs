@@ -35,6 +35,7 @@ using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
 using Boo.Lang.Compiler.Steps;
+using Boo.Lang.Extensions;
 using Boo.Lang.Parser;
 using Castle.MicroKernel;
 using Castle.MicroKernel.SubSystems.Resource;
@@ -44,7 +45,6 @@ using Castle.Windsor;
 namespace Rhino.Commons.Binsor
 {
 	using System.Reflection;
-	using Boo.Lang.Extensions;
 	using DSL;
 
 	public static class BooReader
@@ -105,13 +105,13 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public static void Execute(IWindsorContainer container, IConfigurationRunner configuration)
+		public static void Execute(IWindsorContainer container, AbstractConfigurationRunner abstractConfiguration)
 		{
 			try
 			{
-				using(IoC.UseLocalContainer(container))
+				using(AbstractConfigurationRunner.UseLocalContainer(container))
 				{
-					configuration.Run();
+					abstractConfiguration.Run();
 					foreach(INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
 						needSecondPassRegistration.RegisterSecondPass();
@@ -143,9 +143,9 @@ namespace Rhino.Commons.Binsor
 		{
 			try
 			{
-				using (IoC.UseLocalContainer(container))
+				using (AbstractConfigurationRunner.UseLocalContainer(container))
 				{
-					IConfigurationRunner conf = GetConfigurationInstanceFromStream(
+					AbstractConfigurationRunner conf = GetConfigurationInstanceFromStream(
 						name, environment, container, stream, generationOptions);
 					conf.Run();
 					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
@@ -160,7 +160,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public static IConfigurationRunner GetConfigurationInstanceFromFile(
+		public static AbstractConfigurationRunner GetConfigurationInstanceFromFile(
 			string fileName, string environment, IWindsorContainer container,
 			GenerationOptions generationOptions)
 		{
@@ -176,7 +176,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public static IConfigurationRunner GetConfigurationInstanceFromStream(
+		public static AbstractConfigurationRunner GetConfigurationInstanceFromStream(
 			string name, string environment, IWindsorContainer container, Stream stream,
 			GenerationOptions generationOptions)
 		{
@@ -189,7 +189,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		private static IConfigurationRunner GetConfigurationInstance(
+		private static AbstractConfigurationRunner GetConfigurationInstance(
 			string name, string environment, ICompilerInput input,
 			GenerationOptions generationOptions,
 			ICompilerStep autoReferenceStep)
@@ -222,7 +222,7 @@ namespace Rhino.Commons.Binsor
 				throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
 			}
 			Type type = run.GeneratedAssembly.GetType(name);
-			return Activator.CreateInstance(type) as IConfigurationRunner;
+			return Activator.CreateInstance(type) as AbstractConfigurationRunner;
 		}
 
 		/// <summary>

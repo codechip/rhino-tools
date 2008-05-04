@@ -54,7 +54,7 @@ namespace Rhino.Commons.Binsor
 
         //important, we need to get this when we create the component, because we need
         //to support nested components
-	    private readonly IKernel kernel = IoC.Container.Kernel;
+	    private readonly IKernel kernel = AbstractConfigurationRunner.IoC.Container.Kernel;
 
 		public Component(Type service,
 						 params IComponentExtension[] extensions)

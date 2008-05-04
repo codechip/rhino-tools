@@ -42,7 +42,7 @@ namespace Rhino.Commons.Binsor
 		}
 
 		public BinsorCompilerStep(string environment)
-			: base(typeof (IConfigurationRunner), "Run",
+			: base(typeof (AbstractConfigurationRunner), "Run",
 				   //default namespaces
 			       "Rhino.Commons",
 			       "Rhino.Commons.Binsor",

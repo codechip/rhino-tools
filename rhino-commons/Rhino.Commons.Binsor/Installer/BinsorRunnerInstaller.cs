@@ -34,9 +34,9 @@ namespace Rhino.Commons.Binsor
 {
 	public class BinsorRunnerInstaller : BinsorScriptInstaller<BinsorRunnerInstaller>
 	{
-		private readonly IConfigurationRunner runner;
+		private readonly AbstractConfigurationRunner runner;
 
-		public BinsorRunnerInstaller(IConfigurationRunner runner)
+		public BinsorRunnerInstaller(AbstractConfigurationRunner runner)
 		{
 			this.runner = runner;
 		}
