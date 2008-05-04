@@ -87,10 +87,10 @@ namespace Rhino.Commons
 			}
         }
 
-        internal static Guid? CurrentLongConversationId
+        public static Guid? CurrentLongConversationId
         {
             get { return (Guid?) Local.Data[CurrentLongConversationIdKey]; }
-            set { Local.Data[CurrentLongConversationIdKey] = value; }
+            internal set { Local.Data[CurrentLongConversationIdKey] = value; }
         }
 
 

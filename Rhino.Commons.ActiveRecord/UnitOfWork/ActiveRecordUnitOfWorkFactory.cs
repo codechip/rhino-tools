@@ -31,6 +31,7 @@
 using System;
 using System.Data;
 using System.Reflection;
+using System.Web;
 using Castle.ActiveRecord;
 using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
@@ -162,9 +163,40 @@ namespace Rhino.Commons
 				if (scope == null)
 					throw new InvalidOperationException("You are not in a unit of work");
 				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-				return holder.CreateSession(typeof(ActiveRecordBase));
+                return holder.CreateSession(typeof(ActiveRecordBase));
 			}
-			set { throw new NotImplementedException("Not sure how to implement the storeage of the session here"); }
+			set 
+            {
+                //do nothing.
+                //the CurrentSession if provided through the ISessionFactoryHolder accroding to the SessionScope.
+            }
 		}
+
+
+        public void MoveUnitOfWorkFromAspSessionIntoRequestContext(
+            out IUnitOfWork iUoW, out Guid? LongConversationId)
+        {
+            iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+
+            IActiveRecordUnitOfWork arUoW = iUoW as IActiveRecordUnitOfWork;
+            if (arUoW != null)
+                //register the UnitOfWork SessionScope as this request current session scope.
+                ThreadScopeAccessor.Instance.RegisterScope(arUoW.Scope);
+            else
+                throw new Exception("the current unit of work is not of type IActiveRecordUnitOfWork!");
+
+            LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
+
+            //avoids the temptation to access UnitOfWork from the HttpSession!
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+        }
+
+        public void SaveUnitOfWorkToAspSession()
+        {
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
+                UnitOfWork.CurrentLongConversationId;
+        }
 	}
 }

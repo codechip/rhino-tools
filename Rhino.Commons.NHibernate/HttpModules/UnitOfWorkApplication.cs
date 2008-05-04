@@ -68,24 +68,20 @@ namespace Rhino.Commons.HttpModules
             }
             else
             {
-                MoveUnitOfWorkFromAspSessionIntoRequestContext();
+                IUnitOfWork UoW;
+                Guid? longConversationId;
+
+                IoC.Resolve<IUnitOfWorkFactory>().
+                    MoveUnitOfWorkFromAspSessionIntoRequestContext(out UoW, out longConversationId);
+
+                UnitOfWork.Current = UoW;
+                UnitOfWork.CurrentLongConversationId = longConversationId;
+
                 UnitOfWork.CurrentSession.Reconnect();
             }
         }
 
 
-        private static void MoveUnitOfWorkFromAspSessionIntoRequestContext()
-        {
-            UnitOfWork.Current = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
-            UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
-            UnitOfWork.CurrentLongConversationId =
-                (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
-
-            //avoids the temptation to access UnitOfWork from the HttpSession!
-            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-            HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
-            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
-        }
 
 
         private static bool IsAspSessionAvailable
@@ -104,7 +100,7 @@ namespace Rhino.Commons.HttpModules
                     throw new InvalidOperationException(
                         "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
                 }
-                SaveUnitOfWorkToAspSession();
+                IoC.Resolve<IUnitOfWorkFactory>().SaveUnitOfWorkToAspSession();
             }
             else
             {
@@ -114,13 +110,7 @@ namespace Rhino.Commons.HttpModules
         }
 
 
-        private static void SaveUnitOfWorkToAspSession() 
-        {
-            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-            HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
-            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
-                UnitOfWork.CurrentLongConversationId;
-        }
+
 
 
         public IWindsorContainer Container
