@@ -101,7 +101,7 @@ namespace Rhino.Commons
             {
                 IWindsorContainer result = LocalContainer ?? GlobalContainer;
                 if (result == null)
-                    throw new InvalidOperationException("The container has not been initialized!");
+                    throw new InvalidOperationException("The container has not been initialized! Please call IoC.Initialize(container) before using it.");
                 return result;
             }
         }
