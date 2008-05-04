@@ -22,6 +22,7 @@
 			<include name="log4net.dll"/>
 			<include name="Rhino.Dsl.dll"/>
 			<include name="Rhino.Commons.Clr.dll"/>
+			<include name="Rhino.Commons.Binsor.dll"/>
 			<include name="${clr.dir}/Microsoft.Build.Utilities.dll"/>
 			<include name="${clr.dir}/Microsoft.Build.Framework.dll"/>
 			<include name="System"/>

@@ -111,7 +111,7 @@ namespace Rhino.Commons.Test.Binsor
 		[Test]
 		public void CanInstallBinsorScriptFromRunner()
 		{
-			IConfigurationRunner runner = BooReader.GetConfigurationInstanceFromFile(
+			AbstractConfigurationRunner runner = BooReader.GetConfigurationInstanceFromFile(
 				Path.GetFullPath(@"Binsor\Windsor2.boo"), "", _container,
 				BooReader.GenerationOptions.Memory);
 

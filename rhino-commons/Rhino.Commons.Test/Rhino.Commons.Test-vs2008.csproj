@@ -275,6 +275,10 @@
       <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
       <Name>Rhino.Commons.ActiveRecord</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.Binsor\Rhino.Commons.Binsor.csproj">
+      <Project>{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}</Project>
+      <Name>Rhino.Commons.Binsor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
       <Name>Rhino.Commons.Clr</Name>
