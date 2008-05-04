@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
+using System;
 using System.Data;
 using NHibernate;
 
@@ -48,5 +48,20 @@ namespace Rhino.Commons
 		IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous);
 
         ISession CurrentSession { get; set; }
+
+        /// <summary>
+        ///  When using LongConversation UnitOfWorkApplication uses this method to restore the
+        ///  conversation between requests
+        /// </summary>
+        /// <param name="iUoW">the IUnitOfWork that had been restored</param>
+        /// <param name="LongConversationId">the Long Conversation Id</param>
+	    void MoveUnitOfWorkFromAspSessionIntoRequestContext(
+	        out IUnitOfWork iUoW, out Guid? LongConversationId);
+
+        /// <summary>
+        ///  When using LongConversation UnitOfWorkApplication uses this method to store the
+        ///  conversation between requests
+        /// </summary>
+	    void SaveUnitOfWorkToAspSession();
 	}
 }

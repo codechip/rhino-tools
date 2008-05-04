@@ -29,6 +29,7 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Web;
 using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
@@ -203,6 +204,29 @@ namespace Rhino.Commons
                 session = adapter.Previous.Session;
             CurrentSession = session;
             UnitOfWork.DisposeUnitOfWork(adapter);
+        }
+
+
+        public void MoveUnitOfWorkFromAspSessionIntoRequestContext(
+            out IUnitOfWork iUoW, out Guid? LongConversationId)
+        {
+            iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
+
+            UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
+
+            //avoids the temptation to access UnitOfWork from the HttpSession!
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
+            HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+        }
+
+        public virtual void SaveUnitOfWorkToAspSession()
+        {
+            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+            HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
+            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
+                UnitOfWork.CurrentLongConversationId;
         }
     }
 }

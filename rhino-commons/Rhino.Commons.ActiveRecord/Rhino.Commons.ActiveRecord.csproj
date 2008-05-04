@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateRange.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="UnitOfWork\ActiveRecordTransactionAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\ActiveRecordUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\IActiveRecordUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">

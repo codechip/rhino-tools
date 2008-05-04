@@ -33,9 +33,9 @@ using Castle.ActiveRecord;
 
 namespace Rhino.Commons
 {
-	public class ActiveRecordUnitOfWorkAdapter : BaseUnitOfWorkFactory, IUnitOfWorkImplementor
+	public class ActiveRecordUnitOfWorkAdapter : BaseUnitOfWorkFactory, IActiveRecordUnitOfWork
 	{
-		private readonly ISessionScope scope;
+		private ISessionScope scope;
 		private IUnitOfWorkImplementor previous;
 		private int usageCount = 1;
 		private ActiveRecordTransactionAdapter transactionAdapter;
