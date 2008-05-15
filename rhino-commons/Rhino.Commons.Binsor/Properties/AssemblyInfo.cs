@@ -21,10 +21,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProductAttribute("Rhino.Commons.Binsor")]
 [assembly: AssemblyCopyrightAttribute("Rhino Tools Project, original author or authors")]
 [assembly: AssemblyVersionAttribute("2.0.0.0")]
-[assembly: AssemblyInformationalVersionAttribute("2.0.0.0")]
-[assembly: AssemblyFileVersionAttribute("2.0.0.0")]
+[assembly: AssemblyInformationalVersionAttribute("2.0.0.1382")]
+[assembly: AssemblyFileVersionAttribute("2.0.0.1382")]
 [assembly: AssemblyDelaySignAttribute(false)]
 
 #if MONO
-[assembly: AssemblyKeyFileAttribute(@"C:\oss\rhino-tools3\ayende-open-source.snk")]
+[assembly: AssemblyKeyFileAttribute(@"C:\oss\rhino-tools\ayende-open-source.snk")]
 #endif

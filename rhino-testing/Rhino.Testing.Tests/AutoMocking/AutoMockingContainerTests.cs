@@ -216,7 +216,7 @@ namespace Rhino.Testing.Tests.AutoMocking
 
 	    private void VerifyIsStub(ICollectionOfServices objectToCheck) 
 	    {
-	        IDisposable whatever = mocks.CreateMock<IDisposable>();
+	        IDisposable whatever = mocks.StrictMock<IDisposable>();
 	        objectToCheck.SomethingToDispose = whatever;
 
 	        Assert.AreSame(objectToCheck.SomethingToDispose, whatever, "stub has properties that behave like properties");
