@@ -1,3 +1,5 @@
+using Castle.MicroKernel;
+
 namespace Rhino.Commons.Test.Binsor
 {
     using System;
@@ -14,10 +16,28 @@ namespace Rhino.Commons.Test.Binsor
         }
 
         [Test]
+        public void CanGetAllTypesByNamespace()
+        {
+            RhinoContainer container = new RhinoContainer(@"Binsor\UsingAllTypes.boo");
+            Assert.IsNotNull(container[typeof(UsingAllTypesFixture)]);
+        }
+
+
+        [Test]
         public void CanGetAllTypesByAttribute()
         {
             RhinoContainer container = new RhinoContainer(@"Binsor\UsingAllTypes.boo");
             Assert.IsNotNull(container[typeof(Controller)]);
+        }
+
+        [Test]
+        public void CanGetAllTypesByPredicate()
+        {
+            RhinoContainer container = new RhinoContainer(@"Binsor\UsingAllTypes.boo");
+            IHandler handler = container.Kernel.GetHandler("nh.repos");
+            Assert.IsNotNull(handler);
+            Assert.AreEqual(typeof(IRepository<>), handler.ComponentModel.Service.GetGenericTypeDefinition());
+            Assert.AreEqual(typeof(NHRepository<>), handler.ComponentModel.Implementation);
         }
     }
 

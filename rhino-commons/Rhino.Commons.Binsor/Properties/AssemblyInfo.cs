@@ -26,5 +26,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDelaySignAttribute(false)]
 
 #if MONO
-[assembly: AssemblyKeyFileAttribute(@"C:\oss\rhino-tools.svn\ayende-open-source.snk")]
+[assembly: AssemblyKeyFileAttribute(@"C:\oss\rhino-tools3\ayende-open-source.snk")]
 #endif

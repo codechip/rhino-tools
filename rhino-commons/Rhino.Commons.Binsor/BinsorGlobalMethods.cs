@@ -4,25 +4,56 @@ namespace Rhino.Commons.Binsor
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Reflection;
-	using System.Runtime.CompilerServices;
+    using System.Runtime.CompilerServices;
 
 	[CompilerGlobalScope]
-	public class BinsorGlobalMethods
+	public static class BinsorGlobalMethods
 	{
-		/// <summary>
+	
+        [Boo.Lang.Extension]
+#if DOTNET35
+        public static Type GetFirstInterface(this Type type)
+#else 
+        public static Type GetFirstInterface(Type type)
+#endif
+        {
+            Type[] interfaces = type.GetInterfaces();
+            if(interfaces.Length!=1)
+            {
+                throw new InvalidOperationException(
+                    "Could not find service interface for "+ type +" because it implements "+interfaces.Length +" interfaces."+ Environment.NewLine + 
+                    "GetFirstInterface() will only work on types implementing a single interface.");
+            }
+            return interfaces[0];
+        }
+
+	    /// <summary>
 		/// Get all the types that inherit from <typeparamref name="T"/> in
 		/// all the assemblies that were passed.
 		/// </summary>
 		/// <typeparam name="T">The base type to look for</typeparam>
 		/// <param name="assemblyNames">The assembly names.</param>
 		/// <returns></returns>
-		public static IEnumerable<Type> AllTypesBased<T>(params string[] assemblyNames)
+        public static TypeEnumerable AllTypesBased<T>(params string[] assemblyNames)
 		{
-			return AllTypesInternal(assemblyNames, delegate(Type type)
-			{
-				return typeof(T).IsAssignableFrom(type);
-			});
+            return new TypeEnumerable(AllTypesInternal(assemblyNames, delegate(Type type)
+            {
+                return typeof(T).IsAssignableFrom(type);
+            }));
 		}
+
+        /// <summary>
+        /// Get all the types in all the assemblies that were passed.
+        /// </summary>
+        /// <param name="assemblyNames">The assembly names.</param>
+        /// <returns></returns>
+        public static TypeEnumerable AllTypes(params string[] assemblyNames)
+        {
+            return new TypeEnumerable(AllTypesInternal(assemblyNames, delegate
+            {
+                return true;
+            }));
+        }
 
 		private static IEnumerable<Type> AllTypesInternal(string[] assemblyNames, Predicate<Type> match)
 		{
@@ -39,12 +70,12 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public static IEnumerable<Type> AllTypesWithAttribute<T>(params string[] assemblyNames)
+        public static TypeEnumerable AllTypesWithAttribute<T>(params string[] assemblyNames)
 		{
-			return AllTypesInternal(assemblyNames, delegate(Type type)
-			{
-				return type.IsDefined(typeof(T), true);
-			});
+            return new TypeEnumerable(AllTypesInternal(assemblyNames, delegate(Type type)
+            {
+                return type.IsDefined(typeof(T), true);
+            }));
 		}
 
 		/// <summary>
@@ -52,7 +83,7 @@ namespace Rhino.Commons.Binsor
 		/// Load context, but loading using the LoadFrom context if needed
 		/// </summary>
 		/// <param name="assemblyNames">The assembly names.</param>
-		public static IEnumerable<Assembly> AllAssemblies(params string[] assemblyNames)
+        public static IEnumerable<Assembly> AllAssemblies(params string[] assemblyNames)
 		{
 			List<Assembly> assemblies = new List<Assembly>();
 			foreach (string assembly in assemblyNames)

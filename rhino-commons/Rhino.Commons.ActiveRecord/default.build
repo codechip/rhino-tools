@@ -20,6 +20,7 @@
 			<include name="Castle.MicroKernel.dll"/>
 			<include name="Castle.Core.dll"/>
 			<include name="Castle.ActiveRecord.dll"/>
+			<include name="Castle.Services.Transaction.dll"/>
 			<include name="Castle.Facilities.AutomaticTransactionManagement.dll"/>
 			<include name="log4net.dll"/>
 			<include name="NHibernate.dll"/>
