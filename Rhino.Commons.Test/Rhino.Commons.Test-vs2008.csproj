@@ -165,6 +165,9 @@
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Binsor\UnitOfWorkFacilities.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\MultiFileConfig_Main2.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -242,6 +245,7 @@
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
+    <Compile Include="Binsor\UnitOfWorkFacilityTestCase.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
     <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
