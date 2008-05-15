@@ -1,4 +1,4 @@
-?using MbUnit.Framework;
+using MbUnit.Framework;
 using Rhino.Testing.AutoMocking;
 
 namespace Rhino.Testing.Tests.AutoMocking
