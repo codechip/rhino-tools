@@ -36,6 +36,12 @@ using NHibernate.Criterion;
 
 namespace QueryNamespace
 {
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
+	public partial class Where
+	{
+	}
+
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class QueryBuilder<T>
 	{
 		protected string myName;
@@ -493,6 +499,7 @@ Use HQL for this functionality...",
 		}
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class IdQueryBuilder<T> : QueryBuilder<T>
 	{
 		private string oldName;
@@ -528,6 +535,7 @@ Use HQL for this functionality...",
 		}
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class CollectionQueryBuilder<T> : QueryBuilder<T>
 	{
 		public CollectionQueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
@@ -558,6 +566,7 @@ Use HQL for this functionality...",
 		}
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class PropertyQueryBuilder<T> : QueryBuilder<T>
 	{
 		public PropertyQueryBuilder(QueryBuilder<T> myQueryParent, string name, string associationPath)
@@ -670,6 +679,7 @@ Use HQL for this functionality...",
 		}
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class OrderByClause
 	{
 		bool ascending = true;
@@ -719,6 +729,7 @@ Use HQL for this functionality...",
 		}
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class ProjectBy
 	{
 		public static NHibernate.Criterion.IProjection RowCount
@@ -747,7 +758,7 @@ Use HQL for this functionality...",
 		}
 	}
 
-
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class PropertyProjectionBuilder
 	{
 		protected string name;
@@ -850,6 +861,7 @@ Use HQL for this functionality...",
 
 	}
 
+	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class NumericPropertyProjectionBuilder : PropertyProjectionBuilder
 	{
 		public NumericPropertyProjectionBuilder(string name) : base(name) { }

@@ -64,6 +64,13 @@
 		<property name='Name'/>
 	</class>
 
+	<class name='PotentiallyCrazyCustomer'>
+		<id name='Id'>
+			<generator class='native' />
+		</id>
+		<union-subclass name='CrazyCustomer' />
+		<union-subclass name='SaneCustomer' />
+	</class>
 
 	<joined-subclass name='My.Simple.Model.BadCustomer2, My.Simple.Model'>
 		<key column='f'></key>

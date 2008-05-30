@@ -286,6 +286,19 @@ namespace NHibernate.Query.Generator.Tests
 			Assert.IsNotNull(value);
 		}
 
+		[Test]
+		public void GenerateCodeForUnionSubClass()
+		{
+			Assembly asm = TestUtil.GetAssemblyFromCode(code);
+			object custoer = asm.GetType("Query.Where").GetProperty("CrazyCustomer").GetValue(null, null);
+			System.Type customerType = custoer.GetType();
+			Assert.IsNotNull(customerType);
+			PropertyInfo property = customerType.GetProperty("Id");
+			Assert.IsNotNull(property);
+			object value = property.GetValue(custoer, null);
+			Assert.IsNotNull(value);
+		}
+
 
 		[Test]
 		public void GeneratePropertiesForComponents()
@@ -376,7 +389,7 @@ namespace NHibernate.Query.Generator.Tests
 			string propName = node.Attributes["name"].Value;
 			System.Type customerType = customer.GetType();
 			PropertyInfo property = customerType.GetProperty(propName);
-			Assert.IsNotNull(property, "Should have a property named {0}", propName);
+			Assert.IsNotNull(property, "{0} should have a property named {1}", customerType.Name, propName);
 			Assert.AreEqual(expectedType, property.PropertyType.GetGenericTypeDefinition());
 		}
 

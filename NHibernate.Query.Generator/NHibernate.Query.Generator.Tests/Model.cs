@@ -64,6 +64,18 @@ namespace My.Simple.Model
 	public class CustomerContactData
 	{
 	}
+
+	public class PotentiallyCrazyCustomer
+	{
+	}
+
+	public class CrazyCustomer
+	{
+	}
+
+	public class SaneCustomer
+	{
+	}
 }
 
 namespace Field.Testing
