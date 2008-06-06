@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMemcached", "NMemcached\NMemcached.csproj", "{58E32849-5588-4720-8090-564FED0A25F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMemcached.Tests", "NMemcached.Tests\NMemcached.Tests.csproj", "{A22553C4-7878-452D-BB70-976AB05D31C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMemcached.IntegrationTests", "NMemcached.IntegrationTests\NMemcached.IntegrationTests.csproj", "{D79096CB-9D3C-4A3B-B178-D145224BA346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NMemcachedd.PerformanceTests", "NMemcachedd.PerformanceTests\NMemcachedd.PerformanceTests.csproj", "{F1FAE9A8-AEE5-4E6E-B53E-6A8DD163BFFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58E32849-5588-4720-8090-564FED0A25F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58E32849-5588-4720-8090-564FED0A25F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58E32849-5588-4720-8090-564FED0A25F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58E32849-5588-4720-8090-564FED0A25F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A22553C4-7878-452D-BB70-976AB05D31C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A22553C4-7878-452D-BB70-976AB05D31C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A22553C4-7878-452D-BB70-976AB05D31C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A22553C4-7878-452D-BB70-976AB05D31C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D79096CB-9D3C-4A3B-B178-D145224BA346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D79096CB-9D3C-4A3B-B178-D145224BA346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D79096CB-9D3C-4A3B-B178-D145224BA346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D79096CB-9D3C-4A3B-B178-D145224BA346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1FAE9A8-AEE5-4E6E-B53E-6A8DD163BFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1FAE9A8-AEE5-4E6E-B53E-6A8DD163BFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1FAE9A8-AEE5-4E6E-B53E-6A8DD163BFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1FAE9A8-AEE5-4E6E-B53E-6A8DD163BFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
