@@ -15,7 +15,7 @@ namespace NMemcached.Commands.Retrieval
 		{
 			foreach (var key in Keys)
 			{
-				var item = (CachedItem)Cache.Get(key);
+				var item = Cache.Get(key) as CachedItem;
 				if (item == null)
 					continue;
 				if(item.ExpiresAt < SystemTime.Now())

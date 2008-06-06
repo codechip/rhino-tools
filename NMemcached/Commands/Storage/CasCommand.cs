@@ -47,7 +47,7 @@ namespace NMemcached.Commands.Storage
 				return;
 			}
 
-			var item = (CachedItem)cachedItem;
+			var item = cachedItem as CachedItem;
 			if (item == null)
 			{
 				SendToClient("NOT_FOUND");

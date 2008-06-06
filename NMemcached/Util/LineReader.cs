@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -8,45 +9,55 @@ namespace NMemcached.Util
 	{
 		private readonly Stream stream;
 		private bool lastCharWasCr;
-		StringBuilder sb = new StringBuilder();
-		readonly byte[] buffer = new byte[1];
-		private Action<string, Exception> action;
+		private readonly List<byte> buffer = new List<byte>();
+		private Action<string, Exception> actionToExecuteWhenDone;
+		private readonly byte[] initialBuffer = new byte[1];
+
 		public LineReader(Stream stream)
 		{
 			this.stream = stream;
 		}
 
-		public void Read(Action<string, Exception> actionToExecuteWhenDone)
+		public void Read(Action<string, Exception> action)
 		{
-			this.action = actionToExecuteWhenDone;
-
-			stream.BeginRead(buffer, 0, buffer.Length, OnReadData, null);
+			actionToExecuteWhenDone = action;
+			// we start with an async mode so we wouldn't have to deal with hanging the thread on read
+			// or with stack overflow when we call back from it.
+			stream.BeginRead(initialBuffer, 0, initialBuffer.Length, ReadToEndOfLineInSyncManner, null);
 		}
 
-		public void OnReadData(IAsyncResult ar)
+		private void ReadToEndOfLineInSyncManner(IAsyncResult ar)
 		{
 			try
 			{
-				stream.EndRead(ar);
-				if (lastCharWasCr)
+				int read = stream.EndRead(ar);
+				if(read==0)
+					return;
+
+				int readByte = initialBuffer[0];
+				while (readByte != -1)
 				{
-					if (buffer[0] == '\n')
+					if (lastCharWasCr)
 					{
-						action(sb.ToString(), null);
-						return;
+						if (readByte == '\n')
+						{
+							break;
+						}
+						buffer.Add((byte)'\r');
 					}
-					sb.Append('\r');
+					lastCharWasCr = readByte == '\r';
+					if (lastCharWasCr == false)
+						buffer.Add((byte)readByte);
+					readByte = stream.ReadByte();
 				}
-				lastCharWasCr = buffer[0] == '\r';
-				if(lastCharWasCr==false)
-					sb.Append(Convert.ToChar(buffer[0]));
-				stream.BeginRead(buffer, 0, buffer.Length, OnReadData, null);
+				actionToExecuteWhenDone(
+					Encoding.ASCII.GetString(buffer.ToArray())
+					, null);
 			}
 			catch (Exception e)
 			{
-				action(null, e);
+				actionToExecuteWhenDone(null, e);
 			}
 		}
-
 	}
 }

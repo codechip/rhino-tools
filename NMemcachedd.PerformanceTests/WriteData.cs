@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace NMemcachedd.PerformanceTests
 {
-	public class ReadData
+	public class WriteData
 	{
 		readonly byte[] buffer = new byte[2048];
 		private Stream stream;
@@ -14,27 +14,27 @@ namespace NMemcachedd.PerformanceTests
 		private readonly TcpClient client;
 		private readonly ManualResetEvent wait;
 
-		public ReadData(TcpClient client, Func<int> increment, ManualResetEvent wait)
+		public WriteData(TcpClient client, Func<int> increment, ManualResetEvent wait)
 		{
 			this.client = client;
 			this.wait = wait;
 			this.increment = increment;
 		}
 
-		public void BeginReading(IAsyncResult ar)
+		public void BeginWriting(IAsyncResult ar)
 		{
 			stream = client.GetStream();
-			var bytes = Encoding.ASCII.GetBytes("get ayende\r\n");
-			stream.BeginWrite(bytes, 0, bytes.Length, OnFinishedWritingGet, null);
+			var bytes = Encoding.ASCII.GetBytes("set ayende 0 60 3\r\nabc\r\n");
+			stream.BeginWrite(bytes, 0, bytes.Length, OnFinishedWritingSet, null);
 		}
 
-		private void OnFinishedWritingGet(IAsyncResult ar)
+		private void OnFinishedWritingSet(IAsyncResult ar)
 		{
 			stream.EndWrite(ar);
-			stream.BeginRead(buffer, 0, buffer.Length, OnFinishedReadingGet, null);
+			stream.BeginRead(buffer, 0, buffer.Length, OnFinishedReadingSet, null);
 		}
 
-		private void OnFinishedReadingGet(IAsyncResult ar)
+		private void OnFinishedReadingSet(IAsyncResult ar)
 		{
 			stream.EndRead(ar);
 
@@ -45,8 +45,8 @@ namespace NMemcachedd.PerformanceTests
 				return;
 			}
 
-			var bytes = Encoding.ASCII.GetBytes("get ayende" + val + "\r\n");
-			stream.BeginWrite(bytes, 0, bytes.Length, OnFinishedWritingGet, null);
+			var bytes = Encoding.ASCII.GetBytes("set ayende"+val+" 0 60 3\r\nabc\r\n");
+			stream.BeginWrite(bytes, 0, bytes.Length, OnFinishedWritingSet, null);
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace NMemcached.Commands.Storage
 
 		protected override void ExecuteCommand()
 		{
-			var cachedItem = (CachedItem)Cache.Get(Key);
+			var cachedItem = Cache.Get(Key) as CachedItem;
 			if(cachedItem==null)
 			{
 				SendToClient("NOT_STORED");
