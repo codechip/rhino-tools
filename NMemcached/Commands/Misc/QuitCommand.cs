@@ -7,8 +7,7 @@ namespace NMemcached.Commands.Misc
 	{
 		private readonly Action quitAction;
 
-		public QuitCommand(Stream stream, Action quitAction)
-			: base(stream)
+		public QuitCommand(Action quitAction)
 		{
 			this.quitAction = quitAction;
 		}

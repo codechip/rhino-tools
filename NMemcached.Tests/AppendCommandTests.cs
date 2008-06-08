@@ -26,7 +26,9 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new AppendCommand(stream);
+			var command = new AppendCommand();
+			command.SetContext(stream);
+			
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -41,7 +43,8 @@ namespace NMemcached.Tests
 		public void When_appending_item_on_cache_will_reply_with_stored()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -52,7 +55,8 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new AppendCommand(stream);
+			command = new AppendCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -66,7 +70,8 @@ namespace NMemcached.Tests
 		public void When_appending_item_on_cache_will_append_to_data_already_on_cache()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -77,7 +82,8 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new AppendCommand(stream);
+			command = new AppendCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -93,7 +99,9 @@ namespace NMemcached.Tests
 		public void When_appending_item_on_cache_will_not_modify_flags()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
+			
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -104,7 +112,8 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new AppendCommand(stream);
+			command = new AppendCommand();
+			command.SetContext(stream);
 			command.Init("foo", "15", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };

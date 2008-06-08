@@ -6,11 +6,6 @@ namespace NMemcached.Commands.Retrieval
 {
 	public class GetsCommand : AbstractRetrievalCommand
 	{
-		public GetsCommand(Stream stream)
-			: base(stream)
-		{
-		}
-
 		public override void Execute()
 		{
 			foreach (var key in Keys)
@@ -21,7 +16,7 @@ namespace NMemcached.Commands.Retrieval
 				if(item.ExpiresAt < SystemTime.Now())
 					continue;
 
-				Writer.WriteLine("VALUE {0} {1} {2} {3}", item.Key, item.Flags, item.Buffer.Length, item.Timestamp);
+				Writer.WriteLine(ValueLineFormat, item.Key, item.Flags, item.Buffer.Length, item.Timestamp);
 				// this is needed so it will go directly to the stream, so we will get the output
 				// in the expected order
 				Writer.Flush();
@@ -31,6 +26,11 @@ namespace NMemcached.Commands.Retrieval
 			Writer.WriteLine("END");
 			Writer.Flush();
 			RaiseFinishedExecuting();
+		}
+
+		protected virtual string ValueLineFormat
+		{
+			get { return "VALUE {0} {1} {2} {3}"; }
 		}
 	}
 }

@@ -28,7 +28,8 @@ namespace NMemcached.Tests
 		{
 			Cache["foo"] = new CachedItem { Buffer = Encoding.ASCII.GetBytes("12") };
 			var stream = new MemoryStream();
-			var command = new DecrCommand(stream);
+			var command = new DecrCommand();
+			command.SetContext(stream);
 			command.Init("foo", "15");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -43,7 +44,9 @@ namespace NMemcached.Tests
 		{
 			Cache["foo"] = new CachedItem { Buffer = Encoding.ASCII.GetBytes("12") };
 			var stream = new MemoryStream();
-			var command = new DecrCommand(stream);
+			var command = new DecrCommand();
+			command.SetContext(stream);
+			
 			command.Init("foo", "5");
 
 			command.FinishedExecuting += () => { wait.Set(); };

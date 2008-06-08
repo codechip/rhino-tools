@@ -11,7 +11,9 @@ namespace NMemcached.Tests
 		public void When_passing_arguments_to_quit_will_send_error()
 		{
 			var stream = new MemoryStream();
-			var quit = new QuitCommand(stream, null);
+			var quit = new QuitCommand(null);
+			quit.SetContext(stream);
+			
 			quit.Init("foo");
 			Assert.AreEqual("CLIENT_ERROR Quit accepts no paramters\r\n", ReadAll(stream));
 		}
@@ -20,7 +22,8 @@ namespace NMemcached.Tests
 		public void When_passing_zero_arguments_to_quit_will_succeed()
 		{
 			var stream = new MemoryStream();
-			var quit = new QuitCommand(stream, null);
+			var quit = new QuitCommand(null);
+			quit.SetContext(stream);
 			Assert.IsTrue(quit.Init());
 		}
 
@@ -29,7 +32,8 @@ namespace NMemcached.Tests
 		{
 			var stream = new MemoryStream();
 			bool wasCalled = false;
-			var quit = new QuitCommand(stream, () => wasCalled = true);
+			var quit = new QuitCommand( () => wasCalled = true);
+			quit.SetContext(stream);
 			quit.Execute();
 			Assert.IsTrue(wasCalled);
 		}

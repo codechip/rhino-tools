@@ -21,30 +21,6 @@ namespace NMemcached
 
 		public ClientConnection(TcpClient client, Stream stream, Action onDispose)
 		{
-			commandFactories = new Dictionary<string, Func<Stream, ICommand>>
-			                   	{
-			                   		//storage
-			                   		{"add", s => new AddCommand(s)},
-			                   		{"append", s => new AppendCommand(s)},
-			                   		{"cas", s => new CasCommand(s)},
-			                   		{"delete", s => new DeleteCommand(s)},
-			                   		{"prepend", s => new PrependCommand(s)},
-			                   		{"replace", s => new ReplaceCommand(s)},
-			                   		{"set", s => new SetCommand(s)},
-
-			                   		// retrieval
-			                   		{"get", s => new GetCommand(s)},
-			                   		{"gets", s => new GetsCommand(s)},
-
-			                   		//modifications
-			                   		{"incr", s => new IncrCommand(s)},
-			                   		{"decr", s => new DecrCommand(s)},
-
-			                   		//misc
-			                   		{"flush_all", s => new FlushAllCommand(s)},
-			                   		{"quit", s => new QuitCommand(s, Dispose)},
-			                   		{"version", s => new VersionCommand(s)},
-			                   	};
 			this.client = client;
 			this.stream = stream;
 			this.onDispose = onDispose;
@@ -52,7 +28,31 @@ namespace NMemcached
 			writer = new StreamWriter(stream);
 		}
 
-		private readonly IDictionary<string, Func<Stream, ICommand>> commandFactories;
+		private static readonly IDictionary<string, Func<ClientConnection, ICommand>> commandFactories
+			= new Dictionary<string, Func<ClientConnection, ICommand>>
+			                   	{
+			                   		//storage
+			                   		{"add", s => new AddCommand()},
+			                   		{"append", s => new AppendCommand()},
+			                   		{"cas", s => new CasCommand()},
+			                   		{"delete", s => new DeleteCommand()},
+			                   		{"prepend", s => new PrependCommand()},
+			                   		{"replace", s => new ReplaceCommand()},
+			                   		{"set", s => new SetCommand()},
+
+			                   		// retrieval
+			                   		{"get", s => new GetCommand()},
+			                   		{"gets", s => new GetsCommand()},
+
+			                   		//modifications
+			                   		{"incr", s => new IncrCommand()},
+			                   		{"decr", s => new DecrCommand()},
+
+			                   		//misc
+			                   		{"flush_all", s => new FlushAllCommand()},
+			                   		{"quit", s => new QuitCommand(s.Dispose)},
+			                   		{"version", s => new VersionCommand()},
+			                   	};
 
 		public void ProcessNextCommand()
 		{
@@ -105,7 +105,7 @@ namespace NMemcached
 				}
 				string commandName = arguments[0];
 
-				Func<Stream, ICommand> factory;
+				Func<ClientConnection, ICommand> factory;
 				if (commandFactories.TryGetValue(commandName, out factory) == false)
 				{
 					SendError();
@@ -113,7 +113,8 @@ namespace NMemcached
 					return;
 				}
 
-				ICommand command = factory(stream);
+				ICommand command = factory(this);
+				command.SetContext(stream);
 				var commandArguments = new string[arguments.Length - 1];
 				Array.Copy(arguments, 1, commandArguments, 0, arguments.Length - 1);
 

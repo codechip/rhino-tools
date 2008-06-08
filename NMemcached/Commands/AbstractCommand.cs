@@ -6,28 +6,28 @@ namespace NMemcached.Commands
 {
 	public abstract class AbstractCommand : CacheMixin, ICommand
 	{
-		protected AbstractCommand(Stream stream)
-		{
-			Stream = stream;
-			Writer = new StreamWriter(stream);
-		}
-
 		public Stream Stream { get; private set; }
 		public TextWriter Writer { get; private set; }
 		public bool NoReply { get; protected set; }
-
-		#region ICommand Members
 
 		public string Name
 		{
 			get { return GetType().Name.Replace("Command", "").ToLowerInvariant(); }
 		}
 
+		#region ICommand Members
+
+		public void SetContext(Stream stream)
+		{
+			Stream = stream;
+			Writer = new StreamWriter(stream);			
+		}
+
+		#endregion
+
 		public abstract bool Init(params string[] args);
 		public abstract void Execute();
 		public virtual event Action FinishedExecuting = delegate { };
-
-		#endregion
 
 		protected void RaiseFinishedExecuting()
 		{

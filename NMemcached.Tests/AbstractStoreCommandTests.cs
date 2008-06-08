@@ -2,6 +2,7 @@
 using System.IO;
 using MbUnit.Framework;
 using NMemcached.Commands.Storage;
+using NMemcached.Extensions;
 
 namespace NMemcached.Tests
 {
@@ -173,8 +174,9 @@ namespace NMemcached.Tests
 
 		public class TestCommand : AbstractStoreCommand
 		{
-			public TestCommand(Stream stream) : base(stream)
+			public TestCommand(Stream stream)
 			{
+				SetContext(stream);
 			}
 
 			protected override void ExecuteCommand()
@@ -184,7 +186,7 @@ namespace NMemcached.Tests
 
 			public void SendToClient()
 			{
-				SendToClient("foo");
+				this.SendToClient("foo");
 			}
 		}
 

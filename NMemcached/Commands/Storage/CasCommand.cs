@@ -1,5 +1,6 @@
 using System.IO;
 using NMemcached.Commands.Storage;
+using NMemcached.Extensions;
 using NMemcached.Model;
 
 namespace NMemcached.Commands.Storage
@@ -10,11 +11,6 @@ namespace NMemcached.Commands.Storage
 	public class CasCommand : AbstractStoreCommand
 	{
 		public long Timestamp { get; private set; }
-
-		public CasCommand(Stream stream)
-			: base(stream)
-		{
-		}
 
 		public override bool Init(string[] args)
 		{
@@ -42,7 +38,7 @@ namespace NMemcached.Commands.Storage
 			object cachedItem = Cache.Get(Key);
 			if(cachedItem is BlockOperationOnItemTag)
 			{
-				SendToClient("NOT_STORED");
+				this.SendToClient("NOT_STORED");
 				RaiseFinishedExecuting();
 				return;
 			}
@@ -50,7 +46,7 @@ namespace NMemcached.Commands.Storage
 			var item = cachedItem as CachedItem;
 			if (item == null)
 			{
-				SendToClient("NOT_FOUND");
+				this.SendToClient("NOT_FOUND");
 				RaiseFinishedExecuting();
 				return;
 			}
@@ -58,7 +54,7 @@ namespace NMemcached.Commands.Storage
 			{
 				if (item.Timestamp != Timestamp)
 				{
-					SendToClient("EXISTS");
+					this.SendToClient("EXISTS");
 					RaiseFinishedExecuting();
 					return;
 				}

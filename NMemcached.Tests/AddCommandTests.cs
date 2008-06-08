@@ -25,7 +25,8 @@ namespace NMemcached.Tests
 		public void When_adding_item_will_put_it_in_cache()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			var command = new AddCommand(GetStreamWithData(buffer));
+			var command = new AddCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "13", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -44,7 +45,8 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -72,7 +74,8 @@ namespace NMemcached.Tests
 
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new AddCommand(stream);
+			var command = new AddCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };

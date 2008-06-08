@@ -5,10 +5,6 @@ namespace NMemcached.Commands.Modifications
 {
 	public class DecrCommand : AbstractArithmeticOperation
 	{
-		public DecrCommand(Stream stream)
-			: base(stream)
-		{
-		}
 
 		protected override ulong ArithmeticOperation(ulong cachedValue)
 		{

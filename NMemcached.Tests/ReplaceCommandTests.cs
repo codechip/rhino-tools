@@ -25,7 +25,8 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new ReplaceCommand(stream);
+			var command = new ReplaceCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -44,7 +45,8 @@ namespace NMemcached.Tests
 
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new ReplaceCommand(stream);
+			var command = new ReplaceCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -58,7 +60,8 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };

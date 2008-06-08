@@ -26,7 +26,8 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new PrependCommand(stream);
+			var command = new PrependCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -41,7 +42,8 @@ namespace NMemcached.Tests
 		public void When_prepending_item_on_cache_will_reply_with_stored()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -52,7 +54,8 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new PrependCommand(stream);
+			command = new PrependCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -66,7 +69,8 @@ namespace NMemcached.Tests
 		public void When_prepending_item_on_cache_will_prepend_to_data_already_on_cache()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -77,14 +81,15 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new PrependCommand(stream);
+			command = new PrependCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
 			command.Execute();
 			wait.WaitOne();
 
-			CachedItem item = (CachedItem)Cache.Get("foo");
+			var item = (CachedItem)Cache.Get("foo");
 
 			CollectionAssert.AreEqual(new byte[] { 5, 6, 7, 8, 1, 2, 3, 4, }, item.Buffer);
 		}
@@ -93,7 +98,8 @@ namespace NMemcached.Tests
 		public void When_prepending_item_on_cache_will_not_modify_flags()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			ICommand command = new SetCommand(GetStreamWithData(buffer));
+			ICommand command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -104,14 +110,15 @@ namespace NMemcached.Tests
 
 			buffer = new byte[] { 5, 6, 7, 8 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			command = new PrependCommand(stream);
+			command = new PrependCommand();
+			command.SetContext(stream);
 			command.Init("foo", "15", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
 			command.Execute();
 			wait.WaitOne();
 
-			CachedItem item = (CachedItem)Cache.Get("foo");
+			var item = (CachedItem)Cache.Get("foo");
 
 			Assert.AreEqual(1, item.Flags);
 		}

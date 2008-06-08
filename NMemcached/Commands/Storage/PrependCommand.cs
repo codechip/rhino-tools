@@ -1,22 +1,19 @@
 using System;
 using System.IO;
 using NMemcached.Commands.Storage;
+using NMemcached.Extensions;
 using NMemcached.Model;
 
 namespace NMemcached.Commands.Storage
 {
 	public class PrependCommand : AbstractStoreCommand
 	{
-		public PrependCommand(Stream stream) : base(stream)
-		{
-		}
-
 		protected override void ExecuteCommand()
 		{
 			var cachedItem = Cache.Get(Key) as CachedItem;
 			if (cachedItem == null)
 			{
-				SendToClient("NOT_STORED");
+				this.SendToClient("NOT_STORED");
 				RaiseFinishedExecuting();
 				return;
 			}
@@ -28,7 +25,7 @@ namespace NMemcached.Commands.Storage
 				Array.Copy(Buffer, 0, cachedItem.Buffer, 0, Buffer.Length);
 				Array.Copy(oldBuffer, 0, cachedItem.Buffer, BytesCount, oldBuffer.Length);
 			}
-			SendToClient("STORED");
+			this.SendToClient("STORED");
 			RaiseFinishedExecuting();
 		}
 	}

@@ -1,22 +1,19 @@
 using System;
 using System.Collections;
 using System.IO;
+using NMemcached.Extensions;
 using NMemcached.Model;
 
 namespace NMemcached.Commands.Misc
 {
 	public class FlushAllCommand : AbstractCommand
 	{
-		public FlushAllCommand(Stream stream) : base(stream)
-		{
-		}
-
 		public override void Execute()
 		{
 			if(DelayFlushUntil==null)
 			{
 				ClearCache();
-				SendToClient("OK");
+				this.SendToClient("OK");
 				RaiseFinishedExecuting();
 				return;
 			}
@@ -25,7 +22,7 @@ namespace NMemcached.Commands.Misc
 				CachedItem cachedItem = (CachedItem) de.Value;
 				cachedItem.ExpiresAt = DelayFlushUntil.Value;
 			}
-			SendToClient("OK");
+			this.SendToClient("OK");
 			RaiseFinishedExecuting();
 		}
 
@@ -48,15 +45,6 @@ namespace NMemcached.Commands.Misc
 				return false;
 			NoReply = noReply;
 			return true;
-		}
-
-		protected void SendToClient(string msg)
-		{
-			if (NoReply)
-				return;
-
-			Writer.WriteLine(msg);
-			Writer.Flush();
 		}
 
 		public DateTime? DelayFlushUntil { get; private set; }

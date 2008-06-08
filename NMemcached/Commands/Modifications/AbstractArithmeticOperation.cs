@@ -1,14 +1,12 @@
 using System.IO;
 using System.Text;
+using NMemcached.Extensions;
 using NMemcached.Model;
 
 namespace NMemcached.Commands.Modifications
 {
 	public abstract class AbstractArithmeticOperation : AbstractCommand
 	{
-		protected AbstractArithmeticOperation(Stream stream) : base(stream)
-		{
-		}
 
 		public ulong Value { get; private set; }
 		public string Key { get; private set; }
@@ -18,7 +16,7 @@ namespace NMemcached.Commands.Modifications
 			var item = (CachedItem) Cache.Get(Key);
 			if(item==null)
 			{
-				SendToClient("NOT_FOUND");
+				this.SendToClient("NOT_FOUND");
 				RaiseFinishedExecuting();
 				return;
 			}
@@ -36,7 +34,7 @@ namespace NMemcached.Commands.Modifications
 				value = ArithmeticOperation(value);
 				item.Buffer = Encoding.ASCII.GetBytes(value.ToString());
 			}
-			SendToClient(value.ToString());
+			this.SendToClient(value.ToString());
 			RaiseFinishedExecuting();
 		}
 
@@ -62,14 +60,6 @@ namespace NMemcached.Commands.Modifications
 			NoReply = noReply;
 
 			return true;
-		}
-
-		private void SendToClient(string msg)
-		{
-			if (NoReply)
-				return;
-			Writer.WriteLine(msg);
-			Writer.Flush();
 		}
 	}
 }

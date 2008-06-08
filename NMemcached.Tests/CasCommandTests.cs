@@ -24,8 +24,9 @@ namespace NMemcached.Tests
 		public void Specifying_invalid_cas_value_will_result_in_error()
 		{
 			var stream = new MemoryStream();
-			var cmd = new CasCommand(stream);
-			bool result = cmd.Init("b", "1", "2","2", "?x");
+			var cmd = new CasCommand();
+			cmd.SetContext(stream);
+			bool result = cmd.Init("b", "1", "2", "2", "?x");
 			Assert.IsFalse(result);
 			string actual = ReadAll(stream);
 			Assert.AreEqual("CLIENT_ERROR cas value should be numeric\r\n", actual);
@@ -35,7 +36,8 @@ namespace NMemcached.Tests
 		public void Trying_to_call_empty_key_will_result_in_error()
 		{
 			var stream = new MemoryStream();
-			var cmd = new CasCommand(stream);
+			var cmd = new CasCommand();
+			cmd.SetContext(stream);
 			bool result = cmd.Init("", "1", "2", "2", "?x");
 			Assert.IsFalse(result);
 			string actual = ReadAll(stream);
@@ -46,7 +48,8 @@ namespace NMemcached.Tests
 		public void Trying_to_call_invalid_noreply_will_result_in_error()
 		{
 			var stream = new MemoryStream();
-			var cmd = new CasCommand(stream);
+			var cmd = new CasCommand();
+			cmd.SetContext(stream);
 			bool result = cmd.Init("b", "1", "2", "2", "1", "blah");
 			Assert.IsFalse(result);
 			string actual = ReadAll(stream);
@@ -57,8 +60,9 @@ namespace NMemcached.Tests
 		public void Specifying_too_few_arguments_will_send_error()
 		{
 			var stream = new MemoryStream();
-			var cmd = new CasCommand(stream);
-			bool result = cmd.Init("b", "1", "2","2");
+			var cmd = new CasCommand();
+			cmd.SetContext(stream);
+			bool result = cmd.Init("b", "1", "2", "2");
 			Assert.IsFalse(result);
 			string actual = ReadAll(stream);
 			Assert.AreEqual("CLIENT_ERROR Expected to get 'cas <key> <flags> <exptime> <bytes> <cas unqiue> [noreply]'\r\n", actual);
@@ -68,8 +72,9 @@ namespace NMemcached.Tests
 		public void Specifying_too_many_arguments_will_send_error()
 		{
 			var stream = new MemoryStream();
-			var cmd = new CasCommand(stream);
-			bool result = cmd.Init("b", "1", "2", "3", "noreply", "3","3");
+			var cmd = new CasCommand();
+			cmd.SetContext(stream);
+			bool result = cmd.Init("b", "1", "2", "3", "noreply", "3", "3");
 			Assert.IsFalse(result);
 			string actual = ReadAll(stream);
 			Assert.AreEqual("CLIENT_ERROR Expected to get 'cas <key> <flags> <exptime> <bytes> <cas unqiue> [noreply]'\r\n", actual);
@@ -78,7 +83,8 @@ namespace NMemcached.Tests
 		[Test]
 		public void Will_parse_store_arguments_include_cas()
 		{
-			var command = new CasCommand(new MemoryStream());
+			var command = new CasCommand();
+			command.SetContext(new MemoryStream());
 			command.Init("foo", "1", "0", "2", "523423");
 			Assert.AreEqual(523423, command.Timestamp);
 		}
@@ -86,7 +92,8 @@ namespace NMemcached.Tests
 		[Test]
 		public void Will_parse_store_arguments_include_cas_with_noreply()
 		{
-			var command = new CasCommand(new MemoryStream());
+			var command = new CasCommand();
+			command.SetContext(new MemoryStream());
 			command.Init("foo", "1", "0", "2", "523423", "noreply");
 			Assert.AreEqual(523423, command.Timestamp);
 			Assert.IsTrue(command.NoReply);
@@ -101,7 +108,8 @@ namespace NMemcached.Tests
 			stream.WriteByte(13);
 			stream.WriteByte(10);
 			stream.Position = 0;
-			var command = new CasCommand(stream);
+			var command = new CasCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "0", "2", "523423");
 			command.FinishedExecuting += () => wait.Set();
 			
@@ -122,7 +130,8 @@ namespace NMemcached.Tests
 			stream.WriteByte(13);
 			stream.WriteByte(10);
 			stream.Position = 0;
-			var command = new CasCommand(stream);
+			var command = new CasCommand();
+			command.SetContext(stream); 
 			command.Init("foo", "1", "0", "2", "523423");
 			command.FinishedExecuting += () => wait.Set();
 			command.Execute();
@@ -142,7 +151,8 @@ namespace NMemcached.Tests
 			stream.WriteByte(13);
 			stream.WriteByte(10);
 			stream.Position = 0;
-			var command = new CasCommand(stream);
+			var command = new CasCommand();
+			command.SetContext(stream); 
 			command.Init("foo", "1", "0", "2", "4");
 			command.FinishedExecuting += () => wait.Set();
 			command.Execute();
@@ -162,13 +172,14 @@ namespace NMemcached.Tests
 			stream.WriteByte(13);
 			stream.WriteByte(10);
 			stream.Position = 0;
-			var command = new CasCommand(stream);
+			var command = new CasCommand();
+			command.SetContext(stream); 
 			command.Init("foo", "1", "0", "2", "4");
 			command.FinishedExecuting += () => wait.Set();
 			command.Execute();
 			wait.WaitOne();
 
-			CachedItem c = (CachedItem)Cache["foo"];
+			var c = (CachedItem)Cache["foo"];
 			CollectionAssert.AreEqual(new byte[]{1,2}, c.Buffer);
 			Assert.IsTrue(4L != c.Timestamp);
 		}

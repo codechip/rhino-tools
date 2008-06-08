@@ -6,10 +6,6 @@ namespace NMemcached.Commands.Retrieval
 	{
 		public string[] Keys { get; private set; }
 
-		protected AbstractRetrievalCommand(Stream stream) : base(stream)
-		{
-		}
-
 		public override bool Init(string[] args)
 		{
 			if (args.Length == 0)

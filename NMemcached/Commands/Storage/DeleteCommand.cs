@@ -12,11 +12,6 @@ namespace NMemcached.Commands.Storage
 
 		public DateTime? BlockedFromUpdatingUntil { get; private set; }
 
-		public DeleteCommand(Stream stream)
-			: base(stream)
-		{
-		}
-
 		public override void Execute()
 		{
 			object removedItem;

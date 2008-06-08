@@ -5,10 +5,6 @@ namespace NMemcached.Commands.Misc
 {
 	public class VersionCommand : AbstractCommand
 	{
-		public VersionCommand(Stream stream) : base(stream)
-		{
-		}
-
 		public override void Execute()
 		{
 			Version version = typeof (VersionCommand).Assembly.GetName().Version;

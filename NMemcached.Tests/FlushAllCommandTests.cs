@@ -26,7 +26,9 @@ namespace NMemcached.Tests
 		public void Specifying_too_many_parameters_will_fail()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
+			
 			cmd.Init("foo", "bar", "baz");
 			Assert.AreEqual("CLIENT_ERROR Expected 'flush_all [delay] [noreply]'\r\n", ReadAll(stream));
 		}
@@ -35,7 +37,8 @@ namespace NMemcached.Tests
 		public void Specifying_non_numeric_time_parameters_fails()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init("foo", "bar");
 			Assert.AreEqual("CLIENT_ERROR Exptime should be an integer\r\n", ReadAll(stream));
 		}
@@ -44,7 +47,8 @@ namespace NMemcached.Tests
 		public void Specifying_invalid_noreplay_value_fails()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init("5", "bar");
 			Assert.AreEqual("CLIENT_ERROR Last argument was expected to be [noreply]\r\n", ReadAll(stream));
 		}
@@ -53,7 +57,8 @@ namespace NMemcached.Tests
 		public void Will_correctly_parse_arguments_with_noreply()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init("60", "noreply");
 			Assert.IsTrue(cmd.NoReply);
 			Assert.AreEqual(new DateTime(2000, 1, 1, 0, 1, 0), cmd.DelayFlushUntil);
@@ -63,7 +68,8 @@ namespace NMemcached.Tests
 		public void When_passing_noreply_will_not_send_any_input_to_user()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init("60", "noreply");
 			cmd.Execute();
 			Assert.IsEmpty(ReadAll(stream));
@@ -73,7 +79,8 @@ namespace NMemcached.Tests
 		public void Can_specify_without_parameters()
 		{
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init();
 			Assert.IsFalse(cmd.NoReply);
 			Assert.IsNull(cmd.DelayFlushUntil);
@@ -89,7 +96,8 @@ namespace NMemcached.Tests
 			Assert.AreEqual(50, Cache.Count);
 
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init();
 			cmd.FinishedExecuting += () => wait.Set();
 			cmd.Execute();
@@ -111,7 +119,8 @@ namespace NMemcached.Tests
 			Assert.AreEqual(50, Cache.Count);
 
 			var stream = new MemoryStream();
-			var cmd = new FlushAllCommand(stream);
+			var cmd = new FlushAllCommand();
+			cmd.SetContext(stream);
 			cmd.Init("60");
 			cmd.FinishedExecuting += () => wait.Set();
 			cmd.Execute();

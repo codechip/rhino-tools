@@ -25,7 +25,9 @@ namespace NMemcached.Tests
 		public void When_setting_item_will_put_it_in_cache()
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
-			var command = new SetCommand(GetStreamWithData(buffer));
+			var command = new SetCommand();
+			command.SetContext(GetStreamWithData(buffer));
+
 			command.Init("foo", "1","6000","4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -43,7 +45,8 @@ namespace NMemcached.Tests
 		{
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -61,7 +64,9 @@ namespace NMemcached.Tests
 			var stream = new MemoryStream();
 			stream.Write(buffer, 0, 4);
 			stream.Position = 0;
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
+			
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -78,7 +83,8 @@ namespace NMemcached.Tests
 			var stream = new MemoryStream();
 			stream.Write(buffer, 0, 5);
 			stream.Position = 0;
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -95,7 +101,8 @@ namespace NMemcached.Tests
 			var stream = new MemoryStream();
 			stream.Write(buffer, 0, 5);
 			stream.Position = 0;
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };
@@ -124,7 +131,8 @@ namespace NMemcached.Tests
 
 			var buffer = new byte[] { 1, 2, 3, 4 };
 			MemoryStream stream = GetStreamWithData(buffer);
-			var command = new SetCommand(stream);
+			var command = new SetCommand();
+			command.SetContext(stream);
 			command.Init("foo", "1", "6000", "4");
 
 			command.FinishedExecuting += () => { wait.Set(); };

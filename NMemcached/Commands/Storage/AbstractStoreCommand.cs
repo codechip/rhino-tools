@@ -10,11 +10,6 @@ namespace NMemcached.Commands.Storage
 	{
 		private readonly byte[] crLfBuffer = new byte[2];
 
-		protected AbstractStoreCommand(Stream stream)
-			: base(stream)
-		{
-		}
-
 		protected byte[] Buffer { get; private set; }
 
 		public string Key { get; private set; }
@@ -128,18 +123,9 @@ namespace NMemcached.Commands.Storage
 			var cachedItem = new CachedItem { Key = Key, Buffer = Buffer, Flags = Flags, ExpiresAt = ExpiresAt};
 			Cache.Insert(Key, cachedItem, null, ExpiresAt, NoSlidingExpiration);
 
-			SendToClient("STORED");
+			this.SendToClient("STORED");
 
 			RaiseFinishedExecuting();
-		}
-
-		protected void SendToClient(string msg)
-		{
-			if (NoReply)
-				return;
-
-			Writer.WriteLine(msg);
-			Writer.Flush();
 		}
 	}
 }
