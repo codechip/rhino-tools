@@ -45,7 +45,7 @@
     <Compile Include="Commands\Storage\AddCommand.cs" />
     <Compile Include="Commands\Storage\AppendCommand.cs" />
     <Compile Include="Extensions\CommandExtensions.cs" />
-    <Compile Include="Util\AyncStreamReader.cs" />
+    <Compile Include="Util\BufferReader.cs" />
     <Compile Include="Model\BlockOperationOnItemTag.cs" />
     <Compile Include="Model\CachedItem.cs" />
     <Compile Include="Util\CacheMixin.cs" />

@@ -70,7 +70,7 @@ namespace NMemcached.Commands.Storage
 		public override void Execute()
 		{
 			Buffer = new byte[BytesCount];
-			new AyncStreamReader(Stream, Buffer)
+			new BufferReader(Stream, Buffer)
 				.Read(ReadCrLfPair);
 		}
 
@@ -80,7 +80,7 @@ namespace NMemcached.Commands.Storage
 				ExecuteCommand(e);
 			try
 			{
-				new AyncStreamReader(Stream, crLfBuffer).Read(ExecuteCommand);
+				new BufferReader(Stream, crLfBuffer).Read(ExecuteCommand);
 			}
 			catch (Exception ex)
 			{
