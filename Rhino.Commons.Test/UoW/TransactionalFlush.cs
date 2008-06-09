@@ -119,7 +119,7 @@ namespace Rhino.Commons.Test.UoW
                 }
             });
 
-            bool hasRolledBack = true  ;
+            bool hasRolledBack = false  ;
             foreach (string msg in logMessages  )
             {
                 if (msg.ToLower().Contains("rollback"))
