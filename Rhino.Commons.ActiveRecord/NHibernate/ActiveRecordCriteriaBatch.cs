@@ -33,6 +33,7 @@ using System.Collections;
 using Castle.ActiveRecord;
 using NHibernate;
 using NHibernate.Criterion;
+using Rhino.Commons.NHibernate;
 
 namespace Rhino.Commons
 {
@@ -82,7 +83,7 @@ namespace Rhino.Commons
 		{
 			if (rootType == null)
 			{
-				rootType = criteria.CriteriaClass;
+				rootType = CriteriaUtil.GetRootType(criteria, base.session);
 			}
 		}
 	}

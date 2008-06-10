@@ -33,8 +33,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web;
 using Castle.Windsor;
-using NHibernate;
-using Rhino.Commons.NHibernate.Properties;
+using Rhino.Commons.Properties;
 
 namespace Rhino.Commons.HttpModules
 {

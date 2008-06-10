@@ -154,7 +154,7 @@ namespace Rhino.Commons
 			
 			if (type.IsEntityType)
 			{
-				persister = criteriaQuery.Factory.GetEntityPersister(type.ReturnedClass);
+				persister = criteriaQuery.Factory.GetEntityPersister(type.ReturnedClass.FullName);
 			}
 			StringWriter sw = new StringWriter();
 			XmlWriter writer = XmlWriter.Create(sw);
@@ -241,6 +241,11 @@ namespace Rhino.Commons
 			{
 				return value;
 			}
+		}
+
+		public override IProjection[] GetProjections()
+		{
+			return null;
 		}
 	}
 }

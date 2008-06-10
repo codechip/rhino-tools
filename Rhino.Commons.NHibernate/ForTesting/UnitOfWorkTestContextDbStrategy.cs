@@ -32,6 +32,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Win32;
 using NHibernate;
+using NHibernate.Engine;
 using NHibernate.Tool.hbm2ddl;
 using Rhino.Commons.Helpers;
 using Environment=NHibernate.Cfg.Environment;
@@ -359,7 +360,7 @@ namespace Rhino.Commons.ForTesting
             {
                 //need to get our own connection, because NH will try to close it
                 //as soon as possible, and we will lose the changes.
-                IDbConnection dbConnection = TestContext.SessionFactory.ConnectionProvider.GetConnection();
+                IDbConnection dbConnection = ((ISessionFactoryImplementor)TestContext.SessionFactory).ConnectionProvider.GetConnection();
                 ISession openSession = TestContext.SessionFactory.OpenSession(dbConnection);
                 return openSession;
             }

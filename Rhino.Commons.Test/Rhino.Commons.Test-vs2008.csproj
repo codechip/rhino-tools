@@ -258,7 +258,6 @@
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
     <Compile Include="NHibernate\FuturesFixture.cs" />
     <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
-    <Compile Include="Repository\AdaptiveDomainModelTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryProjectionTests.cs" />

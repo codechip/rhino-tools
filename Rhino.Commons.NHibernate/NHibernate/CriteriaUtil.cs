@@ -1,4 +1,5 @@
 #region license
+
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
 // 
@@ -24,24 +25,55 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #endregion
 
 using System;
 using NHibernate;
+using NHibernate.Criterion;
+using NHibernate.Engine;
+using NHibernate.Impl;
+using NHibernate.Persister.Entity;
 
-namespace Rhino.Commons
+namespace Rhino.Commons.NHibernate
 {
-	public static class RepositoryFetchingStrategy
+	public static class CriteriaUtil
 	{
-		public static ICriteria ApplyFetchingRules(ICriteria criteria)
+		public static ISessionImplementor GetSession(ICriteria criteria)
 		{
-			Type rules = typeof(IFetchingStrategy<>).MakeGenericType(criteria.CriteriaClass);
-			IFetchingStrategy[] fetchingStrategies = (IFetchingStrategy[]) IoC.ResolveAll(rules);
-			foreach (IFetchingStrategy strategy in fetchingStrategies)
-			{
-				criteria = strategy.Apply(criteria);
-			}
-			return criteria;
+			return GetRootCriteria(criteria).Session;
+		}
+
+		private static CriteriaImpl GetRootCriteria(ICriteria criteria)
+		{
+			CriteriaImpl impl = criteria as CriteriaImpl;
+			if (impl != null)
+				return impl;
+			return GetRootCriteria(((CriteriaImpl.Subcriteria)criteria).Parent);
+		}
+
+		public static Type GetRootType(ICriteria criteria)
+		{
+			CriteriaImpl impl = GetRootCriteria(criteria);
+			if(impl.Session==null)
+				throw new InvalidOperationException("Could not get root type on criteria that is not attached to a session");
+
+			ISessionFactoryImplementor factory = impl.Session.Factory;
+			IEntityPersister persister = factory.GetEntityPersister(impl.EntityOrClassName);
+			if (persister == null)
+				throw new InvalidOperationException("Could not find entity named: " + impl.EntityOrClassName);
+
+			return persister.GetMappedClass(EntityMode.Poco);
+		}
+
+		public static Type GetRootType(DetachedCriteria criteria, ISession session)
+		{
+			ISessionFactoryImplementor factory = (ISessionFactoryImplementor)session.SessionFactory;
+			IEntityPersister persister = factory.GetEntityPersister(criteria.EntityOrClassName);
+			if (persister == null)
+				throw new InvalidOperationException("Could not find entity named: " + criteria.EntityOrClassName);
+
+			return persister.GetMappedClass(EntityMode.Poco);
 		}
 	}
 }

@@ -33,7 +33,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using NHibernate;
+using NHibernate.Connection;
 using NHibernate.Criterion;
+using NHibernate.Engine;
 using NHibernate.Transform;
 
 namespace Rhino.Commons
@@ -545,7 +547,8 @@ namespace Rhino.Commons
 
 		public object ExecuteStoredProcedure(string sp_name, params Parameter[] parameters)
 		{
-			IDbConnection connection = SessionFactory.ConnectionProvider.GetConnection();
+			IConnectionProvider connectionProvider = ((ISessionFactoryImplementor)SessionFactory).ConnectionProvider;
+			IDbConnection connection = connectionProvider.GetConnection();
 			try
 			{
 				using (IDbCommand command = connection.CreateCommand())
@@ -560,7 +563,7 @@ namespace Rhino.Commons
 			}
 			finally
 			{
-				SessionFactory.ConnectionProvider.CloseConnection(connection);
+				connectionProvider.CloseConnection(connection);
 			}
 		}
 
@@ -577,7 +580,8 @@ namespace Rhino.Commons
 		public ICollection<T2> ExecuteStoredProcedure<T2>(Converter<IDataReader, T2> converter, string sp_name,
 		                                                  params Parameter[] parameters)
 		{
-			IDbConnection connection = SessionFactory.ConnectionProvider.GetConnection();
+			IConnectionProvider connectionProvider = ((ISessionFactoryImplementor)SessionFactory).ConnectionProvider;
+			IDbConnection connection = connectionProvider.GetConnection();
 
 			try
 			{
@@ -600,7 +604,7 @@ namespace Rhino.Commons
 			}
 			finally
 			{
-				SessionFactory.ConnectionProvider.CloseConnection(connection);
+				connectionProvider.CloseConnection(connection);
 			}
 		}
 
@@ -635,10 +639,7 @@ namespace Rhino.Commons
 				{
 					return tuple[0];
 				}
-				else
-				{
-					return Activator.CreateInstance(typeof (T1), tuple);
-				}
+				return Activator.CreateInstance(typeof (T1), tuple);
 			}
 
 			IList IResultTransformer.TransformList(IList collection)

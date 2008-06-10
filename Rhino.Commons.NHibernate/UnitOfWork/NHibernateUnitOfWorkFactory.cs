@@ -33,7 +33,7 @@ using System.Web;
 using System.Xml;
 using NHibernate;
 using NHibernate.Cfg;
-using Settings=Rhino.Commons.NHibernate.Properties.Settings;
+using Settings=Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {
