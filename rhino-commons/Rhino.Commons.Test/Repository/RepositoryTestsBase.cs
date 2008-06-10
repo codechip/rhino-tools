@@ -34,6 +34,7 @@ using Castle.ActiveRecord;
 using MbUnit.Framework;
 using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Transform;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.Repository
@@ -117,7 +118,7 @@ namespace Rhino.Commons.Test.Repository
         protected static IList<T> LoadAll<T>()
         {
             DetachedCriteria criteria = DetachedCriteria.For<T>();
-            criteria.SetResultTransformer(CriteriaUtil.DistinctRootEntity);
+            criteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
             return criteria.GetExecutableCriteria(UnitOfWork.CurrentSession).List<T>();
         }
 

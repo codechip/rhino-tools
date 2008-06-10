@@ -8,7 +8,7 @@ namespace Rhino.Commons
 {
     public class CriteriaBatch
     {
-        private readonly ISession session;
+    	protected ISession session;
         private DetachedCriteria currentCriteria;
         private int currentIndex = -1;
         private readonly List<Proc<IList>> collectionDelegates = new List<Proc<IList>>();
@@ -78,6 +78,9 @@ namespace Rhino.Commons
 
         public virtual IList Execute(ISession theSession)
         {
+			// a sub class may need this at a later date.
+        	session = theSession;
+
             if (criteriaList.Count == 0) return new ArrayList();
 
             IMultiCriteria multiCriteria = theSession.CreateMultiCriteria();

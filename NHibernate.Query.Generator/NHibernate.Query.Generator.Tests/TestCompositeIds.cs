@@ -6,6 +6,7 @@ using NHibernate.Cfg;
 using NHibernate.Criterion;
 using NHibernate.Query.Generator.Tests.CompositeIds;
 using NHibernate.SqlCommand;
+using NHibernate.Transform;
 using Query;
 
 namespace NHibernate.Query.Generator.Tests
@@ -76,7 +77,7 @@ namespace NHibernate.Query.Generator.Tests
 				Where.CompositeIdParent.Children.Exists(Where.CompositeIdChild.CompositeIdPart1.Like("child"));
 
 			IList<CompositeIdParent> applications =
-				where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity).
+				where.GetExecutableCriteria(session).SetResultTransformer(new DistinctRootEntityResultTransformer()).
 					List<CompositeIdParent>();
 
 			session.Close();

@@ -967,6 +967,16 @@
             <param name="persistentType"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetClassMetadata(System.String)">
+            <summary>
+            Get the <see cref="T:NHibernate.Metadata.IClassMetadata"/> associated with the given entity name
+            </summary>
+            <param name="entityName">the given entity name.</param>
+            <returns>
+            The class metadata or <see langword="null"/> if not found.
+            </returns>
+            <seealso cref="T:NHibernate.Metadata.IClassMetadata"/>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetCollectionMetadata(System.String)">
             <summary>
             Get the <c>CollectionMetadata</c> associated with the named collection role
@@ -976,17 +986,12 @@
         </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetAllClassMetadata">
             <summary>
-            Get all <c>ClassMetadata</c> as a <c>IDictionary</c> from <c>Type</c>
+            Get all <see cref="T:NHibernate.Metadata.IClassMetadata"/> as a <see cref="T:System.Collections.IDictionary"/> from entityname <see langword="string"/>
             to metadata object
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetAllCollectionMetadata">
-            <summary>
-            Get all <c>CollectionMetadata</c> as a <c>IDictionary</c> from role name
-            to metadata object
-            </summary>
-            <returns></returns>
+            <returns>
+            A dictionary from <see langword="string"/> an entity name to <see cref="T:NHibernate.Metadata.IClassMetadata"/>
+            </returns>
         </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetCurrentSession">
             <summary>
@@ -1064,6 +1069,15 @@
             </summary>
             <param name="entityName"></param>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictEntity(System.String,System.Object)">
+            <summary>
+            Evict an entry from the second-level  cache. This method occurs outside
+            of any transaction; it performs an immediate "hard" remove, so does not respect
+            any transaction isolation semantics of the usage strategy. Use with care.
+            </summary>
+            <param name="entityName"></param>
+            <param name="id"></param>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenStatelessSession">
             <summary>
             Get a new stateless session.
@@ -1081,6 +1095,13 @@
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
+        </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetAllCollectionMetadata">
+            <summary>
+            Get all <c>CollectionMetadata</c> as a <c>IDictionary</c> from role name
+            to metadata object
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.ConnectionProvider">
             <summary>
@@ -1119,6 +1140,12 @@
         <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Statistics">
             <summary>
             Get the statistics for this session factory
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.IsClosed">
+            <summary>
+            Was this <see cref="T:NHibernate.ISessionFactory"/> already closed?
             </summary>
             <value></value>
         </member>

@@ -134,7 +134,7 @@ namespace Rhino.Commons
 
 		private IQueryable ObtainQueryable(ICriteriaQuery criteriaQuery)
 		{
-			IQueryable queryable = criteriaQuery.Factory.GetEntityPersister(_entityClass) as IQueryable;
+			IQueryable queryable = criteriaQuery.Factory.GetEntityPersister(_entityClass.FullName) as IQueryable;
 
 			if (queryable == null)
 			{
@@ -146,5 +146,10 @@ namespace Rhino.Commons
 		}
 
 		private static readonly TypedValue[] EmptyTypes = new TypedValue[0];
+
+		public override IProjection[] GetProjections()
+		{
+			return null;
+		}
 	}
 }

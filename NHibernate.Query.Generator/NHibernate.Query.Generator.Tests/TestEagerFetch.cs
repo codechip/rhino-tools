@@ -6,6 +6,7 @@ using NHibernate.Cfg;
 using NHibernate.Criterion;
 using NHibernate.Query.Generator.Tests.WithEagerFetch;
 using NHibernate.SqlCommand;
+using NHibernate.Transform;
 using Query;
 
 namespace NHibernate.Query.Generator.Tests
@@ -122,7 +123,7 @@ namespace NHibernate.Query.Generator.Tests
                 Where.Application.Operations.With(JoinType.LeftOuterJoin, FetchMode.Join);
 
             IList<Application> applications =
-                where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity).
+                where.GetExecutableCriteria(session).SetResultTransformer(new DistinctRootEntityResultTransformer()).
                     List<Application>();
 
             session.Close();
@@ -149,8 +150,8 @@ namespace NHibernate.Query.Generator.Tests
                 Where.Application.Operations
                     .With(JoinType.LeftOuterJoin, FetchMode.Join).Name == "EatCheese";
 
-            IList<Application> applications = 
-                where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity)
+            IList<Application> applications =
+				where.GetExecutableCriteria(session).SetResultTransformer(new DistinctRootEntityResultTransformer())
                     .List<Application>();
 
             session.Close();
@@ -176,7 +177,7 @@ namespace NHibernate.Query.Generator.Tests
                     .With(JoinType.LeftOuterJoin, FetchMode.Join).Name == "EatCheese";
 
             IList<Application> applications =
-                where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity)
+				where.GetExecutableCriteria(session).SetResultTransformer(new DistinctRootEntityResultTransformer())
                     .List<Application>();
 
             session.Close();
@@ -198,7 +199,7 @@ namespace NHibernate.Query.Generator.Tests
 						Where.Application.Settings.GlobalSettings.With(JoinType.LeftOuterJoin, FetchMode.Join);
 
 				IList<Application> applications =
-						where.GetExecutableCriteria(session).SetResultTransformer(CriteriaUtil.DistinctRootEntity)
+						where.GetExecutableCriteria(session).SetResultTransformer(new DistinctRootEntityResultTransformer())
 								.List<Application>();
 
 				session.Close();
