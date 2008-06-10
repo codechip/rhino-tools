@@ -27,9 +27,9 @@
 #endregion
 
 using System.Reflection;
-using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
+using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Facilities
 {
@@ -51,16 +51,24 @@ namespace Rhino.Commons.Facilities
             }
         }
 
-
         protected override void Init()
         {
             Kernel.Register(
                 Component.For(typeof (IRepository<>))
-                    .ImplementedBy(typeof (ARRepository<>)), 
-                Component.For<IUnitOfWorkFactory>()
-                    .ImplementedBy<ActiveRecordUnitOfWorkFactory>()
-                    .DependsOn(Property.ForKey("assemblies").Eq(assemblies))
+                    .ImplementedBy(typeof (ARRepository<>))
                 );
+        	ComponentRegistration<IUnitOfWorkFactory> registerFactory = 
+				Component.For<IUnitOfWorkFactory>()
+        		.ImplementedBy<ActiveRecordUnitOfWorkFactory>();
+
+			// if we are running in test mode, we don't want to register
+			// the assemblies directly, we let the DatabaseTestFixtureBase do it
+			// this allow us to share the configuration between the test & prod projects
+			if(DatabaseTestFixtureBase.IsRunningInTestMode)
+			{
+				registerFactory.DependsOn(Property.ForKey("assemblies").Eq(assemblies));
+			}
+        	Kernel.Register(registerFactory);
         }
 
         public Assembly[] Assemblies

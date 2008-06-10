@@ -76,7 +76,7 @@ namespace Rhino.Commons.ForTesting
 		}
 
 
-		public override void IntialiseContainerAndUowFactory()
+		public override void InitializeContainerAndUowFactory()
 		{
 			if (IoC.IsInitialized) IoC.Reset();
 			ActiveRecordStarter.ResetInitializationFlag();

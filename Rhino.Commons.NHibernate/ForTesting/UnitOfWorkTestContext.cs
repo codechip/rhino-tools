@@ -277,7 +277,7 @@ namespace Rhino.Commons.ForTesting
             unitOfWorkNestingLevel -= 1;
         }
 
-        public abstract void IntialiseContainerAndUowFactory();
+        public abstract void InitializeContainerAndUowFactory();
 
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Rhino.Commons.ForTesting
                     yield return initializer;
             }
 
-            public override void IntialiseContainerAndUowFactory()
+            public override void InitializeContainerAndUowFactory()
             {
                 if (IoC.IsInitialized) 
                     IoC.Reset();
