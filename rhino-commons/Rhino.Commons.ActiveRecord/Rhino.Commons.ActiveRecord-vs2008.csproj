@@ -7,7 +7,7 @@
     <ProjectGuid>{2B796A66-19FC-4E72-BB02-DC16D878725A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Commons.ActiveRecord</RootNamespace>
+    <RootNamespace>Rhino.Commons</RootNamespace>
     <AssemblyName>Rhino.Commons.ActiveRecord</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>

@@ -43,6 +43,17 @@ namespace Rhino.Commons.ForTesting
         public static List<UnitOfWorkTestContext> Contexts = new List<UnitOfWorkTestContext>();
         public static UnitOfWorkTestContext CurrentContext;
 
+    	public static bool IsRunningInTestMode
+    	{
+    		get
+    		{
+    			return (bool)(Local.Data["DatabaseTestFixtureBase.IsRunningInTestMode"] ?? false);
+    		}
+			private set
+			{
+				Local.Data["DatabaseTestFixtureBase.IsRunningInTestMode"] = value;
+			}
+    	}
 
         /// <summary>
         /// Initialize the persistence framework, build a session factory, and
@@ -90,9 +101,9 @@ namespace Rhino.Commons.ForTesting
 
             if (!Equals(context, CurrentContext) || IsInversionOfControlContainerOutOfSynchWith(context))
             {
-                context.IntialiseContainerAndUowFactory();
+                context.InitializeContainerAndUowFactory();
             }
-
+        	IsRunningInTestMode = true;
             CurrentContext = context;
             Debug.Print(string.Format("CurrentContext is: {0}", CurrentContext));
         }
@@ -200,6 +211,7 @@ namespace Rhino.Commons.ForTesting
                 context.Dispose();
 
             CurrentContext = null;
+        	IsRunningInTestMode = false;
             Contexts.Clear();
         }
     }
