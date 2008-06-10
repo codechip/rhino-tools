@@ -12,3 +12,7 @@ for type in AllTypes("Rhino.Commons.Test").WhereNamespaceEq("Rhino.Commons.Test.
 for type in AllTypes("Rhino.Commons.NHibernate") \
 	.Where({ t as System.Type | t.Name.Contains("NHRepository") }):
 	component "nh.repos", type.GetFirstInterface(), type
+
+for type in AllTypes("Rhino.Commons.Test") \
+	.Where({ t as System.Type | t.Name == "Fubar54" }):
+	component "foo54", type.GetFirstInterface({ t as System.Type | t.Name == "IFoo54" }), type

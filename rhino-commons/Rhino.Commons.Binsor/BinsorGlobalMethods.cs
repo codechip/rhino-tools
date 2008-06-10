@@ -9,19 +9,29 @@ namespace Rhino.Commons.Binsor
 	[CompilerGlobalScope]
 	public static class BinsorGlobalMethods
 	{
-	
-        [Boo.Lang.Extension]
+		[Boo.Lang.Extension]
 #if DOTNET35
-        public static Type GetFirstInterface(this Type type)
+		public static Type GetFirstInterface(this Type type)
 #else 
         public static Type GetFirstInterface(Type type)
 #endif
-        {
+		{
+			return GetFirstInterface(type, delegate { return true; });
+		}
+
+		[Boo.Lang.Extension]
+#if DOTNET35
+        public static Type GetFirstInterface(this Type type, Predicate<Type> match)
+#else 
+        public static Type GetFirstInterface(Type type, Predicate<Type> match)
+#endif
+		{
             Type[] interfaces = type.GetInterfaces();
-            if(interfaces.Length!=1)
+			interfaces = Array.FindAll(interfaces, match);
+			if(interfaces.Length!=1)
             {
                 throw new InvalidOperationException(
-                    "Could not find service interface for "+ type +" because it implements "+interfaces.Length +" interfaces."+ Environment.NewLine + 
+                    "Could not find service interface for "+ type +" because it implements "+interfaces.Length +" interfaces matching the given predicate."+ Environment.NewLine + 
                     "GetFirstInterface() will only work on types implementing a single interface.");
             }
             return interfaces[0];
