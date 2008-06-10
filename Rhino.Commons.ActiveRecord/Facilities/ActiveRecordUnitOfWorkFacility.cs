@@ -64,7 +64,7 @@ namespace Rhino.Commons.Facilities
 			// if we are running in test mode, we don't want to register
 			// the assemblies directly, we let the DatabaseTestFixtureBase do it
 			// this allow us to share the configuration between the test & prod projects
-			if(DatabaseTestFixtureBase.IsRunningInTestMode)
+			if(DatabaseTestFixtureBase.IsRunningInTestMode == false)
 			{
 				registerFactory.DependsOn(Property.ForKey("assemblies").Eq(assemblies));
 			}
