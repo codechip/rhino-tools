@@ -148,8 +148,11 @@ namespace Rhino.Commons.HttpModules
 
         public override void Dispose()
         {
-            BeginRequest -= UnitOfWorkApplication_BeginRequest;
-            EndRequest -= UnitOfWorkApplication_EndRequest;
+			// we can't unregister to those, we get invalid operation exeption
+			// when we try that.
+
+			//BeginRequest -= UnitOfWorkApplication_BeginRequest;
+			//EndRequest -= UnitOfWorkApplication_EndRequest;
             if (watcher != null)
                 watcher.Dispose();
         }
