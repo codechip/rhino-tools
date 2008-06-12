@@ -98,12 +98,13 @@ namespace Rhino.Commons.ForTesting
 
             UnitOfWorkTestContext context =
                 GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName);
+			
+			IsRunningInTestMode = true;
 
             if (!Equals(context, CurrentContext) || IsInversionOfControlContainerOutOfSynchWith(context))
             {
                 context.InitializeContainerAndUowFactory();
             }
-        	IsRunningInTestMode = true;
             CurrentContext = context;
             Debug.Print(string.Format("CurrentContext is: {0}", CurrentContext));
         }
