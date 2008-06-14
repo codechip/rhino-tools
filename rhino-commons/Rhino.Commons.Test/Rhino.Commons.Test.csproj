@@ -224,6 +224,7 @@
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
+    <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests.cs" />
     <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateDatabaseTestFixtureBaseTests.cs" />
@@ -235,7 +236,6 @@
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
     <Compile Include="NHibernate\FuturesFixture.cs" />
     <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
-    <Compile Include="Repository\AdaptiveDomainModelTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryProjectionTests.cs" />
