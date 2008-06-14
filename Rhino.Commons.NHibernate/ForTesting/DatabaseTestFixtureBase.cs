@@ -34,186 +34,187 @@ using Rhino.Commons;
 
 namespace Rhino.Commons.ForTesting
 {
-    /// <summary>
-    /// Responsible for creating the <see cref="UnitOfWorkTestContext"/> that a test requires
-    /// and ensuring this context is current for the execution of that test
-    /// </summary>
-    public class DatabaseTestFixtureBase
-    {
-        public static List<UnitOfWorkTestContext> Contexts = new List<UnitOfWorkTestContext>();
-        public static UnitOfWorkTestContext CurrentContext;
+	/// <summary>
+	/// Responsible for creating the <see cref="UnitOfWorkTestContext"/> that a test requires
+	/// and ensuring this context is current for the execution of that test
+	/// </summary>
+	public class DatabaseTestFixtureBase
+	{
+		public static List<UnitOfWorkTestContext> Contexts = new List<UnitOfWorkTestContext>();
+		public static UnitOfWorkTestContext CurrentContext;
 
-    	public static bool IsRunningInTestMode
-    	{
-    		get
-    		{
-    			return (bool)(Local.Data["DatabaseTestFixtureBase.IsRunningInTestMode"] ?? false);
-    		}
+		public static bool IsRunningInTestMode
+		{
+			get
+			{
+				return (bool)(Local.Data["DatabaseTestFixtureBase.IsRunningInTestMode"] ?? false);
+			}
 			private set
 			{
 				Local.Data["DatabaseTestFixtureBase.IsRunningInTestMode"] = value;
 			}
-    	}
+		}
 
-        /// <summary>
-        /// Initialize the persistence framework, build a session factory, and
-        /// initialize the container. If <paramref name="rhinoContainerConfig"/>
-        /// is <see langword="null" /> or <see
-        /// cref="string.Empty">string.Empty</see> a <see
-        /// cref="RhinoContainer">RhinoContainer</see> will not be initialized.
-        /// </summary>
-        /// <param name="framework">The persistence framework</param>
-        /// <param name="rhinoContainerConfig">The configuration file to
-        /// initialize a 
-        /// <see cref="RhinoContainer">RhinoContainer</see> or <see langword="null" />.</param>
-        /// <param name="databaseName">Name of the database or <see langword="null" />.</param>
-        /// <param name="databaseEngine">The database engine that tests should be performed against</param>
-        /// <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
-        /// <remarks>
-        /// If <paramref name="databaseName"/> is <see langword="null" /> or
-        /// <see cref="string.Empty"/> a database with a name
-        /// derived from the other parameters supplied will be created. See
-        /// <see cref="DeriveDatabaseNameFrom(Assembly)"/> and <see cref="DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
-        /// </remarks>
-        public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
-                                                     string rhinoContainerConfig,
-                                                     DatabaseEngine databaseEngine,
-                                                     string databaseName,
-                                                     MappingInfo mappingInfo)
-        {
-            if (string.IsNullOrEmpty(databaseName))
-            {
-                databaseName = DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]);
-            }
+		/// <summary>
+		/// Initialize the persistence framework, build a session factory, and
+		/// initialize the container. If <paramref name="rhinoContainerConfig"/>
+		/// is <see langword="null" /> or <see
+		/// cref="string.Empty">string.Empty</see> a <see
+		/// cref="RhinoContainer">RhinoContainer</see> will not be initialized.
+		/// </summary>
+		/// <param name="framework">The persistence framework</param>
+		/// <param name="rhinoContainerConfig">The configuration file to
+		/// initialize a 
+		/// <see cref="RhinoContainer">RhinoContainer</see> or <see langword="null" />.</param>
+		/// <param name="databaseName">Name of the database or <see langword="null" />.</param>
+		/// <param name="databaseEngine">The database engine that tests should be performed against</param>
+		/// <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
+		/// <remarks>
+		/// If <paramref name="databaseName"/> is <see langword="null" /> or
+		/// <see cref="string.Empty"/> a database with a name
+		/// derived from the other parameters supplied will be created. See
+		/// <see cref="DeriveDatabaseNameFrom(Assembly)"/> and <see cref="DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
+		/// </remarks>
+		public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
+													 string rhinoContainerConfig,
+													 DatabaseEngine databaseEngine,
+													 string databaseName,
+													 MappingInfo mappingInfo)
+		{
+			if (string.IsNullOrEmpty(databaseName))
+			{
+				databaseName = DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]);
+			}
 
-            if (GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName) == null)
-            {
-                UnitOfWorkTestContextDbStrategy dbStrategy =
-                    UnitOfWorkTestContextDbStrategy.For(databaseEngine, databaseName);
-                UnitOfWorkTestContext newContext =
-                    UnitOfWorkTestContext.For(framework, rhinoContainerConfig, dbStrategy, mappingInfo);
-                Contexts.Add(newContext);
-                Debug.Print(string.Format("Created another UnitOfWorkContext for: {0}", newContext));
-            }
+			if (GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName) == null)
+			{
+				UnitOfWorkTestContextDbStrategy dbStrategy =
+					UnitOfWorkTestContextDbStrategy.For(databaseEngine, databaseName);
+				UnitOfWorkTestContext newContext =
+					UnitOfWorkTestContext.For(framework, rhinoContainerConfig, dbStrategy, mappingInfo);
+				Contexts.Add(newContext);
+				Debug.Print(string.Format("Created another UnitOfWorkContext for: {0}", newContext));
+			}
 
-            UnitOfWorkTestContext context =
-                GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName);
-			
+			UnitOfWorkTestContext context =
+				GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName);
+
 			IsRunningInTestMode = true;
 
-            if (!Equals(context, CurrentContext) || IsInversionOfControlContainerOutOfSynchWith(context))
-            {
-                context.InitializeContainerAndUowFactory();
-            }
-            CurrentContext = context;
-            Debug.Print(string.Format("CurrentContext is: {0}", CurrentContext));
-        }
+			if (!Equals(context, CurrentContext) || IsInversionOfControlContainerOutOfSynchWith(context))
+			{
+				context.InitializeContainerAndUowFactory();
+			}
+			CurrentContext = context;
+			Debug.Print(string.Format("CurrentContext is: {0}", CurrentContext));
+		}
 
 
-        private static bool IsInversionOfControlContainerOutOfSynchWith(UnitOfWorkTestContext context) 
-        {
-            return (IoC.IsInitialized == false) != (context.RhinoContainer == null);
-        }
+		private static bool IsInversionOfControlContainerOutOfSynchWith(UnitOfWorkTestContext context)
+		{
+			return (IoC.IsInitialized == false) != (context.RhinoContainer == null);
+		}
 
 
-        private static UnitOfWorkTestContext GetUnitOfWorkTestContextFor(PersistenceFramework framework,
-                                                                         string rhinoContainerConfigPath,
-                                                                         DatabaseEngine databaseEngine,
-                                                                         string databaseName)
-        {
-            Predicate<UnitOfWorkTestContext> criteria =
-                delegate(UnitOfWorkTestContext x) {
-                    return x.Framework == framework &&
-                           x.RhinoContainerConfigPath == StringOrEmpty(rhinoContainerConfigPath) &&
-                           x.DatabaseEngine == databaseEngine &&
-                           x.DatabaseName == databaseName;
-                };
+		private static UnitOfWorkTestContext GetUnitOfWorkTestContextFor(PersistenceFramework framework,
+																		 string rhinoContainerConfigPath,
+																		 DatabaseEngine databaseEngine,
+																		 string databaseName)
+		{
+			Predicate<UnitOfWorkTestContext> criteria =
+				delegate(UnitOfWorkTestContext x)
+				{
+					return x.Framework == framework &&
+						   x.RhinoContainerConfigPath == StringOrEmpty(rhinoContainerConfigPath) &&
+						   x.DatabaseEngine == databaseEngine &&
+						   x.DatabaseName == databaseName;
+				};
 
-            return Contexts.Find(criteria);
-        }
-
-
-        /// <summary>
-        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-        /// </summary>
-        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
-        {
-            IntializeNHibernateAndIoC(framework, rhinoContainerConfig, DatabaseEngine.SQLite, null, mappingInfo);
-        }
-
-        /// <summary>
-        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-        /// </summary>
-        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
-        {
-            IntializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, null, mappingInfo);
-        }
+			return Contexts.Find(criteria);
+		}
 
 
-        /// <summary>
-        /// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-        /// </summary>
-        public static void IntializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
-        {
-            IntializeNHibernateAndIoC(framework, null, DatabaseEngine.SQLite, null, mappingInfo);
-        }
+		/// <summary>
+		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+		/// </summary>
+		public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
+		{
+			IntializeNHibernateAndIoC(framework, rhinoContainerConfig, DatabaseEngine.SQLite, null, mappingInfo);
+		}
+
+		/// <summary>
+		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+		/// </summary>
+		public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
+		{
+			IntializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, null, mappingInfo);
+		}
 
 
-        public static string DeriveDatabaseNameFrom(DatabaseEngine databaseEngine, Assembly assembly)
-        {
-            if (databaseEngine == DatabaseEngine.SQLite)
-                return UnitOfWorkTestContextDbStrategy.SQLiteDbName;
-            else if (databaseEngine == DatabaseEngine.MsSqlCe)
-                return "TempDB.sdf";
-            else
-                return DeriveDatabaseNameFrom(assembly);
-        }
+		/// <summary>
+		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+		/// </summary>
+		public static void IntializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
+		{
+			IntializeNHibernateAndIoC(framework, null, DatabaseEngine.SQLite, null, mappingInfo);
+		}
 
 
-        private static string DeriveDatabaseNameFrom(Assembly assembly)
-        {
-            string[] assemblyNameParts = assembly.GetName().Name.Split('.');
-            if (assemblyNameParts.Length > 1)
-                //assumes that the first part of the assmebly name is the Company name
-                //and the second part is the Project name
-                return assemblyNameParts[1];
-            else
-                return assemblyNameParts[0];
-        }
+		public static string DeriveDatabaseNameFrom(DatabaseEngine databaseEngine, Assembly assembly)
+		{
+			if (databaseEngine == DatabaseEngine.SQLite)
+				return UnitOfWorkTestContextDbStrategy.SQLiteDbName;
+			else if (databaseEngine == DatabaseEngine.MsSqlCe)
+				return "TempDB.sdf";
+			else // we want to have a test DB and a real db, and we really don't want to override on by mistake
+				return DeriveDatabaseNameFrom(assembly) + "_Test";
+		}
 
 
-        private static string StringOrEmpty(string s)
-        {
-            return s ?? string.Empty;
-        }
+		private static string DeriveDatabaseNameFrom(Assembly assembly)
+		{
+			string[] assemblyNameParts = assembly.GetName().Name.Split('.');
+			if (assemblyNameParts.Length > 1)
+				//assumes that the first part of the assmebly name is the Company name
+				//and the second part is the Project name
+				return assemblyNameParts[1];
+			else
+				return assemblyNameParts[0];
+		}
 
 
-        /// <summary>
-        /// Throw away all <see cref="UnitOfWorkTestContext"/> objects within <see cref="Contexts"/>
-        /// and referenced by <see cref="CurrentContext"/>. WARNING: Subsequent calls to  <see
-        /// cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-        /// and all its overloads will now take considerably longer as the persistent framework will
-        /// be initialised a fresh.
-        /// </summary>
-        /// <remarks>
-        /// This method should be used vary sparingly. It is highly unlikely that you will need to
-        /// call this method between every test.
-        /// <para>
-        /// Calling this method will dispose of <see cref="UnitOfWorkTestContext"/> objects within
-        /// <see cref="Contexts"/>. Each context maintains a reference to a 
-        ///  <see cref="RhinoContainer"/>. If this container object is
-        /// referenced by <see cref="IoC"/>.<see cref="IoC.Container"/> then any subsequent calls to <see
-        /// cref="IoC"/>.<see cref="IoC.Resolve(Type)"/> and any of the overloads will throw.
-        /// </para>
-        /// </remarks>
-        public static void DisposeAndRemoveAllUoWTestContexts() 
-        {
-            foreach (UnitOfWorkTestContext context in Contexts)
-                context.Dispose();
+		private static string StringOrEmpty(string s)
+		{
+			return s ?? string.Empty;
+		}
 
-            CurrentContext = null;
-        	IsRunningInTestMode = false;
-            Contexts.Clear();
-        }
-    }
+
+		/// <summary>
+		/// Throw away all <see cref="UnitOfWorkTestContext"/> objects within <see cref="Contexts"/>
+		/// and referenced by <see cref="CurrentContext"/>. WARNING: Subsequent calls to  <see
+		/// cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+		/// and all its overloads will now take considerably longer as the persistent framework will
+		/// be initialised a fresh.
+		/// </summary>
+		/// <remarks>
+		/// This method should be used vary sparingly. It is highly unlikely that you will need to
+		/// call this method between every test.
+		/// <para>
+		/// Calling this method will dispose of <see cref="UnitOfWorkTestContext"/> objects within
+		/// <see cref="Contexts"/>. Each context maintains a reference to a 
+		///  <see cref="RhinoContainer"/>. If this container object is
+		/// referenced by <see cref="IoC"/>.<see cref="IoC.Container"/> then any subsequent calls to <see
+		/// cref="IoC"/>.<see cref="IoC.Resolve(Type)"/> and any of the overloads will throw.
+		/// </para>
+		/// </remarks>
+		public static void DisposeAndRemoveAllUoWTestContexts()
+		{
+			foreach (UnitOfWorkTestContext context in Contexts)
+				context.Dispose();
+
+			CurrentContext = null;
+			IsRunningInTestMode = false;
+			Contexts.Clear();
+		}
+	}
 }

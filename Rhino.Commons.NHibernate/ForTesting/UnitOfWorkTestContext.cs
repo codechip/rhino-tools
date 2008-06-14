@@ -83,7 +83,10 @@ namespace Rhino.Commons.ForTesting
         {
             if (activeRecordType == null)
                 activeRecordType = Type.GetType(activeRecordTestContextType);
-
+			if (activeRecordType == null)
+			{
+				throw new InvalidOperationException("Could not find Active Record context type. Did you forget to reference 'Rhino.Commons.ActiveRecord'?");
+			}
             return
                 (UnitOfWorkTestContext)
                 Activator.CreateInstance(activeRecordType,
