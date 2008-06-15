@@ -63,7 +63,7 @@
 		<!-- Check if there is a framework specific config file and use that -->
 		<property name="app.config.src" value="${src.dir}/App-${framework::get-target-framework()}.config" />
 		<if test="${file::exists(app.config.src)}">
-			<copy 
+			<copy
 				file="${app.config.src}"
 				tofile="${build.dir}/${project::get-name()}.dll.config"
 			/>
@@ -74,7 +74,7 @@
 		<!-- In case there was no framework specific config check if there is a framework neutral file and use that. -->
 		<property name="app.config.src" value="${src.dir}/App.config" />
 		<if test="${file::exists(app.config.src)}" unless="${property::exists('app.config.src.found')}">
-			<copy 
+			<copy
 				file="${app.config.src}"
 				tofile="${build.dir}/${project::get-name()}.dll.config"
 			/>
@@ -91,7 +91,7 @@
 
 		<!-- make sure the config file is writable -->
 		<attrib file="${app.config}" readonly="false" />
-		
+
 		<xmlpoke
 			file="${app.config}"
 			xpath="/configuration/appSettings/add[@key='tests.src']/@value"
@@ -121,16 +121,16 @@
 				<arg value="${msbuildlogger}" />
 			</exec>
 		</if>
-		
+
 		<if test="${not build.msbuild}">
 			<property name="warnaserror" value="${build.warnaserrors}" />
 			<csc
-				target="library" 
-				define="${current.build.defines}" 
-				debug="${build.debug}" 
+				target="library"
+				define="${current.build.defines}"
+				debug="${build.debug}"
 				optimize="${build.optimize}"
 				warnaserror="${warnaserror}"
-				output="${build.dir}/${project::get-name()}.dll" 
+				output="${build.dir}/${project::get-name()}.dll"
 				doc="${build.dir}/${project::get-name()}.xml"
 				rebuild="${build.rebuild}"
 				unless="${build.msbuild}"
@@ -173,11 +173,11 @@
 
 		<csc
 			target="exe"
-			define="${current.build.defines}" 
+			define="${current.build.defines}"
 			debug="${build.debug}"
 			optimize="${build.optimize}"
 			warnaserror="${build.warnaserrors}"
-			output="${build.dir}/${project::get-name()}.exe" 
+			output="${build.dir}/${project::get-name()}.exe"
 		>
 			<nowarn>
 				<warning number="1591" unless="${build.warnmissingdocs}" /> <!-- No XML comment for publicly visible member -->
@@ -233,7 +233,7 @@
 				<attribute type="AssemblyInformationalVersionAttribute" value="${assembly.version.informational}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${assembly.version.informational}" />
 				<attribute type="AssemblyDelaySignAttribute" value="false" />
-				
+
 				<!-- For some reason, NAnt doesn't detect that APTCA has a public no-argument constructor -->
 				<attribute asis="true" type="AllowPartiallyTrustedCallersAttribute" if="${assembly.allow-partially-trusted-callers}" />
 			</attributes>
@@ -244,7 +244,7 @@
 			<echo append="true" file="${assemblyinfo.cs}">#endif</echo>
 		</if>
 	</target>
-	
+
 	<target name="common.assemblyinfo">
 
 		<nant target="generate-assemblyinfo">
@@ -260,12 +260,12 @@
 			<echo message="Running tests in '${project::get-name()}'" />
 
 			<exec
-				program="${mbunit-console}" 
+				program="${mbunit-console}"
 				workingdir="${build.dir}"
-				commandline="${project::get-name()}.dll /rf:${testresults.dir} /rnf:${project::get-name()}.dll-results /rt:Html /rt:Xml"
+				commandline='${project::get-name()}.dll /rf:"${testresults.dir}" /rnf:"${project::get-name()}.dll-results" /rt:Html /rt:Xml'
 				failonerror="${common.testrunner.failonerror}"
 			/>
-			
+
 		</if>
 		<if test="${not common.testrunner.enabled}">
 			<echo message="Tests are disabled for '${project::get-name()}'" />
@@ -283,23 +283,23 @@
 		<!-- make sure the config file is writable -->
 		<attrib file="${app.config}" readonly="false" />
 
-		<!-- 
+		<!--
 			Tell nhibernate how to connect to the test database.
 		-->
 		<xmlpoke
 			file="${app.config}"
 			xpath="/configuration/nhibernate/add[@key='hibernate.dialect']/@value"
-			value="${nhibernate.dialect}" 
+			value="${nhibernate.dialect}"
 		/>
 		<xmlpoke
 			file="${app.config}"
 			xpath="/configuration/nhibernate/add[@key='hibernate.connection.driver_class']/@value"
-			value="${nhibernate.connection.driver_class}" 
+			value="${nhibernate.connection.driver_class}"
 		/>
 		<xmlpoke
 			file="${app.config}"
 			xpath="/configuration/nhibernate/add[@key='hibernate.connection.connection_string']/@value"
-			value="${nhibernate.connection.connection_string}" 
+			value="${nhibernate.connection.connection_string}"
 		/>
 	</target>
 
@@ -309,7 +309,7 @@
 		<xmlpoke
 			file="${app.config}"
 			xpath="/configuration/nhibernate/add[@key='hibernate.connection.connection_string']/@value"
-			value="conn string here" 
+			value="conn string here"
 		/>
 	</target>
 
