@@ -6,17 +6,28 @@ The AssemblyInfo.cs is missing from the repository.
 The reason for that is that the build is generating updated AssemblyInfo.cs files for all projects,
 with the correct version and revision notes.
 
-You need to run:
- > msbuild buildall.build 
+You need to run (from the project root):
+ > nant
  
 from the command line before you can build in visual studio.
 
 You can also run:
 
-> msbuild default.build
+> nant
 
-from a specific project directory, if you want to build just it
+from a specific project directory, if you want to build just it, note that you generally need to build the whole thing before you can do this, since there are dependencies between the projects.
 
+Requirements
+===============
+The tests Rhino Tools assumes that you have a SQL Server database installed and with CREATE DATABASE privileges for the current user.
+You should also ensure that the database server has a database named 'test' and a database named 'test2', with CREATE TABLE and DROP TABLE privileges for
+the current user.
+
+Build options
+==============
+
+- Building without tests: 
+> nant -D:common.testrunner.enabled=false
 
 Building From NHibernate and Castle Trunks
 ==================
@@ -33,118 +44,7 @@ Building From NHibernate and Castle Trunks
    * in the BuildFromTrunk-Config.build file.
 
 4) From a command prompt with administrative access run the following command from the Rhino-Toosl root.
-   >msbuild BuildFromTrunk.build /t:Build-All
-
-
-Customizing A Trunk Build
-==================
-
-1) Ensure you successfully build everything from trunk given the steps above.
-
-2) Create a file in the root directory of Rhino-Tools named
-   MyBuild.build -- Use the sample as an example
-
-   * If you want to build the castle code generator make sure to pass the BuildAll target the parameter With-Cstl-CodeGen
-   * Make sure the directory paths are configured for Castle Contrib
-
-3) Create a target for each one of your projects that is using NH, Castle, and Rhino
-   
-   The target should call the CopyTo target of the BuildFromTrunk.build script.
-   Make sure you set the Dest-Dir parameter when calling the target.  By default
-   libraries will be copied to $(Dest-Dir)\lib\$(Configuration) and Tools will
-   be copied to $(Dest-Dir)\tools\Tool-Name.  To override these locations you
-   can pass in $(Dest-Lib-Dir) and $(Dest-Tool-Dir) values.
-
-   <Target Name=ProjectY">
-     <MSBuild Project="BuildFromTrunk" Targets="CopyTo" Parameters="Configuration=release;Dest-Dir=C:\ProjectX" />
-   </Target>
-
-4) Customize what you want to copy.
-   Now the fun part, you can pass parameters for the libraries you want to copy.
-   Dependencies will be automatically resolved for you.  So if you want to
-   use Rhino.Commons, NH, Windosr, and Castle Logging with Log4Net you could use the
-   following command.
-
-   <Target Name=ProjectY">
-     <MSBuild Project="BuildFromTrunk" Targets="CopyTo" Parameters="Configuration=release;Dest-Dir=C:\ProjectX
-      ;With-Rhino-Commons-NH=true
-      ;With-Log4Net=true" />
-   </Target>
-
-   If you wanted a quickstart AR and Monorail application you could use
-
-   <Target Name=ProjectY">
-     <MSBuild Project="BuildFromTrunk" Targets="CopyTo" Parameters="Configuration=release;Dest-Dir=C:\ProjectX
-      ;With-MR-AR-Scaffolding=true
-      ;With-MR-NVelocity=true
-      ;With-Rhino-Commons=true" />
-   </Target>
-
-** Tips **
-  nant is case sensitive and msbuild is not so when specifying a COnfiguration parameter value use lowercase b/c nh and castle do.
-  
-  Patching the trunk is a pain, check the castle tree for a branch that works with NH trunk.
-  
-  Using Configuration=debug will give you full debug builds of all the libraries, useful for troubleshooting
-     framework bugs but a royal pia for debugging your own applications.
-  
-  You can configure your own projects to use either the debug or release builds depending on your project config
-     Unload the project, edit the references, change the path from ../lib/release/whatever.dll to ../lib/$(Configuration)/whatever.dll
-
-Options List
-==================
-With-NH
-With-NH-Search
-With-NH-Mapping
-With-NH-Prevalence
-With-NH-MemCached
-With-NH-SysCache
-With-NH-SysCache2
-With-NH-SqlTypes
-With-NH-OraTypes
-With-NH-Integration
-
-With-MicroKernel
-With-Windsor
-With-Logging
-With-Log4Net
-
-With-AR
-With-AR-Integration
-With-Transaction
-With-Atm
-
-With-Binder
-With-Validator
-With-TemplateEngine
-With-NVelocity-TemplateEngine
-With-Email
-With-DictionaryAdapter
-
-With-MR
-With-MR-AR-Support
-With-MR-AR-Scaffolding
-With-MR-Windsor
-With-MR-NVelocity
-With-MR-Brail
-With-MR-Json
-
-With-Rhino-Commons
-With-Rhino-Commons-NH
-With-Rhino-Commons-AR
-With-Rhino-Mocks
-With-Mocks
-With-Rhino-Testing
-With-Nhqg
-
-With-SqlLite
-With-SqlCe
-
-With-Cstl-CodeGen
-
-
-
-
+   >nant -f:BuildFromTrunk.build
 
 
 
