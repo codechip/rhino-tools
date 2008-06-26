@@ -33,7 +33,7 @@ namespace Rhino.Commons.Binsor
 	using Boo.Lang.Compiler.Ast;
 	using DSL;
 
-	internal class BinsorCompilerStep : AnonymousBaseClassCompilerStep
+	internal class BinsorCompilerStep : ImplicitBaseClassCompilerStep
 	{
 		private readonly string environment;
 

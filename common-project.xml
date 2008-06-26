@@ -211,7 +211,7 @@
 		description="Generate AssemblyInfo.cs using assembly.* properties."
 	>
 		<property name="assemblyinfo.cs" value="${path::combine(prop.dir,'AssemblyInfo.cs')}" />
-		<attrib file="${assemblyinfo.cs}" readonly="false" />
+		<attrib file="${assemblyinfo.cs}" readonly="false"  failonerror="false"/>
 		<asminfo output="${assemblyinfo.cs}" language="CSharp" failonerror="false">
 			<imports>
 				<import namespace="System" />
@@ -239,9 +239,9 @@
 			</attributes>
 		</asminfo>
 		<if test="${assembly.sign and not (nant.settings.currentframework == 'net-2.0')}" >
-			<echo append="true" file="${assemblyinfo.cs}">#if MONO</echo>
-			<echo append="true" file="${assemblyinfo.cs}">[assembly: AssemblyKeyFileAttribute(@"${path::get-full-path(assembly.keyfile)}")]</echo>
-			<echo append="true" file="${assemblyinfo.cs}">#endif</echo>
+			<echo append="true" file="${assemblyinfo.cs}"  failonerror="false">#if MONO</echo>
+			<echo append="true" file="${assemblyinfo.cs}"  failonerror="false">[assembly: AssemblyKeyFileAttribute(@"${path::get-full-path(assembly.keyfile)}")]</echo>
+			<echo append="true" file="${assemblyinfo.cs}"  failonerror="false">#endif</echo>
 		</if>
 	</target>
 
