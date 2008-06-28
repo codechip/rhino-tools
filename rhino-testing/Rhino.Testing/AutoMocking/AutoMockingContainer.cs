@@ -65,7 +65,7 @@ namespace Rhino.Testing.AutoMocking
 			{
 				return _strategies[type];
 			}
-			return new DynamicMockingStrategy(this);
+			return DefaultMockingStrategy;
 		}
 
 		public virtual IMockingStrategy GetMockingStrategy<T>()
