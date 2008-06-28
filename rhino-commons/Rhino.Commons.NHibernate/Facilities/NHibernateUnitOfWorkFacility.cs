@@ -35,78 +35,108 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Facilities
 {
-    public class NHibernateUnitOfWorkFacility : AbstractFacility
-    {
-        private readonly Assembly[] assemblies;
-        private readonly bool registerEntitiesToRepository;
+	public class NHibernateUnitOfWorkFacility : AbstractFacility
+	{
+		private readonly Assembly[] assemblies;
+		private readonly bool registerEntitiesToRepository;
+		private readonly string configurationFileName;
 
-        public NHibernateUnitOfWorkFacility(string assembly)
-            : this(assembly, false)
-        {
-        }
+		public NHibernateUnitOfWorkFacility(string assembly)
+			: this(assembly, null)
+		{
 
-        public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository)
-            : this(new string[] { assembly, }, registerEntitiesToRepository)
-        {
-        }
+		}
 
-        public NHibernateUnitOfWorkFacility(string[] assemblies)
-            : this(assemblies, false)
-        {
-        }
-        
-        public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository)
-        {
-            this.assemblies = new Assembly[assemblies.Length];
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                this.assemblies[i] = Assembly.Load(assemblies[i]);
-            }
-            this.registerEntitiesToRepository = registerEntitiesToRepository;
-        }
+		public NHibernateUnitOfWorkFacility(string assembly, string configurationFileName)
+			: this(assembly, false, configurationFileName)
+		{
+			this.configurationFileName = configurationFileName;
+		}
 
-        protected override void Init()
-        {
-            Kernel.Register(
-                Component.For(typeof (IRepository<>))
-                    .ImplementedBy(typeof (NHRepository<>))
-                );
-        	ComponentRegistration<IUnitOfWorkFactory> registerFactory = 
+		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository)
+			: this(assembly, registerEntitiesToRepository, null)
+		{
+		}
+
+		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository, string configurationFileName)
+			: this(new string[] { assembly, }, registerEntitiesToRepository, configurationFileName)
+		{
+			this.configurationFileName = configurationFileName;
+		}
+
+		public NHibernateUnitOfWorkFacility(string[] assemblies)
+			: this(assemblies, null)
+		{
+		}
+
+		public NHibernateUnitOfWorkFacility(string[] assemblies, string configurationFileName)
+			: this(assemblies, false, configurationFileName)
+		{
+			this.configurationFileName = configurationFileName;
+		}
+
+		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository)
+			: this(assemblies, registerEntitiesToRepository, null)
+		{
+		}
+
+		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository, string configurationFileName)
+		{
+			this.assemblies = new Assembly[assemblies.Length];
+			for (int i = 0; i < assemblies.Length; i++)
+			{
+				this.assemblies[i] = Assembly.Load(assemblies[i]);
+			}
+			this.registerEntitiesToRepository = registerEntitiesToRepository;
+			this.configurationFileName = configurationFileName;
+		}
+
+		protected override void Init()
+		{
+			Kernel.Register(
+				Component.For(typeof(IRepository<>))
+					.ImplementedBy(typeof(NHRepository<>))
+				);
+			ComponentRegistration<IUnitOfWorkFactory> registerFactory =
 				Component.For<IUnitOfWorkFactory>()
-        		.ImplementedBy<NHibernateUnitOfWorkFactory>();
+				.ImplementedBy<NHibernateUnitOfWorkFactory>();
+
+			if (configurationFileName != null)
+				registerFactory.Parameters(Castle.MicroKernel.Registration.Parameter.ForKey("configurationFileName").Eq(configurationFileName));
 
 			// if we are running in test mode, we don't want to register
 			// the assemblies directly, we let the DatabaseTestFixtureBase do it
 			// this allow us to share the configuration between the test & prod projects
-			if(DatabaseTestFixtureBase.IsRunningInTestMode == false)
+			if (DatabaseTestFixtureBase.IsRunningInTestMode == false)
 			{
 				registerFactory.DependsOn(Property.ForKey("assemblies").Eq(assemblies));
 			}
-        	Kernel.Register(registerFactory);
+			Kernel.Register(registerFactory);
 
-            if (registerEntitiesToRepository) 
-            {
-                EntitiesToRepositories.Register(
-                    Kernel,
-                    new Configuration().Configure().BuildSessionFactory(),
-                    typeof(NHRepository<>),
-                    IsCandidateForRepository
-                    );
-            }
-        }
+			if (registerEntitiesToRepository)
+			{
+				NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
+				EntitiesToRepositories.Register(
+					Kernel,
+					factory.NHibernateSessionFactory,
+					typeof(NHRepository<>),
+					IsCandidateForRepository
+					);
+			}
+		}
 
-        public Assembly[] Assemblies
-        {
-            get { return assemblies; }
-        }
+		public Assembly[] Assemblies
+		{
+			get { return assemblies; }
+		}
 
-        private bool IsCandidateForRepository(Type type)
-        {
-            foreach (Assembly assembly in assemblies)
-            { 
-                if(type.Assembly == assembly) return true;
-            }
-            return false;
-        }
-    }
+		private bool IsCandidateForRepository(Type type)
+		{
+			foreach (Assembly assembly in assemblies)
+			{
+				if (type.Assembly == assembly) return true;
+			}
+			return false;
+		}
+	}
 }
