@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Expressions\NamedExpression.cs" />
     <Compile Include="Expressions\ManyToOneNamedExpression.cs" />
+    <Compile Include="Facilities\MultipleNHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\RhinoTransactionFacility.cs" />
     <Compile Include="Facilities\RhinoTransactionResourceAdapter.cs" />
@@ -100,14 +101,16 @@
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\RepositoryDecorator.cs" />
     <Compile Include="Repositories\RepositoryDetachedCriteriaFactory.cs" />
-    <Compile Include="Repositories\RepositoryFetchingStrategy.cs" />
     <Compile Include="Repositories\RepositoryHelper.cs" />
     <Compile Include="Repositories\RepositoryImplBase.cs" />
     <Compile Include="UnitOfWork\BaseUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\MultipleNHibernateTransaction.cs" />
+    <Compile Include="UnitOfWork\MultipleUnitOfWorkImplementor.cs" />
     <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
+    <Compile Include="UnitOfWork\MultipleNHibernateUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\NHibernateTransactionAdapter.cs" />
     <Compile Include="UnitOfWork\NHibernateUnitOfWorkAdapter.cs" />
     <Compile Include="UnitOfWork\NHibernateUnitOfWorkFactory.cs" />

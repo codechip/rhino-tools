@@ -113,17 +113,17 @@ namespace Rhino.Commons.Facilities
 			}
 			Kernel.Register(registerFactory);
 
-			if (registerEntitiesToRepository)
-			{
-				NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
-				EntitiesToRepositories.Register(
-					Kernel,
-					factory.NHibernateSessionFactory,
-					typeof(NHRepository<>),
-					IsCandidateForRepository
-					);
-			}
-		}
+            if (registerEntitiesToRepository) 
+            {
+            	NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
+            	EntitiesToRepositories.Register(
+                    Kernel,
+                    factory.NHibernateSessionFactory,
+                    typeof(NHRepository<>),
+                    IsCandidateForRepository
+                    );
+            }
+        }
 
 		public Assembly[] Assemblies
 		{

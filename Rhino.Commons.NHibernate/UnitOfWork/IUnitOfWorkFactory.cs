@@ -32,7 +32,7 @@ using NHibernate;
 
 namespace Rhino.Commons
 {
-	public interface IUnitOfWorkFactory
+    public interface IUnitOfWorkFactory
 	{
 		/// <summary>
 		/// Initialize the factory, note that this may be called more than once
@@ -48,6 +48,8 @@ namespace Rhino.Commons
 		IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous);
 
         ISession CurrentSession { get; set; }
+        ISession GetCurrentSessionFor(Type typeOfEntity);
+        void SetCurrentSession(Type typeOfEntity, ISession session);
 
         /// <summary>
         ///  When using LongConversation UnitOfWorkApplication uses this method to restore the
