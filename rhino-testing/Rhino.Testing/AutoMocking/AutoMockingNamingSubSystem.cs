@@ -88,6 +88,11 @@ namespace Rhino.Testing.AutoMocking
 				get { return model; }
 			}
 
+			public Type Service
+			{
+				get { return model.Service; }
+			}
+
 			public object Resolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model, DependencyModel dependency)
 			{
 				throw new NotImplementedException();
