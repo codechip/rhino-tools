@@ -27,6 +27,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Web;
@@ -40,7 +41,7 @@ namespace Rhino.Commons
     public class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
     {
         static readonly object lockObj = new object();
-        public const string CurrentNHibernateSessionKey = "CurrentNHibernateSession.Key";
+        public string CurrentNHibernateSessionKey = Guid.NewGuid().ToString();
         private ISessionFactory sessionFactory;
         private Configuration cfg;
         private INHibernateInitializationAware[] initializationAware;
@@ -182,7 +183,6 @@ namespace Rhino.Commons
         /// <summary>
         /// The current NHibernate session.
         /// Note that the flush mode is CommitOnly!
-        /// Note: Prefer to avoid using this member.
         /// It is provided to support complex scenarios only.
         /// </summary>
         public ISession CurrentSession
@@ -227,6 +227,16 @@ namespace Rhino.Commons
             HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
             HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
                 UnitOfWork.CurrentLongConversationId;
+        }
+
+        public ISession GetCurrentSessionFor(Type typeOfEntity)
+        {
+            return CurrentSession;
+        }
+
+        public void SetCurrentSession(Type typeOfEntity, ISession session)
+        {
+            CurrentSession = session;
         }
     }
 }

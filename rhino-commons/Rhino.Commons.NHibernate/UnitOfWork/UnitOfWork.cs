@@ -174,6 +174,26 @@ namespace Rhino.Commons
             internal set { IoC.Resolve<IUnitOfWorkFactory>().CurrentSession = value; }
         }
 
+        /// <summary>
+        /// Gets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+        /// </summary>
+        /// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+        /// <value>The current session for this entity.</value>
+        public static ISession GetCurrentSessionFor(Type typeOfEntity)
+        {
+            return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(typeOfEntity);
+        }
+
+        /// <summary>
+        /// Sets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+        /// </summary>
+        /// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+        /// <param name="session">the session to set</param>
+        public static void SetCurrentSessionFor(Type typeOfEntity, ISession session)
+        {
+            IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSession(typeOfEntity, session);
+        }
+
 
         /// <summary>
         /// Called internally to clear the current UoW and move to the previous one.
