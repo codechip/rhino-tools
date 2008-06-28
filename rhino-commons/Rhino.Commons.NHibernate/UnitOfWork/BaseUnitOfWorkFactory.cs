@@ -11,7 +11,7 @@ namespace Rhino.Commons
 
         public void TransactionalFlush(IsolationLevel isolationLevel)
         {
-            RhinoTransaction tx = UnitOfWork.Current.BeginTransaction();
+            RhinoTransaction tx = UnitOfWork.Current.BeginTransaction(isolationLevel);
             try
             {
                 //forces a flush of the current unit of work
