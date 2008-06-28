@@ -37,7 +37,7 @@ namespace Rhino.Commons
 	{
 		protected virtual ISession Session
 		{
-            get { return UnitOfWork.CurrentSession; }
+            get { return UnitOfWork.GetCurrentSessionFor(ConcreteType); }
 		}
 
 		public T Get(object id)
@@ -92,7 +92,7 @@ namespace Rhino.Commons
 
 	    protected override ISessionFactory SessionFactory
 	    {
-	        get { return UnitOfWork.CurrentSession.GetSessionImplementation().Factory; }
+	        get { return Session.GetSessionImplementation().Factory; }
 	    }
 
 

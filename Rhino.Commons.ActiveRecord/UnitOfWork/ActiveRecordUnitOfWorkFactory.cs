@@ -198,5 +198,15 @@ namespace Rhino.Commons
             HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
                 UnitOfWork.CurrentLongConversationId;
         }
-	}
+
+        public ISession GetCurrentSessionFor(Type typeOfEntity)
+        {
+            return CurrentSession;
+        }
+
+        public void SetCurrentSession(Type typeOfEntity, ISession session)
+        {
+            CurrentSession = session;
+        }
+    }
 }

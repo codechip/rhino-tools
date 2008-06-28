@@ -230,6 +230,16 @@
     <Content Include="Binsor\Windsor.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Facilities\MutlipleUnitOfWorkArtifacts\Database1.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Facilities\MutlipleUnitOfWorkArtifacts\Database2.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.hbm.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.hbm.xml">
+    </EmbeddedResource>
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -251,6 +261,13 @@
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UnitOfWorkFacilityTestCase.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
+    <Compile Include="Facilities\MultipleNHibernateUnitOfWorkFacilityTests.cs" />
+    <Compile Include="Facilities\MultipleNHibernateUnitOfWorkTestBase.cs" />
+    <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.cs">
+    </Compile>
+    <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.cs">
+    </Compile>
+    <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests.cs" />
     <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateDatabaseTestFixtureBaseTests.cs" />

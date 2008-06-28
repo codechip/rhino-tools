@@ -86,9 +86,10 @@ namespace Rhino.Commons.Facilities
 
             if (registerEntitiesToRepository) 
             {
-                EntitiesToRepositories.Register(
+            	NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
+            	EntitiesToRepositories.Register(
                     Kernel,
-                    new Configuration().Configure().BuildSessionFactory(),
+                    factory.NHibernateSessionFactory,
                     typeof(NHRepository<>),
                     IsCandidateForRepository
                     );
