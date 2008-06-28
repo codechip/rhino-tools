@@ -27,6 +27,7 @@
 #endregion
 
 using System;
+using Castle.MicroKernel;
 using Castle.Windsor;
 
 namespace Rhino.Commons.Binsor
@@ -39,7 +40,12 @@ namespace Rhino.Commons.Binsor
         public static ContainerAdapter IoC
 	    {
             get { return new ContainerAdapter(localContainer); }
-	    } 
+	    }
+
+		public static IKernel Kernel
+		{
+			get { return localContainer.Kernel; }
+		} 
 
         public static IDisposable UseLocalContainer(IWindsorContainer container)
         {

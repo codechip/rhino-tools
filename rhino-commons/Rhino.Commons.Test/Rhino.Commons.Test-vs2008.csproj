@@ -165,6 +165,9 @@
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Binsor\ComponentForwarding.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\UnitOfWorkFacilities.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -241,6 +244,7 @@
     <Compile Include="Binsor\CalculatorTestCase.cs" />
     <Compile Include="Binsor\Binsor2TestCase.cs" />
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
+    <Compile Include="Binsor\ComponentForwardingTestCase.cs" />
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
