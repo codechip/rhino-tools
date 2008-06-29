@@ -168,7 +168,7 @@ namespace Rhino.Commons.Test.Repository
 		string ToString();
 	}
 
-	[ActiveRecord(Cache = CacheEnum.ReadWrite)]
+	[ActiveRecord]
     public class Parent : IParent
 	{
         private Guid id = Guid.NewGuid();
@@ -224,7 +224,7 @@ namespace Rhino.Commons.Test.Repository
         }
     }
 
-    [ActiveRecord(Cache = CacheEnum.ReadWrite)]
+    [ActiveRecord]
     public class Child
     {
         private Guid id = Guid.NewGuid();

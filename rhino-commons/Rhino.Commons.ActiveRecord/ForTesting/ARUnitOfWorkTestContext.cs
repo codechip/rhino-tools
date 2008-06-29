@@ -86,8 +86,11 @@ namespace Rhino.Commons.ForTesting
 				IoC.Initialize(RhinoContainer);
 			}
 
-			foreach (INHibernateInitializationAware initializer in IoC.ResolveAll<INHibernateInitializationAware>())
+			if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+			{
+				foreach (INHibernateInitializationAware initializer in IoC.ResolveAll<INHibernateInitializationAware>())
 					initializer.BeforeInitialization();
+			}
 
 			CallInitializationAwareConfigureIfExists();
 
