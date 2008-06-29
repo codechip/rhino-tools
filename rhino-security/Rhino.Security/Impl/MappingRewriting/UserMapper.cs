@@ -35,7 +35,7 @@ namespace Rhino.Security.Impl.MappingRewriting
 		{
 			Dialect dialect = Dialect.GetDialect(cfg.Properties);
 			Mappings mappings = cfg.CreateMappings(dialect);
-			mappings.AddSecondPass(persistentClasses => PerformMapping());
+			mappings.AddSecondPass(delegate { PerformMapping(); } );
 		}
 
 		private void PerformMapping()
