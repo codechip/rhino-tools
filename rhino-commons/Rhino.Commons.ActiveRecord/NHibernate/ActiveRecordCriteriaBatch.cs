@@ -83,7 +83,7 @@ namespace Rhino.Commons
 		{
 			if (rootType == null)
 			{
-				rootType = CriteriaUtil.GetRootType(criteria, base.session);
+				rootType = criteria.GetRootEntityTypeIfAvailable();
 			}
 		}
 	}
