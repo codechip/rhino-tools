@@ -368,7 +368,7 @@ namespace Rhino.Commons.Test.ForTesting
         }
     }
 
-    [ActiveRecord]
+    [ActiveRecord(Cache = CacheEnum.ReadWrite)]
     public class AREntity
     {
         private Guid id = Guid.NewGuid();
