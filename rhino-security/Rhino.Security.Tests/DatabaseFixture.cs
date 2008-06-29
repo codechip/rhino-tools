@@ -25,8 +25,6 @@ namespace Rhino.Security.Tests
 				typeof(IUser).Assembly,
 				typeof(User).Assembly,
 				typeof(RegisterRhinoSecurityMappingAttribute).Assembly);
-			if (this is ActiveRecord_EnvironmentSetupFixture)
-				Debugger.Launch();
 			IntializeNHibernateAndIoC(PersistenceFramwork, RhinoContainerConfig, GetDatabaseEngine(), from);
 			CurrentContext.CreateUnitOfWork();
 
