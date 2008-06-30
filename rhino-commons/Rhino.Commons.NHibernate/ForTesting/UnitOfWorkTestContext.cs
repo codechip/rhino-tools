@@ -351,7 +351,11 @@ namespace Rhino.Commons.ForTesting
 
             private Configuration CreateConfigs()
             {
-                Configuration cfg = new Configuration();
+
+				foreach (INHibernateInitializationAware initializer in GetNHibernateInitializers())
+					initializer.BeforeInitialization();
+
+				Configuration cfg = new Configuration();
                 cfg.Properties = DbStrategy.NHibernateProperties;
 
                 foreach (KeyValuePair<string, string> import in MappingInfo.QueryLanguageImports)
