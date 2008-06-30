@@ -122,26 +122,33 @@ namespace Rhino.Commons
 
 		private void DoInitialization()
 		{
+			if (InitializationAware == null && IoC.IsInitialized)
+			{
+				if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+				{
+					InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+				}
+			}
+
 			List<Type> registerdTypes = new List<Type>();
 			ActiveRecordStarter.SessionFactoryHolderCreated += delegate(ISessionFactoryHolder holder)
 			{
 				holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
 				{
 					registerdTypes.Add(rootType);
-					if (InitializationAware == null)
-					{
-						if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
-						{
-							InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
-						}
-					}
-					if (InitializationAware != null)
-					{
-						foreach(INHibernateInitializationAware initializer in InitializationAware)
-							initializer.Configured(holder.GetConfiguration(rootType));
-					}
-						
 				};
+			};
+
+			ActiveRecordStarter.MappingRegiseredInConfiguration+=delegate(ISessionFactoryHolder holder)
+			{
+				if (InitializationAware != null)
+				{
+					foreach (Configuration cfg in holder.GetAllConfigurations())
+					{
+						foreach (INHibernateInitializationAware initializer in InitializationAware)
+							initializer.Configured(cfg);
+					}
+				}
 			};
 						
 			ActiveRecordStarter.ResetInitializationFlag();
