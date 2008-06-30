@@ -97,16 +97,23 @@ namespace Rhino.Commons.Test.ForTesting
 
 			IntializeNHibernateAndIoC(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
 				MappingInfo.From().SetNHInitializationAware(mock));
+			Assert.AreEqual(1, mock.BeforeInitializationCalled);
 			Assert.AreEqual(1, mock.ConfiguredWasCalled);
 			Assert.AreEqual(1, mock.InitializedWasCalled);
 		}
 
 		private class NHInitAwareMock : INHibernateInitializationAware
 		{
-			public int ConfiguredWasCalled = 0;
-			public int InitializedWasCalled = 0;
+			public int ConfiguredWasCalled;
+			public int InitializedWasCalled;
+			public int BeforeInitializationCalled;
 
 			#region INHibernateInitializationAware Members
+
+			public void BeforeInitialization()
+			{
+				BeforeInitializationCalled++;
+			}
 
 			public void Configured(Configuration cfg)
 			{

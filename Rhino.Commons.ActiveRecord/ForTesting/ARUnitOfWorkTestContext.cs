@@ -86,18 +86,20 @@ namespace Rhino.Commons.ForTesting
 				IoC.Initialize(RhinoContainer);
 			}
 
+			if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+			{
+				foreach (INHibernateInitializationAware initializer in IoC.ResolveAll<INHibernateInitializationAware>())
+					initializer.BeforeInitialization();
+			}
+
 			CallInitializationAwareConfigureIfExists();
 
 			ActiveRecordStarter.Initialize(MappingInfo.MappingAssemblies, ActiveRecordConfigs);
 
 			if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
 			{
-				INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
-				if (initializationAware != null)
-				{
-					foreach(INHibernateInitializationAware initializer in initializationAware)
+				foreach (INHibernateInitializationAware initializer in IoC.ResolveAll<INHibernateInitializationAware>())
 						initializer.Initialized(Configuration, SessionFactory);
-				}
 			}
 
 			ActiveRecordMediator.GetSessionFactoryHolder().RegisterSessionFactory(SessionFactory, typeof(ActiveRecordBase));
@@ -109,19 +111,18 @@ namespace Rhino.Commons.ForTesting
 			holderDelegate = delegate(ISessionFactoryHolder holder)
 			{
 				ActiveRecordStarter.SessionFactoryHolderCreated -= holderDelegate;
-				holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
+				if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
 				{
-					if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+					INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+					if (initializationAware != null)
 					{
-						INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
-						if (initializationAware != null)
+						foreach (Configuration configuration in holder.GetAllConfigurations())
 						{
-							Configuration configuration = holder.GetConfiguration(rootType);
-							foreach(INHibernateInitializationAware initializer in initializationAware)
+							foreach (INHibernateInitializationAware initializer in initializationAware)
 								initializer.Configured(configuration);
 						}
 					}
-				};
+				}
 			};
 			ActiveRecordStarter.SessionFactoryHolderCreated += holderDelegate;
 		}

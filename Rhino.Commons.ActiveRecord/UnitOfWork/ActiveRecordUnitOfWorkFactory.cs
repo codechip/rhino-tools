@@ -113,43 +113,52 @@ namespace Rhino.Commons
 				{
 					if (!initialized)
 					{
-						List<Type> registerdTypes = new List<Type>();
-						ActiveRecordStarter.SessionFactoryHolderCreated += delegate(ISessionFactoryHolder holder)
-						{
-							holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
-							{
-								registerdTypes.Add(rootType);
-								if (InitializationAware == null)
-								{
-									if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
-									{
-										InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
-									}
-								}
-								if (InitializationAware != null)
-								{
-									foreach(INHibernateInitializationAware initializer in InitializationAware)
-										initializer.Configured(holder.GetConfiguration(rootType));
-								}
-						
-							};
-						};
-						
-						ActiveRecordStarter.ResetInitializationFlag();
-						ActiveRecordStarter.Initialize(assemblies, configurationSource);
-						ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
-						if (InitializationAware != null)
-						{
-							foreach (Type type in registerdTypes)
-							{
-								Configuration configuration = sessionFactoryHolder.GetConfiguration(type);
-								ISessionFactory factory = sessionFactoryHolder.GetSessionFactory(type);
-								foreach (INHibernateInitializationAware initializer in InitializationAware)
-									initializer.Initialized(configuration, factory);
-							}
-						}
+						DoInitialization();
 						initialized = true;
 					}
+				}
+			}
+		}
+
+		private void DoInitialization()
+		{
+			List<Type> registerdTypes = new List<Type>();
+			ActiveRecordStarter.SessionFactoryHolderCreated += delegate(ISessionFactoryHolder holder)
+			{
+				holder.OnRootTypeRegistered += delegate(object sender, Type rootType)
+				{
+					registerdTypes.Add(rootType);
+					if (InitializationAware == null)
+					{
+						if (IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
+						{
+							InitializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
+						}
+					}
+					if (InitializationAware != null)
+					{
+						foreach(INHibernateInitializationAware initializer in InitializationAware)
+							initializer.Configured(holder.GetConfiguration(rootType));
+					}
+						
+				};
+			};
+						
+			ActiveRecordStarter.ResetInitializationFlag();
+			foreach (INHibernateInitializationAware hibernateInitializationAware in InitializationAware)
+			{
+				hibernateInitializationAware.BeforeInitialization();
+			}
+			ActiveRecordStarter.Initialize(assemblies, configurationSource);
+			ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
+			if (InitializationAware != null)
+			{
+				foreach (Type type in registerdTypes)
+				{
+					Configuration configuration = sessionFactoryHolder.GetConfiguration(type);
+					ISessionFactory factory = sessionFactoryHolder.GetSessionFactory(type);
+					foreach (INHibernateInitializationAware initializer in InitializationAware)
+						initializer.Initialized(configuration, factory);
 				}
 			}
 		}

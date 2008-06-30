@@ -37,6 +37,7 @@ namespace Rhino.Commons
 	/// </summary>
 	public interface INHibernateInitializationAware
 	{
+		void BeforeInitialization();
 		void Configured(Configuration cfg);
 		void Initialized(Configuration cfg, ISessionFactory sessionFactory);
 	}
