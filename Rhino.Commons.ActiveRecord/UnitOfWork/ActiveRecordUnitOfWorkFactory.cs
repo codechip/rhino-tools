@@ -139,7 +139,7 @@ namespace Rhino.Commons
 				};
 			};
 
-			ActiveRecordStarter.MappingRegiseredInConfiguration+=delegate(ISessionFactoryHolder holder)
+			ActiveRecordStarter.MappingRegisteredInConfiguration +=delegate(ISessionFactoryHolder holder)
 			{
 				if (InitializationAware != null)
 				{

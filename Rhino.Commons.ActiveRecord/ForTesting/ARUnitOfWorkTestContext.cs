@@ -110,7 +110,7 @@ namespace Rhino.Commons.ForTesting
 			SessionFactoryHolderDelegate holderDelegate = null;
 			holderDelegate = delegate(ISessionFactoryHolder holder)
 			{
-				ActiveRecordStarter.MappingRegiseredInConfiguration -= holderDelegate;
+				ActiveRecordStarter.MappingRegisteredInConfiguration -= holderDelegate;
 				if (IoC.IsInitialized && IoC.Container.Kernel.HasComponent(typeof(INHibernateInitializationAware)))
 				{
 					INHibernateInitializationAware[] initializationAware = IoC.ResolveAll<INHibernateInitializationAware>();
@@ -124,7 +124,7 @@ namespace Rhino.Commons.ForTesting
 					}
 				}
 			};
-			ActiveRecordStarter.MappingRegiseredInConfiguration += holderDelegate;
+			ActiveRecordStarter.MappingRegisteredInConfiguration += holderDelegate;
 		}
 
 
