@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
 
@@ -103,7 +104,7 @@ namespace Rhino.Queues
 		public IRemoteQueue GetRemoteQueue(Uri queueUrl)
 		{
 			ValidationUtil.ValidateQueueUrl(queueUrl);
-			var localQueueName = queueUrl.LocalPath.Substring(1);
+			var localQueueName = queueUrl.ToQueueName();
 			AssertQueueNameIsNotOutgoingQueue(localQueueName);
 			if (IsLocal(queueUrl))
 				return GetLocalQueue(localQueueName);

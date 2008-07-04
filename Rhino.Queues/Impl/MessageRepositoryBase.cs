@@ -1,8 +1,11 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
+using log4net;
 
 namespace Rhino.Queues.Impl
 {
@@ -10,30 +13,16 @@ namespace Rhino.Queues.Impl
 	{
 		private readonly Func<IDbConnection> createConnection;
 		private readonly BinaryFormatter formatter = new BinaryFormatter();
+		private ILog logger;
 
 		protected MessageRepositoryBase(string name, string queuesDirectory)
 		{
+			logger = LogManager.GetLogger(GetType());
 			databaseFilename = Path.Combine(queuesDirectory, name) + ".queue";
 			createConnection = delegate
 			{
-				var con = new SQLiteConnection("Data Source=" + this.databaseFilename);
-				for (int i = 0; i < 10; i++)
-				{
-					try
-					{
-						con.Open();
-						break;
-					}
-					catch (SQLiteException e)
-					{
-						if (e.ErrorCode == SQLiteErrorCode.Busy)
-							continue;
-						throw;
-					}
-				}
-				// if still failed after 10 tries, we need to let the exception bubble up
-				if (con.State != ConnectionState.Open)
-					con.Open();
+				var con = new SQLiteConnection("Data Source=" + databaseFilename);
+				con.Open();
 				return con;
 			};
 		}
@@ -47,10 +36,10 @@ namespace Rhino.Queues.Impl
 		{
 			if (File.Exists(databaseFilename) == false)
 			{
-				using (var connection = new SQLiteConnection("Data Source=" + databaseFilename + ";New=true"))
-				using (var command = connection.CreateCommand())
+				using (var con = new SQLiteConnection("Data Source=" + databaseFilename + ";New=true"))
+				using (var command = con.CreateCommand())
 				{
-					connection.Open();
+					con.Open();
 					command.CommandText = GetQueryToGenerateDatabase();
 					command.ExecuteNonQuery();
 				}
@@ -74,15 +63,10 @@ namespace Rhino.Queues.Impl
 
 		protected static void AddParameter(string name, object value)
 		{
-			AddParameter(cmd, name, value);
-		}
-
-		protected static void AddParameter(IDbCommand command, string name, object value)
-		{
-			var parameter = command.CreateParameter();
+			var parameter = cmd.CreateParameter();
 			parameter.ParameterName = name;
 			parameter.Value = value;
-			command.Parameters.Add(parameter);
+			cmd.Parameters.Add(parameter);
 		}
 
 
@@ -93,9 +77,22 @@ namespace Rhino.Queues.Impl
 		[ThreadStatic]
 		protected static IDbTransaction transaction;
 
-		private string databaseFilename;
+		private readonly string databaseFilename;
 
+		/// <summary>
+		/// Execute the specified a transaction.
+		/// Note that code the action is assumed to be transactional as well.
+		/// That is, if the transaction have failed, it has no effect.
+		/// This is important since we may execute the action several time,
+		/// to overcome deadlock exceptions
+		/// </summary>
+		/// <param name="action">The action.</param>
 		public void Transaction(Action action)
+		{
+			TransactionWithRetries(action, 5);
+		}
+
+		private void TransactionWithRetries(Action action, int retryCount)
 		{
 			if (cmd != null)
 			{
@@ -113,10 +110,22 @@ namespace Rhino.Queues.Impl
 					transaction.Commit();
 				}
 			}
-			catch (Exception e)
+			catch (DbException e)
 			{
-				Console.WriteLine(e);
-				throw;
+				// since we have tests to validate that the SQL we execute is valid,
+				// we assume that any DB error is transient and likely because of locking
+				// so we will try it again after a short pause
+				if (retryCount > 0)
+				{
+					logger.Warn("Error executing transaction, retrying", e);
+					Thread.Sleep(200);
+					TransactionWithRetries(action, retryCount - 1);
+				}
+				else
+				{
+					logger.Error("Failed to execute transaction, aborting transaction", e);
+					throw;
+				}
 			}
 			finally
 			{

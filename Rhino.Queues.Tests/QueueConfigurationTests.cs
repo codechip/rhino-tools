@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
+using System.Linq;
 
 namespace Rhino.Queues.Tests
 {
@@ -79,6 +80,32 @@ namespace Rhino.Queues.Tests
 
 			Assert.IsNull(incoming1.GetEarliestMessage());
 			Assert.IsNull(incoming2.GetEarliestMessage());
+
+			Directory.Delete(directory, true);
+		}
+
+		[Test]
+		public void If_local_uri_queue_does_not_exist_will_create_it()
+		{
+			string directory = Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
+
+			Directory.CreateDirectory(directory);
+
+			Assert.IsFalse(
+				new IncomingQueuePhysicalStorage(directory).GetQueueNames().Contains("my-fun")
+				);
+
+			new QueueConfiguration()
+				.LocalUri("queue://localhost/my-fun")
+				.QueuesDirectory(directory)
+				.PurgePendingMessages()
+				.SkipInitializingTheQueueFactory()
+				.BuildQueueFactory()
+				.Dispose();
+
+			Assert.IsTrue(
+				new IncomingQueuePhysicalStorage(directory).GetQueueNames().Contains("my-fun")
+				);
 
 			Directory.Delete(directory, true);
 		}

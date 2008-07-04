@@ -1,4 +1,5 @@
 using System;
+using Rhino.Queues.Extensions;
 
 namespace Rhino.Queues
 {
@@ -12,12 +13,12 @@ namespace Rhino.Queues
 
 		public string DestinationQueue
 		{
-			get { return Destination.LocalPath.Substring(1); }
+			get { return Destination.ToQueueName(); }
 		}
 
 		public string SourceQueue
 		{
-			get { return Source.LocalPath.Substring(1); }
+			get { return Source.ToQueueName(); }
 		}
 
 		public SingleDestinationMessageBatch()

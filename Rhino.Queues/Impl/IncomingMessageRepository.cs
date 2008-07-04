@@ -35,33 +35,33 @@ namespace Rhino.Queues.Impl
 		public QueueMessage GetEarliestMessage()
 		{
 			byte[] data = null;
-			Transaction(() =>
+			bool done = false;
+			while (done == false)
 			{
-				cmd.CommandText = Queries.GetEarliestMessageFromIncomingQueue;
-				while (true)
+				Transaction(() =>
 				{
+					cmd.CommandText = Queries.GetEarliestMessageFromIncomingQueue;
 					Guid id;
 					using (var reader = cmd.ExecuteReader())
 					{
 						if (reader.Read() == false)
+						{
+							done = true;
 							return;
+						}
 						id = (Guid) reader[0];
 						data = (byte[]) reader[1];
 					}
-					using (var delMsgCmd = connection.CreateCommand())
-					{
-						delMsgCmd.Transaction = transaction;
-						delMsgCmd.CommandText = Queries.DeleteMessageFromIncomingQueue;
-						AddParameter(delMsgCmd, "Id", id);
-						var rowAffected = delMsgCmd.ExecuteNonQuery();
-						// someone else already grabbed and deleted this row, 
-						// so we will try again with another one
-						if (rowAffected != 1)
-							continue;
-						break;
-					}
-				}
-			});
+					cmd.CommandText = Queries.DeleteMessageFromIncomingQueue;
+					AddParameter("Id", id);
+					var rowAffected = cmd.ExecuteNonQuery();
+					// someone else already grabbed and deleted this row, 
+					// so we will try again with another one
+					if (rowAffected != 1)
+						return; // same as continue in this case
+					done = true;// same as break from the loop
+				});
+			}
 			if (data==null)
 				return null;
 			return Deserialize(data);

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Rhino.Queues.Extensions;
 
 namespace Rhino.Queues.Impl
 {
@@ -21,7 +22,7 @@ namespace Rhino.Queues.Impl
 				throw new ArgumentException("urls with query paraemters are not suppoerted");
 			if (uri.LocalPath == "/")
 				throw new ArgumentException("empty queue name is invalid, exepected 'queue://localhost/someQueueName'");
-			var queueName = uri.LocalPath.Substring(1);
+			var queueName = uri.ToQueueName();
 			foreach (var invalidFileNameChar in Path.GetInvalidFileNameChars())
 			{
 				if (queueName.Contains(invalidFileNameChar.ToString()))

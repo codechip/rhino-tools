@@ -1,6 +1,7 @@
 using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
 
@@ -57,9 +58,9 @@ namespace Rhino.Queues.Tests
 			IQueueImpl[] queues = queueFactory.GetAllLocalQueues();
 			Assert.AreEqual(3, queues.Length);
 			Array.Sort(queues, (x,y) => x.Url.AbsolutePath.CompareTo(y.Url.AbsolutePath));
-			Assert.AreEqual("a", queues[0].Url.LocalPath.Substring(1));
-			Assert.AreEqual("b", queues[1].Url.LocalPath.Substring(1));
-			Assert.AreEqual("c", queues[2].Url.LocalPath.Substring(1));
+			Assert.AreEqual("a", queues[0].Url.ToQueueName());
+			Assert.AreEqual("b", queues[1].Url.ToQueueName());
+			Assert.AreEqual("c", queues[2].Url.ToQueueName());
 		}
 
 		[Test]

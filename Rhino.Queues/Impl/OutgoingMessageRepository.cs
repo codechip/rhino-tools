@@ -54,9 +54,10 @@ namespace Rhino.Queues.Impl
 		/// <returns></returns>
 		public MessageBatch GetBatchOfMessagesToSend()
 		{
-			var batch = new MessageBatch();
+			MessageBatch batch = null;
 			Transaction(() =>
 			{
+				batch = new MessageBatch();
 				UpdateBatchIdForCurrentMessages(batch);
 
 				var destToMsgs = HydrateMessageInCurrentBatch(batch);
@@ -73,7 +74,7 @@ namespace Rhino.Queues.Impl
 				}
 				batch.DestinationBatches = destBatches.ToArray();
 			});
-			return batch;
+			return batch ?? new MessageBatch();
 		}
 
 		private static void UpdateBatchIdForCurrentMessages(MessageBatch batch)

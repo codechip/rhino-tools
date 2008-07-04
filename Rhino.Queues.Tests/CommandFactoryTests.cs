@@ -2,6 +2,7 @@ using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Queues.Commands;
+using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -37,7 +38,7 @@ namespace Rhino.Queues.Tests
 			stubbedQueueFactory.Stub(x => x.IsLocal(Arg<Uri>.Is.Anything))
 				.Return(false);
 
-			stubbedQueueFactory.Stub(x => x.GetLocalQueue(localQueue.LocalPath.Substring(1)))
+			stubbedQueueFactory.Stub(x => x.GetLocalQueue(localQueue.ToQueueName()))
 				.Return(MockRepository.GenerateStub<IQueueImpl>());
 
 			ICommand cmd = commandFactory.CreateCommand(new SingleDestinationMessageBatch{Source = localQueue});

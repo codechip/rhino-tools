@@ -31,8 +31,8 @@ namespace Rhino.Queues.Commands
 
 		public void Execute()
 		{
-			logger.DebugFormat("Starting to send batch #{0} to {1}",
-				batch.BatchId, batch.Destination);
+			logger.DebugFormat("Starting to send batch #{0} to {1} with {2} messages",
+				batch.BatchId, batch.Destination, batch.Messages.Length);
 
 			var builder = new UriBuilder(batch.Destination) { Scheme = "http" };
 			request = (HttpWebRequest)WebRequest.Create(builder.Uri);

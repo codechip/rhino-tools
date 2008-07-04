@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
 using System.Linq;
@@ -65,6 +66,11 @@ namespace Rhino.Queues
 				new WorkerFactory(workersCount),
 				new QueueListener(localUri),
 				repository);
+
+			if(queuePhysicalStorage.GetQueueNames().Contains(localUri.ToQueueName())==false)
+			{
+				queuePhysicalStorage.CreateQueue(localUri.ToQueueName());
+			}
 
 			factory.CreateQueuesFromStorage();
 			if (purgePendingMessages)

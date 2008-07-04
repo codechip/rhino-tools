@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1630E1EE-B875-481E-84C5-E558E036A788}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{D3303462-2AF2-4E4C-AA0A-66C9F36FEA1D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Queues</RootNamespace>
-    <AssemblyName>Rhino.Queues</AssemblyName>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,17 +33,12 @@
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLibs\log4net.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.51.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLibs\System.Data.SQLite.DLL</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -54,41 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AcceptMessagesCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\ICommandFactory.cs" />
-    <Compile Include="Commands\SendToRemoteServerCommand.cs" />
-    <Compile Include="Extensions\QueueExtensions.cs" />
-    <Compile Include="ILocalQueue.cs" />
-    <Compile Include="IncomingQueuePhysicalStorage.cs" />
-    <Compile Include="IQueueListener.cs" />
-    <Compile Include="IQueuePhysicalStorage.cs" />
-    <Compile Include="IRemoteQueue.cs" />
-    <Compile Include="QueueConfiguration.cs" />
-    <Compile Include="IIncomingMessageRepository.cs" />
-    <Compile Include="Commands\CommandFactory.cs" />
-    <Compile Include="Impl\FireAndForget.cs" />
-    <Compile Include="Impl\MessageRepositoryBase.cs" />
-    <Compile Include="Impl\OutgoingMessageRepository.cs" />
-    <Compile Include="Impl\QueueListener.cs" />
-    <Compile Include="Workers\IQueueWorker.cs" />
-    <Compile Include="Workers\IWorkerFactory.cs" />
-    <Compile Include="Workers\QueueWorker.cs" />
-    <Compile Include="Impl\ValidationUtil.cs" />
-    <Compile Include="IOutgoingMessageRepository.cs" />
-    <Compile Include="Impl\IncomingMessageRepository.cs" />
-    <Compile Include="Impl\Queries.cs" />
-    <Compile Include="Impl\Queue.cs" />
-    <Compile Include="Impl\IQueueImpl.cs" />
-    <Compile Include="IQueueFactory.cs" />
-    <Compile Include="Impl\IQueueFactoryImpl.cs" />
-    <Compile Include="MessageBatch.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueueFactory.cs" />
-    <Compile Include="QueueMessage.cs" />
-    <Compile Include="SingleDestinationMessageBatch.cs" />
-    <Compile Include="SystemTime.cs" />
-    <Compile Include="Workers\WorkerFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Rhino.Queues\Rhino.Queues.csproj">
+      <Project>{1630E1EE-B875-481E-84C5-E558E036A788}</Project>
+      <Name>Rhino.Queues</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
