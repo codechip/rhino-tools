@@ -71,8 +71,8 @@ namespace Rhino.Queues.Impl
 			var queue = (IQueueImpl)queueFactory.GetLocalQueue(batch.DestinationQueue);
 			if (queue == null)
 			{
-				logger.WarnFormat("Got a batch #{0} from '{1}' for an invalid queue '{2}'",
-				                  batch.BatchId, batch.Source, batch.Destination);
+				logger.WarnFormat("Got a batch #{0} of {1} messages from '{2}' for an invalid queue '{3}'",
+				                  batch.BatchId, batch.Messages.Length, batch.Source, batch.Destination);
 				context.Response.StatusCode = (int)HttpStatusCode.NotFound;
 				using (var sw = new StreamWriter(context.Response.OutputStream))
 				{
@@ -80,8 +80,8 @@ namespace Rhino.Queues.Impl
 				}
 				return;
 			}
-			logger.DebugFormat("Got a batch #{0} from '{1}' for queue '{2}'",
-			                   batch.BatchId, batch.Source, batch.Destination);
+			logger.DebugFormat("Got a batch #{0} of {1} messages from '{2}' for queue '{3}'",
+							   batch.BatchId, batch.Messages.Length, batch.Source, batch.Destination);
 			queue.AcceptMessages(batch.Messages);
 
 			context.Response.StatusCode = (int)HttpStatusCode.OK;

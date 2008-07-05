@@ -28,9 +28,7 @@ namespace Rhino.Queues.Impl
 			{
 				foreach (var msg in msgs)
 				{
-					var id = SequentialGuid.Next();
-					tree.Put(id, msg);
-					queue.Append(id);
+					queue.AppendAssociation(tree, msg);
 				}
 				tx.Commit();
 			}

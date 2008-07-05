@@ -25,6 +25,8 @@ namespace Client
 				queue.Send(new QueueMessage { Body = Encoding.UTF8.GetBytes("Msg #" + i) });
 			}
 			TimeSpan duration = DateTime.Now - start;
+			Console.ForegroundColor = ConsoleColor.Red;
+			
 			Console.WriteLine("Dispatched {0}  messages in {1}", count, duration);
 			Console.ReadKey();
 		}
