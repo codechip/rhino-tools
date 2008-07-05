@@ -14,6 +14,7 @@ namespace Rhino.Queues
 		private Uri localUri = new Uri("queue://localhost/rhino-queues");
 		private string queuesDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Queues");
 		private bool purgePendingMessages;
+		private string name;
 
 		public QueueConfiguration WorkerThreads(int count)
 		{
@@ -50,26 +51,27 @@ namespace Rhino.Queues
 			if (Directory.Exists(queuesDirectory) == false)
 				Directory.CreateDirectory(queuesDirectory);
 
-			var queuePhysicalStorage = new IncomingQueuePhysicalStorage(queuesDirectory);
+			var queuePhysicalStorage = new BerkeleyDbPhysicalStorage(queuesDirectory);
 			var outgoingQueueName = "outgoing-msgs";
 
 			var repository = new OutgoingMessageRepository(outgoingQueueName, queuesDirectory);
 			if (queuePhysicalStorage.GetQueueNames().Contains(outgoingQueueName) == false)
 			{
-				repository.CreateQueueStorage();
+				queuePhysicalStorage.CreateOutputQueue(outgoingQueueName);
 			}
 
+			name = name ?? Path.GetFileName(queuesDirectory);
 			var factory = new QueueFactory(
 				localUri,
 				queuesDirectory,
 				queuePhysicalStorage,
-				new WorkerFactory(workersCount),
+				new WorkerFactory(workersCount, name),
 				new QueueListener(localUri),
 				repository);
 
 			if(queuePhysicalStorage.GetQueueNames().Contains(localUri.ToQueueName())==false)
 			{
-				queuePhysicalStorage.CreateQueue(localUri.ToQueueName());
+				queuePhysicalStorage.CreateInputQueue(localUri.ToQueueName());
 			}
 
 			factory.CreateQueuesFromStorage();
@@ -91,5 +93,12 @@ namespace Rhino.Queues
 			purgePendingMessages = true;
 			return this;
 		}
+
+		public QueueConfiguration Name(string name)
+		{
+			this.name = name;
+			return this;
+		}
+
 	}
 }

@@ -11,7 +11,7 @@ namespace BerkeleyDb.Tests
 		public void Setup()
 		{
 			using (var environment = new BerkeleyDbEnvironment("test"))
-				environment.DeleteQueue("my-queue");
+				environment.Delete("my-queue");
 		}
 
 		[Test]
@@ -25,11 +25,11 @@ namespace BerkeleyDb.Tests
 		public void Environment_flags_are_transactional_logging_recoverable_create_lock_mempool()
 		{
 			var expected = Env.OpenFlags.Create |
-			               Env.OpenFlags.InitLock |
-			               Env.OpenFlags.InitLog |
-                           Env.OpenFlags.InitMPool |
-                           Env.OpenFlags.Register |
-                           Env.OpenFlags.ThreadSafe |
+						   Env.OpenFlags.InitLock |
+						   Env.OpenFlags.InitLog |
+						   Env.OpenFlags.InitMPool |
+						   Env.OpenFlags.Register |
+						   Env.OpenFlags.ThreadSafe |
 						   Env.OpenFlags.InitTxn |
 						   Env.OpenFlags.Recover;
 			Assert.AreEqual(expected, BerkeleyDbEnvironment.CreationFlags);
@@ -70,7 +70,7 @@ namespace BerkeleyDb.Tests
 					using (var child = environment.BeginTransaction())
 					{
 						Assert.AreSame(child, environment.CurrentTransaction);
-						child.Commit();	
+						child.Commit();
 					}
 					Assert.AreSame(tx, environment.CurrentTransaction);
 					tx.Commit();
@@ -84,11 +84,11 @@ namespace BerkeleyDb.Tests
 			using (var environment = new BerkeleyDbEnvironment("test"))
 			{
 				Assert.IsFalse(
-					environment.DoesQueueExists("my-queue")
+					environment.Exists("my-queue")
 					);
 			}
 		}
-		
+
 		[Test]
 		public void Can_create_queue_from_environment()
 		{
@@ -97,8 +97,8 @@ namespace BerkeleyDb.Tests
 			{
 				environment.CreateQueue("my-queue", 100);
 				Assert.IsTrue(
-				    environment.DoesQueueExists("my-queue")
-				    );
+					environment.Exists("my-queue")
+					);
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace BerkeleyDb.Tests
 			using (var environment2 = new BerkeleyDbEnvironment("test"))
 			{
 				Assert.AreSame(environment1.Inner, environment2.Inner);
-			}	
+			}
 		}
 
 		[Test]
@@ -143,7 +143,7 @@ namespace BerkeleyDb.Tests
 			{
 				Assert.AreNotSame(environment1.Inner, environment2.Inner);
 			}
-
 		}
+
 	}
 }

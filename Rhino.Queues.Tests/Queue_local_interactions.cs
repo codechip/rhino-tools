@@ -26,9 +26,6 @@ namespace Rhino.Queues.Tests
 			stubbedOutgoingMsgsRepos = MockRepository.GenerateStub<IOutgoingMessageRepository>();
 			stubbedIncomingMsgsRepos = MockRepository.GenerateStub<IIncomingMessageRepository>();
 			queue = new Queue(new Uri("queue://my/test"), stubbedOutgoingMsgsRepos, stubbedIncomingMsgsRepos);
-			stubbedIncomingMsgsRepos.Stub(x => x.Transaction(null))
-				.IgnoreArguments()
-				.Do(invocation => ((Action) invocation.Arguments[0])());
 		}
 
 		[Test]

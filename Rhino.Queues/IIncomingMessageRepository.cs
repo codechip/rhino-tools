@@ -6,12 +6,8 @@ namespace Rhino.Queues
 	{
 		QueueMessage GetEarliestMessage();
 
-		void Save(QueueMessage msg);
-
-		void Transaction(Action action);
+		void Save(params QueueMessage[] msgs);
 
 		void PurgeAllMessages();
-
-		void CreateQueueStorage();
 	}
 }

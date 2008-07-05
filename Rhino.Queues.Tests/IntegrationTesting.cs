@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using MbUnit.Framework;
 
@@ -10,10 +12,20 @@ namespace Rhino.Queues.Tests
 		private IQueueFactory factory1;
 		private IQueueFactory factory2;
 
+		private int count = 1;
+
 		[SetUp]
 		public void Setup()
 		{
+			SystemTime.Now = () => DateTime.Now;
+
+			if (Directory.Exists("factory1"))
+				Directory.Delete("factory1", true);
+			if (Directory.Exists("factory2"))
+				Directory.Delete("factory2", true);
+
 			factory1 = new QueueConfiguration()
+				.Name("test1 - " + count)
 				.QueuesDirectory("factory1")
 				.LocalUri("queue://localhost/factory1")
 				.WorkerThreads(1)
@@ -21,12 +33,15 @@ namespace Rhino.Queues.Tests
 				.SkipInitializingTheQueueFactory()
 				.BuildQueueFactory();
 			factory2 = new QueueConfiguration()
+				.Name("test2 - " + count)
 				.QueuesDirectory("factory2")
 				.LocalUri("queue://localhost/factory2")
 				.WorkerThreads(1)
 				.PurgePendingMessages()
 				.SkipInitializingTheQueueFactory()
 				.BuildQueueFactory();
+
+			count += 1;
 		}
 
 		[TearDown]
@@ -61,7 +76,9 @@ namespace Rhino.Queues.Tests
 			factory2.Initialize();
 
 			ILocalQueue localQueue = factory2.GetLocalQueue("factory2");
-			QueueMessage recieve = localQueue.Recieve(TimeSpan.FromSeconds(60));
+			QueueMessage recieve = localQueue.Recieve(TimeSpan.FromSeconds(5));
+			
+			Assert.IsNotNull(recieve, "should have gotten a message");
 			CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4 }, recieve.Body);
 		}
 

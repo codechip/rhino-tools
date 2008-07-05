@@ -8,6 +8,15 @@ namespace BerkeleyDb
 		private readonly Env inner;
 		private int refCount;
 
+		public bool CanDispose
+		{
+			get
+			{
+				Thread.MemoryBarrier();
+				return refCount == 0;
+			}
+		}
+
 		public EnvContainer(Env inner)
 		{
 			this.inner = inner;
@@ -24,12 +33,7 @@ namespace BerkeleyDb
 		public bool Release()
 		{
 			var value = Interlocked.Decrement(ref refCount);
-			if(value==0)
-			{
-				Dispose();
-				return true;
-			}
-			return false;
+			return value==0;
 		}
 
 		protected override void Dispose(bool disposing)

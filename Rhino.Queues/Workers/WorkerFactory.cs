@@ -8,6 +8,7 @@ namespace Rhino.Queues.Workers
 	public class WorkerFactory : IWorkerFactory
 	{
 		private readonly int workersCount;
+		private readonly string name;
 		private readonly IList<IQueueWorker> workers = new List<IQueueWorker>();
 		private readonly IList<Thread> threads = new List<Thread>();
 
@@ -21,9 +22,10 @@ namespace Rhino.Queues.Workers
 			get { return threads; }
 		}
 
-		public WorkerFactory(int workersCount)
+		public WorkerFactory(int workersCount, string name)
 		{
 			this.workersCount = workersCount;
+			this.name = name;
 		}
 
 		public void StartWorkers(IQueueFactoryImpl factory, IOutgoingMessageRepository outgoingMessageRepository)
@@ -38,7 +40,7 @@ namespace Rhino.Queues.Workers
 				threads.Add(new Thread(worker.Run)
 				{
 					IsBackground = true,
-					Name = "Queue Worker #" + i
+					Name = name + ": Queue Worker #" + i
 				});
 			}
 			foreach (var thread in threads)

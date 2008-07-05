@@ -9,36 +9,43 @@ namespace Rhino.Queues.Tests
 	[TestFixture]
 	public class QueueConfigurationTests
 	{
+		[SetUp]
+		public void Setup()
+		{
+			if (Directory.Exists("Queues"))
+				Directory.Delete("Queues", true);
+			Directory.CreateDirectory("Queues");
+		}
+
 		[Test]
 		public void Upon_start_will_create_queues_directory_if_does_not_exists()
 		{
-			string directory = Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
-
-			Assert.IsFalse(Directory.Exists(directory));
+			Directory.Delete("Queues", true);
+			Assert.IsFalse(Directory.Exists("Queues"));
 
 			new QueueConfiguration()
-				.QueuesDirectory(directory)
+				.QueuesDirectory("Queues")
 				.BuildQueueFactory()
 				.Dispose();
 
-			Assert.IsTrue(Directory.Exists(directory));
-
-			Directory.Delete(directory, true);
+			Assert.IsTrue(Directory.Exists("Queues"));
 		}
 
 		[Test]
 		public void Upon_start_will_create_outgoing_queue_if_does_not_exists()
 		{
-			string directory = Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
-
+			bool queryExists = new BerkeleyDbPhysicalStorage("Queues").GetQueueNames()
+				.Contains("outgoing-msgs");
+			Assert.IsFalse(queryExists); 
+			
 			new QueueConfiguration()
-				.QueuesDirectory(directory)
+				.QueuesDirectory("Queues")
 				.BuildQueueFactory()
 				.Dispose();
 
-			Assert.IsTrue(File.Exists(Path.Combine(directory, "outgoing-msgs.queue")));
-
-			Directory.Delete(directory, true);
+			queryExists = new BerkeleyDbPhysicalStorage("Queues").GetQueueNames()
+				.Contains("outgoing-msgs");
+			Assert.IsTrue(queryExists);
 		}
 
 		[Test]
@@ -47,21 +54,19 @@ namespace Rhino.Queues.Tests
 			IQueueFactory factory = new QueueConfiguration()
 				.BuildQueueFactory();
 			Assert.IsNotNull(factory);
+			factory.Dispose();
 		}
 
 		[Test]
 		public void Setting_purge_messages_will_clear_messages_from_outgoing_queue_and_all_incoming_queues()
 		{
-			string directory = Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
-
-			Directory.CreateDirectory(directory);
-
-			var outgoing = new OutgoingMessageRepository("outgoing-msgs", directory);
-			var incoming1 = new IncomingMessageRepository("test", directory);
-			var incoming2 = new IncomingMessageRepository("foo", directory);
-			incoming1.CreateQueueStorage();
-			incoming2.CreateQueueStorage();
-			outgoing.CreateQueueStorage();
+			var outgoing = new OutgoingMessageRepository("outgoing-msgs", "Queues");
+			var incoming1 = new IncomingMessageRepository("test", "Queues");
+			var incoming2 = new IncomingMessageRepository("foo", "Queues");
+			var storage = new BerkeleyDbPhysicalStorage("Queues");
+			storage.CreateOutputQueue(outgoing.Name);
+			storage.CreateInputQueue(incoming1.Name);
+			storage.CreateInputQueue(incoming2.Name);
 
 			outgoing.Save(new Uri("queue://foo/bar"), new QueueMessage());
 			incoming1.Save(new QueueMessage());
@@ -69,7 +74,7 @@ namespace Rhino.Queues.Tests
 
 
 			new QueueConfiguration()
-				.QueuesDirectory(directory)
+				.QueuesDirectory("Queues")
 				.PurgePendingMessages()
 				.SkipInitializingTheQueueFactory()
 				.BuildQueueFactory()
@@ -80,34 +85,26 @@ namespace Rhino.Queues.Tests
 
 			Assert.IsNull(incoming1.GetEarliestMessage());
 			Assert.IsNull(incoming2.GetEarliestMessage());
-
-			Directory.Delete(directory, true);
 		}
 
 		[Test]
 		public void If_local_uri_queue_does_not_exist_will_create_it()
 		{
-			string directory = Path.Combine(Environment.CurrentDirectory, Guid.NewGuid().ToString());
-
-			Directory.CreateDirectory(directory);
-
 			Assert.IsFalse(
-				new IncomingQueuePhysicalStorage(directory).GetQueueNames().Contains("my-fun")
+				new BerkeleyDbPhysicalStorage("Queues").GetQueueNames().Contains("my-fun")
 				);
 
 			new QueueConfiguration()
 				.LocalUri("queue://localhost/my-fun")
-				.QueuesDirectory(directory)
+				.QueuesDirectory("Queues")
 				.PurgePendingMessages()
 				.SkipInitializingTheQueueFactory()
 				.BuildQueueFactory()
 				.Dispose();
 
 			Assert.IsTrue(
-				new IncomingQueuePhysicalStorage(directory).GetQueueNames().Contains("my-fun")
+				new BerkeleyDbPhysicalStorage("Queues").GetQueueNames().Contains("my-fun")
 				);
-
-			Directory.Delete(directory, true);
 		}
 	}
 }

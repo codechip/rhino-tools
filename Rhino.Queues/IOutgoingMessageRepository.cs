@@ -18,18 +18,6 @@ namespace Rhino.Queues
 
 		void RemoveSuccessfulBatch(Guid batchId, Uri destination);
 
-		void MarkAllInBatchAsFailed(Guid batchId, Uri destination);
-
-		void ResetBatch(Guid batchId, Uri destination);
-
-		void MoveUnderliverableMessagesToDeadLetterQueue(
-			Guid batchId,
-			Uri destination,
-			int minNumberOfFailures,
-			Exception lastException);
-
-		void Transaction(Action action);
-
-		void CreateQueueStorage();
+		void ReturnedFailedBatchToQueue(Guid batchId, Uri destination, int maxFailureCount, Exception exception);
 	}
 }

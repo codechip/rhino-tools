@@ -39,10 +39,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.51.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLibs\System.Data.SQLite.DLL</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -60,7 +56,10 @@
     <Compile Include="Commands\SendToRemoteServerCommand.cs" />
     <Compile Include="Extensions\QueueExtensions.cs" />
     <Compile Include="ILocalQueue.cs" />
-    <Compile Include="IncomingQueuePhysicalStorage.cs" />
+    <Compile Include="Impl\BerkeleyDbPhysicalStorage.cs" />
+    <Compile Include="Impl\FailedQueueMessage.cs" />
+    <Compile Include="Impl\MessageBatchKey.cs" />
+    <Compile Include="Impl\QueueTransportMessage.cs" />
     <Compile Include="IQueueListener.cs" />
     <Compile Include="IQueuePhysicalStorage.cs" />
     <Compile Include="IRemoteQueue.cs" />
@@ -68,7 +67,6 @@
     <Compile Include="IIncomingMessageRepository.cs" />
     <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Impl\FireAndForget.cs" />
-    <Compile Include="Impl\MessageRepositoryBase.cs" />
     <Compile Include="Impl\OutgoingMessageRepository.cs" />
     <Compile Include="Impl\QueueListener.cs" />
     <Compile Include="Workers\IQueueWorker.cs" />
@@ -77,7 +75,6 @@
     <Compile Include="Impl\ValidationUtil.cs" />
     <Compile Include="IOutgoingMessageRepository.cs" />
     <Compile Include="Impl\IncomingMessageRepository.cs" />
-    <Compile Include="Impl\Queries.cs" />
     <Compile Include="Impl\Queue.cs" />
     <Compile Include="Impl\IQueueImpl.cs" />
     <Compile Include="IQueueFactory.cs" />
@@ -89,6 +86,12 @@
     <Compile Include="SingleDestinationMessageBatch.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Workers\WorkerFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BerkeleyDb\BerkeleyDb.csproj">
+      <Project>{65828F6C-7D61-475E-850C-B380FD04FB7B}</Project>
+      <Name>BerkeleyDb</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

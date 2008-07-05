@@ -7,6 +7,7 @@ namespace Rhino.Queues
 	public class QueueMessage
 	{
 		private readonly NameValueCollection headers = new NameValueCollection();
+
 		private Guid id = Guid.NewGuid();
 
 		public Uri Source { get; set;  }
@@ -25,5 +26,9 @@ namespace Rhino.Queues
 		}
 
 		public byte[] Body { get; set; }
+
+		public Guid? BatchId { get; set; }
+
+		public int FailureCount { get; set; }
 	}
 }

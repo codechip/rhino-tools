@@ -64,7 +64,7 @@ namespace Rhino.Queues.Tests
 		public void When_creating_new_queue_will_call_queue_physical_storage_to_perform_the_work()
 		{
 			queueFactory.CreateQueue("foo2");
-			stubbedQueryPhysicalStorage.AssertWasCalled(x=>x.CreateQueue("foo2"));
+			stubbedQueryPhysicalStorage.AssertWasCalled(x=>x.CreateInputQueue("foo2"));
 		}
 
 		[Test]

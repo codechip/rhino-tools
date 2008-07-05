@@ -1,115 +1,96 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
+using BerkeleyDb;
 
 namespace Rhino.Queues.Impl
 {
-	public class OutgoingMessageRepository : MessageRepositoryBase, IOutgoingMessageRepository
+	public class OutgoingMessageRepository : IOutgoingMessageRepository
 	{
 		private readonly string name;
+		private readonly string path;
 
-		public OutgoingMessageRepository(string name, string directory)
-			: base(name, directory)
+		public OutgoingMessageRepository(string name, string path)
 		{
 			this.name = name;
-		}
-
-		public OutgoingMessageRepository(string name) 
-			: this(name, Environment.CurrentDirectory)
-		{
+			this.path = path;
 		}
 
 		public string Name
 		{
-			get{ return name; }
+			get { return name; }
 		}
 
 		public event Action NewMessageStored = delegate { };
 
 		public void Save(Uri destination, QueueMessage msg)
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
 			{
-				cmd.CommandText = Queries.InsertMessageToOutgoingQueue;
-				AddParameter("@Id", msg.Id);
-				AddParameter("@Destination", destination.ToString());
-				AddParameter("@Data", Serialize(msg));
-				AddParameter("@InsertedAt", SystemTime.Now());
-				AddParameter("@SendAt", SystemTime.Now());
-				cmd.ExecuteNonQuery();
-			});
-			// must be after the change was committed
+				queue.AppendAssociation(tree, new QueueTransportMessage
+				{
+                    SendAt = SystemTime.Now(),
+					Destination = destination,
+					Message = msg
+				});
+				tx.Commit();
+			}
 			NewMessageStored();
 		}
 
 		/// <summary>
 		/// The implementation of this method is a bit tricky.
-		/// First, we enlist all messages that are not in a batch in our newly created batch
+		/// First, we consume all messages that are not in a batch in our newly created batch
 		/// but only if they are elgibile to send.
-		/// Then, we select all the messages in the current batch, and return them in a form
-		/// that is more easily to process.
+		/// We format the results for easy consumtion and then write the batch, so we can track
+		/// its send progress and if it was successful or not.
 		/// We are doing this in two stages to ensure that we two transactions cannot get the 
 		/// same message.
 		/// </summary>
 		/// <returns></returns>
 		public MessageBatch GetBatchOfMessagesToSend()
 		{
-			MessageBatch batch = null;
-			Transaction(() =>
+			var batch = new MessageBatch();
+
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var batches = env.OpenTree(name + ".batches"))
 			{
-				batch = new MessageBatch();
-				UpdateBatchIdForCurrentMessages(batch);
-
-				var destToMsgs = HydrateMessageInCurrentBatch(batch);
-
-				var destBatches = new List<SingleDestinationMessageBatch>();
-				foreach (var msg in destToMsgs)
+				var msgs = new List<QueueTransportMessage>();
+				foreach (var msg in queue.SelectAndConsumeFromAssociation<QueueTransportMessage>(tree,
+						m => m.SendAt <= SystemTime.Now()))
 				{
-					destBatches.Add(new SingleDestinationMessageBatch
-					{
-						BatchId = batch.Id,
-						Destination = msg.Key,
-						Messages = msg.Value.ToArray()
-					});
+					msgs.Add(msg);
+					if (msgs.Count == 100)
+						break;
 				}
+
+				var destBatches = from msg in msgs
+								  group msg by msg.Destination
+									  into g
+									  select new SingleDestinationMessageBatch
+									  {
+										  BatchId = batch.Id,
+										  Destination = g.Key,
+										  Messages = g.Select(m => m.Message).ToArray()
+									  };
+
 				batch.DestinationBatches = destBatches.ToArray();
-			});
-			return batch ?? new MessageBatch();
-		}
 
-		private static void UpdateBatchIdForCurrentMessages(MessageBatch batch)
-		{
-			cmd.CommandText = Queries.UpdateBatchId;
-			AddParameter("BatchId", batch.Id);
-			AddParameter("CurrentTime", SystemTime.Now());
-			cmd.ExecuteNonQuery();
-			cmd.Parameters.Clear();
-		}
-
-		private Dictionary<Uri, List<QueueMessage>> HydrateMessageInCurrentBatch(MessageBatch batch)
-		{
-			var destToMsgs = new Dictionary<Uri, List<QueueMessage>>();
-			cmd.CommandText = Queries.SelectMessagesFromOutgoing;
-			AddParameter("BatchId", batch.Id);
-			using (var reader = cmd.ExecuteReader())
-			{
-				while (reader.Read())
+				foreach (var messageBatch in destBatches)
 				{
-					var destination = reader.GetString(0);
-					List<QueueMessage> messages;
-					var destinationUri = new Uri(destination);
-					if (destToMsgs.TryGetValue(destinationUri, out messages) == false)
-						destToMsgs[destinationUri] = messages = new List<QueueMessage>();
-					var data = (byte[])reader[1];
-					messages.Add(Deserialize(data));
+					batches.Put(new MessageBatchKey(messageBatch), messageBatch);
 				}
-			}
-			return destToMsgs;
-		}
 
-		protected override string GetQueryToGenerateDatabase()
-		{
-			return Queries.CreateTablesForOutgoingQueue;
+				tx.Commit();
+			}
+			return batch;
 		}
 
 		/// <summary>
@@ -119,15 +100,51 @@ namespace Rhino.Queues.Impl
 		/// </summary>
 		/// <param name="batchId">The batch id.</param>
 		/// <param name="destination">The destination.</param>
-		public void ResetBatch(Guid batchId, Uri destination)
+		/// <param name="maxFailureCount">The maximum amount a message is allowed to fail before it is considered dead</param>
+		/// <param name="exception">The exception that caused this batch failure</param>
+		public void ReturnedFailedBatchToQueue(Guid batchId, Uri destination, 
+			int maxFailureCount, Exception exception)
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var batches = env.OpenTree(name + ".batches"))
+			using (var deadLetters = env.OpenTree(name + ".deadLetters"))
 			{
-				cmd.CommandText = Queries.ResetBatchIdForOutgoingQueueByIdAndDestination;
-				AddParameter("BatchId", batchId);
-				AddParameter("Destination", destination.ToString());
-				cmd.ExecuteNonQuery();
-			});
+				var key = new MessageBatchKey(batchId, destination);
+				var batch = (SingleDestinationMessageBatch)batches.Get(key);
+				if(batch==null)
+					return;
+				batches.Delete(key);
+				foreach (var message in batch.Messages)
+				{
+					message.BatchId = null;
+					message.FailureCount++;
+					var secondsToAdd = Math.Min(Math.Pow(message.FailureCount, 2), 300);
+					DateTime timeToSend = SystemTime.Now().AddSeconds(secondsToAdd);
+					if (message.FailureCount <= maxFailureCount)
+					{
+						queue.AppendAssociation(tree, new QueueTransportMessage
+						{
+							Destination = destination,
+                            Message = message,
+                            SendAt = timeToSend
+						});
+					}
+					else
+					{
+						deadLetters.Put(message.Id, new FailedQueueMessage
+						{
+							Destination = destination,
+                            Exception = exception,
+                            FinalFailureAt = SystemTime.Now(),
+                            Message = message
+						});
+					}
+				}
+				tx.Commit();
+			}
 		}
 
 		/// <summary>
@@ -136,68 +153,56 @@ namespace Rhino.Queues.Impl
 		/// </summary>
 		public void ResetAllBatches()
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var batches = env.OpenTree(name + ".batches"))
 			{
-				cmd.CommandText = Queries.ResetAllBatchIdForOutgoingQueue;
-				cmd.ExecuteNonQuery();
-			});
+				foreach (DictionaryEntry de in batches.SelectAndConsume())
+				{
+					var batch = (SingleDestinationMessageBatch)de.Value;
+					foreach (var message in batch.Messages)
+					{
+						message.BatchId = null;
+						queue.AppendAssociation(tree,new QueueTransportMessage
+						{
+							Destination = batch.Destination,
+                            Message = message,
+                            SendAt = SystemTime.Now()
+						});
+					}
+				}
+				tx.Commit();
+			}
 		}
 
 		public void RemoveSuccessfulBatch(Guid batchId, Uri destination)
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var batches = env.OpenTree(name + ".batches"))
 			{
-				cmd.CommandText = Queries.DeleteSuccessfulBatch;
-				AddParameter("BatchId", batchId);
-				AddParameter("Destination", destination.ToString());
-				cmd.ExecuteNonQuery();
-			});
-		}
-
-		/// <summary>
-		/// Mark all messages in batch and destination as failures and increasing the
-		/// time that they will be retried
-		/// </summary>
-		/// <param name="batchId">The batch id.</param>
-		/// <param name="destination">The destination.</param>
-		public void MarkAllInBatchAsFailed(Guid batchId, Uri destination)
-		{
-			Transaction(() =>
-			{
-				cmd.CommandText = Queries.UpdateFailureCountAndTimeToSend;
-				AddParameter("BatchId", batchId);
-				AddParameter("Destination", destination.ToString());
-				cmd.ExecuteNonQuery();
-			});
-		}
-
-
-		public void MoveUnderliverableMessagesToDeadLetterQueue(
-			Guid batchId,
-			Uri destination,
-			int minNumberOfFailures,
-			Exception lastException)
-		{
-			Transaction(() =>
-			{
-				cmd.CommandText = Queries.MoveAllMessagesInBatchWithFailureCountToFAiledMessages;
-				AddParameter("BatchId", batchId);
-				AddParameter("Destination", destination.ToString());
-				AddParameter("CurrentTime", SystemTime.Now());
-				AddParameter("MinNumberOfFailures", minNumberOfFailures);
-				AddParameter("LastException", lastException.ToString());
-
-				cmd.ExecuteNonQuery();
-			});
+				batches.Delete(new MessageBatchKey(batchId, destination));
+				tx.Commit();
+			}
 		}
 
 		public void PurgeAllMessages()
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var batches = env.OpenTree(name + ".batches"))
+			using (var deadLetters = env.OpenTree(name + ".deadLetters"))
 			{
-				cmd.CommandText = Queries.PurgeAllMessagesFromOutgoing;
-				cmd.ExecuteNonQuery();
-			});
+				tree.Truncate();
+				queue.Truncate();
+				batches.Truncate();
+				deadLetters.Truncate();
+				tx.Commit();
+			}
 		}
 	}
 }

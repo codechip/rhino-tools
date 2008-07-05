@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Transactions;
+using BerkeleyDb;
 using Rhino.Queues.Workers;
 
 namespace Rhino.Queues.Impl
@@ -71,13 +72,8 @@ namespace Rhino.Queues.Impl
 
 		public void AcceptMessages(params QueueMessage[] msgs)
 		{
-			incomingMessageRepository.Transaction(() =>
-			{
-				foreach (var msg in msgs)
-				{
-					incomingMessageRepository.Save(msg);
-				}
-			});
+			incomingMessageRepository.Save(msgs);
+
 			if (Transaction.Current == null)
 			{
 				OnMessageArrived();
@@ -91,12 +87,7 @@ namespace Rhino.Queues.Impl
 
 		public void FailedToTransfer(SingleDestinationMessageBatch batch, Exception e)
 		{
-			outgoingMessageRepository.Transaction(() =>
-			{
-				outgoingMessageRepository.MarkAllInBatchAsFailed(batch.BatchId, batch.Destination);
-				outgoingMessageRepository.MoveUnderliverableMessagesToDeadLetterQueue(batch.BatchId, batch.Destination, 100, e);
-				outgoingMessageRepository.ResetBatch(batch.BatchId, batch.Destination);
-			});
+			outgoingMessageRepository.ReturnedFailedBatchToQueue(batch.BatchId, batch.Destination, 100, e);
 		}
 
 		public void SuccessfullyTransfered(SingleDestinationMessageBatch batch)
@@ -132,7 +123,7 @@ namespace Rhino.Queues.Impl
 
 		public void Send(QueueMessage message)
 		{
-			message.Id = Guid.NewGuid();
+			message.Id = SequentialGuid.Next();
 			outgoingMessageRepository.Save(Url, message);
 		}
 

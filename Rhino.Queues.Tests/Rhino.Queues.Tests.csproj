@@ -92,6 +92,10 @@
     <Compile Include="WorkerFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BerkeleyDb\BerkeleyDb.csproj">
+      <Project>{65828F6C-7D61-475E-850C-B380FD04FB7B}</Project>
+      <Name>BerkeleyDb</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.Queues\Rhino.Queues.csproj">
       <Project>{1630E1EE-B875-481E-84C5-E558E036A788}</Project>
       <Name>Rhino.Queues</Name>

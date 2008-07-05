@@ -17,7 +17,7 @@ namespace BerkeleyDb
 			try
 			{
 				EnvContainer container;
-				if(environmentsByFullPath.TryGetValue(fullPath, out container))
+				if (environmentsByFullPath.TryGetValue(fullPath, out container))
 					return container.AddRef();
 				var cookie = locker.UpgradeToWriterLock(-1);
 				try
@@ -26,6 +26,7 @@ namespace BerkeleyDb
 						return container.AddRef();
 					var env = new Env(EnvCreateFlags.None)
 					{
+						ErrorCall = delegate(Env env1, string errpfx, string msg) { Console.WriteLine(errpfx + ": " + msg); },
 						MaxLocks = 10000,
 						MaxLockers = 10000,
 						MaxLockObjects = 10000
@@ -51,21 +52,21 @@ namespace BerkeleyDb
 			try
 			{
 				EnvContainer container;
-				if (environmentsByFullPath.TryGetValue(fullPath, out container))
+				if (environmentsByFullPath.TryGetValue(fullPath, out container) == false)
 					return;
-				lock (container)// only one thread can release 
+				if (container.Release() == false)
+					return;
+				var cookie = locker.UpgradeToWriterLock(-1);
+				try
 				{
-					if (container.Release() == false)
-						return;
-					var cookie = locker.UpgradeToWriterLock(-1);
-					try
-					{
-						environmentsByFullPath.Remove(fullPath);
-					}
-					finally
-					{
-						locker.DowngradeFromWriterLock(ref cookie);
-					}
+					if (container.CanDispose == false)
+						return ;
+					environmentsByFullPath.Remove(fullPath);
+					container.Dispose();
+				}
+				finally
+				{
+					locker.DowngradeFromWriterLock(ref cookie);
 				}
 			}
 			finally
@@ -75,7 +76,6 @@ namespace BerkeleyDb
 		}
 
 		private readonly Env inner;
-		private BerkeleyDbTransaction currentTransaction;
 		private readonly string fullEnvrionmentPath;
 
 		public Env Inner
@@ -83,10 +83,7 @@ namespace BerkeleyDb
 			get { return inner; }
 		}
 
-		public BerkeleyDbTransaction CurrentTransaction
-		{
-			get { return currentTransaction; }
-		}
+		public BerkeleyDbTransaction CurrentTransaction { get; private set; }
 
 		public BerkeleyDbEnvironment(string path)
 		{
@@ -118,24 +115,24 @@ namespace BerkeleyDb
 		protected override void Dispose(bool disposing)
 		{
 			// will dispose all current transactions, regardless of nesting
-			while (currentTransaction != null)
-				currentTransaction.Dispose();
+			while (CurrentTransaction != null)
+				CurrentTransaction.Dispose();
 			ReleaseEnv(fullEnvrionmentPath);
 		}
 
 		public BerkeleyDbTransaction BeginTransaction()
 		{
-			if (currentTransaction == null)
+			if (CurrentTransaction == null)
 			{
-				currentTransaction = new BerkeleyDbTransaction(this, 
+				CurrentTransaction = new BerkeleyDbTransaction(this,
 					inner.TxnBegin(null, Txn.BeginFlags.ReadCommitted));
 			}
 			else
 			{
-				currentTransaction = currentTransaction.NestTransaction(
+				CurrentTransaction = CurrentTransaction.NestTransaction(
 					tx => inner.TxnBegin(tx, Txn.BeginFlags.ReadCommitted));
 			}
-			return currentTransaction;
+			return CurrentTransaction;
 		}
 
 		public void CreateQueue(string queueName, int queueItemSize)
@@ -156,53 +153,91 @@ namespace BerkeleyDb
 
 		private void OnTransactionDisposed(Action action)
 		{
-			if (currentTransaction == null)
+			if (CurrentTransaction == null)
 			{
 				action();
 				return;
 			}
-			currentTransaction.RegisterSyncronization(action);
+			CurrentTransaction.RegisterSyncronization(action);
 		}
 
-		public bool DoesQueueExists(string queueName)
+		public bool Exists(string queueName)
 		{
 			return File.Exists(Path.Combine(fullEnvrionmentPath, queueName));
 		}
 
 		internal void TransactionDisposed(BerkeleyDbTransaction transaction, BerkeleyDbTransaction parent)
 		{
-			if (transaction == currentTransaction)
-				currentTransaction = parent;
+			if (transaction == CurrentTransaction)
+				CurrentTransaction = parent;
 		}
 
 		public BerkeleyDbQueue OpenQueue(string queueName)
 		{
+			Db database = null;
 			try
 			{
-				var database = inner.CreateDatabase(DbCreateFlags.None);
+				database = inner.CreateDatabase(DbCreateFlags.None);
 				var queue = (DbQueue)database.Open(CurrentTransaction.InnerTransaction(),
-					queueName, null, DbType.Queue, Db.OpenFlags.None, 0);
-				return new BerkeleyDbQueue(currentTransaction, database, queue);
+												   queueName, null, DbType.Queue, Db.OpenFlags.ThreadSafe, 0);
+				return new BerkeleyDbQueue(CurrentTransaction, database, queue);
 			}
 			catch (BdbException e)
 			{
+				if (database != null)
+					OnTransactionDisposed(database.Close);
 				if (e.Error == DbRetVal.ENOENT)
 					throw new QueueDoesNotExistsException("Queue " + queueName + " does not exists", e);
 				throw;
 			}
 		}
 
-		public void DeleteQueue(string queueName)
+		public void Delete(string queueName)
 		{
 			try
 			{
 				inner.DbRemove(CurrentTransaction.InnerTransaction(),
-				               queueName, null, Env.WriteFlags.None);
+							   queueName, null, Env.WriteFlags.None);
 			}
-			catch(BdbException e)
+			catch (BdbException e)
 			{
 				if (e.Error == DbRetVal.ENOENT)
 					return;
+				throw;
+			}
+		}
+
+		public void CreateTree(string treeName)
+		{
+			var database = inner.CreateDatabase(DbCreateFlags.None);
+			try
+			{
+				database.Open(CurrentTransaction.InnerTransaction(), treeName, null,
+					DbType.BTree,
+					Db.OpenFlags.Create, 0);
+			}
+			finally
+			{
+				OnTransactionDisposed(database.Close);
+			}
+		}
+
+		public BerkeleyDbTree OpenTree(string treeName)
+		{
+			Db database = null;
+			try
+			{
+				database = inner.CreateDatabase(DbCreateFlags.None);
+				var tree = (DbBTree)database.Open(CurrentTransaction.InnerTransaction(),
+												   treeName, null, DbType.BTree, Db.OpenFlags.ThreadSafe, 0);
+				return new BerkeleyDbTree(CurrentTransaction, database, tree);
+			}
+			catch (BdbException e)
+			{
+				if (database != null)
+					OnTransactionDisposed(database.Close);
+				if (e.Error == DbRetVal.ENOENT)
+					throw new QueueDoesNotExistsException("Tree " + treeName + " does not exists", e);
 				throw;
 			}
 		}

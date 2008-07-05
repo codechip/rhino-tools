@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using MbUnit.Framework;
 
@@ -14,6 +15,11 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
+			if (Directory.Exists("factory1"))
+				Directory.Delete("factory1", true);
+			if (Directory.Exists("factory2"))
+				Directory.Delete("factory2", true);
+
 			factory1 = new QueueConfiguration()
 				.QueuesDirectory("factory1")
 				.LocalUri("queue://localhost/factory1")
@@ -38,7 +44,7 @@ namespace Rhino.Queues.Tests
 
 
 		[Test]
-		public void Can_send_hnudreds_of_messages_and_they_all_get_through()
+		public void Can_send_hundreds_of_messages_and_they_all_get_through()
 		{
 			IRemoteQueue remoteQueue1 = factory1.GetRemoteQueue(new Uri("queue://localhost/factory2"));
 			ILocalQueue localQueue2 = factory2.GetLocalQueue("factory2");
@@ -61,6 +67,7 @@ namespace Rhino.Queues.Tests
 			}
 			doneGettingMessages.WaitOne();
 			int prev = -1;
+			values.Sort();
 			foreach (var val in values)
 			{
 				Assert.AreEqual(prev + 1, val);

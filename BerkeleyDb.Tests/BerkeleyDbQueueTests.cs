@@ -13,8 +13,48 @@ namespace BerkeleyDb.Tests
 			using (var environment = new BerkeleyDbEnvironment("test"))
 			using (var tx = environment.BeginTransaction())
 			{
-				environment.DeleteQueue("my-queue");
+				environment.Delete("my-queue");
+				environment.Delete("my-queue1");
+				environment.Delete("my-queue2");
 				environment.CreateQueue("my-queue", 128);
+				environment.CreateQueue("my-queue1", 128);
+				environment.CreateQueue("my-queue2", 128);
+				tx.Commit();
+			}
+		}
+
+		[Test]
+		public void Can_get_queue_size()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				Assert.AreEqual(128, queue.MaxItemSize);
+			}
+		}
+
+		[Test]
+		public void Can_get_queue_name()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				Assert.AreEqual("my-queue", queue.Name);
+			}
+		}
+
+		[Test]
+		public void Can_append_and_consume_bytes_directly()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				queue.AppendBytes(new byte[] { 1, 2, 3 });
+				byte[] results = queue.ConsumeBytes();
+
+				CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, results);
+
 				tx.Commit();
 			}
 		}
@@ -190,7 +230,7 @@ namespace BerkeleyDb.Tests
 						using (var queue2 = environment2.OpenQueue("my-queue"))
 						{
 							Assert.IsNull(queue2.Consume());
-							//tx2.Commit();
+							tx2.Commit();
 						}
 					}
 
@@ -285,6 +325,125 @@ namespace BerkeleyDb.Tests
 			consumer.Join();
 
 			Assert.GreaterThan(startedReading, finishedProducing);
+		}
+
+		[Test]
+		public void Can_create_transaction_that_spans_across_multiple_queues()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				queue1.Append(new DateTime(2001, 1, 1));
+				queue2.Append(new DateTime(2002, 1, 1));
+				tx.Commit();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				var consumed1 = queue1.Consume();
+				var consumed2 = queue2.Consume();
+				Assert.AreEqual(consumed1, new DateTime(2001, 1, 1));
+				Assert.AreEqual(consumed2, new DateTime(2002, 1, 1));
+				tx.Commit();
+			}
+		}
+
+		[Test]
+		public void Multi_queue_transactions_when_rollback_will_remove_from_all_queues()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				queue1.Append(new DateTime(2001, 1, 1));
+				queue2.Append(new DateTime(2002, 1, 1));
+				tx.Rollback();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				var consumed1 = queue1.Consume();
+				var consumed2 = queue2.Consume();
+				Assert.IsNull(consumed1);
+				Assert.IsNull(consumed2);
+				tx.Commit();
+			}
+		}
+
+		[Test]
+		public void When_consuming_from_multiple_queues_under_transaction_and_rolling_back_items_are_in_the_queue()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				queue1.Append(new DateTime(2001, 1, 1));
+				queue2.Append(new DateTime(2002, 1, 1));
+				tx.Commit();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				var consumed1 = queue1.Consume();
+				var consumed2 = queue2.Consume();
+				Assert.AreEqual(consumed1, new DateTime(2001, 1, 1));
+				Assert.AreEqual(consumed2, new DateTime(2002, 1, 1));
+				tx.Rollback();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue1 = environment.OpenQueue("my-queue1"))
+			using (var queue2 = environment.OpenQueue("my-queue2"))
+			{
+				var consumed1 = queue1.Consume();
+				var consumed2 = queue2.Consume();
+				Assert.AreEqual(consumed1, new DateTime(2001, 1, 1));
+				Assert.AreEqual(consumed2, new DateTime(2002, 1, 1));
+				tx.Commit();
+			}
+		}
+
+		[Test]
+		public void Can_truncate_queue()
+		{
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				queue.Append("1234");
+				tx.Commit();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				queue.Truncate();
+				tx.Commit();
+			}
+
+			using (var environment = new BerkeleyDbEnvironment("test"))
+			using (var tx = environment.BeginTransaction())
+			using (var queue = environment.OpenQueue("my-queue"))
+			{
+				object value = queue.Consume();
+				Assert.IsNull(value);
+				tx.Commit();
+			}
 		}
 	}
 }

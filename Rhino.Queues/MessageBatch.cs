@@ -1,4 +1,5 @@
 using System;
+using BerkeleyDb;
 
 namespace Rhino.Queues
 {
@@ -19,7 +20,7 @@ namespace Rhino.Queues
 		public MessageBatch()
 		{
 			DestinationBatches = new SingleDestinationMessageBatch[0];
-			Id = Guid.NewGuid();
+			Id = SequentialGuid.Next();
 		}
 	}
 }

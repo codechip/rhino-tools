@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -13,10 +14,11 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
-			if (File.Exists("test.queue"))
-				File.Delete("test.queue");
-			incomingMessageRepository = new IncomingMessageRepository("test", Environment.CurrentDirectory);
-			incomingMessageRepository.CreateQueueStorage();
+			if (Directory.Exists("test"))
+				Directory.Delete("test", true);
+			Directory.CreateDirectory("test");
+			incomingMessageRepository = new IncomingMessageRepository("test","test");
+			new BerkeleyDbPhysicalStorage("test").CreateInputQueue("test");
 		}
 
 		[Test]
@@ -101,13 +103,11 @@ namespace Rhino.Queues.Tests
 
 			var message = incomingMessageRepository.GetEarliestMessage();
 			Assert.IsNotNull(message);
-			using (var con = incomingMessageRepository.CreateConnection())
-			using (var cmd = con.CreateCommand())
+			using(var env = new BerkeleyDbEnvironment("test"))
+			using(var queue = env.OpenQueue("test.queue"))
 			{
-				cmd.CommandText = "SELECT COUNT(*) FROM Messages;";
-				Assert.AreEqual(0, cmd.ExecuteScalar());
+				Assert.IsNull(queue.Consume());
 			}
-
 		}
 
 		[Test]

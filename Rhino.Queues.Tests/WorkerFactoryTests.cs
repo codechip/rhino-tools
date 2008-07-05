@@ -19,7 +19,7 @@ namespace Rhino.Queues.Tests
 				.Return(new MessageBatch())
 				.Repeat.Any();
 
-			var factory = new WorkerFactory(5);
+			var factory = new WorkerFactory(5, "test");
 			factory.StartWorkers(stubbedQueueFactory, stubbedOutgoingMessageRepository);
 			Assert.AreEqual(5, factory.Threads.Count);
 			foreach (var thread in factory.Threads)
@@ -40,7 +40,7 @@ namespace Rhino.Queues.Tests
 				.Return(new MessageBatch())
 				.Repeat.Any();
 
-			var factory = new WorkerFactory(5);
+			var factory = new WorkerFactory(5, "test");
 			factory.StartWorkers(stubbedQueueFactory, stubbedOutgoingMessageRepository);
 			factory.StopWorkers();
 			factory.WaitForAllWorkersToStop();
@@ -54,7 +54,7 @@ namespace Rhino.Queues.Tests
 		[Test]
 		public void Asking_worker_factory_to_notify_will_notify_all_threads()
 		{
-			var factory = new WorkerFactory(5);
+			var factory = new WorkerFactory(5 ,"test");
 			for (int i = 0; i < 5; i++)
 			{
 				factory.Workers.Add(MockRepository.GenerateStub<IQueueWorker>());

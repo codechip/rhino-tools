@@ -1,76 +1,71 @@
 using System;
+using BerkeleyDb;
 
 namespace Rhino.Queues.Impl
 {
-	public class IncomingMessageRepository : MessageRepositoryBase, IIncomingMessageRepository
+	public class IncomingMessageRepository : IIncomingMessageRepository
 	{
-		public IncomingMessageRepository(string name, string directory):base(name, directory)
+		private readonly string name;
+		private readonly string path;
+
+		public string Name
 		{
-			
+			get { return name; }
 		}
 
-		public void Save(QueueMessage msg)
+		public IncomingMessageRepository(string name, string path)
 		{
-			Transaction(() =>
-			{
-				var serialized = Serialize(msg);
+			this.name = name;
+			this.path = path;
+		}
 
-				cmd.CommandText = Queries.InsertMessageToIncomingQueue;
-				AddParameter("@Id", msg.Id);
-				AddParameter("@Data", serialized);
-				AddParameter("@InsertedAt", SystemTime.Now());
-				cmd.ExecuteNonQuery();
-			});
+		public void Save(params QueueMessage[] msgs)
+		{
+			using(var env = new	BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
+			{
+				foreach (var msg in msgs)
+				{
+					var id = SequentialGuid.Next();
+					tree.Put(id, msg);
+					queue.Append(id);
+				}
+				tx.Commit();
+			}
 		}
 
 		public void PurgeAllMessages()
 		{
-			Transaction(() =>
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
 			{
-				cmd.CommandText = Queries.PurgeAllMessagesFromIncoming;
-				cmd.ExecuteNonQuery();
-			});
+				tree.Truncate();
+				queue.Truncate();
+				tx.Commit();
+			}
 		}
 
 		public QueueMessage GetEarliestMessage()
 		{
-			byte[] data = null;
-			bool done = false;
-			while (done == false)
+			using (var env = new BerkeleyDbEnvironment(path))
+			using (var tx = env.BeginTransaction())
+			using (var tree = env.OpenTree(name + ".tree"))
+			using (var queue = env.OpenQueue(name + ".queue"))
 			{
-				Transaction(() =>
-				{
-					cmd.CommandText = Queries.GetEarliestMessageFromIncomingQueue;
-					Guid id;
-					using (var reader = cmd.ExecuteReader())
-					{
-						if (reader.Read() == false)
-						{
-							done = true;
-							return;
-						}
-						id = (Guid) reader[0];
-						data = (byte[]) reader[1];
-					}
-					cmd.CommandText = Queries.DeleteMessageFromIncomingQueue;
-					AddParameter("Id", id);
-					var rowAffected = cmd.ExecuteNonQuery();
-					// someone else already grabbed and deleted this row, 
-					// so we will try again with another one
-					if (rowAffected != 1)
-						return; // same as continue in this case
-					done = true;// same as break from the loop
-				});
+				var  val = queue.Consume();
+				if( val==null)
+					return null;
+				var id = (Guid) val;
+				var msg = tree.Get(id);
+				tree.Delete(id);
+				tx.Commit();
+				return (QueueMessage)msg;
 			}
-			if (data==null)
-				return null;
-			return Deserialize(data);
-
 		}
-
-		protected override string GetQueryToGenerateDatabase()
-		{
-			return Queries.CreateTablesForIncomingQueue;
-		}
+		
 	}
 }

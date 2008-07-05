@@ -95,9 +95,11 @@ namespace Rhino.Queues.Tests
 		[Test]
 		public void Will_raise_message_arrived_event_for_each_message_in_batch_and_across_batches()
 		{
+			var stubbedIncomingMessageRepository = new FakeIncomingMessageRepository();
+
 			var queue = new Queue(new Uri("queue://localhost/testQueue"),
 								  MockRepository.GenerateStub<IOutgoingMessageRepository>(),
-								  new FakeIncomingMessageRepository());
+								  stubbedIncomingMessageRepository);
 
 			var callCount = 0;
 			var e = new ManualResetEvent(false);
@@ -116,39 +118,38 @@ namespace Rhino.Queues.Tests
 			e.WaitOne();
 			Assert.AreEqual(100, callCount);
 		}
+	}
 
-		public class FakeIncomingMessageRepository : IIncomingMessageRepository
+	internal class FakeIncomingMessageRepository : IIncomingMessageRepository
+	{
+		private Queue<QueueMessage> q = new Queue<QueueMessage>();
+
+		public QueueMessage GetEarliestMessage()
 		{
-			readonly Queue<QueueMessage> msgQueue = new Queue<QueueMessage>();
-
-			public QueueMessage GetEarliestMessage()
+			lock(q)
 			{
-				lock (msgQueue)
+				if(q.Count==0)
+					return null;
+				return q.Dequeue();
+			}
+		}
+
+		public void Save(params QueueMessage[] msgs)
+		{
+			lock (q)
+			{
+				foreach (var msg in msgs)
 				{
-					return msgQueue.Count == 0 ? null : msgQueue.Dequeue();
+					q.Enqueue(msg);
 				}
 			}
+		}
 
-			public void Save(QueueMessage msg)
+		public void PurgeAllMessages()
+		{
+			lock(q)
 			{
-				lock(msgQueue)
-				{
-					msgQueue.Enqueue(msg);
-				}
-			}
-
-			public void Transaction(Action action)
-			{
-				action();
-			}
-
-			public void PurgeAllMessages()
-			{
-				
-			}
-
-			public void CreateQueueStorage()
-			{
+				q.Clear();
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -14,10 +15,12 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => new DateTime(2000, 1, 1);
-			if (File.Exists("test.queue"))
-				File.Delete("test.queue");
-			outgoingMessageRepository = new OutgoingMessageRepository("test");
-			outgoingMessageRepository.CreateQueueStorage();
+			if (Directory.Exists("test"))
+				Directory.Delete("test", true);
+			Directory.CreateDirectory("test");
+
+			outgoingMessageRepository = new OutgoingMessageRepository("test", "test");
+			new BerkeleyDbPhysicalStorage("test").CreateOutputQueue("test");
 		}
 
 		[Test]
@@ -32,8 +35,8 @@ namespace Rhino.Queues.Tests
 			//associcate everything with a batch
 			var send = outgoingMessageRepository.GetBatchOfMessagesToSend();
 
-			outgoingMessageRepository.ResetBatch(send.Id, new Uri("queue://localhost/test1"));
-
+			outgoingMessageRepository.ReturnedFailedBatchToQueue(send.Id, new Uri("queue://localhost/test1"),100, new Exception());
+			SystemTime.Now = () => new DateTime(2000, 1, 2);
 			// should get the test1 messages in a new batch
 			send = outgoingMessageRepository.GetBatchOfMessagesToSend();
 			Assert.AreEqual(1, send.DestinationBatches.Length);
@@ -88,6 +91,31 @@ namespace Rhino.Queues.Tests
 
 			Assert.AreEqual(2, send.DestinationBatches[0].Messages.Length);
 			Assert.AreEqual(2, send.DestinationBatches[1].Messages.Length);
+		}
+
+		[Test]
+		public void When_reseting_all_batches_will_set_send_time_to_current_time()
+		{
+			outgoingMessageRepository.Save(new Uri("queue://localhost/test1"), new QueueMessage());
+			outgoingMessageRepository.Save(new Uri("queue://localhost/test1"), new QueueMessage());
+
+			outgoingMessageRepository.Save(new Uri("queue://localhost/test2"), new QueueMessage());
+			outgoingMessageRepository.Save(new Uri("queue://localhost/test2"), new QueueMessage());
+
+			//associcate everything with a batch
+			outgoingMessageRepository.GetBatchOfMessagesToSend();
+
+			outgoingMessageRepository.ResetAllBatches();
+			
+			using (var env = new BerkeleyDbEnvironment("test"))
+			using (var tree = env.OpenTree("test.tree"))
+			using (var queue = env.OpenQueue("test.queue"))
+			{
+				foreach (var message in queue.SelectFromAssociation<QueueTransportMessage>(tree))
+				{
+					Assert.AreEqual(message.SendAt, SystemTime.Now());
+				}
+			}
 		}
 	}
 }

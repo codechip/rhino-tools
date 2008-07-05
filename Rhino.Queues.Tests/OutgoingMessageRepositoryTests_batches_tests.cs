@@ -14,10 +14,12 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => new DateTime(2000, 1, 1);
-			if (File.Exists("test.queue"))
-				File.Delete("test.queue");
-			outgoingMessageRepository = new OutgoingMessageRepository("test");
-			outgoingMessageRepository.CreateQueueStorage();
+			if (Directory.Exists("test"))
+				Directory.Delete("test", true);
+			Directory.CreateDirectory("test");
+
+			outgoingMessageRepository = new OutgoingMessageRepository("test", "test");
+			new BerkeleyDbPhysicalStorage("test").CreateOutputQueue("test");
 		}
 
 		[Test]

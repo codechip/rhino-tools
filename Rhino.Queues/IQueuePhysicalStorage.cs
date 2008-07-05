@@ -2,7 +2,7 @@ namespace Rhino.Queues
 {
 	public interface IQueuePhysicalStorage
 	{
-		void CreateQueue(string queueName);
+		void CreateInputQueue(string queueName);
 		string[] GetQueueNames();
 	}
 }

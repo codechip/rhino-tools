@@ -34,7 +34,7 @@ namespace Rhino.Queues.Tests
 		}
 
 		[Test]
-		public void When_notifying_queue_about_batch_failure_will_mark_batch_as_failed()
+		public void When_notifying_queue_about_batch_failure_will_return_failed_batches_to_queue()
 		{
 			var batch = new SingleDestinationMessageBatch
 			{
@@ -42,33 +42,9 @@ namespace Rhino.Queues.Tests
 				Destination = new Uri("queue://localhost/test")
 			};
 			queue.FailedToTransfer(batch, new Exception());
-			stubbedOutgoingMsgsRepos.Stub(x => x.MarkAllInBatchAsFailed(batch.BatchId, batch.Destination));
-		}
-
-		[Test]
-		public void When_notifying_queue_about_batch_failure_will_move_underliverable_messages_to_dead_letter_queue()
-		{
-			var batch = new SingleDestinationMessageBatch
-			{
-				BatchId = Guid.NewGuid(),
-				Destination = new Uri("queue://localhost/test")
-			};
-			var e = new Exception();
-			queue.FailedToTransfer(batch, e);
-			stubbedOutgoingMsgsRepos.Stub(x => x.MoveUnderliverableMessagesToDeadLetterQueue(batch.BatchId, batch.Destination, 100, e));
-		}
-
-		[Test]
-		public void When_notifying_queue_about_batch_failure_will_reset_batch()
-		{
-			var batch = new SingleDestinationMessageBatch
-			{
-				BatchId = Guid.NewGuid(),
-				Destination = new Uri("queue://localhost/test")
-			};
-			var e = new Exception();
-			queue.FailedToTransfer(batch, e);
-			stubbedOutgoingMsgsRepos.Stub(x => x.ResetBatch(batch.BatchId, batch.Destination));
+			stubbedOutgoingMsgsRepos.AssertWasCalled(
+				x => x.ReturnedFailedBatchToQueue(
+					Arg<Guid>.Is.Anything, Arg<Uri>.Is.Anything, Arg<int>.Is.Anything, Arg<Exception>.Is.Anything));
 		}
 	}
 }

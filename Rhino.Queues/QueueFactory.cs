@@ -92,7 +92,7 @@ namespace Rhino.Queues
 
 		public void CreateQueue(string queueName)
 		{
-			queuePhysicalStorage.CreateQueue(queueName);
+			queuePhysicalStorage.CreateInputQueue(queueName);
 			CreateLocalQueueInstance(queueName);
 		}
 

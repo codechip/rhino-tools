@@ -11,7 +11,7 @@ namespace BerkeleyDb.Tests
 		{
 			using (var environment = new BerkeleyDbEnvironment("test"))
 			{
-				environment.DeleteQueue("my-queue");
+				environment.Delete("my-queue");
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace BerkeleyDb.Tests
 			}
 
 			using (var environment = new BerkeleyDbEnvironment("test"))
-				Assert.IsTrue(environment.DoesQueueExists("my-queue"));
+				Assert.IsTrue(environment.Exists("my-queue"));
 		}
 
 		[Test]
@@ -49,7 +49,7 @@ namespace BerkeleyDb.Tests
 			}
 
 			using (var environment = new BerkeleyDbEnvironment("test"))
-				Assert.IsFalse(environment.DoesQueueExists("my-queue"));
+				Assert.IsFalse(environment.Exists("my-queue"));
 		}
 	}
 }
