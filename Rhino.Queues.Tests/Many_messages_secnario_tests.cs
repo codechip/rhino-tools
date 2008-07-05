@@ -15,6 +15,8 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
+			SystemTime.Now = () => DateTime.Now;
+
 			if (Directory.Exists("factory1"))
 				Directory.Delete("factory1", true);
 			if (Directory.Exists("factory2"))
@@ -67,7 +69,8 @@ namespace Rhino.Queues.Tests
 			}
 			doneGettingMessages.WaitOne();
 			int prev = -1;
-			values.Sort();
+			Assert.AreEqual(250, values.Count);
+			values.Sort();// we do not give any ordering guarantees
 			foreach (var val in values)
 			{
 				Assert.AreEqual(prev + 1, val);

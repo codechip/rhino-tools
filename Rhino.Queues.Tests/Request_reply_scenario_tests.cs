@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using MbUnit.Framework;
@@ -14,6 +15,13 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
+			SystemTime.Now = () => DateTime.Now;
+
+			if (Directory.Exists("factory1"))
+				Directory.Delete("factory1", true);
+			if (Directory.Exists("factory2"))
+				Directory.Delete("factory2", true);
+			
 			factory1 = new QueueConfiguration()
 				.QueuesDirectory("factory1")
 				.LocalUri("queue://localhost/factory1")

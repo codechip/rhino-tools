@@ -14,7 +14,7 @@ namespace Rhino.Queues
 	public class QueueFactory : IQueueFactoryImpl
 	{
 		private readonly Uri localUri;
-		private readonly ReaderWriterLock locker = new ReaderWriterLock();
+		private readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 		private readonly IOutgoingMessageRepository outgoingMessageRepository;
 		private readonly IQueueListener queueListener;
 
@@ -55,14 +55,14 @@ namespace Rhino.Queues
 
 		public IQueueImpl[] GetAllLocalQueues()
 		{
-			locker.AcquireReaderLock(-1);
+			locker.EnterReadLock();
 			try
 			{
 				return queuesByName.Values.Cast<IQueueImpl>().ToArray();
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitReadLock();
 			}
 		}
 
@@ -108,13 +108,13 @@ namespace Rhino.Queues
 			AssertQueueNameIsNotOutgoingQueue(localQueueName);
 			if (IsLocal(queueUrl))
 				return GetLocalQueue(localQueueName);
-			locker.AcquireReaderLock(-1);
+			locker.EnterUpgradeableReadLock();
 			try
 			{
 				ILocalQueue queue;
 				if (queuesByDestinationUrl.TryGetValue(queueUrl, out queue) == false)
 				{
-					var writerLock = locker.UpgradeToWriterLock(-1);
+					locker.EnterWriteLock();
 					try
 					{
 						if (queuesByDestinationUrl.TryGetValue(queueUrl, out queue) == false)
@@ -128,14 +128,14 @@ namespace Rhino.Queues
 					}
 					finally
 					{
-						locker.DowngradeFromWriterLock(ref writerLock);
+						locker.ExitWriteLock();
 					}
 				}
 				return queue;
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitUpgradeableReadLock();
 			}
 		}
 
@@ -143,27 +143,27 @@ namespace Rhino.Queues
 		{
 			AssertQueueNameIsNotOutgoingQueue(queueName);
 			ILocalQueue queue;
-			locker.AcquireReaderLock(-1);
+			locker.EnterReadLock();
 			try
 			{
 				queuesByName.TryGetValue(queueName, out queue);
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitReadLock();
 			}
 			return queue;
 		}
 
 		private void CreateLocalQueueInstance(string queueName)
 		{
-			locker.AcquireReaderLock(-1);
+			locker.EnterUpgradeableReadLock();
 			try
 			{
 				ILocalQueue queue;
 				if (queuesByName.TryGetValue(queueName, out queue) == false)
 				{
-					var writerLock = locker.UpgradeToWriterLock(-1);
+					locker.EnterWriteLock();
 					try
 					{
 						if (queuesByName.TryGetValue(queueName, out queue) == false)
@@ -177,14 +177,14 @@ namespace Rhino.Queues
 					}
 					finally
 					{
-						locker.DowngradeFromWriterLock(ref writerLock);
+						locker.ExitWriteLock();
 					}
 				}
 				return;
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitUpgradeableReadLock();
 			}
 		}
 

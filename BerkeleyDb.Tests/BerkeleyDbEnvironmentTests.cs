@@ -10,6 +10,10 @@ namespace BerkeleyDb.Tests
 		[SetUp]
 		public void Setup()
 		{
+
+			if (Directory.Exists("test"))
+				Directory.Delete("test", true);
+			Directory.CreateDirectory("test");
 			using (var environment = new BerkeleyDbEnvironment("test"))
 				environment.Delete("my-queue");
 		}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Collections;
 using MbUnit.Framework;
@@ -12,6 +13,10 @@ namespace BerkeleyDb.Tests
 		[SetUp]
 		public void Setup()
 		{
+			if (Directory.Exists("test"))
+				Directory.Delete("test", true);
+			Directory.CreateDirectory("test");
+
 			using (var environment = new BerkeleyDbEnvironment("test"))
 			{
 				environment.Delete("my-tree");

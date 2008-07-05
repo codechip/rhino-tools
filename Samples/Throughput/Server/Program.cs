@@ -9,7 +9,7 @@ namespace Server
 	{
 		static void Main(string[] args)
 		{
-		//	BasicConfigurator.Configure();
+			BasicConfigurator.Configure();
 			IQueueFactory factory = new QueueConfiguration()
 				.LocalUri("queue://localhost/server")
 				.WorkerThreads(1)

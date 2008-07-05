@@ -9,17 +9,17 @@ namespace BerkeleyDb
 	{
 		private static readonly IDictionary<string, EnvContainer> environmentsByFullPath =
 			new Dictionary<string, EnvContainer>(StringComparer.InvariantCultureIgnoreCase);
-		private static readonly ReaderWriterLock locker = new ReaderWriterLock();
+		private static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
 		private static Env AquireEnv(string fullPath)
 		{
-			locker.AcquireReaderLock(-1);
+			locker.EnterUpgradeableReadLock();
 			try
 			{
 				EnvContainer container;
 				if (environmentsByFullPath.TryGetValue(fullPath, out container))
 					return container.AddRef();
-				var cookie = locker.UpgradeToWriterLock(-1);
+				locker.EnterWriteLock();
 				try
 				{
 					if (environmentsByFullPath.TryGetValue(fullPath, out container))
@@ -37,18 +37,18 @@ namespace BerkeleyDb
 				}
 				finally
 				{
-					locker.DowngradeFromWriterLock(ref cookie);
+					locker.ExitWriteLock();
 				}
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitUpgradeableReadLock();
 			}
 		}
 
 		private static void ReleaseEnv(string fullPath)
 		{
-			locker.AcquireReaderLock(-1);
+			locker.EnterUpgradeableReadLock();
 			try
 			{
 				EnvContainer container;
@@ -56,7 +56,7 @@ namespace BerkeleyDb
 					return;
 				if (container.Release() == false)
 					return;
-				var cookie = locker.UpgradeToWriterLock(-1);
+				locker.EnterWriteLock();
 				try
 				{
 					if (container.CanDispose == false)
@@ -66,12 +66,12 @@ namespace BerkeleyDb
 				}
 				finally
 				{
-					locker.DowngradeFromWriterLock(ref cookie);
+					locker.ExitWriteLock();
 				}
 			}
 			finally
 			{
-				locker.ReleaseReaderLock();
+				locker.ExitUpgradeableReadLock();
 			}
 		}
 
