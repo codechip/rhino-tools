@@ -31,10 +31,9 @@ namespace BerkeleyDb
 		public void Commit()
 		{
 			inner.Commit(Txn.CommitMode.None);
-			ExecuteSyncronizations();
 		}
 
-		private void ExecuteSyncronizations()
+		private void ExecuteDisposeSyncronizations()
 		{
 			foreach (var action in actions)
 			{
@@ -46,13 +45,12 @@ namespace BerkeleyDb
 		public void Rollback()
 		{
 			inner.Abort();
-			ExecuteSyncronizations();
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			inner.Dispose();
-			ExecuteSyncronizations();
+			ExecuteDisposeSyncronizations();
 			environment.TransactionDisposed(this, parent);
 		}
 
@@ -62,7 +60,7 @@ namespace BerkeleyDb
 			return new BerkeleyDbTransaction(environment, this, transaction);
 		}
 
-		public void RegisterSyncronization(Action action)
+		public void RegisterDisposeSyncronization(Action action)
 		{
 			actions.Add(action);
 		}

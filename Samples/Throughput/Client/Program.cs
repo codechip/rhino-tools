@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using log4net.Config;
 using Rhino.Queues;
@@ -9,6 +10,7 @@ namespace Client
 	{
 		static void Main(string[] args)
 		{
+		//	Process.Start(@"..\..\..\Server\bin\debug\Server.exe");
 			BasicConfigurator.Configure(); 
 			IQueueFactory factory = new QueueConfiguration()
 				.LocalUri("queue://localhost/client")

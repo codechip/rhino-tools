@@ -61,6 +61,7 @@
     <Compile Include="IterationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SequentialGuidTests.cs" />
+    <Compile Include="VerificationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\SharedLibs\libdb45.dll">
