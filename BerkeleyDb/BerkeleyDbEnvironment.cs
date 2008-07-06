@@ -51,27 +51,27 @@ namespace BerkeleyDb
 			locker.EnterUpgradeableReadLock();
 			try
 			{
-				EnvContainer container;
-				if (environmentsByFullPath.TryGetValue(fullPath, out container) == false)
-					return;
-				if (container.Release() == false)
-					return;
-				locker.EnterWriteLock();
-				try
-				{
-					if (container.CanDispose == false)
-						return ;
-					environmentsByFullPath.Remove(fullPath);
-					container.Dispose();
-				}
-				finally
-				{
-					locker.ExitWriteLock();
-				}
+			    EnvContainer container;
+			    if (environmentsByFullPath.TryGetValue(fullPath, out container) == false)
+			        return;
+			    if (container.Release() == false)
+			        return;
+			    locker.EnterWriteLock();
+			    try
+			    {
+			        if (container.CanDispose == false)
+			            return ;
+			        environmentsByFullPath.Remove(fullPath);
+			        container.Dispose();
+			    }
+			    finally
+			    {
+			        locker.ExitWriteLock();
+			    }
 			}
 			finally
 			{
-				locker.ExitUpgradeableReadLock();
+			    locker.ExitUpgradeableReadLock();
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace BerkeleyDb
 				action();
 				return;
 			}
-			CurrentTransaction.RegisterSyncronization(action);
+			CurrentTransaction.RegisterDisposeSyncronization(action);
 		}
 
 		public bool Exists(string queueName)

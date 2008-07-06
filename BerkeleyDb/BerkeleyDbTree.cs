@@ -47,8 +47,7 @@ namespace BerkeleyDb
 			if (transaction == null)
 				database.Dispose();
 			else
-				transaction.RegisterSyncronization(database.Close);
-
+				transaction.RegisterDisposeSyncronization(database.Close);
 		}
 
 		private object GetInternal(byte[] keyBytes)
