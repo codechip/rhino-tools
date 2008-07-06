@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -107,11 +106,9 @@ namespace Rhino.Queues.Tests
 
 			outgoingMessageRepository.ResetAllBatches();
 			
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var tree = env.OpenTree("test.tree"))
-			using (var queue = env.OpenQueue("test.queue"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				foreach (var message in queue.SelectFromAssociation<QueueTransportMessage>(tree))
+				foreach (var message in repository.GetTransportMessages())
 				{
 					Assert.AreEqual(message.SendAt, SystemTime.Now());
 				}

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -103,10 +102,9 @@ namespace Rhino.Queues.Tests
 
 			var message = incomingMessageRepository.GetEarliestMessage();
 			Assert.IsNotNull(message);
-			using(var env = new BerkeleyDbEnvironment("test"))
-			using(var queue = env.OpenQueue("test.queue"))
+			using(var repository = new IncomingTestRepository("test"))
 			{
-				Assert.IsNull(queue.Consume());
+				Assert.IsNull(repository.GetLatestMessage());
 			}
 		}
 

@@ -65,6 +65,7 @@
     <Compile Include="CommandFactoryTests.cs" />
     <Compile Include="FireAndForgetTests.cs" />
     <Compile Include="IncomingMessageRepositoryTests.cs" />
+    <Compile Include="IncomingTestRepository.cs" />
     <Compile Include="IntegrationTesting.cs" />
     <Compile Include="LogSpy.cs" />
     <Compile Include="Many_messages_secnario_tests.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Send_to_remote_command_tests.cs" />
     <Compile Include="Sqlite_can_work_with_system_transactions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OutgoingTestRepository.cs" />
     <Compile Include="WorkerFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -44,11 +43,9 @@ namespace Rhino.Queues.Tests
 		public void When_saving_will_set_send_at_to_current_time()
 		{
 			outgoingMessageRepository.Save(new Uri("queue://test/test"), new QueueMessage());
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var tree = env.OpenTree("test.tree"))
-			using (var queue = env.OpenQueue("test.queue"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var msg = (QueueTransportMessage)tree.Get(queue.Consume());
+				var msg = repository.GetLatestMessage();
 				Assert.AreEqual(new DateTime(2000, 1, 1),
 					msg.SendAt);
 			}
