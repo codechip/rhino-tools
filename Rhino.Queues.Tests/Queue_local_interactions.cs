@@ -3,6 +3,7 @@ using System.Threading;
 using System.Transactions;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -25,7 +26,7 @@ namespace Rhino.Queues.Tests
 		{
 			stubbedOutgoingMsgsRepos = MockRepository.GenerateStub<IOutgoingMessageRepository>();
 			stubbedIncomingMsgsRepos = MockRepository.GenerateStub<IIncomingMessageRepository>();
-			queue = new Queue(new Uri("queue://my/test"), stubbedOutgoingMsgsRepos, stubbedIncomingMsgsRepos);
+			queue = new Queue(new Uri("queue://my/test"), stubbedOutgoingMsgsRepos, stubbedIncomingMsgsRepos, QueueType.Input);
 		}
 
 		[Test]

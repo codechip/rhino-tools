@@ -1,6 +1,7 @@
 using System.Threading;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
 

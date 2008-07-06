@@ -1,6 +1,7 @@
 using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 
 namespace Rhino.Queues.Tests
 {

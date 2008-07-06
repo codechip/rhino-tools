@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Transactions;
-using BerkeleyDb;
+using Rhino.Queues.Data;
 using Rhino.Queues.Workers;
 
 namespace Rhino.Queues.Impl
@@ -11,15 +11,18 @@ namespace Rhino.Queues.Impl
 		private readonly IIncomingMessageRepository incomingMessageRepository;
 		private readonly IOutgoingMessageRepository outgoingMessageRepository;
 		private readonly AutoResetEvent waitForItemInQueue = new AutoResetEvent(false);
+		private QueueType type;
 
-		public Queue(Uri url,
-					 IOutgoingMessageRepository outgoingMessageRepository,
-					 IIncomingMessageRepository incomingMessageRepository
-			)
+		public Queue(
+			Uri url,
+			IOutgoingMessageRepository outgoingMessageRepository,
+			IIncomingMessageRepository incomingMessageRepository,
+			QueueType queueType)
 		{
 			Url = url;
 			this.outgoingMessageRepository = outgoingMessageRepository;
 			this.incomingMessageRepository = incomingMessageRepository;
+			type = queueType;
 		}
 
 		public Uri Url { get; private set; }
@@ -97,7 +100,10 @@ namespace Rhino.Queues.Impl
 
 		public void PurgeAllMessages()
 		{
-			incomingMessageRepository.PurgeAllMessages();
+			if (type == QueueType.Input)
+				incomingMessageRepository.PurgeAllMessages();
+			else
+				outgoingMessageRepository.PurgeAllMessages();
 		}
 
 		public QueueMessage Recieve()

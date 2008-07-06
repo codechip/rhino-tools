@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using MbUnit.Framework;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 using System.Linq;
 
@@ -12,9 +13,13 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
-			if (Directory.Exists("Queues"))
-				Directory.Delete("Queues", true);
-			Directory.CreateDirectory("Queues");
+			TestEnvironment.Clear("Queues");
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			TestEnvironment.Clear("Queues");
 		}
 
 		[Test]
@@ -34,7 +39,7 @@ namespace Rhino.Queues.Tests
 		[Test]
 		public void Upon_start_will_create_outgoing_queue_if_does_not_exists()
 		{
-			bool queryExists = new BerkeleyDbPhysicalStorage("Queues").GetQueueNames()
+			bool queryExists = new QueuePhysicalStorage("Queues").GetOutgoingQueueNames()
 				.Contains("outgoing-msgs");
 			Assert.IsFalse(queryExists); 
 			
@@ -43,8 +48,8 @@ namespace Rhino.Queues.Tests
 				.BuildQueueFactory()
 				.Dispose();
 
-			queryExists = new BerkeleyDbPhysicalStorage("Queues").GetQueueNames()
-				.Contains("outgoing-msgs");
+			queryExists = new QueuePhysicalStorage("Queues").GetOutgoingQueueNames()
+				.Contains("outgoing-msgs",StringComparer.InvariantCultureIgnoreCase);
 			Assert.IsTrue(queryExists);
 		}
 
@@ -63,7 +68,7 @@ namespace Rhino.Queues.Tests
 			var outgoing = new OutgoingMessageRepository("outgoing-msgs", "Queues");
 			var incoming1 = new IncomingMessageRepository("test", "Queues");
 			var incoming2 = new IncomingMessageRepository("foo", "Queues");
-			var storage = new BerkeleyDbPhysicalStorage("Queues");
+			var storage = new QueuePhysicalStorage("Queues");
 			storage.CreateOutputQueue(outgoing.Name);
 			storage.CreateInputQueue(incoming1.Name);
 			storage.CreateInputQueue(incoming2.Name);
@@ -91,7 +96,7 @@ namespace Rhino.Queues.Tests
 		public void If_local_uri_queue_does_not_exist_will_create_it()
 		{
 			Assert.IsFalse(
-				new BerkeleyDbPhysicalStorage("Queues").GetQueueNames().Contains("my-fun")
+				new QueuePhysicalStorage("Queues").GetIncomingQueueNames().Contains("my-fun")
 				);
 
 			new QueueConfiguration()
@@ -103,7 +108,7 @@ namespace Rhino.Queues.Tests
 				.Dispose();
 
 			Assert.IsTrue(
-				new BerkeleyDbPhysicalStorage("Queues").GetQueueNames().Contains("my-fun")
+				new QueuePhysicalStorage("Queues").GetIncomingQueueNames().Contains("my-fun")
 				);
 		}
 	}

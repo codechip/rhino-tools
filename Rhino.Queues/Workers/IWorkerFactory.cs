@@ -1,3 +1,4 @@
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Workers

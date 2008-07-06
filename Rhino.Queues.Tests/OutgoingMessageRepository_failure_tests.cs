@@ -1,7 +1,7 @@
 using System;
-using System.IO;
 using System.Linq;
 using MbUnit.Framework;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -15,12 +15,15 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => new DateTime(2000, 1, 1);
-			if (Directory.Exists("test"))
-				Directory.Delete("test", true);
-			Directory.CreateDirectory("test");
-
+			TestEnvironment.Clear("test");
 			outgoingMessageRepository = new OutgoingMessageRepository("test", "test");
-			new BerkeleyDbPhysicalStorage("test").CreateOutputQueue("test");
+			new QueuePhysicalStorage("test").CreateOutputQueue("test");
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			TestEnvironment.Clear("test");
 		}
 
 		[Test]
@@ -103,10 +106,10 @@ namespace Rhino.Queues.Tests
 			using (var repository = new OutgoingTestRepository("test"))
 			{
 				int count = 0;
-				foreach (var message in repository.GetTransportMessages())
+				foreach (var failure in repository.GetTransportMessagesFailures())
 				{
 					count += 1;
-					Assert.AreEqual(expectedFailureCountForEachMessage, message.Message.FailureCount);
+					Assert.AreEqual(expectedFailureCountForEachMessage, failure);
 				}
 				Assert.AreEqual(2,count);
 			}
@@ -171,7 +174,7 @@ namespace Rhino.Queues.Tests
 			using (var repository = new OutgoingTestRepository("test"))
 			{
 				var entry = repository.GetDeadLetters().Single();
-				Assert.AreEqual("foo", entry.Exception.Message);
+				Assert.AreEqual("System.ArgumentException: foo", entry.Exception.Message);
 			}
 		}
 

@@ -28,7 +28,5 @@ namespace Rhino.Queues
 		public byte[] Body { get; set; }
 
 		public Guid? BatchId { get; set; }
-
-		public int FailureCount { get; set; }
 	}
 }

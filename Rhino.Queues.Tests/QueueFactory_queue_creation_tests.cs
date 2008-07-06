@@ -1,6 +1,7 @@
 using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 using Rhino.Queues.Workers;
 
 namespace Rhino.Queues.Tests
@@ -12,7 +13,7 @@ namespace Rhino.Queues.Tests
 		private IOutgoingMessageRepository stubbedOutgoingMessageRepository;
 		private IWorkerFactory stubbedWorkerFactory;
 		private IQueueListener stubbedQueueListener;
-		private IQueuePhysicalStorage stubbedQueryPhysicalStorage;
+		private IQueuePhysicalStorage stubbedQueuePhysicalStorage;
 
 		[SetUp]
 		public void Setup()
@@ -20,15 +21,19 @@ namespace Rhino.Queues.Tests
 			stubbedOutgoingMessageRepository = MockRepository.GenerateStub<IOutgoingMessageRepository>();
 			stubbedWorkerFactory = MockRepository.GenerateStub<IWorkerFactory>();
 			stubbedQueueListener = MockRepository.GenerateStub<IQueueListener>();
-			stubbedQueryPhysicalStorage = MockRepository.GenerateStub<IQueuePhysicalStorage>();
+			stubbedQueuePhysicalStorage = MockRepository.GenerateStub<IQueuePhysicalStorage>();
+
+			stubbedQueuePhysicalStorage.Stub(x => x.GetIncomingQueueNames()).Return(new string[0]);
+			stubbedQueuePhysicalStorage.Stub(x => x.GetOutgoingQueueNames()).Return(new string[0]);
+
 			queueFactory = new QueueFactory(new Uri("queue://localhost/test"),
 			                                Environment.CurrentDirectory,
-											stubbedQueryPhysicalStorage,
+											stubbedQueuePhysicalStorage,
 			                                stubbedWorkerFactory,
 			                                stubbedQueueListener,
 			                                stubbedOutgoingMessageRepository);
 
-			stubbedQueryPhysicalStorage.Stub(x => x.GetQueueNames())
+			stubbedQueuePhysicalStorage.Stub(x => x.GetIncomingQueueNames())
 				.Return(new[] {"foo"})
 				.Repeat.Any();
 			queueFactory.Initialize();
@@ -64,7 +69,7 @@ namespace Rhino.Queues.Tests
 		public void When_creating_new_queue_will_call_queue_physical_storage_to_perform_the_work()
 		{
 			queueFactory.CreateQueue("foo2");
-			stubbedQueryPhysicalStorage.AssertWasCalled(x=>x.CreateInputQueue("foo2"));
+			stubbedQueuePhysicalStorage.AssertWasCalled(x=>x.CreateInputQueue("foo2"));
 		}
 
 		[Test]

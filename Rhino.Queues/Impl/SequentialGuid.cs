@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace BerkeleyDb
+namespace Rhino.Queues.Impl
 {
 	public static class SequentialGuid
 	{

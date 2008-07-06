@@ -1,5 +1,5 @@
 using System;
-using BerkeleyDb;
+using Rhino.Queues.Impl;
 
 namespace Rhino.Queues
 {

@@ -1,6 +1,7 @@
 using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
@@ -23,6 +24,9 @@ namespace Rhino.Queues.Tests
 			stubbedWorkerFactory = MockRepository.GenerateStub<IWorkerFactory>();
 			stubbedQueueListener = MockRepository.GenerateStub<IQueueListener>();
 			stubbedQueuePhysicalStorage = MockRepository.GenerateStub<IQueuePhysicalStorage>();
+			stubbedQueuePhysicalStorage.Stub(x => x.GetIncomingQueueNames()).Return(new string[0]);
+			stubbedQueuePhysicalStorage.Stub(x => x.GetOutgoingQueueNames()).Return(new string[0]);
+
 			queueFactory = new QueueFactory(new Uri("queue://localhost/test"),
 				Environment.CurrentDirectory,
 				stubbedQueuePhysicalStorage,
@@ -30,7 +34,7 @@ namespace Rhino.Queues.Tests
 				stubbedQueueListener,
 				stubbedOutgoingMessageRepository);
 
-			stubbedQueuePhysicalStorage.Stub(x => x.GetQueueNames())
+			stubbedQueuePhysicalStorage.Stub(x => x.GetIncomingQueueNames())
 				.Return(new[] {"a", "b", "c"})
 				.Repeat.Any();
 		}

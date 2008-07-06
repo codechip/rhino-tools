@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using MbUnit.Framework;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -14,12 +14,18 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => new DateTime(2000, 1, 1);
-			if (Directory.Exists("test"))
-				Directory.Delete("test", true);
-			Directory.CreateDirectory("test");
+			TestEnvironment.Clear("test");
+			
 
 			outgoingMessageRepository = new OutgoingMessageRepository("test", "test");
-			new BerkeleyDbPhysicalStorage("test").CreateOutputQueue("test");
+			new QueuePhysicalStorage("test").CreateOutputQueue("test");
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			TestEnvironment.Clear("test");
+			
 		}
 
 		[Test]

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Transactions;
 using MbUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -17,7 +18,7 @@ namespace Rhino.Queues.Tests
 			var stubbedIncomingMessageRepository = MockRepository.GenerateStub<IIncomingMessageRepository>();
 			var queue = new Queue(new Uri("queue://localhost/testQueue"),
 			                      MockRepository.GenerateStub<IOutgoingMessageRepository>(),
-			                      stubbedIncomingMessageRepository);
+			                      stubbedIncomingMessageRepository, QueueType.Input);
 
 			stubbedIncomingMessageRepository
 				.Stub(x => x.GetEarliestMessage())
@@ -41,7 +42,7 @@ namespace Rhino.Queues.Tests
 			var stubbedIncomingMessageRepository = MockRepository.GenerateStub<IIncomingMessageRepository>();
 			var queue = new Queue(new Uri("queue://localhost/testQueue"),
 								  MockRepository.GenerateStub<IOutgoingMessageRepository>(),
-								  stubbedIncomingMessageRepository);
+								  stubbedIncomingMessageRepository, QueueType.Input);
 
 			stubbedIncomingMessageRepository
 				.Stub(x => x.GetEarliestMessage())
@@ -71,7 +72,7 @@ namespace Rhino.Queues.Tests
 			var stubbedIncomingMessageRepository = MockRepository.GenerateStub<IIncomingMessageRepository>();
 			var queue = new Queue(new Uri("queue://localhost/testQueue"),
 								  MockRepository.GenerateStub<IOutgoingMessageRepository>(),
-								  stubbedIncomingMessageRepository);
+								  stubbedIncomingMessageRepository, QueueType.Input);
 
 			// do not return a value, marking that someone else
 			// has already dealt with this message, so we don't have to
@@ -99,7 +100,7 @@ namespace Rhino.Queues.Tests
 
 			var queue = new Queue(new Uri("queue://localhost/testQueue"),
 								  MockRepository.GenerateStub<IOutgoingMessageRepository>(),
-								  stubbedIncomingMessageRepository);
+								  stubbedIncomingMessageRepository, QueueType.Input);
 
 			var callCount = 0;
 			var e = new ManualResetEvent(false);

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using MbUnit.Framework;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
@@ -13,11 +14,17 @@ namespace Rhino.Queues.Tests
 		[SetUp]
 		public void Setup()
 		{
-			if (Directory.Exists("test"))
-				Directory.Delete("test", true);
-			Directory.CreateDirectory("test");
+			SystemTime.Now = () => new DateTime(2000, 1, 1); 
+			TestEnvironment.Clear("test");
+			
 			incomingMessageRepository = new IncomingMessageRepository("test","test");
-			new BerkeleyDbPhysicalStorage("test").CreateInputQueue("test");
+			new QueuePhysicalStorage("test").CreateInputQueue("test");
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			TestEnvironment.Clear("test");	
 		}
 
 		[Test]
@@ -44,8 +51,11 @@ namespace Rhino.Queues.Tests
 			};
 			msg2.Headers["mark"] = "2";
 
+			SystemTime.Now = () => new DateTime(2000, 1, 1);
 			incomingMessageRepository.Save(msg1);
+			SystemTime.Now = () => new DateTime(2000, 1, 2);
 			incomingMessageRepository.Save(msg2);
+
 
 			var message = incomingMessageRepository.GetEarliestMessage();
 			Assert.AreEqual("1", message.Headers["mark"]);
@@ -67,8 +77,9 @@ namespace Rhino.Queues.Tests
 				CorrelationId = Guid.NewGuid(),
 			};
 			msg2.Headers["mark"] = "2";
-
+			SystemTime.Now = () => new DateTime(2000, 1, 1);
 			incomingMessageRepository.Save(msg1);
+			SystemTime.Now = () => new DateTime(2000, 1, 2);
 			incomingMessageRepository.Save(msg2);
 
 			var message = incomingMessageRepository.GetEarliestMessage();

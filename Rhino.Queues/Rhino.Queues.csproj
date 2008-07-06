@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=2.0.1.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLibs\log4net.dll</HintPath>
@@ -40,41 +44,38 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AcceptMessagesCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandFactory.cs" />
     <Compile Include="Commands\SendToRemoteServerCommand.cs" />
+    <Compile Include="Data\DataAccessMixin.cs" />
+    <Compile Include="Data\Queries.cs" />
     <Compile Include="Extensions\QueueExtensions.cs" />
     <Compile Include="ILocalQueue.cs" />
-    <Compile Include="Impl\BerkeleyDbPhysicalStorage.cs" />
+    <Compile Include="Impl\QueuePhysicalStorage.cs" />
     <Compile Include="Impl\FailedQueueMessage.cs" />
     <Compile Include="Impl\MessageBatchKey.cs" />
     <Compile Include="Impl\QueueTransportMessage.cs" />
+    <Compile Include="Impl\QueueType.cs" />
     <Compile Include="IQueueListener.cs" />
     <Compile Include="IQueuePhysicalStorage.cs" />
     <Compile Include="IRemoteQueue.cs" />
     <Compile Include="QueueConfiguration.cs" />
-    <Compile Include="IIncomingMessageRepository.cs" />
+    <Compile Include="Data\IIncomingMessageRepository.cs" />
     <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Impl\FireAndForget.cs" />
-    <Compile Include="Impl\OutgoingMessageRepository.cs" />
+    <Compile Include="Data\OutgoingMessageRepository.cs" />
     <Compile Include="Impl\QueueListener.cs" />
+    <Compile Include="Impl\SequentialGuid.cs" />
     <Compile Include="Workers\IQueueWorker.cs" />
     <Compile Include="Workers\IWorkerFactory.cs" />
     <Compile Include="Workers\QueueWorker.cs" />
     <Compile Include="Impl\ValidationUtil.cs" />
-    <Compile Include="IOutgoingMessageRepository.cs" />
-    <Compile Include="Impl\IncomingMessageRepository.cs" />
+    <Compile Include="Data\IOutgoingMessageRepository.cs" />
+    <Compile Include="Data\IncomingMessageRepository.cs" />
     <Compile Include="Impl\Queue.cs" />
     <Compile Include="Impl\IQueueImpl.cs" />
     <Compile Include="IQueueFactory.cs" />
@@ -86,12 +87,6 @@
     <Compile Include="SingleDestinationMessageBatch.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="Workers\WorkerFactory.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BerkeleyDb\BerkeleyDb.csproj">
-      <Project>{65828F6C-7D61-475E-850C-B380FD04FB7B}</Project>
-      <Name>BerkeleyDb</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

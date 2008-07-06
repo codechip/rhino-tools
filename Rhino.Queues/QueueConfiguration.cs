@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Rhino.Queues.Data;
 using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
@@ -51,11 +52,11 @@ namespace Rhino.Queues
 			if (Directory.Exists(queuesDirectory) == false)
 				Directory.CreateDirectory(queuesDirectory);
 
-			var queuePhysicalStorage = new BerkeleyDbPhysicalStorage(queuesDirectory);
+			var queuePhysicalStorage = new QueuePhysicalStorage(queuesDirectory);
 			var outgoingQueueName = "outgoing-msgs";
 
 			var repository = new OutgoingMessageRepository(outgoingQueueName, queuesDirectory);
-			if (queuePhysicalStorage.GetQueueNames().Contains(outgoingQueueName) == false)
+			if (queuePhysicalStorage.GetOutgoingQueueNames().Contains(outgoingQueueName, StringComparer.InvariantCultureIgnoreCase) == false)
 			{
 				queuePhysicalStorage.CreateOutputQueue(outgoingQueueName);
 			}
@@ -69,7 +70,7 @@ namespace Rhino.Queues
 				new QueueListener(localUri),
 				repository);
 
-			if(queuePhysicalStorage.GetQueueNames().Contains(localUri.ToQueueName())==false)
+			if (queuePhysicalStorage.GetIncomingQueueNames().Contains(localUri.ToQueueName(), StringComparer.InvariantCultureIgnoreCase) == false)
 			{
 				queuePhysicalStorage.CreateInputQueue(localUri.ToQueueName());
 			}

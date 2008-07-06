@@ -1,71 +1,120 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BerkeleyDb;
+using FirebirdSql.Data.FirebirdClient;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
 {
 	public class OutgoingTestRepository : IDisposable
 	{
-		private readonly string name;
+		private readonly string connectionString;
 
 		public OutgoingTestRepository(string name)
 		{
-			this.name = name;
+			connectionString = QueuePhysicalStorage.GetConnectionString(name, name);
 		}
 
 		public QueueTransportMessage[] GetTransportMessages()
 		{
 			var msgs = new List<QueueTransportMessage>();
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var tx = env.BeginTransaction())
-			using (var tree = env.OpenTree(name + ".tree"))
-			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				foreach (var message in queue.SelectFromAssociation<QueueTransportMessage>(tree))
+				connection.Open(); 
+				cmd.CommandText = "SELECT Destination, Data, SendAt FROM OutgoingMessages";
+				using (var reader = cmd.ExecuteReader())
 				{
-					msgs.Add(message);
+					while (reader.Read())
+					{
+						msgs.Add(new QueueTransportMessage
+						{
+							Destination = new Uri(reader.GetString(0)),
+							Message = DataAccessMixin.Deserialize((byte[]) reader[1]),
+							SendAt = reader.GetDateTime(2)
+						});
+					}
 				}
-				tx.Commit();
+				return msgs.ToArray();
 			}
-			return msgs.ToArray();
 		}
+
+		public int[] GetTransportMessagesFailures()
+		{
+			var msgs = new List<int>();
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
+			{
+				connection.Open();
+				cmd.CommandText = "SELECT FailureCount FROM OutgoingMessages";
+				using (var reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						msgs.Add(reader.GetInt32(0));
+					}
+				}
+				return msgs.ToArray();
+			}
+		}
+
 
 		public FailedQueueMessage[] GetDeadLetters()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var dead = env.OpenTree(name + ".deadLetters"))
+			var msgs = new List<FailedQueueMessage>();
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				return dead.Select().Select(x=>x.Value)
-					.Cast<FailedQueueMessage>().ToArray();
+				connection.Open();
+				cmd.CommandText = "SELECT Destination, Data, FinalFailureAt, LastException FROM FailedMessages";
+				using (var reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						msgs.Add(new FailedQueueMessage
+						{
+							Destination = new Uri(reader.GetString(0)),
+							Message = DataAccessMixin.Deserialize((byte[])reader[1]),
+							FinalFailureAt = reader.GetDateTime(2),
+                            Exception = new Exception(reader.GetString(3))
+						});
+					}
+				}
+				return msgs.ToArray();
 			}
 		}
 
 		public int GetCountInBatches()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var batches = env.OpenTree(name + ".batches"))
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				return batches.Select().Count();
+				connection.Open();
+				cmd.CommandText = "SELECT COUNT(*) FROM OutgoingMessages WHERE BatchId IS NOT NULL";
+				return (int) cmd.ExecuteScalar();
 			}
 		}
 
 		public int GetCountInDeadLetters()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var dead = env.OpenTree(name + ".deadLetters"))
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				return dead.Select().Count();
+				connection.Open();
+				cmd.CommandText = "SELECT COUNT(*) FROM FailedMessages";
+				return (int)cmd.ExecuteScalar();
 			}
 		}
 
 		public int GetCountInActiveMessages()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				return queue.Select().Cast<Guid>().Count();
+				connection.Open();
+				cmd.CommandText = "SELECT COUNT(*) FROM OutgoingMessages WHERE BatchId IS NULL";
+				return (int)cmd.ExecuteScalar();
 			}
 		}
 
@@ -75,13 +124,11 @@ namespace Rhino.Queues.Tests
 
 		public QueueTransportMessage GetLatestMessage()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var tree = env.OpenTree(name + ".tree"))
-			using (var queue = env.OpenQueue(name + ".queue"))
-			{
-				return (QueueTransportMessage)tree.Get(queue.Consume());
-				
-			}
+			return (
+			       	from m in GetTransportMessages()
+			       	orderby m.SendAt descending
+			       	select m
+			       ).FirstOrDefault();
 		}
 	}
 }

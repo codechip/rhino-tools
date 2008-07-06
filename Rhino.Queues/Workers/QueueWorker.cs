@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Rhino.Queues.Commands;
+using Rhino.Queues.Data;
 using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Workers

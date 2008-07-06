@@ -1,23 +1,35 @@
 using System;
-using BerkeleyDb;
+using System.Collections.Generic;
+using FirebirdSql.Data.FirebirdClient;
+using Rhino.Queues.Data;
+using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Tests
 {
 	public class IncomingTestRepository : IDisposable
 	{
-		private readonly string name;
+		private readonly string connectionString;
 
 		public IncomingTestRepository(string name)
 		{
-			this.name = name;
+			connectionString = QueuePhysicalStorage.GetConnectionString(name, name);
 		}
 
 		public QueueMessage GetLatestMessage()
 		{
-			using (var env = new BerkeleyDbEnvironment(name))
-			using (var queue = env.OpenQueue(name + ".queue"))
+			using (var connection = new FbConnection(connectionString))
+			using (var cmd = connection.CreateCommand())
 			{
-				return (QueueMessage)queue.Consume();
+				connection.Open();
+				cmd.CommandText = "SELECT FIRST 1 Data FROM IncomingMessages ORDER BY InsertedAt DESC";
+				using (var reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						return DataAccessMixin.Deserialize((byte[])reader[0]);
+					}
+					return null;
+				}
 			}
 		}
 

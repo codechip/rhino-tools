@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using MbUnit.Framework;
@@ -16,6 +17,8 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => DateTime.Now;
+			TestEnvironment.Clear("test");
+			
 
 			if (Directory.Exists("factory1"))
 				Directory.Delete("factory1", true);
@@ -42,6 +45,7 @@ namespace Rhino.Queues.Tests
 		{
 			factory1.Dispose();
 			factory2.Dispose();
+			TestEnvironment.Clear("test");
 		}
 
 
@@ -58,7 +62,9 @@ namespace Rhino.Queues.Tests
 				lock (values)
 				{
 					Console.WriteLine("Values at : " + values.Count);
-					values.Add(BitConverter.ToInt32(message.Body, 0));
+					var int32 = BitConverter.ToInt32(message.Body, 0);
+					values.Add(int32);
+
 					if (values.Count == 250)
 						doneGettingMessages.Set();
 				}

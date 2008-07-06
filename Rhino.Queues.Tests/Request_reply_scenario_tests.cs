@@ -16,7 +16,8 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => DateTime.Now;
-
+			TestEnvironment.Clear("test");
+			
 			if (Directory.Exists("factory1"))
 				Directory.Delete("factory1", true);
 			if (Directory.Exists("factory2"))
@@ -43,6 +44,7 @@ namespace Rhino.Queues.Tests
 		{
 			factory1.Dispose();
 			factory2.Dispose();
+			TestEnvironment.Clear("test");
 		}
 
 		[Test]

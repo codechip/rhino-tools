@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using MbUnit.Framework;
 
@@ -18,11 +17,9 @@ namespace Rhino.Queues.Tests
 		public void Setup()
 		{
 			SystemTime.Now = () => DateTime.Now;
-
-			if (Directory.Exists("factory1"))
-				Directory.Delete("factory1", true);
-			if (Directory.Exists("factory2"))
-				Directory.Delete("factory2", true);
+			TestEnvironment.Clear("factory1");
+			TestEnvironment.Clear("factory2");
+			
 
 			factory1 = new QueueConfiguration()
 				.Name("test1 - " + count)
@@ -49,6 +46,8 @@ namespace Rhino.Queues.Tests
 		{
 			factory1.Dispose();
 			factory2.Dispose();
+			TestEnvironment.Clear("factory1");
+			TestEnvironment.Clear("factory2");
 		}
 
 		[Test]

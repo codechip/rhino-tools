@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Rhino.Queues.Data;
 using Rhino.Queues.Extensions;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Workers;
@@ -84,16 +85,20 @@ namespace Rhino.Queues
 
 		public void CreateQueuesFromStorage()
 		{
-			foreach (var queueName in queuePhysicalStorage.GetQueueNames())
+			foreach (var queueName in queuePhysicalStorage.GetIncomingQueueNames())
 			{
-				CreateLocalQueueInstance(queueName);
+				CreateLocalQueueInstance(queueName, QueueType.Input);
+			}
+			foreach (var queueName in queuePhysicalStorage.GetOutgoingQueueNames())
+			{
+				CreateLocalQueueInstance(queueName, QueueType.Output);
 			}
 		}
 
 		public void CreateQueue(string queueName)
 		{
 			queuePhysicalStorage.CreateInputQueue(queueName);
-			CreateLocalQueueInstance(queueName);
+			CreateLocalQueueInstance(queueName, QueueType.Input);
 		}
 
 		public IRemoteQueue GetRemoteQueue(string queueUrl)
@@ -123,7 +128,7 @@ namespace Rhino.Queues
 							queuesByDestinationUrl[queueUrl] = queue = new Queue(
 								queueUrl,
 								outgoingMessageRepository,
-								repository);
+								repository, QueueType.Input);
 						}
 					}
 					finally
@@ -155,7 +160,7 @@ namespace Rhino.Queues
 			return queue;
 		}
 
-		private void CreateLocalQueueInstance(string queueName)
+		private void CreateLocalQueueInstance(string queueName, QueueType type)
 		{
 			locker.EnterUpgradeableReadLock();
 			try
@@ -170,9 +175,9 @@ namespace Rhino.Queues
 						{
 							var repository = new IncomingMessageRepository(queueName, queuesDirectory);
 							queuesByName[queueName] = new Queue(
-							                                  	new UriBuilder("queue", "localhost", -1, queueName).Uri,
-							                                  	outgoingMessageRepository,
-							                                  	repository);
+																new UriBuilder("queue", "localhost", -1, queueName).Uri,
+																outgoingMessageRepository,
+																repository, type);
 						}
 					}
 					finally
@@ -220,13 +225,13 @@ namespace Rhino.Queues
 
 		protected void Dispose(bool disposing)
 		{
-			if (queueListener!=null) 
+			if (queueListener != null)
 				queueListener.Stop();
 
-			if (workerFactory != null) 
+			if (workerFactory != null)
 				workerFactory.StopWorkers();
 
-			if (workerFactory != null) 
+			if (workerFactory != null)
 				workerFactory.WaitForAllWorkersToStop();
 		}
 	}
