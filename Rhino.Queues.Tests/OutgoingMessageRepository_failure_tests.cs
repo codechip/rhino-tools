@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using BerkeleyDb;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 
@@ -101,36 +100,28 @@ namespace Rhino.Queues.Tests
 
 		private static void AssertFailureCount(int expectedFailureCountForEachMessage)
 		{
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var tx = env.BeginTransaction())
-			using (var tree = env.OpenTree("test.tree"))
-			using (var queue = env.OpenQueue("test.queue"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
 				int count = 0;
-				foreach (var message in queue.SelectFromAssociation<QueueTransportMessage>(tree))
+				foreach (var message in repository.GetTransportMessages())
 				{
 					count += 1;
 					Assert.AreEqual(expectedFailureCountForEachMessage, message.Message.FailureCount);
 				}
-				tx.Commit();
 				Assert.AreEqual(2,count);
 			}
 		}
 
 		private static void AssertSendAtEq(DateTime date)
 		{
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var tx = env.BeginTransaction())
-			using (var tree = env.OpenTree("test.tree"))
-			using (var queue = env.OpenQueue("test.queue"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
 				int msgs = 0;
-				foreach (var message in queue.SelectFromAssociation<QueueTransportMessage>(tree))
+				foreach (var message in repository.GetTransportMessages())
 				{
 					msgs +=1;
 					Assert.AreEqual(date, message.SendAt);
 				}
-				tx.Commit();
 				Assert.AreEqual(2, msgs);
 			}
 		}
@@ -160,12 +151,10 @@ namespace Rhino.Queues.Tests
 			outgoingMessageRepository.ReturnedFailedBatchToQueue(send.Id, new Uri("queue://test/test1"),
 				10, new Exception());
 
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var queue = env.OpenQueue("test.queue"))
-			using (var batches = env.OpenTree("test.batches"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var countInActive = queue.Select<object>().Count();
-				var countInBatches = batches.Select().Count();
+				var countInActive = repository.GetCountInActiveMessages();
+				var countInBatches = repository.GetCountInBatches();
 				Assert.AreEqual(1, countInActive);
 				Assert.AreEqual(1, countInBatches);
 			}
@@ -179,11 +168,10 @@ namespace Rhino.Queues.Tests
 			outgoingMessageRepository.ReturnedFailedBatchToQueue(send.Id, new Uri("queue://test/test2"),
 				0, new ArgumentException("foo"));
 
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var dead = env.OpenTree("test.deadLetters"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var entry = dead.Select().SingleOrDefault();
-				Assert.AreEqual("foo", ((FailedQueueMessage)entry.Value).Exception.Message);
+				var entry = repository.GetDeadLetters().Single();
+				Assert.AreEqual("foo", entry.Exception.Message);
 			}
 		}
 
@@ -195,13 +183,11 @@ namespace Rhino.Queues.Tests
 			outgoingMessageRepository.ReturnedFailedBatchToQueue(send.Id, new Uri("queue://test/test2"),
 				0, new ArgumentException("foo"));
 
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var dead = env.OpenTree("test.deadLetters"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var entry = dead.Select().SingleOrDefault();
-				var message = ((FailedQueueMessage)entry.Value);
-				Assert.AreEqual(SystemTime.Now(), message.FinalFailureAt);
-				Assert.AreEqual(new Uri("queue://test/test2"), message.Destination);
+				var entry = repository.GetDeadLetters().Single();
+				Assert.AreEqual(SystemTime.Now(), entry.FinalFailureAt);
+				Assert.AreEqual(new Uri("queue://test/test2"), entry.Destination);
 			}
 		}
 
@@ -214,14 +200,11 @@ namespace Rhino.Queues.Tests
 			outgoingMessageRepository.ReturnedFailedBatchToQueue(send.Id, new Uri("queue://test/test1"),
 				0, new Exception());
 
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var queue = env.OpenQueue("test.queue"))
-			using (var batches = env.OpenTree("test.batches"))
-			using (var dead = env.OpenTree("test.deadLetters"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var countInActive = queue.Select<object>().Count();
-				var countInBatches = batches.Select().Count();
-				var countInDeadLetters = dead.Select().Count();
+				var countInActive = repository.GetCountInActiveMessages();
+				var countInBatches = repository.GetCountInBatches();
+				var countInDeadLetters = repository.GetCountInDeadLetters();
 				Assert.AreEqual(0, countInActive);
 				Assert.AreEqual(1, countInBatches);
 				Assert.AreEqual(1, countInDeadLetters);
@@ -240,14 +223,11 @@ namespace Rhino.Queues.Tests
 
 			outgoingMessageRepository.PurgeAllMessages();
 
-			using (var env = new BerkeleyDbEnvironment("test"))
-			using (var queue = env.OpenQueue("test.queue"))
-			using (var batches = env.OpenTree("test.batches"))
-			using (var dead = env.OpenTree("test.deadLetters"))
+			using (var repository = new OutgoingTestRepository("test"))
 			{
-				var countInActive = queue.Select<object>().Count();
-				var countInBatches = batches.Select().Count();
-				var countInDeadLetters = dead.Select().Count();
+				var countInActive = repository.GetCountInActiveMessages();
+				var countInBatches = repository.GetCountInBatches();
+				var countInDeadLetters = repository.GetCountInDeadLetters();
 				Assert.AreEqual(0, countInActive);
 				Assert.AreEqual(0, countInBatches);
 				Assert.AreEqual(0, countInDeadLetters);
