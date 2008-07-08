@@ -1,10 +1,12 @@
 import Rhino.Commons.Test.Components
 import Rhino.Commons.Test.Binsor from Rhino.Commons.Test
 
-for type in AllTypes("Rhino.Commons.NHibernate") \
+for repos in AllTypes("Rhino.Commons.NHibernate") \
 	.Where({ t as System.Type | t.Name.Contains("NHRepository") }):
-	component "nh.repos", type.GetFirstInterface(), type
+	component "nh.repos"= repos < repos.GetFirstInterface()
 
-component 'FubarRepository', IFubarRepository, FubarRepository
+component "fubar" = FubarRepository < IFubarRepository, IRepository of Fubar
 
-Kernel.RegisterHandlerForwarding(IRepository of Fubar, 'FubarRepository')
+component FakeRepository of Fubar < IRepository of Fubar
+
+extend "fubar" < FakeRepository of Fubar

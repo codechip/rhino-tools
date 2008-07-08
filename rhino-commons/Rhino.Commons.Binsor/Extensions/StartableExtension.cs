@@ -27,13 +27,38 @@
 #endregion
 
 
+using Castle.MicroKernel.Registration;
+
 namespace Rhino.Commons.Binsor
 {
 	public class StartableExtension : IComponentExtension
 	{
-		void IComponentExtension.Apply(Component component)
+		private string startMethod;
+		private string stopMethod;
+
+		public string StartMethod
 		{
-			component.Configuration.Attributes["startable"] = "true";
+			set { startMethod = value; }
+		}
+
+		public string StopMethod
+		{
+			set { stopMethod = value; }
+		}
+
+		void IComponentExtension.Apply(Component component, ComponentRegistration registration)
+		{
+			registration.Startable();
+
+			if (!string.IsNullOrEmpty(startMethod))
+			{
+				registration.StartUsingMethod(startMethod);
+			}
+
+			if (!string.IsNullOrEmpty(stopMethod))
+			{
+				registration.StopUsingMethod(stopMethod);
+			}
 		}
 	}
 }

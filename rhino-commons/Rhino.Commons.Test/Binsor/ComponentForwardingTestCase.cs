@@ -1,4 +1,5 @@
 using System.IO;
+using Castle.MicroKernel;
 using Castle.Windsor;
 using MbUnit.Framework;
 using Rhino.Commons.Test.Components;
@@ -25,8 +26,17 @@ namespace Rhino.Commons.Test.Binsor
 				_container.Resolve<IRepository<Fubar>>(),
 				_container.Resolve<IFubarRepository>()
 			);
+
+			Assert.AreSame(
+				_container.Resolve<IRepository<Fubar>>(),
+				_container.Resolve<FakeRepository<Fubar>>()
+			);
+
+			IHandler[] handlers = _container.Kernel.GetHandlers(typeof(IRepository<Fubar>));
+			Assert.AreEqual(2, handlers.Length);
 		}
 	}
+
 	public interface IFubarRepository : IRepository<Fubar>{}
 
 	public class FubarRepository : FakeRepository<Fubar>, IFubarRepository

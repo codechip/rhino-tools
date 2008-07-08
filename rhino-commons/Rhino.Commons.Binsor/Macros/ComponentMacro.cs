@@ -27,12 +27,82 @@
 #endregion
 
 
-using System;
-
 namespace Rhino.Commons.Binsor.Macros
 {
+	using System;
+	using System.Collections.Generic;
+	using Boo.Lang.Compiler.Ast;
+
 	[CLSCompliant(false)]
 	public class ComponentMacro : BaseBinsorToplevelMacro<Component>
 	{
+		private Expression implementation;
+		private ArrayLiteralExpression services;
+
+		protected override void ProcessConstructorArguments(MethodInvocationExpression create,
+															MacroStatement macro)
+		{
+			base.ProcessConstructorArguments(create, macro);
+
+			if (services != null)
+			{
+				create.Arguments.Add(services);
+			}
+
+			if (implementation != null)
+			{
+				create.Arguments.Add(implementation);
+			}
+		}
+
+		protected override IEnumerable<Expression> ProcessConstructorArgument(int argIndex, Expression arg)
+		{
+			if (argIndex == 0)
+			{
+				if (arg is BinaryExpression)
+				{
+					BinaryExpression binary = (BinaryExpression)arg;
+
+					switch (binary.Operator)
+					{
+						case BinaryOperatorType.Assign:
+							if (binary.Right is BinaryExpression)
+							{
+								BinaryExpression impl = (BinaryExpression)binary.Right;
+								if (impl.Operator == BinaryOperatorType.LessThan)
+								{
+									yield return binary.Left;
+									implementation = impl.Left;
+									AddService(impl.Right);
+									yield break;
+								}
+							}
+							break;
+
+						case BinaryOperatorType.LessThan:
+							implementation = binary.Left;
+							AddService(binary.Right);
+							yield break;
+					}
+				}
+			}
+
+			if (services != null)
+			{
+				AddService(arg);
+				yield break;
+			}
+
+			yield return arg;
+		}
+
+		private void AddService(Expression expression)
+		{
+			if (services == null)
+			{
+				services = new ArrayLiteralExpression(expression.LexicalInfo);
+			}
+			services.Items.Add(expression);
+		}
 	}
 }

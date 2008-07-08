@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -29,52 +29,15 @@
 #endregion
 
 
-using System.Collections;
-using Castle.Core.Configuration;
-using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 
 namespace Rhino.Commons.Binsor
 {
-	public class EventWireExtension : AbstractComponentExtension
+	public abstract class AbstractComponentExtension : ComponentDescriptor, IComponentExtension
 	{
-		private readonly string _eventName;
-		private readonly IDictionary _subscribers;
-
-		public EventWireExtension(string eventName, IDictionary subscribers)
+		public virtual void Apply(Component component, ComponentRegistration registration)
 		{
-			_eventName = eventName;
-			_subscribers = subscribers;
-		}
-
-		protected override void ApplyToConfiguration(IKernel kernel, IConfiguration compConfig)
-		{
-			if (_subscribers.Count > 0)
-			{
-				IConfiguration subscribers = ObtainSubscribers(compConfig);
-
-				foreach (DictionaryEntry entry in _subscribers)
-				{
-					IConfiguration subscriber = new MutableConfiguration("subscriber");
-					ComponentReference componentId = (ComponentReference)entry.Key;
-					subscriber.Attributes["event"] = _eventName;
-					subscriber.Attributes["id"] = componentId.Name;
-					subscriber.Attributes["handler"] = entry.Value.ToString();
-					subscribers.Children.Add(subscriber);
-				}
-			}
-		}
-
-		private static IConfiguration ObtainSubscribers(IConfiguration config)
-		{
-			IConfiguration subscribers = config.Children["subscribers"];
-
-			if (subscribers == null)
-			{
-				subscribers = new MutableConfiguration("subscribers");
-				config.Children.Add(subscribers);
-			}
-
-			return subscribers;
+			registration.AddDescriptor(this);
 		}
 	}
 }

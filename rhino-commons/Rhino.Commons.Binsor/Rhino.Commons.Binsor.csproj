@@ -91,6 +91,7 @@
     <Compile Include="Configuration\ListBuilder.cs" />
     <Compile Include="ContainerAdapter.cs" />
     <Compile Include="Extend.cs" />
+    <Compile Include="Extensions\AbstractComponentExtension.cs" />
     <Compile Include="Extensions\ConfigurationExtension.cs" />
     <Compile Include="Extensions\EventWireExtension.cs" />
     <Compile Include="Extensions\FactorySupportExtension.cs" />

@@ -53,13 +53,26 @@ namespace Rhino.Commons.Binsor.Macros
 			}
 		}
 
-		protected static void MoveConstructorArguments(MethodInvocationExpression create,
-		                                               MacroStatement macro)
+		protected virtual void ProcessConstructorArguments(MethodInvocationExpression create,
+		                                                   MacroStatement macro)
 		{
+			int argIndex = 0;
+
 			foreach (Expression argument in macro.Arguments)
 			{
-				create.Arguments.Add(argument);
+				foreach (Expression ctorArg in ProcessConstructorArgument(argIndex++, argument))
+				{
+					if (ctorArg != null)
+					{
+						create.Arguments.Add(ctorArg);
+					}
+				}
 			}
+		}
+
+		protected virtual IEnumerable<Expression> ProcessConstructorArgument(int argIndex, Expression arg)
+		{
+			yield return arg;
 		}
 
 		protected bool ArgumentsToCreateNamedArguments(ExpressionCollection arguments,

@@ -27,11 +27,11 @@
 #endregion
 
 
-using System;
-using Boo.Lang.Compiler.Ast;
 namespace Rhino.Commons.Binsor.Macros
 {
-    using Extensions;
+	using System;
+	using Boo.Lang.Compiler.Ast;
+	using Rhino.Commons.Binsor.Extensions;
 
     [CLSCompliant(false)]
 	public class BaseBinsorToplevelMacro<T> : AbstractBinsorMacro
@@ -54,7 +54,7 @@ namespace Rhino.Commons.Binsor.Macros
 
 		private bool ConfigureBinsorMacro(MacroStatement macro)
 		{
-			MoveConstructorArguments(create, macro);
+			ProcessConstructorArguments(create, macro);
 			return ProcessAttributes(macro) &&
 				   ProcessExtensions(macro) &&
 				   ProcessStatements(macro);
