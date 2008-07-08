@@ -70,6 +70,29 @@ namespace Rhino.Queues.Tests.Network
 			}
 		}
 
+
+		[Test]
+		public void Will_not_send_messages_whose_send_at_data_is_in_the_future()
+		{
+			using (sender = new Sender(localStorage, 1))
+			{
+				var resetEvent = new ManualResetEvent(false);
+				sender.NothingToSend += () => resetEvent.Set();
+				sender.Start();
+				localStorage.Add("http://localhost/test/", new TransportMessage
+				{
+					Message = 1,
+					Destination = new Destination { Queue = "test" },
+					SendAt = SystemTime.Now().AddHours(1)
+				});
+				resetEvent.WaitOne();
+				var msg = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").FirstOrDefault();
+				Assert.IsNull(msg);
+
+				localStorage.Dispose();
+			}
+		}
+
 		[Test]
 		public void Will_send_batches_of_max_100_messages()
 		{

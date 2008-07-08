@@ -74,6 +74,5 @@ namespace Rhino.Queues.Tests.Scenarios
 				Assert.AreEqual(i*2, kong[i]);
 			}
 		}
-
 	}
 }

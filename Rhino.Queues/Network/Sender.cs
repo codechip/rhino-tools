@@ -13,7 +13,7 @@ namespace Rhino.Queues.Network
 {
 	public class Sender : ISender
 	{
-		private readonly ILog logger = LogManager.GetLogger(typeof (Sender));
+		private readonly ILog logger = LogManager.GetLogger(typeof(Sender));
 
 		private readonly IMessageStorage storage;
 		private readonly int workerThreadsCount;
@@ -46,17 +46,21 @@ namespace Rhino.Queues.Network
 			{
 				//TODO: Transaction
 				var endPoint = storage.WaitForNewMessages();
-				if(endPoint==null)
+				if (endPoint == null)
 					return;
-				var array = storage.PullMessagesFor(endPoint).Take(100).ToArray();
-				if(array.Length==0)
+				var array = storage.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
+					.Take(100).ToArray();
+				if (array.Length == 0)
+				{
+					NothingToSend();
 					continue;
+				}
 				try
 				{
 					logger.DebugFormat("Starting to send {0} messages to {1}", array.Length, endPoint);
 					var request = (HttpWebRequest)WebRequest.Create(endPoint);
 					request.Method = "PUT";
-					using(var stream = request.GetRequestStream())
+					using (var stream = request.GetRequestStream())
 					{
 						var stream1 = new MemoryStream();
 						new BinaryFormatter().Serialize(stream1, array);
@@ -69,7 +73,7 @@ namespace Rhino.Queues.Network
 				}
 				catch (Exception e)
 				{
-					logger.Warn("Failed to send messages to " + endPoint +" entering items to queue again", e);
+					logger.Warn("Failed to send messages to " + endPoint + " entering items to queue again", e);
 					foreach (var message in array)
 					{
 						storage.Add(endPoint, message);
@@ -80,14 +84,15 @@ namespace Rhino.Queues.Network
 		}
 
 		public event Action BatchSent = delegate { };
-		public event Action<Exception, TransportMessage[]> Error = delegate {};
+		public event Action NothingToSend = delegate { };
+		public event Action<Exception, TransportMessage[]> Error = delegate { };
 
 		public void Dispose()
 		{
 			active = false;
 			foreach (var thread in threads)
 			{
-				if(thread!=Thread.CurrentThread)
+				if (thread != Thread.CurrentThread)
 					thread.Join();
 			}
 		}
