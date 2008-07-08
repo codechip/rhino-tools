@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BED8A741-05EF-4FBD-92F7-98CE93BE85D0}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{90B06B3B-013A-4EF3-8577-7C0825A1C99C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Queues</RootNamespace>
-    <AssemblyName>Rhino.Queues</AssemblyName>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,15 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SharedLibs\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -50,32 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cfg\Configuration.cs" />
-    <Compile Include="IMessageQueue.cs" />
-    <Compile Include="Impl\Destination.cs" />
-    <Compile Include="Impl\IMessageQueueImpl.cs" />
-    <Compile Include="Impl\IQueueFactoryImpl.cs" />
-    <Compile Include="Impl\MessageQueueImpl.cs" />
-    <Compile Include="Impl\QueueFactoryImpl.cs" />
-    <Compile Include="Impl\SystemTime.cs" />
-    <Compile Include="IQueueFactory.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Network\IListener.cs" />
-    <Compile Include="Network\IListenerFactory.cs" />
-    <Compile Include="Network\ISender.cs" />
-    <Compile Include="Network\ISenderFactory.cs" />
-    <Compile Include="Network\Listener.cs" />
-    <Compile Include="Network\ListenerFactory.cs" />
-    <Compile Include="Network\Sender.cs" />
-    <Compile Include="Network\SenderFactory.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\IMessageStorage.cs" />
-    <Compile Include="Storage\InMemory\InMemoryMessageStorageFactory.cs" />
-    <Compile Include="Storage\InMemory\InMemoryMessageStorage.cs" />
-    <Compile Include="Impl\TransportMessage.cs" />
-    <Compile Include="Storage\IStorageFactory.cs" />
-    <Compile Include="Threading\BlockingQueue.cs" />
-    <Compile Include="Threading\IBlockingQueue.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Rhino.Queues\Rhino.Queues.csproj">
+      <Project>{1630E1EE-B875-481E-84C5-E558E036A788}</Project>
+      <Name>Rhino.Queues</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -72,7 +72,7 @@ namespace Rhino.Queues.Tests.Transactions
 			using (var tx = new TransactionScope())
 			using (var queue = serverFactory.OpenQueue("foo"))
 			{
-				Assert.AreEqual(1, queue.Recieve());
+				Assert.AreEqual(1, queue.Recieve().Value);
 				Assert.IsNull(
 					serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault()
 					);
@@ -95,14 +95,14 @@ namespace Rhino.Queues.Tests.Transactions
 			using (new TransactionScope())
 			using (var queue = serverFactory.OpenQueue("foo"))
 			{
-				Assert.AreEqual(1, queue.Recieve());
+				Assert.AreEqual(1, queue.Recieve().Value);
 				Transaction.Current.Rollback();
 			}
 
 			using (var tx = new TransactionScope())
 			using (var queue = serverFactory.OpenQueue("foo"))
 			{
-				Assert.AreEqual(1, queue.Recieve());
+				Assert.AreEqual(1, queue.Recieve().Value);
 				tx.Complete();
 			}
 		}
@@ -121,13 +121,13 @@ namespace Rhino.Queues.Tests.Transactions
 			using (new TransactionScope())
 			using (var queue = serverFactory.OpenQueue("foo"))
 			{
-				Assert.AreEqual(1, queue.Recieve());
+				Assert.AreEqual(1, queue.Recieve().Value);
 			}
 
 			using (var tx = new TransactionScope())
 			using (var queue = serverFactory.OpenQueue("foo"))
 			{
-				Assert.AreEqual(1, queue.Recieve());
+				Assert.AreEqual(1, queue.Recieve().Value);
 				tx.Complete();
 			}
 		}

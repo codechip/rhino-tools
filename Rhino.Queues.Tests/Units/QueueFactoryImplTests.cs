@@ -5,7 +5,6 @@ using MbUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Network;
-using Rhino.Queues.Storage;
 
 namespace Rhino.Queues.Tests.Units
 {
@@ -83,15 +82,17 @@ namespace Rhino.Queues.Tests.Units
 		{
 			factory.OpenQueue("test@foo").Send("my msg2");
 			Assert.AreEqual("my msg2",
-			                messageStorageFactory.OutgoingStorage.PullMessagesFor("http://localhost/foo/").First().Message);
+							messageStorageFactory.OutgoingStorage
+								.PullMessagesFor("http://localhost/foo/").First()
+									.Message.Value);
 		}
 
 		[Test]
 		public void When_recieving_message_will_get_it_from_storage()
 		{
-			messageStorageFactory.IncomingStorage.Add("foo", new TransportMessage{Message = "my msg 5"});
+			messageStorageFactory.IncomingStorage.Add("foo", new TransportMessage { Message = new Message { Value = "my msg 5" } });
 			var recieve = factory.OpenQueue("foo").Recieve();
-			Assert.AreEqual("my msg 5", recieve);
+			Assert.AreEqual("my msg 5", recieve.Value);
 		}
 
 		[Test]
@@ -99,14 +100,16 @@ namespace Rhino.Queues.Tests.Units
 		{
 			factory.OpenQueue("test").Send("my msg1");
 			Assert.AreEqual("my msg1",
-			                messageStorageFactory.OutgoingStorage.PullMessagesFor("http://localhost/self/").First().Message);
+							messageStorageFactory.OutgoingStorage
+								.PullMessagesFor("http://localhost/self/").First()
+									.Message.Value);
 		}
 
 		[Test]
-		[ExpectedException(typeof(InvalidOperationException),"Cannot send or queue before factory 'bar' is started")]
+		[ExpectedException(typeof(InvalidOperationException), "Cannot send or queue before factory 'bar' is started")]
 		public void Cannot_call_send_without_calling_start()
 		{
-            var myFactory = new QueueFactoryImpl("bar", messageStorageFactory, new Dictionary<string, string>
+			var myFactory = new QueueFactoryImpl("bar", messageStorageFactory, new Dictionary<string, string>
             {
             	{"foo", "http://localhost/foo/"},
             	{"bar", "http://localhost/self2/"}

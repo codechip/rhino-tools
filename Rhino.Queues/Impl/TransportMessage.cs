@@ -11,7 +11,7 @@ namespace Rhino.Queues.Impl
 
 		public Destination Destination { get; set; }
 
-		public object Message { get; set; }
+		public Message Message { get; set; }
 
 		public DateTime SendAt { get; set; }
 

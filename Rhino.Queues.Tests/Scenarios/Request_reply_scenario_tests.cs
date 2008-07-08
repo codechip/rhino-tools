@@ -44,7 +44,7 @@ namespace Rhino.Queues.Tests.Scenarios
 			clientFactory.Start();
 
 			serverFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve().Value;
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -55,7 +55,7 @@ namespace Rhino.Queues.Tests.Scenarios
 			clientFactory.Start();
 
 			clientFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve().Value;
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -66,7 +66,7 @@ namespace Rhino.Queues.Tests.Scenarios
 			clientFactory.Start();
 
 			clientFactory.OpenQueue("kong").Send(new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve().Value;
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -78,10 +78,10 @@ namespace Rhino.Queues.Tests.Scenarios
 			clientFactory.Start();
 
 			serverFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
-			var actual1 = (DateTime)clientFactory.OpenQueue("kong").Recieve();
+			var actual1 = (DateTime)clientFactory.OpenQueue("kong").Recieve().Value;
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual1);
 			clientFactory.OpenQueue("foo@server").Send("passed all the way");
-			var actual2 = (string)serverFactory.OpenQueue("foo").Recieve();
+			var actual2 = (string)serverFactory.OpenQueue("foo").Recieve().Value;
 			Assert.AreEqual("passed all the way", actual2);
 			
 		}

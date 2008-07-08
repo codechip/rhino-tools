@@ -42,12 +42,12 @@ namespace Rhino.Queues.Tests.Units
 				new TransportMessage
 				{
 					Destination = new Destination {Queue = "foo", Server = "client"},
-					Message = 5,
+					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now()
 				}
 			});
 			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").First();
-			Assert.AreEqual(5, message.Message);
+			Assert.AreEqual(5, message.Message.Value);
 		}
 
 
@@ -59,7 +59,7 @@ namespace Rhino.Queues.Tests.Units
 				new TransportMessage
 				{
 					Destination = new Destination {Queue = "foo", Server = "client"},
-					Message = 5,
+					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now(),
 					FailureCount = 500
 				}
@@ -83,12 +83,12 @@ namespace Rhino.Queues.Tests.Units
 				new TransportMessage
 				{
 					Destination = new Destination {Queue = "foo", Server = "client"},
-					Message = 5,
+					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now(),
 					FailureCount = 500
 				}
 			});
-			Assert.AreEqual(5, failedMsg.Message);
+			Assert.AreEqual(5, failedMsg.Message.Value);
 			Assert.AreEqual("error", ex.Message);
 		}
 
@@ -98,7 +98,7 @@ namespace Rhino.Queues.Tests.Units
 			var msg = new TransportMessage
 			{
 				Destination = new Destination {Queue = "foo", Server = "client"},
-				Message = 5,
+				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
 			serverFactory.OnSendError(new Exception(), new[]
@@ -114,7 +114,7 @@ namespace Rhino.Queues.Tests.Units
 			var msg = new TransportMessage
 			{
 				Destination = new Destination {Queue = "foo", Server = "client"},
-				Message = 5,
+				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
 			serverFactory.OnSendError(new Exception(), new[]
@@ -130,7 +130,7 @@ namespace Rhino.Queues.Tests.Units
 			var msg = new TransportMessage
 			{
 				Destination = new Destination {Queue = "foo", Server = "client"},
-				Message = 5,
+				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
 			serverFactory.OnSendError(new Exception(), new[] {msg});

@@ -16,7 +16,8 @@ namespace Rhino.Queues.Impl
 		private readonly List<Action> commitSyncronizations = new List<Action>();
 		private readonly List<Action> rollbackSyncronizations = new List<Action>();
 
-		public MessageQueueImpl(Destination destination,
+		public MessageQueueImpl(
+			Destination destination,
 			IMessageStorage incomingStorage,
 			IMessageStorage outgoingStorage,
 			IQueueFactoryImpl queueFactory)
@@ -27,7 +28,7 @@ namespace Rhino.Queues.Impl
 			this.queueFactory = queueFactory;
 		}
 
-		public void Send(object msg)
+		public Message Send(object msg)
 		{
 			string endpointMapping = queueFactory.GetEndpointFromDestination(destination);
 			if (msg == null)
@@ -36,15 +37,23 @@ namespace Rhino.Queues.Impl
 				throw new ArgumentException("Message " + msg.GetType().Name + " must be serializable");
 
 			var now = SystemTime.Now();
+			var message = new Message
+			{
+				Value = msg,
+				Destination = destination,
+				SentAt = now,
+			}; 
 			AddCommitSyncronization(() =>
 			{
+				
 				outgoingStorage.Add(endpointMapping, new TransportMessage
 				{
 					Destination = destination,
-					Message = msg,
+					Message = message,
 					SendAt = now
 				});
 			});
+			return message;
 		}
 
 		private void AddCommitSyncronization(Action action)
@@ -73,7 +82,7 @@ namespace Rhino.Queues.Impl
 		}
 
 
-		public object Recieve()
+		public Message Recieve()
 		{
 			var message = incomingStorage.PullMessagesFor(destination.Queue).FirstOrDefault();
 			while (message == null)
@@ -159,7 +168,7 @@ namespace Rhino.Queues.Impl
 
 		public void Dispose()
 		{
-			
+
 		}
 	}
 }

@@ -57,8 +57,8 @@ namespace Rhino.Queues.Tests.Scenarios
 			var kong = new List<int>();
 			for (int i = 0; i < iterationCount; i++)
 			{
-				fu.Add((int)clientFactory.OpenQueue("fu").Recieve());
-				kong.Add((int)clientFactory.OpenQueue("kong").Recieve());
+				fu.Add((int)clientFactory.OpenQueue("fu").Recieve().Value);
+				kong.Add((int)clientFactory.OpenQueue("kong").Recieve().Value);
 			}
 
 			// we do not ensure order

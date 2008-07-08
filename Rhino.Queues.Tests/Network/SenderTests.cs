@@ -28,10 +28,10 @@ namespace Rhino.Queues.Tests.Network
 			});
 			remoteMessageStorageFactory = new TestMessageStorageFactory();
 			queueFactoryImpl = new QueueFactoryImpl("test",
-			                                        remoteMessageStorageFactory, new Dictionary<string, string>
+													remoteMessageStorageFactory, new Dictionary<string, string>
 			                                        {
 			                                        	{"test", "http://localhost/test/"}
-			                                        }, new[] {"test"}, new ListenerFactory(1), new SenderFactory(1));
+			                                        }, new[] { "test" }, new ListenerFactory(1), new SenderFactory(1));
 
 			queueFactoryImpl.Start();
 		}
@@ -60,12 +60,12 @@ namespace Rhino.Queues.Tests.Network
 				sender.Start();
 				localStorage.Add("http://localhost/test/", new TransportMessage
 				{
-					Message = 1,
-					Destination = new Destination {Queue = "test"}
+					Message = new Message { Value = 1 },
+					Destination = new Destination { Queue = "test" }
 				});
 				remoteMessageStorageFactory.IncomingStorage.WaitForNewMessages();
 				var msg = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").First();
-				Assert.AreEqual(1, msg.Message);
+				Assert.AreEqual(1, msg.Message.Value);
 				localStorage.Dispose();
 			}
 		}
@@ -81,7 +81,7 @@ namespace Rhino.Queues.Tests.Network
 				sender.Start();
 				localStorage.Add("http://localhost/test/", new TransportMessage
 				{
-					Message = 1,
+					Message = new Message { Value = 1 },
 					Destination = new Destination { Queue = "test" },
 					SendAt = SystemTime.Now().AddHours(1)
 				});
@@ -102,8 +102,8 @@ namespace Rhino.Queues.Tests.Network
 				{
 					localStorage.Add("http://localhost/test/", new TransportMessage
 					{
-						Message = i,
-						Destination = new Destination {Queue = "test"}
+						Message = new Message { Value = 1 },
+						Destination = new Destination { Queue = "test" }
 					});
 				}
 				var resetEvent = new ManualResetEvent(false);
@@ -129,8 +129,8 @@ namespace Rhino.Queues.Tests.Network
 				{
 					localStorage.Add("http://localhost/test/", new TransportMessage
 					{
-						Message = i,
-						Destination = new Destination {Queue = "test"}
+						Message = new Message { Value = i },
+						Destination = new Destination { Queue = "test" }
 					});
 				}
 				var resetEvent = new ManualResetEvent(false);
@@ -159,22 +159,22 @@ namespace Rhino.Queues.Tests.Network
 			{
 				sender.Start();
 				var resetEvent = new ManualResetEvent(false);
-				sender.Error += (e,t) =>
+				sender.Error += (e, t) =>
 				{
 					sender.Dispose();
 					resetEvent.Set();
 				};
 				localStorage.Add("http://localhost/test/", new TransportMessage
 				{
-					Message = 1,
-					Destination = new Destination {Queue = "test2"}
+					Message = new Message { Value = 1 },
+					Destination = new Destination { Queue = "test2" }
 				});
 				resetEvent.WaitOne();
 				localStorage.Dispose();
 			}
 			localStorage.WaitForNewMessages();
 			var msg = localStorage.PullMessagesFor("http://localhost/test/").First();
-			Assert.AreEqual(1, msg.Message);
+			Assert.AreEqual(1, msg.Message.Value);
 		}
 
 		[Test]
@@ -195,7 +195,7 @@ namespace Rhino.Queues.Tests.Network
 				};
 				localStorage.Add("http://localhost/test/", new TransportMessage
 				{
-					Message = 1,
+					Message = new Message { Value = 1 },
 					Destination = new Destination { Queue = "test2" }
 				});
 				resetEvent.WaitOne();
@@ -204,7 +204,7 @@ namespace Rhino.Queues.Tests.Network
 			localStorage.WaitForNewMessages();
 			Assert.IsNotNull(ex);
 			Assert.AreEqual(1, msgs.Length);
-			Assert.AreEqual(1, msgs[0].Message);
+			Assert.AreEqual(1, msgs[0].Message.Value);
 		}
 	}
 }
