@@ -57,7 +57,7 @@ namespace Rhino.Queues.Impl
 		{
 			AssertStarted();
 			return new MessageQueueImpl(
-				new Destination(this, queueName),
+				new Destination(queueName, this.Name),
 				incomingStorage,
 				outgoingStorage,
 				this);
@@ -84,20 +84,18 @@ namespace Rhino.Queues.Impl
 			started = true;
 		}
 
-		public void OnSendError(Exception exception, TransportMessage[] msgs)
+		public void OnSendError(Exception exception, TransportMessage msg, MessageSendFailure failure)
 		{
-			foreach (var msg in msgs)
+			msg.FailureCount += 1;
+			DeliveryFailure(msg, exception);
+			if (msg.FailureCount > 500 || failure != MessageSendFailure.None)
 			{
-				msg.FailureCount += 1;
-				if(msg.FailureCount > 500)
-				{
-					FinalDeliveryFailure(msg, exception);
-					continue;
-				}
-				msg.SendAt = SystemTime.Now().AddSeconds( msg.FailureCount * 2 );
-				var destination = GetEndpointFromDestination(msg.Destination);
-				outgoingStorage.Add(destination, msg);
+				FinalDeliveryFailure(msg, exception);
+				return;
 			}
+			msg.SendAt = SystemTime.Now().AddSeconds(msg.FailureCount * 2);
+			var destination = GetEndpointFromDestination(msg.Destination);
+			outgoingStorage.Add(destination, msg);
 		}
 		public string GetEndpointFromDestination(Destination destination)
 		{
@@ -117,6 +115,7 @@ namespace Rhino.Queues.Impl
 			return incomingStorage.Exists(queueName);
 		}
 
+		public event Action<TransportMessage, Exception> DeliveryFailure = delegate { };
 		public event Action<TransportMessage, Exception> FinalDeliveryFailure = delegate { };
 	}
 }

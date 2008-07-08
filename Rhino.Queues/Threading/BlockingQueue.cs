@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -12,24 +13,34 @@ namespace Rhino.Queues.Threading
 
 		public void Enqueue(T o)
 		{
-			lock(locker)
+			lock (locker)
 			{
 				queue.AddFirst(o);
 				Monitor.Pulse(locker);
 			}
 		}
 
-		public T Dequeue()
+		public bool Dequeue(TimeSpan timeToWait, out T t)
 		{
-			lock(locker)
+			lock (locker)
 			{
 				while (queue.Count == 0 && active)
-					Monitor.Wait(locker);
-				if(active==false)
-					return default(T);
+				{
+					if (Monitor.Wait(locker, timeToWait)==false)
+					{
+						t = default(T); 
+						return false;
+					}
+				}
+				if (active == false)
+				{
+					t = default(T);
+					return false;
+				}
 				var value = queue.Last.Value;
 				queue.RemoveLast();
-				return value;
+				t = value;
+				return true;
 			}
 		}
 

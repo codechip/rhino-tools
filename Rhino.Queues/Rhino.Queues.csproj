@@ -66,6 +66,7 @@
     <Compile Include="Network\ISenderFactory.cs" />
     <Compile Include="Network\Listener.cs" />
     <Compile Include="Network\ListenerFactory.cs" />
+    <Compile Include="Network\MessageSendFailure.cs" />
     <Compile Include="Network\Sender.cs" />
     <Compile Include="Network\SenderFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -46,8 +46,8 @@ namespace Rhino.Queues.Tests.Network
 						}
 					});
 				}
-				AssertExpectedFailure(request, HttpStatusCode.BadRequest,
-					"Message ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b doesn't have a queue specified");
+				AssertExpectedFailure(request, HttpStatusCode.NotFound,
+					"ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b:InvalidQueue");
 			}
 		}
 
@@ -73,8 +73,8 @@ namespace Rhino.Queues.Tests.Network
 						}
 					});
 				}
-				AssertExpectedFailure(request, HttpStatusCode.BadRequest,
-					"Message ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b doesn't have a queue specified");
+				AssertExpectedFailure(request, HttpStatusCode.NotFound,
+					"ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b:InvalidQueue");
 			}
 		}
 
@@ -104,7 +104,8 @@ namespace Rhino.Queues.Tests.Network
 						}
 					});
 				}
-				AssertExpectedFailure(request, HttpStatusCode.NotFound, "Message ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b specified queue does-not-exists which doesn't exists");
+				AssertExpectedFailure(request, HttpStatusCode.NotFound, 
+					"ccfb2e24-4065-4ca9-9d20-8232cf8d6d8b:QueueNotFound");
 			}
 		}
 

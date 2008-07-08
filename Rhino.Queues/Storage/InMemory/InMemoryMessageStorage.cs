@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Threading;
 
@@ -26,12 +27,12 @@ namespace Rhino.Queues.Storage.InMemory
 			{
 				var messages = queue.Messages;
 				var current = messages.Last;
-				while (current != null) 
+				while (current != null)
 				{
 					var value = current.Value;
 					var toRemove = current;
 					current = current.Previous;
-					if (predicate(value) == false) 
+					if (predicate(value) == false)
 						continue;
 					messages.Remove(toRemove);
 					yield return value;
@@ -45,7 +46,9 @@ namespace Rhino.Queues.Storage.InMemory
 
 		public bool WaitForNewMessages(string name)
 		{
-			return GetQueue(name).Events.Dequeue() != null;
+			object o;
+			var timeToWait = TimeSpan.FromMilliseconds(Timeout.Infinite);
+			return GetQueue(name).Events.Dequeue(timeToWait, out o);
 		}
 
 		public bool Exists(string name)
@@ -53,15 +56,23 @@ namespace Rhino.Queues.Storage.InMemory
 			return queuesByName.ContainsKey(name);
 		}
 
-		public string WaitForNewMessages()
+		public bool WaitForNewMessages(TimeSpan timeToWait, out string queueWithNewMessages)
 		{
-			return messagesEvents.Dequeue();
+			return messagesEvents.Dequeue(timeToWait, out queueWithNewMessages);
+		}
+
+		public IEnumerable<string> Queues
+		{
+			get
+			{
+				return queuesByName.Keys;
+			}
 		}
 
 		public void Add(string name, TransportMessage message)
 		{
 			QueuePackage queue = GetQueue(name);
-			lock(queue)
+			lock (queue)
 			{
 				queue.Messages.AddFirst(message);
 				queue.Events.Enqueue(new object());
@@ -72,8 +83,8 @@ namespace Rhino.Queues.Storage.InMemory
 		private QueuePackage GetQueue(string name)
 		{
 			QueuePackage queue;
-			if(queuesByName.TryGetValue(name, out queue)==false)
-				throw new ArgumentException("Queue '" + name+ "' was not registered");
+			if (queuesByName.TryGetValue(name, out queue) == false)
+				throw new ArgumentException("Queue '" + name + "' was not registered");
 			return queue;
 		}
 

@@ -5,6 +5,6 @@ namespace Rhino.Queues.Threading
 	public interface IBlockingQueue<T> : IDisposable
 	{
 		void Enqueue(T o);
-		T Dequeue();
+		bool Dequeue(TimeSpan timeToWait, out T t);
 	}
 }

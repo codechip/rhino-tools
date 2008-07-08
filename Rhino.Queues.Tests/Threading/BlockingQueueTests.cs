@@ -13,7 +13,9 @@ namespace Rhino.Queues.Tests.Threading
 		{
 			var queue = new BlockingQueue<string>();
 			queue.Enqueue("foo");
-			Assert.AreEqual("foo", queue.Dequeue());
+			string t;
+			queue.Dequeue(TimeSpan.FromSeconds(5), out t);
+			Assert.AreEqual("foo", t);
 		}
 
 		[Test]
@@ -27,7 +29,9 @@ namespace Rhino.Queues.Tests.Threading
 				start = DateTime.Now;
 				queue.Enqueue("foo");
 			});
-			Assert.AreEqual("foo", queue.Dequeue());
+			string t;
+			queue.Dequeue(TimeSpan.FromSeconds(5), out t);
+			Assert.AreEqual("foo", t);
 			Assert.LowerEqualThan(start, DateTime.Now);
 		}
 	}

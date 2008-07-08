@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Transactions;
 using MbUnit.Framework;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Network;
@@ -63,7 +64,8 @@ namespace Rhino.Queues.Tests.Network
 					Message = new Message { Value = 1 },
 					Destination = new Destination { Queue = "test" }
 				});
-				remoteMessageStorageFactory.IncomingStorage.WaitForNewMessages();
+				string queueWithNewMessages;
+				remoteMessageStorageFactory.IncomingStorage.WaitForNewMessages(TimeSpan.FromSeconds(1), out queueWithNewMessages);
 				var msg = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").First();
 				Assert.AreEqual(1, msg.Message.Value);
 				localStorage.Dispose();
@@ -153,43 +155,18 @@ namespace Rhino.Queues.Tests.Network
 		}
 
 		[Test]
-		public void When_send_fail_will_put_items_back_in_queue()
-		{
-			using (sender = new Sender(localStorage, 1))
-			{
-				sender.Start();
-				var resetEvent = new ManualResetEvent(false);
-				sender.Error += (e, t) =>
-				{
-					sender.Dispose();
-					resetEvent.Set();
-				};
-				localStorage.Add("http://localhost/test/", new TransportMessage
-				{
-					Message = new Message { Value = 1 },
-					Destination = new Destination { Queue = "test2" }
-				});
-				resetEvent.WaitOne();
-				localStorage.Dispose();
-			}
-			localStorage.WaitForNewMessages();
-			var msg = localStorage.PullMessagesFor("http://localhost/test/").First();
-			Assert.AreEqual(1, msg.Message.Value);
-		}
-
-		[Test]
 		public void When_send_fail_will_raise_error_with_failed_messages_and_exception()
 		{
 			Exception ex = null;
-			TransportMessage[] msgs = null;
+			TransportMessage message = null;
 			using (sender = new Sender(localStorage, 1))
 			{
 				sender.Start();
 				var resetEvent = new ManualResetEvent(false);
-				sender.Error += (e, t) =>
+				sender.Error += (e, m, s) =>
 				{
 					ex = e;
-					msgs = t;
+					message = m;
 					sender.Dispose();
 					resetEvent.Set();
 				};
@@ -201,10 +178,58 @@ namespace Rhino.Queues.Tests.Network
 				resetEvent.WaitOne();
 				localStorage.Dispose();
 			}
-			localStorage.WaitForNewMessages();
+			string queueWithNewMessages;
+			localStorage.WaitForNewMessages(TimeSpan.FromSeconds(5), out queueWithNewMessages);
 			Assert.IsNotNull(ex);
-			Assert.AreEqual(1, msgs.Length);
-			Assert.AreEqual(1, msgs[0].Message.Value);
+			Assert.AreEqual(1, message.Message.Value);
+		}
+
+		[Test]
+		public void When_send_failed_because_of_missing_queue_will_mark_that_message_with_queue_not_found()
+		{
+			var msgsToErrors = new Dictionary<TransportMessage, MessageSendFailure>();
+			using (sender = new Sender(localStorage, 1))
+			{
+				sender.Start();
+				var resetEvent = new ManualResetEvent(false);
+				sender.Error += (e, m, s) =>
+				{
+					msgsToErrors.Add(m, s);
+					if (msgsToErrors.Count == 2)
+					{
+						sender.Dispose();
+						resetEvent.Set();
+					}
+				};
+				using (var tx = new TransactionScope())
+				{
+					localStorage.Add("http://localhost/test/", new TransportMessage
+					{
+						Message = new Message { Value = 1 },
+						Destination = new Destination { Queue = "test2" }
+					});
+					localStorage.Add("http://localhost/test/", new TransportMessage
+					{
+						Message = new Message { Value = 1 },
+						Destination = new Destination { Queue = "test" }
+					});
+					tx.Complete();
+				}
+				resetEvent.WaitOne();
+				localStorage.Dispose();
+			}
+
+			Assert.AreEqual(2, msgsToErrors.Count);
+			bool foundNotFound = false, foundNone = false;
+			foreach (var pair in msgsToErrors)
+			{
+				if (pair.Value == MessageSendFailure.None)
+					foundNone = true;
+				else if (pair.Value == MessageSendFailure.QueueNotFound)
+					foundNotFound = true;
+			}
+			Assert.IsTrue(foundNone);
+			Assert.IsTrue(foundNotFound);
 		}
 	}
 }

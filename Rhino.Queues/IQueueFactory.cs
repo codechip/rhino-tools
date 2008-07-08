@@ -10,5 +10,6 @@ namespace Rhino.Queues
 		void Start();
 		bool HasQueue(string queueName);
 		event Action<TransportMessage, Exception> FinalDeliveryFailure;
+		event Action<TransportMessage, Exception> DeliveryFailure;
 	}
 }

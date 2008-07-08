@@ -61,11 +61,14 @@
     <Compile Include="Network\ListenerTests.cs" />
     <Compile Include="Network\SenderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenarios\Can_handle_batch_where_some_messages_are_not_valid.cs" />
     <Compile Include="Scenarios\Request_reply_scenario_tests.cs" />
     <Compile Include="Scenarios\Sending_many_messages_scenario_tests.cs" />
+    <Compile Include="Scenarios\Will_send_messages_to_destination_even_if_destination_is_offline.cs" />
     <Compile Include="Threading\BlockingQueueTests.cs" />
     <Compile Include="Transactions\TransactionsTests.cs" />
     <Compile Include="Units\ConfigurationTests.cs" />
+    <Compile Include="Units\DestinationTests.cs" />
     <Compile Include="Units\InMemoryMessageStorageTests.cs" />
     <Compile Include="Units\MessageQueueImplTests.cs" />
     <Compile Include="Units\QueueFactoryImplTests.cs" />

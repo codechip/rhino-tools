@@ -20,12 +20,12 @@ namespace Rhino.Queues.Tests.Units
 		{
 			SystemTime.Now = () => new DateTime(2000, 1, 1);
 			serverFactory = new Configuration("server")
-			                	.Map("server").To("http://localhost:9999/server/")
-			                	.Map("client").To("http://localhost:9999/client/")
-			                	.RegisterQueue("foo")
-			                	.ListenerThreads(1)
-			                	.SenderThreads(1)
-			                	.BuildQueueFactory() as QueueFactoryImpl;
+								.Map("server").To("http://localhost:9999/server/")
+								.Map("client").To("http://localhost:9999/client/")
+								.RegisterQueue("foo")
+								.ListenerThreads(1)
+								.SenderThreads(1)
+								.BuildQueueFactory() as QueueFactoryImpl;
 		}
 
 		[TearDown]
@@ -37,33 +37,61 @@ namespace Rhino.Queues.Tests.Units
 		[Test]
 		public void When_error_occured_will_put_messages_back_in_their_queue()
 		{
-			serverFactory.OnSendError(new Exception(), new[]
-			{
+			serverFactory.OnSendError(new Exception(),
 				new TransportMessage
 				{
-					Destination = new Destination {Queue = "foo", Server = "client"},
+					Destination = new Destination { Queue = "foo", Server = "client" },
 					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now()
-				}
-			});
+				},
+				MessageSendFailure.None);
 			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").First();
 			Assert.AreEqual(5, message.Message.Value);
 		}
 
+		[Test]
+		public void When_queue_not_found_error_occured_will_NOT_put_messages_back_in_their_queue()
+		{
+			serverFactory.OnSendError(new Exception(),
+				new TransportMessage
+				{
+					Destination = new Destination { Queue = "foo", Server = "client" },
+					Message = new Message { Value = 5 },
+					SendAt = SystemTime.Now()
+				},
+				MessageSendFailure.QueueNotFound);
+			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault();
+			Assert.IsNull(message);
+		}
+
+
+		[Test]
+		public void When_queue_invalid_error_occured_will_NOT_put_messages_back_in_their_queue()
+		{
+			serverFactory.OnSendError(new Exception(),
+				new TransportMessage
+				{
+					Destination = new Destination { Queue = "foo", Server = "client" },
+					Message = new Message { Value = 5 },
+					SendAt = SystemTime.Now()
+				},
+				MessageSendFailure.QueueInvalid);
+			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault();
+			Assert.IsNull(message);
+		}
 
 		[Test]
 		public void When_error_occured_and_failure_count_over_500_will_NOT_add_back_to_queue()
 		{
-			serverFactory.OnSendError(new Exception(), new[]
-			{
+			serverFactory.OnSendError(new Exception(),
 				new TransportMessage
 				{
-					Destination = new Destination {Queue = "foo", Server = "client"},
+					Destination = new Destination { Queue = "foo", Server = "client" },
 					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now(),
 					FailureCount = 500
-				}
-			});
+				},
+				MessageSendFailure.None);
 			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault();
 			Assert.IsNull(message);
 		}
@@ -78,16 +106,15 @@ namespace Rhino.Queues.Tests.Units
 				failedMsg = msg;
 				ex = e;
 			};
-			serverFactory.OnSendError(new Exception("error"), new[]
-			{
+			serverFactory.OnSendError(new Exception("error"),
 				new TransportMessage
 				{
-					Destination = new Destination {Queue = "foo", Server = "client"},
+					Destination = new Destination { Queue = "foo", Server = "client" },
 					Message = new Message { Value = 5 },
 					SendAt = SystemTime.Now(),
 					FailureCount = 500
-				}
-			});
+				},
+				MessageSendFailure.None);
 			Assert.AreEqual(5, failedMsg.Message.Value);
 			Assert.AreEqual("error", ex.Message);
 		}
@@ -97,14 +124,11 @@ namespace Rhino.Queues.Tests.Units
 		{
 			var msg = new TransportMessage
 			{
-				Destination = new Destination {Queue = "foo", Server = "client"},
+				Destination = new Destination { Queue = "foo", Server = "client" },
 				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
-			serverFactory.OnSendError(new Exception(), new[]
-			{
-				msg
-			});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(1, msg.FailureCount);
 		}
 
@@ -113,14 +137,11 @@ namespace Rhino.Queues.Tests.Units
 		{
 			var msg = new TransportMessage
 			{
-				Destination = new Destination {Queue = "foo", Server = "client"},
+				Destination = new Destination { Queue = "foo", Server = "client" },
 				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
-			serverFactory.OnSendError(new Exception(), new[]
-			{
-				msg
-			});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(SystemTime.Now().AddSeconds(2), msg.SendAt);
 		}
 
@@ -129,17 +150,17 @@ namespace Rhino.Queues.Tests.Units
 		{
 			var msg = new TransportMessage
 			{
-				Destination = new Destination {Queue = "foo", Server = "client"},
+				Destination = new Destination { Queue = "foo", Server = "client" },
 				Message = new Message { Value = 5 },
 				SendAt = SystemTime.Now()
 			};
-			serverFactory.OnSendError(new Exception(), new[] {msg});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(SystemTime.Now().AddSeconds(2), msg.SendAt);
-			serverFactory.OnSendError(new Exception(), new[] {msg});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(SystemTime.Now().AddSeconds(4), msg.SendAt);
-			serverFactory.OnSendError(new Exception(), new[] {msg});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(SystemTime.Now().AddSeconds(6), msg.SendAt);
-			serverFactory.OnSendError(new Exception(), new[] {msg});
+			serverFactory.OnSendError(new Exception(), msg, MessageSendFailure.None);
 			Assert.AreEqual(SystemTime.Now().AddSeconds(8), msg.SendAt);
 		}
 
@@ -147,8 +168,8 @@ namespace Rhino.Queues.Tests.Units
 		public void Will_register_to_sender_error_event()
 		{
 			var storageFactory = MockRepository.GenerateStub<IStorageFactory>();
-			var mapping = new Dictionary<string, string> {{"test", "http://localhost/test/"}};
-			var queues = new[] {"test"};
+			var mapping = new Dictionary<string, string> { { "test", "http://localhost/test/" } };
+			var queues = new[] { "test" };
 			var senderFactory = MockRepository.GenerateStub<ISenderFactory>();
 			var sender = MockRepository.GenerateStub<ISender>();
 			storageFactory.Stub(x => x.ForIncomingMessages(null)).IgnoreArguments().Return(

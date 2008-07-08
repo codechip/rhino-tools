@@ -102,11 +102,11 @@ namespace Rhino.Queues.Network
 				if (message.Destination == null || string.IsNullOrEmpty(message.Destination.Queue))
 				{
 					allValid = false;
-					context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+					context.Response.StatusCode = (int)HttpStatusCode.NotFound;
 					using (var writer = new StreamWriter(context.Response.OutputStream))
 					{
 						logger.WarnFormat("Message {0} doesn't have a queue specified", message.Id);
-						writer.WriteLine("Message {0} doesn't have a queue specified", message.Id);
+						writer.WriteLine("{0}:InvalidQueue", message.Id);
 					}
 				}
 				else if (queueFactory.HasQueue(message.Destination.Queue) == false)
@@ -116,7 +116,7 @@ namespace Rhino.Queues.Network
 					using (var writer = new StreamWriter(context.Response.OutputStream))
 					{
 						logger.WarnFormat("Message {0} specified queue {1} which doesn't exists", message.Id, message.Destination.Queue);
-						writer.WriteLine("Message {0} specified queue {1} which doesn't exists", message.Id, message.Destination.Queue);
+						writer.WriteLine("{0}:QueueNotFound", message.Id);
 					}
 				}
 
