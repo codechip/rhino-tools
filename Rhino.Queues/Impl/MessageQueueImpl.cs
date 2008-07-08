@@ -75,12 +75,12 @@ namespace Rhino.Queues.Impl
 
 		public object Recieve()
 		{
-			var message = incomingStorage.GetMessagesFor(destination.Queue).FirstOrDefault();
+			var message = incomingStorage.PullMessagesFor(destination.Queue).FirstOrDefault();
 			while (message == null)
 			{
 				if (incomingStorage.WaitForNewMessages(destination.Queue) == false)
 					return null;
-				message = incomingStorage.GetMessagesFor(destination.Queue).FirstOrDefault();
+				message = incomingStorage.PullMessagesFor(destination.Queue).FirstOrDefault();
 			}
 			AddRollbackSyncronization(() =>
 			{

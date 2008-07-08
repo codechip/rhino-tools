@@ -48,7 +48,7 @@ namespace Rhino.Queues.Network
 				var endPoint = storage.WaitForNewMessages();
 				if(endPoint==null)
 					return;
-				var array = storage.GetMessagesFor(endPoint).Take(100).ToArray();
+				var array = storage.PullMessagesFor(endPoint).Take(100).ToArray();
 				if(array.Length==0)
 					continue;
 				try

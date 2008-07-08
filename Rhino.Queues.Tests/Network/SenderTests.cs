@@ -64,7 +64,7 @@ namespace Rhino.Queues.Tests.Network
 					Destination = new Destination {Queue = "test"}
 				});
 				remoteMessageStorageFactory.IncomingStorage.WaitForNewMessages();
-				var msg = remoteMessageStorageFactory.IncomingStorage.GetMessagesFor("test").First();
+				var msg = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").First();
 				Assert.AreEqual(1, msg.Message);
 				localStorage.Dispose();
 			}
@@ -93,7 +93,7 @@ namespace Rhino.Queues.Tests.Network
 				resetEvent.WaitOne();
 				localStorage.Dispose();
 			}
-			var count = remoteMessageStorageFactory.IncomingStorage.GetMessagesFor("test").Count();
+			var count = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").Count();
 			Assert.AreEqual(100, count);
 		}
 
@@ -125,7 +125,7 @@ namespace Rhino.Queues.Tests.Network
 				resetEvent.WaitOne();
 				localStorage.Dispose();
 			}
-			var count = remoteMessageStorageFactory.IncomingStorage.GetMessagesFor("test").Count();
+			var count = remoteMessageStorageFactory.IncomingStorage.PullMessagesFor("test").Count();
 			Assert.AreEqual(400, count);
 		}
 
@@ -150,7 +150,7 @@ namespace Rhino.Queues.Tests.Network
 				localStorage.Dispose();
 			}
 			localStorage.WaitForNewMessages();
-			var msg = localStorage.GetMessagesFor("http://localhost/test/").First();
+			var msg = localStorage.PullMessagesFor("http://localhost/test/").First();
 			Assert.AreEqual(1, msg.Message);
 		}
 

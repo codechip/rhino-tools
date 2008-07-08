@@ -19,19 +19,28 @@ namespace Rhino.Queues.Storage.InMemory
 				queuesByName.Add(endpoint, new QueuePackage());
 			}
 		}
-
-		public IEnumerable<TransportMessage> GetMessagesFor(string name)
+		public IEnumerable<TransportMessage> PullMessagesFor(string name, Predicate<TransportMessage> predicate)
 		{
 			var queue = GetQueue(name);
-			lock(queue)
+			lock (queue)
 			{
-				while(queue.Messages.Count!=0)
+				var messages = queue.Messages;
+				var current = messages.Last;
+				while (current != null) 
 				{
-					var value = queue.Messages.Last.Value;
-					queue.Messages.RemoveLast();
+					var value = current.Value;
+					var toRemove = current;
+					current = current.Previous;
+					if (predicate(value) == false) 
+						continue;
+					messages.Remove(toRemove);
 					yield return value;
 				}
 			}
+		}
+		public IEnumerable<TransportMessage> PullMessagesFor(string name)
+		{
+			return PullMessagesFor(name, x => true);
 		}
 
 		public bool WaitForNewMessages(string name)

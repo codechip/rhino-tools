@@ -83,7 +83,7 @@ namespace Rhino.Queues.Tests.Units
 		{
 			factory.OpenQueue("test@foo").Send("my msg2");
 			Assert.AreEqual("my msg2",
-			                messageStorageFactory.OutgoingStorage.GetMessagesFor("http://localhost/foo/").First().Message);
+			                messageStorageFactory.OutgoingStorage.PullMessagesFor("http://localhost/foo/").First().Message);
 		}
 
 		[Test]
@@ -99,7 +99,7 @@ namespace Rhino.Queues.Tests.Units
 		{
 			factory.OpenQueue("test").Send("my msg1");
 			Assert.AreEqual("my msg1",
-			                messageStorageFactory.OutgoingStorage.GetMessagesFor("http://localhost/self/").First().Message);
+			                messageStorageFactory.OutgoingStorage.PullMessagesFor("http://localhost/self/").First().Message);
 		}
 
 		[Test]

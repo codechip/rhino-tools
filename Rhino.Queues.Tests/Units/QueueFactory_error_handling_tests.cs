@@ -46,7 +46,7 @@ namespace Rhino.Queues.Tests.Units
 					SendAt = SystemTime.Now()
 				}
 			});
-			var message = serverFactory.OutgoingStorage.GetMessagesFor("http://localhost:9999/client/").First();
+			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").First();
 			Assert.AreEqual(5, message.Message);
 		}
 
@@ -64,7 +64,7 @@ namespace Rhino.Queues.Tests.Units
 					FailureCount = 500
 				}
 			});
-			var message = serverFactory.OutgoingStorage.GetMessagesFor("http://localhost:9999/client/").FirstOrDefault();
+			var message = serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault();
 			Assert.IsNull(message);
 		}
 

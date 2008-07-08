@@ -38,7 +38,7 @@ namespace Rhino.Queues.Tests.Transactions
 			{
 				queue.Send(1);
 				Assert.IsNull(
-					serverFactory.OutgoingStorage.GetMessagesFor("http://localhost:9999/client/").FirstOrDefault()
+					serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault()
 					);
 			}
 		}
@@ -54,7 +54,7 @@ namespace Rhino.Queues.Tests.Transactions
 				tx.Complete();
 			}
 			Assert.IsNotNull(
-					serverFactory.OutgoingStorage.GetMessagesFor("http://localhost:9999/client/").FirstOrDefault()
+					serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault()
 					);
 		}
 
@@ -74,7 +74,7 @@ namespace Rhino.Queues.Tests.Transactions
 			{
 				Assert.AreEqual(1, queue.Recieve());
 				Assert.IsNull(
-					serverFactory.OutgoingStorage.GetMessagesFor("http://localhost:9999/client/").FirstOrDefault()
+					serverFactory.OutgoingStorage.PullMessagesFor("http://localhost:9999/client/").FirstOrDefault()
 					);
 				tx.Complete();
 			}
