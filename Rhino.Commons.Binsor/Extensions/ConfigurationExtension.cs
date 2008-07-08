@@ -29,6 +29,7 @@
 
 using System.Collections;
 using Castle.Core.Configuration;
+using Castle.MicroKernel.Registration;
 using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor.Extensions
@@ -42,7 +43,7 @@ namespace Rhino.Commons.Binsor.Extensions
             _configuration = configuration;
         }
 
-        void IComponentExtension.Apply(Component component)
+        void IComponentExtension.Apply(Component component, ComponentRegistration registration)
         {
             ApplyConfiguration(component.Configuration);
         }

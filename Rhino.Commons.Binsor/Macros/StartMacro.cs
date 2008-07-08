@@ -30,6 +30,7 @@
 
 
 using System;
+using Boo.Lang.Compiler.Ast;
 
 namespace Rhino.Commons.Binsor.Macros
 {
@@ -38,6 +39,14 @@ namespace Rhino.Commons.Binsor.Macros
 	{
 		public StartMacro() : base("start", true, "component", "extend")
 		{
+		}
+
+		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
+											    MacroStatement macro, MacroStatement parent,
+											    ref Statement expansion)
+		{
+			ArgumentsToCreateNamedArguments(macro.Arguments, extension);
+			return base.ExpandExtension(ref extension, macro, parent, ref expansion);
 		}
 	}
 }

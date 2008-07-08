@@ -27,9 +27,12 @@
 #endregion
 
 
+using Castle.Core.Configuration;
+using Castle.MicroKernel;
+
 namespace Rhino.Commons.Binsor
 {
-	public class FactorySupportExtension : IComponentExtension
+	public class FactorySupportExtension : AbstractComponentExtension
 	{
 		private readonly string factoryId;
 		private readonly string factoryCreate;
@@ -46,16 +49,16 @@ namespace Rhino.Commons.Binsor
 			this.factoryCreate = factoryCreate;
 		}
 
-		void IComponentExtension.Apply(Component component)
+		protected override void ApplyToConfiguration(IKernel kernel, IConfiguration compConfig)
 		{
 			if (instanceAccessor == null)
 			{
-				component.Configuration.Attributes["factoryId"] = factoryId;
-				component.Configuration.Attributes["factoryCreate"] = factoryCreate;
+				compConfig.Attributes["factoryId"] = factoryId;
+				compConfig.Attributes["factoryCreate"] = factoryCreate;
 			}
 			else
 			{
-				component.Configuration.Attributes["instance-accessor"] = instanceAccessor;
+				compConfig.Attributes["instance-accessor"] = instanceAccessor;
 			}
 		}
 	}

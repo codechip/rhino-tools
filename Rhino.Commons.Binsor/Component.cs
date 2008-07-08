@@ -27,23 +27,22 @@
 #endregion
 
 
-using System;
-using System.Collections;
-using Boo.Lang;
-using Castle.Core;
-using Castle.Core.Configuration;
-using Castle.MicroKernel;
-using Rhino.Commons.Binsor.Configuration;
-
 namespace Rhino.Commons.Binsor
 {
+	using System;
+	using System.Collections;
 	using System.Collections.Generic;
+	using Boo.Lang;
+	using Castle.Core;
+	using Castle.Core.Configuration;
+	using Castle.MicroKernel;
 	using Castle.MicroKernel.Registration;
+	using Rhino.Commons.Binsor.Configuration;
 
 	public class Component : IQuackFu, INeedSecondPassRegistration, IConfigurationFormatter
 	{
 		private readonly string _name;
-		private readonly Type _service;
+		private readonly IEnumerable<Type> _services;
 		private readonly Type _impl;
 		private IConfiguration _configuration;
 		private IConfiguration _parameters;
@@ -51,10 +50,13 @@ namespace Rhino.Commons.Binsor
 		private readonly IDictionary _attributes = new Hashtable();
 		private readonly IDictionary _dependencies = new Hashtable();
 		private readonly LifestyleType? _lifestyle;
+		private ComponentRegistration _registration;
 
         //important, we need to get this when we create the component, because we need
         //to support nested components
-	    private readonly IKernel kernel = AbstractConfigurationRunner.IoC.Container.Kernel;
+	    internal readonly IKernel kernel = AbstractConfigurationRunner.IoC.Container.Kernel;
+
+		#region Constructors 
 
 		public Component(Type service,
 						 params IComponentExtension[] extensions)
@@ -63,8 +65,14 @@ namespace Rhino.Commons.Binsor
 		}
 
 		public Component(Type service, Type impl,
-					 params IComponentExtension[] extensions)
+					     params IComponentExtension[] extensions)
 			: this(impl.FullName, service, impl, extensions)
+		{
+		}
+
+		public Component(IEnumerable<Type> services, Type impl,
+						 params IComponentExtension[] extensions)
+			: this(impl.FullName, services, impl, extensions)
 		{
 		}
 
@@ -75,14 +83,24 @@ namespace Rhino.Commons.Binsor
 		}
 
 		public Component(string name, Type service, Type impl,
+						 params IComponentExtension[] extensions)
+			: this(name, new Type[] { service }, impl, extensions )
+		{
+		}
+
+		public Component(string name, IEnumerable<Type> services, Type impl,
 		                 params IComponentExtension[] extensions)
 		{
 			_name = name;
-			_service = service;
+			_services = services;
 			_impl = impl;
 			_extensions = extensions;
 		    BooReader.NeedSecondPassRegistrations.Add(this);
 		}
+
+		#endregion
+
+		#region Legacy Constructors
 
 		public Component(string name, Type service, Type impl, LifestyleType lifestyleType)
 			: this(name, service, impl)
@@ -109,6 +127,8 @@ namespace Rhino.Commons.Binsor
 			EnsureConfiguration(configuration);
 		}
 
+		#endregion
+
 		public string Name
 		{
 			get { return _name; }
@@ -128,39 +148,50 @@ namespace Rhino.Commons.Binsor
 			get { return _dependencies; }
 		}
 
+		internal ComponentRegistration Registration
+		{
+			get { return _registration; }
+		}
+
         public Component Register()
 		{
-			RegisterExtensions(_extensions);
-
-			if (_configuration != null)
+			foreach (Type serviceType in _services)
 			{
-				kernel.ConfigurationStore.AddComponentConfiguration(_name, _configuration);
-			}
+				if (_registration == null)
+				{
+					_registration = new ComponentRegistration(serviceType);
+					_registration.Named(_name).ImplementedBy(_impl)
+						.DependsOn(_dependencies);
 
-			ComponentRegistration<object> component = new ComponentRegistration(_service)
-				.Named(_name).ImplementedBy(_impl)
-				.DependsOn(_dependencies);
+					RegisterExtensions(_extensions);
+				}
+				else
+				{
+					_registration.Forward(serviceType);
+				}
+			}
 
 			if (_lifestyle.HasValue)
 			{
-				component.LifeStyle.Is(_lifestyle.Value);
+				_registration.LifeStyle.Is(_lifestyle.Value);
 			}
 
-			kernel.Register(component);
+			kernel.Register(_registration);
 
 			_dependencies.Clear();
 
         	return this;
 		}
 
-		private void RegisterExtensions(IEnumerable<IComponentExtension> extensions)
+		internal void RegisterExtensions(IEnumerable<IComponentExtension> extensions)
 		{
 			if (extensions != null)
 			{
 				EnsureConfiguration(null);
+
 				foreach (IComponentExtension extension in extensions)
 				{
-					extension.Apply(this);
+					extension.Apply(this, _registration);
 				}
 			}
 		}
@@ -219,6 +250,7 @@ namespace Rhino.Commons.Binsor
 			if (_configuration == null)
 			{
 				_configuration = ConfigurationHelper.CreateConfiguration(null, "component", configuration);
+				kernel.ConfigurationStore.AddComponentConfiguration(_name, _configuration);
 			}
 		}
 
@@ -236,11 +268,6 @@ namespace Rhino.Commons.Binsor
 					_configuration.Children.Add(_parameters);
 				}
 			}
-		}
-
-		public void AddExtensions(IComponentExtension[] extensions)
-		{
-			RegisterExtensions(extensions);
 		}
 	}
 }

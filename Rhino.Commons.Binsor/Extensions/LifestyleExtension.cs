@@ -29,7 +29,7 @@
 
 using System;
 using Castle.Core;
-using Castle.Core.Configuration;
+using Castle.MicroKernel.Registration;
 
 namespace Rhino.Commons.Binsor
 {
@@ -44,14 +44,9 @@ namespace Rhino.Commons.Binsor
 			this.lifestyle = lifestyle;
 		}
 
-		void IComponentExtension.Apply(Component component)
+		public virtual void Apply(Component component, ComponentRegistration registration)
 		{
-			component.Configuration.Attributes["lifestyle"] = lifestyle.ToString();
-			AddLifestyleDetails(component.Configuration);
-		}
-
-		protected virtual void AddLifestyleDetails(IConfiguration configuration)
-		{
+			registration.LifeStyle.Is(lifestyle);
 		}
 	}
 
@@ -61,8 +56,7 @@ namespace Rhino.Commons.Binsor
 
 	public class Transient : LifestyleExtension
 	{
-		public Transient() 
-			: base(LifestyleType.Transient)
+		public Transient() : base(LifestyleType.Transient)
 		{
 		}
 	}
@@ -73,8 +67,7 @@ namespace Rhino.Commons.Binsor
 
 	public class Singleton : LifestyleExtension
 	{
-		public Singleton()
-			: base(LifestyleType.Singleton)
+		public Singleton() : base(LifestyleType.Singleton)
 		{
 		}
 	}
@@ -85,8 +78,7 @@ namespace Rhino.Commons.Binsor
 
 	public class Thread : LifestyleExtension
 	{
-		public Thread()
-			: base(LifestyleType.Thread)
+		public Thread() : base(LifestyleType.Thread)
 		{
 		}
 	}
@@ -100,8 +92,7 @@ namespace Rhino.Commons.Binsor
 		private int? initialPoolSize;
 		private int? maxPoolSize;
 
-		public Pooled()
-			: base(LifestyleType.Pooled)
+		public Pooled() : base(LifestyleType.Pooled)
 		{
 		}
 
@@ -115,17 +106,9 @@ namespace Rhino.Commons.Binsor
 			set { maxPoolSize = value; }
 		}
 
-		protected override void AddLifestyleDetails(IConfiguration configuration)
+		public override void Apply(Component component, ComponentRegistration registration)
 		{
-			if (initialPoolSize.HasValue)
-			{
-				configuration.Attributes["initialPoolSize"] = initialPoolSize.ToString();
-			}
-
-			if (maxPoolSize.HasValue)
-			{
-				configuration.Attributes["maxPoolSize"] = maxPoolSize.ToString();				
-			}
+			registration.LifeStyle.PooledWithSize(initialPoolSize, maxPoolSize);
 		}
 	}
 
@@ -135,8 +118,7 @@ namespace Rhino.Commons.Binsor
 
 	public class PerWebRequest : LifestyleExtension
 	{
-		public PerWebRequest()
-			: base(LifestyleType.PerWebRequest)
+		public PerWebRequest() : base(LifestyleType.PerWebRequest)
 		{
 		}
 	}
@@ -149,15 +131,14 @@ namespace Rhino.Commons.Binsor
 	{
 		private readonly Type customLifestyleType;
 
-		public Custom(Type customLifestyleType)
-			: base(LifestyleType.Custom)
+		public Custom(Type customLifestyleType) : base(LifestyleType.Custom)
 		{
 			this.customLifestyleType = customLifestyleType;
 		}
 
-		protected override void AddLifestyleDetails(IConfiguration configuration)
+		public override void Apply(Component component, ComponentRegistration registration)
 		{
-			configuration.Attributes["customLifestyleType"] = customLifestyleType.FullName;
+			registration.LifeStyle.Custom(customLifestyleType);
 		}
 	}
 
