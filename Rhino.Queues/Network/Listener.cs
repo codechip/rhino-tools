@@ -10,16 +10,16 @@ using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Network
 {
-	public class Listener : IDisposable
+	public class Listener : IListener
 	{
 		private readonly ILog logger = LogManager.GetLogger(typeof(Listener));
 		private readonly HttpListener listener;
-		private readonly IQueueFactory queueFactory;
+		private readonly IQueueFactoryImpl queueFactory;
 		private readonly int workerThreadsCount;
 		private bool active = true;
 		private readonly IList<Thread> threads = new List<Thread>();
 
-		public Listener(IQueueFactory queueFactory, int workerThreadsCount, string endpoint)
+		public Listener(IQueueFactoryImpl queueFactory, int workerThreadsCount, string endpoint)
 		{
 			listener = new HttpListener();
 			listener.Prefixes.Add(endpoint);
@@ -68,7 +68,7 @@ namespace Rhino.Queues.Network
 
 							foreach (var q in messagesByQueue)
 							{
-								queueFactory.Queue(q.Queue).PutAll(q.Messages);
+								queueFactory.OpenQueueImpl(q.Queue).PutAll(q.Messages);
 							}
 							context.Response.StatusCode = (int)HttpStatusCode.OK;
 						}

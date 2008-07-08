@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using log4net;
+using Rhino.Queues.Impl;
 using Rhino.Queues.Storage;
 using System.Linq;
 
 namespace Rhino.Queues.Network
 {
-	public class Sender : IDisposable
+	public class Sender : ISender
 	{
 		private readonly ILog logger = LogManager.GetLogger(typeof (Sender));
 
@@ -56,6 +58,10 @@ namespace Rhino.Queues.Network
 					request.Method = "PUT";
 					using(var stream = request.GetRequestStream())
 					{
+						var stream1 = new MemoryStream();
+						new BinaryFormatter().Serialize(stream1, array);
+						stream1.Position = 0;
+						var tmp = new BinaryFormatter().Deserialize(stream1);
 						new BinaryFormatter().Serialize(stream, array);
 					}
 					request.GetResponse().Close();
@@ -68,13 +74,13 @@ namespace Rhino.Queues.Network
 					{
 						storage.Add(endPoint, message);
 					}
-					Error(e);
+					Error(e, array);
 				}
 			}
 		}
 
 		public event Action BatchSent = delegate { };
-		public event Action<Exception> Error = delegate {};
+		public event Action<Exception, TransportMessage[]> Error = delegate {};
 
 		public void Dispose()
 		{

@@ -23,7 +23,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_requests_without_queue()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 
 			using(var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
 			{
@@ -54,7 +54,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_requests_without_destination()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
 			{
@@ -81,7 +81,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_requests_with_unknown_queues()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
 			{
@@ -112,7 +112,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_requests_with_no_data()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 			queueFactory.Stub(x => x.HasQueue("test")).Return(true).Repeat.Any();
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
@@ -130,7 +130,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_requests_with_bad_data()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 			queueFactory.Stub(x => x.HasQueue("test")).Return(true).Repeat.Any();
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
@@ -153,10 +153,10 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_report_error_when_failed_to_add_messages_to_queue()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
-			var messageQueue = MockRepository.GenerateStub<IMessageQueue>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
+			var messageQueue = MockRepository.GenerateStub<IMessageQueueImpl>();
 			queueFactory.Stub(x => x.HasQueue("test")).Return(true).Repeat.Any();
-			queueFactory.Stub(x => x.Queue("test")).Return(messageQueue);
+			queueFactory.Stub(x => x.OpenQueueImpl("test")).Return(messageQueue);
 
 			messageQueue.Stub(x => x.PutAll(Arg<TransportMessage[]>.Is.Anything))
 				.Throw(new Exception("my error message"));
@@ -186,10 +186,10 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_report_success_when_added_messages_to_queue()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
-			var messageQueue = MockRepository.GenerateStub<IMessageQueue>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
+			var messageQueue = MockRepository.GenerateStub<IMessageQueueImpl>();
 			queueFactory.Stub(x => x.HasQueue("test")).Return(true).Repeat.Any();
-			queueFactory.Stub(x => x.Queue("test")).Return(messageQueue);
+			queueFactory.Stub(x => x.OpenQueueImpl("test")).Return(messageQueue);
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
 			{
@@ -214,7 +214,7 @@ namespace Rhino.Queues.Tests.Network
 		[Test]
 		public void Will_reject_non_PUT_requests()
 		{
-			var queueFactory = MockRepository.GenerateStub<IQueueFactory>();
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
 
 			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
 			{

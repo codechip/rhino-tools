@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MbUnit.Framework;
+using Rhino.Mocks;
 using Rhino.Queues.Impl;
 using Rhino.Queues.Storage.InMemory;
 
@@ -20,7 +21,7 @@ namespace Rhino.Queues.Tests.Units
 			{
                 "test"
 			});
-			queue = new MessageQueueImpl("test", storage);
+			queue = new MessageQueueImpl(new Destination { Queue = "test" }, storage, storage, MockRepository.GenerateStub<IQueueFactoryImpl>());
 		}
 
 		[Test]

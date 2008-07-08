@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,7 +31,7 @@ namespace Rhino.Queues.Tests.Network
 			                                        remoteMessageStorageFactory, new Dictionary<string, string>
 			                                        {
 			                                        	{"test", "http://localhost/test/"}
-			                                        }, new[] {"test"}, 3, 3);
+			                                        }, new[] {"test"}, new ListenerFactory(1), new SenderFactory(1));
 
 			queueFactoryImpl.Start();
 		}
@@ -135,7 +136,7 @@ namespace Rhino.Queues.Tests.Network
 			{
 				sender.Start();
 				var resetEvent = new ManualResetEvent(false);
-				sender.Error += exception =>
+				sender.Error += (e,t) =>
 				{
 					sender.Dispose();
 					resetEvent.Set();
@@ -151,6 +152,36 @@ namespace Rhino.Queues.Tests.Network
 			localStorage.WaitForNewMessages();
 			var msg = localStorage.GetMessagesFor("http://localhost/test/").First();
 			Assert.AreEqual(1, msg.Message);
+		}
+
+		[Test]
+		public void When_send_fail_will_raise_error_with_failed_messages_and_exception()
+		{
+			Exception ex = null;
+			TransportMessage[] msgs = null;
+			using (sender = new Sender(localStorage, 1))
+			{
+				sender.Start();
+				var resetEvent = new ManualResetEvent(false);
+				sender.Error += (e, t) =>
+				{
+					ex = e;
+					msgs = t;
+					sender.Dispose();
+					resetEvent.Set();
+				};
+				localStorage.Add("http://localhost/test/", new TransportMessage
+				{
+					Message = 1,
+					Destination = new Destination { Queue = "test2" }
+				});
+				resetEvent.WaitOne();
+				localStorage.Dispose();
+			}
+			localStorage.WaitForNewMessages();
+			Assert.IsNotNull(ex);
+			Assert.AreEqual(1, msgs.Length);
+			Assert.AreEqual(1, msgs[0].Message);
 		}
 	}
 }

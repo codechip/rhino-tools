@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Rhino.Queues.Impl;
+using Rhino.Queues.Network;
 using Rhino.Queues.Storage.InMemory;
 
 namespace Rhino.Queues.Cfg
@@ -84,7 +85,13 @@ namespace Rhino.Queues.Cfg
 				throw new InvalidOperationException(msg);
 			}
 
-			return new QueueFactoryImpl(name, new InMemoryMessageStorageFactory(), endpointMapping, registeredQueues, listenersCount, sendersCount);
+			return new QueueFactoryImpl(
+				name, 
+				new InMemoryMessageStorageFactory(), 
+				endpointMapping, 
+				registeredQueues, 
+				new ListenerFactory(listenersCount), 
+				new SenderFactory(sendersCount));
 		}
 	}
 

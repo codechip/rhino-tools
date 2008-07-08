@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MbUnit.Framework;
+using Rhino.Mocks;
 using Rhino.Queues.Impl;
+using Rhino.Queues.Network;
+using Rhino.Queues.Storage;
 
 namespace Rhino.Queues.Tests.Units
 {
@@ -15,12 +18,19 @@ namespace Rhino.Queues.Tests.Units
 		[SetUp]
 		public void SetUp()
 		{
+			var listenerFactory = MockRepository.GenerateStub<IListenerFactory>();
+			listenerFactory.Stub(x => x.Create(null, null)).IgnoreArguments().Return(
+				MockRepository.GenerateStub<IListener>());
+			var senderFactory = MockRepository.GenerateStub<ISenderFactory>();
+			senderFactory.Stub(x => x.Create(null)).IgnoreArguments().Return(
+				MockRepository.GenerateStub<ISender>());
+
 			messageStorageFactory = new TestMessageStorageFactory();
 			factory = new QueueFactoryImpl("bar", messageStorageFactory, new Dictionary<string, string>
 			{
 				{"foo", "http://localhost/foo/"},
 				{"bar", "http://localhost/self/"}
-			}, new[] {"foo"}, 0, 0);
+			}, new[] { "foo" }, listenerFactory, senderFactory);
 			factory.Start();
 		}
 
@@ -35,21 +45,21 @@ namespace Rhino.Queues.Tests.Units
 			"Destination 'blah' endpoint was not registered. Did you forget to call Map('blah').To('http://some/end/point');")]
 		public void When_sending_to_an_unknown_destination_will_throw()
 		{
-			factory.Send("test@blah", "foo");
+			factory.OpenQueue("test@blah").Send("foo");
 		}
 
 		[Test]
 		[ExpectedArgumentException("Destination cannot be null or empty")]
 		public void When_sending_to_an_empty_destination_will_throw()
 		{
-			factory.Send("", "foo");
+			factory.OpenQueue("").Send("foo");
 		}
 
 		[Test]
 		[ExpectedArgumentException("Destination cannot be null or empty")]
 		public void When_sending_to_an_null_destination_will_throw()
 		{
-			factory.Send(null, "foo");
+			factory.OpenQueue(null).Send("foo");
 		}
 
 
@@ -57,21 +67,21 @@ namespace Rhino.Queues.Tests.Units
 		[ExpectedArgumentNullException]
 		public void When_sending_null_message_will_throw()
 		{
-			factory.Send("foo", null);
+			factory.OpenQueue("foo").Send(null);
 		}
 
 		[Test]
 		[ExpectedArgumentException("Message QueueFactoryImplTests must be serializable")]
 		public void When_sending_unserializable_message_will_throw()
 		{
-			factory.Send("foo", this);
+			factory.OpenQueue("foo").Send(this);
 		}
 
 
 		[Test]
 		public void When_sending_message_will_place_in_storage()
 		{
-			factory.Send("test@foo", "my msg2");
+			factory.OpenQueue("test@foo").Send("my msg2");
 			Assert.AreEqual("my msg2",
 			                messageStorageFactory.OutgoingStorage.GetMessagesFor("http://localhost/foo/").First().Message);
 		}
@@ -80,14 +90,14 @@ namespace Rhino.Queues.Tests.Units
 		public void When_recieving_message_will_get_it_from_storage()
 		{
 			messageStorageFactory.IncomingStorage.Add("foo", new TransportMessage{Message = "my msg 5"});
-			var recieve = factory.Queue("foo").Recieve();
+			var recieve = factory.OpenQueue("foo").Recieve();
 			Assert.AreEqual("my msg 5", recieve);
 		}
 
 		[Test]
 		public void Can_send_message_to_local_without_specifying_destination()
 		{
-			factory.Send("test", "my msg1");
+			factory.OpenQueue("test").Send("my msg1");
 			Assert.AreEqual("my msg1",
 			                messageStorageFactory.OutgoingStorage.GetMessagesFor("http://localhost/self/").First().Message);
 		}
@@ -97,11 +107,11 @@ namespace Rhino.Queues.Tests.Units
 		public void Cannot_call_send_without_calling_start()
 		{
             var myFactory = new QueueFactoryImpl("bar", messageStorageFactory, new Dictionary<string, string>
-			{
-				{"foo", "http://localhost/foo/"},
-				{"bar", "http://localhost/self2/"}
-			}, new[] { "foo" }, 3, 3);
-			myFactory.Send("foo", 1);
+            {
+            	{"foo", "http://localhost/foo/"},
+            	{"bar", "http://localhost/self2/"}
+            }, new[] { "foo" }, new ListenerFactory(1), new SenderFactory(1));
+			myFactory.OpenQueue("foo").Send(1);
 		}
 
 		[Test]
@@ -112,8 +122,8 @@ namespace Rhino.Queues.Tests.Units
 			{
 				{"foo", "http://localhost/foo/"},
 				{"bar", "http://localhost/self3/"}
-			}, new[] { "foo" }, 3, 3);
-			myFactory.Queue("foo");
+			}, new[] { "foo" }, new ListenerFactory(1), new SenderFactory(1));
+			myFactory.OpenQueue("foo");
 		}
 	}
 }

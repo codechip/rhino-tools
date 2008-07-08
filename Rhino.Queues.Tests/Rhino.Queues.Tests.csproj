@@ -47,6 +47,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -63,10 +64,12 @@
     <Compile Include="Scenarios\Request_reply_scenario_tests.cs" />
     <Compile Include="Scenarios\Sending_many_messages_scenario_tests.cs" />
     <Compile Include="Threading\BlockingQueueTests.cs" />
+    <Compile Include="Transactions\TransactionsTests.cs" />
     <Compile Include="Units\ConfigurationTests.cs" />
     <Compile Include="Units\InMemoryMessageStorageTests.cs" />
     <Compile Include="Units\MessageQueueImplTests.cs" />
     <Compile Include="Units\QueueFactoryImplTests.cs" />
+    <Compile Include="Units\QueueFactory_error_handling_tests.cs" />
     <Compile Include="Units\TestMessageStorageFactory.cs" />
   </ItemGroup>
   <ItemGroup>

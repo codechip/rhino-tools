@@ -5,26 +5,38 @@ using Rhino.Queues.Storage;
 
 namespace Rhino.Queues.Impl
 {
-	public class QueueFactoryImpl : IQueueFactory
+	public class QueueFactoryImpl : IQueueFactoryImpl
 	{
 		private readonly string name;
 		private readonly IMessageStorage outgoingStorage, incomingStorage;
 		private readonly IDictionary<string, string> destinationMapping;
-		private Listener listener;
-		private Sender sender;
-		private bool started = false;
+		private readonly IListener listener;
+		private readonly ISender sender;
+		private bool started;
 
-		public QueueFactoryImpl(string name, 
-			IStorageFactory storageFactory, 
-			IDictionary<string, string> destinationMapping,
-			IEnumerable<string> queues, int listenerThreadCount, int senderThreadCount)
+		public void MarkAsStarted()
+		{
+			started = true;
+		}
+
+		public IMessageStorage OutgoingStorage
+		{
+			get { return outgoingStorage; }
+		}
+
+		public IMessageStorage IncomingStorage
+		{
+			get { return incomingStorage; }
+		}
+
+		public QueueFactoryImpl(string name, IStorageFactory storageFactory, IDictionary<string, string> destinationMapping, IEnumerable<string> queues, IListenerFactory listenerFactory, ISenderFactory senderFactory)
 		{
 			this.name = name;
 			this.destinationMapping = destinationMapping;
 			outgoingStorage = storageFactory.ForOutgoingMessages(new HashSet<string>(destinationMapping.Values));
 			incomingStorage = storageFactory.ForIncomingMessages(new HashSet<string>(queues));
-			listener = new Listener(this, listenerThreadCount, destinationMapping[name]);
-			sender = new Sender(outgoingStorage, senderThreadCount);
+			listener = listenerFactory.Create(this, destinationMapping[name]);
+			sender = senderFactory.Create(outgoingStorage);
 		}
 
 		public void Dispose()
@@ -36,41 +48,25 @@ namespace Rhino.Queues.Impl
 			started = false;
 		}
 
-		public void Send(string destination, object msg)
+		public IMessageQueue OpenQueue(string queueName)
 		{
-			AssertStarted();
-			
-			var dest = new Destination(this, destination);
-			string endpointMapping;
-			if (destinationMapping.TryGetValue(dest.Server, out endpointMapping) == false)
-			{
-				var message = string.Format(
-					"Destination '{0}' endpoint was not registered. Did you forget to call Map('{0}').To('http://some/end/point');",
-					dest.Server);
-				throw new ArgumentException(message);
-			}
-			if (msg == null)
-				throw new ArgumentNullException("msg");
-			if(msg.GetType().IsSerializable==false)
-				throw new ArgumentException("Message " + msg.GetType().Name + " must be serializable");
-
-			outgoingStorage.Add(endpointMapping, new TransportMessage
-			{
-				Destination = dest,
-				Message = msg,
-				SentAt = SystemTime.Now()
-			});
+			return OpenQueueImpl(queueName);
 		}
 
-		public IMessageQueue Queue(string queueName)
+		public IMessageQueueImpl OpenQueueImpl(string queueName)
 		{
 			AssertStarted();
-			return new MessageQueueImpl(queueName, incomingStorage);
+			return new MessageQueueImpl(
+				new Destination(this, queueName),
+				incomingStorage,
+				outgoingStorage,
+				this);
 		}
+
 
 		private void AssertStarted()
 		{
-			if(started)
+			if (started)
 				return;
 			throw new InvalidOperationException("Cannot send or queue before factory '" + name + "' is started");
 		}
@@ -82,14 +78,45 @@ namespace Rhino.Queues.Impl
 
 		public void Start()
 		{
+			sender.Error += OnSendError;
 			sender.Start();
 			listener.Start();
 			started = true;
+		}
+
+		public void OnSendError(Exception exception, TransportMessage[] msgs)
+		{
+			foreach (var msg in msgs)
+			{
+				msg.FailureCount += 1;
+				if(msg.FailureCount > 500)
+				{
+					FinalDeliveryFailure(msg, exception);
+					continue;
+				}
+				msg.SendAt = SystemTime.Now().AddSeconds( msg.FailureCount * 2 );
+				var destination = GetEndpointFromDestination(msg.Destination);
+				outgoingStorage.Add(destination, msg);
+			}
+		}
+		public string GetEndpointFromDestination(Destination destination)
+		{
+			string endpointMapping;
+			if (destinationMapping.TryGetValue(destination.Server, out endpointMapping) == false)
+			{
+				var message = string.Format(
+					"Destination '{0}' endpoint was not registered. Did you forget to call Map('{0}').To('http://some/end/point');",
+					destination.Server);
+				throw new ArgumentException(message);
+			}
+			return endpointMapping;
 		}
 
 		public bool HasQueue(string queueName)
 		{
 			return incomingStorage.Exists(queueName);
 		}
+
+		public event Action<TransportMessage, Exception> FinalDeliveryFailure = delegate { };
 	}
 }

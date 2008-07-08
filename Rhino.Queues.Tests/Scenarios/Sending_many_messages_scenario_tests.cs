@@ -50,20 +50,23 @@ namespace Rhino.Queues.Tests.Scenarios
 
 			for (int i = 0; i < iterationCount; i++)
 			{
-				serverFactory.Send("fu@client", i);
-				serverFactory.Send("kong@client", i * 2);
+				serverFactory.OpenQueue("fu@client").Send(i);
+				serverFactory.OpenQueue("kong@client").Send(i * 2);
 			}
 			var fu = new List<int>();
 			var kong = new List<int>();
 			for (int i = 0; i < iterationCount; i++)
 			{
-				fu.Add((int)clientFactory.Queue("fu").Recieve());
-				kong.Add((int)clientFactory.Queue("kong").Recieve());
+				fu.Add((int)clientFactory.OpenQueue("fu").Recieve());
+				kong.Add((int)clientFactory.OpenQueue("kong").Recieve());
 			}
 
 			// we do not ensure order
 			fu.Sort();
 			kong.Sort();
+
+			Assert.AreEqual(iterationCount, fu.Count);
+			Assert.AreEqual(iterationCount, kong.Count);
 
 			for (int i = 0; i < iterationCount; i++)
 			{

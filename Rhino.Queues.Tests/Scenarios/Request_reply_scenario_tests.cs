@@ -43,8 +43,8 @@ namespace Rhino.Queues.Tests.Scenarios
 			serverFactory.Start();
 			clientFactory.Start();
 
-			serverFactory.Send("kong@client", new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.Queue("kong").Recieve();
+			serverFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -54,8 +54,8 @@ namespace Rhino.Queues.Tests.Scenarios
 			serverFactory.Start();
 			clientFactory.Start();
 
-			clientFactory.Send("kong@client", new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.Queue("kong").Recieve();
+			clientFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -65,8 +65,8 @@ namespace Rhino.Queues.Tests.Scenarios
 			serverFactory.Start();
 			clientFactory.Start();
 
-			clientFactory.Send("kong", new DateTime(2000, 1, 1));
-			var actual = (DateTime)clientFactory.Queue("kong").Recieve();
+			clientFactory.OpenQueue("kong").Send(new DateTime(2000, 1, 1));
+			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve();
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
 		}
 
@@ -77,11 +77,11 @@ namespace Rhino.Queues.Tests.Scenarios
 			serverFactory.Start();
 			clientFactory.Start();
 
-			serverFactory.Send("kong@client", new DateTime(2000, 1, 1));
-			var actual1 = (DateTime)clientFactory.Queue("kong").Recieve();
+			serverFactory.OpenQueue("kong@client").Send(new DateTime(2000, 1, 1));
+			var actual1 = (DateTime)clientFactory.OpenQueue("kong").Recieve();
 			Assert.AreEqual(new DateTime(2000, 1, 1), actual1);
-			clientFactory.Send("foo@server", "passed all the way");
-			var actual2 = (string)serverFactory.Queue("foo").Recieve();
+			clientFactory.OpenQueue("foo@server").Send("passed all the way");
+			var actual2 = (string)serverFactory.OpenQueue("foo").Recieve();
 			Assert.AreEqual("passed all the way", actual2);
 			
 		}

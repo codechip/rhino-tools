@@ -3,9 +3,10 @@ using Rhino.Queues.Impl;
 
 namespace Rhino.Queues
 {
-	public interface IMessageQueue
+	public interface IMessageQueue : IDisposable
 	{
+		void Send(object msg);
 		object Recieve();
-		void PutAll(TransportMessage[] msgs);
 	}
+
 }
