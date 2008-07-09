@@ -266,6 +266,16 @@
             This is supplied for advanced sceanrios.
             </remarks>
         </member>
+        <member name="T:Castle.ActiveRecord.WithAccessOptionalTableAttribute">
+            <summary>
+            Base class that allows specifying an alternate table for an object's field or property.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.WithAccessOptionalTableAttribute.Table">
+            <summary>
+            Gets or sets the table name if joined
+            </summary>
+        </member>
         <member name="M:Castle.ActiveRecord.AnyAttribute.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.AnyAttribute"/> class.
@@ -1475,6 +1485,58 @@
             Gets or sets the column name
             </summary>
             <value>The column.</value>
+        </member>
+        <member name="T:Castle.ActiveRecord.JoinedTableAttribute">
+            <summary>
+            Associates another table with the mapping.
+            </summary>
+            <example>
+            <code>
+            [JoinedTable("tb_Address")]
+            public class Order : ActiveRecordBase
+            {
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:Castle.ActiveRecord.JoinedTableAttribute.#ctor(System.String)">
+            <summary>
+             Joins the specified table with the target type.
+            </summary>
+            <param name="table"></param>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Table">
+            <summary>
+            Gets or sets the table name joined with the type.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Schema">
+            <summary>
+            Gets or sets the schema name of the joined table.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Column">
+            <summary>
+            Defines the column used for joining (usually a foreign key)
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Fetch">
+            <summary>
+            Chooses between outer-join fetching
+            or sequential select fetching.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Inverse">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:Castle.ActiveRecord.JoinedTableAttribute"/> is inverse.
+            </summary>
+            <value><c>true</c> if inverse; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.JoinedTableAttribute.Optional">
+            <summary>
+            Determines if the join is optional.
+            <value><c>true</c> if optional; otherwise, <c>false</c>.</value>
+            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.KeyPropertyAttribute">
             <summary>
@@ -2942,6 +3004,12 @@
             </summary>
             <value>The joined classes.</value>
         </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.JoinedTables">
+            <summary>
+            Gets the list of joined tables.
+            </summary>
+            <value>The joined tables.</value>
+        </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel.Components">
             <summary>
             Gets the list of components.
@@ -3473,6 +3541,59 @@
             </summary>
             <value>The import att.</value>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.JoinedTableModel">
+            <summary>
+            Model for joining an additional table to Active Record class.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.#ctor(Castle.ActiveRecord.JoinedTableAttribute)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.JoinedTableModel"/> class.
+            </summary>
+            <param name="att">The att.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.Accept(Castle.ActiveRecord.Framework.Internal.IVisitor)">
+            <summary>
+            Accepts the specified visitor and call the relevant IVisitor.Visit***() method
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.JoinedTableAttribute">
+            <summary>
+            Gets the joined table attribute
+            </summary>
+            <value>The joined table att.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.Properties">
+            <summary>
+            Gets all the properties
+            </summary>
+            <value>The properties.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.Fields">
+            <summary>
+            Gets all the fields
+            </summary>
+            <value>The fields.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.Components">
+            <summary>
+            Gets the list of components.
+            </summary>
+            <value>The components.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.BelongsTo">
+            <summary>
+            Gets the list of [belongs to] models
+            </summary>
+            <value>The belongs to.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.JoinedTableModel.Anys">
+            <summary>
+            Gets the list of [any] model
+            </summary>
+            <value>The anys.</value>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.KeyModel">
             <summary>
             Model for a joined key property in a joined subclass
@@ -3867,6 +3988,12 @@
             </summary>
             <param name="model">The model.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.IVisitor.VisitJoinedTable(Castle.ActiveRecord.Framework.Internal.JoinedTableModel)">
+            <summary>
+            Visits the joined table configuration.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitNode(Castle.ActiveRecord.Framework.Internal.IVisitable)">
             <summary>
             Visits the node.
@@ -4011,6 +4138,12 @@
             </summary>
             <param name="model">The model.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.VisitJoinedTable(Castle.ActiveRecord.Framework.Internal.JoinedTableModel)">
+            <summary>
+            Visits the joined table configuration.
+            </summary>
+            <param name="model">The model.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.AbstractDepthFirstVisitor.GuessType(System.Type,System.Type)">
             <summary>
             Guesses the type of the other end.
@@ -4110,6 +4243,7 @@
             <remarks>
             Infer column name and whatever this propery can be null or not
             Also catch common mistake of try to use [Property] on an entity, instead of [BelongsTo]
+            Ensure that joined properties have a joined table.
             </remarks>
             <param name="model">The model.</param>
         </member>
@@ -4221,6 +4355,15 @@
             </remarks>
             <param name="model">The model.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.VisitJoinedTable(Castle.ActiveRecord.Framework.Internal.JoinedTableModel)">
+            <summary>
+            Visits the joined table.
+            </summary>
+            <remarks>
+            Infer column name
+            </remarks>
+            <param name="model">The model.</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.GetIndexTypeFromDictionary(System.Type)">
             <summary>
             Gets the index type of a mapped dictionary.
@@ -4279,6 +4422,15 @@
             <summary>
             Visits the property.
             </summary>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor.VisitJoinedTable(Castle.ActiveRecord.Framework.Internal.JoinedTableModel)">
+            <summary>
+            Visits the joined table.
+            </summary>
+            <remarks>
+            Infer column name
+            </remarks>
             <param name="model">The model.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.XmlGenerationVisitor.VisitField(Castle.ActiveRecord.Framework.Internal.FieldModel)">
@@ -4406,6 +4558,13 @@
             </summary>
             <param name="type">The type.</param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.CreateDummyModelFor(System.Type)">
+            <summary>
+            Creates the dummy model for the specified type.
+            This is required for integration with plain NHibernate entities
+            </summary>
+            <param name="type">The type.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.ActiveRecordModelBuilder.SetExtension(Castle.ActiveRecord.Framework.Internal.IModelBuilderExtension)">
             <summary>
@@ -8302,6 +8461,36 @@
             <param name="type">The type.</param>
             <param name="id">The id.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.EvictEntity(System.String)">
+            <summary> 
+            From NH docs: Evict all entries from the second-level cache. This method occurs outside
+            of any transaction; it performs an immediate "hard" remove, so does not respect
+            any transaction isolation semantics of the usage strategy. Use with care.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.EvictCollection(System.String)">
+            <summary>
+            From NH docs: Evict all entries from the process-level cache.  This method occurs outside
+            of any transaction; it performs an immediate "hard" remove, so does not respect
+            any transaction isolation semantics of the usage strategy.  Use with care.
+            </summary>
+            <param name="roleName">Name of the role.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.EvictCollection(System.String,System.Object)">
+            <summary>
+            From NH docs: Evict an entry from the process-level cache.  This method occurs outside
+            of any transaction; it performs an immediate "hard" remove, so does not respect
+            any transaction isolation semantics of the usage strategy.  Use with care.
+            </summary>
+            <param name="roleName">Name of the role.</param>
+            <param name="id">The id.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordMediator.EvictQueries(System.String)">
+            <summary>
+            From NH docs: Evict any query result sets cached in the named query cache region.
+            </summary>
+            <param name="cacheRegion">The cache region.</param>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordMediator`1">
             <summary>
             Allow programmers to use the 
@@ -8775,6 +8964,13 @@
             <summary>
             So others frameworks can intercept the 
             creation and act on the holder instance
+            </summary>
+        </member>
+        <member name="E:Castle.ActiveRecord.ActiveRecordStarter.MappingRegisteredInConfiguration">
+            <summary>
+            So others frameworks can intercept the 
+            creation and act on the holder instance after
+            the mapping was already loaded into the NHibernate 
             </summary>
         </member>
         <member name="E:Castle.ActiveRecord.ActiveRecordStarter.ModelsCreated">
@@ -9529,6 +9725,12 @@
             <param name="type"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.ISessionFactoryHolder.GetSessionFactories">
+            <summary>
+            Gets the all the session factories.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.ISessionFactoryHolder.CreateSession(System.Type)">
             <summary>
             Creates a session for the associated type
@@ -9627,6 +9829,12 @@
             <summary>
             Pendent
             </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.GetSessionFactories">
+            <summary>
+            Gets the all the session factories.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.SessionFactoryHolder.GetSessionFactory(System.Type)">
             <summary>

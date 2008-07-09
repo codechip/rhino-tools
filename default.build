@@ -16,7 +16,7 @@
 		<include name="rhino-security/default.build" />
 		<include name="rhino-etl/default.build" />
 		<include name="rhino-igloo/default.build" />
-		<include name="NHibernate.Query.Generator/default.build" />
+		<!--<include name="NHibernate.Query.Generator/default.build" />-->
 	</fileset>
 
 	<target name="debug" description="Selects the debug build configuration">
