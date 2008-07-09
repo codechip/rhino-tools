@@ -106,6 +106,9 @@ namespace NHibernate.Query.Generator
             GenerateVersionComment(queryNameSpace);
             unit.Namespaces.Add(queryNameSpace);
 
+            // set NHibernate as globally qualified to avoid namespace clashes
+            queryNameSpace.Imports.Add(new CodeNamespaceImport("NHibernate = global::NHibernate"));
+
             if (import != null)
             {
                 CodeNamespaceImport nsImport = new CodeNamespaceImport(import);

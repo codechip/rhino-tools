@@ -32,10 +32,12 @@
 //Don't optimize the using statements in this file, as naming conflicts between 
 //generated code and other (project) objects may occur.
 using System.Collections.Generic;
-using NHibernate.Criterion;
 
 namespace QueryNamespace
 {
+    using NHibernate = global::NHibernate;
+    using global::NHibernate.Criterion;
+
 	[System.CodeDom.Compiler.GeneratedCode("NHibernate.Query.Generator", "1.0.0.0")]
 	public partial class Where
 	{
