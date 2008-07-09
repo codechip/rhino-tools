@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -152,10 +152,14 @@ namespace Rhino.Commons
 			};
 						
 			ActiveRecordStarter.ResetInitializationFlag();
-			foreach (INHibernateInitializationAware hibernateInitializationAware in InitializationAware)
+			if (InitializationAware != null)
 			{
-				hibernateInitializationAware.BeforeInitialization();
+				foreach (INHibernateInitializationAware hibernateInitializationAware in InitializationAware)
+				{
+					hibernateInitializationAware.BeforeInitialization();
+				}
 			}
+
 			ActiveRecordStarter.Initialize(assemblies, configurationSource);
 			ISessionFactoryHolder sessionFactoryHolder = ActiveRecordMediator.GetSessionFactoryHolder();
 			if (InitializationAware != null)
