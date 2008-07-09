@@ -213,9 +213,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.hbm.xml" />
-    <Content Include="hibernate.cfg.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="ForTesting\AREntity.hbm.xml" />
     <EmbeddedResource Include="Repository\Child.hbm.xml" />
     <EmbeddedResource Include="Repository\Parent.hbm.xml" />
@@ -233,6 +230,7 @@
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
     <Compile Include="Facilities\MultipleNHibernateUnitOfWorkFacilityTests.cs" />
+    <Compile Include="Facilities\MultipleNHibernateUnitOfWorkTestBase.cs" />
     <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.cs" />
     <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests.cs" />
@@ -266,6 +264,10 @@
     <ProjectReference Include="..\Rhino.Commons.ActiveRecord\Rhino.Commons.ActiveRecord.csproj">
       <Project>{2B796A66-19FC-4E72-BB02-DC16D878725A}</Project>
       <Name>Rhino.Commons.ActiveRecord</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rhino.Commons.Binsor\Rhino.Commons.Binsor-vs2005.csproj">
+      <Project>{8E8CBAEA-B35B-4A88-BAAE-8B11A2EB9019}</Project>
+      <Name>Rhino.Commons.Binsor-vs2005</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
