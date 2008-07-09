@@ -80,7 +80,23 @@ namespace Rhino.Commons.Binsor.Macros
 							break;
 
 						case BinaryOperatorType.LessThan:
-							implementation = binary.Left;
+							if (binary.Left is BinaryExpression)
+							{
+								BinaryExpression impl = (BinaryExpression)binary.Left;
+								if (impl.Operator == BinaryOperatorType.ReferenceEquality)
+								{
+									yield return impl.Left;
+									implementation = impl.Right;
+								}
+								else
+								{
+									break;
+								}
+							}
+							else
+							{
+								implementation = binary.Left;
+							}
 							AddService(binary.Right);
 							yield break;
 					}
