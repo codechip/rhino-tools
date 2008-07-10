@@ -44,13 +44,11 @@ namespace Rhino.Commons.Facilities
 		public NHibernateUnitOfWorkFacility(string assembly)
 			: this(assembly, null)
 		{
-
 		}
 
 		public NHibernateUnitOfWorkFacility(string assembly, string configurationFileName)
 			: this(assembly, false, configurationFileName)
 		{
-			this.configurationFileName = configurationFileName;
 		}
 
 		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository)
@@ -61,7 +59,6 @@ namespace Rhino.Commons.Facilities
 		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository, string configurationFileName)
 			: this(new string[] { assembly, }, registerEntitiesToRepository, configurationFileName)
 		{
-			this.configurationFileName = configurationFileName;
 		}
 
 		public NHibernateUnitOfWorkFacility(string[] assemblies)
@@ -72,7 +69,6 @@ namespace Rhino.Commons.Facilities
 		public NHibernateUnitOfWorkFacility(string[] assemblies, string configurationFileName)
 			: this(assemblies, false, configurationFileName)
 		{
-			this.configurationFileName = configurationFileName;
 		}
 
 		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository)
@@ -82,13 +78,13 @@ namespace Rhino.Commons.Facilities
 
 		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository, string configurationFileName)
 		{
-			this.assemblies = new Assembly[assemblies.Length];
+            this.registerEntitiesToRepository = registerEntitiesToRepository;
+            this.configurationFileName = configurationFileName; 
+            this.assemblies = new Assembly[assemblies.Length];
 			for (int i = 0; i < assemblies.Length; i++)
 			{
 				this.assemblies[i] = Assembly.Load(assemblies[i]);
 			}
-			this.registerEntitiesToRepository = registerEntitiesToRepository;
-			this.configurationFileName = configurationFileName;
 		}
 
 		protected override void Init()

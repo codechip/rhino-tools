@@ -41,7 +41,7 @@ namespace Rhino.Commons
 	public class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
 	{
 		static readonly object lockObj = new object();
-		public string CurrentNHibernateSessionKey = Guid.NewGuid().ToString();
+		public readonly string CurrentNHibernateSessionKey = Guid.NewGuid().ToString();
 		private ISessionFactory sessionFactory;
 		private Configuration cfg;
 		private INHibernateInitializationAware[] initializationAware;
@@ -49,7 +49,6 @@ namespace Rhino.Commons
 
 		public NHibernateUnitOfWorkFactory()
 		{
-
 		}
 
 		public NHibernateUnitOfWorkFactory(string configurationFileName)

@@ -8,29 +8,31 @@ using NHibernate.Metadata;
 
 namespace Rhino.Commons
 {
-	public class MultipleNHibernateUnitOfWorkFactory : IUnitOfWorkFactory
+	public class MultipleNHibernateUnitOfWorkFactory : List<NHibernateUnitOfWorkFactory>, IUnitOfWorkFactory
 	{
+        public const string USER_PROVIDED_CONNECTION_EXCEPTION_MESSAGE = "MultipleNHibernateUnitOfWorkFactory does not support user supplied connections because it cannot associate the connection to a factory.";
 		public const string CurrentNHibernateSessionKey = "CurrentMultipleNHibernateSession.Key";
-		private readonly List<NHibernateUnitOfWorkFactory> unitOfWorkFactories = new List<NHibernateUnitOfWorkFactory>();
-
-		public void Add(NHibernateUnitOfWorkFactory factory)
-		{
-			unitOfWorkFactories.Add(factory);
-		}
 
 		public void Init()
 		{
-			unitOfWorkFactories.ForEach(delegate(NHibernateUnitOfWorkFactory factory) { factory.Init(); });
+			ForEach(delegate(NHibernateUnitOfWorkFactory factory) { factory.Init(); });
 		}
 
 		public IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous)
 		{
-			MultipleUnitsOfWorkImplementor implementor = new MultipleUnitsOfWorkImplementor();
-			unitOfWorkFactories.ForEach(delegate(NHibernateUnitOfWorkFactory factory)
-			{
-				 implementor.Add(factory.Create(maybeUserProvidedConnection, previous));
-			});
-			return implementor;
+            Guard.Against<NotSupportedException>(maybeUserProvidedConnection != null, USER_PROVIDED_CONNECTION_EXCEPTION_MESSAGE);
+
+            MultipleUnitsOfWorkImplementor previousImplementors = previous as MultipleUnitsOfWorkImplementor;
+            MultipleUnitsOfWorkImplementor currentImplementor = new MultipleUnitsOfWorkImplementor();
+            for (int i = 0; i < Count; i++)
+            {
+                IUnitOfWorkImplementor previousImplementor = null;
+                if(previousImplementors != null)
+                    previousImplementor = previousImplementors[i];
+
+                currentImplementor.Add(this[i].Create(null, previousImplementor));
+            }
+            return currentImplementor;
 		}
 
 		public ISession CurrentSession
@@ -38,12 +40,12 @@ namespace Rhino.Commons
 			get
 			{
 				ThereIsExactlyOneFactory();
-				return unitOfWorkFactories[0].CurrentSession;
+				return this[0].CurrentSession;
 			}
 			set
 			{
 				ThereIsExactlyOneFactory();
-				unitOfWorkFactories[0].CurrentSession = value;
+                this[0].CurrentSession = value;
 			}
 		}
 
@@ -54,15 +56,20 @@ namespace Rhino.Commons
 
 		public ISession GetCurrentSessionFor(Type typeOfEntity)
 		{
-			return unitOfWorkFactories.Find(delegate(NHibernateUnitOfWorkFactory factory)
+			return Find(delegate(NHibernateUnitOfWorkFactory factory)
 				{
 					return factory.CurrentSession.SessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
 				}).GetCurrentSessionFor(typeOfEntity);
 		}
 
+        public void SetCurrentSession<TEntity>(ISession session)
+        {
+            SetCurrentSession(typeof(TEntity), session);
+        }
+
 		public void SetCurrentSession(Type typeOfEntity, ISession session)
 		{
-			unitOfWorkFactories.Find(delegate(NHibernateUnitOfWorkFactory factory)
+			Find(delegate(NHibernateUnitOfWorkFactory factory)
 				{
 					return factory.CurrentSession.SessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
 				}).CurrentSession = session;
@@ -73,9 +80,9 @@ namespace Rhino.Commons
 			iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
 			LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
 			ISession[] sessions = (ISession[])HttpContext.Current.Session[CurrentNHibernateSessionKey];
-			for (int i = 0; i < unitOfWorkFactories.Count - 1; i++)
+			for (int i = 0; i < Count - 1; i++)
 			{
-				unitOfWorkFactories[i].CurrentSession = sessions[i];
+				this[i].CurrentSession = sessions[i];
 			}
 
 
@@ -88,7 +95,7 @@ namespace Rhino.Commons
 		public void SaveUnitOfWorkToAspSession()
 		{
 			HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-			HttpContext.Current.Session[CurrentNHibernateSessionKey] = unitOfWorkFactories.ConvertAll<ISession>(FactoryToSession).ToArray();
+			HttpContext.Current.Session[CurrentNHibernateSessionKey] = ConvertAll<ISession>(FactoryToSession).ToArray();
 			HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = UnitOfWork.CurrentLongConversationId;
 		}
 
@@ -99,10 +106,10 @@ namespace Rhino.Commons
 
 		private void ThereIsExactlyOneFactory()
 		{
-			if (unitOfWorkFactories.Count == 0)
+			if (Count == 0)
 				throw new InvalidOperationException("You are not in a unit of work");
-			if (unitOfWorkFactories.Count > 1)
-				throw new InvalidOperationException(string.Format("There are {0} unit(s) of work, pick one using GetCurrentSessionFor<TEntity>", unitOfWorkFactories.Count));
+			if (Count > 1)
+				throw new InvalidOperationException(string.Format("There are {0} unit(s) of work, pick one using GetCurrentSessionFor<TEntity>", Count));
 		}
 	}
 }
