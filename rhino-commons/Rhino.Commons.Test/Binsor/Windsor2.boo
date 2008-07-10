@@ -31,6 +31,7 @@ import Rhino.Commons.Test.Components from Rhino.Commons.Test
 import Rhino.Commons from Rhino.Commons.NHibernate
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
+import Rhino.Commons.Facilities from Rhino.Commons.ActiveRecord
 import Castle.Facilities.ActiveRecordIntegration from Castle.Facilities.ActiveRecordIntegration
 import Castle.Facilities.FactorySupport from Castle.MicroKernel
 import Castle.Facilities.Startable from Castle.MicroKernel
@@ -73,6 +74,7 @@ facility ActiveRecordFacility:
 			connection.connection_string = 'connectionString2'
 			connection.release_mode = 'on_close'
 	
+facility ActiveRecordUnitOfWorkFacility("Rhino.Commons.Binsor")
 	
 # generic type registration
 
