@@ -108,7 +108,7 @@ namespace Rhino.Commons.Binsor
 
 		public override void Apply(Component component, ComponentRegistration registration)
 		{
-			registration.LifeStyle.PooledWithSize(initialPoolSize, maxPoolSize);
+			registration.LifeStyle.PooledWithSize(initialPoolSize.GetValueOrDefault(), maxPoolSize.GetValueOrDefault());
 		}
 	}
 
