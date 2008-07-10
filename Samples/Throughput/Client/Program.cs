@@ -18,6 +18,8 @@ namespace Client
 				.SenderThreads(1)
 				.BuildQueueFactory();
 
+			factory.Start();
+
 			var queue = factory.OpenQueue("echo@server");
 			Console.WriteLine("Starting to send...");
 			var count = 100000;

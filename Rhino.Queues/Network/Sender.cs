@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace Rhino.Queues.Network
 {
+	using System.Diagnostics;
+
 	public class Sender : ISender
 	{
 		private readonly ILog logger = LogManager.GetLogger(typeof(Sender));
@@ -87,9 +89,10 @@ namespace Rhino.Queues.Network
 			catch (WebException e)
 			{
 				var response = ((HttpWebResponse)e.Response);
-				if(response.StatusCode==HttpStatusCode.NotFound)
+
+				if (response != null && response.StatusCode == HttpStatusCode.NotFound)
 				{
-					using(var sr = new StreamReader(response.GetResponseStream()))
+					using (var sr = new StreamReader(response.GetResponseStream()))
 					{
 						NotFoundSendErrorHandling(endPoint, array, e, sr);
 					}
@@ -110,7 +113,7 @@ namespace Rhino.Queues.Network
 			logger.Warn("Failed to send messages to " + endPoint + " entering items to queue again", exception);
 			string line;
 			var failures = new Dictionary<Guid, MessageSendFailure>();
-			while((line = serverResponse.ReadLine())!=null)
+			while ((line = serverResponse.ReadLine()) != null)
 			{
 				try
 				{
@@ -127,7 +130,7 @@ namespace Rhino.Queues.Network
 			foreach (var message in messages)
 			{
 				MessageSendFailure sendFailure;
-				if(failures.TryGetValue(message.Id, out sendFailure)==false)
+				if (failures.TryGetValue(message.Id, out sendFailure) == false)
 					sendFailure = MessageSendFailure.None;
 				Error(exception, message, sendFailure);
 			}

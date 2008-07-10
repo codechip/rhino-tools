@@ -120,7 +120,7 @@ namespace Rhino.Queues.Impl
 
 		void IEnlistmentNotification.Prepare(PreparingEnlistment preparingEnlistment)
 		{
-			preparingEnlistment.Done();
+			preparingEnlistment.Prepared();
 		}
 
 		void IEnlistmentNotification.Commit(Enlistment enlistment)

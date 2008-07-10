@@ -18,13 +18,15 @@ namespace Server
 				.ListenerThreads(1)
 				.SenderThreads(1)
 				.BuildQueueFactory();
+			
+			factory.Start();
 
 			var queue = factory.OpenQueue("echo");
 			Console.WriteLine("Starting to listen");
 			while(true)
 			{
 				var msg = queue.Recieve();
-				Console.WriteLine(msg);
+				Console.WriteLine(msg.Value);
 
 			}
 		}
