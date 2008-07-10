@@ -141,10 +141,8 @@ namespace Rhino.Commons
                 existing.IncrementUsages();
                 return existing;
             }
-            IUnitOfWorkImplementor unitOfWorkImplementor =
-                IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
-            Local.Data[CurrentUnitOfWorkKey] = unitOfWorkImplementor;
-            return unitOfWorkImplementor;
+            Current = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
+            return Current;
         }
 
         /// <summary>
@@ -154,12 +152,12 @@ namespace Rhino.Commons
         {
             get
             {
-				if(globalNonThreadSafeUnitOfwork != null)
-					return globalNonThreadSafeUnitOfwork;
-                IUnitOfWork unitOfWork = (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
-                if (unitOfWork == null)
+                if(!IsStarted)
                     throw new InvalidOperationException("You are not in a unit of work");
-                return unitOfWork;
+                return globalNonThreadSafeUnitOfwork ?? (IUnitOfWork)Local.Data[CurrentUnitOfWorkKey];
+                //if(globalNonThreadSafeUnitOfwork != null)
+                //    return globalNonThreadSafeUnitOfwork;
+                //return (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
             }
             internal set { Local.Data[CurrentUnitOfWorkKey] = value; }
         }
@@ -200,8 +198,7 @@ namespace Rhino.Commons
         /// </summary>
         public static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
         {
-            IUnitOfWorkImplementor previous = unitOfWork.Previous;
-            Local.Data[CurrentUnitOfWorkKey] = previous;
+            Current = unitOfWork.Previous;
         }
     }
 }

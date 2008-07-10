@@ -251,6 +251,7 @@
     <Compile Include="Repository\RepositoryTests.cs" />
     <Compile Include="Repository\RepositoryTestsBase.cs" />
     <Compile Include="RhinoThreadPoolFixture.cs" />
+    <Compile Include="UoW\MultipleNHibernateUnitOfWorkFactoryTests.cs" />
     <Compile Include="UoW\TransactionalFlush.cs" />
     <Compile Include="UoW\GlobalNonThreaSafeUnitOfWorkTest.cs" />
     <Compile Include="With\With.Caching.cs" />
