@@ -43,6 +43,7 @@ namespace Rhino.Commons.Binsor
 	{
 		private readonly string _key;
         private readonly Type _facility;
+		private readonly IFacility _facilityInstance;
 		private readonly IConfiguration _configuration;
 		private readonly IFacilityExtension[] _extensions;
 		private readonly IDictionary _parameters = new Hashtable();
@@ -62,10 +63,22 @@ namespace Rhino.Commons.Binsor
 			_extensions = extensions;
         }
 
-		public Facility(string name, Type facility, IDictionary configuration)
+		public Facility(IFacility facility, params IFacilityExtension[] extensions)
+			: this(facility.GetType().FullName, facility, extensions)
+		{
+		}
+
+		public Facility(string name, IFacility facilityInstance, params IFacilityExtension[] extensions)
 		{
 			_key = name;
-			_facility = facility;
+			_facilityInstance = facilityInstance;
+			_configuration = ConfigurationHelper.CreateConfiguration(null, "facility", null);
+		}
+
+		public Facility(string name, Type facilityInstance, IDictionary configuration)
+		{
+			_key = name;
+			_facility = facilityInstance;
 			_configuration = ConfigurationHelper.CreateConfiguration(null, "facility", configuration);
 		}
 
@@ -94,7 +107,7 @@ namespace Rhino.Commons.Binsor
 				}
 			}
 
-        	IFacility instance = CreateFacilityInstance();
+        	IFacility instance = ObtainFacilityInstance();
 
 			if (_configuration != null)
 			{
@@ -121,8 +134,13 @@ namespace Rhino.Commons.Binsor
             throw new NotSupportedException("You can't invoke a method on a facility");
         }
 
-		private IFacility CreateFacilityInstance()
+		private IFacility ObtainFacilityInstance()
 		{
+			if (_facilityInstance != null)
+			{
+				return _facilityInstance;
+			}
+
 			List<object> parameters = new List<object>();
 			ConstructorInfo constructor = SelectEligbleConstructor(parameters);
 			return (IFacility) constructor.Invoke(parameters.ToArray());

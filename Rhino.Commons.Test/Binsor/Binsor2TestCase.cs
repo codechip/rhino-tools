@@ -35,6 +35,7 @@ using Castle.Facilities.ActiveRecordIntegration;
 using Castle.MicroKernel;
 using Castle.Windsor;
 using MbUnit.Framework;
+using Rhino.Commons.Facilities;
 using Rhino.Commons.Test.Components;
 
 namespace Rhino.Commons.Test.Binsor
@@ -105,6 +106,22 @@ namespace Rhino.Commons.Test.Binsor
 				}
 			}
 			Assert.Fail("Could not find AR Facility");
+		}
+
+		[Test]
+		public void CanRegisterFacilityInstance()
+		{
+			IFacility[] facilities = _container.Kernel.GetFacilities();
+			foreach (IFacility facility in facilities)
+			{
+				ActiveRecordUnitOfWorkFacility ar = facility as ActiveRecordUnitOfWorkFacility;
+				if (ar != null)
+				{
+					Assert.AreEqual(1, ar.Assemblies.Length);
+					return;
+				}
+			}
+			Assert.Fail("Could not find AR UoW Facility");
 		}
 
 		[Test]
