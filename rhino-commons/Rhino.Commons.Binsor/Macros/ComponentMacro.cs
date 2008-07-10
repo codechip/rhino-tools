@@ -66,16 +66,21 @@ namespace Rhino.Commons.Binsor.Macros
 					switch (binary.Operator)
 					{
 						case BinaryOperatorType.Assign:
+							yield return binary.Left;
 							if (binary.Right is BinaryExpression)
 							{
 								BinaryExpression impl = (BinaryExpression)binary.Right;
 								if (impl.Operator == BinaryOperatorType.LessThan)
 								{
-									yield return binary.Left;
 									implementation = impl.Left;
 									AddService(impl.Right);
 									yield break;
 								}
+							}
+							else
+							{
+								yield return binary.Right;
+								yield break;
 							}
 							break;
 
@@ -98,6 +103,11 @@ namespace Rhino.Commons.Binsor.Macros
 								implementation = binary.Left;
 							}
 							AddService(binary.Right);
+							yield break;
+
+						case BinaryOperatorType.ReferenceEquality:
+							yield return binary.Left;
+							yield return binary.Right;
 							yield break;
 					}
 				}
