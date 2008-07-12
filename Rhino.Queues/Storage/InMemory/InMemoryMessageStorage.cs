@@ -25,17 +25,13 @@ namespace Rhino.Queues.Storage.InMemory
 			var queue = GetQueue(name);
 			lock (queue)
 			{
-				var messages = queue.Messages;
-				var current = messages.Last;
-				while (current != null)
+				var messages = queue.MessagesInReverseOrder;
+				foreach (var message in messages)
 				{
-					var value = current.Value;
-					var toRemove = current;
-					current = current.Previous;
-					if (predicate(value) == false)
+					if(predicate(message)==false)
 						continue;
-					messages.Remove(toRemove);
-					yield return value;
+					messages.RemoveCurrent();
+					yield return message;
 				}
 			}
 		}
@@ -46,9 +42,7 @@ namespace Rhino.Queues.Storage.InMemory
 
 		public bool WaitForNewMessages(string name)
 		{
-			object o;
-			var timeToWait = TimeSpan.FromMilliseconds(Timeout.Infinite);
-			return GetQueue(name).Events.Dequeue(timeToWait, out o);
+			return GetQueue(name).WaitForNewMessage();
 		}
 
 		public bool Exists(string name)
@@ -74,8 +68,7 @@ namespace Rhino.Queues.Storage.InMemory
 			QueuePackage queue = GetQueue(name);
 			lock (queue)
 			{
-				queue.Messages.AddFirst(message);
-				queue.Events.Enqueue(new object());
+				queue.Add(message);
 				messagesEvents.Enqueue(name);
 			}
 		}
@@ -86,12 +79,6 @@ namespace Rhino.Queues.Storage.InMemory
 			if (queuesByName.TryGetValue(name, out queue) == false)
 				throw new ArgumentException("Queue '" + name + "' was not registered");
 			return queue;
-		}
-
-		public class QueuePackage
-		{
-			public LinkedList<TransportMessage> Messages = new LinkedList<TransportMessage>();
-			public IBlockingQueue<object> Events = new BlockingQueue<object>();
 		}
 
 		public void Dispose()

@@ -74,6 +74,7 @@
     <Compile Include="Storage\InMemory\InMemoryMessageStorageFactory.cs" />
     <Compile Include="Storage\InMemory\InMemoryMessageStorage.cs" />
     <Compile Include="Impl\TransportMessage.cs" />
+    <Compile Include="Storage\InMemory\QueuePackage.cs" />
     <Compile Include="Storage\IStorageFactory.cs" />
     <Compile Include="Threading\BlockingQueue.cs" />
     <Compile Include="Threading\IBlockingQueue.cs" />
