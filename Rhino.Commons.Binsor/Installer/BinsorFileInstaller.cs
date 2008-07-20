@@ -43,7 +43,7 @@ namespace Rhino.Commons.Binsor
 
 		protected override void InstallInto(IWindsorContainer container)
 		{
-			BooReader.Read(container, fileName, EnvironmentName, GenerationOptions);
+			BooReader.Read(container, fileName, EnvironmentName, GenerationOptions, ImportedNamespaces);
 		}
 	}
 }

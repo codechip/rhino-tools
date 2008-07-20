@@ -168,6 +168,9 @@
     <None Include="Binsor\ComponentForwarding.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Binsor\CustomNamespaces.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\UnitOfWorkFacilities.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -258,6 +261,7 @@
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
+    <Compile Include="Binsor\RepositoryExtensions.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UnitOfWorkFacilityTestCase.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />
