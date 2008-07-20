@@ -31,6 +31,7 @@
 using Castle.MicroKernel;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using System.Collections.Generic;
 
 namespace Rhino.Commons.Binsor
 {
@@ -39,10 +40,12 @@ namespace Rhino.Commons.Binsor
 	{
 		private EnvironmentDelegate environment;
 		private BooReader.GenerationOptions options;
+		private List<string> namespaces;
 		
 		public BinsorScriptInstaller()
 		{
 			options = BooReader.GenerationOptions.Memory;
+			namespaces = new List<string>();
 		}
 		
 		public T GenerateAssembly()
@@ -56,7 +59,13 @@ namespace Rhino.Commons.Binsor
 			this.environment = environment;
 			return (T)this;
 		}
-		
+
+		public T ImportNamespaces(params string[] namespaces)
+		{
+			this.namespaces.AddRange(namespaces);
+			return (T)this;
+		}
+
 		protected BooReader.GenerationOptions GenerationOptions
 		{
 			get { return options; }
@@ -69,7 +78,12 @@ namespace Rhino.Commons.Binsor
 				return ( environment != null ) ? environment() : null;
 			}
 		}
-		
+
+		protected string[] ImportedNamespaces
+		{
+			get { return namespaces.ToArray(); }
+		}
+
 		#region IWindsorInstaller Members
 
 		void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)

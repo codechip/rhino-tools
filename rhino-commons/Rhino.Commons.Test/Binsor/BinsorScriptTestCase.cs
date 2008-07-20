@@ -33,6 +33,7 @@ using Castle.Windsor;
 using MbUnit.Framework;
 using Rhino.Commons;
 using Rhino.Commons.Binsor;
+using Rhino.Commons.Test.Components;
 
 namespace Rhino.Commons.Test.Binsor
 {
@@ -119,7 +120,19 @@ namespace Rhino.Commons.Test.Binsor
 
 			bool has_repos = _container.Kernel.HasComponent(typeof(IRepository<>));
 			Assert.IsTrue(has_repos, "should have generic repository!");
-		}		
+		}
+
+		[Test]
+		public void CanInstallBinsorScriptWithImportedNamespaces()
+		{
+			_container.Install(BinsorScript
+				.FromFile(Path.GetFullPath(@"Binsor\CustomNamespaces.boo"))
+				.ImportNamespaces("Rhino.Commons.Test")
+				);
+
+			IRepository<Fubar> fubar_repos = _container.Resolve<IRepository<Fubar>>();
+			Assert.IsNotNull(fubar_repos);
+		}
 	}
 }
 
