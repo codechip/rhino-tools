@@ -27,9 +27,11 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Reflection;
 using System.Web;
 using System.Xml;
 using NHibernate;
@@ -38,6 +40,8 @@ using Settings = Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {
+	using Iesi.Collections.Generic;
+
 	public class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
 	{
 		static readonly object lockObj = new object();
@@ -46,8 +50,9 @@ namespace Rhino.Commons
 		private Configuration cfg;
 		private INHibernateInitializationAware[] initializationAware;
 		private readonly string configurationFileName;
+	    private Assembly[] assemblies;
 
-		public NHibernateUnitOfWorkFactory()
+	    public NHibernateUnitOfWorkFactory()
 		{
 		}
 
@@ -56,7 +61,18 @@ namespace Rhino.Commons
 			this.configurationFileName = configurationFileName;
 		}
 
-		public INHibernateInitializationAware[] InitializationAware
+		public NHibernateUnitOfWorkFactory(Assembly[] assemblies)
+		{
+			this.assemblies = assemblies;
+		}
+
+
+	    public NHibernateUnitOfWorkFactory(Assembly[] assemblies, string configurationFileName) : this(configurationFileName)
+	    {
+	        this.assemblies = assemblies;
+	    }
+
+	    public INHibernateInitializationAware[] InitializationAware
 		{
 			get { return initializationAware; }
 			set { initializationAware = value; }
@@ -160,10 +176,21 @@ namespace Rhino.Commons
 						if (File.Exists(hibernateConfig))
 							cfg.Configure(new XmlTextReader(hibernateConfig));
 
+						ISet<Assembly> loadedAssemblies = new HashedSet<Assembly>();
+						foreach (var mapping in cfg.ClassMappings)
+						{
+							loadedAssemblies.Add(mapping.MappedClass.Assembly);
+						}
+						foreach (var assembly in assemblies)
+						{
+							if(loadedAssemblies.Contains(assembly) == false)
+								cfg.AddAssembly(assembly);
+						}
+
 						foreach (INHibernateInitializationAware initializer in InitializationAware)
 							initializer.Configured(cfg);
 
-						sessionFactory = cfg.BuildSessionFactory();
+					    sessionFactory = cfg.BuildSessionFactory();
 
 						foreach (INHibernateInitializationAware initializer in InitializationAware)
 							initializer.Initialized(cfg, sessionFactory);
