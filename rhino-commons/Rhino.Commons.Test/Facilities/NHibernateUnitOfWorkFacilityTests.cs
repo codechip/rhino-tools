@@ -27,6 +27,8 @@ namespace Rhino.Commons.Test.Facilities
         {
             IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(GetType().Assembly.FullName));
             Assert.IsInstanceOfType(typeof(NHibernateUnitOfWorkFactory), IoC.Resolve<IUnitOfWorkFactory>());
+            IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(GetType().Assembly.FullName));
+            Assert.IsInstanceOfType(typeof (NHibernateUnitOfWorkFactory), IoC.Resolve<IUnitOfWorkFactory>());
         }
 
         [Test]
@@ -37,9 +39,18 @@ namespace Rhino.Commons.Test.Facilities
         }
 
         [Test, Ignore]
+        public void Should_configure_session_factory_with_entities()
+        {
+			IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(GetType().Assembly.FullName, "facilities\\hibernate2.cfg.xml"));
+
+            using (UnitOfWork.Start())
+                Assert.IsNotNull(UnitOfWork.GetCurrentSessionFor(typeof (Parent)).SessionFactory.GetClassMetadata(typeof(Parent)));
+        }
+
+        [Test]
         public void Should_register_entities_to_the_repository()
         {
-            IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(GetType().Assembly.FullName, true));
+			IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(GetType().Assembly.FullName, true, "facilities\\hibernate2.cfg.xml"));
             Assert.IsNotNull(Repository<IParent>.Create());
         }
     }
