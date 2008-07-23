@@ -34,14 +34,14 @@ using System.IO;
 using System.Reflection;
 using System.Web;
 using System.Xml;
+using Iesi.Collections.Generic;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Mapping;
 using Settings = Rhino.Commons.Properties.Settings;
 
 namespace Rhino.Commons
 {
-	using Iesi.Collections.Generic;
-
 	public class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
 	{
 		static readonly object lockObj = new object();
@@ -177,11 +177,11 @@ namespace Rhino.Commons
 							cfg.Configure(new XmlTextReader(hibernateConfig));
 
 						ISet<Assembly> loadedAssemblies = new HashedSet<Assembly>();
-						foreach (var mapping in cfg.ClassMappings)
+						foreach (PersistentClass mapping in cfg.ClassMappings)
 						{
 							loadedAssemblies.Add(mapping.MappedClass.Assembly);
 						}
-						foreach (var assembly in assemblies)
+						foreach (Assembly assembly in assemblies)
 						{
 							if(loadedAssemblies.Contains(assembly) == false)
 								cfg.AddAssembly(assembly);
