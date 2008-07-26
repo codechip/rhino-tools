@@ -213,6 +213,58 @@ namespace Rhino.Queues.Tests.Network
 		}
 
 		[Test]
+		public void Will_not_accept_duplicate_messages()
+		{
+			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();
+			var messageQueue = MockRepository.GenerateStub<IMessageQueueImpl>();
+			queueFactory.Stub(x => x.HasQueue("test")).Return(true).Repeat.Any();
+			queueFactory.Stub(x => x.OpenQueueImpl("test")).Return(messageQueue).Repeat.Any();
+
+			using (var listener = new Listener(queueFactory, 1, "http://localhost/test/"))
+			{
+				listener.Start();
+				Guid id = Guid.NewGuid();
+
+				//first request
+				var request = WebRequest.Create("http://localhost/test/");
+				request.Method = "PUT";
+				using (var sr = request.GetRequestStream())
+				{
+					new BinaryFormatter().Serialize(sr, new[] { new TransportMessage
+					{
+                        Id = id,
+						Destination = new Destination
+						{
+
+							Queue = "test", Server = "self"
+						}
+					}, });
+				}
+				request.GetResponse().Close();// no error raised
+
+				//second request with same id
+				request = WebRequest.Create("http://localhost/test/");
+				request.Method = "PUT";
+				using (var sr = request.GetRequestStream())
+				{
+					new BinaryFormatter().Serialize(sr, new[] { new TransportMessage
+					{
+						 Id = id,
+						Destination = new Destination
+						{
+							Queue = "test", Server = "self"
+						}
+					}, });
+				}
+				request.GetResponse().Close();// no error raised
+			}
+
+			var argumentsForCallsToPutAll = 
+				messageQueue.GetArgumentsForCallsMadeOn(x => x.PutAll(null), o => o.IgnoreArguments());
+			Assert.AreEqual(1, argumentsForCallsToPutAll.Count);
+		}
+
+		[Test]
 		public void Will_reject_non_PUT_requests()
 		{
 			var queueFactory = MockRepository.GenerateStub<IQueueFactoryImpl>();

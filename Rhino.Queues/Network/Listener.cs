@@ -18,6 +18,7 @@ namespace Rhino.Queues.Network
 		private readonly int workerThreadsCount;
 		private bool active = true;
 		private readonly IList<Thread> threads = new List<Thread>();
+		SizedLimitedSet<Guid> recievedMessagesIds = new SizedLimitedSet<Guid>(1000000);
 
 		public Listener(IQueueFactoryImpl queueFactory, int workerThreadsCount, string endpoint)
 		{
@@ -68,7 +69,11 @@ namespace Rhino.Queues.Network
 
 							foreach (var q in messagesByQueue)
 							{
-								queueFactory.OpenQueueImpl(q.Queue).PutAll(q.Messages);
+								var messages = FilterDuplicateMessages(q.Messages).ToArray();
+								if(messages.Length==0)
+									continue;
+								queueFactory.OpenQueueImpl(q.Queue).PutAll(messages);
+								RecordMessageIds(messages);
 							}
 							context.Response.StatusCode = (int)HttpStatusCode.OK;
 						}
@@ -90,6 +95,29 @@ namespace Rhino.Queues.Network
 				catch (ObjectDisposedException)
 				{
 					return;
+				}
+			}
+		}
+
+		private void RecordMessageIds(IEnumerable<TransportMessage> messages)
+		{
+			lock(recievedMessagesIds)
+			{
+				foreach (var message in messages)
+				{
+					recievedMessagesIds.Add(message.Id);
+				}
+			}
+		}
+
+		private IEnumerable<TransportMessage> FilterDuplicateMessages(IEnumerable<TransportMessage> messages)
+		{
+			lock(recievedMessagesIds)
+			{
+				foreach (var message in messages)
+				{
+					if(recievedMessagesIds.Exists(message.Id)==false)
+						yield return message;
 				}
 			}
 		}

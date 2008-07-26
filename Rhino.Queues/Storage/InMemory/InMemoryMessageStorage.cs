@@ -63,6 +63,12 @@ namespace Rhino.Queues.Storage.InMemory
 			}
 		}
 
+		public void MarkMessagesAsSent(TransportMessage[] array)
+		{
+			// we just ignore this, because to mark them as sent means just
+			// removing them from memory
+		}
+
 		public void Add(string name, TransportMessage message)
 		{
 			QueuePackage queue = GetQueue(name);

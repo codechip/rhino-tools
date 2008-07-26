@@ -77,13 +77,10 @@ namespace Rhino.Queues.Network
 				request.Method = "PUT";
 				using (var stream = request.GetRequestStream())
 				{
-					var stream1 = new MemoryStream();
-					new BinaryFormatter().Serialize(stream1, array);
-					stream1.Position = 0;
-					var tmp = new BinaryFormatter().Deserialize(stream1);
 					new BinaryFormatter().Serialize(stream, array);
 				}
 				request.GetResponse().Close();
+				storage.MarkMessagesAsSent(array);
 				BatchSent();
 			}
 			catch (WebException e)
@@ -108,7 +105,7 @@ namespace Rhino.Queues.Network
 			}
 		}
 
-		private void NotFoundSendErrorHandling(string endPoint, IEnumerable<TransportMessage> messages, Exception exception, StreamReader serverResponse)
+		private void NotFoundSendErrorHandling(string endPoint, IEnumerable<TransportMessage> messages, Exception exception, TextReader serverResponse)
 		{
 			logger.Warn("Failed to send messages to " + endPoint + " entering items to queue again", exception);
 			string line;

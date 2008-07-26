@@ -57,6 +57,7 @@
     <Compile Include="Impl\IQueueFactoryImpl.cs" />
     <Compile Include="Impl\MessageQueueImpl.cs" />
     <Compile Include="Impl\QueueFactoryImpl.cs" />
+    <Compile Include="Impl\SizedLimitedSet.cs" />
     <Compile Include="Impl\SystemTime.cs" />
     <Compile Include="IQueueFactory.cs" />
     <Compile Include="Message.cs" />

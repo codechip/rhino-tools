@@ -73,6 +73,7 @@
     <Compile Include="Units\MessageQueueImplTests.cs" />
     <Compile Include="Units\QueueFactoryImplTests.cs" />
     <Compile Include="Units\QueueFactory_error_handling_tests.cs" />
+    <Compile Include="Units\SizedLimitedSetTests.cs" />
     <Compile Include="Units\TestMessageStorageFactory.cs" />
   </ItemGroup>
   <ItemGroup>

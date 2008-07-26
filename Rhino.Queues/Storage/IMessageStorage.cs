@@ -16,5 +16,7 @@ namespace Rhino.Queues.Storage
 		bool WaitForNewMessages(TimeSpan timeToWait, out string queueWithNewMessages);
 
 		IEnumerable<string> Queues { get;  }
+
+		void MarkMessagesAsSent(TransportMessage[] array);
 	}
 }
