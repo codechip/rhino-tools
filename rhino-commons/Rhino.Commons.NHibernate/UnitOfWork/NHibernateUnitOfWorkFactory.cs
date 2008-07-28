@@ -180,11 +180,11 @@ namespace Rhino.Commons
 					    if (assemblies != null && assemblies.Length > 0)
 					    {
 					        ISet<Assembly> loadedAssemblies = new HashedSet<Assembly>();
-					        foreach (var mapping in cfg.ClassMappings)
+					        foreach (PersistentClass mapping in cfg.ClassMappings)
 					        {
 					            loadedAssemblies.Add(mapping.MappedClass.Assembly);
 					        }
-					        foreach (var assembly in assemblies)
+					        foreach (Assembly assembly in assemblies)
 					        {
 					            if(loadedAssemblies.Contains(assembly) == false)
 					                cfg.AddAssembly(assembly);
