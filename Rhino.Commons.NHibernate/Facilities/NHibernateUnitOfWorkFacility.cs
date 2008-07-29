@@ -32,84 +32,38 @@ using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using NHibernate.Cfg;
 using Rhino.Commons.ForTesting;
+using ComponentParameter = Castle.MicroKernel.Registration.Parameter;
 
 namespace Rhino.Commons.Facilities
 {
 	public class NHibernateUnitOfWorkFacility : AbstractFacility
 	{
-		private readonly Assembly[] assemblies;
-		private readonly bool registerEntitiesToRepository;
-		private readonly string configurationFileName;
+        private NHibernateUnitOfWorkFacilityConfig config;
 
-		public NHibernateUnitOfWorkFacility(string assembly)
-			: this(assembly, null)
+		public NHibernateUnitOfWorkFacility(NHibernateUnitOfWorkFacilityConfig config)
 		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string assembly, string configurationFileName)
-			: this(assembly, false, configurationFileName)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository)
-			: this(assembly, registerEntitiesToRepository, null)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string assembly, bool registerEntitiesToRepository, string configurationFileName)
-			: this(new string[] { assembly, }, registerEntitiesToRepository, configurationFileName)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string[] assemblies)
-			: this(assemblies, null)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string[] assemblies, string configurationFileName)
-			: this(assemblies, false, configurationFileName)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository)
-			: this(assemblies, registerEntitiesToRepository, null)
-		{
-		}
-
-		public NHibernateUnitOfWorkFacility(string[] assemblies, bool registerEntitiesToRepository, string configurationFileName)
-		{
-            this.registerEntitiesToRepository = registerEntitiesToRepository;
-            this.configurationFileName = configurationFileName; 
-            this.assemblies = new Assembly[assemblies.Length];
-			for (int i = 0; i < assemblies.Length; i++)
-			{
-				this.assemblies[i] = Assembly.Load(assemblies[i]);
-			}
+            this.config = config;
 		}
 
 		protected override void Init()
 		{
-			Kernel.Register(
-				Component.For(typeof(IRepository<>))
-					.ImplementedBy(typeof(NHRepository<>))
-				);
+			Kernel.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NHRepository<>)));
 			ComponentRegistration<IUnitOfWorkFactory> registerFactory =
 				Component.For<IUnitOfWorkFactory>()
 				.ImplementedBy<NHibernateUnitOfWorkFactory>();
 
-			if (configurationFileName != null)
-				registerFactory.Parameters(Castle.MicroKernel.Registration.Parameter.ForKey("configurationFileName").Eq(configurationFileName));
+            registerFactory.Parameters(ComponentParameter.ForKey("configurationFileName").Eq(config.NHibernateConfigurationFile));
 
 			// if we are running in test mode, we don't want to register
 			// the assemblies directly, we let the DatabaseTestFixtureBase do it
 			// this allow us to share the configuration between the test & prod projects
 			if (DatabaseTestFixtureBase.IsRunningInTestMode == false)
 			{
-				registerFactory.DependsOn(Property.ForKey("assemblies").Eq(assemblies));
+                registerFactory.DependsOn(Property.ForKey("assemblies").Eq(Assemblies));
 			}
 			Kernel.Register(registerFactory);
 
-            if (registerEntitiesToRepository) 
+            if (config.ShouldRegisterEntitiesToRepository) 
             {
             	NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
             	EntitiesToRepositories.Register(
@@ -123,16 +77,16 @@ namespace Rhino.Commons.Facilities
 
 		public Assembly[] Assemblies
 		{
-			get { return assemblies; }
+			get { return config.Assemblies; }
 		}
 
-		private bool IsCandidateForRepository(Type type)
-		{
-			foreach (Assembly assembly in assemblies)
-			{
-				if (type.Assembly == assembly) return true;
-			}
-			return false;
-		}
+        private bool IsCandidateForRepository(Type type)
+        {
+            foreach (Assembly assembly in Assemblies)
+            {
+                if (type.Assembly == assembly) return true;
+            }
+            return false;
+        }
 	}
 }

@@ -49,32 +49,36 @@ namespace Rhino.Commons.Test.Facilities
 
 		private void InitializeIOC()
 		{
-			IDictionary<string, IEnumerable<Type>> uowConfigs = CreateRules();
+			NHibernateUnitOfWorkFacilityConfig[] configs = CreateRules();
 			IoC.Initialize(
 				new WindsorContainer()
-					.AddFacility("Multiple.Units.Of.Work", new MultipleNHibernateUnitOfWorkFacility(uowConfigs)));
+                    .AddFacility("Multiple.Units.Of.Work", new MultipleNHibernateUnitOfWorkFacility(configs)));
 
 			//load schemas to create databases
 			schemas = new List<SchemaExport>();
-			foreach (string configuration in uowConfigs.Keys)
+            foreach (NHibernateUnitOfWorkFacilityConfig config in configs)
 			{
-				Configuration cfg = new Configuration().Configure(configuration);
-				foreach (Type clazz in uowConfigs[configuration])
+                Configuration cfg = new Configuration().Configure(config.NHibernateConfigurationFile);
+				foreach (Type entity in config.Entities)
 				{
-					cfg.AddClass(clazz);
+                    cfg.AddClass(entity);
 				}
 				schemas.Add(new SchemaExport(cfg));
 			}
 		}
 
-		private static IDictionary<string, IEnumerable<Type>> CreateRules()
+        private static NHibernateUnitOfWorkFacilityConfig[] CreateRules()
 		{
-			string directory = Path.Combine(System.Environment.CurrentDirectory, @"Facilities\MutlipleUnitOfWorkArtifacts");
+            string directory = Path.Combine(System.Environment.CurrentDirectory, @"Facilities\MutlipleUnitOfWorkArtifacts");
 
-			IDictionary<string, IEnumerable<Type>> rules = new Dictionary<string, IEnumerable<Type>>();
-			rules[Path.Combine(directory, "Database1.cfg.xml")] = new Type[] { typeof(DomainObjectFromDatabase1) };
-			rules[Path.Combine(directory, "Database2.cfg.xml")] = new Type[] { typeof(DomainObjectFromDatabase2) };
-			return rules;
+            return new NHibernateUnitOfWorkFacilityConfig[] {
+                new NHibernateUnitOfWorkFacilityConfig()
+                    .AddEntity(typeof(DomainObjectFromDatabase1))
+                    .NHibernateConfiguration(Path.Combine(directory, "Database1.cfg.xml")),
+                new NHibernateUnitOfWorkFacilityConfig()
+                    .AddEntity(typeof(DomainObjectFromDatabase2))
+                    .NHibernateConfiguration(Path.Combine(directory, "Database2.cfg.xml"))
+            };
 		}
 	}
 }

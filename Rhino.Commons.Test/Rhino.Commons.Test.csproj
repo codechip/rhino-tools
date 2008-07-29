@@ -233,6 +233,7 @@
     <Compile Include="Facilities\MultipleNHibernateUnitOfWorkTestBase.cs" />
     <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.cs" />
     <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.cs" />
+    <Compile Include="Facilities\NHibernateUnitOfWorkFacilityConfigTests.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests.cs" />
     <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
