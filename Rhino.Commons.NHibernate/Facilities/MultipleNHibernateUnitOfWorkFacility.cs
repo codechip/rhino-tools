@@ -38,8 +38,7 @@ namespace Rhino.Commons.Facilities
                 cfg.AddClass(mappedEntity);
             
             ISessionFactory sessionFactory = cfg.BuildSessionFactory();
-            if(config.ShouldRegisterEntitiesToRepository)
-                EntitiesToRepositories.Register(Kernel, sessionFactory, typeof(NHRepository<>), delegate { return true; });
+            EntitiesToRepositories.Register(Kernel, sessionFactory, typeof(NHRepository<>), config.IsCandidateForRepository);
             return sessionFactory;
         }
     }

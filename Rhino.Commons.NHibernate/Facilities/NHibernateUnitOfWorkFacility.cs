@@ -62,31 +62,17 @@ namespace Rhino.Commons.Facilities
                 registerFactory.DependsOn(Property.ForKey("assemblies").Eq(Assemblies));
 			}
 			Kernel.Register(registerFactory);
-
-            if (config.ShouldRegisterEntitiesToRepository) 
-            {
-            	NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
-            	EntitiesToRepositories.Register(
-                    Kernel,
-                    factory.NHibernateSessionFactory,
-                    typeof(NHRepository<>),
-                    IsCandidateForRepository
-                    );
-            }
+            NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
+            EntitiesToRepositories.Register(
+                Kernel,
+                factory.NHibernateSessionFactory,
+                typeof(NHRepository<>),
+                config.IsCandidateForRepository);
         }
 
 		public Assembly[] Assemblies
 		{
 			get { return config.Assemblies; }
 		}
-
-        private bool IsCandidateForRepository(Type type)
-        {
-            foreach (Assembly assembly in Assemblies)
-            {
-                if (type.Assembly == assembly) return true;
-            }
-            return false;
-        }
 	}
 }
