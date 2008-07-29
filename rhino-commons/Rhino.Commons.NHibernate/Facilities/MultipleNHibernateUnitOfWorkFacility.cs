@@ -10,11 +10,11 @@ namespace Rhino.Commons.Facilities
 {
     public class MultipleNHibernateUnitOfWorkFacility : AbstractFacility
     {
-    	private readonly IDictionary<string, IEnumerable<Type>> entityRegistrationRules;
-
-        public MultipleNHibernateUnitOfWorkFacility(IDictionary<string, IEnumerable<Type>> entityRegistrationRules)
+        private readonly NHibernateUnitOfWorkFacilityConfig[] configs;
+    	
+        public MultipleNHibernateUnitOfWorkFacility(NHibernateUnitOfWorkFacilityConfig[] configs)
         {
-            this.entityRegistrationRules = entityRegistrationRules;
+            this.configs = configs;
         }
 
         protected override void Init()
@@ -22,24 +22,24 @@ namespace Rhino.Commons.Facilities
             Kernel.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NHRepository<>)));
 
             MultipleNHibernateUnitOfWorkFactory unitOfWorkFactory = new MultipleNHibernateUnitOfWorkFactory();
-            foreach (KeyValuePair<string, IEnumerable<Type>> kvp in entityRegistrationRules)
+            foreach (NHibernateUnitOfWorkFacilityConfig config in configs)
             {
-				string configurationFileName = kvp.Key;
-                NHibernateUnitOfWorkFactory nestedUnitOfWorkFactory = new NHibernateUnitOfWorkFactory(string.Empty);
-                nestedUnitOfWorkFactory.RegisterSessionFactory(CreateSessionFactory(configurationFileName, kvp.Value));
+                NHibernateUnitOfWorkFactory nestedUnitOfWorkFactory = new NHibernateUnitOfWorkFactory(config.NHibernateConfigurationFile);
+                nestedUnitOfWorkFactory.RegisterSessionFactory(CreateSessionFactory(config));
                 unitOfWorkFactory.Add(nestedUnitOfWorkFactory);
             }
             Kernel.AddComponentInstance<IUnitOfWorkFactory>(unitOfWorkFactory);
         }
 
-        private ISessionFactory CreateSessionFactory(string configurationFile, IEnumerable<Type> mappedEntities)
+        private ISessionFactory CreateSessionFactory(NHibernateUnitOfWorkFacilityConfig config)
         {
-            Configuration cfg = new Configuration().Configure(configurationFile);
-            foreach (Type mappedEntity in mappedEntities) 
+            Configuration cfg = new Configuration().Configure(config.NHibernateConfigurationFile);
+            foreach (Type mappedEntity in config.Entities) 
                 cfg.AddClass(mappedEntity);
+            
             ISessionFactory sessionFactory = cfg.BuildSessionFactory();
-
-            EntitiesToRepositories.Register(Kernel, sessionFactory, typeof(NHRepository<>), delegate { return true; });
+            if(config.ShouldRegisterEntitiesToRepository)
+                EntitiesToRepositories.Register(Kernel, sessionFactory, typeof(NHRepository<>), delegate { return true; });
             return sessionFactory;
         }
     }
