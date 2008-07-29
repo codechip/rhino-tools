@@ -13,6 +13,7 @@ namespace Rhino.Queues.Cfg
 		private int sendersCount = 3;
 		private readonly string name;
 		private readonly List<string> registeredQueues = new List<string>();
+		private readonly List<string> registeredDurableQueues = new List<string>();
 
 		private readonly IDictionary<string, string> endpointMapping =
 			new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -62,6 +63,19 @@ namespace Rhino.Queues.Cfg
 			return this;
 		}
 
+
+		public Configuration RegisterDurableQueue(string queue)
+		{
+			registeredDurableQueues.Add(queue);
+			return this;
+		}
+
+		public Configuration RegisterDurableQueues(params string[] queues)
+		{
+			registeredDurableQueues.AddRange(queues);
+			return this;
+		}
+
 		public Configuration ListenerThreads(int count)
 		{
 			listenersCount = count;
@@ -90,6 +104,7 @@ namespace Rhino.Queues.Cfg
 				new InMemoryMessageStorageFactory(), 
 				endpointMapping, 
 				registeredQueues, 
+                registeredDurableQueues,
 				new ListenerFactory(listenersCount), 
 				new SenderFactory(sendersCount));
 		}

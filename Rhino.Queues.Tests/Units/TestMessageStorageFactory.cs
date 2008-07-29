@@ -15,9 +15,9 @@ namespace Rhino.Queues.Tests.Units
 			return OutgoingStorage;
 		}
 
-		public IMessageStorage ForIncomingMessages(HashSet<string> queues)
+		public IMessageStorage ForIncomingMessages(HashSet<string> inMemoryQueues, HashSet<string> durableQueues)
 		{
-			IncomingStorage = new InMemoryMessageStorage(queues);
+			IncomingStorage = new InMemoryMessageStorage(inMemoryQueues);
 			return IncomingStorage;
 		}
 	}

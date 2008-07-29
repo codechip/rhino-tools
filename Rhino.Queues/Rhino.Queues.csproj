@@ -52,10 +52,11 @@
   <ItemGroup>
     <Compile Include="Cfg\Configuration.cs" />
     <Compile Include="IMessageQueue.cs" />
+    <Compile Include="Impl\DiskMessageQueueImpl.cs" />
     <Compile Include="Impl\Destination.cs" />
     <Compile Include="Impl\IMessageQueueImpl.cs" />
     <Compile Include="Impl\IQueueFactoryImpl.cs" />
-    <Compile Include="Impl\MessageQueueImpl.cs" />
+    <Compile Include="Impl\InMemoryMessageQueueImpl.cs" />
     <Compile Include="Impl\QueueFactoryImpl.cs" />
     <Compile Include="Impl\SizedLimitedSet.cs" />
     <Compile Include="Impl\SystemTime.cs" />
@@ -75,7 +76,9 @@
     <Compile Include="Storage\InMemory\InMemoryMessageStorageFactory.cs" />
     <Compile Include="Storage\InMemory\InMemoryMessageStorage.cs" />
     <Compile Include="Impl\TransportMessage.cs" />
+    <Compile Include="Storage\InMemory\MessageStorageBase.cs" />
     <Compile Include="Storage\InMemory\QueuePackage.cs" />
+    <Compile Include="Storage\InMemory\TransportMessageEnumeratorExtensions.cs" />
     <Compile Include="Storage\IStorageFactory.cs" />
     <Compile Include="Threading\BlockingQueue.cs" />
     <Compile Include="Threading\IBlockingQueue.cs" />

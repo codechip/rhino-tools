@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Rhino.Queues.Impl;
-using Rhino.Queues.Threading;
 
 namespace Rhino.Queues.Storage.InMemory
 {
-	public class InMemoryMessageStorage : IMessageStorage
+	public class InMemoryMessageStorage : MessageStorageBase
 	{
-		readonly IBlockingQueue<string> messagesEvents = new BlockingQueue<string>();
 		private readonly IDictionary<string, QueuePackage> queuesByName =
 			new Dictionary<string, QueuePackage>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -20,7 +17,7 @@ namespace Rhino.Queues.Storage.InMemory
 				queuesByName.Add(endpoint, new QueuePackage());
 			}
 		}
-		public IEnumerable<TransportMessage> PullMessagesFor(string name, Predicate<TransportMessage> predicate)
+		public override IEnumerable<TransportMessage> PullMessagesFor(string name, Predicate<TransportMessage> predicate)
 		{
 			var queue = GetQueue(name);
 			lock (queue)
@@ -35,27 +32,17 @@ namespace Rhino.Queues.Storage.InMemory
 				}
 			}
 		}
-		public IEnumerable<TransportMessage> PullMessagesFor(string name)
+		public override IEnumerable<TransportMessage> PullMessagesFor(string name)
 		{
 			return PullMessagesFor(name, x => true);
 		}
 
-		public bool WaitForNewMessages(string name)
-		{
-			return GetQueue(name).WaitForNewMessage();
-		}
-
-		public bool Exists(string name)
+		public override bool Exists(string name)
 		{
 			return queuesByName.ContainsKey(name);
 		}
 
-		public bool WaitForNewMessages(TimeSpan timeToWait, out string queueWithNewMessages)
-		{
-			return messagesEvents.Dequeue(timeToWait, out queueWithNewMessages);
-		}
-
-		public IEnumerable<string> Queues
+		public override IEnumerable<string> Queues
 		{
 			get
 			{
@@ -63,19 +50,12 @@ namespace Rhino.Queues.Storage.InMemory
 			}
 		}
 
-		public void MarkMessagesAsSent(TransportMessage[] array)
-		{
-			// we just ignore this, because to mark them as sent means just
-			// removing them from memory
-		}
-
-		public void Add(string name, TransportMessage message)
+		protected override void OnAdd(string name, TransportMessage message)
 		{
 			QueuePackage queue = GetQueue(name);
 			lock (queue)
 			{
 				queue.Add(message);
-				messagesEvents.Enqueue(name);
 			}
 		}
 
@@ -87,9 +67,9 @@ namespace Rhino.Queues.Storage.InMemory
 			return queue;
 		}
 
-		public void Dispose()
+		public override bool WaitForNewMessages(string name)
 		{
-			messagesEvents.Dispose();
+			return GetQueue(name).WaitForNewMessage();
 		}
 	}
 }

@@ -29,12 +29,18 @@ namespace Rhino.Queues.Impl
 			get { return incomingStorage; }
 		}
 
-		public QueueFactoryImpl(string name, IStorageFactory storageFactory, IDictionary<string, string> destinationMapping, IEnumerable<string> queues, IListenerFactory listenerFactory, ISenderFactory senderFactory)
+		public QueueFactoryImpl(string name, 
+			IStorageFactory storageFactory, 
+			IDictionary<string, string> destinationMapping, 
+			IEnumerable<string> inMemoryQueues,
+			IEnumerable<string> durableQueues, 
+			IListenerFactory listenerFactory, 
+			ISenderFactory senderFactory)
 		{
 			this.name = name;
 			this.destinationMapping = destinationMapping;
 			outgoingStorage = storageFactory.ForOutgoingMessages(new HashSet<string>(destinationMapping.Values));
-			incomingStorage = storageFactory.ForIncomingMessages(new HashSet<string>(queues));
+			incomingStorage = storageFactory.ForIncomingMessages(new HashSet<string>(inMemoryQueues), new HashSet<string>(durableQueues));
 			listener = listenerFactory.Create(this, destinationMapping[name]);
 			sender = senderFactory.Create(outgoingStorage);
 		}
@@ -56,8 +62,8 @@ namespace Rhino.Queues.Impl
 		public IMessageQueueImpl OpenQueueImpl(string queueName)
 		{
 			AssertStarted();
-			return new MessageQueueImpl(
-				new Destination(queueName, this.Name),
+			return new InMemoryMessageQueueImpl(
+				new Destination(queueName, Name),
 				incomingStorage,
 				outgoingStorage,
 				this);

@@ -32,7 +32,7 @@ namespace Rhino.Queues.Tests.Network
 													remoteMessageStorageFactory, new Dictionary<string, string>
 			                                        {
 			                                        	{"test", "http://localhost/test/"}
-			                                        }, new[] { "test" }, new ListenerFactory(1), new SenderFactory(1));
+			                                        }, new[] { "test" }, new string[0], new ListenerFactory(1), new SenderFactory(1));
 
 			queueFactoryImpl.Start();
 		}

@@ -172,14 +172,14 @@ namespace Rhino.Queues.Tests.Units
 			var queues = new[] { "test" };
 			var senderFactory = MockRepository.GenerateStub<ISenderFactory>();
 			var sender = MockRepository.GenerateStub<ISender>();
-			storageFactory.Stub(x => x.ForIncomingMessages(null)).IgnoreArguments().Return(
+			storageFactory.Stub(x => x.ForIncomingMessages(null, null)).IgnoreArguments().Return(
 				MockRepository.GenerateStub<IMessageStorage>());
 			storageFactory.Stub(x => x.ForOutgoingMessages(null)).IgnoreArguments().Return(
 				MockRepository.GenerateStub<IMessageStorage>());
 
 			senderFactory.Stub(x => x.Create(null)).IgnoreArguments().Return(sender);
 
-			using (var queueFactoryImpl = new QueueFactoryImpl("test", storageFactory, mapping, queues,
+			using (var queueFactoryImpl = new QueueFactoryImpl("test", storageFactory, mapping, queues, new string[0],
 											new ListenerFactory(1),
 											senderFactory))
 			{

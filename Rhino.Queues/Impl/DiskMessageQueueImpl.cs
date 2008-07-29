@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Rhino.Queues.Impl
 {
-	public class MessageQueueImpl : IMessageQueueImpl, ISinglePhaseNotification
+	public class DiskMessageQueueImpl : IMessageQueueImpl, ISinglePhaseNotification
 	{
 		private Transaction transaction;
 		private readonly Destination destination;
@@ -16,7 +16,7 @@ namespace Rhino.Queues.Impl
 		private readonly List<Action> commitSyncronizations = new List<Action>();
 		private readonly List<Action> rollbackSyncronizations = new List<Action>();
 
-		public MessageQueueImpl(
+		public DiskMessageQueueImpl(
 			Destination destination,
 			IMessageStorage incomingStorage,
 			IMessageStorage outgoingStorage,
@@ -42,10 +42,10 @@ namespace Rhino.Queues.Impl
 				Value = msg,
 				Destination = destination,
 				SentAt = now,
-			}; 
+			};
 			AddCommitSyncronization(() =>
 			{
-				
+
 				outgoingStorage.Add(endpointMapping, new TransportMessage
 				{
 					Destination = destination,
@@ -108,14 +108,14 @@ namespace Rhino.Queues.Impl
 
 		public void PutAll(TransportMessage[] msgs)
 		{
-			foreach (var msg in msgs)
-			{
-				var copy = msg;
-				AddCommitSyncronization(() =>
+			AddCommitSyncronization(() =>
 				{
-					incomingStorage.Add(destination.Queue, copy);
+					foreach (var msg in msgs)
+					{
+						incomingStorage.Add(destination.Queue, msg);
+					}
 				});
-			}
+
 		}
 
 		void IEnlistmentNotification.Prepare(PreparingEnlistment preparingEnlistment)

@@ -29,7 +29,7 @@ namespace Rhino.Queues.Tests.Units
 			{
 				{"foo", "http://localhost/foo/"},
 				{"bar", "http://localhost/self/"}
-			}, new[] { "foo" }, listenerFactory, senderFactory);
+			}, new[] { "foo" }, new string[0], listenerFactory, senderFactory);
 			factory.Start();
 		}
 
@@ -113,7 +113,7 @@ namespace Rhino.Queues.Tests.Units
             {
             	{"foo", "http://localhost/foo/"},
             	{"bar", "http://localhost/self2/"}
-            }, new[] { "foo" }, new ListenerFactory(1), new SenderFactory(1));
+            }, new[] { "foo" }, new string[0], new ListenerFactory(1), new SenderFactory(1));
 			myFactory.OpenQueue("foo").Send(1);
 		}
 
@@ -125,7 +125,7 @@ namespace Rhino.Queues.Tests.Units
 			{
 				{"foo", "http://localhost/foo/"},
 				{"bar", "http://localhost/self3/"}
-			}, new[] { "foo" }, new ListenerFactory(1), new SenderFactory(1));
+			}, new[] { "foo" }, new string[0], new ListenerFactory(1), new SenderFactory(1));
 			myFactory.OpenQueue("foo");
 		}
 	}

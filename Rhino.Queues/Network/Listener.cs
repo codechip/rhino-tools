@@ -10,6 +10,8 @@ using Rhino.Queues.Impl;
 
 namespace Rhino.Queues.Network
 {
+	using System.Transactions;
+
 	public class Listener : IListener
 	{
 		private readonly ILog logger = LogManager.GetLogger(typeof(Listener));
@@ -51,42 +53,7 @@ namespace Rhino.Queues.Network
 				{
 					var context = listener.GetContext();
 					logger.Debug("new request accepted");
-					using (context.Response)
-					{
-						if (ValidateRequest(context) == false)
-							continue;
-						TransportMessage[] msgs = DeserializeRequest(context);
-						if (msgs == null)
-							continue;
-						if (ValidateAllMessageHasValidQueues(context, msgs) == false)
-							continue;
-						try
-						{
-							var messagesByQueue = from m in msgs
-												  group m by m.Destination.Queue
-													  into g
-													  select new { Queue = g.Key, Messages = g.ToArray() };
-
-							foreach (var q in messagesByQueue)
-							{
-								var messages = FilterDuplicateMessages(q.Messages).ToArray();
-								if(messages.Length==0)
-									continue;
-								queueFactory.OpenQueueImpl(q.Queue).PutAll(messages);
-								RecordMessageIds(messages);
-							}
-							context.Response.StatusCode = (int)HttpStatusCode.OK;
-						}
-						catch (Exception e)
-						{
-							logger.Warn("Error when processing request", e);
-							context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-							using (var sw = new StreamWriter(context.Response.OutputStream))
-							{
-								sw.WriteLine("Failed to accept messages because: " + e.Message);
-							}
-						}
-					}
+					RecieveRequest(context);
 				}
 				catch (HttpListenerException)
 				{
@@ -99,9 +66,49 @@ namespace Rhino.Queues.Network
 			}
 		}
 
+		private void RecieveRequest(HttpListenerContext context)
+		{
+			using (context.Response)
+			{
+				if (ValidateRequest(context) == false)
+					return;
+				var msgs = DeserializeRequest(context);
+				if (msgs == null)
+					return;
+				if (ValidateAllMessageHasValidQueues(context, msgs) == false)
+					return;
+				try
+				{
+					var messagesByQueue = from m in msgs
+										  group m by m.Destination.Queue
+											  into g
+											  select new { Queue = g.Key, Messages = g.ToArray() };
+
+					foreach (var q in messagesByQueue)
+					{
+						var messages = FilterDuplicateMessages(q.Messages).ToArray();
+						if (messages.Length == 0)
+							continue;
+						queueFactory.OpenQueueImpl(q.Queue).PutAll(messages);
+						RecordMessageIds(messages);
+					}
+					context.Response.StatusCode = (int)HttpStatusCode.OK;
+				}
+				catch (Exception e)
+				{
+					logger.Warn("Error when processing request", e);
+					context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+					using (var sw = new StreamWriter(context.Response.OutputStream))
+					{
+						sw.WriteLine("Failed to accept messages because: " + e.Message);
+					}
+				}
+			}
+		}
+
 		private void RecordMessageIds(IEnumerable<TransportMessage> messages)
 		{
-			lock(recievedMessagesIds)
+			lock (recievedMessagesIds)
 			{
 				foreach (var message in messages)
 				{
@@ -112,11 +119,11 @@ namespace Rhino.Queues.Network
 
 		private IEnumerable<TransportMessage> FilterDuplicateMessages(IEnumerable<TransportMessage> messages)
 		{
-			lock(recievedMessagesIds)
+			lock (recievedMessagesIds)
 			{
 				foreach (var message in messages)
 				{
-					if(recievedMessagesIds.Exists(message.Id)==false)
+					if (recievedMessagesIds.Exists(message.Id) == false)
 						yield return message;
 				}
 			}

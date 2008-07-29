@@ -63,7 +63,8 @@ namespace Rhino.Queues.Network
 
 		private void SendMessagesFromEndpoint(string endPoint)
 		{
-			var array = storage.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
+			var array = storage
+				.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
 				.Take(100).ToArray();
 			if (array.Length == 0)
 			{
@@ -80,7 +81,6 @@ namespace Rhino.Queues.Network
 					new BinaryFormatter().Serialize(stream, array);
 				}
 				request.GetResponse().Close();
-				storage.MarkMessagesAsSent(array);
 				BatchSent();
 			}
 			catch (WebException e)

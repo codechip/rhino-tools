@@ -11,7 +11,7 @@ namespace Rhino.Queues.Tests.Units
 	[TestFixture]
 	public class MessageQueueImplTests
 	{
-		private MessageQueueImpl queue;
+		private InMemoryMessageQueueImpl queue;
 		private InMemoryMessageStorage storage;
 
 		[SetUp]
@@ -21,7 +21,7 @@ namespace Rhino.Queues.Tests.Units
 			{
                 "test"
 			});
-			queue = new MessageQueueImpl(new Destination { Queue = "test" }, storage, storage, MockRepository.GenerateStub<IQueueFactoryImpl>());
+			queue = new InMemoryMessageQueueImpl(new Destination { Queue = "test" }, storage, storage, MockRepository.GenerateStub<IQueueFactoryImpl>());
 		}
 
 		[Test]
