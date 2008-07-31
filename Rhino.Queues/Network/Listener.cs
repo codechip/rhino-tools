@@ -79,20 +79,24 @@ namespace Rhino.Queues.Network
 					return;
 				try
 				{
-					var messagesByQueue = from m in msgs
-										  group m by m.Destination.Queue
-											  into g
-											  select new { Queue = g.Key, Messages = g.ToArray() };
-
-					foreach (var q in messagesByQueue)
+					using(var tx = new TransactionScope())
 					{
-						var messages = FilterDuplicateMessages(q.Messages).ToArray();
-						if (messages.Length == 0)
-							continue;
-						queueFactory.OpenQueueImpl(q.Queue).PutAll(messages);
-						RecordMessageIds(messages);
+						var messagesByQueue = from m in msgs
+											  group m by m.Destination.Queue
+												  into g
+												  select new { Queue = g.Key, Messages = g.ToArray() };
+
+						foreach (var q in messagesByQueue)
+						{
+							var messages = FilterDuplicateMessages(q.Messages).ToArray();
+							if (messages.Length == 0)
+								continue;
+							queueFactory.OpenQueueImpl(q.Queue).PutAll(messages);
+							RecordMessageIds(messages);
+						}
+						context.Response.StatusCode = (int)HttpStatusCode.OK;
+						tx.Complete();
 					}
-					context.Response.StatusCode = (int)HttpStatusCode.OK;
 				}
 				catch (Exception e)
 				{

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Rhino.Queues.Network
 {
-	using System.Diagnostics;
+	using System.Transactions;
 
 	public class Sender : ISender
 	{
@@ -49,6 +49,8 @@ namespace Rhino.Queues.Network
 				string endPoint;
 				if (storage.WaitForNewMessages(TimeSpan.FromSeconds(1), out endPoint) == false)
 				{
+					// no new messages, we need to check if old ones become 
+					// eligible to send now
 					foreach (var queue in storage.Queues)
 					{
 						SendMessagesFromEndpoint(queue);
@@ -63,45 +65,51 @@ namespace Rhino.Queues.Network
 
 		private void SendMessagesFromEndpoint(string endPoint)
 		{
-			var array = storage
-				.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
-				.Take(100).ToArray();
-			if (array.Length == 0)
+			using(var tx = new TransactionScope())
 			{
-				NothingToSend();
-				return;
-			}
-			try
-			{
-				logger.DebugFormat("Starting to send {0} messages to {1}", array.Length, endPoint);
-				var request = (HttpWebRequest)WebRequest.Create(endPoint);
-				request.Method = "PUT";
-				using (var stream = request.GetRequestStream())
-				{
-					new BinaryFormatter().Serialize(stream, array);
-				}
-				request.GetResponse().Close();
-				BatchSent();
-			}
-			catch (WebException e)
-			{
-				var response = ((HttpWebResponse)e.Response);
 
-				if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+				var array = storage
+					.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
+					.Take(100).ToArray();
+				if (array.Length == 0)
 				{
-					using (var sr = new StreamReader(response.GetResponseStream()))
+					NothingToSend();
+					return;
+				}
+				try
+				{
+					logger.DebugFormat("Starting to send {0} messages to {1}", array.Length, endPoint);
+					var request = (HttpWebRequest)WebRequest.Create(endPoint);
+					request.Method = "PUT";
+					using (var stream = request.GetRequestStream())
 					{
-						NotFoundSendErrorHandling(endPoint, array, e, sr);
+						new BinaryFormatter().Serialize(stream, array);
+					}
+					request.GetResponse().Close();
+					BatchSent();
+				}
+				catch (WebException e)
+				{
+					var response = ((HttpWebResponse)e.Response);
+
+					if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+					{
+						using (var sr = new StreamReader(response.GetResponseStream()))
+						{
+							NotFoundSendErrorHandling(endPoint, array, e, sr);
+						}
+					}
+					else
+					{
+						DefaultSendErrorHandling(endPoint, array, e);
 					}
 				}
-				else
+				catch (Exception e)
 				{
 					DefaultSendErrorHandling(endPoint, array, e);
 				}
-			}
-			catch (Exception e)
-			{
-				DefaultSendErrorHandling(endPoint, array, e);
+
+				tx.Complete();
 			}
 		}
 
