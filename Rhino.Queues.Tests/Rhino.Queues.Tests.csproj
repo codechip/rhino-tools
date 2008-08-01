@@ -65,6 +65,14 @@
     <Compile Include="Scenarios\Request_reply_scenario_tests.cs" />
     <Compile Include="Scenarios\Sending_many_messages_scenario_tests.cs" />
     <Compile Include="Scenarios\Will_send_messages_to_destination_even_if_destination_is_offline.cs" />
+    <Compile Include="Storage\Disk\CountOfItemsPersistentQueueTests.cs" />
+    <Compile Include="Storage\Disk\MutliFileQueueTests.cs" />
+    <Compile Include="Storage\Disk\PendingWriteExceptionTests.cs" />
+    <Compile Include="Storage\Disk\PerformanceTests.cs" />
+    <Compile Include="Storage\Disk\PersistentQueueSessionTests.cs" />
+    <Compile Include="Storage\Disk\PersistentQueueTests.cs" />
+    <Compile Include="Storage\Disk\PersistentQueueTestsBase.cs" />
+    <Compile Include="Storage\Disk\TrasactionLogTests.cs" />
     <Compile Include="Threading\BlockingQueueTests.cs" />
     <Compile Include="Transactions\TransactionsTests.cs" />
     <Compile Include="Units\ConfigurationTests.cs" />

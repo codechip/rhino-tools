@@ -23,45 +23,47 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-namespace Rhino.Queues.Storage.InMemory
+namespace Rhino.Queues.Storage.Disk
 {
 	using System;
-	using System.Collections.Generic;
-	using Impl;
-	using Threading;
+	using System.Text;
 
-	public abstract class MessageStorageBase : IMessageStorage
+	public class PendingWriteException : Exception
 	{
-		protected readonly IBlockingQueue<string> messagesEvents = new BlockingQueue<string>();
+		private readonly Exception[] pendingWritesExceptions;
 
-		#region IMessageStorage Members
-
-		public void Add(string name, TransportMessage message)
+		public PendingWriteException(Exception[] pendingWritesExceptions)
+			: base("Error during pending writes")
 		{
-			OnAdd(name, message);
-			messagesEvents.Enqueue(name);
+			this.pendingWritesExceptions = pendingWritesExceptions;
 		}
 
-		protected abstract void OnAdd(string name, TransportMessage message);
-
-		public abstract IEnumerable<TransportMessage> PullMessagesFor(string name, Predicate<TransportMessage> predicate);
-		public abstract IEnumerable<TransportMessage> PullMessagesFor(string name);
-		public abstract bool WaitForNewMessages(string name);
-
-		public abstract bool Exists(string name);
-
-		public bool WaitForNewMessages(TimeSpan timeToWait, out string queueWithNewMessages)
+		public Exception[] PendingWritesExceptions
 		{
-			return messagesEvents.Dequeue(timeToWait, out queueWithNewMessages);
+			get { return pendingWritesExceptions; }
 		}
 
-		public abstract IEnumerable<string> Queues { get; }
-
-		public void Dispose()
+		public override string Message
 		{
-			messagesEvents.Dispose();
+			get
+			{
+				var sb = new StringBuilder(base.Message).Append(":");
+				foreach (var exception in pendingWritesExceptions)
+				{
+					sb.AppendLine().Append(" - ").Append(exception.Message);
+				}
+				return sb.ToString();
+			}
 		}
 
-		#endregion
+		public override string ToString()
+		{
+			var sb = new StringBuilder(base.Message).Append(":");
+			foreach (var exception in pendingWritesExceptions)
+			{
+				sb.AppendLine().Append(" - ").Append(exception);
+			}
+			return sb.ToString();
+		}
 	}
 }
