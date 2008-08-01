@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Cfg\Configuration.cs" />
     <Compile Include="IMessageQueue.cs" />
-    <Compile Include="Impl\DiskMessageQueueImpl.cs" />
     <Compile Include="Impl\Destination.cs" />
     <Compile Include="Impl\IMessageQueueImpl.cs" />
     <Compile Include="Impl\IQueueFactoryImpl.cs" />
