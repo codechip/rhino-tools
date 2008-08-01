@@ -26,10 +26,10 @@ namespace Server
 			{
 				var message = queue.Recieve();
 				var str = (string)message.Value;
-				var rev = new string(str.ToCharArray().Reverse().ToArray());
+				var rev = new string(str.Reverse().ToArray());
 				using(var remoteQueue = factory.OpenQueue(message.Source))
 				{
-					Console.WriteLine("Hanlded message");
+					Console.WriteLine("Handled message");
 					remoteQueue.Send(rev);
 				}
 			}
