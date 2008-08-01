@@ -6,7 +6,6 @@
 //{
 //    using System.IO;
 //    using System.Runtime.Serialization.Formatters.Binary;
-//    using System.Transactions;
 
 //    public class DiskMessageStorage : MessageStorageBase
 //    {
@@ -28,14 +27,14 @@
 //            while (true)
 //            {
 //                var entry = queue.Dequeue();
-//                if(entry == null)
+//                if (entry == null)
 //                    continue;
 //                // we have gone a full cycle, and are now reading the 
 //                // items we rejected previous, break to avoid infinite loop
-//                if(rejectedEntires.Contains(entry))
+//                if (rejectedEntires.Contains(entry))
 //                    yield break;
 //                var transportMessage = Deserialize(entry);
-//                if(predicate(transportMessage)==false)
+//                if (predicate(transportMessage) == false)
 //                {
 //                    rejectedEntires.Add(entry);
 //                    queue.Requeue(entry);
@@ -47,7 +46,7 @@
 
 //        private TransportMessage Deserialize(Entry dequeue)
 //        {
-//            using(var stream = new MemoryStream(dequeue.Data))
+//            using (var stream = new MemoryStream(dequeue.Data))
 //            {
 //                return (TransportMessage)new BinaryFormatter().Deserialize(stream);
 //            }

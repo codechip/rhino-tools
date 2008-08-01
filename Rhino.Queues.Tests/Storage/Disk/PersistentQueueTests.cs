@@ -38,6 +38,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 		{
 			using (var queue = new PersistentQueue(path))
 			using (var session = queue.OpenSession())
+			using (var tx = new TransactionScope())
 			{
 				Assert.IsNull(session.Dequeue());
 			}
@@ -213,6 +214,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 			using (var queue = new PersistentQueue(path))
 			using (var session2 = queue.OpenSession())
 			using (var session1 = queue.OpenSession())
+			using (var tx = new TransactionScope())
 			{
 				CollectionAssert.AreEqual(new byte[] { 1, 2, 3, 4 }, session1.Dequeue());
 				Assert.IsNull(session2.Dequeue());

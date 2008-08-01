@@ -57,6 +57,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 				}
 
 				using (var session = queue.OpenSession())
+				using (var tx = new TransactionScope())
 				{
 					for (int j = 0; j < 10; j++)
 					{
@@ -64,7 +65,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 					}
 					Assert.IsNull(session.Dequeue());
 
-					//	session.Flush(); explicitly removed
+					//	tx.Complete(); explicitly removed
 				}
 			}
 			using (var queue = new PersistentQueue(path))
@@ -89,6 +90,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 				}
 
 				using (var session = queue.OpenSession())
+				using (var tx = new TransactionScope())
 				{
 					for (int j = 0; j < 10; j++)
 					{
@@ -96,7 +98,7 @@ namespace Rhino.Queues.Tests.Storage.Disk
 					}
 					Assert.IsNull(session.Dequeue());
 
-					//	session.Flush(); explicitly removed
+					//	tx.Complete(); explicitly removed
 				}
 			}
 			using (var queue = new PersistentQueue(path))

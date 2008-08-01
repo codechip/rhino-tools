@@ -24,9 +24,10 @@ namespace Rhino.Queues.Tests.Storage.Disk
 					((Func<Stream, long>)invocation.Arguments[1])(limitedSizeStream);
 				});
 			using (var session = new PersistentQueueSession(queueStub, limitedSizeStream, 1024 * 1024))
+			using (var tx = new TransactionScope())
 			{
 				session.Enqueue(new byte[64 * 1024 * 1024 + 1]);
-				session.Flush();
+				tx.Complete();
 			}
 		}
 
@@ -43,9 +44,10 @@ namespace Rhino.Queues.Tests.Storage.Disk
 					((Func<Stream, long>)invocation.Arguments[1])(limitedSizeStream);
 				});
 			using (var session = new PersistentQueueSession(queueStub, limitedSizeStream, 1024 * 1024))
+			using (var tx = new TransactionScope())
 			{
 				session.Enqueue(new byte[64]);
-				session.Flush();
+				tx.Complete();
 			}
 		}
 
@@ -66,8 +68,10 @@ namespace Rhino.Queues.Tests.Storage.Disk
 			}
 			using (var queue = new PersistentQueue(path))
 			using (var session = queue.OpenSession())
+			using (var tx = new TransactionScope())
 			{
 				session.Dequeue();
+				tx.Complete();
 			}
 		}
 	}

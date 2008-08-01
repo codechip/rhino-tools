@@ -41,7 +41,9 @@ namespace Rhino.Queues.Storage.Disk
 			{
 				currentTransaction = Transaction.Current;
 				currentTransaction.EnlistVolatile(this, EnlistmentOptions.None);
+				return;
 			}
+			throw new InvalidOperationException("Cannot use session without a transaction");
 		}
 
 		public void Enqueue(byte[] data)
@@ -192,6 +194,7 @@ namespace Rhino.Queues.Storage.Disk
 		public void Dispose()
 		{
 			queue.Reinstate(operations);
+			operations.Clear();
 			foreach (var stream in streamsToDisposeOnFlush)
 			{
 				stream.Dispose();
