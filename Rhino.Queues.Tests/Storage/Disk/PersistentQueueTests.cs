@@ -220,5 +220,36 @@ namespace Rhino.Queues.Tests.Storage.Disk
 				Assert.IsNull(session2.Dequeue());
 			}
 		}
+
+		[Test]
+		public void Reversing_dequeue_will_send_to_end_of_line()
+		{
+			using (var queue = new PersistentQueue(path))
+			{
+				using (var session = queue.OpenSession())
+				using (var tx = new TransactionScope())
+				{
+					session.Enqueue(BitConverter.GetBytes(1));
+					session.Enqueue(BitConverter.GetBytes(2));
+					session.Enqueue(BitConverter.GetBytes(3));
+					tx.Complete();
+				}
+
+				using (var session = queue.OpenSession())
+				using (var tx = new TransactionScope())
+				{
+					Action reverse;
+					Assert.AreEqual(1, BitConverter.ToInt32(session.ReversibleDequeue(out reverse), 0));
+					reverse();
+					Assert.AreEqual(2, BitConverter.ToInt32(session.Dequeue(), 0));
+					Assert.AreEqual(3, BitConverter.ToInt32(session.Dequeue(), 0));
+					Assert.AreEqual(1, BitConverter.ToInt32(session.Dequeue(), 0));
+					
+					tx.Complete();
+				}
+			}
+
+
+		}
 	}
 }

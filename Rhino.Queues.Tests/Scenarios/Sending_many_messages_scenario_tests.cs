@@ -5,6 +5,8 @@ using MbUnit.Framework;
 
 namespace Rhino.Queues.Tests.Scenarios
 {
+	using System.Transactions;
+
 	[TestFixture]
 	public class Sending_many_messages_scenario_tests
 	{
@@ -20,6 +22,7 @@ namespace Rhino.Queues.Tests.Scenarios
 				.RegisterQueues("foo", "bar")
 				.ListenerThreads(1)
 				.SenderThreads(1)
+				.PurgeOnStartup()
 				.BuildQueueFactory();
 
 			clientFactory = new Configuration("client")
@@ -28,6 +31,7 @@ namespace Rhino.Queues.Tests.Scenarios
 				.RegisterQueues("kong", "fu")
 				.ListenerThreads(1)
 				.SenderThreads(1)
+				.PurgeOnStartup()
 				.BuildQueueFactory();
 		}
 
@@ -48,17 +52,28 @@ namespace Rhino.Queues.Tests.Scenarios
 
 			var iterationCount = 5000;
 
-			for (int i = 0; i < iterationCount; i++)
+			using(var tx = new TransactionScope())
 			{
-				serverFactory.OpenQueue("fu@client").Send(i);
-				serverFactory.OpenQueue("kong@client").Send(i * 2);
+				for (int i = 0; i < iterationCount; i++)
+				{
+					serverFactory.OpenQueue("fu@client").Send(i);
+					serverFactory.OpenQueue("kong@client").Send(i * 2);
+				}
+				tx.Complete();
 			}
+
 			var fu = new List<int>();
 			var kong = new List<int>();
-			for (int i = 0; i < iterationCount; i++)
+			using (var tx = new TransactionScope())
 			{
-				fu.Add((int)clientFactory.OpenQueue("fu").Recieve().Value);
-				kong.Add((int)clientFactory.OpenQueue("kong").Recieve().Value);
+				for (int i = 0; i < iterationCount; i++)
+				{
+					var value = clientFactory.OpenQueue("fu").Recieve().Value;
+					fu.Add((int) value);
+					value = clientFactory.OpenQueue("kong").Recieve().Value;
+					kong.Add((int) value);
+				}
+				tx.Complete();
 			}
 
 			// we do not ensure order

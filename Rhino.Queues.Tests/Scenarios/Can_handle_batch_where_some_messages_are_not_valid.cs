@@ -52,8 +52,12 @@ namespace Rhino.Queues.Tests.Scenarios
 				queue.Send(new DateTime(2000, 1, 1));
 				tx.Complete();
 			}
-			var actual = (DateTime)clientFactory.OpenQueue("kong").Recieve().Value;
-			Assert.AreEqual(new DateTime(2000, 1, 1), actual);
+			using (var tx = new TransactionScope())
+			{
+				var actual = (DateTime) clientFactory.OpenQueue("kong").Recieve().Value;
+				Assert.AreEqual(new DateTime(2000, 1, 1), actual);
+				tx.Complete();
+			}
 		}
 	}
 }

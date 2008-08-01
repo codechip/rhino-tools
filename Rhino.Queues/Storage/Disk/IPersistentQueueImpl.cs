@@ -13,5 +13,6 @@ namespace Rhino.Queues.Storage.Disk
 		Entry Dequeue();
 		void Reinstate(IEnumerable<Operation> reinstatedOperations);
 		int CurrentFileNumber { get;  }
+		void Requeue(IEnumerable<Operation> operations);
 	}
 }

@@ -67,7 +67,6 @@ namespace Rhino.Queues.Network
 		{
 			using(var tx = new TransactionScope())
 			{
-
 				var array = storage
 					.PullMessagesFor(endPoint, m => m.SendAt <= SystemTime.Now())
 					.Take(100).ToArray();

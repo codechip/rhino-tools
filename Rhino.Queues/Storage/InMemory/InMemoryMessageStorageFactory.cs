@@ -10,9 +10,9 @@ namespace Rhino.Queues.Storage.InMemory
 			return new InMemoryMessageStorage(endpoints);
 		}
 
-		public IMessageStorage ForIncomingMessages(HashSet<string> inMemoryQueues, HashSet<string> durableQueues)
+		public IMessageStorage ForIncomingMessages(HashSet<string> endpoints)
 		{
-			return new InMemoryMessageStorage(inMemoryQueues);
+			return new InMemoryMessageStorage(endpoints);
 		}
 	}
 }

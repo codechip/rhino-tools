@@ -20,7 +20,7 @@ namespace Rhino.Queues.Network
 		private readonly int workerThreadsCount;
 		private bool active = true;
 		private readonly IList<Thread> threads = new List<Thread>();
-		SizedLimitedSet<Guid> recievedMessagesIds = new SizedLimitedSet<Guid>(1000000);
+		readonly SizedLimitedSet<Guid> recievedMessagesIds = new SizedLimitedSet<Guid>(1000000);
 
 		public Listener(IQueueFactoryImpl queueFactory, int workerThreadsCount, string endpoint)
 		{

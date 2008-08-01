@@ -9,6 +9,7 @@ namespace Rhino.Queues.Storage.Disk
 
 	public class PersistentQueueSession : ISinglePhaseNotification, IPersistentQueueSession
 	{
+		private bool transactionFinished;
 		private readonly List<Operation> operations = new List<Operation>();
 		private readonly IList<Exception> pendingWritesFailures = new List<Exception>();
 		private readonly IList<WaitHandle> pendingWritesHandles = new List<WaitHandle>();
@@ -44,6 +45,11 @@ namespace Rhino.Queues.Storage.Disk
 				return;
 			}
 			throw new InvalidOperationException("Cannot use session without a transaction");
+		}
+
+		public bool IsUsable
+		{
+			get { return transactionFinished == false; }
 		}
 
 		public void Enqueue(byte[] data)
@@ -130,17 +136,30 @@ namespace Rhino.Queues.Storage.Disk
 
 		public byte[] Dequeue()
 		{
-			TryJoinTransaction(); 
+			Action reverse;
+			return ReversibleDequeue(out reverse);
+		}
+
+		public byte[] ReversibleDequeue(out Action reverse)
+		{
+			TryJoinTransaction();
+			reverse = delegate { };
 			var entry = queue.Dequeue();
 			if (entry == null)
 				return null;
-			operations.Add(new Operation(
+			var operation = new Operation(
 				OperationType.Dequeue,
 				entry.FileNumber,
 				entry.Start,
 				entry.Length,
 				null
-			));
+				);
+			operations.Add(operation);
+			reverse = delegate
+			{
+				operations.Remove(operation);
+				queue.Requeue(new[] { operation });
+			};
 			return entry.Data;
 		}
 
@@ -193,14 +212,27 @@ namespace Rhino.Queues.Storage.Disk
 
 		public void Dispose()
 		{
-			queue.Reinstate(operations);
-			operations.Clear();
+		}
+
+		private void ActualDispose()
+		{
+			DisposeStreams();
+			GC.SuppressFinalize(this);
+		}
+
+		private void DisposeStreams()
+		{
 			foreach (var stream in streamsToDisposeOnFlush)
 			{
 				stream.Dispose();
 			}
 			currentStream.Dispose();
-			GC.SuppressFinalize(this);
+		}
+
+		private void Rollback()
+		{
+			queue.Reinstate(operations);
+			operations.Clear();
 		}
 
 		~PersistentQueueSession()
@@ -217,12 +249,16 @@ namespace Rhino.Queues.Storage.Disk
 		{
 			Flush();
 			enlistment.Done();
+			ActualDispose();
+			transactionFinished = true;
 		}
 
 		public void Rollback(Enlistment enlistment)
 		{
-			Dispose();
+			Rollback();
 			enlistment.Done();
+			ActualDispose();
+			transactionFinished = true;
 		}
 
 		public void InDoubt(Enlistment enlistment)
@@ -234,6 +270,8 @@ namespace Rhino.Queues.Storage.Disk
 		{
 			Flush();
 			singlePhaseEnlistment.Committed();
+			ActualDispose();
+			transactionFinished = true;
 		}
 	}
 }

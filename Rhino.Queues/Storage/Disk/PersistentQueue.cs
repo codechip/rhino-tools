@@ -61,10 +61,10 @@ namespace Rhino.Queues.Storage.Disk
 			{
 				fileLock = new FileStream(Path.Combine(path, "lock"), FileMode.Create, FileAccess.ReadWrite, FileShare.None);
 			}
-			catch (IOException)
+			catch (IOException ex)
 			{
 				GC.SuppressFinalize(this); //avoid finalizing invalid instance
-				throw new InvalidOperationException("Another instance of the queue is already in action");
+				throw new InvalidOperationException("Another instance of the queue is already in action or could not find queue directory", ex);
 			}
 
 			try
@@ -293,6 +293,23 @@ namespace Rhino.Queues.Storage.Disk
 			}
 		}
 
+		public void Requeue(IEnumerable<Operation> requeuedOperations)
+		{
+			lock (entries)
+			{
+				ApplyTransactionOperations(
+					from entry in requeuedOperations
+					select new Operation(
+						OperationType.Enqueue,
+						entry.FileNumber,
+						entry.Start,
+						entry.Length,
+						entry.Data
+						)
+					);
+			}
+		}
+
 		#endregion
 
 		private void ReadTransactionLog()
@@ -396,7 +413,6 @@ namespace Rhino.Queues.Storage.Disk
 
 		public int[] ApplyTransactionOperationsInMemory(IEnumerable<Operation> operations)
 		{
-			var filesToRemove = new List<int>();
 			foreach (var operation in operations)
 			{
 				switch (operation.Type)
@@ -413,11 +429,6 @@ namespace Rhino.Queues.Storage.Disk
 						checkedOutEntries.Remove(entryToRemove);
 						var itemCountRemoval = countOfItemsPerFile.GetValueOrDefault(entryToRemove.FileNumber);
 						countOfItemsPerFile[entryToRemove.FileNumber] = itemCountRemoval - 1;
-						if (itemCountRemoval == 1)
-						{
-							countOfItemsPerFile.Remove(entryToRemove.FileNumber);
-							filesToRemove.Add(entryToRemove.FileNumber);
-						}
 						break;
 
 					case OperationType.Reinstate:
@@ -426,6 +437,18 @@ namespace Rhino.Queues.Storage.Disk
 						checkedOutEntries.Remove(entryToReistate);
 						break;
 				}
+			}
+			var filesToRemove = new List<int>();
+			foreach (var pair in countOfItemsPerFile)
+			{
+				if (pair.Value < 1)
+				{
+					filesToRemove.Add(pair.Key);
+				}
+			}
+			foreach (var i in filesToRemove)
+			{
+				countOfItemsPerFile.Remove(i);
 			}
 			return filesToRemove.ToArray();
 		}

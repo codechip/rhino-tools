@@ -40,7 +40,7 @@ namespace Rhino.Queues.Impl
 			this.name = name;
 			this.destinationMapping = destinationMapping;
 			outgoingStorage = storageFactory.ForOutgoingMessages(new HashSet<string>(destinationMapping.Values));
-			incomingStorage = storageFactory.ForIncomingMessages(new HashSet<string>(inMemoryQueues), new HashSet<string>(durableQueues));
+			incomingStorage = storageFactory.ForIncomingMessages(new HashSet<string>(inMemoryQueues));
 			listener = listenerFactory.Create(this, destinationMapping[name]);
 			sender = senderFactory.Create(outgoingStorage);
 		}
@@ -62,7 +62,7 @@ namespace Rhino.Queues.Impl
 		public IMessageQueueImpl OpenQueueImpl(string queueName)
 		{
 			AssertStarted();
-			return new InMemoryMessageQueueImpl(
+			return new DiskMessageQueueImpl(
 				new Destination(queueName, Name),
 				incomingStorage,
 				outgoingStorage,

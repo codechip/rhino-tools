@@ -7,6 +7,8 @@ using Rhino.Queues.Storage.InMemory;
 
 namespace Rhino.Queues.Cfg
 {
+	using Rhino.Queues.Storage.Disk;
+
 	public class Configuration
 	{
 		private int listenersCount = 3;
@@ -17,6 +19,8 @@ namespace Rhino.Queues.Cfg
 
 		private readonly IDictionary<string, string> endpointMapping =
 			new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+		private bool purgeOnStartup;
 
 		public Configuration(string name)
 		{
@@ -101,12 +105,18 @@ namespace Rhino.Queues.Cfg
 
 			return new QueueFactoryImpl(
 				name, 
-				new InMemoryMessageStorageFactory(), 
+				new DiskMessageStorageFactory(name, purgeOnStartup), 
 				endpointMapping, 
 				registeredQueues, 
                 registeredDurableQueues,
 				new ListenerFactory(listenersCount), 
 				new SenderFactory(sendersCount));
+		}
+
+		public Configuration PurgeOnStartup()
+		{
+			this.purgeOnStartup = true;
+			return this;
 		}
 	}
 
