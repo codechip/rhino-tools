@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Rhino.Commons.Facilities;
 using Rhino.Commons.Test.Repository;
 using Castle.Windsor;
@@ -54,12 +53,14 @@ namespace Rhino.Commons.Test.Facilities
             NHibernateUnitOfWorkFacilityConfig config = BuildFacilityConfiguration().RegisterEntitiesWhere(entityInThisAssembly);
 
             IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(config));
-            Assert.IsNotNull(Repository<IParent>.Create());
+
+            using (UnitOfWork.Start())
+                Assert.IsNotNull(Repository<IParent>.Create());
         }
 
-        private NHibernateUnitOfWorkFacilityConfig BuildFacilityConfiguration()
+        public static NHibernateUnitOfWorkFacilityConfig BuildFacilityConfiguration()
         {
-            return new NHibernateUnitOfWorkFacilityConfig(GetType().Assembly)
+            return new NHibernateUnitOfWorkFacilityConfig(typeof(NHibernateUnitOfWorkFacilityTests).Assembly)
                 .NHibernateConfiguration("facilities\\hibernate2.cfg.xml");
         }
     }

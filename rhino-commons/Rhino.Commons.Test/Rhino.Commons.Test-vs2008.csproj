@@ -274,7 +274,9 @@
     </Compile>
     <Compile Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.cs">
     </Compile>
+    <Compile Include="Facilities\NHibernateUnitOfWorkFacilityConfigTests.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests.cs" />
+    <Compile Include="Facilities\NHibernateUnitOfWorkFacilityTests_No_IoC.cs" />
     <Compile Include="ForTesting\DatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\ARDatabaseTestFixtureBaseTests.cs" />
     <Compile Include="ForTesting\NHibernateDatabaseTestFixtureBaseTests.cs" />
@@ -292,6 +294,7 @@
     <Compile Include="Repository\RepositoryTests.cs" />
     <Compile Include="Repository\RepositoryTestsBase.cs" />
     <Compile Include="RhinoThreadPoolFixture.cs" />
+    <Compile Include="UoW\MultipleNHibernateUnitOfWorkFactoryTests.cs" />
     <Compile Include="UoW\TransactionalFlush.cs" />
     <Compile Include="UoW\GlobalNonThreaSafeUnitOfWorkTest.cs" />
     <Compile Include="With\With.Caching.cs" />
