@@ -26,11 +26,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-using System;
 using System.Reflection;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
-using NHibernate.Cfg;
 using Rhino.Commons.ForTesting;
 using ComponentParameter = Castle.MicroKernel.Registration.Parameter;
 
@@ -62,12 +60,8 @@ namespace Rhino.Commons.Facilities
                 registerFactory.DependsOn(Property.ForKey("assemblies").Eq(Assemblies));
 			}
 			Kernel.Register(registerFactory);
-            NHibernateUnitOfWorkFactory factory = (NHibernateUnitOfWorkFactory)Kernel.Resolve<IUnitOfWorkFactory>();
-            EntitiesToRepositories.Register(
-                Kernel,
-                factory.NHibernateSessionFactory,
-                typeof(NHRepository<>),
-                config.IsCandidateForRepository);
+
+            Kernel.AddComponentInstance("entitiesToRepositories", typeof(INHibernateInitializationAware), new EntitiesToRepositoriesInitializationAware(config.IsCandidateForRepository));        
         }
 
 		public Assembly[] Assemblies

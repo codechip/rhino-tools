@@ -176,11 +176,11 @@ namespace Rhino.Commons
 						if (File.Exists(hibernateConfig))
 							cfg.Configure(new XmlTextReader(hibernateConfig));
 
-
 					    if (assemblies != null && assemblies.Length > 0)
 					    {
 					        ISet<Assembly> loadedAssemblies = new HashedSet<Assembly>();
-					        foreach (PersistentClass mapping in cfg.ClassMappings)
+					        
+                            foreach (PersistentClass mapping in cfg.ClassMappings)
 					        {
 					            loadedAssemblies.Add(mapping.MappedClass.Assembly);
 					        }
