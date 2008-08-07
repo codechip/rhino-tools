@@ -54,6 +54,12 @@ namespace Rhino.Commons.NHibernate
 
 		public static Type GetRootType(ICriteria criteria)
 		{
+			Type rootType = criteria.GetRootEntityTypeIfAvailable();
+			if (rootType != null)
+			{
+				return rootType;
+			}
+
 			CriteriaImpl impl = GetRootCriteria(criteria);
 			if(impl.Session==null)
 				throw new InvalidOperationException("Could not get root type on criteria that is not attached to a session");
@@ -68,6 +74,12 @@ namespace Rhino.Commons.NHibernate
 
 		public static Type GetRootType(DetachedCriteria criteria, ISession session)
 		{
+			Type rootType = criteria.GetRootEntityTypeIfAvailable();
+			if (rootType != null)
+			{
+				return rootType;
+			}
+
 			ISessionFactoryImplementor factory = (ISessionFactoryImplementor)session.SessionFactory;
 			IEntityPersister persister = factory.GetEntityPersister(criteria.EntityOrClassName);
 			if (persister == null)
