@@ -33,7 +33,9 @@ using Castle.Windsor;
 
 namespace Rhino.Commons
 {
-    public static class IoC
+	using System.Collections;
+
+	public static class IoC
     {
         private static IWindsorContainer container;
         private static readonly object LocalContainerKey = new object();
@@ -67,7 +69,7 @@ namespace Rhino.Commons
         /// <returns></returns>
         public static T TryResolve<T>()
         {
-            return TryResolve<T>(default(T));
+            return TryResolve(default(T));
         }
 
         /// <summary>
@@ -94,6 +96,17 @@ namespace Rhino.Commons
         {
             return Container.Resolve<T>(name);
         }
+
+		public static T Resolve<T>(object argumentsAsAnonymousType)
+		{
+			return Container.Resolve<T>(argumentsAsAnonymousType);
+		}
+
+
+		public static T Resolve<T>(IDictionary parameters)
+		{
+			return Container.Resolve<T>(parameters);
+		}
 
         public static IWindsorContainer Container
         {
