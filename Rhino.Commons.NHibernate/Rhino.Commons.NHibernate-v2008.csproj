@@ -96,7 +96,6 @@
     <Compile Include="NHibernate\FutureQueryOf.cs" />
     <Compile Include="NHibernate\FutureQueryOptions.cs" />
     <Compile Include="NHibernate\FutureValueOptions.cs" />
-    <Compile Include="NHibernate\IsAExpression.cs" />
     <Compile Include="NHibernate\ProcessCriteriaDelegate.cs" />
     <Compile Include="NHibernate\XmlIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
