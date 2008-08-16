@@ -60,7 +60,7 @@ namespace Rhino.Commons
 
 		public ActiveRecordUnitOfWorkFactory()
 		{
-			//assumes that another class will have taken on the responsibility of initializing the ActiveRecord framework
+			//assumes that another class will have taken on the responsibility of initializing the ActiveRecord framework	
 			initialized = true;
 		}
 
@@ -221,7 +221,11 @@ namespace Rhino.Commons
 
         public ISession GetCurrentSessionFor(Type typeOfEntity)
         {
-            return CurrentSession;
+			ISessionScope scope = SessionScope.Current;
+			if (scope == null)
+				throw new InvalidOperationException("You are not in a unit of work");
+			ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
+			return holder.CreateSession(typeOfEntity);
         }
 
         public void SetCurrentSession(Type typeOfEntity, ISession session)
