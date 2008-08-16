@@ -31,7 +31,6 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using Boo.Lang;
 using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
@@ -39,6 +38,8 @@ using Rhino.Commons.Binsor.Configuration;
 
 namespace Rhino.Commons.Binsor
 {
+	using Boo.Lang;
+
 	public class Facility : IQuackFu
 	{
 		private readonly string _key;
@@ -141,7 +142,7 @@ namespace Rhino.Commons.Binsor
 				return _facilityInstance;
 			}
 
-			List<object> parameters = new List<object>();
+			System.Collections.Generic.List<object> parameters = new System.Collections.Generic.List<object>();
 			ConstructorInfo constructor = SelectEligbleConstructor(parameters);
 			return (IFacility) constructor.Invoke(parameters.ToArray());
 		}
