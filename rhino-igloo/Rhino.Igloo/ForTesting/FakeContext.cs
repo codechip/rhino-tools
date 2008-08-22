@@ -48,13 +48,22 @@ namespace Rhino.Igloo.Tests
         private IDictionary<string, object> session = new Dictionary<string, object>();
         private string lastUser;
         private bool signOutCalled;
-        private readonly IPrincipal principal = new GenericPrincipal(new GenericIdentity("test"), null);
+        private IPrincipal principal = new GenericPrincipal(new GenericIdentity("test"), null);
         private readonly IList<UploadedFile> uploadedFiles = new List<UploadedFile>();
         private TimeSpan? refreshWaitTime;
         private string refreshUrl;
         private bool hasEnded;
         private readonly string rawUrl = null;
         private bool isIE7;
+
+        /// <summary>
+        /// Sets the principle
+        /// </summary>
+        /// <param name="value">the <see cref="IPrincipal"/> to use instead of <see cref="GenericPrincipal"/>.</param>
+        public void SetPrincipal(IPrincipal value)
+        {
+            this.principal = value;
+        }
 
         /// <summary>
         /// Sets the is IE 7 flag

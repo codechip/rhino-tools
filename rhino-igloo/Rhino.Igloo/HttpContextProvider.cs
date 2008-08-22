@@ -33,8 +33,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Web;
 using Rhino.Igloo;
-using Rhino.Igloo.Properties;
-
 namespace Rhino.Igloo
 {
 	/// <summary>

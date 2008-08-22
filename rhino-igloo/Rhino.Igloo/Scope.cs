@@ -29,7 +29,6 @@
 
 using Castle.Components.Validator;
 using Rhino.Commons;
-using Rhino.Igloo.Properties;
 
 namespace Rhino.Igloo
 {
@@ -118,7 +117,7 @@ namespace Rhino.Igloo
 			set
 			{
                 ErrorSummary summary = new ErrorSummary();
-                summary.RegisterErrorMessage(Resources.ErrorMessage, value);
+                summary.RegisterErrorMessage(Constants.ErrorMessage, value);
                 ErrorSummary = summary;
 			    Flash[Constants.ErrorMessage] = value;
 			}
@@ -146,32 +145,28 @@ namespace Rhino.Igloo
 
         private static string GetObjectFromUserInput(string key)
         {
-            IContextProvider contextProvider = IoC.Resolve<IContextProvider>();
-            IContext currentContext = contextProvider.Current;
-            string result = currentContext.GetInputVariable(key);
-            return result;
+            return Current.GetInputVariable(key);
         }
 
         // note multiplies of those
         private static string[] GetMultiplyObjectsFromInput(string key)
         {
-            IContextProvider contextProvider = IoC.Resolve<IContextProvider>();
-            IContext currentContext = contextProvider.Current;
-            return currentContext.GetMultiplyInputVariables(key);
+            return Current.GetMultiplyInputVariables(key);
         }
 
         private static object GetFromSession(string key)
         {
-            IContextProvider contextProvider = IoC.Resolve<IContextProvider>();
-            IContext currentContext = contextProvider.Current;
-            return currentContext.GetFromSession(key);
+            return Current.GetFromSession(key);
         }
 
         private static void SetAtSession(string key, object val)
         {
-            IContextProvider contextProvider = IoC.Resolve<IContextProvider>();
-            IContext currentContext = contextProvider.Current;
-            currentContext.SetAtSession(key, val);
+            Current.SetAtSession(key, val);
+        }
+
+        private static IContext Current
+        {
+            get { return IoC.Resolve<IContextProvider>().Current; }
         }
     }
 }

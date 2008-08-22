@@ -2,14 +2,28 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Igloo", "Rhino.Igloo\Rhino.Igloo.csproj", "{D8B481B1-229C-49BF-BCAA-E61EA23EEDBC}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Controllers", "RhinoIglooSample.Controllers\RhinoIglooSample.Controllers.csproj", "{3FB264DC-25D4-47C1-A112-F543A920845E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Model", "RhinoIglooSample.Model\RhinoIglooSample.Model.csproj", "{7C333A74-6C23-4C85-B05E-C5A837F27C03}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Web", "RhinoIglooSample.Web\RhinoIglooSample.Web.csproj", "{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{0FBC4D2B-6572-4ECB-A65B-441C564C521A}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,19 +50,12 @@ Global
 		{7C333A74-6C23-4C85-B05E-C5A837F27C03}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7C333A74-6C23-4C85-B05E-C5A837F27C03}.Start|Any CPU.ActiveCfg = Release|Any CPU
 		{7C333A74-6C23-4C85-B05E-C5A837F27C03}.Start|Any CPU.Build.0 = Release|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Start|Any CPU.ActiveCfg = Release|Any CPU
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Start|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3FB264DC-25D4-47C1-A112-F543A920845E} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
-		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
 		{7C333A74-6C23-4C85-B05E-C5A837F27C03} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
+		{3FB264DC-25D4-47C1-A112-F543A920845E} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
 	EndGlobalSection
 EndGlobal

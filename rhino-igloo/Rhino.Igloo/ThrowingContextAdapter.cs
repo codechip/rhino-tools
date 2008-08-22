@@ -39,13 +39,15 @@ namespace Rhino.Igloo
     /// </summary>
 	public class ThrowingContextAdapter : IContext
 	{
-		/// <summary>
+        private const string NOT_SUPPORTED_EXCEPTION_MESSAGE = "You are not in a web context, you cannot call the context";
+        
+        /// <summary>
 		/// Redirects the specified destination.
 		/// </summary>
 		/// <param myName="destination">The destination.</param>
 		public void Redirect(string destination)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
         /// <summary>
@@ -55,7 +57,7 @@ namespace Rhino.Igloo
         /// <param name="endResponse">if set to <c>true</c> [end response].</param>
         public void Redirect(string destination, bool endResponse)
         {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
 		/// <summary>
@@ -92,7 +94,7 @@ namespace Rhino.Igloo
 		/// <param name="value">The value.</param>
 		public void SetAtSession(string key, object value)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 		/// <summary>
@@ -102,7 +104,7 @@ namespace Rhino.Igloo
 		/// <param name="user">The user.</param>
 		public void AuthenticateAndRedirect(string destination, string user)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
         /// <summary>
@@ -113,7 +115,7 @@ namespace Rhino.Igloo
         /// <param name="endResponse">if set to <c>true</c> [end response].</param>
         public void AuthenticateAndRedirect(string destination, string user, bool endResponse)
         {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
 		/// <summary>
@@ -122,7 +124,7 @@ namespace Rhino.Igloo
 		/// <param name="user">The user.</param>
     	public void Authenticate(string user)
     	{
-    		throw new NotSupportedException("You are not in a web context, you cannot call the context");
+    		throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
     	}
 
     	/// <summary>
@@ -132,7 +134,7 @@ namespace Rhino.Igloo
 		/// <param name="user">The user.</param>
 		public void Authenticate(string destination, string user)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 
@@ -141,7 +143,7 @@ namespace Rhino.Igloo
 		/// </summary>
 		public void SignOut()
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 
@@ -151,7 +153,7 @@ namespace Rhino.Igloo
         /// <value>The identity.</value>
 	    public IPrincipal CurrentUser
 	    {
-            get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); } 
+            get { throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE); } 
 	    }
 
 	    /// <summary>
@@ -160,7 +162,7 @@ namespace Rhino.Igloo
 		/// <value>The uploaded files.</value>
 		public IList<UploadedFile> UploadedFiles
 		{
-			get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); }
+			get { throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE); }
 		}
 
 
@@ -170,7 +172,7 @@ namespace Rhino.Igloo
         /// <value>The raw URL.</value>
 	    public string RawUrl
 	    {
-            get { throw new NotSupportedException("You are not in a web context, you cannot call the context"); }
+            get { throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE); }
 	    }
 
 	    /// <summary>
@@ -180,7 +182,7 @@ namespace Rhino.Igloo
 		/// <returns></returns>
 		public string GetFullPath(string directory)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
         /// <summary>
@@ -189,7 +191,7 @@ namespace Rhino.Igloo
         /// <returns></returns>
         public string GetHostName()
         {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
 		/// <summary>
@@ -198,7 +200,7 @@ namespace Rhino.Igloo
 		/// <param name="path">The path.</param>
 		public void EnsureDirectoryExists(string path)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 		/// <summary>
@@ -207,7 +209,7 @@ namespace Rhino.Igloo
 		/// <param name="waitTime">The wait time.</param>
 		public void AddRefreshHeaderAfter(TimeSpan waitTime)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 		/// <summary>
@@ -217,7 +219,7 @@ namespace Rhino.Igloo
 		/// <param name="waitTime">The wait time.</param>
 		public void AddRefreshHeaderAfter(string url, TimeSpan waitTime)
 		{
-			throw new NotSupportedException("You are not in a web context, you cannot call the context");
+			throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 		}
 
 
@@ -228,7 +230,7 @@ namespace Rhino.Igloo
 	    /// <returns></returns>
 	    public string MapPath(string path)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
 
 
@@ -239,7 +241,7 @@ namespace Rhino.Igloo
 	    /// <returns></returns>
 	    public string HtmlDecode(string htmlEncodedString)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
 
@@ -250,7 +252,7 @@ namespace Rhino.Igloo
 	    /// <returns></returns>
 	    public string HtmlEncode(string htmlString)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
 
@@ -259,7 +261,7 @@ namespace Rhino.Igloo
 	    /// </summary>
 	    public void EndResponse()
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 
         /// <summary>
@@ -267,7 +269,7 @@ namespace Rhino.Igloo
         /// </summary>
 	    public Uri Url()
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
 
 
@@ -278,7 +280,7 @@ namespace Rhino.Igloo
         /// <returns>The encoded url</returns>
 	    public string UrlEncode(string s)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
 
         /// <summary>
@@ -288,7 +290,7 @@ namespace Rhino.Igloo
         /// <returns>The unencoded url</returns>
 	    public string UrlDecode(string s)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
 
 
@@ -299,9 +301,8 @@ namespace Rhino.Igloo
         /// <returns></returns>
 	    public string ResolveUrl(string url)
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
-
 
         /// <summary>
         /// Sets the context varaible with the specified value
@@ -337,7 +338,7 @@ namespace Rhino.Igloo
         /// </summary>
 	    public void ClearSession()
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
 	    }
 
         /// <summary>
@@ -346,7 +347,7 @@ namespace Rhino.Igloo
         /// <returns></returns>
 	    public bool BrowserIsIE7()
 	    {
-            throw new NotSupportedException("You are not in a web context, you cannot call the context");
+            throw new NotSupportedException(NOT_SUPPORTED_EXCEPTION_MESSAGE);
         }
 	}
 }
