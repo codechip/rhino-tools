@@ -93,6 +93,7 @@
     <Compile Include="Extend.cs" />
     <Compile Include="Extensions\AbstractComponentExtension.cs" />
     <Compile Include="Extensions\ConfigurationExtension.cs" />
+    <Compile Include="Extensions\InterceptorExtension.cs" />
     <Compile Include="Extensions\EventWireExtension.cs" />
     <Compile Include="Extensions\FactorySupportExtension.cs" />
     <Compile Include="Extensions\LifestyleExtension.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Macros\ComponentMethodVisitor.cs" />
     <Compile Include="Macros\ConfigurationMacro.cs" />
     <Compile Include="Macros\ConfigurationNodeVisitor.cs" />
+    <Compile Include="Macros\InterceptorMacro.cs" />
     <Compile Include="Macros\CreateUsingMacro.cs" />
     <Compile Include="Macros\ExtendMacro.cs" />
     <Compile Include="Macros\FacilityMacro.cs" />
