@@ -223,7 +223,7 @@ namespace Rhino.Commons.Binsor
 			{
 				throw new CompilerError(string.Format("Could not compile configuration! {0}", run.Errors.ToString(true)));
 			}
-			Type type = run.GeneratedAssembly.GetType(name);
+			Type type = run.GeneratedAssembly.GetType(name.Replace('.', '_'));
 			return Activator.CreateInstance(type) as AbstractConfigurationRunner;
 		}
 

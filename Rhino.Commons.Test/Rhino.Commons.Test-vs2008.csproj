@@ -114,9 +114,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MbUnit.Framework, Version=1.0.2531.41788, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5">
+    <Reference Include="MbUnit.Framework, Version=2.4.2.130, Culture=neutral, PublicKeyToken=5e72ecd30bc408d5">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\Tools\MbUnit\MbUnit.Framework.dll</HintPath>
+      <HintPath>..\..\..\..\LunaverseRepositories\MotivatorSystems\Mojo\lib\MbUnit\MbUnit.Framework.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=1.2.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -166,6 +166,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="Binsor\ComponentForwarding.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Binsor\Interceptor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Binsor\CustomNamespaces.boo">
@@ -263,6 +266,8 @@
     <Compile Include="Binsor\ComponentForwardingTestCase.cs" />
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
+    <Compile Include="Binsor\FakeInterceptor.cs" />
+    <Compile Include="Binsor\InterceptorTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\RepositoryExtensions.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
