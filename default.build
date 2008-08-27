@@ -214,10 +214,10 @@
 		</delete>
 
 		<!-- Prepare release note files -->
-		<call target="createreleasenotes" />
+		<!--<call target="createreleasenotes" />-->
 
 		<!-- Include a zip file with all source code -->
-		<call target="zip-source" if="${build.debug}" />
+		<call target="zip-source" if="${ build.debug == 'Enable' }" />
 
 		<!-- Include a zip file with all dependencies -->
 		<call target="zip-dependencies" />
