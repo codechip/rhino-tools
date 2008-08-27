@@ -6,7 +6,7 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
     public class InterceptorMacro : BaseBinsorExtensionMacro<InterceptorExtension>
     {
-        public InterceptorMacro() : base("interceptor", false, new[] { "component" })
+        public InterceptorMacro() : base("interceptor", false, new string[] { "component" })
         {
         }
 

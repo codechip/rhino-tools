@@ -30,6 +30,7 @@ using System.IO;
 using Castle.Core;
 using Castle.Windsor;
 using MbUnit.Framework;
+using Castle.MicroKernel;
 
 namespace Rhino.Commons.Test.Binsor
 {
@@ -42,20 +43,20 @@ namespace Rhino.Commons.Test.Binsor
 		public override void TestInitialize()
 		{
             base.TestInitialize();
-			var path = Path.GetFullPath(@"Binsor\Interceptor.boo");
+			string path = Path.GetFullPath(@"Binsor\Interceptor.boo");
 			_container = new RhinoContainer(path);
 		}
         
 		[Test]
 		public void CanAddInterceptorToComponentRegistrations()
 		{
-            var repositoryHandler = _container.Kernel.GetHandler("repository");
+            IHandler repositoryHandler = _container.Kernel.GetHandler("repository");
             Assert.IsTrue(repositoryHandler.ComponentModel.Interceptors.Contains(
                 new InterceptorReference(typeof(FakeInterceptor))));
             Assert.IsTrue(repositoryHandler.ComponentModel.Interceptors.Contains(
                 new InterceptorReference(typeof(FakeInterceptor2))));
 
-            var viewHandler = _container.Kernel.GetHandler(typeof(MyView));
+            IHandler viewHandler = _container.Kernel.GetHandler(typeof(MyView));
             Assert.IsTrue(viewHandler.ComponentModel.Interceptors.Contains(
                 new InterceptorReference(typeof(FakeInterceptor))));
             Assert.IsTrue(viewHandler.ComponentModel.Interceptors.Contains(
