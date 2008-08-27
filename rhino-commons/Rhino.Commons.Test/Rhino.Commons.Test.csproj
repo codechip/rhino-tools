@@ -226,6 +226,7 @@
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
+    <Compile Include="Binsor\InterceptorTestCase.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />

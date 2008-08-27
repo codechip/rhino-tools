@@ -29,7 +29,6 @@
       <include name="Castle.MicroKernel.dll" />
       <include name="NHibernate.dll" />
       <include name="log4net.dll" />
-      <include name="Rhino.Mocks.dll" />
       <include name="Boo.Lang.dll" />
       <include name="Boo.Lang.Compiler.dll" />
       <include name="Boo.Lang.Parser.dll" />
