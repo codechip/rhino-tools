@@ -70,24 +70,38 @@ namespace Rhino.Commons.ForTesting
         /// </remarks>
         public static void CreatePhysicalDatabaseMediaFor(DatabaseEngine databaseEngine, string databaseName)
         {
-            For(databaseEngine, databaseName).CreateDatabaseMedia();
+            For(databaseEngine, databaseName, null).CreateDatabaseMedia();
         }
 
         public static UnitOfWorkTestContextDbStrategy For(DatabaseEngine databaseEngine, string databaseName) 
         {
+            return For(databaseEngine, databaseName, null);
+        }
+
+        public static UnitOfWorkTestContextDbStrategy For(DatabaseEngine databaseEngine, string databaseName, IDictionary<string, string> properties)
+        {
+            UnitOfWorkTestContextDbStrategy strategy;
             switch (databaseEngine)
             {
                 case DatabaseEngine.SQLite:
-                    return new SQlLiteUnitOfWorkTestContextDbStrategy();
+                    strategy = new SQlLiteUnitOfWorkTestContextDbStrategy();
+                    break;
                 case DatabaseEngine.MsSqlCe:
-                    return new MsSqlCeUnitOfWorkTestContextDbStrategy(databaseName);
+                    strategy = new MsSqlCeUnitOfWorkTestContextDbStrategy(databaseName);
+                    break;
                 case DatabaseEngine.MsSql2005:
-                    return new MsSql2005UnitOfWorkTestContextDbStrategy(databaseName);
+                    strategy = new MsSql2005UnitOfWorkTestContextDbStrategy(databaseName);
+                    break;
                 case DatabaseEngine.MsSql2005Express:
-                    return new MsSql2005ExpressUnitOfWorkTestContextDbStrategy(databaseName);
+                    strategy = new MsSql2005ExpressUnitOfWorkTestContextDbStrategy(databaseName);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("databaseEngine");
             }
+            if (properties != null)
+                foreach (KeyValuePair<string,string> property in properties)
+                    strategy.NHibernateProperties[property.Key] = property.Value;
+            return strategy;
         }
 
         public static bool IsSqlServer2005OrAboveInstalled()
@@ -122,7 +136,9 @@ namespace Rhino.Commons.ForTesting
             get { return databaseName; }
         }
 
-        public abstract IDictionary<string,string> NHibernateProperties { get; }
+        private IDictionary<string,string> properties = new Dictionary<string,string>();
+
+        public IDictionary<string,string> NHibernateProperties { get { return properties; } }
 
 
         public UnitOfWorkTestContext TestContext
@@ -159,30 +175,21 @@ namespace Rhino.Commons.ForTesting
         private class MsSqlCeUnitOfWorkTestContextDbStrategy : UnitOfWorkTestContextDbStrategy
         {
             public MsSqlCeUnitOfWorkTestContextDbStrategy(string databaseName) : base(databaseName)
-            {}
+            {
+                properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlServerCeDriver");
+                properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSqlCeDialect");
+                properties.Add(Environment.ConnectionProvider,
+                               "NHibernate.Connection.DriverConnectionProvider");
+                string connectionString = string.Format("Data Source={0};", DatabaseName);
+                properties.Add(Environment.ConnectionString, connectionString);
+                properties.Add(Environment.ShowSql, "true");
+                properties.Add(Environment.ReleaseConnections, "on_close");
+            }
 
 
             public override DatabaseEngine DatabaseEngine
             {
                 get { return DatabaseEngine.MsSqlCe; }
-            }
-
-
-            public override IDictionary<string,string> NHibernateProperties
-            {
-                get
-                {
-                    Dictionary<string,string> properties = new Dictionary<string,string>();
-                    properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlServerCeDriver");
-                    properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSqlCeDialect");
-                    properties.Add(Environment.ConnectionProvider,
-                                   "NHibernate.Connection.DriverConnectionProvider");
-                    string connectionString = string.Format("Data Source={0};", DatabaseName);
-                    properties.Add(Environment.ConnectionString, connectionString);
-                    properties.Add(Environment.ShowSql, "true");
-                    properties.Add(Environment.ReleaseConnections, "on_close");
-                    return properties;
-                }
             }
 
 
@@ -201,31 +208,22 @@ namespace Rhino.Commons.ForTesting
         private class MsSql2005UnitOfWorkTestContextDbStrategy : UnitOfWorkTestContextDbStrategy
         {
             public MsSql2005UnitOfWorkTestContextDbStrategy(string databaseName) : base(databaseName)
-            {}
+            {
+                properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlClientDriver");
+                properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSql2005Dialect");
+                properties.Add(Environment.ConnectionProvider,
+                               "NHibernate.Connection.DriverConnectionProvider");
+                properties.Add(Environment.ConnectionString, ConnectionStringFor(DatabaseName));
+                properties.Add(Environment.ShowSql, "true");
+                properties.Add(Environment.ReleaseConnections, "on_close");
+                //by specifying a default schema, nhibernate's dynamic sql queries benefit from caching
+                properties.Add(Environment.DefaultSchema, string.Format("{0}.dbo", DatabaseName));
+            }
 
 
             public override DatabaseEngine DatabaseEngine
             {
                 get { return DatabaseEngine.MsSql2005; }
-            }
-
-
-            public override IDictionary<string,string> NHibernateProperties
-            {
-                get
-                {
-                    Dictionary<string,string> properties = new Dictionary<string,string>();
-                    properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SqlClientDriver");
-                    properties.Add(Environment.Dialect, "NHibernate.Dialect.MsSql2005Dialect");
-                    properties.Add(Environment.ConnectionProvider,
-                                   "NHibernate.Connection.DriverConnectionProvider");
-                    properties.Add(Environment.ConnectionString, ConnectionStringFor(DatabaseName));
-                    properties.Add(Environment.ShowSql, "true");
-                    properties.Add(Environment.ReleaseConnections, "on_close");
-                    //by specifying a default schema, nhibernate's dynamic sql queries benefit from caching
-                    properties.Add(Environment.DefaultSchema, string.Format("{0}.dbo", DatabaseName));
-                    return properties;
-                }
             }
 
 
@@ -319,28 +317,21 @@ namespace Rhino.Commons.ForTesting
 
         private class SQlLiteUnitOfWorkTestContextDbStrategy : UnitOfWorkTestContextDbStrategy
         {
-            public SQlLiteUnitOfWorkTestContextDbStrategy() : base(SQLiteDbName) { }
+            public SQlLiteUnitOfWorkTestContextDbStrategy() : base(SQLiteDbName)
+            {
+                properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SQLite20Driver");
+                properties.Add(Environment.Dialect, "NHibernate.Dialect.SQLiteDialect");
+                properties.Add(Environment.ConnectionProvider,
+                               "NHibernate.Connection.DriverConnectionProvider");
+                string connectionString = string.Format("Data Source={0};Version=3;New=True;", DatabaseName);
+                properties.Add(Environment.ConnectionString, connectionString);
+                properties.Add(Environment.ShowSql, "true");
+                properties.Add(Environment.ReleaseConnections, "on_close");
+            }
 
             public override DatabaseEngine DatabaseEngine
             {
                 get { return DatabaseEngine.SQLite; }
-            }
-
-            public override IDictionary<string,string> NHibernateProperties
-            {
-                get
-                {
-                    Dictionary<string,string> properties = new Dictionary<string,string>();
-                    properties.Add(Environment.ConnectionDriver, "NHibernate.Driver.SQLite20Driver");
-                    properties.Add(Environment.Dialect, "NHibernate.Dialect.SQLiteDialect");
-                    properties.Add(Environment.ConnectionProvider,
-                                   "NHibernate.Connection.DriverConnectionProvider");
-                    string connectionString = string.Format("Data Source={0};Version=3;New=True;", DatabaseName);
-                    properties.Add(Environment.ConnectionString, connectionString);
-                    properties.Add(Environment.ShowSql, "true");
-                    properties.Add(Environment.ReleaseConnections, "on_close");
-                    return properties;
-                }
             }
 
 
