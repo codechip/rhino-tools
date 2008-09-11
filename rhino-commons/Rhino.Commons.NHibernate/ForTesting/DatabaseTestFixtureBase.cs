@@ -81,6 +81,16 @@ namespace Rhino.Commons.ForTesting
 													 string databaseName,
 													 MappingInfo mappingInfo)
 		{
+			IntializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, databaseName, mappingInfo, null);
+		}
+
+		public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
+													 string rhinoContainerConfig,
+													 DatabaseEngine databaseEngine,
+													 string databaseName,
+													 MappingInfo mappingInfo,
+													IDictionary<string, string> properties)
+		{
 			if (string.IsNullOrEmpty(databaseName))
 			{
 				databaseName = DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]);
@@ -89,7 +99,7 @@ namespace Rhino.Commons.ForTesting
 			if (GetUnitOfWorkTestContextFor(framework, rhinoContainerConfig, databaseEngine, databaseName) == null)
 			{
 				UnitOfWorkTestContextDbStrategy dbStrategy =
-					UnitOfWorkTestContextDbStrategy.For(databaseEngine, databaseName);
+					UnitOfWorkTestContextDbStrategy.For(databaseEngine, databaseName, properties);
 				UnitOfWorkTestContext newContext =
 					UnitOfWorkTestContext.For(framework, rhinoContainerConfig, dbStrategy, mappingInfo);
 				Contexts.Add(newContext);
