@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <project name="rhino.tools" xmlns="http://nant.sf.net/release/0.85/nant.xsd">
+	<property name="test.db"
+						value="Data Source=localhost;Initial Catalog=Test;Integrated Security=True"/>
+	<property name="test.db.xpath"
+						value="/configuration/connectionStrings/add[@name='test']/@connectionString"/>
 	<!-- 
 		Use this to determine if the key file ayende-open-source.snk should be used to 
 		sign the assemblies. Defaults to true since private key is present

@@ -98,6 +98,10 @@
 			value="${src.dir}"
 			failonerror="false"
 		/>
+		<xmlpoke
+			file="${app.config}"
+			xpath="${test.db.xpath}"
+			value="${test.db}" />
 	</target>
 
  	<target name="common.compile-dll"

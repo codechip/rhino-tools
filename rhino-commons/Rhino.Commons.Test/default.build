@@ -7,6 +7,9 @@
 >
   <property overwrite="false" name="assembly.is-cls-compliant" value="false" />
   <property name="root.dir" value="../.." />
+	<property name="test.db.xpath"
+					 value="/configuration/connectionStrings/add[@name='Rhino.Commons.Test.Properties.Settings.TestDatabase']/@connectionString"/>
+	
   <include buildfile="${root.dir}/common-project.xml" />
 
   <target name="init" depends="common.init">

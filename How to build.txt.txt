@@ -1,6 +1,0 @@
-How to build
-= = = = = = =
-
-Run nant from the project root.
-Note that .NET 2.0 SP1 is required for the tests to pass (but not for executing the code).
-Reporting errors, bugs and feature requests should go to: <rhino-tools-dev@googlegroups.com>
