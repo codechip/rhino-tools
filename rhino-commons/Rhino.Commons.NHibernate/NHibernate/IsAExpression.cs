@@ -26,7 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-namespace Rhino.Commmons
+namespace Rhino.Commons
 {
 	using System;
 	using System.Collections.Generic;
