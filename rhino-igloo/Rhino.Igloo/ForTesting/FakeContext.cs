@@ -55,6 +55,7 @@ namespace Rhino.Igloo.Tests
         private bool hasEnded;
         private readonly string rawUrl = null;
         private bool isIE7;
+        private readonly IDictionary<string, string> context = new Dictionary<string, string>();
 
         /// <summary>
         /// Sets the principle
@@ -431,7 +432,7 @@ namespace Rhino.Igloo.Tests
         /// <param name="value"></param>
         public void SetContextVaraible(string name, object value)
         {
-            throw new NotImplementedException();
+            context[name] = value.ToString();
         }
 
         /// <summary>
@@ -440,7 +441,7 @@ namespace Rhino.Igloo.Tests
         /// <returns></returns>
         public string GetLogonUser()
         {
-            throw new NotImplementedException();
+            return LastUser;
         }
 
         /// <summary>
@@ -458,7 +459,7 @@ namespace Rhino.Igloo.Tests
         /// </summary>
         public void ClearSession()
         {
-            throw new NotImplementedException();
+            session.Clear();
         }
 
         /// <summary>

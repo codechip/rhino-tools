@@ -40,6 +40,7 @@ using Castle.MicroKernel.Facilities;
 using log4net;
 using NHibernate;
 using NHibernate.Criterion;
+using Rhino.Commons;
 
 namespace Rhino.Igloo
 {
@@ -224,18 +225,22 @@ namespace Rhino.Igloo
                     continue;
 
                 object entity = null;
+
                 if (kvp.Key.EagerLoad != null)
                 {
-                    DetachedCriteria criteria = DetachedCriteria.For(kvp.Value.PropertyType)
-                      .Add(Expression.Eq("id", key))
-                      .SetFetchMode(kvp.Key.EagerLoad, FetchMode.Join);
-                    object[] all = (object[])ActiveRecordMediator.FindAll(kvp.Value.PropertyType, criteria);
-                    if (all.Length > 0)
+                    IList all = UnitOfWork.CurrentSession
+                        .CreateCriteria(kvp.Value.PropertyType)
+                        .Add(Expression.IdEq(key))
+                        .SetFetchMode(kvp.Key.EagerLoad, FetchMode.Join)
+                        .List();
+                    if (all.Count > 0)
                         entity = all[0];
                 }
                 else
                 {
-                    entity = ActiveRecordMediator.FindByPrimaryKey(kvp.Value.PropertyType, key,false);
+                    Type repositoryType = typeof(IRepository<>).MakeGenericType(kvp.Value.PropertyType);
+                    object repository = IoC.Resolve(repositoryType);
+                    entity = repositoryType.GetMethod("Get").Invoke(repository, new object[]{key});
                 }
                 kvp.Value.SetValue(instance, entity, null);
 
