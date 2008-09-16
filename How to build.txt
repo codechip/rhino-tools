@@ -23,6 +23,8 @@ The tests Rhino Tools assumes that you have a SQL Server database installed and 
 You should also ensure that the database server has a database named 'test' and a database named 'test2', with CREATE TABLE and DROP TABLE privileges for
 the current user.
 
+The .NET SDK is also mandatory
+
 Build options
 ==============
 
