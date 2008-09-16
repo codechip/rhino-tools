@@ -263,7 +263,7 @@
 		<property name="nunit-console2" value="nunit-console2" overwrite="false" />
 		<property name="nunit-console" value="nunit-console" overwrite="false" />
 
-		<property name="testrunner" value="NUnit" />
+		<property name="testrunner" value="mbunit" />
 
 		<!-- Where is WiX? -->
 		<property name="wix.dir" value="${environment::get-folder-path('ProgramFiles')}\Windows Installer XML v3\bin" overwrite="false" />
