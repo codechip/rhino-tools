@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 
 // Copyright (c) 2005 - 2007 Ayende Rahien (ayende@ayende.com)
 // All rights reserved.
@@ -28,65 +28,34 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Text;
-using System.Reflection;
+using Castle.Windsor;
 using Castle.Core.Resource;
-
+using Castle.MicroKernel;
+using Castle.MicroKernel.SubSystems;
+using Castle.MicroKernel.SubSystems.Resource;
 namespace Rhino.Commons.Binsor
 {
-	public static class BinsorScript
-	{
-		public static BinsorFileInstaller FromFile(string fileName)
-		{
-			return new BinsorFileInstaller(fileName);
-		}
+    public class BinsorResourceInstaller: BinsorScriptInstaller<BinsorResourceInstaller>
+    {
+        private readonly string uri;
 
-        //public static BinsorStreamReaderInstaller FromStreamReader(StreamReader reader)
-        //{
-        //    return new BinsorStreamReaderInstaller(reader);
-        //}
-        public static BinsorResourceInstaller FromResource(string uri)
+        public BinsorResourceInstaller(string uri)
         {
-            return new BinsorResourceInstaller(uri);
+            this.uri = uri;
         }
-	    
-		public static BinsorStreamInstaller FromStream(Stream stream)
-		{
-			return new BinsorStreamInstaller(stream);
-		}
 
-		public static BinsorStreamInstaller Inline(string script)
-		{
-			return FromStream(new MemoryStream(ASCIIEncoding.ASCII.GetBytes(script)));
-		}		
-		
-		public static BinsorRunnerInstaller FromCompiledAssembly(string assemblyName)
-		{
-			return FromCompiledAssembly(AssemblyUtil.LoadAssembly(assemblyName));
-		}
-
-		public static BinsorRunnerInstaller FromCompiledAssembly(Assembly assembly)
-		{
-			foreach(Type type in assembly.GetExportedTypes())
-			{
-				if (type.IsClass && !type.IsAbstract &&
-					typeof(AbstractConfigurationRunner).IsAssignableFrom(type))
-				{
-					AbstractConfigurationRunner runner = (AbstractConfigurationRunner) Activator.CreateInstance(type);
-					return FromRunner(runner);
-				}
-			}
-			
-			throw new ArgumentException(
-				string.Format("Assembly {0} does not appear to be a Binsor assembly",
-				assembly.FullName));
-		}
-
-		public static BinsorRunnerInstaller FromRunner(AbstractConfigurationRunner runner)
-		{
-			return new BinsorRunnerInstaller(runner);
-		}	
-	}
+        protected override void InstallInto(IWindsorContainer container)
+        {
+            IResourceSubSystem system = (IResourceSubSystem) container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+            IResource resource = system.CreateResource(uri);
+            CustomUri Uri = new CustomUri(uri);
+             BooReader.Read(container, Uri, GenerationOptions, GetName(),
+                           EnvironmentName);
+            
+        }
+        protected string GetName()
+        {
+            return "Binsor" + System.Guid.NewGuid();
+        }
+    }
 }

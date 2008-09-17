@@ -35,7 +35,10 @@ namespace Rhino.Commons
 	using System.IO;
 	using Castle.Core.Resource;
 	using Castle.MicroKernel;
+    using Castle.MicroKernel.SubSystems;
+    using Castle.MicroKernel.SubSystems.Resource;
 	using Castle.MicroKernel.SubSystems.Conversion;
+
 	using Castle.Windsor;
 	using Castle.Windsor.Configuration;
 	using Castle.Windsor.Configuration.Interpreters;
@@ -55,26 +58,37 @@ namespace Rhino.Commons
 		{
 		}
 
-		public RhinoContainer(string fileName)
-			: this(fileName, null)
+        public RhinoContainer(string fileNameorUri)
+            : this(fileNameorUri, null)
 		{
 		}
+        public RhinoContainer(CustomUri uri, IEnvironmentInfo env)
+            : base(new DefaultKernel(), CreateInterpreter(uri,env))
+        {
+            IResourceSubSystem system = (IResourceSubSystem) Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+            IResource resource = system.CreateResource(uri);
 
-		public RhinoContainer(string fileName, IEnvironmentInfo env)
-			: base(new DefaultKernel(), CreateInterpreter(fileName, env))
-		{
-			if (IsBoo(fileName))
+            if (IsBoo(uri))
 			{
 				RunInstaller();
 			}
 			else
 			{
-				InitalizeFromConfigurationSource(
-				new XmlInterpreter(fileName), env);
+              InitalizeFromConfigurationSource(
+                new XmlInterpreter(resource), env);
 			}
+            
+        }
+		public RhinoContainer(string fileNameorUri, IEnvironmentInfo env)
+            : this(new CustomUri(GetUri(fileNameorUri)), env)
+		{
 		}
 
 
+        public RhinoContainer(CustomUri uri)
+            : this(uri,null)
+        {
+        }
 		public RhinoContainer(IConfigurationInterpreter interpreter)
 			: this(interpreter, null)
 		{
@@ -89,13 +103,31 @@ namespace Rhino.Commons
 		{
 			get { return isDisposed; }
 		}
+        private static string GetUri(string fileNameOrUri)
+        {
+            if (fileNameOrUri.Contains(CustomUri.SchemeDelimiter) == false)
+            {
+                return CustomUri.UriSchemeFile + CustomUri.SchemeDelimiter + fileNameOrUri;
+            }
+            return fileNameOrUri;
+        }
 
-		private static IComponentsInstaller CreateInterpreter(string fileName, IEnvironmentInfo env)
+	    private static IComponentsInstaller CreateInterpreter(string fileName, IEnvironmentInfo env)
 		{
 			if (IsBoo(fileName))
 				return new BooComponentInstaller(fileName, env);
 			return new DefaultComponentInstaller();
 		}
+        private static IComponentsInstaller CreateInterpreter(Castle.Core.Resource.CustomUri uri, IEnvironmentInfo env)
+        {
+            if (IsBoo(uri))
+                return new BooComponentInstaller(uri, env);
+            return new DefaultComponentInstaller();
+        }
+        private static bool IsBoo(CustomUri uri)
+        {
+            return IsBoo(uri.Path);
+        }
 
 		private static bool IsBoo(string fileName)
 		{

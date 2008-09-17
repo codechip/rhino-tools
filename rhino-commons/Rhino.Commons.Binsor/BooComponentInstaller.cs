@@ -33,24 +33,36 @@ namespace Rhino.Commons.Binsor
 	using System;
 	using Castle.MicroKernel;
 	using Castle.Windsor;
-
+    using Castle.Core.Resource;
+    using Castle.MicroKernel.SubSystems.Resource;
 	public class BooComponentInstaller : IComponentsInstaller
 	{
 		private readonly string fileName;
 		private readonly IEnvironmentInfo env;
-
+	    private readonly CustomUri uri;
 		public BooComponentInstaller(String fileName, IEnvironmentInfo env)
 		{
 			this.fileName = fileName;
 			this.env = env;
 		}
-
+        public BooComponentInstaller(CustomUri uri, IEnvironmentInfo env)
+        {
+            this.uri = uri;
+            this.env = env;
+        }
 		public void SetUp(IWindsorContainer container, IConfigurationStore store)
 		{
 			string name = null;
-			if (env != null)
-				name = env.GetEnvironmentName();
-			BooReader.Read(container, fileName, name);
+            name = env != null ? env.GetEnvironmentName() : "ResourceWindsor";
+
+		    if (uri != null)
+		    {
+		        BooReader.Read(container, uri, name);
+		    }
+		    else
+		    {
+		        BooReader.Read(container, fileName, name);
+		    }
 		}
 	}
 }
