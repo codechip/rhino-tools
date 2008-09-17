@@ -146,6 +146,9 @@
     <EmbeddedResource Include="Binsor\EmbeddedWindsor.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Binsor\CustomNamespaces.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Binsor\MultiFileConfig_Main2.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -206,6 +209,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.hbm.xml" />
+    <Content Include="Facilities\hibernate2.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Facilities\MutlipleUnitOfWorkArtifacts\Database2.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -219,6 +225,7 @@
     <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
+    <Compile Include="Binsor\BinsorResourceTestCase.cs" />
     <Compile Include="Binsor\BinsorStreamTestCase.cs" />
     <Compile Include="Binsor\Calculator.cs" />
     <Compile Include="Binsor\CalculatorTestCase.cs" />
@@ -226,7 +233,7 @@
     <Compile Include="Binsor\BinsorImportsTestCase.cs" />
     <Compile Include="Binsor\ConfigurationAsserts.cs" />
     <Compile Include="Binsor\BinsorScriptTestCase.cs" />
-    <Compile Include="Binsor\InterceptorTestCase.cs" />
+    <Compile Include="Binsor\FakeInterceptor.cs" />
     <Compile Include="Binsor\MultiFileTestCase.cs" />
     <Compile Include="Binsor\TestEnvironmentInfo.cs" />
     <Compile Include="Binsor\UsingAllTypesFixture.cs" />

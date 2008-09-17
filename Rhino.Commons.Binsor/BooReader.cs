@@ -79,6 +79,10 @@ namespace Rhino.Commons.Binsor
 			}
 			throw new InvalidOperationException("Could not find component named: " + name);
 		}
+        public static void Read(IWindsorContainer container, CustomUri uri,string name, params string[] namespaces)
+        {
+            Read(container, uri, name, name, namespaces);
+        }
 
 		public static void Read(IWindsorContainer container, string fileName, params string[] namespaces)
 		{
@@ -104,6 +108,30 @@ namespace Rhino.Commons.Binsor
 				NeedSecondPassRegistrations = null;
 			}
 		}
+
+        public static void Read(
+            IWindsorContainer container, CustomUri uri,
+            GenerationOptions generationOptions, string name,
+            string environment, params string[] namespaces)
+        {
+            try
+            {
+                using (AbstractConfigurationRunner.UseLocalContainer(container))
+                {
+                    AbstractConfigurationRunner conf = GetConfigurationInstanceFromResource(
+                        name, environment, container, uri, generationOptions, namespaces);
+                    conf.Run();
+                    foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+                    {
+                        needSecondPassRegistration.RegisterSecondPass();
+                    }
+                }
+            }
+            finally
+            {
+                NeedSecondPassRegistrations = null;
+            }
+        }
 
 		public static void Execute(IWindsorContainer container, AbstractConfigurationRunner abstractConfiguration)
 		{
@@ -135,6 +163,13 @@ namespace Rhino.Commons.Binsor
 		{
 			Read(container, stream, GenerationOptions.Memory, name, environment, namespaces);
 		}
+
+        public static void Read(
+            IWindsorContainer container, CustomUri uri,
+            string name, string environment, params string[] namespaces)
+        {
+            Read(container, uri, GenerationOptions.Memory, name, environment, namespaces);
+        }
 
 		public static void Read(
 			IWindsorContainer container, Stream stream,
@@ -177,6 +212,20 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
+	    public static AbstractConfigurationRunner GetConfigurationInstanceFromResource(
+            string name, string environment, IWindsorContainer container, CustomUri uri,
+			GenerationOptions generationOptions, params string[] namespaces)
+	    {
+            IResourceSubSystem system =
+                 (IResourceSubSystem)container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
+            IResource resource = system.CreateResource(uri);
+            string baseDirectory = Path.GetDirectoryName(uri.Path);
+            UrlResolverDelegate urlResolver = CreateWindorUrlResolver(container);
+                return GetConfigurationInstance(
+                    name, environment, new ReaderInput(name, resource.GetStreamReader()),
+                    generationOptions, new AutoReferenceFilesCompilerStep(baseDirectory,urlResolver),
+                    namespaces);
+	    }
 		public static AbstractConfigurationRunner GetConfigurationInstanceFromStream(
 			string name, string environment, IWindsorContainer container, Stream stream,
 			GenerationOptions generationOptions, params string[] namespaces)

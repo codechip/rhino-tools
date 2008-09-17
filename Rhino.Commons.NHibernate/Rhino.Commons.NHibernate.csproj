@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Expressions\NamedExpression.cs" />
     <Compile Include="Expressions\ManyToOneNamedExpression.cs" />
+    <Compile Include="Facilities\EntitiesToRepositoriesInitializationAware.cs" />
     <Compile Include="Facilities\MultipleNHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacilityConfig.cs" />
