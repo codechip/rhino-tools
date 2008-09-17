@@ -38,6 +38,11 @@ namespace Rhino.Commons.Facilities
 	{
         private NHibernateUnitOfWorkFacilityConfig config;
 
+        public NHibernateUnitOfWorkFacility()
+            : this(new NHibernateUnitOfWorkFacilityConfig())
+        { 
+        }
+
 		public NHibernateUnitOfWorkFacility(NHibernateUnitOfWorkFacilityConfig config)
 		{
             this.config = config;
