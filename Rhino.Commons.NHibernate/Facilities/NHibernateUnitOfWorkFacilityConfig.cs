@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Iesi.Collections.Generic;
+using Rhino.Commons;
 
 namespace Rhino.Commons.Facilities
 {
@@ -10,7 +11,7 @@ namespace Rhino.Commons.Facilities
         private ISet<Assembly> assemblies = new HashedSet<Assembly>();
         private ISet<Type> entities = new HashedSet<Type>();
         private string nhibernateConfigurationFile = "hibernate.cfg.xml";
-        private Predicate<Type> isCandidateForRepository = delegate(Type t){ return false; };
+        private Predicate<Type> isCandidateForRepository = IsCandidateForRepositoryAttribute.IsCandidate;
 
         public NHibernateUnitOfWorkFacilityConfig()
         { 
