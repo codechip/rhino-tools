@@ -43,10 +43,6 @@ namespace Rhino.Commons.Binsor
 			return new BinsorFileInstaller(fileName);
 		}
 
-        //public static BinsorStreamReaderInstaller FromStreamReader(StreamReader reader)
-        //{
-        //    return new BinsorStreamReaderInstaller(reader);
-        //}
         public static BinsorResourceInstaller FromResource(string uri)
         {
             return new BinsorResourceInstaller(uri);
