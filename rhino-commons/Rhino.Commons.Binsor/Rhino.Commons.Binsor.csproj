@@ -104,6 +104,7 @@
     <Compile Include="AbstractConfigurationRunner.cs" />
     <Compile Include="INeedSecondPassRegistration.cs" />
     <Compile Include="Installer\BinsorFileInstaller.cs" />
+    <Compile Include="Installer\BinsorResourceInstaller.cs" />
     <Compile Include="Installer\BinsorRunnerInstaller.cs" />
     <Compile Include="Installer\BinsorScript.cs" />
     <Compile Include="Installer\BinsorScriptInstaller.cs" />
