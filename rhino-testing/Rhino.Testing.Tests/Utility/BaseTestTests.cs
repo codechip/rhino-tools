@@ -18,7 +18,7 @@ namespace Rhino.Testing.Tests.Utility
         [TearDown]
         public void AfterEachTest()
         {
-            DestoryContainer();
+            DestroyContainer();
         }
 
         [Test]

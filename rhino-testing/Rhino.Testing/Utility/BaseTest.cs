@@ -21,7 +21,7 @@ namespace Rhino.Testing.Utility
             container.Initialize();
         }
 
-        protected void DestoryContainer()
+        protected void DestroyContainer()
         {
             container.Dispose();
         }
