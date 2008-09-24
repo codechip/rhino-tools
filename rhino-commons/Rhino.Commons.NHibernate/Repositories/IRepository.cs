@@ -55,8 +55,7 @@ namespace Rhino.Commons
 
 		/// <summary>
 		/// A future of the entity loaded from the persistance store
-		/// Will throw an exception if there isn't an entity that matches
-		/// the id.
+		/// Will throw an exception if there is no entity with a matching id.
 		/// </summary>
 		/// <param name="id">The entity's id</param>
 		/// <returns>The entity that matches the id</returns>
@@ -64,8 +63,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Load the entity from the persistance store
-        /// Will throw an exception if there isn't an entity that matches
-        /// the id.
+        /// Will throw an exception if there is no entity with a matching id.
         /// </summary>
         /// <param name="id">The entity's id</param>
         /// <returns>The entity that matches the id</returns>
@@ -100,14 +98,14 @@ namespace Rhino.Commons
         T Save(T entity);
 
         /// <summary>
-        /// Saves or update the entity, based on its usaved-value
+        /// Saves or updates the entity, based on its unsaved-value.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity">The entity to save or update.</param>
         /// <returns>The saved or updated entity</returns>
         T SaveOrUpdate(T entity);
 
         /// <summary>
-        /// Saves or update the copy of entity, based on its usaved-value
+        /// Saves or updates a copy of entity, based on its unsaved-value.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>The saved entity</returns>
@@ -131,7 +129,7 @@ namespace Rhino.Commons
 
 		/// <summary>
 		/// Loads all the entities that match the criteria
-		/// by order
+		/// by order.
 		/// </summary>
 		/// <param name="criteria">the criteria to look for</param>
 		/// <param name="orders"> the order to load the entities</param>
@@ -140,7 +138,7 @@ namespace Rhino.Commons
 
 		/// <summary>
 		/// Loads all the entities that match the criteria
-		/// by order
+		/// by order.
 		/// </summary>
 		/// <param name="criteria">the criteria to look for</param>
 		/// <param name="orders"> the order to load the entities</param>
@@ -154,7 +152,7 @@ namespace Rhino.Commons
     	
         /// <summary>
         /// Loads all the entities that match the criteria
-        /// by order
+        /// by order.
         /// </summary>
         /// <param name="orders"></param>
         /// <param name="criteria">the criteria to look for</param>
@@ -162,7 +160,7 @@ namespace Rhino.Commons
         ICollection<T> FindAll(Order[] orders, params ICriterion[] criteria);
     	
         /// <summary>
-        /// Loads all the entities that match the criteria
+        /// Loads all the entities that match the criteria.
         /// </summary>
         /// <param name="criteria">the criteria to look for</param>
         /// <returns>All the entities that match the criteria</returns>
@@ -179,7 +177,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Loads all the entities that match the criteria, with paging 
-        /// and orderring by a single field.
+        /// and ordering by a single field.
         /// <param name="firstResult">The first result to load</param>
         /// <param name="numberOfResults">Total number of results to load</param>
         /// <param name="criteria">the cirteria to look for</param>
@@ -193,7 +191,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Loads all the entities that match the criteria, with paging 
-        /// and orderring by a multiply fields.
+        /// and ordering by a multiple fields.
         /// </summary>
         /// <param name="firstResult">The first result to load</param>
         /// <param name="numberOfResults">Total number of results to load</param>
@@ -224,7 +222,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Find a single entity based on a criteria.
-        /// Thorws is there is more than one result.
+        /// Throws is there is more than one result.
         /// </summary>
         /// <param name="criteria">The criteria to look for</param>
         /// <returns>The entity or null</returns>
@@ -232,7 +230,7 @@ namespace Rhino.Commons
 
 		/// <summary>
 		/// Find a single entity based on a criteria.
-		/// Thorws is there is more than one result.
+		/// Throws is there is more than one result.
 		/// </summary>
 		/// <param name="criteria">The criteria to look for</param>
 		/// <returns>The entity or null</returns>
@@ -240,7 +238,7 @@ namespace Rhino.Commons
     	
         /// <summary>
         /// Find a single entity based on a named query.
-        /// Thorws is there is more than one result.
+		/// Throws is there is more than one result.
         /// </summary>
         /// <param name="parameters">parameters for the query</param>
         /// <param name="namedQuery">the query to executre</param>
@@ -312,7 +310,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Create the project of type <typeparamref name="ProjT"/> (ie a
-        /// DataTransferObject) that satisfies the criteria supplied. Throws a
+        /// DataTransferObject) that satisfy the criteria supplied. Throws a
         /// NHibernate.NonUniqueResultException if there is more than one
         /// result.
         /// </summary>
@@ -349,7 +347,7 @@ namespace Rhino.Commons
 
         /// <summary>
         /// Create the projects of type <typeparamref name="ProjT"/> (ie
-        /// DataTransferObject(s)) that satisfies the criteria supplied.
+        /// DataTransferObject(s)) that satisfy the criteria supplied.
         /// </summary>
         /// <param name="criteria">The criteria to look for</param>
         /// <param name="projectionList">Maps the properties from the object 
@@ -413,7 +411,7 @@ namespace Rhino.Commons
     	DetachedCriteria CreateDetachedCriteria();
 
 		/// <summary>
-		/// Creates an aliases <see cref="DetachedCriteria"/> compatible with this Repository
+		/// Creates an aliase <see cref="DetachedCriteria"/> compatible with this Repository
 		/// </summary>
 		/// <param name="alias">the alias</param>
 		/// <returns>The <see cref="DetachedCriteria"/></returns>
