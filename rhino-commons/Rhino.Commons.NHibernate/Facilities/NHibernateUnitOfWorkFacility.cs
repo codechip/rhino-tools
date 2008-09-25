@@ -50,7 +50,13 @@ namespace Rhino.Commons.Facilities
 
 		protected override void Init()
 		{
-			Kernel.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NHRepository<>)));
+			ComponentRegistration<object> component = Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NHRepository<>));
+			if(!string.IsNullOrEmpty(config.RepositoryKey))
+			{
+				component.Named(config.RepositoryKey);
+			}
+			
+			Kernel.Register(component);
 			ComponentRegistration<IUnitOfWorkFactory> registerFactory =
 				Component.For<IUnitOfWorkFactory>()
 				.ImplementedBy<NHibernateUnitOfWorkFactory>();

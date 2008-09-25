@@ -58,6 +58,15 @@ namespace Rhino.Commons.Test.Facilities
                 Assert.IsNotNull(Repository<IParent>.Create());
         }
 
+		[Test]
+		public void Should_register_services_with_keys()
+		{
+			string repositoryKey = "default_repository";
+			NHibernateUnitOfWorkFacilityConfig config = BuildFacilityConfiguration().WithRepositoryKey(repositoryKey);
+			IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(config));
+            Assert.IsTrue(IoC.Container.Kernel.HasComponent(repositoryKey));
+		}
+
         public static NHibernateUnitOfWorkFacilityConfig BuildFacilityConfiguration()
         {
             return new NHibernateUnitOfWorkFacilityConfig(typeof(NHibernateUnitOfWorkFacilityTests).Assembly)
