@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EE98519D-104D-4A31-ADD8-82C5F836018C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -189,6 +189,7 @@
     <None Include="Binsor\MultiFileConfig_Main.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Binsor\UnitOfWorkFacilities2.boo" />
     <None Include="Binsor\UsingAllTypes.boo">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

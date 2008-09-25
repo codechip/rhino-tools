@@ -36,27 +36,41 @@ namespace Rhino.Commons.Facilities
     public class ActiveRecordUnitOfWorkFacility : AbstractFacility
     {
         private readonly Assembly[] assemblies;
+    	private string repositoryKey;
 
-        public ActiveRecordUnitOfWorkFacility(string assembly)
+    	public ActiveRecordUnitOfWorkFacility(string assembly)
             : this(new string[] { assembly, })
         {
         }
-
         public ActiveRecordUnitOfWorkFacility(string[] assemblies)
+			:this(null,assemblies)
         {
-            this.assemblies = new Assembly[assemblies.Length];
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                this.assemblies[i] = Assembly.Load(assemblies[i]);
-            }
         }
+		public ActiveRecordUnitOfWorkFacility(string repositoryKey, string assembly)
+			: this(repositoryKey, new string[] { assembly, })
+		{
+		}
+		public ActiveRecordUnitOfWorkFacility(string repositoryKey,string[] assemblies)
+		{
+			this.repositoryKey = repositoryKey;
+			this.assemblies = new Assembly[assemblies.Length];
+			for (int i = 0; i < assemblies.Length; i++)
+			{
+				this.assemblies[i] = Assembly.Load(assemblies[i]);
+			}
+		}
 
-        protected override void Init()
+
+
+    	protected override void Init()
         {
-            Kernel.Register(
-                Component.For(typeof (IRepository<>))
-                    .ImplementedBy(typeof (ARRepository<>))
-                );
+    		ComponentRegistration<object> component =
+				Component.For(typeof (IRepository<>)).ImplementedBy(typeof (ARRepository<>));
+			if(!string.IsNullOrEmpty(repositoryKey))
+			{
+				component.Named(repositoryKey);
+			}
+    		Kernel.Register(component);
         	ComponentRegistration<IUnitOfWorkFactory> registerFactory = 
 				Component.For<IUnitOfWorkFactory>()
         		.ImplementedBy<ActiveRecordUnitOfWorkFactory>();

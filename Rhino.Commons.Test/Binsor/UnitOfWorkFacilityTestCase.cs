@@ -24,5 +24,11 @@ namespace Rhino.Commons.Test.Binsor
             Assert.IsTrue(container.Kernel.HasComponent(typeof (IRepository<>)));
             Assert.IsTrue(container.Kernel.HasComponent(typeof(IUnitOfWorkFactory)));
         }
+		[Test]
+		public void ActiveRecordUnitOfWorkFacilityWillRegisterIRepositoryWithRepositoryKey()
+		{
+			RhinoContainer container = new RhinoContainer(@"Binsor\UnitOfWorkFacilities2.boo");
+			Assert.IsTrue(container.Kernel.HasComponent("default_repository"));
+		}
     }
 }

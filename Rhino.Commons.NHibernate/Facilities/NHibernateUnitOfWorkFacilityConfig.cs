@@ -12,8 +12,9 @@ namespace Rhino.Commons.Facilities
         private ISet<Type> entities = new HashedSet<Type>();
         private string nhibernateConfigurationFile = "hibernate.cfg.xml";
         private Predicate<Type> isCandidateForRepository = IsCandidateForRepositoryAttribute.IsCandidate;
+    	private string repositoryKey;
 
-        public NHibernateUnitOfWorkFacilityConfig()
+    	public NHibernateUnitOfWorkFacilityConfig()
         { 
         }
 
@@ -82,5 +83,17 @@ namespace Rhino.Commons.Facilities
         {
             get { return nhibernateConfigurationFile; }
         }
+
+    	public string RepositoryKey
+    	{
+    		get { return repositoryKey; }
+    	}
+
+    	public NHibernateUnitOfWorkFacilityConfig WithRepositoryKey(string key)
+    	{
+			//can be null
+    		this.repositoryKey = key;
+    		return this;
+    	}
     }
 }
