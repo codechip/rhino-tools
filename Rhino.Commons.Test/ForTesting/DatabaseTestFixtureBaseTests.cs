@@ -27,11 +27,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Castle.ActiveRecord;
+using Castle.Windsor;
 using MbUnit.Framework;
 using NHibernate;
+using Rhino.Commons.Facilities;
 using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.ForTesting
@@ -207,8 +211,21 @@ namespace Rhino.Commons.Test.ForTesting
             }
         }
 
+		[Test]
+		public void CanInitializeWithFluentInterfaceAndContainerInstance()
+		{
+			MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
+			IWindsorContainer container = new WindsorContainer();
+			container.AddFacility("nh",
+			                      new NHibernateUnitOfWorkFacility(
+			                      	new NHibernateUnitOfWorkFacilityConfig(Assembly.GetAssembly(typeof (AREntity)))));
 
-        protected void IntializeNHibernateAndIoC(string rhinoContainerPath,
+			Initialize(PersistenceFramework.NHibernate, mappingInfo).AndIoC(container);
+
+			Assert.AreSame(container,CurrentContext.RhinoContainer);
+		}
+		
+    	protected void IntializeNHibernateAndIoC(string rhinoContainerPath,
                                                  DatabaseEngine databaseEngine,
                                                  string databaseName)
         {
@@ -271,7 +288,7 @@ namespace Rhino.Commons.Test.ForTesting
             if (string.IsNullOrEmpty(databaseName))
             {
                 Assert.AreEqual(
-                    DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]),
+                    NHibernateInitializer.DeriveDatabaseNameFrom(databaseEngine, mappingInfo.MappingAssemblies[0]),
                     context.DatabaseName);
             }
             else
@@ -366,6 +383,33 @@ namespace Rhino.Commons.Test.ForTesting
                                      @"ForTesting\Windsor-NH.config"));
             }
         }
+//		[Test]
+//		public virtual void CanInitializeWithFluentNHibernate_Simple()
+//		{
+//			MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
+//			NHibernateInitializer initializer=Initialize(PersistenceFramework.NHibernate, mappingInfo).Using(DatabaseEngine.SQLite,":memoir");
+//			Assert.AreEqual(PersistenceFramework.NHibernate,initializer.PersistenceFramework);
+//			Assert.AreSame(mappingInfo,initializer.MappingInfo);
+//			Assert.AreEqual(DatabaseEngine.SQLite,initializer.DatabaseEngine);
+//			Assert.AreEqual(":memoir",initializer.DatabaseName);
+//
+//		}
+//		[Test]
+//		public virtual void CanInitializeWithFluentNHibernate_Complete()
+//		{
+//			MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
+//			Initialize(PersistenceFramework.NHibernate, mappingInfo);
+//			
+//		}
+//		[Test]
+//		public virtual void CanInitializeNHibernateWithIoC()
+//		{
+//			MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
+//			string rhinoContainerConfig = "windsor.boo";
+//			NHibernateInitializer initializer = Initialize(PersistenceFramework.NHibernate, mappingInfo)
+//				.AndIoC().With(rhinoContainerConfig);
+//			
+//		}
     }
 
     [ActiveRecord]
@@ -404,4 +448,6 @@ namespace Rhino.Commons.Test.ForTesting
             set { name = value; }
         }
     }
+		
+	
 }

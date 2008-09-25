@@ -76,6 +76,16 @@ namespace Rhino.Commons.ForTesting
             }
         }
 
+		public static UnitOfWorkTestContext For(PersistenceFramework framwork,
+                                                IWindsorContainer container,
+                                                UnitOfWorkTestContextDbStrategy dbStrategy,
+                                                MappingInfo mappingInfo)
+		{
+			UnitOfWorkTestContext context = For(framwork, string.Empty, dbStrategy, mappingInfo);
+			context.rhinoContainer = container;
+			return context;
+		}
+
 
         private static UnitOfWorkTestContext CreateActiveRecordImplementation(UnitOfWorkTestContextDbStrategy dbStrategy,
                                                                                 MappingInfo mappingInfo,
@@ -94,7 +104,7 @@ namespace Rhino.Commons.ForTesting
         }
 
 
-        private readonly string rhinoContainerConfigPath;
+    	private readonly string rhinoContainerConfigPath;
         private readonly UnitOfWorkTestContextDbStrategy dbStrategy;
         private readonly MappingInfo mappingInfo;
         private IWindsorContainer rhinoContainer;
@@ -110,7 +120,7 @@ namespace Rhino.Commons.ForTesting
             mappingInfo = assemblies;
             this.dbStrategy.TestContext = this;
         }
-
+		
 
         protected MappingInfo MappingInfo
         {
@@ -143,7 +153,7 @@ namespace Rhino.Commons.ForTesting
         {
             get
             {
-                if (string.IsNullOrEmpty(rhinoContainerConfigPath))
+                if (string.IsNullOrEmpty(rhinoContainerConfigPath) && rhinoContainer==null)
                     return null;
                 return 
                     rhinoContainer =
@@ -322,7 +332,7 @@ namespace Rhino.Commons.ForTesting
                                                    string rhinoContainerConfigPath,
                                                    MappingInfo assemblies)
                 : base(dbStrategy, rhinoContainerConfigPath, assemblies) {}
-
+			
 
             public override Configuration Configuration
             {
@@ -392,9 +402,6 @@ namespace Rhino.Commons.ForTesting
 
             public override void InitializeContainerAndUowFactory()
             {
-                if (IoC.IsInitialized) 
-                    IoC.Reset();
-
                 ResetRhinoContainer();
 
                 if (RhinoContainer != null)
@@ -408,7 +415,17 @@ namespace Rhino.Commons.ForTesting
 
             protected void ResetRhinoContainer()
             {
-                rhinoContainer = null;
+				if (!string.IsNullOrEmpty(rhinoContainerConfigPath))
+				{
+					if (IoC.IsInitialized)
+						IoC.Reset();
+				
+					rhinoContainer = null;
+				}
+				else
+				{
+					IoC.Reset(rhinoContainer);
+				}
             }
         }
     }
