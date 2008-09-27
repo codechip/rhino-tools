@@ -48,6 +48,11 @@ namespace Rhino.Commons.Facilities
             this.config = config;
 		}
 
+        public NHibernateUnitOfWorkFacility(string assembly)
+        {
+            this.config = new NHibernateUnitOfWorkFacilityConfig(assembly);
+        }
+
 		protected override void Init()
 		{
 			ComponentRegistration<object> component = Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NHRepository<>));
