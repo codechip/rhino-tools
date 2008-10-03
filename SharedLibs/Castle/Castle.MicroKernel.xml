@@ -734,8 +734,17 @@
         </member>
         <member name="T:Castle.MicroKernel.LifecycleConcerns.ILifecycleConcern">
             <summary>
-            Summary description for ILifecycleConcern.
+            Represents a concern that will be applied to a component instance
+            during commission or decomission phase. 
             </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.LifecycleConcerns.ILifecycleConcern.Apply(Castle.Core.ComponentModel,System.Object)">
+            <summary>
+            Implementors should act on the instance in response to 
+            a decomission or commission phase. 
+            </summary>
+            <param name="model">The model.</param>
+            <param name="component">The component.</param>
         </member>
         <member name="T:Castle.Facilities.TypedFactory.FactoryInterceptor">
             <summary>
@@ -1633,6 +1642,12 @@
             </summary>
             <param name="interfaces">The interfaces.</param>
         </member>
+        <member name="M:Castle.MicroKernel.Proxy.ProxyOptions.AddMixIns(System.Object[])">
+            <summary>
+            Adds the additional mix ins to integrate.
+            </summary>
+            <param name="mixIns">The mix ins.</param>
+        </member>
         <member name="M:Castle.MicroKernel.Proxy.ProxyOptions.Equals(System.Object)">
             <summary>
             Equalses the specified obj.
@@ -1676,6 +1691,12 @@
         <member name="P:Castle.MicroKernel.Proxy.ProxyOptions.AdditionalInterfaces">
             <summary>
             Gets the additional interfaces to proxy.
+            </summary>
+            <value>The interfaces.</value>
+        </member>
+        <member name="P:Castle.MicroKernel.Proxy.ProxyOptions.MixIns">
+            <summary>
+            Gets the mix ins to integrate.
             </summary>
             <value>The interfaces.</value>
         </member>
@@ -1729,6 +1750,20 @@
             Prepares to register types from an assembly.
             </summary>
             <param name="assembly">The assembly.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypes.FromAssemblyContaining(System.Type)">
+            <summary>
+            Prepares to register types from an assembly containing the type.
+            </summary>
+            <param name="type">The type belonging to the assembly.</param>
+            <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AllTypes.FromAssemblyContaining``1">
+            <summary>
+            Prepares to register types from an assembly containing the type.
+            </summary>
+            <typeparam name="T">The type belonging to the assembly.</typeparam>
             <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.FromDescriptor"/></returns>
         </member>
         <member name="M:Castle.MicroKernel.Registration.AllTypes.From(System.Collections.Generic.IEnumerable{System.Type})">
@@ -1792,6 +1827,14 @@
             <param name="types">The list of types.</param>
             <returns>The corresponding <see cref="T:Castle.MicroKernel.Registration.BasedOnDescriptor"/></returns>
         </member>
+        <member name="T:Castle.MicroKernel.Registration.ConfigureDelegate`1">
+            <summary>
+            Delegate for custom registration configuration.
+            </summary>
+            <typeparam name="T">The return type.</typeparam>
+            <param name="registration">The component registration.</param>
+            <returns>Not uaed.</returns>
+        </member>
         <member name="T:Castle.MicroKernel.Registration.BasedOnDescriptor">
             <summary>
             Describes how to register a group of related types.
@@ -1834,6 +1877,13 @@
             <param name="configurer">The configuration action.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.Configure``1(Castle.MicroKernel.Registration.ConfigureDelegate{``0})">
+            <summary>
+            Allows customized configurations of each matching type.
+            </summary>
+            <param name="configurer">The configuration action.</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.AllowMultipleMatches">
             <summary>
             Allows a type to be registered multiple times.
@@ -1853,6 +1903,13 @@
             <param name="basedOn">The base type.</param>
             <returns>The descriptor for the type.</returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.BasedOnDescriptor.Where(System.Predicate{System.Type})">
+            <summary>
+            Returns the descriptor for accepting a type based on a condition.
+            </summary>
+            <param name="accepted">The accepting condition.</param>
+            <returns>The descriptor for the type.</returns>
+        </member>
         <member name="P:Castle.MicroKernel.Registration.BasedOnDescriptor.InternalBasedOn">
             <summary>
             Gets the type all types must be based on.
@@ -1861,6 +1918,11 @@
         <member name="P:Castle.MicroKernel.Registration.BasedOnDescriptor.WithService">
             <summary>
             Gets the service descriptor.
+            </summary>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.FromAssemblyDescriptor">
+            <summary>
+            Selects a set of types from an assembly.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Registration.FromDescriptor">
@@ -1887,6 +1949,18 @@
             <param name="basedOn">The base type.</param>
             <returns>The descriptor for the type.</returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.FromDescriptor.Where(System.Predicate{System.Type})">
+            <summary>
+            Returns the descriptor for accepting a type based on a condition.
+            </summary>
+            <param name="accepted">The accepting condition.</param>
+            <returns>The descriptor for the type.</returns>
+        </member>
+        <member name="T:Castle.MicroKernel.Registration.FromTypesDescriptor">
+            <summary>
+            Selects an existing set of types to register.
+            </summary>
+        </member>
         <member name="T:Castle.MicroKernel.Registration.ServiceDescriptor">
             <summary>
             Describes how to select a types service.
@@ -1911,12 +1985,33 @@
             <param name="selector"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.ServiceDescriptor.Select(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Assigns the supplied service types.
+            </summary>
+            <param name="types"></param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.MicroKernel.Registration.Component.For(System.Type)">
             <summary>
             Creates a component registration for the <paramref name="serviceType"/>
             </summary>
             <param name="serviceType">Type of the service.</param>
             <returns>The component registration.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.For(System.Type[])">
+            <summary>
+            Creates a component registration for the <paramref name="serviceTypes"/>
+            </summary>
+            <param name="serviceTypes">Types of the service.</param>
+            <returns>The component registration.</returns>B
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.For(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Creates a component registration for the <paramref name="serviceTypes"/>
+            </summary>
+            <param name="serviceTypes">Types of the service.</param>
+            <returns>The component registration.</returns>B
         </member>
         <member name="M:Castle.MicroKernel.Registration.Component.For``1">
             <summary>
@@ -1970,13 +2065,34 @@
             <param name="model">The component model.</param>
             <returns>The component registration.</returns>
         </member>
-        <member name="M:Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistred(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+        <member name="M:Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistered(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
             <summary>
             Determines if the component service is already registered.
             </summary>
             <param name="kernel">The kernel.</param>
             <param name="model">The component model.</param>
             <returns>true if the service is already registered.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInNamespace(System.String)">
+            <summary>
+            Creates a predicate to check if a component is in a namespace.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <returns>true if the component type is in the namespace.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInSameNamespaceAs(System.Type)">
+            <summary>
+            Creates a predicate to check if a component shares a namespace with another.
+            </summary>
+            <param name="type">The component type to test namespace against.</param>
+            <returns>true if the component is in the same namespace.</returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.Component.IsInSameNamespaceAs``1">
+            <summary>
+            Creates a predicate to check if a component shares a namespace with another.
+            </summary>
+            <typeparam name="T">The component type to test namespace against.</typeparam>
+            <returns>true if the component is in the same namespace.</returns>
         </member>
         <member name="T:Castle.MicroKernel.Registration.ComponentFilter">
             <summary>
@@ -3547,7 +3663,7 @@
             <summary>
             Event fired when a dependency is being resolved,
             it allows the dependency to be changed,
-            but the client ComponentModel must not be altered.
+            but the client ComponentModel must not be changed.
             </summary>
         </member>
         <member name="E:Castle.MicroKernel.KernelEventSupport.HandlerRegistered">

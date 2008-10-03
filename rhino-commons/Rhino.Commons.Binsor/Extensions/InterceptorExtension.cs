@@ -45,7 +45,7 @@ namespace Rhino.Commons.Binsor
         {
 			AbstractConfigurationRunner.Kernel.Register(
 				Castle.MicroKernel.Registration.Component.For(interceptorType)
-				.Unless(Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistred)
+				.Unless(Castle.MicroKernel.Registration.Component.ServiceAlreadyRegistered)
 				);
 			
             registration.Interceptors(InterceptorReference.ForType(interceptorType)).First
