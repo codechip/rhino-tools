@@ -128,13 +128,15 @@
 
 		<if test="${not build.msbuild}">
 			<property name="warnaserror" value="${build.warnaserrors}" />
+			<property name="project.name" value="${project::get-name()}" overwrite="false" />
+			
 			<csc
 				target="library"
 				define="${current.build.defines}"
 				debug="${build.debug}"
 				optimize="${build.optimize}"
 				warnaserror="${warnaserror}"
-				output="${build.dir}/${project::get-name()}.dll"
+				output="${build.dir}/${project.name}.dll"
 				doc="${build.dir}/${project::get-name()}.xml"
 				rebuild="${build.rebuild}"
 				unless="${build.msbuild}"
