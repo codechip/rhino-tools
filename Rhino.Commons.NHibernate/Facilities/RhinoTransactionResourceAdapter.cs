@@ -36,27 +36,39 @@ namespace Rhino.Commons.Facilities
 	{
 		private IUnitOfWork unitOfWork;
 		private RhinoTransaction rhinoTransaction;
+		private readonly TransactionMode transactionMode;
 
 		public RhinoTransactionResourceAdapter(TransactionMode transactionMode)
 		{
+			this.transactionMode = transactionMode;
 		}
 
 		public void Start()
 		{
-			unitOfWork = UnitOfWork.Start();
-			rhinoTransaction = unitOfWork.BeginTransaction();
+			if (transactionMode != TransactionMode.Requires ||
+				!UnitOfWork.Current.IsInActiveTransaction)
+			{
+				unitOfWork = UnitOfWork.Start();
+				rhinoTransaction = unitOfWork.BeginTransaction();
+			}
 		}
 
 		public void Commit()
 		{
-			rhinoTransaction.Commit();
-			Dispose();
+			if (rhinoTransaction != null)
+			{
+				rhinoTransaction.Commit();
+				Dispose();
+			}
 		}
 
 		public void Rollback()
 		{
-			rhinoTransaction.Rollback();
-			Dispose();
+			if (rhinoTransaction != null)
+			{
+				rhinoTransaction.Rollback();
+				Dispose();
+			}
 		}
 
 		protected void Dispose()
