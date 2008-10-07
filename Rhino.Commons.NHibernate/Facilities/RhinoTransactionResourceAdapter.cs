@@ -45,7 +45,8 @@ namespace Rhino.Commons.Facilities
 
 		public void Start()
 		{
-			if (transactionMode != TransactionMode.Requires ||
+			if (!UnitOfWork.IsStarted ||
+				transactionMode != TransactionMode.Requires ||
 				!UnitOfWork.Current.IsInActiveTransaction)
 			{
 				unitOfWork = UnitOfWork.Start();
