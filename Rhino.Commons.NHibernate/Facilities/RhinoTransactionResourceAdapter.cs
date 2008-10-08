@@ -74,11 +74,16 @@ namespace Rhino.Commons.Facilities
 
 		protected void Dispose()
 		{
-			rhinoTransaction.Dispose();
-
-			if (unitOfWork != null)
+			try
 			{
-				unitOfWork.Dispose();
+				rhinoTransaction.Dispose();
+			}
+			finally
+			{
+				if (unitOfWork != null)
+				{
+					unitOfWork.Dispose();
+				}
 			}
 		}
 	}
