@@ -53,8 +53,14 @@ namespace Rhino.Commons
 
 		public void Dispose()
 		{
-			transactionScope.Dispose();
-			IsActive = false;
+			try
+			{
+				transactionScope.Dispose();
+			}
+			finally
+			{
+				IsActive = false;
+			}
 		}
 	}
 }
