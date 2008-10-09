@@ -48,7 +48,13 @@ namespace Rhino.Commons
 		IUnitOfWorkImplementor Create(IDbConnection maybeUserProvidedConnection, IUnitOfWorkImplementor previous);
 
         ISession CurrentSession { get; set; }
+        
         ISession GetCurrentSessionFor(Type typeOfEntity);
+        
+        ISession GetCurrentSessionFor(string name);
+
+        IDisposable SetCurrentSessionName(string name);
+
         void SetCurrentSession(Type typeOfEntity, ISession session);
 
         /// <summary>

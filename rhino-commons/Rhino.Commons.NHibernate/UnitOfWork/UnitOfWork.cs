@@ -93,6 +93,10 @@ namespace Rhino.Commons
             internal set { Local.Data[CurrentLongConversationIdKey] = value; }
         }
 
+        public static IDisposable SetCurrentSessionName(string name)
+        {
+            return IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSessionName(name);
+        }
 
         /// <summary>
         /// NOT thread safe! Mostly intended to support mocking of the unit of work. 
@@ -181,6 +185,12 @@ namespace Rhino.Commons
         {
             return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(typeOfEntity);
         }
+
+        public static ISession GetCurrentSessionFor(string name)
+        {
+            return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(name);
+        }
+
 
         /// <summary>
         /// Sets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used

@@ -4,6 +4,7 @@ using System.Data;
 using System.Web;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Engine;
 using NHibernate.Metadata;
 
 namespace Rhino.Commons
@@ -39,11 +40,18 @@ namespace Rhino.Commons
 		{
 			get
 			{
+                if (CurrentName != null)
+                    return GetCurrentSessionFor(CurrentName);
 				ThereIsExactlyOneFactory();
 				return this[0].CurrentSession;
 			}
 			set
 			{
+                if (CurrentName != null)
+                {
+                    SetCurrentSessionFor(CurrentName, value);
+                    return;
+                }
 				ThereIsExactlyOneFactory();
                 this[0].CurrentSession = value;
 			}
@@ -56,26 +64,70 @@ namespace Rhino.Commons
 
 		public ISession GetCurrentSessionFor(Type typeOfEntity)
 		{
-			return Find(delegate(NHibernateUnitOfWorkFactory factory)
-				{
-					return factory.CurrentSession.SessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
-				}).GetCurrentSessionFor(typeOfEntity);
+		    var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+		    {
+		        return factory.NHibernateSessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
+		    });
+            if(unitOfWorkFactory == null)
+                throw new InvalidOperationException("No session factory was registered that has "+ typeOfEntity +" registered.");
+		    return unitOfWorkFactory.GetCurrentSessionFor(typeOfEntity);
 		}
 
-        public void SetCurrentSession<TEntity>(ISession session)
+        public ISession GetCurrentSessionFor(string name)
+        {
+            var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+            {
+                var settings = ((ISessionFactoryImplementor) factory.NHibernateSessionFactory).Settings;
+                return settings.SessionFactoryName == name;
+            });
+            if (unitOfWorkFactory == null)
+                throw new InvalidOperationException("No session factory was registered that has the name: " + name);
+		  
+            return unitOfWorkFactory.CurrentSession;
+        }
+
+        public void SetCurrentSessionFor(string name, ISession session)
+        {
+            var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+            {
+                var settings = ((ISessionFactoryImplementor)factory.NHibernateSessionFactory).Settings;
+                return settings.SessionFactoryName == name;
+            });
+            if (unitOfWorkFactory == null)
+                throw new InvalidOperationException("No session factory was registered that has the name: " + name);
+
+            unitOfWorkFactory.CurrentSession = session;
+        }
+
+	    public IDisposable SetCurrentSessionName(string name)
+	    {
+	        CurrentName = name;
+	        return new DisposableAction(delegate { CurrentName = null; });
+	    }
+
+	    private string CurrentName
+	    {
+            get { return (string) Local.Data[this]; }
+	        set { Local.Data[this] = value; }
+	    }
+
+	    public void SetCurrentSession<TEntity>(ISession session)
         {
             SetCurrentSession(typeof(TEntity), session);
         }
 
 		public void SetCurrentSession(Type typeOfEntity, ISession session)
 		{
-			Find(delegate(NHibernateUnitOfWorkFactory factory)
-				{
-					return factory.CurrentSession.SessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
-				}).CurrentSession = session;
+		    var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+		    {
+		        return factory.NHibernateSessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
+		    });
+            if (unitOfWorkFactory == null)
+                throw new InvalidOperationException("No session factory was registered that has " + typeOfEntity + " registered.");
+		    unitOfWorkFactory.CurrentSession = session;
 		}
 
-		public void MoveUnitOfWorkFromAspSessionIntoRequestContext(out IUnitOfWork iUoW, out Guid? LongConversationId)
+	    public void MoveUnitOfWorkFromAspSessionIntoRequestContext(out IUnitOfWork iUoW, out Guid? LongConversationId)
 		{
 			iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
 			LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];

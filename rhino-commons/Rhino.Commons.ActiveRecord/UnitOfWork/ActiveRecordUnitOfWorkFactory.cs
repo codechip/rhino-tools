@@ -228,7 +228,17 @@ namespace Rhino.Commons
 			return holder.CreateSession(typeOfEntity);
         }
 
-        public void SetCurrentSession(Type typeOfEntity, ISession session)
+	    public ISession GetCurrentSessionFor(string name)
+	    {
+	        return CurrentSession;
+	    }
+
+	    public IDisposable SetCurrentSessionName(string name)
+	    {
+	        return new DisposableAction(delegate { });
+	    }
+
+	    public void SetCurrentSession(Type typeOfEntity, ISession session)
         {
             CurrentSession = session;
         }
