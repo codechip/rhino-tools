@@ -117,6 +117,7 @@ namespace Rhino.Commons
 
 			// Generate SqlString of the form:
 			// columnName1 in (xml query) and columnName2 in (xml query) and ...
+			criteriaQuery.AddUsedTypedValues(this.GetTypedValues(criteria, criteriaQuery));			
 
 			for (int columnIndex = 0; columnIndex < columnNames.Length; columnIndex++)
 			{

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping default-lazy='false'
+	assembly='Rhino.Commons.Test'
+	namespace='Rhino.Commons.Test.NHibernate'
+	xmlns='urn:nhibernate-mapping-2.2'>
+	<class name='Person'>
+		<id name='Id'
+			column='id'>
+			<generator class='native'/>
+		</id>
+		<property name='Name'/>		
+		<bag name='MailReceived' inverse='true'>			
+			<key column='mailRevicedId' />
+			<one-to-many class='Mail' />
+		</bag>
+		<bag name='MailSent' inverse='true'>
+			<key column='mailSentId' />
+			<one-to-many class='Mail' />
+		</bag>		
+	</class>
+</hibernate-mapping>

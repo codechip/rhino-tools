@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hibernate-mapping default-lazy='false'
+	assembly='Rhino.Commons.Test'
+	namespace='Rhino.Commons.Test.NHibernate'
+	xmlns='urn:nhibernate-mapping-2.2'>
+	<class name='Mail'>
+		<id name='Id'
+			column='id'>
+			<generator class='native'/>
+		</id>
+		<property name='Subject'/>
+		<many-to-one name='From' cascade='save-update' class='Person' column='fromPersonId' not-null='false' />
+		<many-to-one name='To' cascade='save-update' class='Person' column='toPersonId' not-null='false' />
+	</class>
+</hibernate-mapping>

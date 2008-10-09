@@ -249,6 +249,8 @@
     <Content Include="Facilities\MutlipleUnitOfWorkArtifacts\Database2.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="NHibernate\Mail.hbm.xml" />
+    <EmbeddedResource Include="NHibernate\Person.hbm.xml" />
     <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase1.hbm.xml">
     </EmbeddedResource>
     <EmbeddedResource Include="Facilities\MutlipleUnitOfWorkArtifacts\DomainObjectFromDatabase2.hbm.xml">
@@ -293,6 +295,7 @@
     <Compile Include="NHibernate\EmbeddedDBTests.cs" />
     <Compile Include="Logging\ActiveLoggerFilterScopeTests.cs" />
     <Compile Include="NHibernate\FuturesFixture.cs" />
+    <Compile Include="NHibernate\XmlInFixture.cs" />
     <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryTests.cs" />
