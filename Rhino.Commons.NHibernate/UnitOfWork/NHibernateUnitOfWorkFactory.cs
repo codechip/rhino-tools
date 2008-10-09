@@ -255,7 +255,17 @@ namespace Rhino.Commons
 				UnitOfWork.CurrentLongConversationId;
 		}
 
-		public ISession GetCurrentSessionFor(Type typeOfEntity)
+        public ISession GetCurrentSessionFor(string name)
+        {
+            return CurrentSession;
+        }
+
+	    public IDisposable SetCurrentSessionName(string name)
+	    {
+            return new DisposableAction(delegate { });
+	    }
+
+	    public ISession GetCurrentSessionFor(Type typeOfEntity)
 		{
 			return CurrentSession;
 		}
