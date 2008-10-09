@@ -37,17 +37,18 @@ using Rhino.Commons.ForTesting;
 
 namespace Rhino.Commons.Test.NHibernate
 {
-    [TestFixture]
+	[TestFixture]
     public class EmbeddedDBTests : DatabaseTestFixtureBase
     {
         private ISession session;
         private SMS sms;
-
-        [TestFixtureSetUp]
-        public void OneTimeTestInitialize()
-        {
-            IntializeNHibernate(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());
-        }
+		
+		[TestFixtureSetUp]
+		public void OneTimeTestInitialize()
+		{
+			//IntializeNHibernate(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());			
+			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, "", DatabaseEngine.SQLite, MappingInfo.FromAssemblyContaining<SMS>());
+		}
 
         [SetUp]
         public void TestInitialize()
@@ -121,7 +122,7 @@ namespace Rhino.Commons.Test.NHibernate
             Assert.AreEqual(1, msg_count);
             Assert.IsNotNull(loadedMsg);
 
-        }
+        }		
     }
 
     public class SMS
@@ -140,5 +141,5 @@ namespace Rhino.Commons.Test.NHibernate
             get { return message; }
             set { message = value; }
         }
-    }
+    }	
 }
