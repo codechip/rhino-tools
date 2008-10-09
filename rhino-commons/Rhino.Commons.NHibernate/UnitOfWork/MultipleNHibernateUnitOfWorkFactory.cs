@@ -64,7 +64,7 @@ namespace Rhino.Commons
 
 		public ISession GetCurrentSessionFor(Type typeOfEntity)
 		{
-		    var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+		    NHibernateUnitOfWorkFactory unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
 		    {
 		        return factory.NHibernateSessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
 		    });
@@ -75,9 +75,9 @@ namespace Rhino.Commons
 
         public ISession GetCurrentSessionFor(string name)
         {
-            var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+            NHibernateUnitOfWorkFactory unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
             {
-                var settings = ((ISessionFactoryImplementor) factory.NHibernateSessionFactory).Settings;
+                Settings settings = ((ISessionFactoryImplementor)factory.NHibernateSessionFactory).Settings;
                 return settings.SessionFactoryName == name;
             });
             if (unitOfWorkFactory == null)
@@ -88,9 +88,9 @@ namespace Rhino.Commons
 
         public void SetCurrentSessionFor(string name, ISession session)
         {
-            var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+            NHibernateUnitOfWorkFactory unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
             {
-                var settings = ((ISessionFactoryImplementor)factory.NHibernateSessionFactory).Settings;
+                Settings settings = ((ISessionFactoryImplementor)factory.NHibernateSessionFactory).Settings;
                 return settings.SessionFactoryName == name;
             });
             if (unitOfWorkFactory == null)
@@ -118,7 +118,7 @@ namespace Rhino.Commons
 
 		public void SetCurrentSession(Type typeOfEntity, ISession session)
 		{
-		    var unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
+		    NHibernateUnitOfWorkFactory unitOfWorkFactory = Find(delegate(NHibernateUnitOfWorkFactory factory)
 		    {
 		        return factory.NHibernateSessionFactory.GetAllClassMetadata().ContainsKey(typeOfEntity.FullName);
 		    });

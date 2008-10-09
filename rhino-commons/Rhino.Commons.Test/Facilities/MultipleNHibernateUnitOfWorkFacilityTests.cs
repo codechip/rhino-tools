@@ -1,5 +1,6 @@
 using System;
 using MbUnit.Framework;
+using NHibernate;
 using Rhino.Commons.Test.Facilities.MutlipleUnitOfWorkArtifacts;
 
 namespace Rhino.Commons.Test.Facilities
@@ -10,21 +11,21 @@ namespace Rhino.Commons.Test.Facilities
         [Test]
         public void Should_be_able_to_get_unit_of_work_by_name()
         {
-            var s1 = UnitOfWork.GetCurrentSessionFor("database1");
-            var s2 = UnitOfWork.GetCurrentSessionFor("database2");
+            ISession s1 = UnitOfWork.GetCurrentSessionFor("database1");
+            ISession s2 = UnitOfWork.GetCurrentSessionFor("database2");
             Assert.AreNotEqual(s1.SessionFactory, s2.SessionFactory);
         }
 
         [Test]
         public void Should_be_able_to_get_into_scope()
         {
-            var s1 = UnitOfWork.GetCurrentSessionFor("database1");
+            ISession s1 = UnitOfWork.GetCurrentSessionFor("database1");
             using(UnitOfWork.SetCurrentSessionName("database1"))
             {
                 Assert.AreSame(UnitOfWork.CurrentSession, s1);
             }
 
-            var s2= UnitOfWork.GetCurrentSessionFor("database2");
+            ISession s2= UnitOfWork.GetCurrentSessionFor("database2");
             using (UnitOfWork.SetCurrentSessionName("database2"))
             {
                 Assert.AreSame(UnitOfWork.CurrentSession, s2);
