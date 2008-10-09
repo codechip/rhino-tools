@@ -40,9 +40,12 @@ namespace Rhino.Commons.Test.NHibernate
 		[SetUp]
 		public void TestInitialize()
 		{
-			jane = new Person {Name = "Jane"};
-			adam = new Person {Name = "Adam"};
-			bob = new Person {Name = "Bob"};
+			jane = new Person();
+			jane.Name = "jane";
+			adam = new Person();
+			adam.Name = "Adam";
+			bob = new Person();
+			bob.Name = "Bob";
 
 			session = CurrentContext.CreateSession();
 
