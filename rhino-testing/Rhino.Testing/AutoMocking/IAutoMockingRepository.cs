@@ -22,6 +22,7 @@ namespace Rhino.Testing.AutoMocking
         /// <returns><see cref="TypeMarker"/> that you can then used to select the mock type</returns>
         TypeMarker Mark(Type type);
     	bool CanResolveFromMockRepository(Type service);
+        bool ResolveProperties { get; set; }
     }
 
     public interface IGenericMockingRepository

@@ -63,6 +63,13 @@ namespace Rhino.Testing.Tests.AutoMocking
 	    }
 
 
+        [Test]
+        public void Create_WillNotIgnorePropertiesWhenResolvingDependencies()
+        {
+            ComponentWithComplexProperty target = containerThatResolvesProperties.Create<ComponentWithComplexProperty>();
+            Assert.IsNotNull(target.ComplexProperty);
+        }
+
 	    [Test]
 	    public void CanStopContainerResolvingSpecificDependencies()
 	    {

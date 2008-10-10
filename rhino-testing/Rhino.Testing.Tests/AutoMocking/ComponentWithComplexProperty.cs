@@ -17,6 +17,9 @@ namespace Rhino.Testing.Tests.AutoMocking
 		private string constructorArgument1;
 		private string constructorArgument2;
 
+        public ComplexProperty()
+        {
+        }
 
 		public ComplexProperty(string constructorArgument1, string constructorArgument2)
 		{

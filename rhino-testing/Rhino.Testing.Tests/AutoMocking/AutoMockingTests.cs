@@ -8,6 +8,8 @@ namespace Rhino.Testing.Tests.AutoMocking
     {
         protected AutoMockingContainer container;
         protected MockRepository mocks;
+        protected AutoMockingContainer containerThatResolvesProperties;
+        protected MockRepository mocksForContainerThatResolvesProperties;
 
         [SetUp]
         public virtual void Setup()
@@ -15,6 +17,9 @@ namespace Rhino.Testing.Tests.AutoMocking
             mocks = new MockRepository();
             container = new AutoMockingContainer(mocks);
             container.Initialize();
+            mocksForContainerThatResolvesProperties = new MockRepository();
+            containerThatResolvesProperties = new AutoMockingContainer(mocksForContainerThatResolvesProperties, true);
+            containerThatResolvesProperties.Initialize();
         }
 
 
@@ -22,6 +27,7 @@ namespace Rhino.Testing.Tests.AutoMocking
         public void TestCleanup()
         {
             if (container != null) container.Dispose();
+            if (containerThatResolvesProperties != null) containerThatResolvesProperties.Dispose();
         }
     }
 }

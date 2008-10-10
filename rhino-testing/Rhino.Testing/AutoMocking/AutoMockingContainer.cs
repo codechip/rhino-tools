@@ -15,13 +15,19 @@ namespace Rhino.Testing.AutoMocking
 		private readonly MockRepository _mocks;
 		private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 		private readonly Dictionary<Type, IMockingStrategy> _strategies = new Dictionary<Type, IMockingStrategy>();
+	    private bool _resolveProperties;
 
-		public AutoMockingContainer(MockRepository mocks)
+		public AutoMockingContainer(MockRepository mocks) : this(mocks, false)
 		{
-			_mocks = mocks;
 		}
 
-		#region IAutoMockingRepository Members
+        public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
+        {
+            _mocks = mocks;
+            _resolveProperties = resolveProperties;
+        }
+
+        #region IAutoMockingRepository Members
 		public virtual MockRepository MockRepository
 		{
 			get { return _mocks; }
@@ -93,7 +99,8 @@ namespace Rhino.Testing.AutoMocking
 		{
 			if (model.CustomComponentActivator!=null)
 				return;
-			model.CustomComponentActivator = typeof(AutoMockingComponentActivator);
+            if (!ResolveProperties)
+                model.CustomComponentActivator = typeof(AutoMockingComponentActivator);
 		}
 
 		private void AddComponentIfMissing<T>()
@@ -227,5 +234,10 @@ namespace Rhino.Testing.AutoMocking
 			_markMissing.Add(type);
 		}
 
+	    public bool ResolveProperties
+	    {
+            get { return _resolveProperties; }
+            set { _resolveProperties = value; }
+	    }
 	}
 }
