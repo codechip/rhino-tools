@@ -188,6 +188,14 @@ namespace Rhino.Igloo
                     {
                         switch (kvp.Key.Scope)
                         {
+                            case ScopeType.Inputs:
+                                string[] instancesToInject = Scope.Inputs[kvp.Key.Name];
+                                if (instancesToInject == null)
+                                    continue;
+                                object results = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instancesToInject);
+                                if (results != null)
+                                    propertyInfo.SetValue(instance, results, null);
+                                break;
                             case ScopeType.Input:
                                 string instanceToInject = Scope.Input[kvp.Key.Name];
                                 if (instanceToInject == null)

@@ -10,6 +10,10 @@ namespace Rhino.Igloo
         /// </summary>
         Input,
         /// <summary>
+        /// The current input scope for an array
+        /// </summary>
+        Inputs,
+        /// <summary>
         /// The session scope
         /// </summary>
         Session,

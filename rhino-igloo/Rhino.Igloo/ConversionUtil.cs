@@ -38,6 +38,35 @@ namespace Rhino.Igloo
     public static class ConversionUtil
     {
         /// <summary>
+        /// Converts array of one type to another, applying heuristics as neccecary
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="inject">The inject.</param>
+        /// <exception cref="System.InvalidOperationException">thrown if Type.HasElementType is false (is not an array)</exception>
+        /// <returns></returns>
+        public static object ConvertTo(Type type, string[] inject)
+        {
+            if(!type.HasElementType)
+                throw new InvalidOperationException("Type " + type.FullName + " is not an array, and cannot be converted as such");
+
+            if (inject == null)
+            {
+                return !type.IsValueType ? null : Activator.CreateInstance(type, 0);
+            }
+            if (type.IsInstanceOfType(inject))
+                return inject;
+
+
+            Array array = (Array)Activator.CreateInstance(type, inject.Length);
+            Type elementType = type.GetElementType();
+            for(int i = 0; i < inject.Length; i++)
+            {
+                array.SetValue(ConvertTo(elementType, inject[i]), i);
+            }
+            return array;
+        }
+
+        /// <summary>
         /// Converts one type to another, applying heuristics as neccecary
         /// </summary>
         /// <param name="type">The type.</param>
@@ -54,14 +83,14 @@ namespace Rhino.Igloo
             }
             if (type.IsInstanceOfType(inject))
                 return inject;
-			else if(type == typeof(int))
-			{
-				int temp;
-				if(int.TryParse(inject, out temp))
-					return temp;
-				else 
-					return null;
-			}
+            else if (type == typeof(int))
+            {
+                int temp;
+                if (int.TryParse(inject, out temp))
+                    return temp;
+                else
+                    return null;
+            }
             else if (typeof(IConvertible).IsAssignableFrom(type))
                 return Convert.ChangeType(inject, type);
 
