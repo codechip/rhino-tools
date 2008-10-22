@@ -55,39 +55,22 @@ namespace Rhino.Commons.HttpModules
             if (IoC.IsInitialized == false)
                 InitializeContainer(this);
 
-            IUnitOfWork currentUnitOfWork = null;
+			bool loadedConversation = false;
             if (IsAspSessionAvailable)
             {
-                currentUnitOfWork = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+            	loadedConversation = LongConversationManager.LoadConversation();
             }
 
-            if (currentUnitOfWork == null)
+			if (!loadedConversation)
             {
                 UnitOfWork.Start();
             }
-            else
-            {
-                IUnitOfWork UoW;
-                Guid? longConversationId;
-
-                IoC.Resolve<IUnitOfWorkFactory>().
-                    MoveUnitOfWorkFromAspSessionIntoRequestContext(out UoW, out longConversationId);
-
-                UnitOfWork.Current = UoW;
-                UnitOfWork.CurrentLongConversationId = longConversationId;
-
-                UnitOfWork.CurrentSession.Reconnect();
-            }
         }
-
-
-
 
         private static bool IsAspSessionAvailable
         {
             get { return HttpContext.Current.Session != null; }
         }
-
 
         public virtual void UnitOfWorkApplication_EndRequest(object sender, EventArgs e)
         {
@@ -99,7 +82,7 @@ namespace Rhino.Commons.HttpModules
                     throw new InvalidOperationException(
                         "Session must be enabled when using Long Conversations! If you are using web services, make sure to use [WebMethod(EnabledSession=true)]");
                 }
-                IoC.Resolve<IUnitOfWorkFactory>().SaveUnitOfWorkToAspSession();
+				LongConversationManager.SaveConversation();
             }
             else
             {
@@ -107,10 +90,6 @@ namespace Rhino.Commons.HttpModules
                     UnitOfWork.Current.Dispose();
             }
         }
-
-
-
-
 
         public IWindsorContainer Container
         {
@@ -135,7 +114,6 @@ namespace Rhino.Commons.HttpModules
             self.CreateContainer();
         }
 
-
         public virtual void Application_End(object sender, EventArgs e)
         {
             if (Container != null) //can happen if this isn't the first app
@@ -144,7 +122,6 @@ namespace Rhino.Commons.HttpModules
                 Container.Dispose();
             }
         }
-
 
         public override void Dispose()
         {

@@ -29,6 +29,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Reflection;
 using System.Web;
@@ -139,7 +140,7 @@ namespace Rhino.Commons
 				};
 			};
 
-			ActiveRecordStarter.MappingRegisteredInConfiguration +=delegate(ISessionFactoryHolder holder)
+			ActiveRecordStarter.MappingRegisteredInConfiguration += delegate(ISessionFactoryHolder holder)
 			{
 				if (InitializationAware != null)
 				{
@@ -150,7 +151,7 @@ namespace Rhino.Commons
 					}
 				}
 			};
-						
+
 			ActiveRecordStarter.ResetInitializationFlag();
 			if (InitializationAware != null)
 			{
@@ -183,64 +184,58 @@ namespace Rhino.Commons
 				if (scope == null)
 					throw new InvalidOperationException("You are not in a unit of work");
 				ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
-                return holder.CreateSession(typeof(ActiveRecordBase));
+				return holder.CreateSession(typeof(ActiveRecordBase));
 			}
-			set 
-            {
-                //do nothing.
-                //the CurrentSession if provided through the ISessionFactoryHolder accroding to the SessionScope.
-            }
+			set
+			{
+				//do nothing.
+				//the CurrentSession if provided through the ISessionFactoryHolder accroding to the SessionScope.
+			}
 		}
 
 
-        public void MoveUnitOfWorkFromAspSessionIntoRequestContext(
-            out IUnitOfWork iUoW, out Guid? LongConversationId)
-        {
-            iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
+		public void LoadUnitOfWorkFromHashtable(Hashtable hashtable, out IUnitOfWork iUoW, out Guid? LongConversationId)
+		{
+			iUoW = (IUnitOfWork)hashtable[UnitOfWork.CurrentUnitOfWorkKey];
 
-            IActiveRecordUnitOfWork arUoW = iUoW as IActiveRecordUnitOfWork;
-            if (arUoW != null)
-                //register the UnitOfWork SessionScope as this request current session scope.
-                ThreadScopeAccessor.Instance.RegisterScope(arUoW.Scope);
-            else
-                throw new Exception("the current unit of work is not of type IActiveRecordUnitOfWork!");
+			IActiveRecordUnitOfWork arUoW = iUoW as IActiveRecordUnitOfWork;
+			if (arUoW != null)
+				//register the UnitOfWork SessionScope as this request current session scope.
+				ThreadScopeAccessor.Instance.RegisterScope(arUoW.Scope);
+			else
+				throw new Exception("the current unit of work is not of type IActiveRecordUnitOfWork!");
 
-            LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
+			LongConversationId = (Guid?)hashtable[UnitOfWork.CurrentLongConversationIdKey];
+		}
 
-            //avoids the temptation to access UnitOfWork from the HttpSession!
-            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
-        }
+		public void SaveUnitOfWorkToHashtable(Hashtable hashtable)
+		{
+			hashtable[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+			hashtable[UnitOfWork.CurrentLongConversationIdKey] = UnitOfWork.CurrentLongConversationId;
+		}
 
-        public void SaveUnitOfWorkToAspSession()
-        {
-            HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-            HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
-                UnitOfWork.CurrentLongConversationId;
-        }
-
-        public ISession GetCurrentSessionFor(Type typeOfEntity)
-        {
+		public ISession GetCurrentSessionFor(Type typeOfEntity)
+		{
 			ISessionScope scope = SessionScope.Current;
 			if (scope == null)
 				throw new InvalidOperationException("You are not in a unit of work");
 			ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
 			return holder.CreateSession(typeOfEntity);
-        }
+		}
 
-	    public ISession GetCurrentSessionFor(string name)
-	    {
-	        return CurrentSession;
-	    }
+		public ISession GetCurrentSessionFor(string name)
+		{
+			return CurrentSession;
+		}
 
-	    public IDisposable SetCurrentSessionName(string name)
-	    {
-	        return new DisposableAction(delegate { });
-	    }
+		public IDisposable SetCurrentSessionName(string name)
+		{
+			return new DisposableAction(delegate { });
+		}
 
-	    public void SetCurrentSession(Type typeOfEntity, ISession session)
-        {
-            CurrentSession = session;
-        }
-    }
+		public void SetCurrentSession(Type typeOfEntity, ISession session)
+		{
+			CurrentSession = session;
+		}
+	}
 }

@@ -35,180 +35,217 @@ using Rhino.Commons.HttpModules;
 
 namespace Rhino.Commons
 {
-    public static class UnitOfWork
-    {
-        public const string CurrentUnitOfWorkKey = "CurrentUnitOfWork.Key";
-        public const string CurrentLongConversationIdKey = "CurrentLongConversationId.Key";
-
-        private static IUnitOfWork globalNonThreadSafeUnitOfwork;
-
-        /// <summary>
-        /// Signals the start of an application/user transaction that spans multiple page requests
-        /// </summary>
-        /// <remarks>
-        /// Used in conjunction with <see cref="UnitOfWorkApplication"/>, will ensure that the current UoW
-        /// (see <see cref="Current"/>) is kept intact across multiple page requests. 
-        /// <para>
-        /// Note: This method does not start a physical database transaction.
-        /// </para>
-        /// </remarks>
-        public static void StartLongConversation()
-        {
-            if (InLongConversation)
-                throw new InvalidOperationException("You are already in a long conversation");
-
-            Local.Data[CurrentLongConversationIdKey] = Guid.NewGuid();
-        }
-
-        /// <summary>
-        /// Signals the end of the current application/user transaction <seealso cref="StartLongConversation"/>
-        /// </summary>
-        /// <remarks>
-        /// Actual disposal of the current UoW is deferred until the end the current page request 
-        /// </remarks>
-        public static void EndLongConversation()
-        {
-            Local.Data[CurrentLongConversationIdKey] = null;
-        }
+	public static class UnitOfWork
+	{
+		public const string CurrentUnitOfWorkKey = "CurrentUnitOfWork.Key";
+		public const string CurrentLongConversationIdKey = "CurrentLongConversationId.Key";
+		public const string CurrentLongPrivateKey = "CurrentLongPrivate.Key";
 
 
-        public static bool InLongConversation
-        {
-            get { return CurrentLongConversationId != null; }
-        }
+		private static IUnitOfWork globalNonThreadSafeUnitOfwork;
 
-        public static bool IsStarted
-        {
-            get 
-			{ 
-				if(globalNonThreadSafeUnitOfwork != null)
+		/// <summary>
+		/// Signals the start of an application/user transaction that spans multiple page requests
+		/// </summary>
+		/// <remarks>
+		/// Used in conjunction with <see cref="UnitOfWorkApplication"/>, will ensure that the current UoW
+		/// (see <see cref="Current"/>) is kept intact across multiple page requests. 
+		/// <para>
+		/// Note: This method does not start a physical database transaction.
+		/// </para>
+		/// </remarks>
+		public static void StartLongConversation()
+		{
+			if (InLongConversation)
+				throw new InvalidOperationException("You are already in a long conversation");
+
+			Local.Data[CurrentLongConversationIdKey] = Guid.NewGuid();
+		}
+
+		/// <summary>
+		/// Signals the start of an application/user transaction that spans multiple page requests, 
+		/// but is not loaded without explicitly specifying the conversation key.
+		/// </summary>
+		/// <remarks>
+		/// Used in conjunction with <see cref="UnitOfWorkApplication"/>, will ensure that the current UoW
+		/// (see <see cref="Current"/>) is kept intact across multiple page requests. Review the <see cref="LongConversationManager"/> for details.
+		/// <para>
+		/// Note: This method does not start a physical database transaction.
+		/// </para>
+		/// </remarks>
+		public static Guid StartPrivateConversation()
+		{
+			if (InLongConversation)
+				throw new InvalidOperationException("You are already in a long conversation");
+			LongConversationIsPrivate = true;
+			return (Guid)(Local.Data[CurrentLongConversationIdKey] = Guid.NewGuid());
+		}
+
+		/// <summary>
+		/// Signals the end of the current application/user transaction <seealso cref="StartLongConversation"/>
+		/// </summary>
+		/// <remarks>
+		/// Actual disposal of the current UoW is deferred until the end the current page request 
+		/// </remarks>
+		public static void EndLongConversation()
+		{
+			Local.Data[CurrentLongConversationIdKey] = null;
+		}
+
+
+		public static bool InLongConversation
+		{
+			get { return CurrentLongConversationId != null; }
+		}
+
+		public static bool IsStarted
+		{
+			get
+			{
+				if (globalNonThreadSafeUnitOfwork != null)
 					return true;
-				return Local.Data[CurrentUnitOfWorkKey] != null; 
+				return Local.Data[CurrentUnitOfWorkKey] != null;
 			}
-        }
+		}
 
-        public static Guid? CurrentLongConversationId
-        {
-            get { return (Guid?) Local.Data[CurrentLongConversationIdKey]; }
-            internal set { Local.Data[CurrentLongConversationIdKey] = value; }
-        }
+		public static Guid? CurrentLongConversationId
+		{
+			get { return (Guid?)Local.Data[CurrentLongConversationIdKey]; }
+			internal set { Local.Data[CurrentLongConversationIdKey] = value; }
+		}
 
-        public static IDisposable SetCurrentSessionName(string name)
-        {
-            return IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSessionName(name);
-        }
+		public static bool LongConversationIsPrivate
+		{
+			get { return Local.Data[CurrentLongPrivateKey] != null && ((bool)Local.Data[CurrentLongPrivateKey]); }
+			internal set { Local.Data[CurrentLongPrivateKey] = value; }
+		}
 
-        /// <summary>
-        /// NOT thread safe! Mostly intended to support mocking of the unit of work. 
+		public static IDisposable SetCurrentSessionName(string name)
+		{
+			return IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSessionName(name);
+		}
+
+		/// <summary>
+		/// NOT thread safe! Mostly intended to support mocking of the unit of work. 
 		/// You must pass a null argument when finished  to ensure atomic units of work UnitOfWorkRegisterGlobalUnitOfWork(null);
 		/// You can also call Dispose() on the result of this method, or put it in a using statement (preferred)
 		/// </summary>
-        public static IDisposable RegisterGlobalUnitOfWork(IUnitOfWork global)
-        {
-            globalNonThreadSafeUnitOfwork = global;
-        	return new DisposableAction(delegate
-        	{
-        		globalNonThreadSafeUnitOfwork = null;
-        	});
-        }
+		public static IDisposable RegisterGlobalUnitOfWork(IUnitOfWork global)
+		{
+			globalNonThreadSafeUnitOfwork = global;
+			return new DisposableAction(delegate
+			{
+				globalNonThreadSafeUnitOfwork = null;
+			});
+		}
 
-        public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
-        {
-            return Start(null, nestingOptions);
-        }
+		public static IUnitOfWork Start(UnitOfWorkNestingOptions nestingOptions)
+		{
+			return Start(null, nestingOptions);
+		}
 
-        public static IUnitOfWork Start()
-        {
-            return Start(null, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
-        }
+		public static IUnitOfWork Start()
+		{
+			return Start(null, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
+		}
 
-        public static IUnitOfWork Start(IDbConnection connection)
-        {
-            return Start(connection, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
-        }
+		public static IUnitOfWork Start(IDbConnection connection)
+		{
+			return Start(connection, UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork);
+		}
 
-        /// <summary>
-        /// Start a Unit of Work
-        /// is called
-        /// </summary>
-        /// <returns>
-        /// An IUnitOfwork object that can be used to work with the current UoW.
-        /// </returns>
-        public static IUnitOfWork Start(IDbConnection connection, UnitOfWorkNestingOptions nestingOptions)
-        {
-            if (globalNonThreadSafeUnitOfwork != null)
-                return globalNonThreadSafeUnitOfwork;
-            IUnitOfWorkImplementor existing = (IUnitOfWorkImplementor) Local.Data[CurrentUnitOfWorkKey];
-            if (nestingOptions == UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork &&
-                existing != null)
-            {
-                existing.IncrementUsages();
-                return existing;
-            }
-            Current = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
-            return Current;
-        }
+		/// <summary>
+		/// Start a Unit of Work
+		/// is called
+		/// </summary>
+		/// <returns>
+		/// An IUnitOfwork object that can be used to work with the current UoW.
+		/// </returns>
+		public static IUnitOfWork Start(IDbConnection connection, UnitOfWorkNestingOptions nestingOptions)
+		{
+			if (globalNonThreadSafeUnitOfwork != null)
+				return globalNonThreadSafeUnitOfwork;
+			IUnitOfWorkImplementor existing = (IUnitOfWorkImplementor)Local.Data[CurrentUnitOfWorkKey];
+			if (nestingOptions == UnitOfWorkNestingOptions.ReturnExistingOrCreateUnitOfWork &&
+				existing != null)
+			{
+				existing.IncrementUsages();
+				return existing;
+			}
+			Current = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
+			foreach (var workAware in IoC.ResolveAll<IUnitOfWorkAware>())
+				workAware.UnitOfWorkStarted(Current);
+			return Current;
+		}
 
-        /// <summary>
-        /// The current unit of work.
-        /// </summary>
-        public static IUnitOfWork Current
-        {
-            get
-            {
-                if(!IsStarted)
-                    throw new InvalidOperationException("You are not in a unit of work");
-                return globalNonThreadSafeUnitOfwork ?? (IUnitOfWork)Local.Data[CurrentUnitOfWorkKey];
-                //if(globalNonThreadSafeUnitOfwork != null)
-                //    return globalNonThreadSafeUnitOfwork;
-                //return (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
-            }
-            internal set { Local.Data[CurrentUnitOfWorkKey] = value; }
-        }
+		/// <summary>
+		/// The current unit of work.
+		/// </summary>
+		public static IUnitOfWork Current
+		{
+			get
+			{
+				if (!IsStarted)
+					throw new InvalidOperationException("You are not in a unit of work");
+				return globalNonThreadSafeUnitOfwork ?? (IUnitOfWork)Local.Data[CurrentUnitOfWorkKey];
+				//if(globalNonThreadSafeUnitOfwork != null)
+				//    return globalNonThreadSafeUnitOfwork;
+				//return (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
+			}
+			internal set { Local.Data[CurrentUnitOfWorkKey] = value; }
+		}
 
-        /// <summary>
-        /// Gets the current session.
-        /// </summary>
-        /// <value>The current session.</value>
-        public static ISession CurrentSession
-        {
-            get { return IoC.Resolve<IUnitOfWorkFactory>().CurrentSession; }
-            internal set { IoC.Resolve<IUnitOfWorkFactory>().CurrentSession = value; }
-        }
+		/// <summary>
+		/// Gets the current session.
+		/// </summary>
+		/// <value>The current session.</value>
+		public static ISession CurrentSession
+		{
+			get { return IoC.Resolve<IUnitOfWorkFactory>().CurrentSession; }
+			internal set { IoC.Resolve<IUnitOfWorkFactory>().CurrentSession = value; }
+		}
 
-        /// <summary>
-        /// Gets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
-        /// </summary>
-        /// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
-        /// <value>The current session for this entity.</value>
-        public static ISession GetCurrentSessionFor(Type typeOfEntity)
-        {
-            return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(typeOfEntity);
-        }
+		/// <summary>
+		/// Gets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+		/// </summary>
+		/// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+		/// <value>The current session for this entity.</value>
+		public static ISession GetCurrentSessionFor(Type typeOfEntity)
+		{
+			return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(typeOfEntity);
+		}
 
-        public static ISession GetCurrentSessionFor(string name)
-        {
-            return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(name);
-        }
-
-
-        /// <summary>
-        /// Sets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
-        /// </summary>
-        /// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
-        /// <param name="session">the session to set</param>
-        public static void SetCurrentSessionFor(Type typeOfEntity, ISession session)
-        {
-            IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSession(typeOfEntity, session);
-        }
+		public static ISession GetCurrentSessionFor(string name)
+		{
+			return IoC.Resolve<IUnitOfWorkFactory>().GetCurrentSessionFor(name);
+		}
 
 
-        /// <summary>
-        /// Called internally to clear the current UoW and move to the previous one.
-        /// </summary>
-        public static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
-        {
-            Current = unitOfWork.Previous;
-        }
-    }
+		/// <summary>
+		/// Sets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+		/// </summary>
+		/// <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+		/// <param name="session">the session to set</param>
+		public static void SetCurrentSessionFor(Type typeOfEntity, ISession session)
+		{
+			IoC.Resolve<IUnitOfWorkFactory>().SetCurrentSession(typeOfEntity, session);
+		}
+
+
+		/// <summary>
+		/// Called internally to clear the current UoW and move to the previous one.
+		/// </summary>
+		public static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
+		{
+			IUnitOfWorkAware[] awareImplmenters = IoC.ResolveAll<IUnitOfWorkAware>();
+			foreach (var workAware in awareImplmenters)
+				workAware.UnitOfWorkDisposing(Current);
+			
+			IUnitOfWork disposed = Current;
+			Current = unitOfWork.Previous;
+			
+			foreach (var workAware in awareImplmenters)
+				workAware.UnitOfWorkDisposed(disposed);
+		}
+	}
 }

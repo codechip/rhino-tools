@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Web;
@@ -127,28 +128,22 @@ namespace Rhino.Commons
 		    unitOfWorkFactory.CurrentSession = session;
 		}
 
-	    public void MoveUnitOfWorkFromAspSessionIntoRequestContext(out IUnitOfWork iUoW, out Guid? LongConversationId)
+	    public void LoadUnitOfWorkFromHashtable(Hashtable hashtable, out IUnitOfWork iUoW, out Guid? LongConversationId)
 		{
-			iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
-			LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
-			ISession[] sessions = (ISession[])HttpContext.Current.Session[CurrentNHibernateSessionKey];
+			iUoW = (IUnitOfWork)hashtable[UnitOfWork.CurrentUnitOfWorkKey];
+			LongConversationId = (Guid?)hashtable[UnitOfWork.CurrentLongConversationIdKey];
+			ISession[] sessions = (ISession[])hashtable[CurrentNHibernateSessionKey];
 			for (int i = 0; i < Count - 1; i++)
 			{
 				this[i].CurrentSession = sessions[i];
 			}
-
-
-			//avoids the temptation to access UnitOfWork from the HttpSession!
-			HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-			HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
-			HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
 		}
 
-		public void SaveUnitOfWorkToAspSession()
+		public void SaveUnitOfWorkToHashtable(Hashtable hashtable)
 		{
-			HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-			HttpContext.Current.Session[CurrentNHibernateSessionKey] = ConvertAll<ISession>(FactoryToSession).ToArray();
-			HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = UnitOfWork.CurrentLongConversationId;
+			hashtable[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+			hashtable[CurrentNHibernateSessionKey] = ConvertAll<ISession>(FactoryToSession).ToArray();
+			hashtable[UnitOfWork.CurrentLongConversationIdKey] = UnitOfWork.CurrentLongConversationId;
 		}
 
 		private ISession FactoryToSession(IUnitOfWorkFactory factory)

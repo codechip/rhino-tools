@@ -119,8 +119,10 @@
     <Compile Include="UnitOfWork\BaseUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkAware.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\IUnitOfWorkImplementor.cs" />
+    <Compile Include="UnitOfWork\LongConversationManager.cs" />
     <Compile Include="UnitOfWork\MultipleNHibernateTransaction.cs" />
     <Compile Include="UnitOfWork\MultipleNHibernateUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\MultipleUnitOfWorkImplementor.cs" />
