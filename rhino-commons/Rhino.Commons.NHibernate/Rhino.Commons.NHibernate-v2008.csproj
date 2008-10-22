@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -131,6 +131,7 @@
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="With\With.Cache.cs" />
+    <Compile Include="With\With.AuthoRollbackTransaction.cs" />
     <Compile Include="With\With.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
