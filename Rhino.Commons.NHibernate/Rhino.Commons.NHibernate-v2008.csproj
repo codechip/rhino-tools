@@ -131,7 +131,7 @@
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
     <Compile Include="UnitOfWork\UnitOfWorkNestingOptions.cs" />
     <Compile Include="With\With.Cache.cs" />
-    <Compile Include="With\With.AuthoRollbackTransaction.cs" />
+    <Compile Include="With\With.AutoRollbackTransaction.cs" />
     <Compile Include="With\With.Transaction.cs" />
   </ItemGroup>
   <ItemGroup>
