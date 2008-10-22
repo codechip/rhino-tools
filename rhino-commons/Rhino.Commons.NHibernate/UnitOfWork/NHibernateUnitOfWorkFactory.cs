@@ -233,26 +233,19 @@ namespace Rhino.Commons
 		}
 
 
-		public void MoveUnitOfWorkFromAspSessionIntoRequestContext(
-			out IUnitOfWork iUoW, out Guid? LongConversationId)
+		public void LoadUnitOfWorkFromHashtable(Hashtable hashtable, out IUnitOfWork iUoW, out Guid? LongConversationId)
 		{
-			iUoW = (IUnitOfWork)HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey];
-			LongConversationId = (Guid?)HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey];
+			iUoW = (IUnitOfWork)hashtable[UnitOfWork.CurrentUnitOfWorkKey];
+			LongConversationId = (Guid?)hashtable[UnitOfWork.CurrentLongConversationIdKey];
 
-			UnitOfWork.CurrentSession = (ISession)HttpContext.Current.Session[CurrentNHibernateSessionKey];
-
-			//avoids the temptation to access UnitOfWork from the HttpSession!
-			HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = null;
-			HttpContext.Current.Session[CurrentNHibernateSessionKey] = null;
-			HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] = null;
+			UnitOfWork.CurrentSession = (ISession)hashtable[CurrentNHibernateSessionKey];
 		}
 
-		public virtual void SaveUnitOfWorkToAspSession()
+		public virtual void SaveUnitOfWorkToHashtable(Hashtable hashtable)
 		{
-			HttpContext.Current.Session[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
-			HttpContext.Current.Session[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
-			HttpContext.Current.Session[UnitOfWork.CurrentLongConversationIdKey] =
-				UnitOfWork.CurrentLongConversationId;
+			hashtable[UnitOfWork.CurrentUnitOfWorkKey] = UnitOfWork.Current;
+			hashtable[CurrentNHibernateSessionKey] = UnitOfWork.CurrentSession;
+			hashtable[UnitOfWork.CurrentLongConversationIdKey] = UnitOfWork.CurrentLongConversationId;
 		}
 
         public ISession GetCurrentSessionFor(string name)

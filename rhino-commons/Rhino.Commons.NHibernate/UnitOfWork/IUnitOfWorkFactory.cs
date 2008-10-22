@@ -27,6 +27,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Data;
 using NHibernate;
 
@@ -61,15 +62,16 @@ namespace Rhino.Commons
         ///  When using LongConversation UnitOfWorkApplication uses this method to restore the
         ///  conversation between requests
         /// </summary>
+        /// <param name="hashtable">the Hashtable to load the unit of work from</param>
         /// <param name="iUoW">the IUnitOfWork that had been restored</param>
         /// <param name="LongConversationId">the Long Conversation Id</param>
-	    void MoveUnitOfWorkFromAspSessionIntoRequestContext(
-	        out IUnitOfWork iUoW, out Guid? LongConversationId);
+	    void LoadUnitOfWorkFromHashtable(Hashtable hashtable, out IUnitOfWork iUoW, out Guid? LongConversationId);
 
         /// <summary>
         ///  When using LongConversation UnitOfWorkApplication uses this method to store the
         ///  conversation between requests
         /// </summary>
-	    void SaveUnitOfWorkToAspSession();
+		/// <param name="hashtable">the Hashtable to save the unit of work to</param>
+	    void SaveUnitOfWorkToHashtable(Hashtable hashtable);
 	}
 }
