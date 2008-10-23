@@ -153,9 +153,7 @@ namespace Rhino.Commons
 
 		private void ThereIsExactlyOneFactory()
 		{
-			if (Count == 0)
-				throw new InvalidOperationException("You are not in a unit of work");
-			if (Count > 1)
+			if (Count != 1)
 				throw new InvalidOperationException(string.Format("There are {0} unit(s) of work, pick one using GetCurrentSessionFor<TEntity>", Count));
 		}
 	}

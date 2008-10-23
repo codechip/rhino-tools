@@ -173,7 +173,7 @@ namespace Rhino.Commons
 				return existing;
 			}
 			Current = IoC.Resolve<IUnitOfWorkFactory>().Create(connection, existing);
-			foreach (var workAware in IoC.ResolveAll<IUnitOfWorkAware>())
+			foreach (IUnitOfWorkAware workAware in IoC.ResolveAll<IUnitOfWorkAware>())
 				workAware.UnitOfWorkStarted(Current);
 			return Current;
 		}
@@ -188,9 +188,6 @@ namespace Rhino.Commons
 				if (!IsStarted)
 					throw new InvalidOperationException("You are not in a unit of work");
 				return globalNonThreadSafeUnitOfwork ?? (IUnitOfWork)Local.Data[CurrentUnitOfWorkKey];
-				//if(globalNonThreadSafeUnitOfwork != null)
-				//    return globalNonThreadSafeUnitOfwork;
-				//return (IUnitOfWork) Local.Data[CurrentUnitOfWorkKey];
 			}
 			internal set { Local.Data[CurrentUnitOfWorkKey] = value; }
 		}
@@ -238,13 +235,14 @@ namespace Rhino.Commons
 		public static void DisposeUnitOfWork(IUnitOfWorkImplementor unitOfWork)
 		{
 			IUnitOfWorkAware[] awareImplmenters = IoC.ResolveAll<IUnitOfWorkAware>();
-			foreach (var workAware in awareImplmenters)
+			foreach (IUnitOfWorkAware workAware in awareImplmenters)
 				workAware.UnitOfWorkDisposing(Current);
 			
-			IUnitOfWork disposed = Current;
+			IUnitOfWork disposed = null;
+			if(IsStarted) disposed = Current;
 			Current = unitOfWork.Previous;
 			
-			foreach (var workAware in awareImplmenters)
+			foreach (IUnitOfWorkAware workAware in awareImplmenters)
 				workAware.UnitOfWorkDisposed(disposed);
 		}
 	}
