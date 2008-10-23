@@ -55,9 +55,10 @@ namespace Rhino.Commons.Test.UoW
 
 		internal class UnitOfWorkAwareImplementor : IUnitOfWorkAware
 		{
-			public int StartedCalled { get; set; }
-			public int DisposingCalled { get; set; }
-			public int DisposedCalled { get; set; }
+			private int startedCalled, disposingCalled, disposedCalled;
+			public int StartedCalled { get{return startedCalled;} set{startedCalled = value;} }
+			public int DisposingCalled { get{return disposingCalled;} set{disposingCalled = value;} }
+			public int DisposedCalled { get{return disposedCalled;} set{disposedCalled = value;} }
 
 
 			public void UnitOfWorkStarted(IUnitOfWork unitOfWork)
