@@ -43,15 +43,16 @@ namespace Rhino.Commons.Facilities
         { 
         }
 
+        public NHibernateUnitOfWorkFacility(string assembly)
+			:this(new NHibernateUnitOfWorkFacilityConfig(assembly))
+        {
+        }
+
 		public NHibernateUnitOfWorkFacility(NHibernateUnitOfWorkFacilityConfig config)
 		{
             this.config = config;
 		}
 
-        public NHibernateUnitOfWorkFacility(string assembly)
-        {
-            this.config = new NHibernateUnitOfWorkFacilityConfig(assembly);
-        }
 
 		protected override void Init()
 		{
