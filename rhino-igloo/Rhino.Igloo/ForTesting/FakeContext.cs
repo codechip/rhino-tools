@@ -53,7 +53,7 @@ namespace Rhino.Igloo.Tests
         private TimeSpan? refreshWaitTime;
         private string refreshUrl;
         private bool hasEnded;
-        private readonly string rawUrl = null;
+        private string rawUrl = null;
         private bool isIE7;
         private readonly IDictionary<string, string> context = new Dictionary<string, string>();
 
@@ -263,6 +263,7 @@ namespace Rhino.Igloo.Tests
         public string RawUrl
         {
             get { return rawUrl; }
+			set { rawUrl = value; }
         }
 
         /// <summary>
