@@ -245,5 +245,12 @@ namespace Rhino.Commons
 			foreach (IUnitOfWorkAware workAware in awareImplmenters)
 				workAware.UnitOfWorkDisposed(disposed);
 		}
+        /// <summary>
+        /// Called when finished with UnitOfWorkFactory to explicately close the SessionFactory
+        /// </summary>
+        public static void DisposeUnitOfWorkFactory()
+        {
+            IoC.Resolve<IUnitOfWorkFactory>().Dispose();
+        }
 	}
 }

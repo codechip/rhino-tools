@@ -237,5 +237,14 @@ namespace Rhino.Commons
 		{
 			CurrentSession = session;
 		}
+
+	    public void Dispose()
+	    {
+            ISessionFactoryHolder holder = ActiveRecordMediator.GetSessionFactoryHolder();
+            foreach (ISessionFactory factory in holder.GetSessionFactories())
+            {
+                factory.Dispose();
+            }
+	    }
 	}
 }

@@ -33,7 +33,7 @@ using NHibernate;
 
 namespace Rhino.Commons
 {
-    public interface IUnitOfWorkFactory
+    public interface IUnitOfWorkFactory : IDisposable 
 	{
 		/// <summary>
 		/// Initialize the factory, note that this may be called more than once

@@ -267,5 +267,10 @@ namespace Rhino.Commons
 		{
 			CurrentSession = session;
 		}
+
+	    public void Dispose()
+	    {
+            NHibernateSessionFactory.Dispose();
+	    }
 	}
 }

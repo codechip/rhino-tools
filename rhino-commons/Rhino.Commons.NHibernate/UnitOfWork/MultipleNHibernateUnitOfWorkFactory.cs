@@ -156,5 +156,13 @@ namespace Rhino.Commons
 			if (Count != 1)
 				throw new InvalidOperationException(string.Format("There are {0} unit(s) of work, pick one using GetCurrentSessionFor<TEntity>", Count));
 		}
+
+	    public void Dispose()
+	    {
+            foreach (NHibernateUnitOfWorkFactory factory in this)
+            {
+                factory.Dispose();
+            }
+	    }
 	}
 }
