@@ -33,6 +33,7 @@ using System.Reflection;
 using Castle.Windsor;
 using NHibernate;
 using NHibernate.Cfg;
+using Environment=NHibernate.Cfg.Environment;
 
 namespace Rhino.Commons.ForTesting
 {
@@ -351,6 +352,9 @@ namespace Rhino.Commons.ForTesting
 
             private ISessionFactory BuildSessionFactory()
             {
+                //TODO: This is hack for rev 1705. there should be a better way
+                if (Configuration.GetProperty(Environment.ProxyFactoryFactoryClass) == null)
+                    Configuration.Properties[Environment.ProxyFactoryFactoryClass] = "NHibernate.ProxyGenerators.CastleDynamicProxy.ProxyFactoryFactory, NHibernate.ProxyGenerators.CastleDynamicProxy";
             	  ISessionFactory sessionFactory = Configuration.BuildSessionFactory();
 
                 foreach (INHibernateInitializationAware initializer in GetNHibernateInitializers())
