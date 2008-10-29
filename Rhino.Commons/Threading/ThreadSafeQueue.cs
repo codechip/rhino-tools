@@ -32,21 +32,11 @@ using System.Threading;
 
 namespace Rhino.Commons
 {
-	public interface IQueue<T>
+    public class ThreadSafeQueue<T> : IQueue<T>
 	{
-		void Enqueue(T o);
-		T Dequeue();
-	}
+		private readonly Queue q = new Queue();
 
-	public class ThreadSafeQueue<T> : IQueue<T>
-	{
-		private Queue q = new Queue();
-
-		public ThreadSafeQueue()
-		{
-		}
-
-		public void Enqueue(T o)
+	    public void Enqueue(T o)
 		{
 			lock (this)
 			{
@@ -66,7 +56,18 @@ namespace Rhino.Commons
 				return (T)q.Dequeue();
 			}
 		}
-	    
+
+	    public bool IsEmpty
+	    {
+            get
+            {
+                lock(this)
+                {
+                    return q.Count == 0;
+                }
+            }
+	    }
+
 	    public bool TryDequeue(out T item)
 	    {
             lock (this)
@@ -81,5 +82,4 @@ namespace Rhino.Commons
             }
 	    }
 	}
-
 }
