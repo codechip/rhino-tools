@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="HumanResources.Model"
+                   namespace="HumanResources.Model">
+  
+	<class name="Salary" >
+	
+    <id name="Id">
+			<generator class="native" />
+		</id>
+    <property name="SecurityKey"/>
+    <property name="Name" />
+		<property name="HourlyRate" />
+  </class>
+</hibernate-mapping>

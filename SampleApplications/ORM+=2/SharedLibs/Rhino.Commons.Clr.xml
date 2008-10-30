@@ -1,0 +1,944 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Rhino.Commons.Clr</name>
+    </assembly>
+    <members>
+        <member name="T:Rhino.Commons.Exceptions.ElementNotFoundException">
+            <summary>
+            Raised when a collection iteration was asked to find an element that
+            does not exists
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.ElementNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.ElementNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.ElementNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.ElementNotFoundException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.ElementNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.ElementNotFoundException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+        </member>
+        <member name="T:Rhino.Commons.Exceptions.HackExpiredException">
+            <summary>
+            Raised when a <see cref="T:Rhino.Commons.Exceptions.TimeBombHack"/> has expired.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.HackExpiredException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.HackExpiredException"/> class.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.HackExpiredException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.HackExpiredException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.HackExpiredException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.HackExpiredException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="inner">The inner.</param>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.HackExpiredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.HackExpiredException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+        </member>
+        <member name="T:Rhino.Commons.Exceptions.PerformancePolicyViolationException">
+            <summary>
+            Raised when the performance policy or SLA are raised.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.PerformancePolicyViolationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.PerformancePolicyViolationException"/> class.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.PerformancePolicyViolationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.PerformancePolicyViolationException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.PerformancePolicyViolationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.PerformancePolicyViolationException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="inner">The inner.</param>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.PerformancePolicyViolationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.Exceptions.PerformancePolicyViolationException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+        </member>
+        <member name="T:Rhino.Commons.Exceptions.TimeBombHack">
+            <summary>
+            Helper class that allow to specify temporary hacks in a 
+            simple fashion
+            </summary>
+            <example>
+            <code>
+            TimeBombHack.Until(new DateTime(2007,12,31), "Ignoring security for the client demo");
+            </code>
+            </example>
+        </member>
+        <member name="M:Rhino.Commons.Exceptions.TimeBombHack.Until(System.DateTime,System.String)">
+            <summary>
+            Will throw with the specified message after the 
+            <param name="expiredAt">The expiry date</param>
+            <param name="message">The message.</param>
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.LocalDataImpl.ILocalData">
+            <summary>
+            Implementors of this interface are used to store data
+            in a local fashion
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.LocalDataImpl.ILocalData.Clear">
+            <summary>
+            Clears this instance.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.LocalDataImpl.ILocalData.Item(System.Object)">
+            <summary>
+            Gets or sets the <see cref="T:System.Object"/> with the specified key.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Rhino.Commons.Local">
+            <summary>
+            This class is key for handling local data, data that is private
+            to the current context, be it the current thread, the current web 
+            request, etc.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.Local.Data">
+            <summary>
+            Gets the current data
+            </summary>
+            <value>The data.</value>
+        </member>
+        <member name="P:Rhino.Commons.Local.RunningInWeb">
+            <summary>
+            Gets a value indicating whether running in the web context
+            </summary>
+            <value><c>true</c> if [running in web]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Rhino.Commons.AssemblyUtil">
+            <summary>
+            Assembly helpers.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.AssemblyUtil.LoadAssembly(System.String)">
+            <summary>
+            Loads the assembly with the supplied assembly name.
+            </summary>
+            <param name="assemblyName">The assembly name.</param>
+            <returns>The loaded assembly.</returns>
+        </member>
+        <member name="T:Rhino.Commons.Collection">
+            <summary>
+            Helper class for collections
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Containing``1(``0[])">
+            <summary>
+            Return an IList containing all the items passed in the construtor.
+            A cheap way to create a list from known variables, basically.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items">The items.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Exists``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Determines whether an element matching a predicate exists
+            in the collection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <param name="predicate">The predicate to test.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.First``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Get the first item in the collection, if it exists
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Last``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Get the last element in the collection, if it exists
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Range``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+            <summary>
+            Selects the items in the collection in the specified range.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection to get a range of elements from.</param>
+            <param name="index">The index at which to start collecting elements.</param>
+            <param name="count">The number of elements to collect.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.SelectAll``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Selects all the items in the collection 
+            that match the specified predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Find``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Find the first item that match the given predicate, or
+            default value if not element was matched
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items">The items.</param>
+            <param name="pred">The pred.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.SelectAllNot``1(System.Collections.Generic.IEnumerable{``0},System.Predicate{``0})">
+            <summary>
+            Selects all items in the collection that does not 
+            match the specified predicate
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <param name="predicate">The predicate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Execute the action on all the items in the collection
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ToArray``1(System.Object)">
+            <summary>
+            Convert an untyped obj to array of specified type
+            The type is assumed to implement IEnumerable
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj">The list.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ToArray``1(System.Collections.IEnumerable)">
+            <summary>
+            Convert the given IEnumerable to an array
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">The list.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ToBindingList``1(System.Collections.IEnumerable)">
+            <summary>
+            Converts the list to a binding list
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list">The list.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.GroupBy``2(System.Collections.Generic.ICollection{``0},System.Converter{``0,``1})">
+            <summary>
+            Groups the items in the collection according to the grouping value
+            returned from the converter
+            </summary>
+            <typeparam name="K">The item in the collection</typeparam>
+            <typeparam name="T">The grouping item</typeparam>
+            <param name="collection">The collection.</param>
+            <param name="converter">The converter.</param>
+            <example>
+            <code>
+            <![CDATA[
+            int [] nums = { 1,2,3,4,5,6,7,8,9,10};
+            IDictionary<bool, ICollection<int>> results = Collection.GroupBy<int, bool>(nums, delegate(int num) { return num % 2 == 0; });
+            ]]>
+            </code>
+            Will output:
+            { 
+            	true :  { 2,4,6,8,10 },
+            	false : { 1,3,5,7,9  },
+            }
+            </example>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Single(System.Collections.ICollection)">
+            <summary>
+            Return a single element from the collection, and throw if 
+            the collection has more than a single item
+            </summary>
+            <param name="collection">The collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ToUniqueCollection``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return a collection where each item from the original collection 
+            appear once and only once
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.ToUniqueCollection``1(System.Collections.IEnumerable)">
+            <summary>
+            Return a collection where each item from the original collection 
+            appear once and only once
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collection">The collection.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Map``2(System.Collections.Generic.IEnumerable{``0},System.Converter{``0,``1})">
+            <summary>
+            Translate from one type to another using the converter
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="source">The source.</param>
+            <param name="converter">The converter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Collection.Reduce``2(System.Collections.Generic.IEnumerable{``0},``1,Rhino.Commons.Collection.Accumulator{``0,``1})">
+            <summary>
+            Reduces the specified source from a collection to the <typeparamref name="TResult"/>
+            </summary>
+            <typeparam name="TSource">The type of the source.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="source">The source.</param>
+            <param name="startValue">The start value.</param>
+            <param name="accumulator">The accumulator.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rhino.Commons.Collection.Accumulator`2">
+            <summary>
+            Delegate for accumulating the values
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.DateUtil">
+            <summary>
+            Helper class for dates
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.Combine(System.DateTime,System.DateTime)">
+            <summary>
+            Combines the date part of the first date with the 
+            time part of the second part
+            </summary>
+            <param name="datePart">The date part.</param>
+            <param name="timePart">The time part.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.StartMonth(System.DateTime)">
+            <summary>
+            Get the start of the month of this date
+            </summary>
+            <param name="date">The date.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.EndMonth(System.DateTime)">
+            <summary>
+            Get the end of the month from this date
+            </summary>
+            <param name="date">The date.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.Next(System.DayOfWeek)">
+            <summary>
+            Get the next date that match the day of the week
+            </summary>
+            <param name="dayOfWeek">The day of week.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.Previous(System.DayOfWeek)">
+            <summary>
+            Get the previous date that match the day of the week
+            </summary>
+            <param name="dayOfWeek">The day of week.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.StartWeek(System.DateTime)">
+            <summary>
+            Get the start of the ween this date is on
+            </summary>
+            <param name="time">The time.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.DateUtil.EndWeek(System.DateTime)">
+            <summary>
+            Get the end of the ween this date is on
+            </summary>
+            <param name="time">The time.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rhino.Commons.Func`1">
+            <summary>
+            Common delegate definition
+            </summary>
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`2">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`3">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`4">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`5">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`6">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`7">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`8">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`9">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Func`10">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`1">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`2">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`3">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`4">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`5">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`6">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`7">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`8">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Proc`9">
+            <summary>
+            Common delegate definition
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.DisposableAction`1">
+            <summary>
+            Better sytnax for context operation.
+            Wraps a delegate that is executed when the Dispose method is called.
+            This allows to do context sensitive things easily.
+            Basically, it mimics Java's anonymous classes.
+            </summary>
+            <typeparam name="T">
+            The type of the parameter that the delegate to execute on dispose
+            will accept
+            </typeparam>
+        </member>
+        <member name="M:Rhino.Commons.DisposableAction`1.#ctor(Rhino.Commons.Proc{`0},`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.DisposableAction`1"/> class.
+            </summary>
+            <param name="action">The action to execute on dispose</param>
+            <param name="val">The value that will be passed to the action on dispose</param>
+        </member>
+        <member name="M:Rhino.Commons.DisposableAction`1.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.DisposableAction`1.Value">
+            <summary>
+            Gets the value associated with this action
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Rhino.Commons.DisposableAction">
+            <summary>
+            Better sytnax for context operation.
+            Wraps a delegate that is executed when the Dispose method is called.
+            This allows to do context sensitive things easily.
+            Basically, it mimics Java's anonymous classes.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.DisposableAction.#ctor(Rhino.Commons.Proc)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.DisposableAction"/> class.
+            </summary>
+            <param name="action">The action to execute on dispose</param>
+        </member>
+        <member name="M:Rhino.Commons.DisposableAction.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.EventArgs`1">
+            <summary>
+            Generic version of EveryArgs, allow to avoid 
+            defining custom  EventArgs types 
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Rhino.Commons.EventArgs`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.EventArgs`1"/> class.
+            </summary>
+            <param name="item">The item.</param>
+        </member>
+        <member name="P:Rhino.Commons.EventArgs`1.Item">
+            <summary>
+            Gets or sets the item for this event args
+            </summary>
+            <value>The item.</value>
+        </member>
+        <member name="T:Rhino.Commons.Guard">
+            <summary>
+            Helper class for guard statements, which allow prettier
+            code for guard clauses
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Guard.Against(System.Boolean,System.String)">
+            <summary>
+            Will throw a <see cref="T:System.InvalidOperationException"/> if the assertion
+            is true, with the specificied message.
+            </summary>
+            <param name="assertion">if set to <c>true</c> [assertion].</param>
+            <param name="message">The message.</param>
+            <example>
+            Sample usage:
+            <code>
+            Guard.Against(string.IsNullOrEmpty(name), "Name must have a value");
+            </code>
+            </example>
+        </member>
+        <member name="M:Rhino.Commons.Guard.Against``1(System.Boolean,System.String)">
+            <summary>
+            Will throw exception of type <typeparamref name="TException"/>
+            with the specified message if the assertion is true
+            </summary>
+            <typeparam name="TException"></typeparam>
+            <param name="assertion">if set to <c>true</c> [assertion].</param>
+            <param name="message">The message.</param>
+            <example>
+            Sample usage:
+            <code>
+            <![CDATA[
+            Guard.Against<ArgumentException>(string.IsNullOrEmpty(name), "Name must have a value");
+            ]]>
+            </code>
+            </example>
+        </member>
+        <member name="T:Rhino.Commons.PropertyIndexer`2">
+            <summary>
+            Allow to add named indexers to language like C#, that doesn't
+            support them. 
+            </summary>
+            <typeparam name="RetType">The type of the return type.</typeparam>
+            <typeparam name="IndexType">The type of the index type.</typeparam>
+        </member>
+        <member name="M:Rhino.Commons.PropertyIndexer`2.#ctor(Rhino.Commons.Func{`0,`1},Rhino.Commons.Proc{`1,`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.PropertyIndexer`2"/> class.
+            </summary>
+            <param name="getter">The getter.</param>
+            <param name="setter">The setter.</param>
+        </member>
+        <member name="P:Rhino.Commons.PropertyIndexer`2.Item(`1)">
+            <summary>
+            Gets or sets the RetType at the specified index.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Rhino.Commons.PropertyIndexerGetter`2">
+            <summary>
+            Allow to add named getter indexers to language like C#, that doesn't
+            support them. 
+            </summary>
+            <typeparam name="RetType">The type of the ret type.</typeparam>
+            <typeparam name="IndexType">The type of the index type.</typeparam>
+        </member>
+        <member name="M:Rhino.Commons.PropertyIndexerGetter`2.#ctor(Rhino.Commons.Func{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.PropertyIndexerGetter`2"/> class.
+            </summary>
+            <param name="getter">The getter.</param>
+        </member>
+        <member name="P:Rhino.Commons.PropertyIndexerGetter`2.Item(`1)">
+            <summary>
+            Gets the RetType at the specified index.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Rhino.Commons.PropertyIndexerSetter`2">
+            <summary>
+            Allow to add named setter indexers to language like C#, that doesn't
+            support them. 
+            </summary>
+            <typeparam name="RetType">The type of the ret type.</typeparam>
+            <typeparam name="IndexType">The type of the index type.</typeparam>
+        </member>
+        <member name="M:Rhino.Commons.PropertyIndexerSetter`2.#ctor(Rhino.Commons.Proc{`1,`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.PropertyIndexerSetter`2"/> class.
+            </summary>
+            <param name="setter">The setter.</param>
+        </member>
+        <member name="P:Rhino.Commons.PropertyIndexerSetter`2.Item(`1)">
+            <summary>
+            Sets the RetType with the specified ERROR.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Rhino.Commons.StaticReflection">
+            <summary>
+            Helper class to use delegate inference in order to get
+            faster GetMethod approach
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo(Rhino.Commons.Proc)">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``1(Rhino.Commons.Proc{``0})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``2(Rhino.Commons.Proc{``0,``1})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``3(Rhino.Commons.Proc{``0,``1,``2})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``4(Rhino.Commons.Proc{``0,``1,``2,``3})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``5(Rhino.Commons.Proc{``0,``1,``2,``3,``4})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``6(Rhino.Commons.Proc{``0,``1,``2,``3,``4,``5})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``7(Rhino.Commons.Proc{``0,``1,``2,``3,``4,``5,``6})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``8(Rhino.Commons.Proc{``0,``1,``2,``3,``4,``5,``6,``7})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``9(Rhino.Commons.Proc{``0,``1,``2,``3,``4,``5,``6,``7,``8})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``1(Rhino.Commons.Func{``0})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``2(Rhino.Commons.Func{``0,``1})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``3(Rhino.Commons.Func{``0,``1,``2})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``4(Rhino.Commons.Func{``0,``1,``2,``3})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``5(Rhino.Commons.Func{``0,``1,``2,``3,``4})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``6(Rhino.Commons.Func{``0,``1,``2,``3,``4,``5})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``7(Rhino.Commons.Func{``0,``1,``2,``3,``4,``5,``6})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``8(Rhino.Commons.Func{``0,``1,``2,``3,``4,``5,``6,``7})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``9(Rhino.Commons.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.StaticReflection.MethodInfo``10(Rhino.Commons.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9})">
+            <summary>
+            Get the method of the delegate
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.ThereBeDragonsAttribute">
+            <summary>
+            This marker attribute decorate dangerous parts of the code
+            where for some reason the developer decided to do something in a way
+            that is not straight-forward.
+            This usually means that this is using some functionality that is not fully supported.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ThereBeDragonsAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.ThereBeDragonsAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ThereBeDragonsAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.ThereBeDragonsAttribute"/> class.
+            </summary>
+            <param name="whyAreYouUsingThis">The why are you using this.</param>
+        </member>
+        <member name="T:Rhino.Commons.Use">
+            <summary>
+            Helper class to provide simple data access, when we want to access the ADO.Net
+            library directly. 
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Use.Transaction``1(System.String,Rhino.Commons.Use.Func{``0})">
+            <summary>
+            Execute the specified delegate inside a transaction and return 
+            the result of the delegate.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionStringName">The name of the named connection string in the configuration file</param>
+            <param name="actionToExecute">The action to execute</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Use.Transaction(System.String,Rhino.Commons.Use.Proc)">
+            <summary>
+            Execute the specified delegate inside a transaction
+            </summary>
+            <param name="connectionStringName">Name of the connection string.</param>
+            <param name="actionToExecute">The action to execute.</param>
+        </member>
+        <member name="M:Rhino.Commons.Use.Transaction(System.String,System.Data.IsolationLevel,Rhino.Commons.Use.Proc)">
+            <summary>
+            Execute the specified delegate inside a transaction with the specific
+            isolation level 
+            </summary>
+            <param name="connectionStringName">Name of the connection string.</param>
+            <param name="isolationLevel">The isolation level.</param>
+            <param name="actionToExecute">The action to execute.</param>
+        </member>
+        <member name="M:Rhino.Commons.Use.DisposeTransaction">
+            <summary>
+            Disposes the transaction.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Use.RollbackTransaction">
+            <summary>
+            Rollbacks the transaction.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Use.CommitTransaction">
+            <summary>
+            Commits the transaction.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Use.StartTransaction(System.String,System.Data.IsolationLevel)">
+            <summary>
+            Starts the transaction.
+            </summary>
+            <param name="name">The name.</param>
+            <param name="isolation">The isolation.</param>
+        </member>
+        <member name="M:Rhino.Commons.Use.Connection(System.String)">
+            <summary>
+            Creates an open connection for a given named connection string, using the provider name
+            to select the proper implementation
+            </summary>
+            <param name="name">The name.</param>
+            <returns>The open connection</returns>
+        </member>
+        <member name="P:Rhino.Commons.Use.ActiveConnection">
+            <summary>
+            Gets or sets the active connection.
+            </summary>
+            <value>The active connection.</value>
+        </member>
+        <member name="P:Rhino.Commons.Use.ActiveTransaction">
+            <summary>
+            Gets or sets the active transaction.
+            </summary>
+            <value>The active transaction.</value>
+        </member>
+        <member name="P:Rhino.Commons.Use.TransactionCounter">
+            <summary>
+            Gets or sets the transaction counter.
+            </summary>
+            <value>The transaction counter.</value>
+        </member>
+        <member name="T:Rhino.Commons.Use.Func`1">
+            <summary>
+            Delegate to execute an action with a command
+            and return a result: <typeparam name="T"/>
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Use.Proc">
+            <summary>
+            Delegate to execute an action with a command
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.Validation">
+            <summary>
+            Helper class for performing validation
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Validation.DateRange(System.DateTime,System.DateTime)">
+            <summary>
+            Validate that the start date comes beore the end.
+            </summary>
+            <param name="start">The start.</param>
+            <param name="end">The end.</param>
+        </member>
+        <member name="M:Rhino.Commons.Validation.NotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Validate that the string in not null or empty
+            </summary>
+            <param name="str">The STR.</param>
+            <param name="name">The name.</param>
+        </member>
+        <member name="M:Rhino.Commons.Validation.NotNull(System.Object,System.String)">
+            <summary>
+            Validate that the object is not null
+            </summary>
+            <param name="obj">The obj.</param>
+            <param name="paramName">Name of the param.</param>
+        </member>
+        <member name="M:Rhino.Commons.Validation.InRange(System.IComparable,System.IComparable,System.IComparable,System.String)">
+            <summary>
+            Validate overlap of comparables
+            </summary>
+            <param name="start">The start.</param>
+            <param name="end">The end.</param>
+            <param name="obj">The obj.</param>
+            <param name="paramName">Name of the param.</param>
+        </member>
+        <member name="M:Rhino.Commons.Validation.InDateRange(System.DateTime,System.DateTime,System.DateTime,System.DateTime)">
+            <summary>
+            Validate overlap of dates
+            </summary>
+            <param name="innerStart">The inner start.</param>
+            <param name="innerEnd">The inner end.</param>
+            <param name="outerStart">The outer start.</param>
+            <param name="outerEnd">The outer end.</param>
+        </member>
+        <member name="M:Rhino.Commons.Validation.PositiveNumber(System.Int32,System.String)">
+            <summary>
+            Validate that the number is positive
+            </summary>
+            <param name="number">The number.</param>
+            <param name="name">The name.</param>
+        </member>
+    </members>
+</doc>

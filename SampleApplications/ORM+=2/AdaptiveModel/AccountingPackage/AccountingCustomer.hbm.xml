@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="AccountingPackage"
+                   namespace="AccountingPackage">
+  
+	<class name="AccountingCustomer" >
+	
+    <id name="Id">
+			<generator class="guid.comb" />
+		</id>
+		
+    <property name="Name" />
+		<property name="Debt" />
+	
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,1610 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Rhino.Commons.NHibernate</name>
+    </assembly>
+    <members>
+        <member name="T:Rhino.Commons.INHibernateInitializationAware">
+            <summary>
+            Used to handle extra initialization for configuration and session factory
+            </summary>
+        </member>
+        <member name="T:Rhino.Commons.ForTesting.DatabaseTestFixtureBase">
+            <summary>
+            Responsible for creating the <see cref="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext"/> that a test requires
+            and ensuring this context is current for the execution of that test
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,System.String,Rhino.Commons.ForTesting.MappingInfo)">
+            <summary>
+            Initialize the persistence framework, build a session factory, and
+            initialize the container. If <paramref name="rhinoContainerConfig"/>
+            is <see langword="null"/> or <see cref="F:System.String.Empty">string.Empty</see> a <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> will not be initialized.
+            </summary>
+            <param name="framework">The persistence framework</param>
+            <param name="rhinoContainerConfig">The configuration file to
+            initialize a 
+            <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> or <see langword="null"/>.</param>
+            <param name="databaseName">Name of the database or <see langword="null"/>.</param>
+            <param name="databaseEngine">The database engine that tests should be performed against</param>
+            <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
+            <remarks>
+            If <paramref name="databaseName"/> is <see langword="null"/> or
+            <see cref="F:System.String.Empty"/> a database with a name
+            derived from the other parameters supplied will be created. See
+            <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.NHibernateInitializer.DeriveDatabaseNameFrom(System.Reflection.Assembly)"/> and <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.NHibernateInitializer.DeriveDatabaseNameFrom(Rhino.Commons.ForTesting.DatabaseEngine,System.Reflection.Assembly)"/>
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.MappingInfo)">
+            <summary>
+            See <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,System.String,Rhino.Commons.ForTesting.MappingInfo)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,Rhino.Commons.ForTesting.MappingInfo)">
+            <summary>
+            See <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,System.String,Rhino.Commons.ForTesting.MappingInfo)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernate(Rhino.Commons.ForTesting.PersistenceFramework,Rhino.Commons.ForTesting.MappingInfo)">
+            <summary>
+            See <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,System.String,Rhino.Commons.ForTesting.MappingInfo)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.DisposeAndRemoveAllUoWTestContexts">
+            <summary>
+            Throw away all <see cref="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext"/> objects within <see cref="F:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.Contexts"/>
+            and referenced by <see cref="F:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.CurrentContext"/>. WARNING: Subsequent calls to  <see cref="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.IntializeNHibernateAndIoC(Rhino.Commons.ForTesting.PersistenceFramework,System.String,Rhino.Commons.ForTesting.DatabaseEngine,System.String,Rhino.Commons.ForTesting.MappingInfo)"/>
+            and all its overloads will now take considerably longer as the persistent framework will
+            be initialised a fresh.
+            </summary>
+            <remarks>
+            This method should be used vary sparingly. It is highly unlikely that you will need to
+            call this method between every test.
+            <para>
+            Calling this method will dispose of <see cref="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext"/> objects within
+            <see cref="F:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.Contexts"/>. Each context maintains a reference to a 
+             <see cref="T:Rhino.Commons.RhinoContainer"/>. If this container object is
+            referenced by <see cref="T:Rhino.Commons.IoC"/>.<see cref="P:Rhino.Commons.IoC.Container"/> then any subsequent calls to <see cref="T:Rhino.Commons.IoC"/>.<see cref="M:Rhino.Commons.IoC.Resolve(System.Type)"/> and any of the overloads will throw.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.Initialize(Rhino.Commons.ForTesting.PersistenceFramework,Rhino.Commons.ForTesting.MappingInfo)">
+            <summary>
+            Initializes Nhibernate and/or IoC using Fluent Builder.
+            </summary>
+            <param name="framework">The framework.</param>
+            <param name="mappingInfo">The mapping info.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.NHibernateInitializer.AndIoC(System.String)">
+            <summary>
+            Initializes from the input file path
+            </summary>
+            <param name="rhinoContainerConfigPath">The rhino container config path.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.DatabaseTestFixtureBase.NHibernateInitializer.AndIoC(Castle.Windsor.IWindsorContainer)">
+            <summary>
+            Initializes with the container instance
+            </summary>
+            <param name="container">The container.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rhino.Commons.ForTesting.MappingInfo">
+            <summary>
+            Data holder for NHibernate mapping information
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.MappingInfo.AddQueryLanguageImports(System.Type[])">
+            <summary>
+            Tell NHibernate about the types that are referenced in HQL queries.
+            </summary>
+            <remarks>
+            This method makes a simple assumption: the name of a type referenced in HQL is the same as the 
+            unqalified name of the actual class/struct. If alias names are used, then
+            register these using <see cref="M:Rhino.Commons.ForTesting.MappingInfo.AddQueryLanguageImport(System.String,System.Type)"/>
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateEmbeddedDBTestFixtureBase.FixtureInitialize(System.String,System.Reflection.Assembly[])">
+            <summary>
+            Initialize NHibernate, build a session factory, and initialize the container.
+            If <paramref name="rhinoContainerConfig"/> is <see langword="null"/> or <see cref="F:System.String.Empty">string.Empty</see>
+            a <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> will not be initialized.
+            </summary>
+            <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> 
+            or <see langword="null"/>.</param>
+            <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateEmbeddedDBTestFixtureBase.FixtureInitialize(System.Reflection.Assembly[])">
+            <summary>
+            Initialize NHibernate and builds a session factory
+            Note, this is a costly call so it will be executed only one.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateEmbeddedDBTestFixtureBase.SetupDB">
+            <summary>
+            Creates the in memory db schema using the session.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateEmbeddedDBTestFixtureBase.CreateUnitOfWork">
+            <summary>
+            Starts a <see cref="T:Rhino.Commons.UnitOfWork"/> and creates the in memory db schema.
+            </summary>
+            <example>Using <see cref="T:Rhino.Commons.RhinoContainer"/>, <see cref="T:Rhino.Commons.IoC"/>, and <see cref="T:Rhino.Commons.UnitOfWork"/> in your tests.
+            <code lang="c#" escaped="true">
+            using NUnit.Framework;
+            using Rhino.Commons;
+            using Rhino.Commons.ForTesting;
+            
+            [TestFixture]
+            public class FooTest : NHibernateEmbeddedDBTestFixtureBase
+            {
+            	[TestFixtureSetup]
+            	public void TestFixtureSetup()
+            	{
+            		FixtureInitialize("RhinoContainer.boo", typeof(Foo).Assembly);
+            	}
+            
+            	[Setup]
+            	public void TestSetup()
+            	{
+            		/// Creates a top level UnitOfWork, remember to clean me up
+            		CreateUnitOfWork();
+            	}
+            
+            	[TearDown]
+            	public void TestTearDown()
+            	{
+            		/// Cleanup the top level UnitOfWork
+            		UnitOfWork.Current.Dispose();
+            	}
+            
+            	[Test]
+            	public void CanSaveFoo()
+            	{
+            		Foo f = new Foo();
+            		Foo res = null;
+            		f.Name = "Bar";
+            
+            		Assert.AreEqual(Guid.Empty, f.Id);
+            
+            		With.Transaction(delegate
+            		{
+            			IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Save(f);
+            		});
+            		
+            		Assert.AreNotEqual(Guid.Empty, f.Id);
+            
+            		using(UnitOfWork.Start())
+            			res = IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Load(f.Id);
+            
+            		Assert.IsNotNull(res);
+            		Assert.AreEqual("Bar", res.Name);
+            	}
+            }
+            </code>
+            </example>
+            <seealso cref="T:Rhino.Commons.RhinoContainer"/>
+            <seealso cref="T:Rhino.Commons.IoC"/>
+            <seealso cref="T:Rhino.Commons.UnitOfWork"/>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateEmbeddedDBTestFixtureBase.CreateSession">
+            <summary>
+            Opens an NHibernate session and creates the db schema.
+            </summary>
+            <returns>The open NHibernate session.</returns>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateInMemoryTestFixtureBase.OneTimeInitalize(System.String,System.Reflection.Assembly[])">
+            <summary>
+            Initialize NHibernate, build a session factory, and initialize the container.
+            If <paramref name="rhinoContainerConfig"/> is <see langword="null"/> or <see cref="F:System.String.Empty">string.Empty</see>
+            a <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> will not be initialized.
+            </summary>
+            <param name="rhinoContainerConfig">The configuration file to initialize a <see cref="T:Rhino.Commons.RhinoContainer">RhinoContainer</see> 
+            or <see langword="null"/>.</param>
+            <param name="assemblies">The assemblies to load for NHibernate mapping files.</param>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateInMemoryTestFixtureBase.OneTimeInitalize(System.Reflection.Assembly[])">
+            <summary>
+            Initialize NHibernate and builds a session factory
+            Note, this is a costly call so it will be executed only one.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateInMemoryTestFixtureBase.SetupDB(NHibernate.ISession)">
+            <summary>
+            Creates the in memory db schema using the session.
+            </summary>
+            <param name="session">An open NHibernate session.</param>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateInMemoryTestFixtureBase.CreateUnitOfWork">
+            <summary>
+            Starts a <see cref="T:Rhino.Commons.UnitOfWork"/> and creates the in memory db schema.
+            </summary>
+            <example>Using <see cref="T:Rhino.Commons.RhinoContainer"/>, <see cref="T:Rhino.Commons.IoC"/>, and <see cref="T:Rhino.Commons.UnitOfWork"/> in your tests.
+            <code lang="c#" escaped="true">
+            using NUnit.Framework;
+            using Rhino.Commons;
+            using Rhino.Commons.ForTesting;
+            
+            [TestFixture]
+            public class FooTest : NHibernateInMemoryTest
+            {
+            	[TestFixtureSetup]
+            	public void TestFixtureSetup()
+            	{
+            		OneTimeInitialize("RhinoContainer.boo", typeof(Foo).Assembly);
+            	}
+            
+            	[Setup]
+            	public void TestSetup()
+            	{
+            		/// Creates a top level UnitOfWork, remember to clean me up
+            		CreateUnitOfWork();
+            	}
+            
+            	[TearDown]
+            	public void TestTearDown()
+            	{
+            		/// Cleanup the top level UnitOfWork
+            		UnitOfWork.Current.Dispose();
+            	}
+            
+            	[Test]
+            	public void CanSaveFoo()
+            	{
+            		Foo f = new Foo();
+            		Foo res = null;
+            		f.Name = "Bar";
+            
+            		Assert.AreEqual(Guid.Empty, f.Id);
+            
+            		With.Transaction(delegate
+            		{
+            			IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Save(f);
+            		});
+            		
+            		Assert.AreNotEqual(Guid.Empty, f.Id);
+            
+            		using(UnitOfWork.Start())
+            			res = IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;.Load(f.Id);
+            
+            		Assert.IsNotNull(res);
+            		Assert.AreEqual("Bar", res.Name);
+            	}
+            }
+            </code>
+            </example>
+            <seealso cref="T:Rhino.Commons.RhinoContainer"/>
+            <seealso cref="T:Rhino.Commons.IoC"/>
+            <seealso cref="T:Rhino.Commons.UnitOfWork"/>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.NHibernateInMemoryTestFixtureBase.CreateSession">
+            <summary>
+            Opens an NHibernate session and creates the in memory db schema.
+            </summary>
+            <returns>The open NHibernate session.</returns>
+        </member>
+        <member name="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext">
+            <summary>
+            Encapsulates the construction, initialization and disposal of the
+            database and UnitOfWork context required for testing. Allows different
+            implementations of this context to be substituted at runtime
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.UnitOfWorkTestContext.CreateUnitOfWork">
+            <summary>
+            Starts a <see cref="T:Rhino.Commons.UnitOfWork"/> and creates the db schema.
+            </summary>
+            <example>Using <see cref="T:Rhino.Commons.RhinoContainer"/>, <see cref="T:Rhino.Commons.IoC"/>, and <see cref="T:Rhino.Commons.UnitOfWork"/> in your tests.
+            <code lang="c#" escaped="true">
+            using MbUnit.Framework;
+            using Rhino.Commons;
+            using Rhino.Commons.ForTesting;
+            
+            [TestFixture]
+            public class FooTest : DatabaseTestFixtureBase
+            {
+            	[TestFixtureSetup]
+            	public void TestFixtureSetup()
+            	{
+            		IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, "RhinoContainer.boo", typeof(Foo).Assembly);
+            	}
+            
+            	[Setup]
+            	public void TestSetup()
+            	{
+            		/// Creates a top level UnitOfWork, remember to clean me up
+            		CurrentContext.CreateUnitOfWork();
+            	}
+            
+            	[TearDown]
+            	public void TestTearDown()
+            	{
+            		/// Cleanup the top level UnitOfWork
+            		CurrentContext.DisposeUnitOfWork();
+            	}
+            
+            	[Test]
+            	public void CanSaveFoo()
+            	{
+            		Foo f = new Foo();
+            		Foo res = null;
+            		f.Name = "Bar";
+            
+            		Assert.AreEqual(Guid.Empty, f.Id);
+            
+            		With.Transaction(delegate
+            		{
+            			IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;().Save(f);
+            		});
+            		
+            		Assert.AreNotEqual(Guid.Empty, f.Id);
+            
+            		using(UnitOfWork.Start())
+            			res = IoC.Resolve&lt;IRepository&lt;Foo&gt;&gt;().Load(f.Id);
+            
+            		Assert.IsNotNull(res);
+            		Assert.AreEqual("Bar", res.Name);
+            	}
+            }
+            </code>
+            </example>
+            <seealso cref="T:Rhino.Commons.RhinoContainer"/>
+            <seealso cref="T:Rhino.Commons.IoC"/>
+            <seealso cref="T:Rhino.Commons.UnitOfWork"/>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.UnitOfWorkTestContext.CreateSession">
+            <summary>
+            Opens an NHibernate session and creates the db schema.
+            </summary>
+            <returns>The open NHibernate session.</returns>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.UnitOfWorkTestContext.SetupDatabase(NHibernate.ISession)">
+            <summary>
+            Creates the in db schema using the session.
+            </summary>
+            <param name="session">An open NHibernate session.</param>
+        </member>
+        <member name="T:Rhino.Commons.ForTesting.UnitOfWorkTestContextDbStrategy">
+            <summary>
+            A strategy class that parameterizes a <see cref="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext"/> with database specific implementations
+            </summary>
+            <remarks>
+            This class is a companion to <see cref="T:Rhino.Commons.ForTesting.UnitOfWorkTestContext"/>. Its
+            purpose is to encapsulate behind a common interface the database
+            specific implementations of behaviour required to construct and manage
+            the test context
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.ForTesting.UnitOfWorkTestContextDbStrategy.CreatePhysicalDatabaseMediaFor(Rhino.Commons.ForTesting.DatabaseEngine,System.String)">
+            <summary>
+            Creates the physical database named <paramref name="databaseName"/>.
+            </summary>
+            <remarks>
+            Use this method to create the physical database file. 
+            <para>
+            For MsSqlCe this will create a database file in the file system
+            named <paramref name="databaseName"/>.sdf
+            </para>
+            <para>
+            For MsSql2005 this will create a database named <paramref
+            name="databaseName"/> in the (local) instance of Sql Server 2005 on
+            this machine
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Rhino.Commons.HttpModules.EnsureMaxNumberOfQueriesPerRequestModule">
+            <summary>
+            This verifies that the current request has performed less than the configurable 
+            number of queries (MaxNumberOfQueriesPerRequest).
+            Can be temporarily ignored using ?hack=true
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.HttpModules.EnsureMaxNumberOfQueriesPerRequestModule.QueryCount">
+            <summary>
+            Gets the query count.
+            </summary>
+            <value>The query count.</value>
+        </member>
+        <member name="T:Rhino.Commons.FutureBase">
+            <summary>
+            Base class for the future of a query, when you try to access the real
+            result of the query than all the future queries in the current context
+            (current thread / current request) are executed as a single batch and all
+            their results are loaded in a single round trip.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.FutureBase.ExecuteBatchQuery">
+            <summary>
+            Execute all the queries in the batch.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.FutureBase.ClearBatcher">
+            <summary>
+            Clears the batcher.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.FutureBase.WasLoaded">
+            <summary>
+            Gets a value indicating whether this instance was loaded.
+            </summary>
+            <value><c>true</c> if this query was loaded; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Rhino.Commons.FutureBase.Batcher">
+            <summary>
+            Gets the batcher.
+            </summary>
+            <value>The batcher.</value>
+        </member>
+        <member name="T:Rhino.Commons.FutureQueryOf`1">
+            <summary>
+            Hold the future of a query, when you try to iterate over
+            a instance of <see cref="T:Rhino.Commons.FutureQueryOf`1"/> or access the Results
+            or TotalCount properties, all the future queries in the current context
+            (current thread / current request) are executed as a single batch and all
+            their results are loaded in a single round trip.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="T:Rhino.Commons.FutureValue`1">
+            <summary>
+            Base class for the future of a query, when you try to access the real
+            result of the query than all the future queries in the current context
+            (current thread / current request) are executed as a single batch and all
+            their results are loaded in a single round trip.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.FutureValue`1.#ctor(System.Object,Rhino.Commons.FutureValueOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Rhino.Commons.FutureValue`1"/> class.
+            </summary>
+            <param name="id">The id.</param>
+            <param name="options">The options.</param>
+        </member>
+        <member name="P:Rhino.Commons.FutureValue`1.Value">
+            <summary>
+            Gets the value, initializing the current batch if needed
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:Rhino.Commons.XmlIn.Create(System.String,System.Collections.IEnumerable,System.Int32)">
+            <summary>
+            Creates the specified property.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="values">The values.</param>
+            <param name="maximumNumberOfParametersToNotUseXml">The maximum number of paramters allowed before the XmlIn creates an xml string.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rhino.Commons.EntitiesToRepositories">
+            <summary>
+            This class takes the responsability of inspecting NHibernate's entities
+            and extracting the relevant domain interfaces as separate <see cref="T:Rhino.Commons.IRepository`1"/> 
+            services.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.EntitiesToRepositories.Register(Castle.Windsor.IWindsorContainer,NHibernate.ISessionFactory,System.Type,System.Predicate{System.Type})">
+            <summary>
+            Registers the interfaces of the entities defined in the session factory in the container.
+            </summary>
+            <param name="windsorContainer">The windsor container.</param>
+            <param name="sessionFactory">The session factory.</param>
+            <param name="repository">The repository type to map to <seealso cref="T:Rhino.Commons.IRepository`1"/>.</param>
+            <param name="isCandidateForRepository">The is candidate for repository.</param>
+            <remarks>
+            The reason that we have the <paramref name="isCandidateForRepository"/> is to avoid registering services
+            for interfaces that are not related to the domain (INotifyPropertyChanged, as a good example).
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.EntitiesToRepositories.Register(Castle.MicroKernel.IKernel,NHibernate.ISessionFactory,System.Type,System.Predicate{System.Type})">
+            <summary>
+            Registers the interfaces of the entities defined in the session factory in the kernel.
+            </summary>
+            <param name="kernel">The kernel.</param>
+            <param name="sessionFactory">The session factory.</param>
+            <param name="repository">The repository type to map to <seealso cref="T:Rhino.Commons.IRepository`1"/>.</param>
+            <param name="isCandidateForRepository">The is candidate for repository.</param>
+            <remarks>
+            The reason that we have the <paramref name="isCandidateForRepository"/> is to avoid registering services
+            for interfaces that are not related to the domain (INotifyPropertyChanged, as a good example).
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.EntitiesToRepositories.ImplementsOpenIRepository(System.Type)">
+            <summary>
+            I hate open generic types in the CLR
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Get(System.Object)">
+            <summary>
+            Get the entity from the persistance store, or return null
+            if it doesn't exist.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>Either the entity that matches the id, or a null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FutureGet(System.Object)">
+            <summary>
+            Get a future entity from the persistance store, or return null
+            if it doesn't exist.
+            Note that the null will be there when you resolve the FutureValue.Value property
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>A future for the value</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FutureLoad(System.Object)">
+            <summary>
+            A future of the entity loaded from the persistance store
+            Will throw an exception if there is no entity with a matching id.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>The entity that matches the id</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Load(System.Object)">
+            <summary>
+            Load the entity from the persistance store
+            Will throw an exception if there is no entity with a matching id.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>The entity that matches the id</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Delete(`0)">
+            <summary>
+            Register the entity for deletion when the unit of work
+            is completed. 
+            </summary>
+            <param name="entity">The entity to delete</param>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.DeleteAll">
+            <summary>
+            Registers all entities for deletion when the unit of work
+            is completed.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.DeleteAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Registers all entities for deletion that match the supplied
+            criteria condition when the unit of work is completed.
+            </summary>
+            <param name="where">criteria condition to select the rows to be deleted</param>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Save(`0)">
+            <summary>
+            Register te entity for save in the database when the unit of work
+            is completed. (INSERT)
+            </summary>
+            <param name="entity">the entity to save</param>
+            <returns>The saved entity</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.SaveOrUpdate(`0)">
+            <summary>
+            Saves or updates the entity, based on its unsaved-value.
+            </summary>
+            <param name="entity">The entity to save or update.</param>
+            <returns>The saved or updated entity</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.SaveOrUpdateCopy(`0)">
+            <summary>
+            Saves or updates a copy of entity, based on its unsaved-value.
+            </summary>
+            <param name="entity"></param>
+            <returns>The saved entity</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Update(`0)">
+            <summary>
+            Register the entity for update in the database when the unit of work
+            is completed. (UPDATE)
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="order"></param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order.
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(NHibernate.Criterion.DetachedCriteria,System.Int32,System.Int32,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order.
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <param name="firstResult">the first result to load</param>
+            <param name="maxResults">the number of result to load</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order.
+            </summary>
+            <param name="orders"></param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria.
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, and allow paging.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and ordering by a single field.
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The field the repository should order by</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and ordering by a multiple fields.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The fields the repository should order by</param>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return all the results
+            </summary>
+            <param name="namedQuery">The named query to execute</param>
+            <param name="parameters">Parameters for the query</param>
+            <returns>The results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindAll(System.Int32,System.Int32,System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return paged results
+            </summary>
+            <param name="parameters">Parameters for the query</param>
+            <param name="namedQuery">the query to execute</param>
+            <param name="firstResult">The first result to return</param>
+            <param name="numberOfResults">number of records to return</param>
+            <returns>Paged results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindOne(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Find a single entity based on a criteria.
+            Throws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindOne(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Find a single entity based on a criteria.
+            Throws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindOne(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Find a single entity based on a named query.
+            Throws is there is more than one result.
+            </summary>
+            <param name="parameters">parameters for the query</param>
+            <param name="namedQuery">the query to executre</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindFirst(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Find the entity based on a criteria.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <param name="orders">Optional orderring</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.FindFirst(NHibernate.Criterion.Order[])">
+            <summary>
+            Find the first entity of type
+            </summary>
+            <param name="orders">Optional orderring</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ExecuteStoredProcedure(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the specified stored procedure with the given parameters
+            and return the result.
+            Note: only scalar values are supported using this approach.
+            </summary>
+            <param name="sp_name">The name of the stored procedure</param>
+            <param name="parameters">parameters for the stored procedure</param>
+            <returns>return value</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ExecuteStoredProcedure``1(System.Converter{System.Data.IDataReader,``0},System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the specified stored procedure with the given parameters and then converts
+            the results using the supplied delegate.
+            </summary>
+            <typeparam name="T2">The collection type to return.</typeparam>
+            <param name="converter">The delegate which converts the raw results.</param>
+            <param name="sp_name">The name of the stored procedure.</param>
+            <param name="parameters">Parameters for the stored procedure.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Exists(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Check if any instance matches the criteria.
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Exists">
+            <summary>
+            Check if any instance of the type exists
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Count(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Counts the number of instances matching the criteria.
+            </summary>
+            <param name="criteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Count">
+            <summary>
+            Counts the overall number of instances.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportOne``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)">
+            <summary>
+            Create the project of type <typeparamref name="ProjT"/> (ie a
+            DataTransferObject) that satisfy the criteria supplied. Throws a
+            NHibernate.NonUniqueResultException if there is more than one
+            result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <param name="projectionList">Maps the properties from the object 
+            graph satisfiying <paramref name="criteria"/>  to the DTO 
+            <typeparamref name="ProjT"/></param>
+            <returns>The DTO or null</returns>
+            <remarks>
+            The intent is for <paramref name="criteria"/> to be based (rooted)
+            on <typeparamref name="T"/>. This is not enforced but is a
+            convention that should be followed
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportOne``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportOne``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.ProjectionList)">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])">
+            <summary>
+            Create the projects of type <typeparamref name="ProjT"/> (ie
+            DataTransferObject(s)) that satisfy the criteria supplied.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <param name="projectionList">Maps the properties from the object 
+            graph satisfiying <paramref name="criteria"/>  to the DTO 
+            <typeparamref name="ProjT"/></param>
+            <param name="orders">The fields the repository should order by</param>
+            <returns>The projection result (DTO's) built from the object graph 
+            satisfying <paramref name="criteria"/></returns>
+            <remarks>
+            The intent is for <paramref name="criteria"/> to be based (rooted)
+            on <typeparamref name="T"/>. This is not enforced but is a
+            convention that should be followed
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,System.Boolean)">
+            <summary>
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.ReportAll``1(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return all the resulting DTO's
+            (projection)
+            <seealso cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+            <typeparam name="ProjJ">the type returned</typeparam>
+            <param name="namedQuery">the query to execute in the *.hbm 
+            mapping files</param>
+            <param name="parameters">parameters for the query</param>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.CreateDetachedCriteria">
+            <summary>
+            Creates a <see cref="T:NHibernate.Criterion.DetachedCriteria"/> compatible with this Repository
+            </summary>
+            <returns>The <see cref="T:NHibernate.Criterion.DetachedCriteria"/></returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.CreateDetachedCriteria(System.String)">
+            <summary>
+            Creates an aliase <see cref="T:NHibernate.Criterion.DetachedCriteria"/> compatible with this Repository
+            </summary>
+            <param name="alias">the alias</param>
+            <returns>The <see cref="T:NHibernate.Criterion.DetachedCriteria"/></returns>
+        </member>
+        <member name="M:Rhino.Commons.IRepository`1.Create">
+            <summary>
+            Create an instance of <typeparamref name="T"/>, mapping it to the concrete class 
+            if needed
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FutureGet(System.Object)">
+            <summary>
+            Get a future entity from the persistance store, or return null
+            if it doesn't exist.
+            Note that the null will be there when you resolve the FutureValue.Value property
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>A future for the value</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FutureLoad(System.Object)">
+            <summary>
+            A future of the entity loaded from the persistance store
+            Will throw an exception if there isn't an entity that matches
+            the id.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>The entity that matches the id</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.CreateDetachedCriteria">
+            <summary>
+            Creates a <see cref="T:NHibernate.Criterion.DetachedCriteria"/> compatible with this Repository
+            </summary>
+            <returns>The <see cref="T:NHibernate.Criterion.DetachedCriteria"/></returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.CreateDetachedCriteria(System.String)">
+            <summary>
+            Creates an aliases <see cref="T:NHibernate.Criterion.DetachedCriteria"/> compatible with this Repository
+            </summary>
+            <param name="alias">the alias</param>
+            <returns>The <see cref="T:NHibernate.Criterion.DetachedCriteria"/></returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="order">the order in which to bring the data</param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="orders">the order in which to bring the data</param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(NHibernate.Criterion.DetachedCriteria,System.Int32,System.Int32,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <param name="firstResult">the first result to load</param>
+            <param name="maxResults">the number of result to load</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, and allow paging.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and orderring by a single field.
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The field the repository should order by</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and orderring by a multiply fields.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The fields the repository should order by</param>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return all the results
+            </summary>
+            <param name="namedQuery">The named query to execute</param>
+            <param name="parameters">Parameters for the query</param>
+            <returns>The results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindAll(System.Int32,System.Int32,System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return paged results
+            </summary>
+            <param name="parameters">Parameters for the query</param>
+            <param name="namedQuery">the query to execute</param>
+            <param name="firstResult">The first result to return</param>
+            <param name="numberOfResults">number of records to return</param>
+            <returns>Paged results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindOne(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Find a single entity based on a criteria.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindOne(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Find a single entity based on a criteria.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindOne(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Find a single entity based on a named query.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="parameters">parameters for the query</param>
+            <param name="namedQuery">the query to executre</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindFirst(NHibernate.Criterion.Order[])">
+            <summary>
+            Find the first entity of type
+            </summary>
+            <param name="orders">Optional ordering</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.FindFirst(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Find the entity based on a criteria.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <param name="orders">Optional orderring</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.Count(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Counts the number of instances matching the criteria.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.Count">
+            <summary>
+            Counts the overall number of instances.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.Exists(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Check if any instance matches the criteria.
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.Exists">
+            <summary>
+            Check if any instance of the type exists
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.ExecuteStoredProcedure``1(System.Converter{System.Data.IDataReader,``0},System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the specified stored procedure with the given parameters and then converts
+            the results using the supplied delegate.
+            </summary>
+            <typeparam name="T2">The collection type to return.</typeparam>
+            <param name="converter">The delegate which converts the raw results.</param>
+            <param name="sp_name">The name of the stored procedure.</param>
+            <param name="parameters">Parameters for the stored procedure.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.RepositoryImplBase`1.Create">
+            <summary>
+            Create an instance of <typeparamref name="T"/>, mapping it to the concrete class 
+            if needed
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Rhino.Commons.RepositoryImplBase`1.ConcreteType">
+            <summary>
+            Gets or sets the concrete type of this repository
+            </summary>
+            <value>The type of the concrete.</value>
+        </member>
+        <member name="T:Rhino.Commons.RepositoryImplBase`1.TypedResultTransformer`1">
+            <summary>
+            This is used to convert the resulting tuples into strongly typed objects.
+            </summary>
+            <typeparam name="T1"></typeparam>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FutureGet(System.Object)">
+            <summary>
+            Get the entity from the persistance store, or return null
+            if it doesn't exist.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>Either the entity that matches the id, or a null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FutureLoad(System.Object)">
+            <summary>
+            Get a future entity from the persistance store, or return null
+            if it doesn't exist.
+            Note that the null will be there when you resolve the FutureValue.Value property
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>A future for the value</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Get(System.Object)">
+            <summary>
+            Get the entity from the persistance store, or return null
+            if it doesn't exist.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>Either the entity that matches the id, or a null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Load(System.Object)">
+            <summary>
+            Load the entity from the persistance store
+            Will throw an exception if there isn't an entity that matches
+            the id.
+            </summary>
+            <param name="id">The entity's id</param>
+            <returns>The entity that matches the id</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Delete(`0)">
+            <summary>
+            Register the entity for deletion when the unit of work
+            is completed. 
+            </summary>
+            <param name="entity">The entity to delete</param>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.DeleteAll">
+            <summary>
+            Registers all entities for deletion when the unit of work
+            is completed.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.DeleteAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Registers all entities for deletion that match the supplied
+            criteria condition when the unit of work is completed.
+            </summary>
+            <param name="where">criteria condition to select the rows to be deleted</param>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Save(`0)">
+            <summary>
+            Register te entity for save in the database when the unit of work
+            is completed. (INSERT)
+            </summary>
+            <param name="entity">the entity to save</param>
+            <returns>The saved entity</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.SaveOrUpdate(`0)">
+            <summary>
+            Saves or update the entity, based on its usaved-value
+            </summary>
+            <param name="entity"></param>
+            <returns>The saved or updated entity</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.SaveOrUpdateCopy(`0)">
+            <summary>
+            Saves or update the copy of entity, based on its usaved-value
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Update(`0)">
+            <summary>
+            Register the entity for update in the database when the unit of work
+            is completed. (UPDATE)
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="order"></param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(NHibernate.Criterion.DetachedCriteria,System.Int32,System.Int32,NHibernate.Criterion.Order[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <param name="orders"> the order to load the entities</param>
+            <param name="firstResult">the first result to load</param>
+            <param name="maxResults">the number of result to load</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            by order
+            </summary>
+            <param name="orders"></param>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria
+            </summary>
+            <param name="criteria">the criteria to look for</param>
+            <returns>All the entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, and allow paging.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and orderring by a single field.
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The field the repository should order by</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(System.Int32,System.Int32,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Loads all the entities that match the criteria, with paging 
+            and orderring by a multiply fields.
+            </summary>
+            <param name="firstResult">The first result to load</param>
+            <param name="numberOfResults">Total number of results to load</param>
+            <param name="criteria">the cirteria to look for</param>
+            <returns>number of Results of entities that match the criteria</returns>
+            <param name="selectionOrder">The fields the repository should order by</param>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return all the results
+            </summary>
+            <param name="namedQuery">The named query to execute</param>
+            <param name="parameters">Parameters for the query</param>
+            <returns>The results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindAll(System.Int32,System.Int32,System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the named query and return paged results
+            </summary>
+            <param name="parameters">Parameters for the query</param>
+            <param name="namedQuery">the query to execute</param>
+            <param name="firstResult">The first result to return</param>
+            <param name="numberOfResults">number of records to return</param>
+            <returns>Paged results of the query</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindOne(NHibernate.Criterion.ICriterion[])">
+            <summary>
+            Find a single entity based on a criteria.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindOne(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Find a single entity based on a criteria.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindOne(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Find a single entity based on a named query.
+            Thorws is there is more than one result.
+            </summary>
+            <param name="parameters">parameters for the query</param>
+            <param name="namedQuery">the query to executre</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindFirst(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.Order[])">
+            <summary>
+            Find the entity based on a criteria.
+            </summary>
+            <param name="criteria">The criteria to look for</param>
+            <param name="orders">Optional orderring</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.FindFirst(NHibernate.Criterion.Order[])">
+            <summary>
+            Find the first entity of type
+            </summary>
+            <param name="orders">Optional orderring</param>
+            <returns>The entity or null</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ExecuteStoredProcedure(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the specified stored procedure with the given parameters
+            and return the result.
+            Note: only scalar values are supported using this approach.
+            </summary>
+            <param name="sp_name">The name of the stored procedure</param>
+            <param name="parameters">parameters for the stored procedure</param>
+            <returns>return value</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ExecuteStoredProcedure``1(System.Converter{System.Data.IDataReader,``0},System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            Execute the specified stored procedure with the given parameters and then converts
+            the results using the supplied delegate.
+            </summary>
+            <typeparam name="T2">The collection type to return.</typeparam>
+            <param name="converter">The delegate which converts the raw results.</param>
+            <param name="sp_name">The name of the stored procedure.</param>
+            <param name="parameters">Parameters for the stored procedure.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Exists(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Check if any instance matches the criteria.
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Exists">
+            <summary>
+            Check if any instance of the type exists
+            </summary>
+            <returns><c>true</c> if an instance is found; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Count(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Counts the number of instances matching the criteria.
+            </summary>
+            <param name="criteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Count">
+            <summary>
+            Counts the overall number of instances.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportOne``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportOne``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportOne``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportOne``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.ProjectionList)">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList)">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.ICriterion[])">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[],NHibernate.Criterion.ICriterion)">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(NHibernate.Criterion.DetachedCriteria,NHibernate.Criterion.ProjectionList,NHibernate.Criterion.Order[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.ReportAll``1(System.String,Rhino.Commons.Parameter[])">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.ReportAll``1(System.String,Rhino.Commons.Parameter[])"/>
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.CreateDetachedCriteria">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.CreateDetachedCriteria"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.CreateDetachedCriteria(System.String)">
+            <summary>
+            See <see cref="M:Rhino.Commons.IRepository`1.CreateDetachedCriteria(System.String)"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rhino.Commons.Repository`1.Create">
+            <summary>
+            Create an instance of <typeparamref name="T"/>, mapping it to the concrete class 
+            if needed
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Rhino.Commons.IUnitOfWorkAware">
+            <summary>
+            Used to handle extra initialization for sessions such as filters, or to execute operations when a session is disposed.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkAware.UnitOfWorkStarted(Rhino.Commons.IUnitOfWork)">
+            <summary>
+            Called when the UnitOfWork has been started, and UnitOfWork.Current is assigned
+            </summary>
+            <param name="unitOfWork">The newly started UnitOfWork</param>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkAware.UnitOfWorkDisposing(Rhino.Commons.IUnitOfWork)">
+            <summary>
+            Called when the UnitOfWork is about to be disposed.
+            </summary>
+            <param name="unitOfWork">The UnitOfWork being disposed</param>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkAware.UnitOfWorkDisposed(Rhino.Commons.IUnitOfWork)">
+            <summary>
+            Called after the UnitOfWork has been disposed
+            </summary>
+            <param name="unitOfWork">The recently disposed UnitOfWork</param>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkFactory.Init">
+            <summary>
+            Initialize the factory, note that this may be called more than once
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkFactory.Create(System.Data.IDbConnection,Rhino.Commons.IUnitOfWorkImplementor)">
+            <summary>
+            Create a new unit of work implementation.
+            </summary>
+            <param name="maybeUserProvidedConnection">Possible connection that the user supplied</param>
+            <param name="previous">Previous unit of work, if existed</param>
+            <returns>A usable unit of work</returns>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkFactory.LoadUnitOfWorkFromHashtable(System.Collections.Hashtable,Rhino.Commons.IUnitOfWork@,System.Nullable{System.Guid}@)">
+            <summary>
+             When using LongConversation UnitOfWorkApplication uses this method to restore the
+             conversation between requests
+            </summary>
+            <param name="hashtable">the Hashtable to load the unit of work from</param>
+            <param name="iUoW">the IUnitOfWork that had been restored</param>
+            <param name="LongConversationId">the Long Conversation Id</param>
+        </member>
+        <member name="M:Rhino.Commons.IUnitOfWorkFactory.SaveUnitOfWorkToHashtable(System.Collections.Hashtable)">
+            <summary>
+             When using LongConversation UnitOfWorkApplication uses this method to store the
+             conversation between requests
+            </summary>
+            <param name="hashtable">the Hashtable to save the unit of work to</param>
+        </member>
+        <member name="T:Rhino.Commons.LongConversationManager">
+            <summary>
+            The LongConversationManager class is used internally to manage both "public" 
+            and "private" NHibernate sessions that span multiple requests. When using UnitOfWork.StartLongConversation 
+            all future requests will be part of the same session until it is desposed. When using 
+            UnitOfWork.StartPrivateConversation requests with the correct GUID key will be resumed, otherwise the default
+            behavior will occur. The GUID key can be passed in the Query String or as a Form variable, and defaults to the name
+            LongConverstionKey. 
+            
+            Private conversations are recommended for AJAX intensive applications where multiple requests may
+            be occuring simultaneously, some of which need to be isolated from other requests. When using any type of 
+            Long Conversations (public or private) it is important to manage transactions and concurrency correctly.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.NHibernateUnitOfWorkAdapter.IncrementUsages">
+            <summary>
+            Add another usage to this.
+            Will increase the dispose count
+            NOT THREAD SAFE
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.NHibernateUnitOfWorkFactory.RegisterSessionFactory(NHibernate.ISessionFactory)">
+            <summary>
+            Replace the default implementation of the Session Factory (read from configuration)
+            with a user supplied one.
+            NOTE: This should be done at application start. 
+            No attempt is made to make this thread safe!
+            </summary>
+            <param name="factory">
+            </param>
+        </member>
+        <member name="P:Rhino.Commons.NHibernateUnitOfWorkFactory.NHibernateSessionFactory">
+            <summary>
+            The session factory for the application.
+            Note: Prefer to avoid using the member.
+            It is provided to support complex scenarios only, and it is possible
+            to configure its behavior externally via configuration.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.NHibernateUnitOfWorkFactory.CurrentSession">
+            <summary>
+            The current NHibernate session.
+            Note that the flush mode is CommitOnly!
+            It is provided to support complex scenarios only.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.StartLongConversation">
+            <summary>
+            Signals the start of an application/user transaction that spans multiple page requests
+            </summary>
+            <remarks>
+            Used in conjunction with <see cref="T:Rhino.Commons.HttpModules.UnitOfWorkApplication"/>, will ensure that the current UoW
+            (see <see cref="P:Rhino.Commons.UnitOfWork.Current"/>) is kept intact across multiple page requests. 
+            <para>
+            Note: This method does not start a physical database transaction.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.StartPrivateConversation">
+            <summary>
+            Signals the start of an application/user transaction that spans multiple page requests, 
+            but is not loaded without explicitly specifying the conversation key.
+            </summary>
+            <remarks>
+            Used in conjunction with <see cref="T:Rhino.Commons.HttpModules.UnitOfWorkApplication"/>, will ensure that the current UoW
+            (see <see cref="P:Rhino.Commons.UnitOfWork.Current"/>) is kept intact across multiple page requests. Review the <see cref="T:Rhino.Commons.LongConversationManager"/> for details.
+            <para>
+            Note: This method does not start a physical database transaction.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.EndLongConversation">
+            <summary>
+            Signals the end of the current application/user transaction <seealso cref="M:Rhino.Commons.UnitOfWork.StartLongConversation"/>
+            </summary>
+            <remarks>
+            Actual disposal of the current UoW is deferred until the end the current page request 
+            </remarks>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.RegisterGlobalUnitOfWork(Rhino.Commons.IUnitOfWork)">
+            <summary>
+            NOT thread safe! Mostly intended to support mocking of the unit of work. 
+            You must pass a null argument when finished  to ensure atomic units of work UnitOfWorkRegisterGlobalUnitOfWork(null);
+            You can also call Dispose() on the result of this method, or put it in a using statement (preferred)
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.Start(System.Data.IDbConnection,Rhino.Commons.UnitOfWorkNestingOptions)">
+            <summary>
+            Start a Unit of Work
+            is called
+            </summary>
+            <returns>
+            An IUnitOfwork object that can be used to work with the current UoW.
+            </returns>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.GetCurrentSessionFor(System.Type)">
+            <summary>
+            Gets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+            </summary>
+            <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+            <value>The current session for this entity.</value>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.SetCurrentSessionFor(System.Type,NHibernate.ISession)">
+            <summary>
+            Sets the current session. Must be used when a MultiplNHibernateUnitOfWorkFactory is used
+            </summary>
+            <param name="typeOfEntity">the concrete type of entity mapped in hbm files</param>
+            <param name="session">the session to set</param>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.DisposeUnitOfWork(Rhino.Commons.IUnitOfWorkImplementor)">
+            <summary>
+            Called internally to clear the current UoW and move to the previous one.
+            </summary>
+        </member>
+        <member name="M:Rhino.Commons.UnitOfWork.DisposeUnitOfWorkFactory">
+            <summary>
+            Called when finished with UnitOfWorkFactory to explicately close the SessionFactory
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.UnitOfWork.Current">
+            <summary>
+            The current unit of work.
+            </summary>
+        </member>
+        <member name="P:Rhino.Commons.UnitOfWork.CurrentSession">
+            <summary>
+            Gets the current session.
+            </summary>
+            <value>The current session.</value>
+        </member>
+    </members>
+</doc>

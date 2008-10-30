@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="CustomerCareModule"
+                   namespace="CustomerCareModule">
+
+  <class name="Lead" >
+
+    <id name="Id">
+      <generator class="native" />
+    </id>
+
+    <property name="Note" />
+    <!-- we don't specify the Customer mapping here, we do it at runtime w-->
+  </class>
+</hibernate-mapping>
