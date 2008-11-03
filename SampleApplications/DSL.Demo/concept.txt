@@ -1,0 +1,8 @@
+On drawing request:
+	needs approval from engineering
+	assigned
+	drawing is produced
+		needs approval from Engineering, Production, Development,
+							Quality Control, Inventory Control 
+	Sent to vendor
+	Vendor confirms receiving new drawing

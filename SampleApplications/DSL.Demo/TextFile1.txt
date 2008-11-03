@@ -1,0 +1,16 @@
+suggest_preferred_customer: 
+ when order > 1000
+ 
+suggest_preferred_customer (delegate{
+	when order > 1000
+})
+
+when is  meta method tht runs during compilation\\
+
+suggest_preffered_customer(delegate
+{
+	return delegate(Order order, Customer customer)
+	{
+		return order > 1000
+	};
+})
