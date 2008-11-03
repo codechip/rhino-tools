@@ -23,7 +23,7 @@ namespace RhinoIglooSample.Web
         {
             if(Controller.ChangePassword())
             {
-                SuccessMessage.Text = Scope.SuccessMesssage;
+                SuccessMessage.Text = Scope.SuccessMessage;
             }
             else
             {

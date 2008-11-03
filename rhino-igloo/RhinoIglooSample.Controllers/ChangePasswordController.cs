@@ -63,7 +63,7 @@ namespace RhinoIglooSample.Controllers
             user.Password = NewPass;
             user.PasswordExpiresAt = DateTime.Today.AddDays(7);
             users.Save(user);
-            Scope.SuccessMesssage = "Password changed successfully";
+            Scope.SuccessMessage = "Password changed successfully";
             return true;
         }
 

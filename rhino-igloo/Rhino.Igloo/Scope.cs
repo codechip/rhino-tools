@@ -126,7 +126,7 @@ namespace Rhino.Igloo
 		/// <summary>
 		/// SuccessMessage.
 		/// </summary>
-    	public static string SuccessMesssage
+    	public static string SuccessMessage
     	{
 			get { return (string) Flash[Constants.SuccessMessage]; }
 			set { Flash[Constants.SuccessMessage] = value; }
