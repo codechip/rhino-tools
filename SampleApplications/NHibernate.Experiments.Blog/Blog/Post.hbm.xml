@@ -4,6 +4,7 @@
 				   namespace="MyBlog">
 	<class name="Post"
 		   table="Posts">
+    <cache usage="read-write"/>
 		<id name="Id">
 			<generator class="identity"/>
 		</id>

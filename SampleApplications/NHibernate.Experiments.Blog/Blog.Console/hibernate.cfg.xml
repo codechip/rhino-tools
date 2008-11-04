@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
 	<session-factory>
-		<property name="hibernate.connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
-		<property name="hibernate.connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
-		<property name="hibernate.connection.connection_string">Data Source=localhost;Initial Catalog=blog;Integrated Security=True</property>
-		<property name="hibernate.dialect">MyBlog.Console.CustomFunctionsMsSql2005Dialect, Blog.Console</property>
-		<property name="hibernate.use_outer_join">true</property>
-		<property name="hibernate.show_sql">true</property>
-		<property name="hibernate.query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+		<property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
+		<property name="connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
+		<property name="connection.connection_string">Data Source=localhost;Initial Catalog=blog;Integrated Security=True</property>
+		<property name="dialect">MyBlog.Console.CustomFunctionsMsSql2005Dialect, Blog.Console</property>
+		<property name="use_outer_join">true</property>
+		<property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+
+    <property name="cache.provider_class">NHibernate.Cache.HashtableCacheProvider</property>
+    <property name="cache.use_second_level_cache">true</property>
+    <property name="cache.use_query_cache">true</property>
+    
 		<mapping assembly="Blog"/>
 	</session-factory>
 </hibernate-configuration>
