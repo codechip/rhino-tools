@@ -49,6 +49,14 @@ namespace Rhino.Igloo
     /// </summary>
     public class RhinoIglooFacility : AbstractFacility
     {
+        private static readonly IInjectedMemberStrategy[] injectedMemberStrategies = new IInjectedMemberStrategy[]
+            {
+                new InputsInjectedMemberStrategy(),
+                new InputInjectedMemberStrategy(),
+                new SessionInjectedMemberStrategy(),
+                new FlashInjectedMemberStrategy()
+            };
+
         private static readonly ILog logger = LogManager.GetLogger(typeof(RhinoIglooFacility));
 
         private Assembly[] assemblies = null;
@@ -123,16 +131,14 @@ namespace Rhino.Igloo
 
         private void RegisterControllers()
         {
-             Kernel.AddComponent("BaseController", typeof(BaseController));
+            Kernel.AddComponent("BaseController", typeof(BaseController));
             foreach (Assembly assembly in assemblies)
             {
                 foreach (Type type in assembly.GetExportedTypes())
                 {
-                    if (typeof(BaseController).IsAssignableFrom(type) &&
-                        AttributeUtil.ShouldSkipAutomaticRegistration(type) == false)
-                    {
-                        Kernel.AddComponent(type.Name, type);
-                    }
+                    if (!typeof(BaseController).IsAssignableFrom(type))continue; 
+                    if (AttributeUtil.ShouldSkipAutomaticRegistration(type)) continue;
+                    Kernel.AddComponent(type.Name, type);
                 }
             }
         }
@@ -149,10 +155,8 @@ namespace Rhino.Igloo
                 foreach (Type type in assembly.GetExportedTypes())
                 {
                     // MasterPage / Web page / UserControl
-                    if (AttributeUtil.IsView(type))
-                    {
-                        repository.AddComponent(type);
-                    }
+                    if (!AttributeUtil.IsView(type)) continue;
+                    repository.AddComponent(type);
                 }
             }
         }
@@ -176,89 +180,71 @@ namespace Rhino.Igloo
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <param name="membersToInject">The members to inject.</param>
-        private static void InjectMembers(Object instance,
-                                          IDictionary<InjectAttribute, PropertyInfo> membersToInject)
+        private static void InjectMembers(Object instance, IDictionary<InjectAttribute, PropertyInfo> membersToInject)
         {
-            if (membersToInject != null && membersToInject.Count > 0)
+            if (membersToInject == null) return;
+            if (membersToInject.Count == 0) return;
+            foreach (KeyValuePair<InjectAttribute, PropertyInfo> kvp in membersToInject)
             {
-                foreach (KeyValuePair<InjectAttribute, PropertyInfo> kvp in membersToInject)
+                PropertyInfo propertyInfo = kvp.Value;
+                try
                 {
-                    PropertyInfo propertyInfo = kvp.Value;
-                    try
+                    foreach (IInjectedMemberStrategy strategy in injectedMemberStrategies)
                     {
-                        switch (kvp.Key.Scope)
-                        {
-                            case ScopeType.Inputs:
-                                string[] instancesToInject = Scope.Inputs[kvp.Key.Name];
-                                if (instancesToInject == null)
-                                    continue;
-                                object results = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instancesToInject);
-                                if (results != null)
-                                    propertyInfo.SetValue(instance, results, null);
-                                break;
-                            case ScopeType.Input:
-                                string instanceToInject = Scope.Input[kvp.Key.Name];
-                                if (instanceToInject == null)
-                                    continue;
-                                object result = ConversionUtil.ConvertTo(propertyInfo.PropertyType, instanceToInject);
-                                if (result != null)
-                                    propertyInfo.SetValue(instance, result, null);
-                                break;
-                            case ScopeType.Session:
-                                propertyInfo.SetValue(instance, Scope.Session[kvp.Key.Name], null);
-                                break;
-                            case ScopeType.Flash:
-                                propertyInfo.SetValue(instance, Scope.Flash[kvp.Key.Name], null);
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException("ScopeType.Scope");
-                        }
+                        if(!strategy.IsSatisfiedBy(kvp.Key.Scope)) continue;
+                        strategy.SetValueFor(kvp.Key.Name, kvp.Value, instance);
                     }
-                    catch (Exception e)
-                    {
-                        logger.Debug(
-                            string.Format("Failed to convert {0} to type {1}", kvp.Key.Name, kvp.Value.PropertyType), e);
-                    }
+                }
+                catch (Exception e)
+                {
+                    string message = string.Format("Failed to convert {0} to type {1}", kvp.Key.Name, kvp.Value.PropertyType);
+                    logger.Debug(message, e);
                 }
             }
         }
 
-        private static void InjectEntities(object instance,
-                                           IDictionary<InjectEntityAttribute, PropertyInfo> entitiesToInject)
+        private static void InjectEntities(object instance, IDictionary<InjectEntityAttribute, PropertyInfo> entitiesToInject)
         {
             foreach (KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp in entitiesToInject)
             {
                 object key = ConvertKey(instance, Scope.Input[kvp.Key.Name], kvp);
-                if (key == null)
-                    continue;
+                if (key == null) continue;
 
-                object entity = null;
+                Type typeOfEntity = kvp.Value.PropertyType;
+                Type repositoryType = typeof(IRepository<>).MakeGenericType(typeOfEntity);
+                object repository = IoC.Resolve(repositoryType);
+                object entity;
 
                 if (kvp.Key.EagerLoad != null)
                 {
-                    IList all = UnitOfWork.CurrentSession
-                        .CreateCriteria(kvp.Value.PropertyType)
-                        .Add(Expression.IdEq(key))
-                        .SetFetchMode(kvp.Key.EagerLoad, FetchMode.Join)
-                        .List();
-                    if (all.Count > 0)
-                        entity = all[0];
+                    entity = repositoryType
+                        .GetMethod("FindOne", new Type[] { typeof(DetachedCriteria) })
+                        .Invoke(repository, new object[] { DetachedCriteria
+                            .For(typeOfEntity)
+                            .SetFetchMode(kvp.Key.EagerLoad, FetchMode.Eager)
+                            .Add(Expression.IdEq(key)) });
                 }
-                else
+                else if (IoC.Container.Kernel.HasComponent(typeof(IFetchingStrategy<>).MakeGenericType(typeOfEntity)))
                 {
-                    Type repositoryType = typeof(IRepository<>).MakeGenericType(kvp.Value.PropertyType);
-                    object repository = IoC.Resolve(repositoryType);
-                    entity = repositoryType.GetMethod("Get").Invoke(repository, new object[]{key});
+                    entity = repositoryType
+                        .GetMethod("FindOne", new Type[] { typeof(DetachedCriteria) })
+                        .Invoke(repository, new object[] { DetachedCriteria
+                            .For(typeOfEntity)
+                            .Add(Expression.IdEq(key)) });
+                }
+                else 
+                {
+                    entity = repositoryType
+                        .GetMethod("Get")
+                        .Invoke(repository, new object[] { key });
                 }
                 kvp.Value.SetValue(instance, entity, null);
-
             }
         }
 
         private static object ConvertKey(object instance, string key, KeyValuePair<InjectEntityAttribute, PropertyInfo> kvp)
         {
-            if (key == null)
-                return null;
+            if (key == null) return null;
             try
             {
                 return ConversionUtil.ConvertTo(kvp.Key.IdType, key);
