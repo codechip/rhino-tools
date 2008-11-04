@@ -12,7 +12,7 @@ namespace Rhino.Commons.Facilities
     {
         private readonly NHibernateUnitOfWorkFacilityConfig[] configs;
     	
-        public MultipleNHibernateUnitOfWorkFacility(NHibernateUnitOfWorkFacilityConfig[] configs)
+        public MultipleNHibernateUnitOfWorkFacility(params NHibernateUnitOfWorkFacilityConfig[] configs)
         {
             this.configs = configs;
         }
