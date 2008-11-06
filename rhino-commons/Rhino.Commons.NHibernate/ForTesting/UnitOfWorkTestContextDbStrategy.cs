@@ -268,15 +268,10 @@ namespace Rhino.Commons.ForTesting
             protected virtual string GetSqlServerDataDirectory()
             {
                 string sqlServerRegKey = @"SOFTWARE\Microsoft\Microsoft SQL Server\";
-                string sqlServerInstanceName =
-                    (string)Registry.LocalMachine
-                                 .OpenSubKey(sqlServerRegKey + @"Instance Names\SQL")
-                                 .GetValue("MSSQLSERVER");
+                string sqlServerInstanceName = Registry64.LocalMachine.GetValue(sqlServerRegKey + @"Instance Names\SQL",
+                                                                                "MSSQLSERVER");
                 string sqlServerInstanceSetupRegKey = sqlServerRegKey + sqlServerInstanceName + @"\Setup";
-                return
-                    (string)Registry.LocalMachine
-                                 .OpenSubKey(sqlServerInstanceSetupRegKey)
-                                 .GetValue("SQLDataRoot") + @"\Data\";
+                return Registry64.LocalMachine.GetValue(sqlServerInstanceSetupRegKey, "SQLDataRoot");
             }
         }
 

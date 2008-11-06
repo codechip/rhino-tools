@@ -48,6 +48,7 @@
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
     <Compile Include="Guard.cs" />
+    <Compile Include="Registry64.cs" />
     <Compile Include="ThereBeDragonsAttribute.cs" />
     <Compile Include="Exceptions\TimeBombHack.cs" />
     <Compile Include="GenericEventArgs.cs" />
