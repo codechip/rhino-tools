@@ -19,7 +19,13 @@ namespace Rhino.Commons.Facilities
 
         protected override void Init()
         {
-            Kernel.Register(Component.For(typeof(IRepository<>)).ImplementedBy(typeof(NHRepository<>)));
+            Type repositoryInterface = Type.GetType("Rhino.Commons.IRepository`1, Rhino.Commons.NHibernate.Repositories");
+            Type repositoryImpl = Type.GetType("Rhino.Commons.NHRepository`1, Rhino.Commons.NHibernate.Repositories");
+            if(repositoryImpl!=null)
+            {
+                Kernel.Register(Component.For(repositoryInterface)
+                    .ImplementedBy(repositoryImpl));
+            }
 
             MultipleNHibernateUnitOfWorkFactory unitOfWorkFactory = new MultipleNHibernateUnitOfWorkFactory();
             foreach (NHibernateUnitOfWorkFacilityConfig config in configs)
@@ -33,12 +39,25 @@ namespace Rhino.Commons.Facilities
 
         private ISessionFactory CreateSessionFactory(NHibernateUnitOfWorkFacilityConfig config)
         {
+            var initializationAwares = Kernel.ResolveAll<INHibernateInitializationAware>();
+            foreach (var aware in initializationAwares)
+            {
+                aware.BeforeInitialization();
+            }
             Configuration cfg = new Configuration().Configure(config.NHibernateConfigurationFile);
             foreach (Type mappedEntity in config.Entities) 
                 cfg.AddClass(mappedEntity);
-            
+
+            foreach (var aware in initializationAwares)
+            {
+                aware.Configured(cfg);
+            }
+
             ISessionFactory sessionFactory = cfg.BuildSessionFactory();
-            EntitiesToRepositories.Register(Kernel, sessionFactory, typeof(NHRepository<>), config.IsCandidateForRepository);
+            foreach (var aware in initializationAwares)
+            {
+                aware.Initialized(cfg, sessionFactory);
+            }
             return sessionFactory;
         }
     }

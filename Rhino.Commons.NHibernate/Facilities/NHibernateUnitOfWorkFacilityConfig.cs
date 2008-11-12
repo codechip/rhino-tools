@@ -11,7 +11,10 @@ namespace Rhino.Commons.Facilities
         private ISet<Assembly> assemblies = new HashedSet<Assembly>();
         private ISet<Type> entities = new HashedSet<Type>();
         private string nhibernateConfigurationFile = "hibernate.cfg.xml";
-        private Predicate<Type> isCandidateForRepository = IsCandidateForRepositoryAttribute.IsCandidate;
+
+        private Predicate<Type> isCandidateForRepository =
+            type => type.IsDefined(typeof (IsCandidateForRepositoryAttribute), true);
+
     	private string repositoryKey;
 
     	public NHibernateUnitOfWorkFacilityConfig()

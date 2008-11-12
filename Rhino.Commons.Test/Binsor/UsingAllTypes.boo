@@ -10,7 +10,7 @@ for type in AllTypes("Rhino.Commons.Test").WhereNamespaceEq("Rhino.Commons.Test.
 	if not Kernel.HasComponent(type):  
 		component type
 
-for type in AllTypes("Rhino.Commons.NHibernate") \
+for type in AllTypes("Rhino.Commons.NHibernate.Repositories") \
 	.Where({ t as System.Type | t.Name.Contains("NHRepository") }):
 	component "nh.repos", type.GetFirstInterface(), type
 

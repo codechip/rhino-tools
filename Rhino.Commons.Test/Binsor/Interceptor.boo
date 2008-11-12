@@ -27,7 +27,7 @@
 #endregion
 
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
-import Rhino.Commons from Rhino.Commons.NHibernate
+import Rhino.Commons from Rhino.Commons.NHibernate.Repositories
 import Rhino.Commons.Test.Binsor
 
 component 'repository', IRepository of Fubar, FakeRepository of Fubar: 

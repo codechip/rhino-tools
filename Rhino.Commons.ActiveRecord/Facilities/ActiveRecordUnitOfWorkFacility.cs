@@ -26,6 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using System.Reflection;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
@@ -64,13 +65,19 @@ namespace Rhino.Commons.Facilities
 
     	protected override void Init()
         {
-    		ComponentRegistration<object> component =
-				Component.For(typeof (IRepository<>)).ImplementedBy(typeof (ARRepository<>));
-			if(!string.IsNullOrEmpty(repositoryKey))
-			{
-				component.Named(repositoryKey);
-			}
-    		Kernel.Register(component);
+            Type repositoryInterface = Type.GetType("Rhino.Commons.IRepository`1, Rhino.Commons.NHibernate.Repositories");
+            Type repositoryImpl = Type.GetType("Rhino.Commons.ARRepository`1, Rhino.Commons.ActiveRecord.Repositories");
+            if (repositoryImpl != null)
+            {
+                var component = Component.For(repositoryInterface)
+                    .ImplementedBy(repositoryImpl);
+                if (!string.IsNullOrEmpty(repositoryKey))
+                {
+                    component.Named(repositoryKey);
+                }
+                Kernel.Register(component);
+            } 
+
         	ComponentRegistration<IUnitOfWorkFactory> registerFactory = 
 				Component.For<IUnitOfWorkFactory>()
         		.ImplementedBy<ActiveRecordUnitOfWorkFactory>();

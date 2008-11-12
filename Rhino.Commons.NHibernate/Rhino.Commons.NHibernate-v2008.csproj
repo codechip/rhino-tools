@@ -75,7 +75,6 @@
   <ItemGroup>
     <Compile Include="Expressions\NamedExpression.cs" />
     <Compile Include="Expressions\ManyToOneNamedExpression.cs" />
-    <Compile Include="Facilities\EntitiesToRepositoriesInitializationAware.cs" />
     <Compile Include="Facilities\MultipleNHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacility.cs" />
     <Compile Include="Facilities\NHibernateUnitOfWorkFacilityConfig.cs" />
@@ -97,6 +96,7 @@
     <Compile Include="NHibernate\FutureQueryOptions.cs" />
     <Compile Include="NHibernate\FutureValueOptions.cs" />
     <Compile Include="NHibernate\IsAExpression.cs" />
+    <Compile Include="Facilities\IsCandidateForRepositoryAttribute.cs" />
     <Compile Include="NHibernate\ProcessCriteriaDelegate.cs" />
     <Compile Include="NHibernate\XmlIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,17 +105,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Repositories\EntitiesToRepositories.cs" />
-    <Compile Include="Repositories\IFetchingStrategy.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\IsCandidateForRepositoryAttribute.cs" />
-    <Compile Include="Repositories\NHRepository.cs" />
-    <Compile Include="Repositories\Parameter.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="Repositories\RepositoryDecorator.cs" />
-    <Compile Include="Repositories\RepositoryDetachedCriteriaFactory.cs" />
-    <Compile Include="Repositories\RepositoryHelper.cs" />
-    <Compile Include="Repositories\RepositoryImplBase.cs" />
     <Compile Include="UnitOfWork\BaseUnitOfWorkFactory.cs" />
     <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
     <Compile Include="UnitOfWork\IUnitOfWork.cs" />

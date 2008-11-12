@@ -26,6 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
+using System;
 using System.Reflection;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
@@ -56,13 +57,19 @@ namespace Rhino.Commons.Facilities
 
 		protected override void Init()
 		{
-			ComponentRegistration<object> component = Component.For(typeof (IRepository<>)).ImplementedBy(typeof (NHRepository<>));
-			if(!string.IsNullOrEmpty(config.RepositoryKey))
-			{
-				component.Named(config.RepositoryKey);
-			}
+            Type repositoryInterface = Type.GetType("Rhino.Commons.IRepository`1, Rhino.Commons.NHibernate.Repositories");
+            Type repositoryImpl = Type.GetType("Rhino.Commons.NHRepository`1, Rhino.Commons.NHibernate.Repositories");
+            if (repositoryImpl != null)
+            {
+                var component = Component.For(repositoryInterface)
+                    .ImplementedBy(repositoryImpl);
+                if (!string.IsNullOrEmpty(config.RepositoryKey))
+                {
+                    component.Named(config.RepositoryKey);
+                }
+                Kernel.Register(component);
+            } 
 			
-			Kernel.Register(component);
 			ComponentRegistration<IUnitOfWorkFactory> registerFactory =
 				Component.For<IUnitOfWorkFactory>()
 				.ImplementedBy<NHibernateUnitOfWorkFactory>();
@@ -78,7 +85,14 @@ namespace Rhino.Commons.Facilities
 			}
 			Kernel.Register(registerFactory);
 
-            Kernel.AddComponentInstance("entitiesToRepositories", typeof(INHibernateInitializationAware), new EntitiesToRepositoriesInitializationAware(config.IsCandidateForRepository));        
+		    var entitiesAware = Type.GetType("Rhino.Commons.Facilities.EntitiesToRepositoriesInitializationAware, Rhino.Commons.NHibernate.Repositories");
+            if(entitiesAware==null)
+                return;
+
+		    Kernel.Register(Component.For(typeof (INHibernateInitializationAware))
+		                        .ImplementedBy(entitiesAware)
+		                        .Named(entitiesAware.FullName)
+		                        .DependsOn(new { isCandidateForRepository = config.IsCandidateForRepository }));
         }
 
 		public Assembly[] Assemblies

@@ -265,7 +265,12 @@ namespace Rhino.Commons.Binsor
 			compiler.Parameters.References.Add(typeof (BooReader).Assembly);
 			compiler.Parameters.References.Add(typeof (MacroMacro).Assembly);
 
-			TryAddAssembliesReferences(compiler.Parameters, "Rhino.Commons.NHibernate", "Rhino.Commons.ActiveRecord");
+			TryAddAssembliesReferences(compiler.Parameters, 
+                "Rhino.Commons.NHibernate", 
+                "Rhino.Commons.ActiveRecord",
+                "Rhino.Commons.NHibernate.Repositories",
+                "Rhino.Commons.ActiveRecord.Repositories"
+                );
 
 			CompilerContext run = compiler.Run();
 			if (run.Errors.Count != 0)

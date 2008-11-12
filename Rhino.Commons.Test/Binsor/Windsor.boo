@@ -27,7 +27,8 @@
 #endregion
 
 import Rhino.Commons.Test.Components from Rhino.Commons.Test
-import Rhino.Commons from Rhino.Commons.NHibernate
+import Rhino.Commons from Rhino.Commons.NHibernate as nh
+import Rhino.Commons from Rhino.Commons.NHibernate.Repositories as nhr
 import Rhino.Commons.Test.Binsor
 import Castle.Facilities.Logging
 
