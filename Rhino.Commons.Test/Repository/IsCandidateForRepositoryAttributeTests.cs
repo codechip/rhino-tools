@@ -1,5 +1,6 @@
 using Rhino.Commons;
 using MbUnit.Framework;
+using Rhino.Commons.Facilities;
 
 namespace Rhino.Commons.Test.Repository
 {
@@ -8,14 +9,16 @@ namespace Rhino.Commons.Test.Repository
     {
         [Test]
         public void The_interface_should_be_a_candidate_for_a_repository()
-        { 
-            Assert.IsTrue(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsARepository)));
+        {
+            var config = new NHibernateUnitOfWorkFacilityConfig();
+            Assert.IsTrue(config.IsCandidateForRepository(typeof(AnInterfaceThatIsARepository)));
         }
 
         [Test]
         public void The_interface_should_not_be_a_candidate_for_a_repository()
-        { 
-            Assert.IsFalse(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsNotARepository)));
+        {
+            var config = new NHibernateUnitOfWorkFacilityConfig();
+            Assert.IsFalse(config.IsCandidateForRepository(typeof(AnInterfaceThatIsNotARepository)));
         }
     }
 
