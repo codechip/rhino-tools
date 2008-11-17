@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E41D7A6B-D0ED-4466-BC7D-5396878277D8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cuyahoga.Modules.Redirection</RootNamespace>
+    <AssemblyName>Cuyahoga.Modules.Redirection</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Facilities.NHibernateIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Castle.Facilities.NHibernateIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Cuyahoga.Core, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Cuyahoga.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cuyahoga.ServerControls, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Cuyahoga.ServerControls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cuyahoga.Web, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Cuyahoga.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=1.0.4.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileTypesMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedirectionModule.cs" />
+    <Compile Include="Web\EditRedirection.aspx.cs">
+      <DependentUpon>EditRedirection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\EditRedirection.aspx.designer.cs">
+      <DependentUpon>EditRedirection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\EditRedirections.aspx.cs">
+      <DependentUpon>EditRedirections.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\EditRedirections.aspx.designer.cs">
+      <DependentUpon>EditRedirections.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Web\Redirections.ascx.cs">
+      <DependentUpon>Redirections.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Web\Redirections.ascx.designer.cs">
+      <DependentUpon>Redirections.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\RedirectionUrl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\RedirectionUrl.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web\EditRedirection.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Web\EditRedirections.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Web\Redirections.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Install\Database\1.0.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /s /y "$(ProjectDir)"Web\*.as?x "$(SolutionDir)"Web\Modules\Redirections\
+xcopy /s /y "$(ProjectDir)"Web\*.gif "$(SolutionDir)"Web\Modules\Redirections\
+xcopy /s /y "$(ProjectDir)"Install\Database\*.sql "$(SolutionDir)"Web\Modules\Redirections\Install\Database\
+xcopy /s /y "$(TargetDir)"Cuyahoga.Modules.Redirection*.dll "$(SolutionDir)"Web\bin\</PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0"
+                    assembly="Cuyahoga.Modules.Redirection"
+                    namespace="Cuyahoga.Modules.Redirection.Domain">
+	<class name="RedirectionUrl" table="cm_redirection">
+
+		<id name="Id" column="id" type="Int32" unsaved-value="-1">
+			<generator class="native"/>
+		</id>
+		
+		<timestamp name="UpdateTimestamp" column="updatetimestamp" unsaved-value="1/1/0001" />
+
+		<property name="Url" column="url" type="String" length="255" />
+		<property name="Title" column="title" type="String" length="100" not-null="false" />
+		<property name="NumberOfDownloads" column="numberofdownloads" type="Int32" />
+		<property name="DatePublished" column="datepublished" type="DateTime" />
+
+		<many-to-one name="Section" class="Cuyahoga.Core.Domain.Section, Cuyahoga.Core" column="sectionid" cascade="none" />
+		<many-to-one name="Publisher" class="Cuyahoga.Core.Domain.User, Cuyahoga.Core" column="publisherid" cascade="none" />
+
+	</class>
+</hibernate-mapping>
