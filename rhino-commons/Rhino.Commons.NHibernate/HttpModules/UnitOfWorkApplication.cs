@@ -138,7 +138,14 @@ namespace Rhino.Commons.HttpModules
         {
             string windsorConfig = GetWindsorConfig();
 
-        	FileSystemEventHandler resetIoC = delegate { IoC.Reset(); };
+        	FileSystemEventHandler resetIoC = delegate 
+			{
+				if (IoC.IsInitialized)
+				{
+					IoC.Container.Dispose();
+				}
+				IoC.Reset(); 
+			};
             watcher = new FileSystemWatcher(Path.GetDirectoryName(windsorConfig));
             watcher.Filter = Path.GetFileName(windsorConfig);
             watcher.Created += resetIoC;
