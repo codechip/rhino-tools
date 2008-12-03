@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using HibernatingRhinos.NHibernate.Profiler.Appender;
 using HumanResources.Model;
 using log4net.Config;
 using NHibernate;
@@ -17,7 +18,7 @@ namespace MultiTenancy.Host
       
         private static void Main()
         {
-            XmlConfigurator.Configure(new FileInfo("nhprof.log4net.config"));
+            NHibernateProfiler.Initialize();
             
             BuildFactory("nhibernate");
             BuildFactory("northwind");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using HibernatingRhinos.NHibernate.Profiler.Appender;
 using HumanResources.Model;
 using log4net.Config;
 using NHibernate;
@@ -15,7 +16,7 @@ namespace Futures.Host
     {
         static void Main(string[] args)
         {
-            XmlConfigurator.Configure(new FileInfo("nhprof.log4net.config"));
+            NHibernateProfiler.Initialize();
 
             Configuration cfg = new Configuration()
                   .Configure("nhibernate.cfg.xml");

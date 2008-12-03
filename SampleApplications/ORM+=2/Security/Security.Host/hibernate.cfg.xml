@@ -2,13 +2,14 @@
 <hibernate-configuration  xmlns="urn:nhibernate-configuration-2.2" >
 	<session-factory>
     <property name="connection.connection_string">Server=localhost;initial catalog=nhibernate;Trusted_Connection=Yes</property>
-		<property name="dialect">NHibernate.Dialect.MsSql2005Dialect</property>
+		<property name="dialect">NHibernate.Dialect.MsSql2000Dialect</property>
     <property name="cache.use_query_cache">true</property>
     <property name="cache.use_second_level_cache">true</property>
     
     <!-- This cache provider is for testing purposes only -->
     <property name="cache.provider_class">NHibernate.Cache.HashtableCacheProvider, NHibernate</property>
 
+    <property name='proxyfactory.factory_class'>NHibernate.ProxyGenerators.CastleDynamicProxy.ProxyFactoryFactory, NHibernate.ProxyGenerators.CastleDynamicProxy</property>
     <mapping assembly="HumanResources.Model"/>
     <mapping assembly="Rhino.Security"/>
   </session-factory>

@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HibernatingRhinos.NHibernate.Profiler.Appender, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HibernatingRhinos.NHibernate.Profiler.Appender, Version=0.9.0.0, Culture=neutral, PublicKeyToken=0774796e73ebf640, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\HibernatingRhinos.NHibernate.Profiler.Appender.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Work\NHibernateProfiler\HibernatingRhinos.NHibernate.Profiler.Appender\bin\Debug\HibernatingRhinos.NHibernate.Profiler.Appender.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -85,11 +85,6 @@
       <Project>{F21092AF-E260-444E-B2FA-E7C07D00DDF6}</Project>
       <Name>HumanResources.Northwind %28MultiTenancy 2\HumanResources.Northwind%29</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nhprof.log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

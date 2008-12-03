@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using HibernatingRhinos.NHibernate.Profiler.Appender;
 using HumanResources.Model;
 using HumanResources.Northwind;
 using log4net.Config;
@@ -19,7 +20,7 @@ namespace MultiTenancy.Host
 
         private static void Main()
         {
-            XmlConfigurator.Configure(new FileInfo("nhprof.log4net.config"));
+            NHibernateProfiler.Initialize();
 
             BuildFactory("nhibernate");
             BuildFactory("northwind");
@@ -108,7 +109,7 @@ namespace MultiTenancy.Host
             Configuration cfg = new Configuration()
                 .Configure(name + ".cfg.xml");
             using (new ConsoleColorer(GetColorForName(name)))
-                new SchemaExport(cfg).Execute(true, true, false, true);
+                new SchemaExport(cfg).Execute(false, true, false, true);
             factories[name] = cfg.BuildSessionFactory();
         }
 

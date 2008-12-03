@@ -3,7 +3,8 @@
 	<session-factory>
     <property name="connection.connection_string">Server=localhost;initial catalog=northwind;Trusted_Connection=Yes</property>
     <property name="connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
-		<property name="dialect">NHibernate.Dialect.MsSql2005Dialect</property>
+    <property name="dialect">NHibernate.Dialect.MsSql2000Dialect</property>
+    <property name='proxyfactory.factory_class'>NHibernate.ProxyGenerators.CastleDynamicProxy.ProxyFactoryFactory, NHibernate.ProxyGenerators.CastleDynamicProxy</property>
 
     <mapping assembly="HumanResources.Model" resource="HumanResources.Model.TimesheetEntry.hbm.xml"/>
     

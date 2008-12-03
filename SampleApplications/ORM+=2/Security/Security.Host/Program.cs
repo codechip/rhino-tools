@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using Castle.Windsor;
+using HibernatingRhinos.NHibernate.Profiler.Appender;
 using HumanResources.Model;
-using log4net.Config;
+using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using Rhino.Commons;
 using Rhino.Commons.Facilities;
 using Rhino.Security;
 using Rhino.Security.Interfaces;
-using Util;
 
 namespace Security.Host
 {
@@ -19,28 +15,70 @@ namespace Security.Host
     {
         static void Main()
         {
-            XmlConfigurator.Configure(new FileInfo("nhprof.log4net.config"));
+            NHibernateProfiler.Initialize();
             try
             {
                 var container = new WindsorContainer();
                 IoC.Initialize(container);
                 container.Kernel.AddFacility("nh", new NHibernateUnitOfWorkFacility());
                 container.Kernel.AddFacility("security", new RhinoSecurityFacility(typeof(Employee)));
-                container.AddComponent("entity.extractor", typeof (IEntityInformationExtractor<>),
-                                       typeof (EntityInformationExtractor<>));
-                container.AddComponent("capture.nh.cfg", typeof (INHibernateInitializationAware),
-                                       typeof (CaptureNHibernateConfiguration));
-                
+                container.AddComponent("entity.extractor", typeof(IEntityInformationExtractor<>),
+                                       typeof(EntityInformationExtractor<>));
+                container.AddComponent("capture.nh.cfg", typeof(INHibernateInitializationAware),
+                                       typeof(CaptureNHibernateConfiguration));
+
                 //CreateDB(container);
 
-                using(UnitOfWork.Start())
-                using(var tx = UnitOfWork.Current.BeginTransaction())
+                using (UnitOfWork.Start())
+                using (var tx = UnitOfWork.Current.BeginTransaction())
                 {
                     var authorizationRepository = container.Resolve<IAuthorizationRepository>();
-                    authorizationRepository.CreateOperation("/Salary/Read");
-                    UnitOfWork.Current.Flush();
-                    authorizationRepository.CreateOperation("/Salary/Write");
-                    
+                    var authorizationService = container.Resolve<IAuthorizationService>();
+
+                    //authorizationRepository.CreateEntitiesGroup("Salaries");
+                    //authorizationRepository.CreateOperation("/Salary/Read");
+                    //UnitOfWork.Current.Flush();
+                    //authorizationRepository.CreateOperation("/Salary/Write");
+
+                    //UnitOfWork.CurrentSession.Save(new Salary
+                    //{
+                    //    HourlyRate = 10,
+                    //    Name = "Standard",
+                    //});
+
+                    //UnitOfWork.CurrentSession.Save(new Employee
+                    //{
+                    //    Name = "ayende",
+                    //    Salary = salary
+                    //});
+
+                    //var salary = UnitOfWork.CurrentSession
+                    //    .CreateCriteria(typeof(Salary))
+                    //    .UniqueResult<Salary>();
+
+                    //var salary = UnitOfWork.CurrentSession
+                    //    .CreateCriteria(typeof(Salary))
+                    //    .UniqueResult<Salary>();
+
+                    var emp = UnitOfWork.CurrentSession
+                        .CreateCriteria(typeof(Employee))
+                        .UniqueResult<Employee>();
+
+                    //authorizationRepository.AssociateEntityWith(salary, "Salaries");
+
+                    var isAllowed = authorizationService.IsAllowed(emp, "/Salary/Read");
+                    Console.WriteLine(isAllowed);
+
+                    var salariesCriteria = UnitOfWork.CurrentSession
+                        .CreateCriteria(typeof(Salary))
+                        .Add(Restrictions.Like("Name", "Sal", MatchMode.Start));
+
+                    authorizationService.AddPermissionsToQuery(emp, "/Salary/Read", salariesCriteria);
+
+                    foreach (Salary salary in salariesCriteria.List())
+                    {
+                        Console.WriteLine(salary.Name);
+                    }
                     tx.Commit();
                 }
             }
@@ -48,7 +86,6 @@ namespace Security.Host
             {
                 Console.WriteLine(e);
             }
-        
         }
 
         private static void CreateDB(IWindsorContainer container)

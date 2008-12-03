@@ -3,6 +3,7 @@ using System.IO;
 using AccountingPackage;
 using CustomerCareModule;
 using HelpDeskPackage;
+using HibernatingRhinos.NHibernate.Profiler.Appender;
 using Interfaces;
 using log4net.Config;
 using NHibernate;
@@ -15,7 +16,7 @@ namespace AdaptiveModelHost
     {
         static void Main()
         {
-            XmlConfigurator.Configure(new FileInfo("nhprof.log4net.config"));
+            NHibernateProfiler.Initialize();
             
             DemoUsingCustomerCareModule<AccountingCustomer>(
                 "Accounting");
@@ -34,7 +35,7 @@ namespace AdaptiveModelHost
             cfg.MapManyToOne<ICustomer, TCustomer>();
             cfg.SetSchema(schema);
 
-            new SchemaExport(cfg).Execute(true, true, false, true);
+            new SchemaExport(cfg).Execute(false, true, false, true);
 
             ISessionFactory factory = cfg.BuildSessionFactory();
 
