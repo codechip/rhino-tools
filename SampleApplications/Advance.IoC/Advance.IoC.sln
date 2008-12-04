@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.Components", "Advance.IoC.Components\Advance.IoC.Components.csproj", "{9ECEC3B6-4B58-4684-A4F1-9C89849516DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.AuthRegistration", "AutoRegistration\Advance.IoC.AuthRegistration\Advance.IoC.AuthRegistration.csproj", "{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoRegistration", "AutoRegistration", "{D5DB633F-AD31-48BB-9AD3-0EC24827B1F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.AOP", "Advance.IoC.AOP\Advance.IoC.AOP.csproj", "{37241988-C1F1-4939-891F-2E106D6A86E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AoP", "AoP", "{692154EE-0BCF-4A7A-99B8-5238638F868A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GenericSpecialization", "GenericSpecialization", "{8B2A5A2A-CE38-464A-8DB5-4BC9C1CFCD72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.GenericSpecialization", "Advance.IoC.GenericSpecialization\Advance.IoC.GenericSpecialization.csproj", "{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HierarchicalContainers", "HierarchicalContainers", "{551ACE16-D656-496F-A2D9-F453204E5772}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.HierarchicalContainers", "Advance.IoC.HierarchicalContainers\Advance.IoC.HierarchicalContainers.csproj", "{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ComponentSelectors", "ComponentSelectors", "{F1B0CB6C-796D-4437-9882-093E51AF9D4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.ComponentSelectors", "Advance.IoC.ComponentSelectors\Advance.IoC.ComponentSelectors.csproj", "{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Advance.IoC.GenericSpecialization.Validation", "Advance.IoC.GenericSpecialization.Validation\Advance.IoC.GenericSpecialization.Validation.csproj", "{9B823E98-45BE-4310-82B2-7D3C55251FF3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9ECEC3B6-4B58-4684-A4F1-9C89849516DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ECEC3B6-4B58-4684-A4F1-9C89849516DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ECEC3B6-4B58-4684-A4F1-9C89849516DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ECEC3B6-4B58-4684-A4F1-9C89849516DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37241988-C1F1-4939-891F-2E106D6A86E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37241988-C1F1-4939-891F-2E106D6A86E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37241988-C1F1-4939-891F-2E106D6A86E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37241988-C1F1-4939-891F-2E106D6A86E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B823E98-45BE-4310-82B2-7D3C55251FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B823E98-45BE-4310-82B2-7D3C55251FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B823E98-45BE-4310-82B2-7D3C55251FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B823E98-45BE-4310-82B2-7D3C55251FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{71DBF2E9-8EA2-4F1D-97A3-E47449C0D56C} = {D5DB633F-AD31-48BB-9AD3-0EC24827B1F2}
+		{9ECEC3B6-4B58-4684-A4F1-9C89849516DD} = {D5DB633F-AD31-48BB-9AD3-0EC24827B1F2}
+		{37241988-C1F1-4939-891F-2E106D6A86E8} = {692154EE-0BCF-4A7A-99B8-5238638F868A}
+		{E799CF16-F33A-4A69-A6AD-9EE2EC8CDF4D} = {8B2A5A2A-CE38-464A-8DB5-4BC9C1CFCD72}
+		{9B823E98-45BE-4310-82B2-7D3C55251FF3} = {8B2A5A2A-CE38-464A-8DB5-4BC9C1CFCD72}
+		{07556618-A1D8-4BE9-B3F1-A278E9F7CAC0} = {551ACE16-D656-496F-A2D9-F453204E5772}
+		{1EF8ECFB-7256-4EF0-A8DA-B615BBBA5E67} = {F1B0CB6C-796D-4437-9882-093E51AF9D4B}
+	EndGlobalSection
+EndGlobal
