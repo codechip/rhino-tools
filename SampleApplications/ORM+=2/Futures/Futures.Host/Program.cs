@@ -20,12 +20,13 @@ namespace Futures.Host
 
             Configuration cfg = new Configuration()
                   .Configure("nhibernate.cfg.xml");
-            using (new ConsoleColorer("nhibernate"))
-                new SchemaExport(cfg).Execute(false, true, false, true);
             var factory = cfg.BuildSessionFactory();
 
-            CreateData(factory);
-            Console.Clear();
+            //using (new ConsoleColorer("nhibernate"))
+            //    new SchemaExport(cfg).Execute(false, true, false, true);
+
+            //CreateData(factory);
+            //Console.Clear();
             using (new ConsoleColorer("future"))
             using (ISession session = factory.OpenSession())
             using (ITransaction tx = session.BeginTransaction())
@@ -34,6 +35,8 @@ namespace Futures.Host
                     .Future<Employee>();
                 var salaries = session.CreateCriteria(typeof (Salary))
                     .Future<Salary>();
+                var timesheets = session.CreateCriteria(typeof(TimesheetEntry))
+                    .Future<TimesheetEntry>();
 
                 foreach (var employee in employees)
                 {
@@ -42,6 +45,11 @@ namespace Futures.Host
                 foreach (var salary in salaries)
                 {
                     Console.WriteLine(salary.Name + ": " + salary.HourlyRate);
+                }
+
+                foreach (var entry in timesheets)
+                {
+                    Console.WriteLine(entry.Id);
                 }
 
                 tx.Commit();

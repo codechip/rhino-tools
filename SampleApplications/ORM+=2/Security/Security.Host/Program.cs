@@ -28,7 +28,7 @@ namespace Security.Host
                                        typeof(CaptureNHibernateConfiguration));
 
                 //CreateDB(container);
-
+                
                 using (UnitOfWork.Start())
                 using (var tx = UnitOfWork.Current.BeginTransaction())
                 {
@@ -40,11 +40,12 @@ namespace Security.Host
                     //UnitOfWork.Current.Flush();
                     //authorizationRepository.CreateOperation("/Salary/Write");
 
-                    //UnitOfWork.CurrentSession.Save(new Salary
+                    //var salary = new Salary
                     //{
                     //    HourlyRate = 10,
                     //    Name = "Standard",
-                    //});
+                    //};
+                    //UnitOfWork.CurrentSession.Save(salary);
 
                     //UnitOfWork.CurrentSession.Save(new Employee
                     //{
@@ -56,28 +57,25 @@ namespace Security.Host
                     //    .CreateCriteria(typeof(Salary))
                     //    .UniqueResult<Salary>();
 
-                    //var salary = UnitOfWork.CurrentSession
-                    //    .CreateCriteria(typeof(Salary))
-                    //    .UniqueResult<Salary>();
-
                     var emp = UnitOfWork.CurrentSession
                         .CreateCriteria(typeof(Employee))
                         .UniqueResult<Employee>();
 
                     //authorizationRepository.AssociateEntityWith(salary, "Salaries");
 
-                    var isAllowed = authorizationService.IsAllowed(emp, "/Salary/Read");
-                    Console.WriteLine(isAllowed);
+                    //var isAllowed = authorizationService.IsAllowed(emp, "/Salary/Read");
+                    //Console.WriteLine(isAllowed);
 
                     var salariesCriteria = UnitOfWork.CurrentSession
                         .CreateCriteria(typeof(Salary))
                         .Add(Restrictions.Like("Name", "Sal", MatchMode.Start));
 
-                    authorizationService.AddPermissionsToQuery(emp, "/Salary/Read", salariesCriteria);
+                    authorizationService
+                        .AddPermissionsToQuery(emp, "/Salary/Read", salariesCriteria);
 
-                    foreach (Salary salary in salariesCriteria.List())
+                    foreach (Salary o in salariesCriteria.List())
                     {
-                        Console.WriteLine(salary.Name);
+                        Console.WriteLine(o.Name);
                     }
                     tx.Commit();
                 }

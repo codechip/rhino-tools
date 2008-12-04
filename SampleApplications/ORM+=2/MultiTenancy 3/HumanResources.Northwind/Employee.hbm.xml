@@ -10,6 +10,7 @@
     </id>
 
     <property name="Name" />
-    <many-to-one name="Salary" class="HumanResources.Northwind.SalaryWithOvertimeAndBehavior, HumanResources.Northwind" />
+    <many-to-one name="Salary" 
+                 class="HumanResources.Northwind.SalaryWithOvertimeAndBehavior, HumanResources.Northwind" />
   </class>
 </hibernate-mapping>

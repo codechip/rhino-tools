@@ -6,7 +6,8 @@
     <property name="dialect">NHibernate.Dialect.MsSql2000Dialect</property>
     <property name='proxyfactory.factory_class'>NHibernate.ProxyGenerators.CastleDynamicProxy.ProxyFactoryFactory, NHibernate.ProxyGenerators.CastleDynamicProxy</property>
 
-    <mapping assembly="HumanResources.Model" resource="HumanResources.Model.TimesheetEntry.hbm.xml"/>
+    <mapping assembly="HumanResources.Model" 
+             resource="HumanResources.Model.TimesheetEntry.hbm.xml"/>
     
     <mapping assembly="HumanResources.Northwind"/>
     

@@ -19,15 +19,22 @@ namespace MultiTenancy.Host
         private static void Main()
         {
             NHibernateProfiler.Initialize();
-            
-            BuildFactory("nhibernate");
-            BuildFactory("northwind");
 
-            CreateData("nhibernate", 25m);
-            CreateData("Northwind", 22m);
+            try
+            {
+                BuildFactory("nhibernate");
+                BuildFactory("northwind");
 
-            CalculateSalary("nhibernate");
-            CalculateSalary("Northwind");
+                CreateData("nhibernate", 25m);
+                CreateData("Northwind", 22m);
+
+                CalculateSalary("nhibernate");
+                CalculateSalary("Northwind");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static void CreateData(string name, decimal hourlyRate)
