@@ -225,7 +225,6 @@
     <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
-    <Compile Include="Binsor\BinsorResourceTestCase.cs" />
     <Compile Include="Binsor\BinsorStreamTestCase.cs" />
     <Compile Include="Binsor\Calculator.cs" />
     <Compile Include="Binsor\CalculatorTestCase.cs" />

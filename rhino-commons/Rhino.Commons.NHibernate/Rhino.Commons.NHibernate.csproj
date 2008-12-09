@@ -111,6 +111,8 @@
     <Compile Include="Repositories\RepositoryHelper.cs" />
     <Compile Include="Repositories\RepositoryImplBase.cs" />
     <Compile Include="UnitOfWork\BaseUnitOfWorkFactory.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWorkAware.cs" />
+    <Compile Include="UnitOfWork\LongConversationManager.cs" />
     <Compile Include="UnitOfWork\MultipleNHibernateTransaction.cs" />
     <Compile Include="UnitOfWork\MultipleUnitOfWorkImplementor.cs" />
     <Compile Include="UnitOfWork\INHibernateInitializationAware.cs" />
