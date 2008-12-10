@@ -33,6 +33,7 @@ using Castle.ActiveRecord.Framework;
 using Castle.ActiveRecord.Framework.Config;
 using NHibernate;
 using NHibernate.Cfg;
+using AREnvironment = NHibernate.Cfg.Environment;
 
 namespace Rhino.Commons.ForTesting
 {
@@ -60,7 +61,7 @@ namespace Rhino.Commons.ForTesting
 
 		public override Configuration Configuration
 		{
-			get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
+            get { return ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase)); }
 		}
 
 
@@ -72,7 +73,14 @@ namespace Rhino.Commons.ForTesting
 
 		public override ISessionFactory SessionFactory
 		{
-			get { return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory(); }
+            get
+            { 
+                //TODO: This is hack for rev 1748. there should be a better way. similiar to hack on UnitOfWorkTestContext.BuildSessionFactory()
+                if (Configuration.GetProperty(AREnvironment.ProxyFactoryFactoryClass) == null)
+                    Configuration.Properties[AREnvironment.ProxyFactoryFactoryClass] = "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle";
+
+                return sessionFactory = sessionFactory ?? Configuration.BuildSessionFactory();
+            }
 		}
 
 

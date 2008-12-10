@@ -122,7 +122,7 @@ namespace Rhino.Igloo.Tests
         /// <returns></returns>
         public string[] GetMultiplyInputVariables(string key)
         {
-            return inputs.GetValues(key);
+            return Inputs.GetValues(key);
         }
 
         /// <summary>
@@ -172,9 +172,7 @@ namespace Rhino.Igloo.Tests
         /// <returns></returns>
         public object GetFromSession(string key)
         {
-            if (Session.ContainsKey(key) == false)
-                return null;
-            return Session[key];
+            return Session.ContainsKey(key) ? Session[key] : null;
         }
 
         /// <summary>

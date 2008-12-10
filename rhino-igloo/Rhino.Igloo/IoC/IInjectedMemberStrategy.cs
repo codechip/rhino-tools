@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 
 namespace Rhino.Igloo
@@ -8,7 +6,7 @@ namespace Rhino.Igloo
     internal interface IInjectedMemberStrategy
     {
         bool IsSatisfiedBy(ScopeType scope);
-        void SetValueFor(string key, PropertyInfo property, Object instance);
+        void SetValueFor(Object instance, string key, PropertyInfo property);
     }
 
     internal class InputsInjectedMemberStrategy : IInjectedMemberStrategy
@@ -18,7 +16,7 @@ namespace Rhino.Igloo
             return scope == ScopeType.Inputs;
         }
 
-        public void SetValueFor(string key, PropertyInfo property, Object instance)
+        public void SetValueFor(Object instance, string key, PropertyInfo property)
         {
             if (Scope.Inputs[key] == null) return;
 
@@ -34,7 +32,7 @@ namespace Rhino.Igloo
             return scope == ScopeType.Input;
         }
 
-        public void SetValueFor(string key, PropertyInfo property, Object instance)
+        public void SetValueFor(Object instance, string key, PropertyInfo property)
         {
             if (Scope.Input[key] == null) return;
             object result = ConversionUtil.ConvertTo(property.PropertyType, Scope.Input[key]);
@@ -49,7 +47,7 @@ namespace Rhino.Igloo
             return scope == ScopeType.Session;
         }
 
-        public void SetValueFor(string key, PropertyInfo property, Object instance)
+        public void SetValueFor(Object instance, string key, PropertyInfo property)
         {
             property.SetValue(instance, Scope.Session[key], null);
         }
@@ -62,9 +60,25 @@ namespace Rhino.Igloo
             return scope == ScopeType.Flash;
         }
 
-        public void SetValueFor(string key, PropertyInfo property, Object instance)
+        public void SetValueFor(Object instance, string key, PropertyInfo property)
         {
             property.SetValue(instance, Scope.Flash[key], null);
+        }
+    }
+
+    internal class ThrowingInjectedMemberStrategy : IInjectedMemberStrategy
+    {
+        private ScopeType _scope;
+
+        public bool IsSatisfiedBy(ScopeType scope)
+        {
+            _scope = scope;
+            return true;
+        }
+
+        public void SetValueFor(Object instance, string key, PropertyInfo property)
+        {
+            throw new ArgumentOutOfRangeException("ScopeType.Scope");
         }
     }
 }

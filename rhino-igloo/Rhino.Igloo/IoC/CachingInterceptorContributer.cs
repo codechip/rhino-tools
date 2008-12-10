@@ -49,14 +49,14 @@ namespace Rhino.Igloo
         /// </summary>
         public void ProcessModel(IKernel kernel, ComponentModel model)
         {
-            bool isRepository = model.Service.IsGenericType && 
-                model.Service.GetGenericTypeDefinition() == typeof(IRepository<>);
-            if (isRepository == false)
-                return;
+            //is generic repository
+            if (!model.Service.IsGenericType) return;
+            if (model.Service.GetGenericTypeDefinition() != typeof(IRepository<>)) return;
+
             Type entityType = model.Service.GetGenericArguments()[0];
             bool cacheable = entityType.GetCustomAttributes(typeof(CacheableAttribute), true).Length != 0;
-            if(cacheable==false)
-                return;
+            if(!cacheable) return;
+
             model.Interceptors.Add(new InterceptorReference(typeof(CachingInterceptor)));
         }
     }

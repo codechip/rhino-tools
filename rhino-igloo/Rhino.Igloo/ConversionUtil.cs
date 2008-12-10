@@ -46,16 +46,18 @@ namespace Rhino.Igloo
         /// <returns></returns>
         public static object ConvertTo(Type type, string[] inject)
         {
-            if(!type.HasElementType)
+            if (!type.HasElementType)
+            {
                 throw new InvalidOperationException("Type " + type.FullName + " is not an array, and cannot be converted as such");
-
+            }
             if (inject == null)
             {
                 return !type.IsValueType ? null : Activator.CreateInstance(type, 0);
             }
             if (type.IsInstanceOfType(inject))
+            {
                 return inject;
-
+            }
 
             Array array = (Array)Activator.CreateInstance(type, inject.Length);
             Type elementType = type.GetElementType();
@@ -76,37 +78,44 @@ namespace Rhino.Igloo
         {
             if (inject == null)
             {
-                if (type.IsValueType == false)
-                    return null;
-                else
-                    return Activator.CreateInstance(type);
+                return type.IsValueType ? Activator.CreateInstance(type) : null;
             }
+
             if (type.IsInstanceOfType(inject))
+            {
                 return inject;
+            }
             else if (type == typeof(int))
             {
                 int temp;
                 if (int.TryParse(inject, out temp))
                     return temp;
-                else
-                    return null;
+                return null;
             }
             else if (typeof(IConvertible).IsAssignableFrom(type))
+            {
                 return Convert.ChangeType(inject, type);
+            }
 
             //Maybe we have a constructor that accept the type?
             ConstructorInfo ctor = type.GetConstructor(new Type[] { inject.GetType() });
             if (ctor != null)
+            {
                 return Activator.CreateInstance(type, inject);
+            }
 
             //Maybe we have a Parse method ??
             MethodInfo parseMethod = type.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public);
             if (parseMethod != null)
+            {
                 return parseMethod.Invoke(null, new object[] { inject });
+            }
 
-            throw new ArgumentException(
-                string.Format("Cannot convert value '{0}' of type '{1}' to request type '{2}'", inject,
-                              inject.GetType(), type));
+            throw new ArgumentException(string.Format(
+                "Cannot convert value '{0}' of type '{1}' to request type '{2}'", 
+                inject,
+                inject.GetType(), 
+                type));
         }
     }
 }

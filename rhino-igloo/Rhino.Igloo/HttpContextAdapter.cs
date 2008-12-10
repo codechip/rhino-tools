@@ -92,8 +92,8 @@ namespace Rhino.Igloo
         /// <param name="key">The key.</param>
         public string GetInputVariable(string key)
         {
-            if (key == null)
-                throw new ArgumentNullException("key", "The key cannnot be null");
+            if (key == null) throw new ArgumentNullException("key", "The key cannnot be null");
+
 			string aspNetFormKey = "$" + key;
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
@@ -101,7 +101,7 @@ namespace Rhino.Igloo
 					return context.Server.HtmlEncode(context.Request.Form[formKey]);
             }
         	string result = context.Request.QueryString[key];
-			if (string.IsNullOrEmpty(result) == false)
+			if (!string.IsNullOrEmpty(result))
 				return context.Server.HtmlEncode(result);
         	return result;
         }
@@ -113,8 +113,8 @@ namespace Rhino.Igloo
         /// <param name="key">The key.</param>
         public string[] GetMultiplyInputVariables(string key)
         {
-            if (key == null)
-                throw new ArgumentNullException("key", "The key cannnot be null");
+            if (key == null) throw new ArgumentNullException("key", "The key cannnot be null");
+
 			string aspNetFormKey = "$" + key;
 			foreach (string formKey in context.Request.Form.AllKeys)
             {
@@ -129,11 +129,11 @@ namespace Rhino.Igloo
 
 		private string[] HtmlEncode(string[] results)
     	{
-            if (results==null)
-                return new string[0];
+            if (results == null) return new string[0];
+
     		for (int i = 0; i < results.Length; i++)
     		{
-				if(string.IsNullOrEmpty(results[i])==false)
+				if(!string.IsNullOrEmpty(results[i]))
 				{
 					results[i] = context.Server.HtmlEncode(results[i]);
 				}
@@ -147,9 +147,7 @@ namespace Rhino.Igloo
         /// <param name="key">The key.</param>
         public object GetFromSession(string key)
         {
-            if(context.Session==null)
-                return null;
-            return context.Session[key];
+            return context.Session != null ? context.Session[key] : null;
         }
 
         /// <summary>
@@ -159,8 +157,7 @@ namespace Rhino.Igloo
         /// <param name="value">The value.</param>
         public void SetAtSession(string key, object value)
         {
-            if (context.Session == null)
-                throw new InvalidOperationException("Not in a session");
+            if (context.Session == null) throw new InvalidOperationException("Not in a session");
             context.Session[key] = value;
         }
 
@@ -192,14 +189,8 @@ namespace Rhino.Igloo
 		/// <param name="user">The user.</param>
     	public void Authenticate(string user)
     	{
-    		FormsAuthenticationTicket authTicket =
-    			new FormsAuthenticationTicket(user, false, 60);
-
-    		string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-
-    		HttpCookie authCookie =
-    			new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-
+    		FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(user, false, 60);
+    		HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(authTicket));
     		context.Response.Cookies.Add(authCookie);
     	}
 
@@ -229,16 +220,14 @@ namespace Rhino.Igloo
         {
             get
             {
-                if (uploadedFiles == null)
+                if (uploadedFiles != null) return uploadedFiles;
+
+                uploadedFiles = new List<UploadedFile>();
+                foreach (string key in context.Request.Files)
                 {
-                    uploadedFiles = new List<UploadedFile>();
-                    foreach (string key in context.Request.Files)
-                    {
-                        HttpPostedFile file = context.Request.Files[key];
-                        if (string.IsNullOrEmpty(file.FileName))
-                            continue;
-                        uploadedFiles.Add(new UploadedFile(file.FileName, file.InputStream));
-                    }
+                    HttpPostedFile file = context.Request.Files[key];
+                    if (string.IsNullOrEmpty(file.FileName)) continue;
+                    uploadedFiles.Add(new UploadedFile(file.FileName, file.InputStream));
                 }
                 return uploadedFiles;
             }
@@ -279,8 +268,7 @@ namespace Rhino.Igloo
         /// <param name="path">The path.</param>
         public void EnsureDirectoryExists(string path)
         {
-            if (Directory.Exists(path) == false)
-                Directory.CreateDirectory(path);
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
         }
 
 
@@ -380,8 +368,8 @@ namespace Rhino.Igloo
         /// <returns></returns>
         public bool BrowserIsIE7()
         {
-            return context.Request.Browser.Browser == "IE" &&
-                   context.Request.Browser.MajorVersion == 7;
+            HttpBrowserCapabilities browser = context.Request.Browser;
+            return browser.Browser == "IE" && browser.MajorVersion == 7;
         }
 
 
@@ -410,13 +398,9 @@ namespace Rhino.Igloo
                 if (!ipWithDot.EndsWith("."))
                 {
                     string[] split = ipWithDot.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (split.Length != 4)
-                    {
-                        ipWithDot = ipWithDot + ".";
-                    }
+                    if (split.Length != 4) ipWithDot = ipWithDot + ".";
                 }
-                if (clientIp.StartsWith(ipWithDot))
-                    return true;
+                if (clientIp.StartsWith(ipWithDot)) return true;
             }
             return false;
         }

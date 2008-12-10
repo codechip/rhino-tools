@@ -86,10 +86,9 @@ namespace Rhino.Igloo
             List<BaseController> controllers = new List<BaseController>();
             foreach (PropertyInfo info in controllersToInject)
             {
-                if(info.CanWrite==false)
-                    return;
+                if(!info.CanWrite) return;
 
-                BaseController controller = (BaseController)IoC.Container.Resolve(info.PropertyType);
+                BaseController controller = (BaseController)IoC.Resolve(info.PropertyType);
                 controllers.Add(controller);
                 info.SetValue(instance, controller, null);
             }

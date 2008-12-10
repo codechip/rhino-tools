@@ -118,6 +118,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ForTesting\FakeContext.cs" />
     <Compile Include="ForTesting\FakeContextProvider.cs" />
+    <Compile Include="IoC\IInjectedEntityStrategy.cs" />
+    <Compile Include="IoC\IInjectedMemberStrategy.cs" />
     <Compile Include="ScopeItem.cs" />
     <Compile Include="ThrowingContextAdapter.cs" />
     <Compile Include="UploadedFile.cs" />

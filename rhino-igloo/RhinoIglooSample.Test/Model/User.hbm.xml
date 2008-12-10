@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping assembly="RhinoIglooSample.Test" namespace="RhinoIglooSample.Test.Model" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="User" table="user_tbl">
+    <id name="Id">
+      <generator class="identity" />
+    </id>
+    <property name="Name"/>
+  </class>
+</hibernate-mapping>

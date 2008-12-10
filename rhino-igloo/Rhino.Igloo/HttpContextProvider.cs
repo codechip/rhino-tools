@@ -47,9 +47,8 @@ namespace Rhino.Igloo
 		{
 			get
 			{
-				if (HttpContext.Current == null)
-					return new ThrowingContextAdapter();
-				return new HttpContextAdapter(HttpContext.Current);
+                if (HttpContext.Current != null) return new HttpContextAdapter(HttpContext.Current);
+                return new ThrowingContextAdapter();
 			}
 		}
 	}

@@ -47,16 +47,15 @@ namespace Rhino.Igloo
         {
             foreach (ActiveRecordModel model in models)
             {
-                if (IsCacheable(model.Type) == false)
+                if (!IsCacheable(model.Type))
                 {
                     model.ActiveRecordAtt.Cache = CacheEnum.ReadWrite;
                 }
+
                 foreach (HasManyModel hasManyModel in model.HasMany)
                 {
-                    if (IsCacheable(hasManyModel.HasManyAtt.MapType))
-                    {
-                        hasManyModel.HasManyAtt.Cache = CacheEnum.ReadWrite;
-                    }
+                    if (!IsCacheable(hasManyModel.HasManyAtt.MapType)) continue;
+                    hasManyModel.HasManyAtt.Cache = CacheEnum.ReadWrite;
                 }
             }
         }

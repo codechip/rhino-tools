@@ -44,8 +44,7 @@ namespace Rhino.Igloo
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		public static void WebUI_InjectComponent(object sender, EventArgs e)
         {
-            ComponentRepository repository = IoC.Resolve<ComponentRepository>();
-            repository.InjectControllers(sender);
+            IoC.Resolve<ComponentRepository>().InjectControllers(sender);
         }
     }
 }

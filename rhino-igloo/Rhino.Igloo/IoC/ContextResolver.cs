@@ -33,7 +33,6 @@ using System.Text;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using Rhino.Commons;
 using Rhino.Igloo;
 
 namespace Rhino.Igloo
@@ -44,12 +43,19 @@ namespace Rhino.Igloo
 	/// </summary>
 	public class ContextResolver : ISubDependencyResolver
 	{
+        private readonly IKernel kernel;
+
+        public ContextResolver(IKernel kernel)
+        {
+            this.kernel = kernel;
+        }
+
 		/// <summary>
 		/// Get the current context for the application
 		/// </summary>
 		public object Resolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model, DependencyModel dependency)
 		{
-			return IoC.Resolve<IContextProvider>().Current;
+			return kernel.Resolve<IContextProvider>().Current;
 		}
 
 		/// <summary>
