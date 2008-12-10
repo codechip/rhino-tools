@@ -14,6 +14,7 @@
 		<include name="RhinoIglooSample.Model/default.build" />
 		<include name="RhinoIglooSample.Controllers/default.build" />
 		<include name="RhinoIglooSample.Web/default.build" />
+		<include name="RhinoIglooSample.Test/default.build" />
 	</fileset>
 
 	<target name="build" depends="common.build" />
