@@ -7,6 +7,7 @@ namespace Advance.IoC.Components.Controllers
     {
         private readonly IAuthenticationService authenticationService;
         private readonly IStatisticsTracking statisticsTracking;
+
         public LoginController(IAuthenticationService authenticationService, IStatisticsTracking statisticsTracking)
         {
             this.authenticationService = authenticationService;

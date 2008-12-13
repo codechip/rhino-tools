@@ -29,13 +29,13 @@ namespace Advance.IoC.AuthRegistration
                     .WithService.FirstInterface()
                     .Configure(registration =>
                     {
-                        if (typeof(IController).IsAssignableFrom(registration.Implementation))
-                        {
-                            registration.LifeStyle.Is(LifestyleType.Transient);
-                            string componentName = registration.Implementation.Name;
-                            componentName = (componentName.Substring(0, componentName.Length - "Controller".Length));
-                            registration.Named(componentName.ToLowerInvariant());
-                        }
+                        if (!typeof(IController).IsAssignableFrom(registration.Implementation))
+                            return;
+
+                        registration.LifeStyle.Is(LifestyleType.Transient);
+                        string componentName = registration.Implementation.Name;
+                        componentName = (componentName.Substring(0, componentName.Length - "Controller".Length));
+                        registration.Named(componentName.ToLowerInvariant());
                     })
                 );
 

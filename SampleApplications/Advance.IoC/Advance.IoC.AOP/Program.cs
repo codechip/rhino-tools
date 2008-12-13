@@ -17,8 +17,9 @@ namespace Advance.IoC.AOP
                 Component.For<IRemoteService>()
                     .ImplementedBy<RemoteService>()
                     .Interceptors(
-                        new InterceptorReference(typeof(CachingInterceptor)),
-                        new InterceptorReference(typeof (AuditingInterceptor))
+                        new InterceptorReference(typeof(AuditingInterceptor)),
+                        new InterceptorReference(typeof(SlaInterceptor)),
+                        new InterceptorReference(typeof(CachingInterceptor))
                         )
                     .Anywhere
                 );

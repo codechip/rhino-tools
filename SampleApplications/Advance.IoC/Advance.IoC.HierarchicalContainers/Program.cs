@@ -6,7 +6,7 @@ namespace Advance.IoC.HierarchicalContainers
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var container = new WindsorContainer();
 
@@ -35,7 +35,7 @@ namespace Advance.IoC.HierarchicalContainers
             Console.WriteLine();
             Console.WriteLine("Getting user service");
 
-            // trying to get a component define in the parent container
+            // trying to get a component defined in the parent container
            // var usersService1 = container.Resolve<IUsersService>();
            // Console.WriteLine(usersService1.Sender);
             

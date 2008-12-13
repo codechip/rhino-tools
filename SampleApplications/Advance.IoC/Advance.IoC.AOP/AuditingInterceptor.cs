@@ -12,12 +12,14 @@ namespace Advance.IoC.AOP
             try
             {
                 invocation.Proceed();
+                Console.WriteLine("Method " + invocation.Method + " succeded!");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Method "+invocation.Method +" failed!");
                 throw;
             }
+               
         }
     }
 }
