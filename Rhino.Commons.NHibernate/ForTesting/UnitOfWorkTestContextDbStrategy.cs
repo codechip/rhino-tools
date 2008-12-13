@@ -125,6 +125,8 @@ namespace Rhino.Commons.ForTesting
         public UnitOfWorkTestContextDbStrategy(string databaseName)
         {
             this.databaseName = databaseName;
+            properties["proxyfactory.factory_class"] =
+                "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle";
         }
 
 
