@@ -63,6 +63,7 @@
     <Compile Include="CanRouteMessageToConsumerThroughContainer.cs" />
     <Compile Include="FailureToProcessMessage.cs" />
     <Compile Include="CanCreateInstancesOfServiceBusFromContainer.cs" />
+    <Compile Include="MessageModuleTests.cs" />
     <Compile Include="MsmqSubscriptionTests.cs" />
     <Compile Include="MsmqTestBase.cs" />
     <Compile Include="MsmqTests.cs" />

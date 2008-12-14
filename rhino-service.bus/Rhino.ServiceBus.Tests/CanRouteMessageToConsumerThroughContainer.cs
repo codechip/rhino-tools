@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
-    public class CanRouteMessageToConsumerThroughContainer
+    public class CanRouteMessageToConsumerThroughContainer : MsmqTestBase
     {
         private readonly IWindsorContainer container;
 

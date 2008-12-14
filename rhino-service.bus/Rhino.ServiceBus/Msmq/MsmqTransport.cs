@@ -54,7 +54,7 @@ namespace Rhino.ServiceBus.Msmq
                 queue = new MessageQueue(queueDescriptor.QueuePath, QueueAccessMode.SendAndReceive);
                 var filter = new MessagePropertyFilter();
                 filter.SetAll();
-                queue.MessageReadPropertyFilter=filter;
+                queue.MessageReadPropertyFilter = filter;
 
             }
             catch (Exception e)
@@ -93,13 +93,15 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Reply(params object[] messages)
         {
-            if (currentMessageInformation==null)
+            if (currentMessageInformation == null)
                 throw new TransactionException("There is no message to reply to, sorry.");
 
             Send(currentMessageInformation.Source, messages);
         }
 
         public event Action<CurrentMessageInformation> MessageArrived = delegate { };
+        public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure = delegate { };
+        public event Action<CurrentMessageInformation> MessageProcessingCompleted = delegate { };
 
         #endregion
 
@@ -331,6 +333,7 @@ namespace Rhino.ServiceBus.Msmq
                 {
                     currentMessageInformation = new CurrentMessageInformation
                     {
+                        TransportMessage = transportMessage,
                         MessageId = CorrelationId.Parse(message.Id),
                         AllMessages = messages,
                         CorrelationId = CorrelationId.Parse(message.CorrelationId),
@@ -340,8 +343,22 @@ namespace Rhino.ServiceBus.Msmq
                     MessageArrived(currentMessageInformation);
                 }
             }
+            catch (Exception e)
+            {
+                try
+                {
+                    MessageProcessingFailure(currentMessageInformation, e);
+                }
+                catch(Exception moduleException)
+                {
+                    throw new TransportException("Module failed to process message failure: " + e.Message,
+                                                 moduleException);
+                }
+                throw;
+            }
             finally
             {
+                MessageProcessingCompleted(currentMessageInformation);
                 currentMessageInformation = null;
             }
         }
@@ -349,9 +366,9 @@ namespace Rhino.ServiceBus.Msmq
         public void Send(Uri uri, params object[] msgs)
         {
             var message = new Message();
-            
+
             serializer.Serialize(msgs, new MsmqTransportMessage(message));
-            
+
             message.ResponseQueue = queue;
 
             SetCorrelationIdOnMessage(message);
@@ -366,7 +383,7 @@ namespace Rhino.ServiceBus.Msmq
                     return s;
                 })
                 .FirstOrDefault();
-            
+
             SendMessageToQueue(message, uri);
         }
 
@@ -383,14 +400,14 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 using (var sendQueue = new MessageQueue(
-                    sendQueueDescription.QueuePath, 
+                    sendQueueDescription.QueuePath,
                     QueueAccessMode.Send))
                 {
                     var transactionType = GetTransactionTypeBasedOnQueue(sendQueue);
                     sendQueue.Send(message, transactionType);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new TransactionException("Failed to send message to " + uri, e);
             }

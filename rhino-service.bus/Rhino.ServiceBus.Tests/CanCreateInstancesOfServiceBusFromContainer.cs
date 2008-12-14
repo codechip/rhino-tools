@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
-    public class CanCreateInstancesOfServiceBusFromContainer
+    public class CanCreateInstancesOfServiceBusFromContainer : MsmqTestBase
     {
         private readonly WindsorContainer container;
 

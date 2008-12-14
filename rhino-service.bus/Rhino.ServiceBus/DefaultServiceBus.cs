@@ -7,6 +7,7 @@ using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using System.Linq;
+using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Util;
 
@@ -17,6 +18,7 @@ namespace Rhino.ServiceBus
         private readonly ITransport transport;
         private readonly ISubscriptionStorage subscriptionStorage;
         private readonly IReflection reflection;
+        private readonly IMessageModule[] modules;
         private readonly IKernel kernel;
 
         private readonly ILog logger = LogManager.GetLogger(typeof(DefaultServiceBus));
@@ -25,12 +27,14 @@ namespace Rhino.ServiceBus
             IKernel kernel,
             ITransport transport,
             ISubscriptionStorage subscriptionStorage,
-            IReflection reflection
+            IReflection reflection,
+            IMessageModule[] modules
             )
         {
             this.transport = transport;
             this.subscriptionStorage = subscriptionStorage;
             this.reflection = reflection;
+            this.modules = modules;
             this.kernel = kernel;
         }
 
@@ -86,10 +90,24 @@ namespace Rhino.ServiceBus
         public void Dispose()
         {
             transport.Stop();
+            transport.MessageArrived -= Transport_OnMessageArrived;
+            foreach (var module in modules)
+            {
+                module.Stop(transport);
+            }
+        }
+
+        public IMessageModule[] Modules
+        {
+            get { return modules; }
         }
 
         public void Start()
         {
+            foreach (var module in modules)
+            {
+                module.Init(transport);
+            }
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.Start();
         }
@@ -173,7 +191,7 @@ namespace Rhino.ServiceBus
 
             foreach (var sagaPersisterHandler in handlers)
             {
-                var sagaPersisterType = reflection.GetGenericTypeOf(typeof (ISagaPersister<>),
+                var sagaPersisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>),
                                                                     sagaPersisterHandler.ComponentModel.Implementation);
 
                 var sagaPersister = kernel.Resolve(sagaPersisterType);
@@ -184,7 +202,7 @@ namespace Rhino.ServiceBus
                         continue;
                     instances.Add(sagaInstance);
                 }
-                finally 
+                finally
                 {
                     kernel.ReleaseComponent(sagaPersister);
                 }

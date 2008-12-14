@@ -16,5 +16,7 @@ namespace Rhino.ServiceBus.Internal
         void Reply(params object[] messages);
 
         event Action<CurrentMessageInformation> MessageArrived;
+        event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
+        event Action<CurrentMessageInformation> MessageProcessingCompleted;
     }
 }

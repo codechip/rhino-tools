@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
-    public class SagaTests
+    public class SagaTests : MsmqBehaviorTests
     {
         private static Guid sagaId;
         private static ManualResetEvent wait;

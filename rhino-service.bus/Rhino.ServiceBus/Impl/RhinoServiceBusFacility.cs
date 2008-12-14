@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using Castle.Core;
+using Castle.Core.Configuration;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Serializers;
 
@@ -20,6 +23,7 @@ namespace Rhino.ServiceBus.Impl
         private Uri endpoint;
         private Uri errorEndpoint;
         private Uri subscriptionQueue;
+        private List<Type> messageModules = new List<Type>();
 
         public RhinoServiceBusFacility UseMsmqSubscription()
         {
@@ -36,6 +40,13 @@ namespace Rhino.ServiceBus.Impl
         public RhinoServiceBusFacility UseJsonSerialization()
         {
             serializerImpl = typeof (JsonSerializer);
+            return this;
+        }
+
+        public RhinoServiceBusFacility AddMessageModule<TModule>()
+            where TModule : IMessageModule
+        {
+            messageModules.Add(typeof(TModule));
             return this;
         }
 
@@ -58,9 +69,15 @@ namespace Rhino.ServiceBus.Impl
             ReadBusConfiguration();
             ReadSubscriptionConfiguration();
 
+            foreach (var type in messageModules)
+            {
+                Kernel.AddComponent(type.FullName, type);
+            }
+
             Kernel.Register(
                 Component.For<IServiceBus,IStartableServiceBus>()
-                    .ImplementedBy<DefaultServiceBus>(),
+                    .ImplementedBy<DefaultServiceBus>()
+                    .Parameters(Parameter.ForKey("modules").Eq(CreateModuleConfigurationNode())),
                 Component.For<IReflection>()
                     .ImplementedBy<DefaultReflection>(),
                 Component.For<ISubscriptionStorage>()
@@ -81,6 +98,16 @@ namespace Rhino.ServiceBus.Impl
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
                 );
+        }
+
+        private IConfiguration CreateModuleConfigurationNode()
+        {
+            var config = new MutableConfiguration("array");
+            foreach (var type in messageModules)
+            {
+                config.CreateChild("item", "${" + type.FullName + "}");
+            }
+            return config;
         }
 
         private void Kernel_OnComponentRegistered(string key, IHandler handler)
