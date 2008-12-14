@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1B21C8A5-5E0E-412B-A7F4-9F28B4427F21}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.ServiceBus</RootNamespace>
+    <AssemblyName>Rhino.ServiceBus</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.MicroKernel, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Castle.MicroKernel.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConsumerOf.cs" />
+    <Compile Include="Impl\CorrelationId.cs" />
+    <Compile Include="Impl\CurrentMessageInformation.cs" />
+    <Compile Include="DefaultServiceBus.cs" />
+    <Compile Include="Exceptions\MessagePublicationException.cs" />
+    <Compile Include="Exceptions\SubscriptionException.cs" />
+    <Compile Include="Exceptions\TransportException.cs" />
+    <Compile Include="Impl\InMemorySagaPersister.cs" />
+    <Compile Include="Impl\RhinoServiceBusFacility.cs" />
+    <Compile Include="Internal\IMessageConsumer.cs" />
+    <Compile Include="Impl\DefaultReflection.cs" />
+    <Compile Include="Internal\IReflection.cs" />
+    <Compile Include="Internal\ISagaPersister.cs" />
+    <Compile Include="Internal\ISubscriptionStorage.cs" />
+    <Compile Include="Sagas\InitiatedBy.cs" />
+    <Compile Include="IServiceBus.cs" />
+    <Compile Include="Internal\ITransport.cs" />
+    <Compile Include="IStartableServiceBus.cs" />
+    <Compile Include="Impl\ITransportMessage.cs" />
+    <Compile Include="Internal\IMessageSerializer.cs" />
+    <Compile Include="Msmq\MsmqSubscriptionStorage.cs" />
+    <Compile Include="Msmq\MsmqTransportMessage.cs" />
+    <Compile Include="Msmq\MsmqUtil.cs" />
+    <Compile Include="Msmq\MsmqTransport.cs" />
+    <Compile Include="Msmq\QueueDescriptor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sagas\ISaga.cs" />
+    <Compile Include="Sagas\ISagaMessage.cs" />
+    <Compile Include="Sagas\Orchestrates.cs" />
+    <Compile Include="Serializers\JsonSerializer.cs" />
+    <Compile Include="Util\GuidCombGenerator.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
