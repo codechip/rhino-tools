@@ -123,7 +123,22 @@ namespace Rhino.ServiceBus.Impl
         private void ReadManagementConfiguration()
         {
             managementEndpoint = new Uri(endpoint + "_management");
-            subscriptionQueue = new Uri(endpoint + "_subscriptions");
+
+            var busConfig = FacilityConfig.Children["subscriptions"];
+            if (busConfig == null)
+                throw new ConfigurationErrorsException("Could not find 'subscriptions' node in confiuration");
+
+            var uriString = busConfig.Attributes["endpoint"];
+            try
+            {
+                subscriptionQueue = new Uri(uriString);
+            }
+            catch (Exception e)
+            {
+                throw new ConfigurationErrorsException(
+                    "Attribute 'endpoint' on 'subscriptions' has an invalid value '" + uriString + "'"
+                    , e);
+            }
         }
 
         private void ReadBusConfiguration()
