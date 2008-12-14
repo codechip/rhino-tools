@@ -16,9 +16,10 @@ namespace Rhino.ServiceBus.Msmq
     {
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
         private readonly MessageQueue queue;
-        private readonly QueueDescriptor queueDescriptor;
+        private readonly MessageQueue managementQueue;
         private readonly IMessageSerializer serializer;
         private readonly Uri endpoint;
+        private readonly Uri managementEndpoint;
         private readonly Uri errorEndpoint;
         private readonly int threadCount;
         private readonly int numberOfRetries;
@@ -38,24 +39,37 @@ namespace Rhino.ServiceBus.Msmq
         public MsmqTransport(
             IMessageSerializer serializer,
             Uri endpoint,
+            Uri managementEndpoint,
             Uri errorEndpoint,
             int threadCount,
             int numberOfRetries)
         {
             this.serializer = serializer;
             this.endpoint = endpoint;
+            this.managementEndpoint = managementEndpoint;
             this.errorEndpoint = errorEndpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
-            waitHandles = new WaitHandle[threadCount];
-            queueDescriptor = MsmqUtil.GetQueueDescription(endpoint);
+            waitHandles = new WaitHandle[threadCount + 1];
+            managementQueue = InitalizeQueue(managementEndpoint);
+            queue = InitalizeQueue(endpoint);
+        }
+
+        public Uri ManagementEndpoint
+        {
+            get { return managementEndpoint; }
+        }
+
+        private static MessageQueue InitalizeQueue(Uri endpoint)
+        {
+            var queueDescriptor = MsmqUtil.GetQueueDescription(endpoint);
             try
             {
-                queue = new MessageQueue(queueDescriptor.QueuePath, QueueAccessMode.SendAndReceive);
+                var messageQueue = new MessageQueue(queueDescriptor.QueuePath, QueueAccessMode.SendAndReceive);
                 var filter = new MessagePropertyFilter();
                 filter.SetAll();
-                queue.MessageReadPropertyFilter = filter;
-
+                messageQueue.MessageReadPropertyFilter = filter;
+                return messageQueue;
             }
             catch (Exception e)
             {
@@ -76,19 +90,45 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
+            var managementWaitHandle = new ManualResetEvent(false);
+            waitHandles[0] = managementWaitHandle;
+            managementQueue.BeginPeek(TimeSpan.FromSeconds(1),
+                new QueueState
+                {
+                    MessageRecieved = () => ManagementMessageArrived,
+                    WaitHandle = managementWaitHandle
+                }, OnPeekMessage);
+
             for (int t = 0; t < threadCount; t++)
             {
                 var waitHandle = new ManualResetEvent(false);
-                waitHandles[t] = waitHandle;
-                queue.BeginPeek(TimeSpan.FromSeconds(1), waitHandle, OnPeekMessage);
+                waitHandles[t + 1] = waitHandle;
+                queue.BeginPeek(TimeSpan.FromSeconds(1), new QueueState
+                {
+                    MessageRecieved = () => MessageArrived,
+                    WaitHandle = waitHandle
+                }, OnPeekMessage);
             }
         }
 
         public void Stop()
         {
             ShouldStop = true;
-            WaitHandle.WaitAll(waitHandles);
+
+            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
+            {
+                WaitHandle.WaitAll(waitHandles);
+            }
+            else
+            {
+                foreach (var handle in waitHandles)
+                {
+                    handle.WaitOne();
+                }
+            }
+
             queue.Close();
+            managementQueue.Close();
         }
 
         public void Reply(params object[] messages)
@@ -99,9 +139,10 @@ namespace Rhino.ServiceBus.Msmq
             Send(currentMessageInformation.Source, messages);
         }
 
-        public event Action<CurrentMessageInformation> MessageArrived = delegate { };
-        public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure = delegate { };
-        public event Action<CurrentMessageInformation> MessageProcessingCompleted = delegate { };
+        public event Action<CurrentMessageInformation> ManagementMessageArrived;
+        public event Action<CurrentMessageInformation> MessageArrived;
+        public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
+        public event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
         #endregion
 
@@ -111,24 +152,25 @@ namespace Rhino.ServiceBus.Msmq
             if (peek == false)// error 
                 return;
 
+            var state = (QueueState) ar.AsyncState;
             if (ShouldStop)
             {
-                ((ManualResetEvent)ar.AsyncState).Set();
+                state.WaitHandle.Set();
                 return;
             }
 
             if (peek == null)//nothing was found
             {
-                queue.BeginPeek(TimeSpan.FromSeconds(1), ar.AsyncState, OnPeekMessage);
+                queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
                 return;
             }
 
-            ReceiveMessageInTransaction();
+            ReceiveMessageInTransaction(state);
 
-            queue.BeginPeek(TimeSpan.FromSeconds(1), ar.AsyncState, OnPeekMessage);
+            queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
         }
 
-        private void ReceiveMessageInTransaction()
+        private void ReceiveMessageInTransaction(QueueState state)
         {
             using (var tx = new TransactionScope())
             {
@@ -146,7 +188,7 @@ namespace Rhino.ServiceBus.Msmq
                         return;
                     }
 
-                    ProcessMessage(message);
+                    ProcessMessage(message, state);
                 }
                 catch (MessageQueueException e)
                 {
@@ -311,7 +353,7 @@ namespace Rhino.ServiceBus.Msmq
             return true;
         }
 
-        private void ProcessMessage(Message message)
+        private void ProcessMessage(Message message, QueueState state)
         {
             var transportMessage = new MsmqTransportMessage(message);
             object[] messages;
@@ -340,16 +382,21 @@ namespace Rhino.ServiceBus.Msmq
                         Message = msg,
                         Source = MsmqUtil.GetQueueUri(message.ResponseQueue)
                     };
-                    MessageArrived(currentMessageInformation);
+
+                    var messageRecieved = state.MessageRecieved();
+                    if (messageRecieved != null)
+                        messageRecieved(currentMessageInformation);
                 }
             }
             catch (Exception e)
             {
                 try
                 {
-                    MessageProcessingFailure(currentMessageInformation, e);
+                    var copy = MessageProcessingFailure;
+                    if (copy != null)
+                        copy(currentMessageInformation, e);
                 }
-                catch(Exception moduleException)
+                catch (Exception moduleException)
                 {
                     throw new TransportException("Module failed to process message failure: " + e.Message,
                                                  moduleException);
@@ -358,7 +405,9 @@ namespace Rhino.ServiceBus.Msmq
             }
             finally
             {
-                MessageProcessingCompleted(currentMessageInformation);
+                var copy = MessageProcessingCompleted;
+                if (copy != null)
+                    copy(currentMessageInformation);
                 currentMessageInformation = null;
             }
         }
@@ -411,6 +460,12 @@ namespace Rhino.ServiceBus.Msmq
             {
                 throw new TransactionException("Failed to send message to " + uri, e);
             }
+        }
+
+        private class QueueState
+        {
+            public Func<Action<CurrentMessageInformation>> MessageRecieved;
+            public ManualResetEvent WaitHandle;
         }
     }
 }

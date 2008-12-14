@@ -22,8 +22,8 @@ namespace Rhino.ServiceBus.Impl
         private int numberOfRetries = 5;
         private Uri endpoint;
         private Uri errorEndpoint;
-        private Uri subscriptionQueue;
-        private List<Type> messageModules = new List<Type>();
+        private Uri managementEndpoint;
+        private readonly List<Type> messageModules = new List<Type>();
 
         public RhinoServiceBusFacility UseMsmqSubscription()
         {
@@ -84,7 +84,7 @@ namespace Rhino.ServiceBus.Impl
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
                     {
-                        subscriptionQueue
+                        subscriptionQueue = managementEndpoint
                     }),
                 Component.For<ITransport>()
                     .ImplementedBy(transportImpl)
@@ -93,7 +93,8 @@ namespace Rhino.ServiceBus.Impl
                         numberOfRetries,
                         threadCount,
                         errorEndpoint,
-                        endpoint
+                        endpoint,
+                        managementEndpoint
                     }),
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
@@ -110,7 +111,7 @@ namespace Rhino.ServiceBus.Impl
             return config;
         }
 
-        private void Kernel_OnComponentRegistered(string key, IHandler handler)
+        private static void Kernel_OnComponentRegistered(string key, IHandler handler)
         {
             if (typeof(IMessageConsumer).IsAssignableFrom(handler.ComponentModel.Implementation)==false)
                 return;
@@ -120,18 +121,19 @@ namespace Rhino.ServiceBus.Impl
 
         private void ReadSubscriptionConfiguration()
         {
-            var subscriptionConfig = FacilityConfig.Children["subscription"];
-
+            var subscriptionConfig = FacilityConfig.Children["management"];
+            if (subscriptionConfig == null)
+                throw new ConfigurationErrorsException("Could not find 'management' node in the configuration");
 
             var uriString = subscriptionConfig.Attributes["queue"];
             try
             {
-                subscriptionQueue = new Uri(uriString);
+                managementEndpoint = new Uri(uriString);
             }
             catch (Exception e)
             {
                 throw new ConfigurationErrorsException(
-                    "Attribute 'queue' on 'subscription' has an invalid value '" + uriString + "'"
+                    "Attribute 'queue' on 'management' has an invalid value '" + uriString + "'"
                     , e);
             }
 
@@ -140,6 +142,8 @@ namespace Rhino.ServiceBus.Impl
         private void ReadBusConfiguration()
         {
             var busConfig = FacilityConfig.Children["bus"];
+            if(busConfig==null)
+                throw new ConfigurationErrorsException("Could not find 'bus' node in confiuration");
 
             var retries = busConfig.Attributes["numberOfRetries"];
             int result;

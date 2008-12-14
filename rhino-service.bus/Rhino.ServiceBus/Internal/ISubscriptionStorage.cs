@@ -6,7 +6,13 @@ namespace Rhino.ServiceBus.Internal
     public interface ISubscriptionStorage
     {
         IEnumerable<Uri> GetSubscriptionsFor(Type type);
+        
         void AddInstanceSubscription(IMessageConsumer consumer);
+        
         object[] GetInstanceSubscriptions(Type type);
+
+        void AddSubscription(string type, string endpoint);
+
+        void RemoveSubscription(string type, string endpoint);
     }
 }

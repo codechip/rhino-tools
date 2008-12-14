@@ -10,11 +10,13 @@ namespace Rhino.ServiceBus.Internal
         void Stop();
 
         Uri Endpoint { get; }
+        Uri ManagementEndpoint { get; }
 
         void Send(Uri uri, params object[] msgs);
 
         void Reply(params object[] messages);
 
+        event Action<CurrentMessageInformation> ManagementMessageArrived;
         event Action<CurrentMessageInformation> MessageArrived;
         event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         event Action<CurrentMessageInformation> MessageProcessingCompleted;

@@ -9,63 +9,33 @@ namespace Rhino.ServiceBus.Tests
 {
     public class MsmqTestBase : IDisposable
     {
-        protected MessageQueue queue;
-        protected MessageQueue subscriptions;
-        protected MessageQueue transactionalQueue;
-        protected MessageQueue errorQueue;
-
         protected readonly Uri ErrorQueueUri;
         private readonly string errorTestQueuePath;
 
-        protected readonly Uri TestQueueUri;
-        private readonly string testQueuePath;
-
-        protected readonly Uri SubscriptionsUri;
         private readonly string subbscriptionQueuePath;
+        protected readonly Uri SubscriptionsUri;
+        private readonly string testQueuePath;
+        protected readonly Uri TestQueueUri;
 
-        
-        protected readonly Uri TransactionalTestQueueUri;
+
         private readonly string transactionalTestQueuePath;
-        
-        private ITransport transport;
+        protected readonly Uri TransactionalTestQueueUri;
+        protected MessageQueue errorQueue;
+        protected MessageQueue queue;
+        protected MessageQueue subscriptions;
+        protected MessageQueue transactionalQueue;
+
         private ITransport transactionalTransport;
-
-        public ITransport Transport
-        {
-            get
-            {
-                if (transport == null)
-                {
-                    transport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TestQueueUri,
-                                                  ErrorQueueUri, 1, 5);
-                    transport.Start();
-                }
-                return transport;
-            }
-        }
-
-        public ITransport TransactionalTransport
-        {
-            get
-            {
-                if (transactionalTransport == null)
-                {
-                    transactionalTransport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TransactionalTestQueueUri,
-                                                               ErrorQueueUri, 1, 5);
-                    transactionalTransport.Start();
-                }
-                return transactionalTransport;
-            }
-        }
+        private ITransport transport;
 
         public MsmqTestBase()
         {
             ErrorQueueUri = new Uri("msmq://./error_test_queue");
             errorTestQueuePath = MsmqUtil.GetQueueDescription(ErrorQueueUri).QueuePath;
-            
+
             TestQueueUri = new Uri("msmq://./test_queue");
             testQueuePath = MsmqUtil.GetQueueDescription(TestQueueUri).QueuePath;
-            
+
             TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
 
@@ -100,16 +70,49 @@ namespace Rhino.ServiceBus.Tests
             subscriptions.Purge();
         }
 
+        public ITransport Transport
+        {
+            get
+            {
+                if (transport == null)
+                {
+                    transport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TestQueueUri,
+                                                  SubscriptionsUri, ErrorQueueUri, 1, 5);
+                    transport.Start();
+                }
+                return transport;
+            }
+        }
+
+        public ITransport TransactionalTransport
+        {
+            get
+            {
+                if (transactionalTransport == null)
+                {
+                    transactionalTransport = new MsmqTransport(new JsonSerializer(new DefaultReflection()),
+                                                               TransactionalTestQueueUri,
+                                                               SubscriptionsUri, ErrorQueueUri, 1, 5);
+                    transactionalTransport.Start();
+                }
+                return transactionalTransport;
+            }
+        }
+
+        #region IDisposable Members
+
         public void Dispose()
         {
             queue.Dispose();
             errorQueue.Dispose();
             transactionalQueue.Dispose();
 
-            if(transport!=null)
+            if (transport != null)
                 transport.Stop();
-            if(transactionalTransport!=null)
+            if (transactionalTransport != null)
                 transactionalTransport.Stop();
         }
+
+        #endregion
     }
 }

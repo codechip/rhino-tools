@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Castle.MicroKernel;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
-using System.Linq;
 using Rhino.ServiceBus.MessageModules;
+using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Util;
 
@@ -15,13 +16,13 @@ namespace Rhino.ServiceBus
 {
     public class DefaultServiceBus : IStartableServiceBus
     {
-        private readonly ITransport transport;
-        private readonly ISubscriptionStorage subscriptionStorage;
-        private readonly IReflection reflection;
-        private readonly IMessageModule[] modules;
         private readonly IKernel kernel;
 
-        private readonly ILog logger = LogManager.GetLogger(typeof(DefaultServiceBus));
+        private readonly ILog logger = LogManager.GetLogger(typeof (DefaultServiceBus));
+        private readonly IMessageModule[] modules;
+        private readonly IReflection reflection;
+        private readonly ISubscriptionStorage subscriptionStorage;
+        private readonly ITransport transport;
 
         public DefaultServiceBus(
             IKernel kernel,
@@ -37,6 +38,13 @@ namespace Rhino.ServiceBus
             this.modules = modules;
             this.kernel = kernel;
         }
+
+        public IMessageModule[] Modules
+        {
+            get { return modules; }
+        }
+
+        #region IStartableServiceBus Members
 
         public void Publish(params object[] messages)
         {
@@ -72,14 +80,39 @@ namespace Rhino.ServiceBus
             get { return transport.Endpoint; }
         }
 
+        public void Dispose()
+        {
+            transport.Stop();
+            transport.MessageArrived -= Transport_OnMessageArrived;
+            transport.ManagementMessageArrived -= Transport_OnManagementMessageArrived;
+
+            foreach (IMessageModule module in modules)
+            {
+                module.Stop(transport);
+            }
+        }
+
+        public void Start()
+        {
+            foreach (IMessageModule module in modules)
+            {
+                module.Init(transport);
+            }
+            transport.MessageArrived += Transport_OnMessageArrived;
+            transport.ManagementMessageArrived += Transport_OnManagementMessageArrived;
+            transport.Start();
+        }
+
+        #endregion
+
         private bool PublishInternal(object[] messages)
         {
             bool sentMsg = false;
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot publish an empty message batch");
-            var msg = messages[0];
-            var subscriptions = subscriptionStorage.GetSubscriptionsFor(msg.GetType());
-            foreach (var subscription in subscriptions)
+            object msg = messages[0];
+            IEnumerable<Uri> subscriptions = subscriptionStorage.GetSubscriptionsFor(msg.GetType());
+            foreach (Uri subscription in subscriptions)
             {
                 transport.Send(subscription, messages);
                 sentMsg = true;
@@ -87,29 +120,21 @@ namespace Rhino.ServiceBus
             return sentMsg;
         }
 
-        public void Dispose()
+        private void Transport_OnManagementMessageArrived(CurrentMessageInformation msg)
         {
-            transport.Stop();
-            transport.MessageArrived -= Transport_OnMessageArrived;
-            foreach (var module in modules)
+            var addSubscription = msg.Message as AddSubscription;
+            if (addSubscription != null)
             {
-                module.Stop(transport);
+                subscriptionStorage.AddSubscription(addSubscription.Type, addSubscription.Endpoint);
+                return;
             }
-        }
-
-        public IMessageModule[] Modules
-        {
-            get { return modules; }
-        }
-
-        public void Start()
-        {
-            foreach (var module in modules)
+            var removeSubscription = msg.Message as RemoveSubscription;
+            if (removeSubscription != null)
             {
-                module.Init(transport);
+                subscriptionStorage.RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
+                return;
             }
-            transport.MessageArrived += Transport_OnMessageArrived;
-            transport.Start();
+            logger.WarnFormat("Got unknown management message for management endpoint: {0}", msg.Message);
         }
 
         public void Transport_OnMessageArrived(CurrentMessageInformation msg)
@@ -123,7 +148,7 @@ namespace Rhino.ServiceBus
             }
             try
             {
-                foreach (var consumer in consumers)
+                foreach (object consumer in consumers)
                 {
                     reflection.InvokeConsume(consumer, msg.Message);
 
@@ -135,7 +160,7 @@ namespace Rhino.ServiceBus
             }
             finally
             {
-                foreach (var consumer in consumers)
+                foreach (object consumer in consumers)
                 {
                     kernel.ReleaseComponent(consumer);
                 }
@@ -144,8 +169,8 @@ namespace Rhino.ServiceBus
 
         private void PersistSagaInstance(ISaga saga)
         {
-            var persisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>), saga);
-            var persister = kernel.Resolve(persisterType);
+            Type persisterType = reflection.GetGenericTypeOf(typeof (ISagaPersister<>), saga);
+            object persister = kernel.Resolve(persisterType);
 
             if (saga.IsCompleted)
                 reflection.InvokeSagaPersisterComplete(persister, saga);
@@ -155,13 +180,13 @@ namespace Rhino.ServiceBus
 
         private object[] GatherConsumers(CurrentMessageInformation msg)
         {
-            var sagas = GetSagasFor(msg.Message as ISagaMessage);
+            object[] sagas = GetSagasFor(msg.Message as ISagaMessage);
 
-            var instanceConsumers = subscriptionStorage
+            object[] instanceConsumers = subscriptionStorage
                 .GetInstanceSubscriptions(msg.Message.GetType());
 
-            var consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
-            var consumers = (object[])kernel.ResolveAll(consumerType, new Hashtable());
+            Type consumerType = reflection.GetGenericTypeOf(typeof (ConsumerOf<>), msg.Message);
+            var consumers = (object[]) kernel.ResolveAll(consumerType, new Hashtable());
             return instanceConsumers
                 .Union(sagas)
                 .Union(consumers)
@@ -174,9 +199,9 @@ namespace Rhino.ServiceBus
                 return new object[0];
 
             var instances = new List<object>();
-            var sagaInitiatedByThisMessage = reflection.GetGenericTypeOf(typeof(InitiatedBy<>), sagaMessage);
+            Type sagaInitiatedByThisMessage = reflection.GetGenericTypeOf(typeof (InitiatedBy<>), sagaMessage);
 
-            var initiated = (object[])kernel.ResolveAll(sagaInitiatedByThisMessage, new Hashtable());
+            var initiated = (object[]) kernel.ResolveAll(sagaInitiatedByThisMessage, new Hashtable());
 
             foreach (ISaga saga in initiated)
             {
@@ -185,19 +210,19 @@ namespace Rhino.ServiceBus
 
             instances.AddRange(initiated);
 
-            var messageType = reflection.GetGenericTypeOf(typeof(Orchestrates<>), sagaMessage);
+            Type messageType = reflection.GetGenericTypeOf(typeof (Orchestrates<>), sagaMessage);
 
-            var handlers = kernel.GetAssignableHandlers(messageType);
+            IHandler[] handlers = kernel.GetAssignableHandlers(messageType);
 
-            foreach (var sagaPersisterHandler in handlers)
+            foreach (IHandler sagaPersisterHandler in handlers)
             {
-                var sagaPersisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>),
-                                                                    sagaPersisterHandler.ComponentModel.Implementation);
+                Type sagaPersisterType = reflection.GetGenericTypeOf(typeof (ISagaPersister<>),
+                                                                     sagaPersisterHandler.ComponentModel.Implementation);
 
-                var sagaPersister = kernel.Resolve(sagaPersisterType);
+                object sagaPersister = kernel.Resolve(sagaPersisterType);
                 try
                 {
-                    var sagaInstance = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
+                    object sagaInstance = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
                     if (sagaInstance != null)
                         continue;
                     instances.Add(sagaInstance);

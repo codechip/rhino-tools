@@ -72,6 +72,8 @@
     <Compile Include="Internal\ISagaPersister.cs" />
     <Compile Include="Internal\ISubscriptionStorage.cs" />
     <Compile Include="MessageModules\IMessageModule.cs" />
+    <Compile Include="Messages\AddSubscription.cs" />
+    <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Internal\ITransport.cs" />
