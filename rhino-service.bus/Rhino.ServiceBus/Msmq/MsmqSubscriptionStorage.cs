@@ -107,16 +107,7 @@ namespace Rhino.ServiceBus.Msmq
                     .Where(x=>x!=null)
                     .ToArray();
 
-                value.Clear();
-
-                foreach (var consumerInstance in array)
-                {
-                    foreach (var consumer in consumers)
-                    {
-                        consumer.Value
-                            .RemoveAll(x => ReferenceEquals(x.Target, consumerInstance));
-                    }
-                }
+                value.RemoveAll(x => x.IsAlive == false);
 
                 return array;
             }
