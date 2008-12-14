@@ -22,6 +22,7 @@ namespace Rhino.ServiceBus.Impl
         private int numberOfRetries = 5;
         private Uri endpoint;
         private Uri errorEndpoint;
+        private Uri subscriptionQueue;
         private Uri managementEndpoint;
         private readonly List<Type> messageModules = new List<Type>();
 
@@ -67,7 +68,7 @@ namespace Rhino.ServiceBus.Impl
             Kernel.ComponentRegistered+=Kernel_OnComponentRegistered;
 
             ReadBusConfiguration();
-            ReadSubscriptionConfiguration();
+            ReadManagementConfiguration();
 
             foreach (var type in messageModules)
             {
@@ -84,7 +85,7 @@ namespace Rhino.ServiceBus.Impl
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
                     {
-                        subscriptionQueue = managementEndpoint
+                        subscriptionQueue
                     }),
                 Component.For<ITransport>()
                     .ImplementedBy(transportImpl)
@@ -119,24 +120,10 @@ namespace Rhino.ServiceBus.Impl
             handler.ComponentModel.LifestyleType = LifestyleType.Transient;
         }
 
-        private void ReadSubscriptionConfiguration()
+        private void ReadManagementConfiguration()
         {
-            var subscriptionConfig = FacilityConfig.Children["management"];
-            if (subscriptionConfig == null)
-                throw new ConfigurationErrorsException("Could not find 'management' node in the configuration");
-
-            var uriString = subscriptionConfig.Attributes["queue"];
-            try
-            {
-                managementEndpoint = new Uri(uriString);
-            }
-            catch (Exception e)
-            {
-                throw new ConfigurationErrorsException(
-                    "Attribute 'queue' on 'management' has an invalid value '" + uriString + "'"
-                    , e);
-            }
-
+            managementEndpoint = new Uri(endpoint + "_management");
+            subscriptionQueue = new Uri(endpoint + "_subscriptions");
         }
 
         private void ReadBusConfiguration()
@@ -166,17 +153,8 @@ namespace Rhino.ServiceBus.Impl
                     ,e);
             }
 
-            uriString = busConfig.Attributes["errorEndpoint"];
-            try
-            {
-                errorEndpoint = new Uri(uriString);
-            }
-            catch (Exception e)
-            {
-                throw new ConfigurationErrorsException(
-                    "Attribute 'errorEndpoint' on 'bus' has an invalid value '" + uriString + "'"
-                    , e);
-            }
+            errorEndpoint = new Uri(endpoint + "_error");
+           
         }
     }
 }

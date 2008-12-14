@@ -14,6 +14,10 @@ namespace Rhino.ServiceBus.Tests
 
         private readonly string subbscriptionQueuePath;
         protected readonly Uri SubscriptionsUri;
+
+        private readonly string managementQueuePath;
+        protected readonly Uri ManagementUri;
+
         private readonly string testQueuePath;
         protected readonly Uri TestQueueUri;
 
@@ -23,6 +27,7 @@ namespace Rhino.ServiceBus.Tests
         protected MessageQueue errorQueue;
         protected MessageQueue queue;
         protected MessageQueue subscriptions;
+        protected MessageQueue management;
         protected MessageQueue transactionalQueue;
 
         private ITransport transactionalTransport;
@@ -30,7 +35,10 @@ namespace Rhino.ServiceBus.Tests
 
         public MsmqTestBase()
         {
-            ErrorQueueUri = new Uri("msmq://./error_test_queue");
+            ManagementUri = new Uri("msmq://./test_queue_management");
+            managementQueuePath = MsmqUtil.GetQueueDescription(ManagementUri).QueuePath;
+
+            ErrorQueueUri = new Uri("msmq://./test_queue_error");
             errorTestQueuePath = MsmqUtil.GetQueueDescription(ErrorQueueUri).QueuePath;
 
             TestQueueUri = new Uri("msmq://./test_queue");
@@ -39,7 +47,7 @@ namespace Rhino.ServiceBus.Tests
             TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
 
-            SubscriptionsUri = new Uri("msmq://./test_subscriptions");
+            SubscriptionsUri = new Uri("msmq://./test_queue_subscriptions");
             subbscriptionQueuePath = MsmqUtil.GetQueueDescription(SubscriptionsUri).QueuePath;
 
             if (MessageQueue.Exists(testQueuePath) == false)
@@ -54,8 +62,14 @@ namespace Rhino.ServiceBus.Tests
             if (MessageQueue.Exists(subbscriptionQueuePath) == false)
                 MessageQueue.Create(subbscriptionQueuePath, true);
 
+            if (MessageQueue.Exists(managementQueuePath) == false)
+                MessageQueue.Create(managementQueuePath, true);
+
             queue = new MessageQueue(testQueuePath);
             queue.Purge();
+
+            management = new MessageQueue(managementQueuePath);
+            management.Purge();
 
             errorQueue = new MessageQueue(errorTestQueuePath);
             var filter = new MessagePropertyFilter();
