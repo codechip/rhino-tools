@@ -10,6 +10,8 @@ namespace Rhino.ServiceBus.Internal
         IEnumerable<Uri> GetSubscriptionsFor(Type type);
         
         void AddInstanceSubscription(IMessageConsumer consumer);
+
+        void RemoveInstanceSubscription(IMessageConsumer consumer);
         
         object[] GetInstanceSubscriptions(Type type);
 

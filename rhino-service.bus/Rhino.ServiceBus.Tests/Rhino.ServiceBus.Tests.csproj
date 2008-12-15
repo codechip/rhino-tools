@@ -76,6 +76,7 @@
     <Compile Include="SendByMessageOwner.cs" />
     <Compile Include="TwoBusesCommunicating.cs" />
     <Compile Include="UnserializableMessageWillBeForwardedToErrorQueue.cs" />
+    <Compile Include="XmlSerializerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rhino.ServiceBus\Rhino.ServiceBus.csproj">

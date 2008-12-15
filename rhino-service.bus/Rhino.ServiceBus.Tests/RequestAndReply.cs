@@ -1,12 +1,14 @@
+using System;
 using System.Threading;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
-    public class RequestAndReply : MsmqTestBase, 
+    public class RequestAndReply : MsmqTestBase,
         ConsumerOf<RequestAndReply.PongMessage>
     {
         private readonly WindsorContainer container;
@@ -28,12 +30,42 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                bus.AddInstanceSubscription(this)
-                   .Send(bus.Endpoint, new PingMessage());
-                
+                using (bus.AddInstanceSubscription(this))
+                {
+                    bus.Send(bus.Endpoint, new PingMessage());
+
+                    handle.WaitOne();
+
+                    Assert.NotNull(message);
+                }
+            }
+        }
+
+        [Fact]
+        public void Can_request_and_reply_and_then_unsubscribe()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                using (bus.AddInstanceSubscription(this))
+                {
+                    bus.Send(bus.Endpoint, new PingMessage());
+
+                    handle.WaitOne();
+
+                    Assert.NotNull(message);
+                }
+
+                handle.Reset();
+
+                message = null;
+                container.Resolve<ITransport>().MessageArrived += m => handle.Set();
+                bus.Send(bus.Endpoint, new PingMessage());
+
                 handle.WaitOne();
 
-                Assert.NotNull(message);
+                Assert.Null(message);
             }
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using log4net;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Sagas;
@@ -9,7 +10,7 @@ namespace Rhino.ServiceBus.Impl
 {
     public class DefaultReflection : IReflection
     {
-        private ILog logger = LogManager.GetLogger(typeof(DefaultReflection));
+        private readonly ILog logger = LogManager.GetLogger(typeof(DefaultReflection));
 
         public object CreateInstance(string typeName)
         {
@@ -17,7 +18,31 @@ namespace Rhino.ServiceBus.Impl
             return Activator.CreateInstance(type);
         }
 
-        public void Set(object instance, string name, object value)
+        public object CreateInstance(Type type, params object[] args)
+        {
+            try
+            {
+                return Activator.CreateInstance(type, args);
+            }
+            catch (Exception e)
+            {
+                throw new MissingMethodException("No parameterless constructor defined for this object: " + type, e);
+            }
+        }
+
+        public Type GetType(string type)
+        {
+            return Type.GetType(type);
+        }
+
+        public void InvokeAdd(object instance, object item)
+        {
+            Type type = instance.GetType();
+            MethodInfo method = type.GetMethod("Add", new[] {item.GetType()});
+            method.Invoke(instance, new[] {item});
+        }
+
+        public void Set(object instance, string name, Func<Type, object> generateValue)
         {
             var type = instance.GetType();
             var property = type.GetProperty(name);
@@ -26,11 +51,25 @@ namespace Rhino.ServiceBus.Impl
                 logger.InfoFormat("Could not find property {0} to set on {1}", name, type);
                 return;
             }
-            if (property.PropertyType == typeof(Guid))
-            {
-                value = new Guid((string)value);
-            }
+            var value = generateValue(property.PropertyType);
             property.SetValue(instance, value, null);
+        }
+
+        public void Set(object instance, string name, object value)
+        {
+            Set(instance, name, type => value);
+        }
+
+        public object Get(object instance, string name)
+        {
+            var type = instance.GetType();
+            var property = type.GetProperty(name);
+            if (property == null)
+            {
+                logger.InfoFormat("Could not find property {0} to get on {1}", name, type);
+                return null;
+            }
+            return property.GetValue(instance, null);
         }
 
         public Type GetGenericTypeOf(Type type, object msg)
@@ -69,6 +108,30 @@ namespace Rhino.ServiceBus.Impl
             var type = persister.GetType();
             var method = type.GetMethod("Complete");
             method.Invoke(persister, new object[] { entity });
+        }
+
+        public string GetNamespaceForXml(object msg)
+        {
+            var type = msg.GetType();
+            return type.Namespace.Split('.')
+                .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
+        }
+
+        public string GetName(object msg)
+        {
+            return msg.GetType().Name;
+        }
+
+        public string GetAssemblyQualifiedNameWithoutVersion(object msg)
+        {
+            var type = msg.GetType();
+            return type.FullName + ", " + type.Assembly.GetName().Name;
+        }
+
+        public IEnumerable<string> GetProperties(object value)
+        {
+            return value.GetType().GetProperties()
+                .Select(x => x.Name);
         }
 
         public Type[] GetMessagesConsumed(IMessageConsumer consumer)

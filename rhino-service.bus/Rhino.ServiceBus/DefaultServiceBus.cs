@@ -100,10 +100,15 @@ namespace Rhino.ServiceBus
             }
         }
 
-        public IServiceBus AddInstanceSubscription(IMessageConsumer consumer)
+        public IDisposable AddInstanceSubscription(IMessageConsumer consumer)
         {
             subscriptionStorage.AddInstanceSubscription(consumer);
-            return this;
+            var weakRef = new WeakReference(consumer);
+            return new DisposableAction(()=>
+            {
+                var messageConsumer = weakRef.Target as IMessageConsumer;
+                subscriptionStorage.RemoveInstanceSubscription(messageConsumer);
+            });
         }
 
         public Uri Endpoint

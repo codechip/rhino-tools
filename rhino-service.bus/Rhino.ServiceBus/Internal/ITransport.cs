@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Rhino.ServiceBus.Impl;
 
 namespace Rhino.ServiceBus.Internal
@@ -18,7 +19,7 @@ namespace Rhino.ServiceBus.Internal
 
         event Action<CurrentMessageInformation> AdministrativeMessageArrived;
         event Action<CurrentMessageInformation> MessageArrived;
-        event Action<ITransportMessage, Exception> MessageSerializationException;
+        event Action<Exception> MessageSerializationException;
         event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         event Action<CurrentMessageInformation> MessageProcessingCompleted;
     }

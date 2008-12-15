@@ -45,7 +45,7 @@ namespace Rhino.ServiceBus
         /// Create a weak reference subscription for all the registered consumers 
         /// for this consumer instance
         /// </summary>
-        IServiceBus AddInstanceSubscription(IMessageConsumer consumer);
+        IDisposable AddInstanceSubscription(IMessageConsumer consumer);
 
         void Subscribe<T>();
 

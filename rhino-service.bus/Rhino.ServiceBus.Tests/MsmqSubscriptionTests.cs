@@ -14,14 +14,14 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_read_subscription_from_queue()
         {
-            var serializer = new JsonSerializer(new DefaultReflection());
+            var serializer = new XmlMessageSerializer(new DefaultReflection());
 
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
             {
                 Endpoint = TransactionalTestQueueUri.ToString(),
                 Type = typeof(TestMessage).FullName,
-            }}, new MsmqTransportMessage(msg));
+            }}, msg.BodyStream);
 
             queue.Send(msg, MessageQueueTransactionType.None);
             msg = queue.Peek();
@@ -43,13 +43,13 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Adding_then_removing_will_result_in_no_subscriptions()
         {
-            var serializer = new JsonSerializer(new DefaultReflection());
+            var serializer = new XmlMessageSerializer(new DefaultReflection());
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
             {
                 Endpoint = TransactionalTestQueueUri.ToString(),
                 Type = typeof(TestMessage).FullName,
-            }}, new MsmqTransportMessage(msg));
+            }}, msg.BodyStream);
 
 
             queue.Send(msg, MessageQueueTransactionType.None);

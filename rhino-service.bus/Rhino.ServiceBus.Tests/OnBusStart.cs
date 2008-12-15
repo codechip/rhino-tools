@@ -44,7 +44,7 @@ namespace Rhino.ServiceBus.Tests
                 while (messagesEnum.MoveNext(TimeSpan.FromSeconds(0)))
                 {
                     var message = messagesEnum.Current;
-                    var subscription = (AddSubscription)serializer.Deserialize(new MsmqTransportMessage(message))[0];
+                    var subscription = (AddSubscription)serializer.Deserialize(message.BodyStream)[0];
                     if(subscription.Type==typeof(TestMessage).FullName)
                     {
                         found = true;
@@ -72,7 +72,7 @@ namespace Rhino.ServiceBus.Tests
                 var messages = subscriptions.GetAllMessages();
                 foreach (var message in messages)
                 {
-                    var subscription = (AddSubscription)serializer.Deserialize(new MsmqTransportMessage(message))[0];
+                    var subscription = (AddSubscription)serializer.Deserialize(message.BodyStream)[0];
                     Assert.NotEqual(typeof (OccasionalTestHandler).FullName, subscription.Type);
                 }
             }

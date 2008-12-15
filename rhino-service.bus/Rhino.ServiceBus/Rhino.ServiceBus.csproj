@@ -55,9 +55,13 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
     <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
@@ -86,10 +90,8 @@
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Internal\ITransport.cs" />
     <Compile Include="IStartableServiceBus.cs" />
-    <Compile Include="Impl\ITransportMessage.cs" />
     <Compile Include="Internal\IMessageSerializer.cs" />
     <Compile Include="Msmq\MsmqSubscriptionStorage.cs" />
-    <Compile Include="Msmq\MsmqTransportMessage.cs" />
     <Compile Include="Msmq\MsmqUtil.cs" />
     <Compile Include="Msmq\MsmqTransport.cs" />
     <Compile Include="Msmq\QueueDescriptor.cs" />
@@ -97,7 +99,7 @@
     <Compile Include="Sagas\ISaga.cs" />
     <Compile Include="Sagas\ISagaMessage.cs" />
     <Compile Include="Sagas\Orchestrates.cs" />
-    <Compile Include="Serializers\JsonSerializer.cs" />
+    <Compile Include="Serializers\XmlSerializer.cs" />
     <Compile Include="Util\GuidCombGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

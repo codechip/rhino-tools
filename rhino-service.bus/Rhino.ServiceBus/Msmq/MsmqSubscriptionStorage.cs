@@ -49,7 +49,7 @@ namespace Rhino.ServiceBus.Msmq
                     object[] msgs;
                     try
                     {
-                        msgs = messageSerializer.Deserialize(new MsmqTransportMessage(current));
+                        msgs = messageSerializer.Deserialize(current.BodyStream);
                     }
                     catch (Exception e)
                     {
@@ -67,7 +67,6 @@ namespace Rhino.ServiceBus.Msmq
                                 Message = msg,
                                 MessageId = CorrelationId.Parse(current.Id),
                                 Source = subscriptionQueue,
-                                TransportMessage = new MsmqTransportMessage(current)
                             });
                         }
                     }
@@ -146,6 +145,32 @@ namespace Rhino.ServiceBus.Msmq
             {
                 readerWriterLock.ExitReadLock();
             }
+        }
+
+        public void RemoveInstanceSubscription(IMessageConsumer consumer)
+        {
+            var messagesConsumes = reflection.GetMessagesConsumed(consumer);
+            bool changed = false;
+            readerWriterLock.EnterWriteLock();
+            try
+            {
+                foreach (var type in messagesConsumes)
+                {
+                    List<WeakReference> value;
+                    
+                    if (consumers.TryGetValue(type.FullName, out value) == false)
+                        continue;
+                    
+                    if (value.RemoveAll(x => ReferenceEquals(x.Target, consumer)) > 0)
+                        changed = true;
+                }
+            }
+            finally
+            {
+                readerWriterLock.ExitWriteLock();
+            }
+            if (changed)
+                RaiseSubscriptionChanged();
         }
 
         public object[] GetInstanceSubscriptions(Type type)

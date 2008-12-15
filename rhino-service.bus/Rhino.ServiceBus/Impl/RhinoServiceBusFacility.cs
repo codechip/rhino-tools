@@ -20,7 +20,7 @@ namespace Rhino.ServiceBus.Impl
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
         private Uri endpoint;
         private int numberOfRetries = 5;
-        private Type serializerImpl = typeof(JsonSerializer);
+        private Type serializerImpl = typeof(XmlMessageSerializer);
         private Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
         private Type transportImpl = typeof(MsmqTransport);
@@ -34,12 +34,6 @@ namespace Rhino.ServiceBus.Impl
         public RhinoServiceBusFacility UseMsmqTransport()
         {
             transportImpl = typeof(MsmqTransport);
-            return this;
-        }
-
-        public RhinoServiceBusFacility UseJsonSerialization()
-        {
-            serializerImpl = typeof(JsonSerializer);
             return this;
         }
 

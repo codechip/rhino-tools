@@ -1,12 +1,11 @@
 using System.IO;
-using Rhino.ServiceBus.Impl;
 
 namespace Rhino.ServiceBus.Internal
 {
     public interface IMessageSerializer
     {
-        void Serialize(object[] obj, ITransportMessage message);
+        void Serialize(object[] mesages, Stream message);
 
-        object[] Deserialize(ITransportMessage message);
+        object[] Deserialize(Stream message);
     }
 }
