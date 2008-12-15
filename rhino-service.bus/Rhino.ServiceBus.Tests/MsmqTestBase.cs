@@ -9,9 +9,6 @@ namespace Rhino.ServiceBus.Tests
 {
     public class MsmqTestBase : IDisposable
     {
-        protected readonly Uri ErrorQueueUri;
-        private readonly string errorTestQueuePath;
-
         private readonly string subbscriptionQueuePath;
         protected readonly Uri SubscriptionsUri;
 
@@ -30,7 +27,6 @@ namespace Rhino.ServiceBus.Tests
         protected readonly string transactionalTestQueuePath;
         protected readonly Uri TransactionalTestQueueUri;
 
-        protected MessageQueue errorQueue;
         protected MessageQueue queue;
         protected MessageQueue subscriptions;
         protected MessageQueue management;
@@ -48,9 +44,6 @@ namespace Rhino.ServiceBus.Tests
 
             ManagementUri2 = new Uri("msmq://./test_queue2_management");
             managementQueuePath2 = MsmqUtil.GetQueueDescription(ManagementUri2).QueuePath;
-
-            ErrorQueueUri = new Uri("msmq://./test_queue_error");
-            errorTestQueuePath = MsmqUtil.GetQueueDescription(ErrorQueueUri).QueuePath;
 
             TestQueueUri = new Uri("msmq://./test_queue");
             testQueuePath = MsmqUtil.GetQueueDescription(TestQueueUri).QueuePath;
@@ -70,9 +63,6 @@ namespace Rhino.ServiceBus.Tests
             if (MessageQueue.Exists(testQueuePath2) == false)
                 MessageQueue.Create(testQueuePath2);
 
-            if (MessageQueue.Exists(errorTestQueuePath) == false)
-                MessageQueue.Create(errorTestQueuePath);
-
             if (MessageQueue.Exists(transactionalTestQueuePath) == false)
                 MessageQueue.Create(transactionalTestQueuePath, true);
 
@@ -88,8 +78,19 @@ namespace Rhino.ServiceBus.Tests
             queue = new MessageQueue(testQueuePath);
             queue.Purge();
 
+            using (var errQueue = new MessageQueue(testQueuePath + ";errors"))
+            {
+                errQueue.Purge();
+            }
+
             testQueue2 = new MessageQueue(testQueuePath2);
             testQueue2.Purge();
+
+            using (var errQueue2 = new MessageQueue(testQueuePath2 + ";errors"))
+            {
+                errQueue2.Purge();
+            }
+
 
             management = new MessageQueue(managementQueuePath);
             management.Purge();
@@ -97,18 +98,17 @@ namespace Rhino.ServiceBus.Tests
             management2 = new MessageQueue(managementQueuePath2);
             management2.Purge();
 
-            errorQueue = new MessageQueue(errorTestQueuePath);
-            var filter = new MessagePropertyFilter();
-            filter.SetAll();
-            errorQueue.MessageReadPropertyFilter = filter;
-            errorQueue.Purge();
-
             transactionalQueue = new MessageQueue(transactionalTestQueuePath);
             transactionalQueue.Purge();
 
+            using (var errQueue3 = new MessageQueue(transactionalTestQueuePath + ";errors"))
+            {
+                errQueue3.Purge();
+            }
+
             subscriptions = new MessageQueue(subbscriptionQueuePath)
             {
-                Formatter = new XmlMessageFormatter(new[] {typeof (string)})
+                Formatter = new XmlMessageFormatter(new[] { typeof(string) })
             };
             subscriptions.Purge();
         }
@@ -120,7 +120,7 @@ namespace Rhino.ServiceBus.Tests
                 if (transport == null)
                 {
                     transport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TestQueueUri,
-                                                  SubscriptionsUri, ErrorQueueUri, 1, 5);
+                                                  SubscriptionsUri, 1, 5);
                     transport.Start();
                 }
                 return transport;
@@ -135,7 +135,7 @@ namespace Rhino.ServiceBus.Tests
                 {
                     transactionalTransport = new MsmqTransport(new JsonSerializer(new DefaultReflection()),
                                                                TransactionalTestQueueUri,
-                                                               SubscriptionsUri, ErrorQueueUri, 1, 5);
+                                                               SubscriptionsUri, 1, 5);
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;
@@ -147,8 +147,9 @@ namespace Rhino.ServiceBus.Tests
         public void Dispose()
         {
             queue.Dispose();
-            errorQueue.Dispose();
             transactionalQueue.Dispose();
+            management.Dispose();
+            subscriptions.Dispose();
 
             if (transport != null)
                 transport.Stop();

@@ -16,7 +16,6 @@ namespace Rhino.ServiceBus.Msmq
     {
         [ThreadStatic] private static CurrentMessageInformation currentMessageInformation;
         private readonly Uri endpoint;
-        private readonly Uri errorEndpoint;
         private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
         private readonly ILog logger = LogManager.GetLogger(typeof (MsmqTransport));
         private readonly Uri managementEndpoint;
@@ -33,14 +32,12 @@ namespace Rhino.ServiceBus.Msmq
             IMessageSerializer serializer,
             Uri endpoint,
             Uri managementEndpoint,
-            Uri errorEndpoint,
             int threadCount,
             int numberOfRetries)
         {
             this.serializer = serializer;
             this.endpoint = endpoint;
             this.managementEndpoint = managementEndpoint;
-            this.errorEndpoint = errorEndpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
             waitHandles = new WaitHandle[threadCount + 1];
@@ -192,7 +189,8 @@ namespace Rhino.ServiceBus.Msmq
 
         private void OnPeekMessage(IAsyncResult ar)
         {
-            bool? peek = TryEndingPeek(ar);
+            Message message;
+            bool? peek = TryEndingPeek(ar,out message);
             if (peek == false) // error 
                 return;
 
@@ -209,7 +207,8 @@ namespace Rhino.ServiceBus.Msmq
                 return;
             }
 
-            ReceiveMessageInTransaction(state);
+            if (DispatchToErrorQueueIfNeeded(state.Queue,message) == false)
+                ReceiveMessageInTransaction(state);
 
             state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
         }
@@ -226,11 +225,6 @@ namespace Rhino.ServiceBus.Msmq
                     message = state.Queue.Receive(
                         TimeSpan.FromSeconds(5),
                         GetTransactionTypeBasedOnQueue(state.Queue));
-
-                    if (DispatchToErrorQueueIfNeeded(message))
-                    {
-                        return;
-                    }
 
                     ProcessMessage(message, state);
                 }
@@ -258,7 +252,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private bool DispatchToErrorQueueIfNeeded(Message message)
+        private bool DispatchToErrorQueueIfNeeded(MessageQueue queue, Message message)
         {
             string id = GetMessageId(message);
 
@@ -281,8 +275,9 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 failureCounts.Remove(id);
-                message.Extension = Encoding.Unicode.GetBytes(errorCounter.ExceptionText);
-                SendMessageToQueue(message, errorEndpoint);
+                //not sure how to do this when moving queue
+                //message.Extension = Encoding.Unicode.GetBytes(errorCounter.ExceptionText);
+                queue.MoveToSubQueue("errors",message);
                 return true;
             }
             finally
@@ -382,15 +377,16 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private bool? TryEndingPeek(IAsyncResult ar)
+        private bool? TryEndingPeek(IAsyncResult ar, out Message message)
         {
             var state = (QueueState) ar.AsyncState;
             try
             {
-                state.Queue.EndPeek(ar);
+                message = state.Queue.EndPeek(ar);
             }
             catch (MessageQueueException e)
             {
+                message = null;
                 if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
                 {
                     logger.Error("Could not peek message from queue", e);
@@ -404,19 +400,8 @@ namespace Rhino.ServiceBus.Msmq
         private void ProcessMessage(Message message, QueueState state)
         {
             var transportMessage = new MsmqTransportMessage(message);
-            object[] messages;
-            try
-            {
-                messages = serializer.Deserialize(transportMessage);
-            }
-            catch (Exception e)
-            {
-                //serialization exception are not recoverable, move directly
-                //to error queue
-                message.Extension = Encoding.Unicode.GetBytes(e.ToString());
-                SendMessageToQueue(message, errorEndpoint);
-                return;
-            }
+            //deserialization errors do not count for module events
+            object[] messages = serializer.Deserialize(transportMessage);
             try
             {
                 foreach (var msg in messages)

@@ -1,3 +1,4 @@
+using System.Messaging;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
@@ -12,9 +13,12 @@ namespace Rhino.ServiceBus.Tests
             Transport.MessageArrived += o => o1 = o;
             queue.Send("blah blah not valid");
 
-            var errMsg = errorQueue.Receive();
-            Assert.NotNull(errMsg);
-            Assert.Null(o1);
+            using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
+            {
+                var errMsg = errorQueue.Receive();
+                Assert.NotNull(errMsg);
+                Assert.Null(o1);
+            }
         }
     }
 }
