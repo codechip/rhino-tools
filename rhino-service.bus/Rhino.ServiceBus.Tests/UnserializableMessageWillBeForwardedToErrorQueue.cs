@@ -20,5 +20,21 @@ namespace Rhino.ServiceBus.Tests
                 Assert.Null(o1);
             }
         }
+
+        [Fact]
+        public void Should_raise_event()
+        {
+
+            bool wasCalled = false;
+            Transport.MessageSerializationException += (message, exception) => wasCalled = true;
+            queue.Send("blah blah not valid");
+
+            using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
+            {
+                errorQueue.Receive();// wait for message to be processed.
+            }
+
+            Assert.True(wasCalled);
+        }
     }
 }

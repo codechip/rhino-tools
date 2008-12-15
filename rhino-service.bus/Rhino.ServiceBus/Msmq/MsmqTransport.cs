@@ -462,7 +462,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private object[] DeserializeMessages(MsmqTransportMessage transportMessage)
+        private object[] DeserializeMessages(ITransportMessage transportMessage)
         {
             object[] messages;
             try
@@ -476,7 +476,7 @@ namespace Rhino.ServiceBus.Msmq
                     logger.Error("Error when serializing message", e);
                     var copy = MessageSerializationException;
                     if (copy != null)
-                        copy(e);
+                        copy(transportMessage,e);
                 }
                 catch (Exception moduleEx)
                 {
@@ -487,7 +487,7 @@ namespace Rhino.ServiceBus.Msmq
             return messages;
         }
 
-        public event Action<Exception> MessageSerializationException;
+        public event Action<ITransportMessage, Exception> MessageSerializationException;
 
         private static void SetCorrelationIdOnMessage(Message message)
         {

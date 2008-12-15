@@ -15,10 +15,10 @@ namespace Rhino.ServiceBus.Internal
 
         void Reply(params object[] messages);
 
-        
+
         event Action<CurrentMessageInformation> AdministrativeMessageArrived;
         event Action<CurrentMessageInformation> MessageArrived;
-        event Action<Exception> MessageSerializationException; 
+        event Action<ITransportMessage, Exception> MessageSerializationException;
         event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         event Action<CurrentMessageInformation> MessageProcessingCompleted;
     }

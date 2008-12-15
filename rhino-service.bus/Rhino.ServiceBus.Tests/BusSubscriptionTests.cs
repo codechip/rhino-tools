@@ -5,8 +5,6 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.Msmq;
-using Rhino.ServiceBus.Serializers;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
