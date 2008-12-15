@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Messaging;
 using System.Threading;
 using Castle.Windsor;
@@ -17,6 +18,58 @@ namespace Rhino.ServiceBus.Tests
         {
             container = new WindsorContainer(new XmlInterpreter());
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
+        }
+
+        [Fact]
+        public void Adding_subscription_that_already_exists_has_no_op_on_queue()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                var storage = container.Resolve<ISubscriptionStorage>();
+                var wait = new ManualResetEvent(false);
+                int count = 0;
+                storage.SubscriptionChanged += () =>
+                {
+                    if (Interlocked.Increment(ref count) == 2)
+                        wait.Set();
+                };
+
+                bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
+                bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
+
+                wait.WaitOne();
+
+                Assert.Equal(1, subscriptions.GetAllMessages().Length);
+            }
+        }
+
+
+        [Fact]
+        public void Adding_subscription_that_already_exists_has_no_op_in_memory()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                var storage = container.Resolve<ISubscriptionStorage>();
+                var wait = new ManualResetEvent(false);
+                int count = 0;
+                storage.SubscriptionChanged += () =>
+                {
+                    if (Interlocked.Increment(ref count) == 2)
+                        wait.Set();
+                };
+
+                bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
+                bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
+
+                wait.WaitOne();
+
+                var uris = storage.GetSubscriptionsFor(typeof(MsmqSubscriptionTests.TestMessage));
+                Assert.Equal(1, uris.Count());
+            }
         }
 
         [Fact]

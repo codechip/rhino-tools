@@ -15,7 +15,7 @@ namespace Rhino.ServiceBus.Internal
         
         object[] GetInstanceSubscriptions(Type type);
 
-        void AddSubscription(string type, string endpoint);
+        bool AddSubscription(string type, string endpoint);
 
         void RemoveSubscription(string type, string endpoint);
 

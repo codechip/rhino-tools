@@ -157,10 +157,10 @@ namespace Rhino.ServiceBus.Msmq
                 foreach (var type in messagesConsumes)
                 {
                     List<WeakReference> value;
-                    
+
                     if (consumers.TryGetValue(type.FullName, out value) == false)
                         continue;
-                    
+
                     if (value.RemoveAll(x => ReferenceEquals(x.Target, consumer)) > 0)
                         changed = true;
                 }
@@ -212,26 +212,34 @@ namespace Rhino.ServiceBus.Msmq
             var addSubscription = msgInfo.Message as AddSubscription;
             if (addSubscription != null)
             {
-                AddSubscription(addSubscription.Type, addSubscription.Endpoint);
+                bool newSubscription = AddSubscription(addSubscription.Type, addSubscription.Endpoint);
                 AddMessageIdentifierForTracking(msgInfo.MessageId.ToString(), addSubscription.Type, new Uri(addSubscription.Endpoint));
                 if (msmqMsgInfo != null)
-                    msmqMsgInfo.Queue.MoveToSubQueue("subscriptions", msmqMsgInfo.MsmqMessage);
+                {
+                    if (newSubscription)
+                        msmqMsgInfo.Queue.MoveToSubQueue("subscriptions", msmqMsgInfo.MsmqMessage);
+                    else
+                        ConsumeMessageFromQueue(msmqMsgInfo);
+                }
                 return;
             }
             var removeSubscription = msgInfo.Message as RemoveSubscription;
             if (removeSubscription == null)
                 return;
             RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
+            ConsumeMessageFromQueue(msmqMsgInfo);
+        }
+
+        private static void ConsumeMessageFromQueue(MsmqCurrentMessageInformation msmqMsgInfo)
+        {
+            if (msmqMsgInfo == null)
+                return;
+                
             try
             {
-                if (msmqMsgInfo != null)
-                {
-                    var message = msmqMsgInfo.Queue.ReceiveById(
-                        msmqMsgInfo.MsmqMessage.Id,
-                        msmqMsgInfo.TransactionType);
-                    if (message == null)
-                        logger.Debug("Subscription was not found on subscription queue when trying to remove it");
-                }
+                msmqMsgInfo.Queue.ReceiveById(
+                    msmqMsgInfo.MsmqMessage.Id,
+                    msmqMsgInfo.TransactionType);
             }
             catch (MessageQueueException e)
             {
@@ -242,8 +250,9 @@ namespace Rhino.ServiceBus.Msmq
 
         public event Action SubscriptionChanged;
 
-        public void AddSubscription(string type, string endpoint)
+        public bool AddSubscription(string type, string endpoint)
         {
+            bool added;
             readerWriterLock.EnterWriteLock();
             try
             {
@@ -255,7 +264,7 @@ namespace Rhino.ServiceBus.Msmq
                 }
 
                 var uri = new Uri(endpoint);
-                subscriptionsForType.Add(uri);
+                added = subscriptionsForType.Add(uri);
 
                 logger.InfoFormat("Added subscription for {0} on {1}",
                                   type, uri);
@@ -266,6 +275,7 @@ namespace Rhino.ServiceBus.Msmq
             }
 
             RaiseSubscriptionChanged();
+            return added;
         }
 
         private void RaiseSubscriptionChanged()
