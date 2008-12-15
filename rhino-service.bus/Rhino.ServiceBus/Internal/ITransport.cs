@@ -10,7 +10,6 @@ namespace Rhino.ServiceBus.Internal
         void Stop();
 
         Uri Endpoint { get; }
-        Uri ManagementEndpoint { get; }
 
         void Send(Uri uri, params object[] msgs);
 

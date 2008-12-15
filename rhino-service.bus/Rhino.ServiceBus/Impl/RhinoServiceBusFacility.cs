@@ -19,8 +19,6 @@ namespace Rhino.ServiceBus.Impl
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
         private Uri endpoint;
-        private Uri errorEndpoint;
-        private Uri managementEndpoint;
         private int numberOfRetries = 5;
         private Type serializerImpl = typeof(JsonSerializer);
         private Uri subscriptionQueue;
@@ -102,9 +100,7 @@ namespace Rhino.ServiceBus.Impl
                     {
                         numberOfRetries,
                         threadCount,
-                        errorEndpoint,
                         endpoint,
-                        managementEndpoint
                     }),
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
@@ -171,8 +167,6 @@ namespace Rhino.ServiceBus.Impl
 
         private void ReadManagementConfiguration()
         {
-            managementEndpoint = new Uri(endpoint + "_management");
-
             IConfiguration busConfig = FacilityConfig.Children["subscriptions"];
             if (busConfig == null)
                 throw new ConfigurationErrorsException("Could not find 'subscriptions' node in confiuration");
@@ -216,8 +210,6 @@ namespace Rhino.ServiceBus.Impl
                     "Attribute 'endpoint' on 'bus' has an invalid value '" + uriString + "'"
                     , e);
             }
-
-            errorEndpoint = new Uri(endpoint + "_error");
         }
     }
 }

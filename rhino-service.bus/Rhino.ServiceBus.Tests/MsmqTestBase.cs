@@ -12,12 +12,6 @@ namespace Rhino.ServiceBus.Tests
         private readonly string subbscriptionQueuePath;
         protected readonly Uri SubscriptionsUri;
 
-        private readonly string managementQueuePath;
-        protected readonly Uri ManagementUri;
-
-        private readonly string managementQueuePath2;
-        protected readonly Uri ManagementUri2;
-
         protected readonly string testQueuePath;
         protected readonly Uri TestQueueUri;
 
@@ -29,7 +23,6 @@ namespace Rhino.ServiceBus.Tests
 
         protected MessageQueue queue;
         protected MessageQueue subscriptions;
-        protected MessageQueue management;
         protected MessageQueue transactionalQueue;
 
         private ITransport transactionalTransport;
@@ -39,12 +32,6 @@ namespace Rhino.ServiceBus.Tests
 
         public MsmqTestBase()
         {
-            ManagementUri = new Uri("msmq://./test_queue_management");
-            managementQueuePath = MsmqUtil.GetQueueDescription(ManagementUri).QueuePath;
-
-            ManagementUri2 = new Uri("msmq://./test_queue2_management");
-            managementQueuePath2 = MsmqUtil.GetQueueDescription(ManagementUri2).QueuePath;
-
             TestQueueUri = new Uri("msmq://./test_queue");
             testQueuePath = MsmqUtil.GetQueueDescription(TestQueueUri).QueuePath;
 
@@ -69,12 +56,6 @@ namespace Rhino.ServiceBus.Tests
             if (MessageQueue.Exists(subbscriptionQueuePath) == false)
                 MessageQueue.Create(subbscriptionQueuePath, true);
 
-            if (MessageQueue.Exists(managementQueuePath) == false)
-                MessageQueue.Create(managementQueuePath, true);
-
-            if (MessageQueue.Exists(managementQueuePath2) == false)
-                MessageQueue.Create(managementQueuePath2, true);
-
             queue = new MessageQueue(testQueuePath);
             queue.Purge();
 
@@ -90,13 +71,6 @@ namespace Rhino.ServiceBus.Tests
             {
                 errQueue2.Purge();
             }
-
-
-            management = new MessageQueue(managementQueuePath);
-            management.Purge();
-
-            management2 = new MessageQueue(managementQueuePath2);
-            management2.Purge();
 
             transactionalQueue = new MessageQueue(transactionalTestQueuePath);
             transactionalQueue.Purge();
@@ -119,8 +93,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transport == null)
                 {
-                    transport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TestQueueUri,
-                                                  SubscriptionsUri, 1, 5);
+                    transport = new MsmqTransport(new JsonSerializer(new DefaultReflection()), TestQueueUri, 1, 5);
                     transport.Start();
                 }
                 return transport;
@@ -134,8 +107,7 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new JsonSerializer(new DefaultReflection()),
-                                                               TransactionalTestQueueUri,
-                                                               SubscriptionsUri, 1, 5);
+                                                               TransactionalTestQueueUri, 1, 5);
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;
@@ -148,7 +120,6 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Dispose();
             transactionalQueue.Dispose();
-            management.Dispose();
             subscriptions.Dispose();
 
             if (transport != null)

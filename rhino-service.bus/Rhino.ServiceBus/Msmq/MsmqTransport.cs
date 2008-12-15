@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
-using System.Text;
 using System.Threading;
 using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -18,26 +18,22 @@ namespace Rhino.ServiceBus.Msmq
         private readonly Uri endpoint;
         private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
         private readonly ILog logger = LogManager.GetLogger(typeof (MsmqTransport));
-        private readonly Uri managementEndpoint;
         private readonly int numberOfRetries;
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IMessageSerializer serializer;
         private readonly int threadCount;
         private readonly WaitHandle[] waitHandles;
-        private MessageQueue managementQueue;
         private MessageQueue queue;
         private bool haveStarted;
 
         public MsmqTransport(
             IMessageSerializer serializer,
             Uri endpoint,
-            Uri managementEndpoint,
             int threadCount,
             int numberOfRetries)
         {
             this.serializer = serializer;
             this.endpoint = endpoint;
-            this.managementEndpoint = managementEndpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
             waitHandles = new WaitHandle[threadCount + 1];
@@ -47,11 +43,6 @@ namespace Rhino.ServiceBus.Msmq
 
         #region ITransport Members
 
-        public Uri ManagementEndpoint
-        {
-            get { return managementEndpoint; }
-        }
-
         public Uri Endpoint
         {
             get { return endpoint; }
@@ -59,35 +50,18 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
-            managementQueue = InitalizeQueue(managementEndpoint);
             queue = InitalizeQueue(endpoint);
-
-            var managementWaitHandle = new ManualResetEvent(false);
-            waitHandles[0] = managementWaitHandle;
-            try
-            {
-                managementQueue.BeginPeek(TimeSpan.FromSeconds(1),
-                                          new QueueState
-                                          {
-                                              MessageRecieved = () => ManagementMessageArrived,
-                                              Queue = managementQueue,
-                                              WaitHandle = managementWaitHandle
-                                          }, OnPeekMessage);
-            }
-            catch (Exception e)
-            {
-                throw new TransportException("Unable to start reading from management queue: " + managementEndpoint, e);
-            }
 
             for (int t = 0; t < threadCount; t++)
             {
                 var waitHandle = new ManualResetEvent(false);
-                waitHandles[t + 1] = waitHandle;
+                waitHandles[t] = waitHandle;
                 try
                 {
                     queue.BeginPeek(TimeSpan.FromSeconds(1), new QueueState
                     {
-                        MessageRecieved = () => MessageArrived,
+                        MessageRecieved = msg => 
+                            msg is AdministrativeMessage ? ManagementMessageArrived : MessageArrived,
                         Queue = queue,
                         WaitHandle = waitHandle
                     }, OnPeekMessage);
@@ -107,7 +81,6 @@ namespace Rhino.ServiceBus.Msmq
             WaitForProcessingToEnd();
 
             queue.Close();
-            managementQueue.Close();
         }
 
         private void WaitForProcessingToEnd()
@@ -278,6 +251,7 @@ namespace Rhino.ServiceBus.Msmq
                 //not sure how to do this when moving queue
                 //message.Extension = Encoding.Unicode.GetBytes(errorCounter.ExceptionText);
                 queue.MoveToSubQueue("errors",message);
+                logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id, errorCounter.ExceptionText);
                 return true;
             }
             finally
@@ -416,7 +390,7 @@ namespace Rhino.ServiceBus.Msmq
                         Source = MsmqUtil.GetQueueUri(message.ResponseQueue)
                     };
 
-                    var messageRecieved = state.MessageRecieved();
+                    var messageRecieved = state.MessageRecieved(msg);
                     if (messageRecieved != null)
                         messageRecieved(currentMessageInformation);
                 }
@@ -485,7 +459,7 @@ namespace Rhino.ServiceBus.Msmq
 
         private class QueueState
         {
-            public Func<Action<CurrentMessageInformation>> MessageRecieved;
+            public Func<object, Action<CurrentMessageInformation>> MessageRecieved;
             public MessageQueue Queue;
             public ManualResetEvent WaitHandle;
         }

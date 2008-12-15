@@ -74,6 +74,7 @@
     <Compile Include="Internal\ISubscriptionStorage.cs" />
     <Compile Include="MessageModules\IMessageModule.cs" />
     <Compile Include="Messages\AddSubscription.cs" />
+    <Compile Include="Messages\AdministrativeMessage.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
