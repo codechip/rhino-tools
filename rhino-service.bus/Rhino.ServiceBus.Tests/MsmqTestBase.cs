@@ -21,14 +21,15 @@ namespace Rhino.ServiceBus.Tests
         private readonly string managementQueuePath2;
         protected readonly Uri ManagementUri2;
 
-        private readonly string testQueuePath;
+        protected readonly string testQueuePath;
         protected readonly Uri TestQueueUri;
 
-        private readonly string testQueuePath2;
+        protected readonly string testQueuePath2;
         protected readonly Uri TestQueueUri2;
 
-        private readonly string transactionalTestQueuePath;
+        protected readonly string transactionalTestQueuePath;
         protected readonly Uri TransactionalTestQueueUri;
+
         protected MessageQueue errorQueue;
         protected MessageQueue queue;
         protected MessageQueue subscriptions;

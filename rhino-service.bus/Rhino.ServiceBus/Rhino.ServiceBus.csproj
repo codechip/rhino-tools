@@ -75,6 +75,8 @@
     <Compile Include="MessageModules\IMessageModule.cs" />
     <Compile Include="Messages\AddSubscription.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
+    <Compile Include="Msmq\MsmqExtensions.cs" />
+    <Compile Include="Msmq\NativeMethods.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />
     <Compile Include="IServiceBus.cs" />

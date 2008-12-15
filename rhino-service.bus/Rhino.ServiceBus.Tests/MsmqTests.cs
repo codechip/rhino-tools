@@ -3,11 +3,84 @@ using System.Messaging;
 using System.Threading;
 using System.Transactions;
 using Xunit;
+using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus.Tests
 {
     public class MsmqBehaviorTests : MsmqTestBase
     {
+        public MsmqBehaviorTests()
+        {
+            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            {
+                subqueue.Purge();
+            }
+
+            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";error"))
+            {
+                subqueue.Purge();
+            }
+        }
+
+        [Fact]
+        public void Can_move_message_to_sub_queue()
+        {
+            queue.Send("a");
+
+            var peek = queue.Peek();
+            queue.MoveToSubQueue("error", peek);
+
+            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            {
+                subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+                var receive = subqueue.Receive();
+                Assert.Equal("a", receive.Body);
+            }
+        }
+
+        [Fact]
+        public void Moving_to_subqueue_will_take_part_in_ambient_transaction()
+        {
+            queue.Send("a");
+
+            var peek = queue.Peek();
+            using (var tx = new TransactionScope())
+            {
+                queue.MoveToSubQueue("error", peek);
+                tx.Complete();
+            }
+
+            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            {
+                subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+                var receive = subqueue.Receive();
+                Assert.Equal("a", receive.Body);
+            }
+        }
+
+        [Fact]
+        public void Moving_to_subqueue_will_take_part_in_ambient_transaction_and_when_rolled_back_will_cancel_move()
+        {
+            using (var tx = new TransactionScope())
+            {
+                transactionalQueue.Send("a",MessageQueueTransactionType.Automatic);
+                tx.Complete();
+            }
+            
+            using (new TransactionScope())
+            {
+                var peek = transactionalQueue.Peek();
+                transactionalQueue.MoveToSubQueue("error", peek);
+                //tx.Complete();
+            }
+
+            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";error"))
+            {
+                subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+                Assert.Equal(0, subqueue.GetAllMessages().Length);
+            }
+        }
+
         [Fact]
         public void Can_rollback_message_to_transactional_queue()
         {
@@ -21,7 +94,7 @@ namespace Rhino.ServiceBus.Tests
 
             using (new TransactionScope())
             {
-                var receive = transactionalQueue.Receive(TimeSpan.FromSeconds(1), MessageQueueTransactionType.Automatic);
+                transactionalQueue.Receive(TimeSpan.FromSeconds(1), MessageQueueTransactionType.Automatic);
                 //do not complete tx
             }
 
