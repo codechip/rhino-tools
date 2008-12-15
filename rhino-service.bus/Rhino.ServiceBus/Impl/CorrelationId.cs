@@ -4,6 +4,12 @@ namespace Rhino.ServiceBus.Impl
 {
     public class CorrelationId
     {
+        public static CorrelationId Empty = new CorrelationId
+        {
+            Id = Guid.Empty,
+            Version = 0
+        };
+
         public Guid Id { get; set; }
         public int Version { get; set; }
 

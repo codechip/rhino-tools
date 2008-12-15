@@ -67,7 +67,6 @@
     <Compile Include="Exceptions\TransportException.cs" />
     <Compile Include="Impl\InMemorySagaPersister.cs" />
     <Compile Include="Impl\RhinoServiceBusFacility.cs" />
-    <Compile Include="Internal\DesiredMessageActionFromTransport.cs" />
     <Compile Include="Internal\IMessageConsumer.cs" />
     <Compile Include="Impl\DefaultReflection.cs" />
     <Compile Include="Internal\IReflection.cs" />
@@ -78,6 +77,7 @@
     <Compile Include="Messages\AdministrativeMessage.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Internal\MessageAction.cs" />
+    <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />

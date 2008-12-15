@@ -115,22 +115,27 @@ namespace Rhino.ServiceBus
         {
             transport.Stop();
             transport.MessageArrived -= Transport_OnMessageArrived;
-            transport.AdministrativeMessageArrived -= Transport_OnAdministrativeMessageArrived;
 
             foreach (IMessageModule module in modules)
             {
                 module.Stop(transport);
             }
+
+            var subscriptionAsModule = subscriptionStorage as IMessageModule;
+            if (subscriptionAsModule != null)
+                subscriptionAsModule.Stop(transport);
         }
 
         public void Start()
         {
+            var subscriptionAsModule = subscriptionStorage as IMessageModule;
+            if(subscriptionAsModule!=null)
+                subscriptionAsModule.Init(transport);
             foreach (var module in modules)
             {
                 module.Init(transport);
             }
             transport.MessageArrived += Transport_OnMessageArrived;
-            transport.AdministrativeMessageArrived += Transport_OnAdministrativeMessageArrived;
 
             transport.Start();
             subscriptionStorage.Initialize();
@@ -210,20 +215,6 @@ namespace Rhino.ServiceBus
                 sentMsg = true;
             }
             return sentMsg;
-        }
-
-        private DesiredMessageActionFromTransport Transport_OnAdministrativeMessageArrived(CurrentMessageInformation msg)
-        {
-            var desiredAction = subscriptionStorage.HandleAdministrativeMessage(msg.MessageId.ToString(), msg.Message);
-            if (desiredAction != null)
-                return desiredAction;
-
-            logger.WarnFormat("Got unknown management message for management endpoint: {0}", msg.Message);
-
-            return new DesiredMessageActionFromTransport
-            {
-                MessageAction = MessageAction.Consume
-            };
         }
 
         public void Transport_OnMessageArrived(CurrentMessageInformation msg)

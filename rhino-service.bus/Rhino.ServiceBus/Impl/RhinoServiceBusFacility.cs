@@ -21,7 +21,6 @@ namespace Rhino.ServiceBus.Impl
         private Uri endpoint;
         private int numberOfRetries = 5;
         private Type serializerImpl = typeof(JsonSerializer);
-        private Uri subscriptionQueue;
         private Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
         private Type transportImpl = typeof(MsmqTransport);
@@ -91,7 +90,7 @@ namespace Rhino.ServiceBus.Impl
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
                     {
-                        subscriptionQueue
+                        subscriptionQueue = endpoint
                     }),
                 Component.For<ITransport>()
                     .ImplementedBy(transportImpl)
@@ -183,7 +182,6 @@ namespace Rhino.ServiceBus.Impl
             try
             {
                 endpoint = new Uri(uriString);
-                subscriptionQueue = new Uri(uriString + ";subscriptions");
             }
             catch (Exception e)
             {
