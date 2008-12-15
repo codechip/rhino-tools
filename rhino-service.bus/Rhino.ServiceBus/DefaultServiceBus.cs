@@ -128,11 +128,17 @@ namespace Rhino.ServiceBus
 
         public void Start()
         {
+            logger.DebugFormat("Starting the bus for {0}",Endpoint);
+
             var subscriptionAsModule = subscriptionStorage as IMessageModule;
             if(subscriptionAsModule!=null)
+            {
+                logger.DebugFormat("Initating subscription storage as message module: {0}", subscriptionAsModule);
                 subscriptionAsModule.Init(transport);
+            }
             foreach (var module in modules)
             {
+                logger.DebugFormat("Initating message module: {0}", module);
                 module.Init(transport);
             }
             transport.MessageArrived += Transport_OnMessageArrived;
@@ -150,6 +156,7 @@ namespace Rhino.ServiceBus
                 if (owner.IsOwner(type) == false)
                     continue;
 
+                logger.InfoFormat("Subscribing {0} on {1}", type.FullName, owner.Endpoint);
                 Send(owner.Endpoint, new AddSubscription
                 {
                     Endpoint = Endpoint.ToString(),

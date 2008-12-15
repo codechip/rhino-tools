@@ -37,6 +37,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Initialize()
         {
+            logger.DebugFormat("Initializing msmq subscription storage on: {0}", subscriptionQueue);
             using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
             using (var enumerator = queue.GetMessageEnumerator2())
             {

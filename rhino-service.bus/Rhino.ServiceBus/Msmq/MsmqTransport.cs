@@ -53,6 +53,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
+            logger.DebugFormat("Starting msmq transport on: {0}",Endpoint);
             queue = InitalizeQueue(endpoint);
 
             for (int t = 0; t < threadCount; t++)
