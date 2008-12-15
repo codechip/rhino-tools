@@ -1,7 +1,11 @@
+using System;
 using System.Threading;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Messages;
+using Rhino.ServiceBus.Msmq;
 using Xunit;
 using System.Linq;
 
@@ -19,27 +23,58 @@ namespace Rhino.ServiceBus.Tests
             container.AddComponent<OccasionalTestHandler>();
         }
 
-        [Fact(Skip = "No longer relevant, need to rethink how to do this")]
+        [Fact]
         public void Should_subscribe_to_all_handlers_automatically()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
             {
+                var wait = new ManualResetEvent(false);
+                var subscriptionStorage = container.Resolve<ISubscriptionStorage>();
+                
+                subscriptionStorage.SubscriptionChanged += () => wait.Set();
+              
                 bus.Start();
+                
+                wait.WaitOne();
 
-                var messages = subscriptions.GetAllMessages();
-                Assert.Equal("Add: " + bus.Endpoint, messages[0].Label);
+                var serializer = container.Resolve<IMessageSerializer>();
+                bool found = false;
+                subscriptions.Peek();
+                var messagesEnum = subscriptions.GetMessageEnumerator2();
+                while (messagesEnum.MoveNext(TimeSpan.FromSeconds(0)))
+                {
+                    var message = messagesEnum.Current;
+                    var subscription = (AddSubscription)serializer.Deserialize(new MsmqTransportMessage(message))[0];
+                    if(subscription.Type==typeof(TestMessage).FullName)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                Assert.True(found);
             }
         }
 
-        [Fact(Skip = "No longer relevant, need to rethink how to do this")]
+        [Fact]
         public void Would_not_automatically_subscribe_occasional_consumers()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
             {
-                bus.Start();
+                var wait = new ManualResetEvent(false);
+                var subscriptionStorage = container.Resolve<ISubscriptionStorage>();
 
+                subscriptionStorage.SubscriptionChanged += () => wait.Set();
+                bus.Start();
+                wait.WaitOne();
+
+                var serializer = container.Resolve<IMessageSerializer>();
+                subscriptions.Peek();
                 var messages = subscriptions.GetAllMessages();
-                Assert.Equal(3, messages.Length);
+                foreach (var message in messages)
+                {
+                    var subscription = (AddSubscription)serializer.Deserialize(new MsmqTransportMessage(message))[0];
+                    Assert.NotEqual(typeof (OccasionalTestHandler).FullName, subscription.Type);
+                }
             }
         }
 
