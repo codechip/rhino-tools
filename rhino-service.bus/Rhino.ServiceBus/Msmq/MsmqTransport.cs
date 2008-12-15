@@ -203,7 +203,7 @@ namespace Rhino.ServiceBus.Msmq
                 return;
             }
 
-            ReceiveMessageInTransaction(state);
+            ReceiveMessageInTransaction(state, message.Id);
 
             state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
         }
@@ -229,7 +229,7 @@ namespace Rhino.ServiceBus.Msmq
             return true;
         }
 
-        private void ReceiveMessageInTransaction(QueueState state)
+        private void ReceiveMessageInTransaction(QueueState state, string messageId)
         {
             using (var tx = new TransactionScope())
             {
@@ -238,8 +238,8 @@ namespace Rhino.ServiceBus.Msmq
                 try
                 {
                     state.Queue.MessageReadPropertyFilter.SetAll();
-                    message = state.Queue.Receive(
-                        TimeSpan.FromSeconds(5),
+                    message = state.Queue.ReceiveById(
+                        messageId,
                         GetTransactionTypeBasedOnQueue(state.Queue));
 
                     ProcessMessage(message, MessageArrived);
