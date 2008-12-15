@@ -58,7 +58,7 @@ namespace Rhino.ServiceBus.Msmq
 
             for (int t = 0; t < threadCount; t++)
             {
-                var waitHandle = new ManualResetEvent(false);
+                var waitHandle = new ManualResetEvent(true);
                 waitHandles[t] = waitHandle;
                 try
                 {
@@ -67,6 +67,7 @@ namespace Rhino.ServiceBus.Msmq
                         Queue = queue,
                         WaitHandle = waitHandle
                     }, OnPeekMessage);
+                    waitHandle.Reset();
                 }
                 catch (Exception e)
                 {
