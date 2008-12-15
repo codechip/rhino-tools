@@ -23,7 +23,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                Assert.Throws<MessagePublicationException>(() => bus.Publish(new { abc = 15 }));
+                Assert.Throws<MessagePublicationException>(() => bus.Publish("test"));
             }
         }
 
@@ -34,7 +34,18 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                Assert.DoesNotThrow(() => bus.Notify(new {abc = 15}));
+                Assert.DoesNotThrow(() => bus.Notify("test"));
+            }
+        }
+
+        [Fact]
+        public void Trying_to_send_with_no_owner_will_throw()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                Assert.Throws<MessagePublicationException>(() => bus.Send("test"));
             }
         }
     }

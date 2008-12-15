@@ -91,13 +91,17 @@ namespace Rhino.ServiceBus
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot send empty message batch");
 
+            bool sent = false;
             foreach (var owner in messageOwners)
             {
                 if (owner.IsOwner(messages[0].GetType()) == false)
                     continue;
 
                 Send(owner.Endpoint, messages);
+                sent = true;
             }
+            if(sent==false)
+                throw new MessagePublicationException("Could not find no message owner for " + messages[0]);
         }
 
         public IDisposable AddInstanceSubscription(IMessageConsumer consumer)

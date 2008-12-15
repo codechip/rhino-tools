@@ -113,6 +113,14 @@ namespace Rhino.ServiceBus.Impl
         public string GetNamespaceForXml(object msg)
         {
             var type = msg.GetType();
+            if(type.Namespace==null && type.Name.StartsWith("<>"))
+                throw new InvalidOperationException("Anonymous types are not supported");
+
+            if (type.Namespace == null)//global types?
+            {
+                return type.Name
+                    .ToLowerInvariant();
+            }
             return type.Namespace.Split('.')
                 .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
         }
