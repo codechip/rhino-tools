@@ -46,5 +46,9 @@ namespace Rhino.ServiceBus
         /// for this consumer instance
         /// </summary>
         IServiceBus AddInstanceSubscription(IMessageConsumer consumer);
+
+        void Subscribe<T>();
+
+        void Subscribe(Type type);
     }
 }

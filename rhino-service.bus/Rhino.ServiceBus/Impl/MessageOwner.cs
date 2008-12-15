@@ -8,9 +8,9 @@ namespace Rhino.ServiceBus.Impl
         public Assembly Assembly;
         public Uri Endpoint;
 
-        public bool IsOwner(object msg)
+        public bool IsOwner(Type msg)
         {
-            return msg.GetType().Assembly == Assembly;
+            return msg.Assembly == Assembly;
         }
 
     }

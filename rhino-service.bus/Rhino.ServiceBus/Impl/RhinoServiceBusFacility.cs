@@ -68,7 +68,6 @@ namespace Rhino.ServiceBus.Impl
             Kernel.ComponentRegistered += Kernel_OnComponentRegistered;
 
             ReadBusConfiguration();
-            ReadManagementConfiguration();
             ReadMessageOwners();
 
             foreach (Type type in messageModules)
@@ -165,25 +164,6 @@ namespace Rhino.ServiceBus.Impl
             handler.ComponentModel.LifestyleType = LifestyleType.Transient;
         }
 
-        private void ReadManagementConfiguration()
-        {
-            IConfiguration busConfig = FacilityConfig.Children["subscriptions"];
-            if (busConfig == null)
-                throw new ConfigurationErrorsException("Could not find 'subscriptions' node in confiuration");
-
-            string uriString = busConfig.Attributes["endpoint"];
-            try
-            {
-                subscriptionQueue = new Uri(uriString);
-            }
-            catch (Exception e)
-            {
-                throw new ConfigurationErrorsException(
-                    "Attribute 'endpoint' on 'subscriptions' has an invalid value '" + uriString + "'"
-                    , e);
-            }
-        }
-
         private void ReadBusConfiguration()
         {
             IConfiguration busConfig = FacilityConfig.Children["bus"];
@@ -203,6 +183,7 @@ namespace Rhino.ServiceBus.Impl
             try
             {
                 endpoint = new Uri(uriString);
+                subscriptionQueue = new Uri(uriString + ";subscriptions");
             }
             catch (Exception e)
             {

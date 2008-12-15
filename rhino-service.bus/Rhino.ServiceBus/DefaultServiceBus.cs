@@ -30,7 +30,7 @@ namespace Rhino.ServiceBus
             ITransport transport,
             ISubscriptionStorage subscriptionStorage,
             IReflection reflection,
-            IMessageModule[] modules, 
+            IMessageModule[] modules,
             MessageOwner[] messageOwners)
         {
             this.transport = transport;
@@ -68,7 +68,7 @@ namespace Rhino.ServiceBus
 
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot reply with an empty message batch");
-            
+
             transport.Reply(messages);
         }
 
@@ -79,21 +79,21 @@ namespace Rhino.ServiceBus
 
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot send empty message batch");
-            
+
             transport.Send(endpoint, messages);
         }
 
         public void Send(params object[] messages)
         {
-            if (messages == null) 
+            if (messages == null)
                 throw new ArgumentNullException("messages");
 
-            if(messages.Length==0)
+            if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot send empty message batch");
 
             foreach (var owner in messageOwners)
             {
-                if(owner.IsOwner(messages[0])==false)
+                if (owner.IsOwner(messages[0].GetType()) == false)
                     continue;
 
                 Send(owner.Endpoint, messages);
@@ -115,7 +115,7 @@ namespace Rhino.ServiceBus
         {
             transport.Stop();
             transport.MessageArrived -= Transport_OnMessageArrived;
-            transport.ManagementMessageArrived -= Transport_OnManagementMessageArrived;
+            transport.AdministrativeMessageArrived -= Transport_OnAdministrativeMessageArrived;
 
             foreach (IMessageModule module in modules)
             {
@@ -130,18 +130,36 @@ namespace Rhino.ServiceBus
                 module.Init(transport);
             }
             transport.MessageArrived += Transport_OnMessageArrived;
-            transport.ManagementMessageArrived += Transport_OnManagementMessageArrived;
-            
+            transport.AdministrativeMessageArrived += Transport_OnAdministrativeMessageArrived;
+
             transport.Start();
             subscriptionStorage.Initialize();
 
-            subscriptionStorage.AddSubscriptionIfNotExists(
-                typeof(AddSubscription).FullName, Endpoint);
+            Subscribe<AddSubscription>();
 
-            subscriptionStorage.AddSubscriptionIfNotExists(
-                typeof(RemoveSubscription).FullName, Endpoint);
+            Subscribe<AddSubscription>();
 
             AutomaticallySubscribeConsumerMessages();
+        }
+
+        public void Subscribe(Type type)
+        {
+            foreach (var owner in messageOwners)
+            {
+                if (owner.IsOwner(type) == false)
+                    continue;
+
+                Send(owner.Endpoint, new AddSubscription
+                {
+                    Endpoint = Endpoint.ToString(),
+                    Type = type.FullName
+                });
+            }
+        }
+
+        public void Subscribe<T>()
+        {
+            Subscribe(typeof(T));
         }
 
         private void AutomaticallySubscribeConsumerMessages()
@@ -151,10 +169,10 @@ namespace Rhino.ServiceBus
             foreach (var handler in handlers)
             {
                 var msgs = reflection.GetMessagesConsumed(handler.ComponentModel.Implementation,
-                                                          type => type == typeof (OccasionalConsumerOf<>));
+                                                          type => type == typeof(OccasionalConsumerOf<>));
                 foreach (var msg in msgs)
                 {
-                    subscriptionStorage.AddSubscriptionIfNotExists(msg.FullName, Endpoint);
+                    Subscribe(msg);
                     list.Add(new AddSubscription
                     {
                         Endpoint = Endpoint.ToString(),
@@ -170,7 +188,7 @@ namespace Rhino.ServiceBus
 
         private bool PublishInternal(object[] messages)
         {
-            if (messages == null) 
+            if (messages == null)
                 throw new ArgumentNullException("messages");
 
             bool sentMsg = false;
@@ -186,21 +204,18 @@ namespace Rhino.ServiceBus
             return sentMsg;
         }
 
-        private void Transport_OnManagementMessageArrived(CurrentMessageInformation msg)
+        private DesiredMessageActionFromTransport Transport_OnAdministrativeMessageArrived(CurrentMessageInformation msg)
         {
-            var addSubscription = msg.Message as AddSubscription;
-            if (addSubscription != null)
-            {
-                subscriptionStorage.AddSubscription(addSubscription.Type, addSubscription.Endpoint);
-                return;
-            }
-            var removeSubscription = msg.Message as RemoveSubscription;
-            if (removeSubscription != null)
-            {
-                subscriptionStorage.RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
-                return;
-            }
+            var desiredAction = subscriptionStorage.HandleAdministrativeMessage(msg.MessageId.ToString(), msg.Message);
+            if (desiredAction != null)
+                return desiredAction;
+
             logger.WarnFormat("Got unknown management message for management endpoint: {0}", msg.Message);
+
+            return new DesiredMessageActionFromTransport
+            {
+                MessageAction = MessageAction.Consume
+            };
         }
 
         public void Transport_OnMessageArrived(CurrentMessageInformation msg)

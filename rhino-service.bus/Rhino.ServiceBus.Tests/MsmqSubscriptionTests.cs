@@ -1,8 +1,10 @@
 using System;
 using System.Messaging;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using System.Linq;
+using Rhino.ServiceBus.Serializers;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
@@ -12,13 +14,23 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_read_subscription_from_queue()
         {
-            subscriptions.Send(new Message
-            {
-                Label = "Add: " + TransactionalTestQueueUri,
-                Body = typeof(TestMessage).FullName
-            },MessageQueueTransactionType.Single);
+            var serializer = new JsonSerializer(new DefaultReflection());
 
-            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),SubscriptionsUri);
+            var msg = new Message();
+            serializer.Serialize(new object[]{new AddSubscription
+            {
+                Endpoint = TransactionalTestQueueUri.ToString(),
+                Type = typeof(TestMessage).FullName,
+            }}, new MsmqTransportMessage(msg));
+
+            queue.Send(msg, MessageQueueTransactionType.None);
+            msg = queue.Peek();
+            queue.MoveToSubQueue("subscriptions", msg);
+
+
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
+                serializer,
+                SubscriptionsUri);
 
             var uri = subscriptionStorage
                 .GetSubscriptionsFor(typeof(TestMessage))
@@ -30,13 +42,22 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Adding_then_removing_will_result_in_no_subscriptions()
         {
-            subscriptions.Send(new Message
+            var serializer = new JsonSerializer(new DefaultReflection());
+            var msg = new Message();
+            serializer.Serialize(new object[]{new AddSubscription
             {
-                Label = "Add: " + TransactionalTestQueueUri,
-                Body = typeof(TestMessage).FullName
-            }, MessageQueueTransactionType.Single);
+                Endpoint = TransactionalTestQueueUri.ToString(),
+                Type = typeof(TestMessage).FullName,
+            }}, new MsmqTransportMessage(msg));
 
-            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+
+            queue.Send(msg, MessageQueueTransactionType.None);
+            msg = queue.Peek();
+            queue.MoveToSubQueue("subscriptions",msg);
+
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
+                serializer, 
+                SubscriptionsUri);
             subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TransactionalTestQueueUri.ToString());
 
             var uris = subscriptionStorage
@@ -45,22 +66,25 @@ namespace Rhino.ServiceBus.Tests
             Assert.Equal(0, uris.Count());
         }
 
-        [Fact]
+        [Fact(Skip = "Not relevant anymore, should move to higher integration")]
         public void Adding_then_removing_will_result_in_compacted_queue()
         {
-            subscriptions.Send(new Message
+            var serializer = new JsonSerializer(new DefaultReflection());
+            var msg = new Message();
+            serializer.Serialize(new object[]{new AddSubscription
             {
-                Label = "Add: " + TransactionalTestQueueUri,
-                Body = typeof(TestMessage).FullName
-            }, MessageQueueTransactionType.Single);
+                Endpoint = TransactionalTestQueueUri.ToString(),
+                Type = typeof(TestMessage).FullName,
+            }}, new MsmqTransportMessage(msg));
 
-            subscriptions.Send(new Message
-            {
-                Label = "Add: " + TestQueueUri,
-                Body = typeof(TestMessage).FullName
-            }, MessageQueueTransactionType.Single);
+            queue.Send(msg, MessageQueueTransactionType.None);
+            msg = queue.Peek();
+            queue.MoveToSubQueue("subscriptions", msg);
 
-            var storage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+
+            var storage = new MsmqSubscriptionStorage(new DefaultReflection(),
+                serializer, 
+                SubscriptionsUri);
             storage.RemoveSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
 
             int count = 0;
@@ -70,10 +94,12 @@ namespace Rhino.ServiceBus.Tests
             Assert.Equal(1, count);
         }
 
-        [Fact]
+        [Fact(Skip = "Not relevant anymore, should move to higher integration")]
         public void Can_add_subscription_to_queue()
         {
-            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
+                new JsonSerializer(new DefaultReflection()), 
+                SubscriptionsUri);
             subscriptionStorage.AddSubscription(typeof (TestMessage).FullName, TestQueueUri.ToString());
             subscriptions.Formatter = new XmlMessageFormatter(new[] {typeof (string)});
 
@@ -83,10 +109,12 @@ namespace Rhino.ServiceBus.Tests
             Assert.Equal(typeof(TestMessage).FullName, peek.Body);
         }
 
-        [Fact]
+        [Fact(Skip = "Not relevant anymore, should move to higher integration")]
         public void Can_remove_subscription_from_queue()
         {
-            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
+                new JsonSerializer(new DefaultReflection()), 
+                SubscriptionsUri);
             subscriptionStorage.AddSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
             subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
             subscriptions.Formatter = new XmlMessageFormatter(new[] { typeof(string) });

@@ -19,7 +19,7 @@ namespace Rhino.ServiceBus.Tests
             container.AddComponent<OccasionalTestHandler>();
         }
 
-        [Fact]
+        [Fact(Skip = "No longer relevant, need to rethink how to do this")]
         public void Should_subscribe_to_all_handlers_automatically()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
@@ -31,7 +31,7 @@ namespace Rhino.ServiceBus.Tests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "No longer relevant, need to rethink how to do this")]
         public void Would_not_automatically_subscribe_occasional_consumers()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())

@@ -28,7 +28,6 @@ namespace Rhino.ServiceBus.Tests
         private ITransport transactionalTransport;
         private ITransport transport;
         protected readonly MessageQueue testQueue2;
-        protected readonly MessageQueue management2;
 
         public MsmqTestBase()
         {
@@ -41,7 +40,7 @@ namespace Rhino.ServiceBus.Tests
             TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
 
-            SubscriptionsUri = new Uri("msmq://./test_subscriptions");
+            SubscriptionsUri = new Uri("msmq://./test_queue;subscriptions");
             subbscriptionQueuePath = MsmqUtil.GetQueueDescription(SubscriptionsUri).QueuePath;
 
             if (MessageQueue.Exists(testQueuePath) == false)
@@ -52,9 +51,6 @@ namespace Rhino.ServiceBus.Tests
 
             if (MessageQueue.Exists(transactionalTestQueuePath) == false)
                 MessageQueue.Create(transactionalTestQueuePath, true);
-
-            if (MessageQueue.Exists(subbscriptionQueuePath) == false)
-                MessageQueue.Create(subbscriptionQueuePath, true);
 
             queue = new MessageQueue(testQueuePath);
             queue.Purge();

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
 using System.Threading;
-using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -20,12 +20,16 @@ namespace Rhino.ServiceBus.Msmq
 
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IReflection reflection;
-        private const string AddPrefix = "Add: ";
+        private readonly IMessageSerializer messageSerializer;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
 
-        public MsmqSubscriptionStorage(IReflection reflection, Uri subscriptionQueue)
+        public MsmqSubscriptionStorage(
+            IReflection reflection,
+            IMessageSerializer messageSerializer,
+            Uri subscriptionQueue)
         {
             this.reflection = reflection;
+            this.messageSerializer = messageSerializer;
             this.subscriptionQueue = subscriptionQueue;
             Initialize();
         }
@@ -33,47 +37,37 @@ namespace Rhino.ServiceBus.Msmq
         public void Initialize()
         {
             using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
+            using (var enumerator = queue.GetMessageEnumerator2())
             {
-                using (var enumerator = queue.GetMessageEnumerator2())
+                while (enumerator.MoveNext(TimeSpan.FromMilliseconds(0)))
                 {
-                    while (enumerator.MoveNext(TimeSpan.FromMilliseconds(0)))
+                    var current = enumerator.Current;
+                    object[] msgs;
+                    try
                     {
-                        var current = enumerator.Current;
-                        HandleSubscriptionFromMessage(current);
+                        msgs = messageSerializer.Deserialize(new MsmqTransportMessage(current));
+                    }
+                    catch (Exception e)
+                    {
+                        throw new SubscriptionException("Could not deserialize message from subscription queue", e);
+                    }
+
+                    try
+                    {
+                        foreach (var msg in msgs)
+                        {
+                            HandleAdministrativeMessage(current.Id, msg);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new SubscriptionException("Failed to process subscription records", e);
                     }
                 }
             }
         }
 
-        private void HandleSubscriptionFromMessage(Message current)
-        {
-            if (current == null)
-                return;
-            var messageType = (string)current.Body;
-            HashSet<Uri> subscriptionsForType;
-            if (subscriptions.TryGetValue(messageType, out subscriptionsForType) == false)
-            {
-                subscriptionsForType = new HashSet<Uri>();
-                subscriptions[messageType] = subscriptionsForType;
-            }
-            if (current.Label.StartsWith(AddPrefix))
-            {
-                var uri = new Uri(current.Label.Substring(AddPrefix.Length));
-                subscriptionsForType.Add(uri);
-
-                AddMessageIdentifierForTracking(current, messageType, uri);
-
-                logger.InfoFormat("Added subscription for {0} on {1}",
-                                  messageType, uri);
-                return;
-            }
-
-            logger.WarnFormat("Could not understand subscription message '{0}' (ignoring)",
-                              current.Label);
-            return;
-        }
-
-        private void AddMessageIdentifierForTracking(Message current, string messageType, Uri uri)
+        private void AddMessageIdentifierForTracking(string messageId, string messageType, Uri uri)
         {
             var key = new TypeAndUriKey { TypeName = messageType, Uri = uri };
             IList<string> value;
@@ -81,7 +75,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 subscriptionMessageIds[key] = value = new List<string>();
             }
-            value.Add(current.Id);
+            value.Add(messageId);
         }
 
         private void RemoveSubscriptionMessageFromQueue(MessageQueue queue, string type, Uri uri)
@@ -111,21 +105,14 @@ namespace Rhino.ServiceBus.Msmq
             var description = MsmqUtil.GetQueueDescription(subscriptionQueue);
 
             MessageQueue queue;
-            bool transactional;
             try
             {
                 queue = new MessageQueue(description.QueuePath, accessMode);
-                transactional = queue.Transactional;
             }
             catch (Exception e)
             {
                 throw new SubscriptionException("Could not open subscription queue (" + description.Uri + ")", e);
             }
-
-            if (transactional == false)
-                throw new SubscriptionException("The subscription queue must be transactional (" +
-                                                description.Uri + ")");
-
             queue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
             return queue;
         }
@@ -179,45 +166,48 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        public void AddSubscriptionIfNotExists(string type, Uri endpoint)
+        public DesiredMessageActionFromTransport HandleAdministrativeMessage(string messageId, object message)
         {
-            bool shouldRegister = true;
-
-            readerWriterLock.EnterReadLock();
-            try
+            var addSubscription = message as AddSubscription;
+            if (addSubscription != null)
             {
-
-                HashSet<Uri> value;
-                if (subscriptions.TryGetValue(type, out value))
+                AddSubscription(addSubscription.Type, addSubscription.Endpoint);
+                AddMessageIdentifierForTracking(messageId, addSubscription.Type, new Uri(addSubscription.Endpoint));
+                return new DesiredMessageActionFromTransport
                 {
-                    shouldRegister = value.Contains(endpoint); 
-                }
+                    Destination = "subscriptions",
+                    MessageAction = MessageAction.Move
+                };
             }
-            finally
+            var removeSubscription = message as RemoveSubscription;
+            if (removeSubscription != null)
             {
-                readerWriterLock.ExitReadLock();
+                RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
+                return new DesiredMessageActionFromTransport
+                {
+                    MessageAction = MessageAction.Consume
+                };
             }
-
-            if(shouldRegister)
-                AddSubscription(type, endpoint.ToString());
+            return null;
         }
 
         public void AddSubscription(string type, string endpoint)
         {
-            var message = new Message
-            {
-                Label = AddPrefix + endpoint,
-                Body = type
-            };
-            using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Send))
-            {
-                queue.Send(message, MessageQueueTransactionType.Single);
-            }
-
             readerWriterLock.EnterWriteLock();
             try
             {
-                HandleSubscriptionFromMessage(message);
+                HashSet<Uri> subscriptionsForType;
+            if (subscriptions.TryGetValue(type, out subscriptionsForType) == false)
+            {
+                subscriptionsForType = new HashSet<Uri>();
+                subscriptions[type] = subscriptionsForType;
+            }
+
+                var uri = new Uri(endpoint);
+                subscriptionsForType.Add(uri);
+
+                logger.InfoFormat("Added subscription for {0} on {1}",
+                                  type, uri);
             }
             finally
             {
