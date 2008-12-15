@@ -31,10 +31,20 @@ namespace Rhino.ServiceBus
         void Send(Uri endpoint, params object[] messages);
 
         /// <summary>
+        /// Send the message directly to the default endpoint
+        /// for this type of message
+        /// </summary>
+        void Send(params object[] messages);
+
+        /// <summary>
         /// Get the endpoint of the bus
         /// </summary>
         Uri Endpoint { get; }
 
+        /// <summary>
+        /// Create a weak reference subscription for all the registered consumers 
+        /// for this consumer instance
+        /// </summary>
         IServiceBus AddInstanceSubscription(IMessageConsumer consumer);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Msmq;
 using System.Linq;
 using Xunit;
@@ -17,7 +18,7 @@ namespace Rhino.ServiceBus.Tests
                 Body = typeof(TestMessage).FullName
             },MessageQueueTransactionType.Single);
 
-            var subscriptionStorage = new MsmqSubscriptionStorage(SubscriptionsUri);
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),SubscriptionsUri);
 
             var uri = subscriptionStorage
                 .GetSubscriptionsFor(typeof(TestMessage))
@@ -41,8 +42,8 @@ namespace Rhino.ServiceBus.Tests
                 Label = "Remove: " + TransactionalTestQueueUri,
                 Body = typeof(TestMessage).FullName
             }, MessageQueueTransactionType.Single);
-            
-            var subscriptionStorage = new MsmqSubscriptionStorage(SubscriptionsUri);
+
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
 
             var uris = subscriptionStorage
                 .GetSubscriptionsFor(typeof (TestMessage));
@@ -72,7 +73,7 @@ namespace Rhino.ServiceBus.Tests
                 Body = typeof(TestMessage).FullName
             }, MessageQueueTransactionType.Single);
 
-            new MsmqSubscriptionStorage(SubscriptionsUri);
+            new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
 
             int count = 0;
             var enumerator2 = subscriptions.GetMessageEnumerator2();
@@ -84,7 +85,7 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_add_subscription_to_queue()
         {
-            var subscriptionStorage = new MsmqSubscriptionStorage(SubscriptionsUri);
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
             subscriptionStorage.AddSubscription(typeof (TestMessage).FullName, TestQueueUri.ToString());
             subscriptions.Formatter = new XmlMessageFormatter(new[] {typeof (string)});
 
@@ -97,7 +98,7 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_remove_subscription_from_queue()
         {
-            var subscriptionStorage = new MsmqSubscriptionStorage(SubscriptionsUri);
+            var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
             subscriptionStorage.AddSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
             subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
             subscriptions.Formatter = new XmlMessageFormatter(new[] { typeof(string) });

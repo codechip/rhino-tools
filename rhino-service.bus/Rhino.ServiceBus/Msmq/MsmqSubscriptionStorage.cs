@@ -14,7 +14,7 @@ namespace Rhino.ServiceBus.Msmq
     {
         private readonly Uri subscriptionQueue;
         private readonly Dictionary<string, List<WeakReference>> consumers = new Dictionary<string, List<WeakReference>>();
-        
+
         private readonly Dictionary<string, IList<Uri>> subscriptions = new Dictionary<string, IList<Uri>>();
         private readonly Dictionary<TypeAndUriKey, IList<string>> subscriptionMessageIds = new Dictionary<TypeAndUriKey, IList<string>>();
 
@@ -22,30 +22,26 @@ namespace Rhino.ServiceBus.Msmq
         private readonly IReflection reflection;
         private const string AddPrefix = "Add: ";
         private const string RemovePrefix = "Remove: ";
-        private ILog logger = LogManager.GetLogger(typeof (MsmqSubscriptionStorage));
+        private ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
 
-        public MsmqSubscriptionStorage(IReflection reflection)
+        public MsmqSubscriptionStorage(IReflection reflection, Uri subscriptionQueue)
         {
             this.reflection = reflection;
-        }
-
-        public MsmqSubscriptionStorage(Uri subscriptionQueue)
-        {
             this.subscriptionQueue = subscriptionQueue;
             var list = new List<Action<MessageQueue>>();
-            using(var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
+            using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
             {
-                using(var enumerator = queue.GetMessageEnumerator2())
+                using (var enumerator = queue.GetMessageEnumerator2())
                 {
-                    while(enumerator.MoveNext(TimeSpan.FromMilliseconds(0)))
+                    while (enumerator.MoveNext(TimeSpan.FromMilliseconds(0)))
                     {
                         var current = enumerator.Current;
                         var action = HandleSubscriptionFromMessage(current);
-                        if(action!=null)
+                        if (action != null)
                             list.Add(action);
                     }
                 }
-                using(var tx = new TransactionScope())
+                using (var tx = new TransactionScope())
                 {
                     foreach (var action in list)
                     {
@@ -62,7 +58,7 @@ namespace Rhino.ServiceBus.Msmq
                 return null;
             var messageType = (string)current.Body;
             IList<Uri> subscriptionsForType;
-            if(subscriptions.TryGetValue(messageType,out subscriptionsForType)==false)
+            if (subscriptions.TryGetValue(messageType, out subscriptionsForType) == false)
             {
                 subscriptionsForType = new List<Uri>();
                 subscriptions[messageType] = subscriptionsForType;
@@ -71,20 +67,20 @@ namespace Rhino.ServiceBus.Msmq
             {
                 var uri = new Uri(current.Label.Substring(AddPrefix.Length));
                 subscriptionsForType.Add(uri);
-                
+
                 AddMessageIdentifierForTracking(current, messageType, uri);
 
                 logger.InfoFormat("Added subscription for {0} on {1}",
                                   messageType, uri);
                 return null;
             }
-            if(current.Label.StartsWith(RemovePrefix))
+            if (current.Label.StartsWith(RemovePrefix))
             {
                 var uri = new Uri(current.Label.Substring(RemovePrefix.Length));
                 subscriptionsForType.Remove(uri);
-                
+
                 AddMessageIdentifierForTracking(current, messageType, uri);
-                
+
                 logger.InfoFormat("Removed subscription for {0} on {1}",
                                   messageType, uri);
                 return (queue) => RemoveSubscriptionMessageFromQueue(queue, messageType, uri);
@@ -97,9 +93,9 @@ namespace Rhino.ServiceBus.Msmq
 
         private void AddMessageIdentifierForTracking(Message current, string messageType, Uri uri)
         {
-            var key = new TypeAndUriKey {TypeName = messageType, Uri = uri};
+            var key = new TypeAndUriKey { TypeName = messageType, Uri = uri };
             IList<string> value;
-            if(subscriptionMessageIds.TryGetValue(key, out value)==false)
+            if (subscriptionMessageIds.TryGetValue(key, out value) == false)
             {
                 subscriptionMessageIds[key] = value = new List<string>();
             }
@@ -110,7 +106,7 @@ namespace Rhino.ServiceBus.Msmq
         {
             var key = new TypeAndUriKey { TypeName = type, Uri = uri };
             IList<string> messageIds;
-            if(subscriptionMessageIds.TryGetValue(key, out messageIds)==false)
+            if (subscriptionMessageIds.TryGetValue(key, out messageIds) == false)
                 return;
             foreach (var msgId in messageIds)
             {
@@ -122,7 +118,7 @@ namespace Rhino.ServiceBus.Msmq
                 }
                 catch (MessageQueueException e)
                 {
-                    if(e.MessageQueueErrorCode!=MessageQueueErrorCode.IOTimeout)
+                    if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
                         throw;
                 }
             }
@@ -136,7 +132,7 @@ namespace Rhino.ServiceBus.Msmq
             bool transactional;
             try
             {
-                queue = new MessageQueue(description.QueuePath,accessMode);
+                queue = new MessageQueue(description.QueuePath, accessMode);
                 transactional = queue.Transactional;
             }
             catch (Exception e)
@@ -175,7 +171,7 @@ namespace Rhino.ServiceBus.Msmq
             readerWriterLock.EnterReadLock();
             try
             {
-                if(consumers.TryGetValue(type.FullName, out value)==false)
+                if (consumers.TryGetValue(type.FullName, out value) == false)
                     return new object[0];
             }
             finally
@@ -187,8 +183,8 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 var array = value
-                    .Select(x=>x.Target)
-                    .Where(x=>x!=null)
+                    .Select(x => x.Target)
+                    .Where(x => x != null)
                     .ToArray();
 
                 value.RemoveAll(x => x.IsAlive == false);
@@ -201,6 +197,29 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
+        public void AddSubscriptionIfNotExists(string type, Uri endpoint)
+        {
+            bool shouldRegister = true;
+
+            readerWriterLock.EnterReadLock();
+            try
+            {
+
+                IList<Uri> value;
+                if (subscriptions.TryGetValue(type, out value))
+                {
+                    shouldRegister = value.Contains(endpoint); 
+                }
+            }
+            finally
+            {
+                readerWriterLock.ExitReadLock();
+            }
+
+            if(shouldRegister)
+                AddSubscription(type, endpoint.ToString());
+        }
+
         public void AddSubscription(string type, string endpoint)
         {
             var message = new Message
@@ -208,7 +227,7 @@ namespace Rhino.ServiceBus.Msmq
                 Label = AddPrefix + endpoint,
                 Body = type
             };
-            using (var queue = CreateSubscriptionQueue(subscriptionQueue,QueueAccessMode.Send))
+            using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Send))
             {
                 queue.Send(message, MessageQueueTransactionType.Single);
             }
@@ -240,9 +259,9 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 var action = HandleSubscriptionFromMessage(message);
-                if(action!=null)
+                if (action != null)
                 {
-                    using(var tx = new TransactionScope())
+                    using (var tx = new TransactionScope())
                     {
                         action(CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive));
                         tx.Complete();
@@ -257,7 +276,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void AddInstanceSubscription(IMessageConsumer consumer)
         {
-            var messagesConsumes = reflection.GetMessagesConsumes(consumer);
+            var messagesConsumes = reflection.GetMessagesConsumed(consumer);
 
             readerWriterLock.EnterWriteLock();
             try
@@ -265,7 +284,7 @@ namespace Rhino.ServiceBus.Msmq
                 foreach (var type in messagesConsumes)
                 {
                     List<WeakReference> value;
-                    if(consumers.TryGetValue(type.FullName,out value)==false)
+                    if (consumers.TryGetValue(type.FullName, out value) == false)
                     {
                         value = new List<WeakReference>();
                         consumers[type.FullName] = value;
@@ -296,15 +315,15 @@ namespace Rhino.ServiceBus.Msmq
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (TypeAndUriKey)) return false;
-            return Equals((TypeAndUriKey) obj);
+            if (obj.GetType() != typeof(TypeAndUriKey)) return false;
+            return Equals((TypeAndUriKey)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((TypeName != null ? TypeName.GetHashCode() : 0)*397) ^ (Uri != null ? Uri.GetHashCode() : 0);
+                return ((TypeName != null ? TypeName.GetHashCode() : 0) * 397) ^ (Uri != null ? Uri.GetHashCode() : 0);
             }
         }
     }

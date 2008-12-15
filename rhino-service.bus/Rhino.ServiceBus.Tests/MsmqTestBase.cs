@@ -47,7 +47,7 @@ namespace Rhino.ServiceBus.Tests
             TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
 
-            SubscriptionsUri = new Uri("msmq://./test_queue_subscriptions");
+            SubscriptionsUri = new Uri("msmq://./test_subscriptions");
             subbscriptionQueuePath = MsmqUtil.GetQueueDescription(SubscriptionsUri).QueuePath;
 
             if (MessageQueue.Exists(testQueuePath) == false)
@@ -80,7 +80,10 @@ namespace Rhino.ServiceBus.Tests
             transactionalQueue = new MessageQueue(transactionalTestQueuePath);
             transactionalQueue.Purge();
 
-            subscriptions = new MessageQueue(subbscriptionQueuePath);
+            subscriptions = new MessageQueue(subbscriptionQueuePath)
+            {
+                Formatter = new XmlMessageFormatter(new[] {typeof (string)})
+            };
             subscriptions.Purge();
         }
 

@@ -18,21 +18,23 @@ namespace Rhino.ServiceBus
     {
         private readonly IKernel kernel;
 
-        private readonly ILog logger = LogManager.GetLogger(typeof (DefaultServiceBus));
+        private readonly ILog logger = LogManager.GetLogger(typeof(DefaultServiceBus));
         private readonly IMessageModule[] modules;
         private readonly IReflection reflection;
         private readonly ISubscriptionStorage subscriptionStorage;
         private readonly ITransport transport;
+        private readonly MessageOwner[] messageOwners;
 
         public DefaultServiceBus(
             IKernel kernel,
             ITransport transport,
             ISubscriptionStorage subscriptionStorage,
             IReflection reflection,
-            IMessageModule[] modules
-            )
+            IMessageModule[] modules, 
+            MessageOwner[] messageOwners)
         {
             this.transport = transport;
+            this.messageOwners = messageOwners;
             this.subscriptionStorage = subscriptionStorage;
             this.reflection = reflection;
             this.modules = modules;
@@ -61,12 +63,41 @@ namespace Rhino.ServiceBus
 
         public void Reply(params object[] messages)
         {
+            if (messages == null)
+                throw new ArgumentNullException("messages");
+
+            if (messages.Length == 0)
+                throw new MessagePublicationException("Cannot reply with an empty message batch");
+            
             transport.Reply(messages);
         }
 
         public void Send(Uri endpoint, params object[] messages)
         {
+            if (messages == null)
+                throw new ArgumentNullException("messages");
+
+            if (messages.Length == 0)
+                throw new MessagePublicationException("Cannot send empty message batch");
+            
             transport.Send(endpoint, messages);
+        }
+
+        public void Send(params object[] messages)
+        {
+            if (messages == null) 
+                throw new ArgumentNullException("messages");
+
+            if(messages.Length==0)
+                throw new MessagePublicationException("Cannot send empty message batch");
+
+            foreach (var owner in messageOwners)
+            {
+                if(owner.IsOwner(messages[0])==false)
+                    continue;
+
+                Send(owner.Endpoint, messages);
+            }
         }
 
         public IServiceBus AddInstanceSubscription(IMessageConsumer consumer)
@@ -94,19 +125,39 @@ namespace Rhino.ServiceBus
 
         public void Start()
         {
-            foreach (IMessageModule module in modules)
+            foreach (var module in modules)
             {
                 module.Init(transport);
             }
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.ManagementMessageArrived += Transport_OnManagementMessageArrived;
             transport.Start();
+
+            subscriptionStorage.AddSubscriptionIfNotExists(
+                typeof(AddSubscription).FullName, Endpoint);
+
+            subscriptionStorage.AddSubscriptionIfNotExists(
+                typeof(RemoveSubscription).FullName, Endpoint);
+
+            var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));
+            foreach (var handler in handlers)
+            {
+                var msgs = reflection.GetMessagesConsumed(handler.ComponentModel.Implementation,
+                                                              type => type == typeof (OccasionalConsumerOf<>));
+                foreach (var msg in msgs)
+                {
+                    subscriptionStorage.AddSubscriptionIfNotExists(msg.FullName, Endpoint);
+                }
+            }
         }
 
         #endregion
 
         private bool PublishInternal(object[] messages)
         {
+            if (messages == null) 
+                throw new ArgumentNullException("messages");
+
             bool sentMsg = false;
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot publish an empty message batch");
@@ -169,7 +220,7 @@ namespace Rhino.ServiceBus
 
         private void PersistSagaInstance(ISaga saga)
         {
-            Type persisterType = reflection.GetGenericTypeOf(typeof (ISagaPersister<>), saga);
+            Type persisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>), saga);
             object persister = kernel.Resolve(persisterType);
 
             if (saga.IsCompleted)
@@ -185,8 +236,8 @@ namespace Rhino.ServiceBus
             object[] instanceConsumers = subscriptionStorage
                 .GetInstanceSubscriptions(msg.Message.GetType());
 
-            Type consumerType = reflection.GetGenericTypeOf(typeof (ConsumerOf<>), msg.Message);
-            var consumers = (object[]) kernel.ResolveAll(consumerType, new Hashtable());
+            Type consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
+            var consumers = (object[])kernel.ResolveAll(consumerType, new Hashtable());
             return instanceConsumers
                 .Union(sagas)
                 .Union(consumers)
@@ -199,9 +250,9 @@ namespace Rhino.ServiceBus
                 return new object[0];
 
             var instances = new List<object>();
-            Type sagaInitiatedByThisMessage = reflection.GetGenericTypeOf(typeof (InitiatedBy<>), sagaMessage);
+            Type sagaInitiatedByThisMessage = reflection.GetGenericTypeOf(typeof(InitiatedBy<>), sagaMessage);
 
-            var initiated = (object[]) kernel.ResolveAll(sagaInitiatedByThisMessage, new Hashtable());
+            var initiated = (object[])kernel.ResolveAll(sagaInitiatedByThisMessage, new Hashtable());
 
             foreach (ISaga saga in initiated)
             {
@@ -210,13 +261,13 @@ namespace Rhino.ServiceBus
 
             instances.AddRange(initiated);
 
-            Type messageType = reflection.GetGenericTypeOf(typeof (Orchestrates<>), sagaMessage);
+            Type messageType = reflection.GetGenericTypeOf(typeof(Orchestrates<>), sagaMessage);
 
             IHandler[] handlers = kernel.GetAssignableHandlers(messageType);
 
             foreach (IHandler sagaPersisterHandler in handlers)
             {
-                Type sagaPersisterType = reflection.GetGenericTypeOf(typeof (ISagaPersister<>),
+                Type sagaPersisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>),
                                                                      sagaPersisterHandler.ComponentModel.Implementation);
 
                 object sagaPersister = kernel.Resolve(sagaPersisterType);

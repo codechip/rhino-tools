@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="Impl\MessageOwner.cs" />
     <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
     <Compile Include="DefaultServiceBus.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="MessageModules\IMessageModule.cs" />
     <Compile Include="Messages\AddSubscription.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
+    <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Internal\ITransport.cs" />

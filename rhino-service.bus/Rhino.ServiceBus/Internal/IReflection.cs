@@ -8,20 +8,23 @@ namespace Rhino.ServiceBus.Internal
         object CreateInstance(string typeName);
 
         void Set(object instance, string name, object value);
-        
+
         object ForAllOf<T>(object instance, Func<T, T> func);
-        
+
         Type GetGenericTypeOf(Type type, object msg);
-        
+
         Type GetGenericTypeOf(Type type, Type paramType);
-        
+
         void InvokeConsume(object consumer, object msg);
-        
-        Type[] GetMessagesConsumes(IMessageConsumer consumer);
+
+        Type[] GetMessagesConsumed(IMessageConsumer consumer);
+
+        Type[] GetMessagesConsumed(Type consumerType, Predicate<Type> filter);
 
         object InvokeSagaPersisterGet(object persister, Guid correlationId);
 
         void InvokeSagaPersisterSave(object persister, ISaga entity);
+
         void InvokeSagaPersisterComplete(object persister, ISaga entity);
     }
 }

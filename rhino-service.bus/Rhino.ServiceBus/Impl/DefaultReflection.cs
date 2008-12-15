@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using log4net;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Sagas;
+using System.Linq;
 
 namespace Rhino.ServiceBus.Impl
 {
@@ -70,21 +71,38 @@ namespace Rhino.ServiceBus.Impl
             method.Invoke(persister, new object[] { entity });
         }
 
-        public Type[] GetMessagesConsumes(IMessageConsumer consumer)
+        public Type[] GetMessagesConsumed(IMessageConsumer consumer)
         {
-            var list = new List<Type>();
-            var interfaces = consumer.GetType().GetInterfaces();
+            var consumerType = consumer.GetType();
+            return GetMessagesConsumed(consumerType, type => false);
+        }
+
+        public Type[] GetMessagesConsumed(Type consumerType, Predicate<Type> filter)
+        {
+            var list = new HashSet<Type>();
+            var toRemove = new HashSet<Type>();
+
+            var interfaces = consumerType.GetInterfaces();
 
             foreach (var type in interfaces)
             {
                 if (type.IsGenericType == false)
                     continue;
 
-                if (type.GetGenericTypeDefinition() != typeof(ConsumerOf<>))
+                var definition = type.GetGenericTypeDefinition();
+
+                if (filter(definition))
+                {
+                    toRemove.Add(type.GetGenericArguments()[0]);
+                    continue;
+                }
+
+                if (definition != typeof(ConsumerOf<>))
                     continue;
 
                 list.Add(type.GetGenericArguments()[0]);
             }
+            list.ExceptWith(toRemove);
             return list.ToArray();
         }
 

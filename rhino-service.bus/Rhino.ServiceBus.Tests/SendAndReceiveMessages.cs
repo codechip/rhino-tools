@@ -1,8 +1,5 @@
 using System;
 using System.Threading;
-using Rhino.ServiceBus.Impl;
-using Rhino.ServiceBus.Msmq;
-using Rhino.ServiceBus.Serializers;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests

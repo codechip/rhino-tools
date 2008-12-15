@@ -14,5 +14,7 @@ namespace Rhino.ServiceBus.Internal
         void AddSubscription(string type, string endpoint);
 
         void RemoveSubscription(string type, string endpoint);
+
+        void AddSubscriptionIfNotExists(string type, Uri endpoint);
     }
 }
