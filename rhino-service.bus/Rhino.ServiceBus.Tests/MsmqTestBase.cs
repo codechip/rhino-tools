@@ -31,16 +31,16 @@ namespace Rhino.ServiceBus.Tests
 
         public MsmqTestBase()
         {
-            TestQueueUri = new Uri("msmq://./test_queue");
+            TestQueueUri = new Uri("msmq://localhost/test_queue");
             testQueuePath = MsmqUtil.GetQueueDescription(TestQueueUri).QueuePath;
 
-            TestQueueUri2 = new Uri("msmq://./test_queue2");
+            TestQueueUri2 = new Uri("msmq://localhost/test_queue2");
             testQueuePath2 = MsmqUtil.GetQueueDescription(TestQueueUri2).QueuePath;
 
-            TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
+            TransactionalTestQueueUri = new Uri("msmq://localhost/transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
 
-            SubscriptionsUri = new Uri("msmq://./test_queue;subscriptions");
+            SubscriptionsUri = new Uri("msmq://localhost/test_queue;subscriptions");
             subbscriptionQueuePath = MsmqUtil.GetQueueDescription(SubscriptionsUri).QueuePath;
 
             if (MessageQueue.Exists(testQueuePath) == false)

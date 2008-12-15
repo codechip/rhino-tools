@@ -80,7 +80,10 @@ namespace Rhino.ServiceBus.Msmq
 
         private void RemoveSubscriptionMessageFromQueue(MessageQueue queue, string type, Uri uri)
         {
-            var key = new TypeAndUriKey { TypeName = type, Uri = uri };
+            var key = new TypeAndUriKey
+            {
+                TypeName = type, Uri = uri
+            };
             IList<string> messageIds;
             if (subscriptionMessageIds.TryGetValue(key, out messageIds) == false)
                 return;
@@ -191,6 +194,8 @@ namespace Rhino.ServiceBus.Msmq
             return null;
         }
 
+        public event Action SubscriptionChanged;
+
         public void AddSubscription(string type, string endpoint)
         {
             readerWriterLock.EnterWriteLock();
@@ -213,6 +218,15 @@ namespace Rhino.ServiceBus.Msmq
             {
                 readerWriterLock.ExitWriteLock();
             }
+
+            RaiseSubscriptionChanged();
+        }
+
+        private void RaiseSubscriptionChanged()
+        {
+            var copy = SubscriptionChanged;
+            if (copy != null)
+                copy();
         }
 
         public void RemoveSubscription(string type, string endpoint)
@@ -243,6 +257,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 readerWriterLock.ExitWriteLock();
             }
+            RaiseSubscriptionChanged();
         }
 
         public void AddInstanceSubscription(IMessageConsumer consumer)
@@ -267,35 +282,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 readerWriterLock.ExitWriteLock();
             }
-        }
-    }
-
-    public class TypeAndUriKey
-    {
-        public string TypeName;
-        public Uri Uri;
-
-        public bool Equals(TypeAndUriKey obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj.TypeName, TypeName) && Equals(obj.Uri, Uri);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(TypeAndUriKey)) return false;
-            return Equals((TypeAndUriKey)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((TypeName != null ? TypeName.GetHashCode() : 0) * 397) ^ (Uri != null ? Uri.GetHashCode() : 0);
-            }
+            RaiseSubscriptionChanged();
         }
     }
 }

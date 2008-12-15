@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
@@ -25,17 +26,24 @@ namespace Rhino.ServiceBus.Tests
             container2.AddComponent<PongHandler>();
         }
 
-        [Fact(Skip = "Something is wrong with subscriptions now")]
+        [Fact]
         public void Can_send_messages_from_one_end_to_the_other()
         {
             using(var bus1 = container1.Resolve<IStartableServiceBus>())
             using(var bus2 = container2.Resolve<IStartableServiceBus>())
             {
+                var subscriptionStorage2 = container2.Resolve<ISubscriptionStorage>();
+                
+                var wait = new ManualResetEvent(false);
+                subscriptionStorage2.SubscriptionChanged += () => wait.Set();
+                
                 bus1.Start();
                 bus2.Start();
 
                 PongHandler.ResetEvent = new ManualResetEvent(false);
                 PongHandler.GotReply = false;
+
+                wait.WaitOne();
 
                 bus2.Publish(new Ping());
 

@@ -135,10 +135,6 @@ namespace Rhino.ServiceBus
             transport.Start();
             subscriptionStorage.Initialize();
 
-            Subscribe<AddSubscription>();
-
-            Subscribe<AddSubscription>();
-
             AutomaticallySubscribeConsumerMessages();
         }
 
@@ -162,9 +158,28 @@ namespace Rhino.ServiceBus
             Subscribe(typeof(T));
         }
 
+        public void Unsubscribe<T>()
+        {
+            Unsubscribe(typeof(T));
+        }
+
+        public void Unsubscribe(Type type)
+        {
+            foreach (var owner in messageOwners)
+            {
+                if (owner.IsOwner(type) == false)
+                    continue;
+
+                Send(owner.Endpoint, new RemoveSubscription
+                {
+                    Endpoint = Endpoint.ToString(),
+                    Type = type.FullName
+                });
+            }
+        }
+
         private void AutomaticallySubscribeConsumerMessages()
         {
-            var list = new List<AddSubscription>();
             var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));
             foreach (var handler in handlers)
             {
@@ -173,15 +188,8 @@ namespace Rhino.ServiceBus
                 foreach (var msg in msgs)
                 {
                     Subscribe(msg);
-                    list.Add(new AddSubscription
-                    {
-                        Endpoint = Endpoint.ToString(),
-                        Type = msg.FullName
-                    });
                 }
             }
-
-            Notify(list.ToArray());
         }
 
         #endregion

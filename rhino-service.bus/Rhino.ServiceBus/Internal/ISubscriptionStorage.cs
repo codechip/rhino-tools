@@ -18,5 +18,7 @@ namespace Rhino.ServiceBus.Internal
         void RemoveSubscription(string type, string endpoint);
 
         DesiredMessageActionFromTransport HandleAdministrativeMessage(string messageId, object message);
+
+        event Action SubscriptionChanged;
     }
 }

@@ -50,5 +50,9 @@ namespace Rhino.ServiceBus
         void Subscribe<T>();
 
         void Subscribe(Type type);
+
+        void Unsubscribe<T>();
+
+        void Unsubscribe(Type type);
     }
 }

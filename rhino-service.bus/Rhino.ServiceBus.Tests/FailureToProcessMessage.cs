@@ -22,8 +22,6 @@ namespace Rhino.ServiceBus.Tests
 
             gotFirstMessage.WaitOne();
 
-            Assert.NotNull(queue.Peek());
-
             gotSecondMessage.Set();
         }
 
