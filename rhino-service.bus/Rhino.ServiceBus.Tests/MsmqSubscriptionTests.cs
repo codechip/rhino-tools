@@ -36,14 +36,8 @@ namespace Rhino.ServiceBus.Tests
                 Body = typeof(TestMessage).FullName
             }, MessageQueueTransactionType.Single);
 
-
-            subscriptions.Send(new Message
-            {
-                Label = "Remove: " + TransactionalTestQueueUri,
-                Body = typeof(TestMessage).FullName
-            }, MessageQueueTransactionType.Single);
-
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+            subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TransactionalTestQueueUri.ToString());
 
             var uris = subscriptionStorage
                 .GetSubscriptionsFor(typeof (TestMessage));
@@ -66,14 +60,8 @@ namespace Rhino.ServiceBus.Tests
                 Body = typeof(TestMessage).FullName
             }, MessageQueueTransactionType.Single);
 
-
-            subscriptions.Send(new Message
-            {
-                Label = "Remove: " + TransactionalTestQueueUri,
-                Body = typeof(TestMessage).FullName
-            }, MessageQueueTransactionType.Single);
-
-            new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+            var storage = new MsmqSubscriptionStorage(new DefaultReflection(), SubscriptionsUri);
+            storage.RemoveSubscription(typeof(TestMessage).FullName, TestQueueUri.ToString());
 
             int count = 0;
             var enumerator2 = subscriptions.GetMessageEnumerator2();

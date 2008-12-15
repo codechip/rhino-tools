@@ -21,7 +21,6 @@ namespace Rhino.ServiceBus.Msmq
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IReflection reflection;
         private const string AddPrefix = "Add: ";
-        private const string RemovePrefix = "Remove: ";
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
 
         public MsmqSubscriptionStorage(IReflection reflection, Uri subscriptionQueue)
@@ -33,7 +32,6 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Initialize()
         {
-            var list = new List<Action<MessageQueue>>();
             using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
             {
                 using (var enumerator = queue.GetMessageEnumerator2())
@@ -41,26 +39,16 @@ namespace Rhino.ServiceBus.Msmq
                     while (enumerator.MoveNext(TimeSpan.FromMilliseconds(0)))
                     {
                         var current = enumerator.Current;
-                        var action = HandleSubscriptionFromMessage(current);
-                        if (action != null)
-                            list.Add(action);
+                        HandleSubscriptionFromMessage(current);
                     }
-                }
-                using (var tx = new TransactionScope())
-                {
-                    foreach (var action in list)
-                    {
-                        action(queue);
-                    }
-                    tx.Complete();
                 }
             }
         }
 
-        private Action<MessageQueue> HandleSubscriptionFromMessage(Message current)
+        private void HandleSubscriptionFromMessage(Message current)
         {
             if (current == null)
-                return null;
+                return;
             var messageType = (string)current.Body;
             HashSet<Uri> subscriptionsForType;
             if (subscriptions.TryGetValue(messageType, out subscriptionsForType) == false)
@@ -77,23 +65,12 @@ namespace Rhino.ServiceBus.Msmq
 
                 logger.InfoFormat("Added subscription for {0} on {1}",
                                   messageType, uri);
-                return null;
-            }
-            if (current.Label.StartsWith(RemovePrefix))
-            {
-                var uri = new Uri(current.Label.Substring(RemovePrefix.Length));
-                subscriptionsForType.Remove(uri);
-
-                AddMessageIdentifierForTracking(current, messageType, uri);
-
-                logger.InfoFormat("Removed subscription for {0} on {1}",
-                                  messageType, uri);
-                return queue => RemoveSubscriptionMessageFromQueue(queue, messageType, uri);
+                return;
             }
 
             logger.WarnFormat("Could not understand subscription message '{0}' (ignoring)",
                               current.Label);
-            return null;
+            return;
         }
 
         private void AddMessageIdentifierForTracking(Message current, string messageType, Uri uri)
@@ -250,28 +227,27 @@ namespace Rhino.ServiceBus.Msmq
 
         public void RemoveSubscription(string type, string endpoint)
         {
-            var message = new Message
+            var uri = new Uri(endpoint);
+            using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
             {
-                Label = RemovePrefix + endpoint,
-                Body = type
-            };
-            using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Send))
-            {
-                queue.Send(message, MessageQueueTransactionType.Single);
+                RemoveSubscriptionMessageFromQueue(queue, type, uri);
             }
 
             readerWriterLock.EnterWriteLock();
             try
             {
-                var action = HandleSubscriptionFromMessage(message);
-                if (action != null)
+                HashSet<Uri> subscriptionsForType;
+
+                if (subscriptions.TryGetValue(type, out subscriptionsForType) == false)
                 {
-                    using (var tx = new TransactionScope())
-                    {
-                        action(CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive));
-                        tx.Complete();
-                    }
+                    subscriptionsForType = new HashSet<Uri>();
+                    subscriptions[type] = subscriptionsForType;
                 }
+
+                subscriptionsForType.Remove(uri);
+
+                logger.InfoFormat("Removed subscription for {0} on {1}",
+                                  type, endpoint);
             }
             finally
             {
