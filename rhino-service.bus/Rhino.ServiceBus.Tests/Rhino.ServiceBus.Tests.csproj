@@ -70,6 +70,7 @@
     <Compile Include="MsmqTests.cs" />
     <Compile Include="OnBusStart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishingTests.cs" />
     <Compile Include="RequestAndReply.cs" />
     <Compile Include="SagaTests.cs" />
     <Compile Include="SendAndReceiveMessages.cs" />
