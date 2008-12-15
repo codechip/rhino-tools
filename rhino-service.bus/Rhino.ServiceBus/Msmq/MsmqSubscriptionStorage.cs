@@ -15,19 +15,24 @@ namespace Rhino.ServiceBus.Msmq
         private readonly Uri subscriptionQueue;
         private readonly Dictionary<string, List<WeakReference>> consumers = new Dictionary<string, List<WeakReference>>();
 
-        private readonly Dictionary<string, IList<Uri>> subscriptions = new Dictionary<string, IList<Uri>>();
+        private readonly Dictionary<string, HashSet<Uri>> subscriptions = new Dictionary<string, HashSet<Uri>>();
         private readonly Dictionary<TypeAndUriKey, IList<string>> subscriptionMessageIds = new Dictionary<TypeAndUriKey, IList<string>>();
 
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IReflection reflection;
         private const string AddPrefix = "Add: ";
         private const string RemovePrefix = "Remove: ";
-        private ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
+        private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
 
         public MsmqSubscriptionStorage(IReflection reflection, Uri subscriptionQueue)
         {
             this.reflection = reflection;
             this.subscriptionQueue = subscriptionQueue;
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             var list = new List<Action<MessageQueue>>();
             using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
             {
@@ -57,10 +62,10 @@ namespace Rhino.ServiceBus.Msmq
             if (current == null)
                 return null;
             var messageType = (string)current.Body;
-            IList<Uri> subscriptionsForType;
+            HashSet<Uri> subscriptionsForType;
             if (subscriptions.TryGetValue(messageType, out subscriptionsForType) == false)
             {
-                subscriptionsForType = new List<Uri>();
+                subscriptionsForType = new HashSet<Uri>();
                 subscriptions[messageType] = subscriptionsForType;
             }
             if (current.Label.StartsWith(AddPrefix))
@@ -83,7 +88,7 @@ namespace Rhino.ServiceBus.Msmq
 
                 logger.InfoFormat("Removed subscription for {0} on {1}",
                                   messageType, uri);
-                return (queue) => RemoveSubscriptionMessageFromQueue(queue, messageType, uri);
+                return queue => RemoveSubscriptionMessageFromQueue(queue, messageType, uri);
             }
 
             logger.WarnFormat("Could not understand subscription message '{0}' (ignoring)",
@@ -153,7 +158,7 @@ namespace Rhino.ServiceBus.Msmq
             readerWriterLock.EnterReadLock();
             try
             {
-                IList<Uri> subscriptionForType;
+                HashSet<Uri> subscriptionForType;
                 if (subscriptions.TryGetValue(type.FullName, out subscriptionForType) == false)
                     return new Uri[0];
                 return subscriptionForType;
@@ -205,7 +210,7 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
 
-                IList<Uri> value;
+                HashSet<Uri> value;
                 if (subscriptions.TryGetValue(type, out value))
                 {
                     shouldRegister = value.Contains(endpoint); 

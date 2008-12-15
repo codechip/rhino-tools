@@ -27,6 +27,7 @@ namespace Rhino.ServiceBus.Msmq
         private readonly WaitHandle[] waitHandles;
         private MessageQueue managementQueue;
         private MessageQueue queue;
+        private bool haveStarted;
 
         public MsmqTransport(
             IMessageSerializer serializer,
@@ -66,30 +67,56 @@ namespace Rhino.ServiceBus.Msmq
 
             var managementWaitHandle = new ManualResetEvent(false);
             waitHandles[0] = managementWaitHandle;
-            managementQueue.BeginPeek(TimeSpan.FromSeconds(1),
-                                      new QueueState
-                                      {
-                                          MessageRecieved = () => ManagementMessageArrived,
-                                          Queue = managementQueue,
-                                          WaitHandle = managementWaitHandle
-                                      }, OnPeekMessage);
+            try
+            {
+                managementQueue.BeginPeek(TimeSpan.FromSeconds(1),
+                                          new QueueState
+                                          {
+                                              MessageRecieved = () => ManagementMessageArrived,
+                                              Queue = managementQueue,
+                                              WaitHandle = managementWaitHandle
+                                          }, OnPeekMessage);
+            }
+            catch (Exception e)
+            {
+                throw new TransportException("Unable to start reading from management queue: " + managementEndpoint, e);
+            }
 
             for (int t = 0; t < threadCount; t++)
             {
                 var waitHandle = new ManualResetEvent(false);
                 waitHandles[t + 1] = waitHandle;
-                queue.BeginPeek(TimeSpan.FromSeconds(1), new QueueState
+                try
                 {
-                    MessageRecieved = () => MessageArrived,
-                    Queue = queue,
-                    WaitHandle = waitHandle
-                }, OnPeekMessage);
+                    queue.BeginPeek(TimeSpan.FromSeconds(1), new QueueState
+                    {
+                        MessageRecieved = () => MessageArrived,
+                        Queue = queue,
+                        WaitHandle = waitHandle
+                    }, OnPeekMessage);
+                }
+                catch (Exception e)
+                {
+                    throw new TransportException("Unable to start reading from queue: " + endpoint, e);
+                }
             }
+            haveStarted = true;
         }
 
         public void Stop()
         {
             ShouldStop = true;
+
+            WaitForProcessingToEnd();
+
+            queue.Close();
+            managementQueue.Close();
+        }
+
+        private void WaitForProcessingToEnd()
+        {
+            if(haveStarted==false)
+                return;
 
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
             {
@@ -99,12 +126,10 @@ namespace Rhino.ServiceBus.Msmq
             {
                 foreach (WaitHandle handle in waitHandles)
                 {
-                    handle.WaitOne();
+                    if (handle != null)
+                        handle.WaitOne();
                 }
             }
-
-            queue.Close();
-            managementQueue.Close();
         }
 
         public void Reply(params object[] messages)

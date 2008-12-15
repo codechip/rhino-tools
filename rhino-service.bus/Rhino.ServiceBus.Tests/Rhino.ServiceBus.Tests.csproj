@@ -73,6 +73,7 @@
     <Compile Include="SagaTests.cs" />
     <Compile Include="SendAndReceiveMessages.cs" />
     <Compile Include="SendByMessageOwner.cs" />
+    <Compile Include="TwoBusesCommunicating.cs" />
     <Compile Include="UnserializableMessageWillBeForwardedToErrorQueue.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +83,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="AnotherBus.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

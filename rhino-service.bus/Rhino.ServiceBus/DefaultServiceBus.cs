@@ -131,7 +131,9 @@ namespace Rhino.ServiceBus
             }
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.ManagementMessageArrived += Transport_OnManagementMessageArrived;
+            
             transport.Start();
+            subscriptionStorage.Initialize();
 
             subscriptionStorage.AddSubscriptionIfNotExists(
                 typeof(AddSubscription).FullName, Endpoint);
@@ -139,16 +141,29 @@ namespace Rhino.ServiceBus
             subscriptionStorage.AddSubscriptionIfNotExists(
                 typeof(RemoveSubscription).FullName, Endpoint);
 
+            AutomaticallySubscribeConsumerMessages();
+        }
+
+        private void AutomaticallySubscribeConsumerMessages()
+        {
+            var list = new List<AddSubscription>();
             var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));
             foreach (var handler in handlers)
             {
                 var msgs = reflection.GetMessagesConsumed(handler.ComponentModel.Implementation,
-                                                              type => type == typeof (OccasionalConsumerOf<>));
+                                                          type => type == typeof (OccasionalConsumerOf<>));
                 foreach (var msg in msgs)
                 {
                     subscriptionStorage.AddSubscriptionIfNotExists(msg.FullName, Endpoint);
+                    list.Add(new AddSubscription
+                    {
+                        Endpoint = Endpoint.ToString(),
+                        Type = msg.FullName
+                    });
                 }
             }
+
+            Notify(list.ToArray());
         }
 
         #endregion

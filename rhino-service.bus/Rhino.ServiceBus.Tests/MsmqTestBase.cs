@@ -18,9 +18,14 @@ namespace Rhino.ServiceBus.Tests
         private readonly string managementQueuePath;
         protected readonly Uri ManagementUri;
 
+        private readonly string managementQueuePath2;
+        protected readonly Uri ManagementUri2;
+
         private readonly string testQueuePath;
         protected readonly Uri TestQueueUri;
 
+        private readonly string testQueuePath2;
+        protected readonly Uri TestQueueUri2;
 
         private readonly string transactionalTestQueuePath;
         protected readonly Uri TransactionalTestQueueUri;
@@ -32,17 +37,25 @@ namespace Rhino.ServiceBus.Tests
 
         private ITransport transactionalTransport;
         private ITransport transport;
+        protected readonly MessageQueue testQueue2;
+        protected readonly MessageQueue management2;
 
         public MsmqTestBase()
         {
             ManagementUri = new Uri("msmq://./test_queue_management");
             managementQueuePath = MsmqUtil.GetQueueDescription(ManagementUri).QueuePath;
 
+            ManagementUri2 = new Uri("msmq://./test_queue2_management");
+            managementQueuePath2 = MsmqUtil.GetQueueDescription(ManagementUri2).QueuePath;
+
             ErrorQueueUri = new Uri("msmq://./test_queue_error");
             errorTestQueuePath = MsmqUtil.GetQueueDescription(ErrorQueueUri).QueuePath;
 
             TestQueueUri = new Uri("msmq://./test_queue");
             testQueuePath = MsmqUtil.GetQueueDescription(TestQueueUri).QueuePath;
+
+            TestQueueUri2 = new Uri("msmq://./test_queue2");
+            testQueuePath2 = MsmqUtil.GetQueueDescription(TestQueueUri2).QueuePath;
 
             TransactionalTestQueueUri = new Uri("msmq://./transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueueDescription(TransactionalTestQueueUri).QueuePath;
@@ -52,6 +65,9 @@ namespace Rhino.ServiceBus.Tests
 
             if (MessageQueue.Exists(testQueuePath) == false)
                 MessageQueue.Create(testQueuePath);
+
+            if (MessageQueue.Exists(testQueuePath2) == false)
+                MessageQueue.Create(testQueuePath2);
 
             if (MessageQueue.Exists(errorTestQueuePath) == false)
                 MessageQueue.Create(errorTestQueuePath);
@@ -65,11 +81,20 @@ namespace Rhino.ServiceBus.Tests
             if (MessageQueue.Exists(managementQueuePath) == false)
                 MessageQueue.Create(managementQueuePath, true);
 
+            if (MessageQueue.Exists(managementQueuePath2) == false)
+                MessageQueue.Create(managementQueuePath2, true);
+
             queue = new MessageQueue(testQueuePath);
             queue.Purge();
 
+            testQueue2 = new MessageQueue(testQueuePath2);
+            testQueue2.Purge();
+
             management = new MessageQueue(managementQueuePath);
             management.Purge();
+
+            management2 = new MessageQueue(managementQueuePath2);
+            management2.Purge();
 
             errorQueue = new MessageQueue(errorTestQueuePath);
             var filter = new MessagePropertyFilter();
