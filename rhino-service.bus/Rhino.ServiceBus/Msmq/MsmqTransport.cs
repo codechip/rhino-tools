@@ -14,20 +14,19 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqTransport : ITransport
     {
-        [ThreadStatic]
-        private static MsmqCurrentMessageInformation currentMessageInformation;
+        private const int AdministrativeMessageMarker = 42;
+        [ThreadStatic] private static MsmqCurrentMessageInformation currentMessageInformation;
 
         private readonly Uri endpoint;
         private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
-        private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
+        private readonly ILog logger = LogManager.GetLogger(typeof (MsmqTransport));
         private readonly int numberOfRetries;
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IMessageSerializer serializer;
         private readonly int threadCount;
         private readonly WaitHandle[] waitHandles;
-        private MessageQueue queue;
         private bool haveStarted;
-        private const int AdministrativeMessageMarker = 42;
+        private MessageQueue queue;
 
         public MsmqTransport(
             IMessageSerializer serializer,
@@ -53,7 +52,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
-            logger.DebugFormat("Starting msmq transport on: {0}",Endpoint);
+            logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
             queue = InitalizeQueue(endpoint);
 
             for (int t = 0; t < threadCount; t++)
@@ -83,27 +82,8 @@ namespace Rhino.ServiceBus.Msmq
 
             WaitForProcessingToEnd();
 
-            if (queue != null) 
+            if (queue != null)
                 queue.Close();
-        }
-
-        private void WaitForProcessingToEnd()
-        {
-            if (haveStarted == false)
-                return;
-
-            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
-            {
-                WaitHandle.WaitAll(waitHandles);
-            }
-            else
-            {
-                foreach (WaitHandle handle in waitHandles)
-                {
-                    if (handle != null)
-                        handle.WaitOne();
-                }
-            }
         }
 
         public void Reply(params object[] messages)
@@ -114,6 +94,7 @@ namespace Rhino.ServiceBus.Msmq
             Send(currentMessageInformation.Source, messages);
         }
 
+        public event Action<CurrentMessageInformation> MessageSent;
         public event Action<CurrentMessageInformation> AdministrativeMessageArrived;
         public event Action<CurrentMessageInformation> MessageArrived;
         public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
@@ -144,13 +125,45 @@ namespace Rhino.ServiceBus.Msmq
                 .FirstOrDefault();
 
             SendMessageToQueue(message, uri);
+            var copy = MessageSent;
+            if (copy == null)
+                return;
+            copy(new CurrentMessageInformation
+            {
+                AllMessages = msgs,
+                Source = endpoint,
+                Destination = uri,
+                CorrelationId = CorrelationId.Parse(message.CorrelationId),
+                MessageId = CorrelationId.Parse(message.Id),
+            });
         }
+
+        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
 
         #endregion
 
+        private void WaitForProcessingToEnd()
+        {
+            if (haveStarted == false)
+                return;
+
+            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
+            {
+                WaitHandle.WaitAll(waitHandles);
+            }
+            else
+            {
+                foreach (WaitHandle handle in waitHandles)
+                {
+                    if (handle != null)
+                        handle.WaitOne();
+                }
+            }
+        }
+
         private static MessageQueue InitalizeQueue(Uri endpoint)
         {
-            var queueDescriptor = MsmqUtil.GetQueuePath(endpoint);
+            string queueDescriptor = MsmqUtil.GetQueuePath(endpoint);
             try
             {
                 var messageQueue = new MessageQueue(queueDescriptor, QueueAccessMode.SendAndReceive);
@@ -174,7 +187,7 @@ namespace Rhino.ServiceBus.Msmq
             if (peek == false) // error 
                 return;
 
-            var state = (QueueState)ar.AsyncState;
+            var state = (QueueState) ar.AsyncState;
             if (ShouldStop)
             {
                 state.WaitHandle.Set();
@@ -187,9 +200,9 @@ namespace Rhino.ServiceBus.Msmq
                 return;
             }
 
-            logger.DebugFormat("Got message {0} from {1}", 
-                message.Label, 
-                MsmqUtil.GetQueueUri(state.Queue));
+            logger.DebugFormat("Got message {0} from {1}",
+                               message.Label,
+                               MsmqUtil.GetQueueUri(state.Queue));
 
             if (DispatchToErrorQueueIfNeeded(state.Queue, message))
             {
@@ -294,7 +307,8 @@ namespace Rhino.ServiceBus.Msmq
                 //not sure how to do this when moving queue
                 //message.Extension = Encoding.Unicode.GetBytes(errorCounter.ExceptionText);
                 messageQueue.MoveToSubQueue("errors", message);
-                logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id, errorCounter.ExceptionText);
+                logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
+                                  errorCounter.ExceptionText);
                 return true;
             }
             finally
@@ -310,7 +324,7 @@ namespace Rhino.ServiceBus.Msmq
 
             return Transaction.Current == null
                        ? MessageQueueTransactionType.Single
-                        : MessageQueueTransactionType.Automatic;
+                       : MessageQueueTransactionType.Automatic;
         }
 
         private void HandleMessageCompletion(
@@ -399,7 +413,7 @@ namespace Rhino.ServiceBus.Msmq
 
         private bool? TryEndingPeek(IAsyncResult ar, out Message message)
         {
-            var state = (QueueState)ar.AsyncState;
+            var state = (QueueState) ar.AsyncState;
             try
             {
                 message = state.Queue.EndPeek(ar);
@@ -417,13 +431,13 @@ namespace Rhino.ServiceBus.Msmq
             return true;
         }
 
-        private void ProcessMessage(Message message,QueueState state, Action<CurrentMessageInformation> messageRecieved)
+        private void ProcessMessage(Message message, QueueState state, Action<CurrentMessageInformation> messageRecieved)
         {
             //deserialization errors do not count for module events
             object[] messages = DeserializeMessages(state, message);
             try
             {
-                foreach (var msg in messages)
+                foreach (object msg in messages)
                 {
                     currentMessageInformation = new MsmqCurrentMessageInformation
                     {
@@ -432,7 +446,7 @@ namespace Rhino.ServiceBus.Msmq
                         CorrelationId = CorrelationId.Parse(message.CorrelationId),
                         Message = msg,
                         Queue = queue,
-
+                        Destination = Endpoint,
                         Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
                         MsmqMessage = message,
                         TransactionType = GetTransactionTypeBasedOnQueue(queue)
@@ -466,7 +480,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private object[] DeserializeMessages(QueueState state,Message transportMessage)
+        private object[] DeserializeMessages(QueueState state, Message transportMessage)
         {
             object[] messages;
             try
@@ -478,7 +492,7 @@ namespace Rhino.ServiceBus.Msmq
                 try
                 {
                     logger.Error("Error when serializing message", e);
-                    var copy = MessageSerializationException;
+                    Action<CurrentMessageInformation, Exception> copy = MessageSerializationException;
                     if (copy != null)
                     {
                         var information = new CurrentMessageInformation
@@ -487,7 +501,7 @@ namespace Rhino.ServiceBus.Msmq
                             Source = MsmqUtil.GetQueueUri(state.Queue),
                             MessageId = CorrelationId.Parse(transportMessage.Id)
                         };
-                        copy(information,e);
+                        copy(information, e);
                     }
                 }
                 catch (Exception moduleEx)
@@ -499,8 +513,6 @@ namespace Rhino.ServiceBus.Msmq
             return messages;
         }
 
-        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
-
         private static void SetCorrelationIdOnMessage(Message message)
         {
             if (currentMessageInformation != null)
@@ -510,7 +522,7 @@ namespace Rhino.ServiceBus.Msmq
 
         private void SendMessageToQueue(Message message, Uri uri)
         {
-            var sendQueueDescription = MsmqUtil.GetQueuePath(uri);
+            string sendQueueDescription = MsmqUtil.GetQueuePath(uri);
             try
             {
                 using (var sendQueue = new MessageQueue(

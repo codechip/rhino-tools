@@ -66,7 +66,10 @@ namespace Rhino.ServiceBus.Impl
             Type value;
             if (wellKnownTypeNameToType.TryGetValue(type, out value))
                 return value;
-
+            if(type.StartsWith("array_of_"))
+            {
+                return GetType(type.Substring("array_of_".Length));
+            }
             return Type.GetType(type);
         }
 
@@ -148,9 +151,16 @@ namespace Rhino.ServiceBus.Impl
         public string GetNamespaceForXml(object msg)
         {
             Type type = msg.GetType();
+            return GetNamespaceForXml(type);
+        }
+
+        private string GetNamespaceForXml(Type type)
+        {
             string value;
             if(typeToWellKnownTypeName.TryGetValue(type, out value))
                 return value;
+            if (type.IsArray)
+                return "array_of_" + GetNamespaceForXml(type.GetElementType());
 
             if (type.Namespace == null && type.Name.StartsWith("<>"))
                 throw new InvalidOperationException("Anonymous types are not supported");
@@ -160,8 +170,17 @@ namespace Rhino.ServiceBus.Impl
                 return type.Name
                     .ToLowerInvariant();
             }
-            return type.Namespace.Split('.')
-                       .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
+            var typeName = type.Namespace.Split('.')
+                          .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
+            var indexOf = typeName.IndexOf('`');
+            if (indexOf == -1)
+                return typeName;
+            typeName = typeName.Substring(0, indexOf)+ "_of_";
+            foreach (var argument in type.GetGenericArguments())
+            {
+                typeName += GetNamespaceForXml(argument) + "_";
+            }
+            return typeName.Substring(0,typeName.Length-1);
         }
 
         public string GetName(object msg)

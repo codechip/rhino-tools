@@ -31,6 +31,7 @@ namespace Rhino.ServiceBus.MessageModules
             transport.MessageProcessingFailure += Transport_OnMessageProcessingFailure;
             transport.MessageProcessingCompleted += Transport_OnMessageProcessingCompleted;
             transport.MessageSerializationException += Transport_OnMessageSerializationException;
+            transport.MessageSent+=Transport_OnMessageSent;
         }
 
         public void Stop(ITransport transport)
@@ -39,6 +40,7 @@ namespace Rhino.ServiceBus.MessageModules
             transport.MessageProcessingFailure -= Transport_OnMessageProcessingFailure;
             transport.MessageProcessingCompleted -= Transport_OnMessageProcessingCompleted;
             transport.MessageSerializationException -= Transport_OnMessageSerializationException;
+            transport.MessageSent -= Transport_OnMessageSent;
 
             queue.Dispose();
         }
@@ -46,6 +48,20 @@ namespace Rhino.ServiceBus.MessageModules
         private void Send(object obj)
         {
             Send(obj, GetTransactionType());
+        }
+
+        private void Transport_OnMessageSent(CurrentMessageInformation info)
+        {
+            Send(new MessageSentMessage()
+            {
+                MessageId = info.MessageId,
+                CorrelationId = info.CorrelationId,
+                Source = info.Source,
+                Message = info.AllMessages,
+                MessageType = info.AllMessages[0].ToString(),
+                Timestamp = DateTime.Now,
+                Destination = info.Destination
+            });
         }
 
         private void Send(object obj, MessageQueueTransactionType transactionType)

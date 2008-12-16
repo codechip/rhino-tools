@@ -10,6 +10,8 @@ namespace Rhino.ServiceBus.Impl
 
         public Uri Source { get; set; }
 
+        public Uri Destination { get; set; }
+
         public object Message { get; set; }
 
         public object[] AllMessages { get; set; }

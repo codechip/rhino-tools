@@ -107,6 +107,26 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void Will_send_message_about_message_sent()
+        {
+            var module = container.Resolve<MessageLoggingModule>(new { logQueue = TestQueueUri });
+            module.Init(transport);
+
+            transport.Raise(x => x.MessageSent += null,
+                new CurrentMessageInformation
+                {
+                    MessageId = CorrelationId.New(),
+                    AllMessages = new[]{"test"}
+                });
+
+            var msg = queue.Receive();
+
+            var failedMessage = (MessageSentMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
+            Assert.NotEqual(CorrelationId.Empty, failedMessage.MessageId);
+            Assert.Equal(new[] { "test" }, failedMessage.Message);
+        }
+
+        [Fact]
         public void Will_send_message_about_message_processing_failed_even_when_rolling_back_tx()
         {
             var module = container.Resolve<MessageLoggingModule>(new { logQueue = TestQueueUri });

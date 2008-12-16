@@ -13,7 +13,6 @@ namespace Rhino.ServiceBus.Serializers
 {
     public class XmlMessageSerializer : IMessageSerializer
     {
-        private const string ListNamespace = "http://servicebus.hibernatingrhinos.com/2008/12/20/list";
         private readonly IReflection reflection;
 
         public XmlMessageSerializer(IReflection reflection)
@@ -68,7 +67,7 @@ namespace Rhino.ServiceBus.Serializers
             }
             else if (value is IEnumerable)
             {
-                var list = new XElement(namespaces["list"] + name);
+                XElement list = GetContentWithNamespace(value, namespaces, name);
                 parent.Add(list);
                 foreach (var item in ((IEnumerable)value))
                 {
@@ -80,14 +79,7 @@ namespace Rhino.ServiceBus.Serializers
             }
             else
             {
-                var xmlNsAlias = reflection.GetNamespaceForXml(value);
-                XNamespace xmlNs;
-                if (namespaces.TryGetValue(xmlNsAlias, out xmlNs) == false)
-                {
-                    namespaces[xmlNsAlias] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
-                }
-
-                var content = new XElement(xmlNs + name);
+                XElement content = GetContentWithNamespace(value, namespaces, name);
                 parent.Add(content);
                 foreach (var property in reflection.GetProperties(value))
                 {
@@ -97,6 +89,18 @@ namespace Rhino.ServiceBus.Serializers
                     WriteObject(property, propVal, content, namespaces);
                 }
             }
+        }
+
+        private XElement GetContentWithNamespace(object value, IDictionary<string, XNamespace> namespaces, string name)
+        {
+            var xmlNsAlias = reflection.GetNamespaceForXml(value);
+            XNamespace xmlNs;
+            if (namespaces.TryGetValue(xmlNsAlias, out xmlNs) == false)
+            {
+                namespaces[xmlNsAlias] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
+            }
+
+            return new XElement(xmlNs + name);
         }
 
         private bool ShouldPutAsString(object value)
@@ -159,7 +163,6 @@ namespace Rhino.ServiceBus.Serializers
             var namespaces = new Dictionary<string, XNamespace>
             {
                 {"esb", "http://servicebus.hibernatingrhinos.com/2008/12/20/esb"},
-                {"list", ListNamespace},
             };
             foreach (var msg in mesages)
             {
@@ -194,7 +197,7 @@ namespace Rhino.ServiceBus.Serializers
             {
                 return FromString(type, element.Value);
             }
-            if (element.Name.NamespaceName == ListNamespace)
+            if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 return ReadList(type, element);
             }
@@ -256,7 +259,8 @@ namespace Rhino.ServiceBus.Serializers
             var array = instance as Array;
             foreach (var value in element.Elements())
             {
-                object o = ReadObject(elementType, value);
+                var itemType = reflection.GetType(value.Name.NamespaceName);
+                object o = ReadObject(itemType ?? elementType, value);
                 if (array != null)
                     array.SetValue(o, index);
                 else

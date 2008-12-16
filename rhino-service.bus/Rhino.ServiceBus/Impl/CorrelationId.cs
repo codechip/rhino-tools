@@ -38,6 +38,9 @@ namespace Rhino.ServiceBus.Impl
 
         public static CorrelationId Parse(string correlationId)
         {
+            if(string.IsNullOrEmpty(correlationId))
+                return null;
+
             var parts = correlationId.Split('\\');
             try
             {
@@ -47,15 +50,15 @@ namespace Rhino.ServiceBus.Impl
                     Version = int.Parse(parts[1])
                 };
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new InvalidOperationException("Could not parse correlation id: " + correlationId);
+                throw new InvalidOperationException("Could not parse correlation id: " + correlationId, e);
             }
         }
 
         public static implicit operator string(CorrelationId id)
         {
-            if(id==null)
+            if (id == null)
                 return null;
             return id.ToString();
         }

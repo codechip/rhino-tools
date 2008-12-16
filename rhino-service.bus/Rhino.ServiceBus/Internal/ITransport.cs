@@ -16,6 +16,8 @@ namespace Rhino.ServiceBus.Internal
 
         void Reply(params object[] messages);
 
+        event Action<CurrentMessageInformation> MessageSent;
+
         event Action<CurrentMessageInformation> AdministrativeMessageArrived;
         
         event Action<CurrentMessageInformation> MessageArrived;

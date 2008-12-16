@@ -6,6 +6,7 @@ using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Messages;
 using Xunit;
+using System.Linq;
 
 namespace Rhino.ServiceBus.Tests
 {
@@ -38,11 +39,15 @@ namespace Rhino.ServiceBus.Tests
                     Name = "ayende"
                 });
 
-                var message = testQueue2.Peek();
                 var serializer = container.Resolve<IMessageSerializer>();
-                var msg = (MessageArrivedMessage)serializer.Deserialize(message.BodyStream)[0];
+
+                var msg = testQueue2.GetAllMessages()
+                    .Select(x => serializer.Deserialize(x.BodyStream)[0])
+                    .OfType<MessageSentMessage>()
+                    .First();
 
                 Assert.Equal(typeof(TestMessage).FullName, msg.MessageType);
+                Assert.Equal("ayende", ((TestMessage)((object[])msg.Message)[0]).Name);
             }
         }
 
