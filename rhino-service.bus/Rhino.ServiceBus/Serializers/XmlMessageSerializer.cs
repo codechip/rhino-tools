@@ -29,7 +29,10 @@ namespace Rhino.ServiceBus.Serializers
 
             foreach (var m in mesages)
             {
-                WriteObject(reflection.GetName(m), m, messagesElement, namespaces, true);
+                if (m == null)
+                    continue;
+
+                WriteObject(reflection.GetName(m), m, messagesElement, namespaces);
             }
 
             messagesElement.Add(
@@ -50,26 +53,17 @@ namespace Rhino.ServiceBus.Serializers
             streamWriter.Flush();
         }
 
-        private void WriteObject(
-            string name,
-            object value,
-            XContainer parent,
-            IDictionary<string, XNamespace> namespaces,
-            bool isRoot)
+        private void WriteObject(string name, object value, XContainer parent, IDictionary<string, XNamespace> namespaces)
         {
             if (ShouldPutAsString(value))
             {
-                XName elementName = name;
-                if (isRoot)
+                var ns = reflection.GetNamespaceForXml(value);
+                XNamespace xmlNs;
+                if (namespaces.TryGetValue(ns, out xmlNs) == false)
                 {
-                    var ns = reflection.GetNamespaceForXml(value);
-                    XNamespace xmlNs;
-                    if (namespaces.TryGetValue(ns, out xmlNs) == false)
-                    {
-                        namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(xmlNs);
-                    }
-                    elementName = xmlNs + name;
+                    namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
                 }
+                XName elementName = xmlNs + name;
                 parent.Add(new XElement(elementName, FormatAsString(value)));
             }
             else if (value is IEnumerable)
@@ -78,8 +72,10 @@ namespace Rhino.ServiceBus.Serializers
                 parent.Add(list);
                 foreach (var item in ((IEnumerable)value))
                 {
+                    if (item == null)
+                        continue;
 
-                    WriteObject("value", item, list, namespaces, false);
+                    WriteObject("value", item, list, namespaces);
                 }
             }
             else
@@ -95,7 +91,10 @@ namespace Rhino.ServiceBus.Serializers
                 parent.Add(content);
                 foreach (var property in reflection.GetProperties(value))
                 {
-                    WriteObject(property, reflection.Get(value, property), content, namespaces, false);
+                    var propVal = reflection.Get(value, property);
+                    if (propVal == null)
+                        continue;
+                    WriteObject(property, propVal, content, namespaces);
                 }
             }
         }
@@ -204,32 +203,36 @@ namespace Rhino.ServiceBus.Serializers
             {
                 reflection.Set(instance,
                     prop.Name.LocalName,
-                    t => ReadObject(t, prop));
+                    typeFromProperty =>
+                    {
+                        var propType = reflection.GetType(prop.Name.NamespaceName);
+                        return ReadObject(propType ?? typeFromProperty, prop);
+                    });
             }
             return instance;
         }
 
         private static bool CanParseFromString(Type type)
         {
-            if(type.IsPrimitive)
+            if (type.IsPrimitive)
                 return true;
 
-            if(type == typeof(string))
+            if (type == typeof(string))
                 return true;
 
-            if(type == typeof(Uri))
+            if (type == typeof(Uri))
                 return true;
 
-            if(type==typeof(DateTime))
+            if (type == typeof(DateTime))
                 return true;
 
-            if(type==typeof(TimeSpan))
+            if (type == typeof(TimeSpan))
                 return true;
 
-            if(type==typeof(Guid))
+            if (type == typeof(Guid))
                 return true;
 
-            if(type.IsEnum)
+            if (type.IsEnum)
                 return true;
 
             return false;

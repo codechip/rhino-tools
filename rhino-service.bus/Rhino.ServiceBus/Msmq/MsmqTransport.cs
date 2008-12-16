@@ -215,7 +215,7 @@ namespace Rhino.ServiceBus.Msmq
             Exception ex = null;
             try
             {
-                ProcessMessage(message, AdministrativeMessageArrived);
+                ProcessMessage(message, state, AdministrativeMessageArrived);
             }
             catch (Exception e)
             {
@@ -242,7 +242,7 @@ namespace Rhino.ServiceBus.Msmq
                         messageId,
                         GetTransactionTypeBasedOnQueue(state.Queue));
 
-                    ProcessMessage(message, MessageArrived);
+                    ProcessMessage(message, state, MessageArrived);
                 }
                 catch (MessageQueueException e)
                 {
@@ -417,10 +417,10 @@ namespace Rhino.ServiceBus.Msmq
             return true;
         }
 
-        private void ProcessMessage(Message message, Action<CurrentMessageInformation> messageRecieved)
+        private void ProcessMessage(Message message,QueueState state, Action<CurrentMessageInformation> messageRecieved)
         {
             //deserialization errors do not count for module events
-            object[] messages = DeserializeMessages(message);
+            object[] messages = DeserializeMessages(state, message);
             try
             {
                 foreach (var msg in messages)
@@ -466,7 +466,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private object[] DeserializeMessages(Message transportMessage)
+        private object[] DeserializeMessages(QueueState state,Message transportMessage)
         {
             object[] messages;
             try
@@ -480,7 +480,15 @@ namespace Rhino.ServiceBus.Msmq
                     logger.Error("Error when serializing message", e);
                     var copy = MessageSerializationException;
                     if (copy != null)
-                        copy(e);
+                    {
+                        var information = new CurrentMessageInformation
+                        {
+                            Message = transportMessage,
+                            Source = MsmqUtil.GetQueueUri(state.Queue),
+                            MessageId = CorrelationId.Parse(transportMessage.Id)
+                        };
+                        copy(information,e);
+                    }
                 }
                 catch (Exception moduleEx)
                 {
@@ -491,7 +499,7 @@ namespace Rhino.ServiceBus.Msmq
             return messages;
         }
 
-        public event Action<Exception> MessageSerializationException;
+        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
 
         private static void SetCorrelationIdOnMessage(Message message)
         {

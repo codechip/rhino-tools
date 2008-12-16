@@ -43,6 +43,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SharedLibs\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SharedLibs\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -62,8 +66,10 @@
   <ItemGroup>
     <Compile Include="BusSubscriptionTests.cs" />
     <Compile Include="CanRouteMessageToConsumerThroughContainer.cs" />
+    <Compile Include="DefaultReflectionTests.cs" />
     <Compile Include="FailureToProcessMessage.cs" />
     <Compile Include="CanCreateInstancesOfServiceBusFromContainer.cs" />
+    <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
     <Compile Include="MsmqSubscriptionTests.cs" />
     <Compile Include="MsmqTestBase.cs" />

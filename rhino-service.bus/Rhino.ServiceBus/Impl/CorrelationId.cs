@@ -52,5 +52,12 @@ namespace Rhino.ServiceBus.Impl
                 throw new InvalidOperationException("Could not parse correlation id: " + correlationId);
             }
         }
+
+        public static implicit operator string(CorrelationId id)
+        {
+            if(id==null)
+                return null;
+            return id.ToString();
+        }
     }
 }

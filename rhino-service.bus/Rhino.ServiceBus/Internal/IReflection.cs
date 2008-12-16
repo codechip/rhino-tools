@@ -10,7 +10,7 @@ namespace Rhino.ServiceBus.Internal
 
         object CreateInstance(Type type, params object[]args);
 
-        void Set(object instance, string name, Func<Type, object> generateValue);
+        void Set(object instance, string name, Func<Type,object> generateValue);
 
         void Set(object instance, string name, object value);
 

@@ -25,7 +25,7 @@ namespace Rhino.ServiceBus.Tests
         public void Should_raise_event()
         {
             bool wasCalled = false;
-            Transport.MessageSerializationException += (exception) => wasCalled = true;
+            Transport.MessageSerializationException += (info,exception) => wasCalled = true;
             queue.Send("blah blah not valid");
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))

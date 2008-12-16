@@ -77,10 +77,15 @@
     <Compile Include="Internal\ISagaPersister.cs" />
     <Compile Include="Internal\ISubscriptionStorage.cs" />
     <Compile Include="MessageModules\IMessageModule.cs" />
+    <Compile Include="MessageModules\MessageLoggingModule.cs" />
     <Compile Include="Messages\AddSubscription.cs" />
     <Compile Include="Messages\AdministrativeMessage.cs" />
+    <Compile Include="Messages\MessageArrivedMessage.cs" />
+    <Compile Include="Messages\MessageProcessingFailedMessage.cs" />
+    <Compile Include="Messages\MessageProcessingCompletedMessage.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Internal\MessageAction.cs" />
+    <Compile Include="Messages\SerializationErrorMessage.cs" />
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
@@ -99,7 +104,7 @@
     <Compile Include="Sagas\ISaga.cs" />
     <Compile Include="Sagas\ISagaMessage.cs" />
     <Compile Include="Sagas\Orchestrates.cs" />
-    <Compile Include="Serializers\XmlSerializer.cs" />
+    <Compile Include="Serializers\XmlMessageSerializer.cs" />
     <Compile Include="Util\GuidCombGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -45,5 +45,22 @@ namespace Rhino.ServiceBus.Msmq
             
             }
         }
+
+        public static MessageQueue CreateQueue(this Uri queueUri, QueueAccessMode accessMode)
+        {
+            var description = MsmqUtil.GetQueueDescription(queueUri);
+
+            MessageQueue queue;
+            try
+            {
+                queue = new MessageQueue(description.QueuePath, accessMode);
+            }
+            catch (Exception e)
+            {
+                throw new MessagePublicationException("Could not open queue (" + description.Uri + ")", e);
+            }
+            return queue;
+        }
+
     }
 }

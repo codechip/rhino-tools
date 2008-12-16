@@ -1,20 +1,51 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using log4net;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Sagas;
-using System.Linq;
 
 namespace Rhino.ServiceBus.Impl
 {
     public class DefaultReflection : IReflection
     {
-        private readonly ILog logger = LogManager.GetLogger(typeof(DefaultReflection));
+        private readonly ILog logger = LogManager.GetLogger(typeof (DefaultReflection));
+
+        private readonly IDictionary<Type, string> typeToWellKnownTypeName;
+        private readonly IDictionary<string, Type> wellKnownTypeNameToType;
+
+        public DefaultReflection()
+        {
+            wellKnownTypeNameToType = new Dictionary<string, Type>();
+            typeToWellKnownTypeName = new Dictionary<Type, string>
+            {
+                {typeof (string), "string"},
+                {typeof (int), "int"},
+                {typeof (byte), "byte"},
+                {typeof (bool), "bool"},
+                {typeof (DateTime), "datetime"},
+                {typeof (TimeSpan), "timespan"},
+                {typeof (decimal), "decimal"},
+                {typeof (float), "float"},
+                {typeof (double), "double"},
+                {typeof (char), "char"},
+                {typeof (Guid), "guid"},
+                {typeof (Uri), "uri"},
+                {typeof (short), "short"},
+                {typeof (long), "long"}
+            };
+            foreach (var pair in typeToWellKnownTypeName)
+            {
+                wellKnownTypeNameToType.Add(pair.Value, pair.Key);
+            }
+        }
+
+        #region IReflection Members
 
         public object CreateInstance(string typeName)
         {
-            var type = Type.GetType(typeName, true);
+            Type type = Type.GetType(typeName, true);
             return Activator.CreateInstance(type);
         }
 
@@ -32,6 +63,10 @@ namespace Rhino.ServiceBus.Impl
 
         public Type GetType(string type)
         {
+            Type value;
+            if (wellKnownTypeNameToType.TryGetValue(type, out value))
+                return value;
+
             return Type.GetType(type);
         }
 
@@ -44,26 +79,26 @@ namespace Rhino.ServiceBus.Impl
 
         public void Set(object instance, string name, Func<Type, object> generateValue)
         {
-            var type = instance.GetType();
-            var property = type.GetProperty(name);
+            Type type = instance.GetType();
+            PropertyInfo property = type.GetProperty(name);
             if (property == null)
             {
                 logger.InfoFormat("Could not find property {0} to set on {1}", name, type);
                 return;
             }
-            var value = generateValue(property.PropertyType);
+            object value = generateValue(property.PropertyType);
             property.SetValue(instance, value, null);
         }
 
         public void Set(object instance, string name, object value)
         {
-            Set(instance, name, type => value);
+            Set(instance, name, t => value);
         }
 
         public object Get(object instance, string name)
         {
-            var type = instance.GetType();
-            var property = type.GetProperty(name);
+            Type type = instance.GetType();
+            PropertyInfo property = type.GetProperty(name);
             if (property == null)
             {
                 logger.InfoFormat("Could not find property {0} to get on {1}", name, type);
@@ -84,45 +119,49 @@ namespace Rhino.ServiceBus.Impl
 
         public void InvokeConsume(object consumer, object msg)
         {
-            var type = consumer.GetType();
-            var consume = type.GetMethod("Consume", new[] { msg.GetType() });
-            consume.Invoke(consumer, new[] { msg });
+            Type type = consumer.GetType();
+            MethodInfo consume = type.GetMethod("Consume", new[] {msg.GetType()});
+            consume.Invoke(consumer, new[] {msg});
         }
 
         public object InvokeSagaPersisterGet(object persister, Guid correlationId)
         {
-            var type = persister.GetType();
-            var method = type.GetMethod("Get");
-            return method.Invoke(persister, new object[] { correlationId });
+            Type type = persister.GetType();
+            MethodInfo method = type.GetMethod("Get");
+            return method.Invoke(persister, new object[] {correlationId});
         }
 
         public void InvokeSagaPersisterSave(object persister, ISaga entity)
         {
-            var type = persister.GetType();
-            var method = type.GetMethod("Save");
-            method.Invoke(persister, new object[] { entity });
+            Type type = persister.GetType();
+            MethodInfo method = type.GetMethod("Save");
+            method.Invoke(persister, new object[] {entity});
         }
 
         public void InvokeSagaPersisterComplete(object persister, ISaga entity)
         {
-            var type = persister.GetType();
-            var method = type.GetMethod("Complete");
-            method.Invoke(persister, new object[] { entity });
+            Type type = persister.GetType();
+            MethodInfo method = type.GetMethod("Complete");
+            method.Invoke(persister, new object[] {entity});
         }
 
         public string GetNamespaceForXml(object msg)
         {
-            var type = msg.GetType();
-            if(type.Namespace==null && type.Name.StartsWith("<>"))
+            Type type = msg.GetType();
+            string value;
+            if(typeToWellKnownTypeName.TryGetValue(type, out value))
+                return value;
+
+            if (type.Namespace == null && type.Name.StartsWith("<>"))
                 throw new InvalidOperationException("Anonymous types are not supported");
 
-            if (type.Namespace == null)//global types?
+            if (type.Namespace == null) //global types?
             {
                 return type.Name
                     .ToLowerInvariant();
             }
             return type.Namespace.Split('.')
-                .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
+                       .Last().ToLowerInvariant() + "." + type.Name.ToLowerInvariant();
         }
 
         public string GetName(object msg)
@@ -132,8 +171,15 @@ namespace Rhino.ServiceBus.Impl
 
         public string GetAssemblyQualifiedNameWithoutVersion(object msg)
         {
-            var type = msg.GetType();
-            return type.FullName + ", " + type.Assembly.GetName().Name;
+            Type type = msg.GetType();
+            string value;
+            if(typeToWellKnownTypeName.TryGetValue(type, out value))
+                return value;
+
+            Assembly assembly = type.Assembly;
+            if (assembly.GlobalAssemblyCache == false)
+                return type.FullName + ", " + assembly.FullName.Split(',')[0];
+            return type.AssemblyQualifiedName;
         }
 
         public IEnumerable<string> GetProperties(object value)
@@ -144,7 +190,7 @@ namespace Rhino.ServiceBus.Impl
 
         public Type[] GetMessagesConsumed(IMessageConsumer consumer)
         {
-            var consumerType = consumer.GetType();
+            Type consumerType = consumer.GetType();
             return GetMessagesConsumed(consumerType, type => false);
         }
 
@@ -153,14 +199,14 @@ namespace Rhino.ServiceBus.Impl
             var list = new HashSet<Type>();
             var toRemove = new HashSet<Type>();
 
-            var interfaces = consumerType.GetInterfaces();
+            Type[] interfaces = consumerType.GetInterfaces();
 
-            foreach (var type in interfaces)
+            foreach (Type type in interfaces)
             {
                 if (type.IsGenericType == false)
                     continue;
 
-                var definition = type.GetGenericTypeDefinition();
+                Type definition = type.GetGenericTypeDefinition();
 
                 if (filter(definition))
                 {
@@ -168,7 +214,7 @@ namespace Rhino.ServiceBus.Impl
                     continue;
                 }
 
-                if (definition != typeof(ConsumerOf<>))
+                if (definition != typeof (ConsumerOf<>))
                     continue;
 
                 list.Add(type.GetGenericArguments()[0]);
@@ -181,14 +227,16 @@ namespace Rhino.ServiceBus.Impl
         {
             if (instance is ValueType)
                 return instance;
-            foreach (var property in instance.GetType().GetProperties())
+            foreach (PropertyInfo property in instance.GetType().GetProperties())
             {
-                if (property.PropertyType != typeof(T))
+                if (property.PropertyType != typeof (T))
                     continue;
-                T converter = func((T)property.GetValue(instance, null));
+                T converter = func((T) property.GetValue(instance, null));
                 property.SetValue(instance, converter, null);
             }
             return instance;
         }
+
+        #endregion
     }
 }
