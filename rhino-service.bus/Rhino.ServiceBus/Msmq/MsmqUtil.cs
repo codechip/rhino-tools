@@ -5,15 +5,13 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqUtil
     {
-        public static QueueDescriptor GetQueueDescription(string uri)
+        public static string GetQueuePath(string uri)
         {
-            return GetQueueDescription(new Uri(uri));
+            return GetQueuePath(new Uri(uri));
         }
 
-        public static QueueDescriptor GetQueueDescription(Uri uri)
+        public static string GetQueuePath(Uri uri)
         {
-            var descriptor = new QueueDescriptor();
-
             if (uri.AbsolutePath.IndexOf("/", 1) >= 0)
             {
                 throw new InvalidOperationException(
@@ -33,17 +31,9 @@ namespace Rhino.ServiceBus.Msmq
             {
                 hostName = localhost;
                 uri = new Uri("msmq://" + localhost + uri.AbsolutePath);
-                descriptor.IsLocal = true;
-            }
-            else
-            {
-                descriptor.IsLocal = string.Compare(uri.Host, localhost, true) == 0;
             }
 
-            descriptor.Uri = uri;
-            descriptor.FullQueuePath = string.Format(@"FormatName:DIRECT=OS:{0}\private$\{1}", hostName, uri.AbsolutePath.Substring(1));
-            descriptor.QueuePath = string.Format(hostName + "\\private$\\" + uri.AbsolutePath.Substring(1));
-            return descriptor;
+            return string.Format(hostName + "\\private$\\" + uri.AbsolutePath.Substring(1));
         }
 
         public static Uri GetQueueUri(MessageQueue queue)

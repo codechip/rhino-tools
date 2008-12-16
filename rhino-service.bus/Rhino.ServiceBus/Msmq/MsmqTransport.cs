@@ -150,10 +150,10 @@ namespace Rhino.ServiceBus.Msmq
 
         private static MessageQueue InitalizeQueue(Uri endpoint)
         {
-            QueueDescriptor queueDescriptor = MsmqUtil.GetQueueDescription(endpoint);
+            var queueDescriptor = MsmqUtil.GetQueuePath(endpoint);
             try
             {
-                var messageQueue = new MessageQueue(queueDescriptor.QueuePath, QueueAccessMode.SendAndReceive);
+                var messageQueue = new MessageQueue(queueDescriptor, QueueAccessMode.SendAndReceive);
                 var filter = new MessagePropertyFilter();
                 filter.SetAll();
                 messageQueue.MessageReadPropertyFilter = filter;
@@ -163,7 +163,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 throw new TransportException(
                     "Could not receive from queue: " + endpoint + Environment.NewLine +
-                    "Queue path: " + queueDescriptor.QueuePath, e);
+                    "Queue path: " + queueDescriptor, e);
             }
         }
 
@@ -510,11 +510,11 @@ namespace Rhino.ServiceBus.Msmq
 
         private void SendMessageToQueue(Message message, Uri uri)
         {
-            QueueDescriptor sendQueueDescription = MsmqUtil.GetQueueDescription(uri);
+            var sendQueueDescription = MsmqUtil.GetQueuePath(uri);
             try
             {
                 using (var sendQueue = new MessageQueue(
-                    sendQueueDescription.QueuePath,
+                    sendQueueDescription,
                     QueueAccessMode.Send))
                 {
                     MessageQueueTransactionType transactionType = GetTransactionTypeBasedOnQueue(sendQueue);

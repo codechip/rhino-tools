@@ -32,9 +32,13 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                bus.Send(new TestMessage());
+                bus.Send(new TestMessage
+                {
+                    Email = "foo@bar.org",
+                    Name = "ayende"
+                });
 
-                var message = testQueue2.Receive();
+                var message = testQueue2.Peek();
                 var serializer = container.Resolve<IMessageSerializer>();
                 var msg = (MessageArrivedMessage)serializer.Deserialize(message.BodyStream)[0];
 
@@ -44,7 +48,8 @@ namespace Rhino.ServiceBus.Tests
 
         public class TestMessage
         {
-            
+            public string Name { get; set; }
+            public string Email { get; set; }
         }
 
         public class TestHandler : ConsumerOf<TestMessage>

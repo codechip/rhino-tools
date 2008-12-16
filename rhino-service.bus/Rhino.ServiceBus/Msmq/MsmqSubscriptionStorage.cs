@@ -116,16 +116,16 @@ namespace Rhino.ServiceBus.Msmq
 
         private static MessageQueue CreateSubscriptionQueue(Uri subscriptionQueue, QueueAccessMode accessMode)
         {
-            var description = MsmqUtil.GetQueueDescription(subscriptionQueue);
+            var description = MsmqUtil.GetQueuePath(subscriptionQueue);
 
             MessageQueue queue;
             try
             {
-                queue = new MessageQueue(description.QueuePath, accessMode);
+                queue = new MessageQueue(description, accessMode);
             }
             catch (Exception e)
             {
-                throw new SubscriptionException("Could not open subscription queue (" + description.Uri + ")", e);
+                throw new SubscriptionException("Could not open subscription queue (" + subscriptionQueue + ")", e);
             }
             queue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
             return queue;
