@@ -19,8 +19,9 @@ namespace Rhino.ServiceBus.Impl
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
         private Uri endpoint;
+        private Uri logEndpoint;
         private int numberOfRetries = 5;
-        private Type serializerImpl = typeof(XmlMessageSerializer);
+        private readonly Type serializerImpl = typeof(XmlMessageSerializer);
         private Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
         private Type transportImpl = typeof(MsmqTransport);
@@ -63,9 +64,18 @@ namespace Rhino.ServiceBus.Impl
             ReadBusConfiguration();
             ReadMessageOwners();
 
-            foreach (Type type in messageModules)
+            foreach (var type in messageModules)
             {
                 Kernel.AddComponent(type.FullName, type);
+            }
+
+            if (logEndpoint != null)
+            {
+                Kernel.Register(
+                    Component.For<MessageLoggingModule>()
+                        .DependsOn(new{ logQueue = logEndpoint })
+                    );
+                messageModules.Insert(0, typeof(MessageLoggingModule));
             }
 
             Kernel.Register(
@@ -173,15 +183,19 @@ namespace Rhino.ServiceBus.Impl
                 threadCount = result;
 
             string uriString = busConfig.Attributes["endpoint"];
-            try
-            {
-                endpoint = new Uri(uriString);
-            }
-            catch (Exception e)
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out endpoint) == false)
             {
                 throw new ConfigurationErrorsException(
-                    "Attribute 'endpoint' on 'bus' has an invalid value '" + uriString + "'"
-                    , e);
+                    "Attribute 'endpoint' on 'bus' has an invalid value '" + uriString + "'");
+            }
+
+            uriString = busConfig.Attributes["logEndpoint"];
+            if (uriString == null)
+                return;
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out logEndpoint) == false)
+            {
+                throw new ConfigurationErrorsException(
+                    "Attribute 'logEndpoint' on 'bus' has an invalid value '" + uriString + "'");
             }
         }
     }
