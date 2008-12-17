@@ -72,6 +72,7 @@
     <Compile Include="DefaultReflectionTests.cs" />
     <Compile Include="FailureToProcessMessage.cs" />
     <Compile Include="CanCreateInstancesOfServiceBusFromContainer.cs" />
+    <Compile Include="Hosting\Can_host_in_another_app_domain.cs" />
     <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
     <Compile Include="MsmqSubscriptionTests.cs" />
