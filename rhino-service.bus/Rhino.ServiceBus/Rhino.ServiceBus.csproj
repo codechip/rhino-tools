@@ -86,7 +86,6 @@
     <Compile Include="Messages\MessageProcessingCompletedMessage.cs" />
     <Compile Include="Messages\MessageSentMessage.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
-    <Compile Include="Internal\MessageAction.cs" />
     <Compile Include="Messages\SerializationErrorMessage.cs" />
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
