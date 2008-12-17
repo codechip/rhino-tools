@@ -51,6 +51,28 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void Consuming_using_enumerator()
+        {
+            queue.Send("a");
+            queue.Send("b");
+            queue.Send("c");
+
+            var enumerator2 = queue.GetMessageEnumerator2();
+            try
+            {
+                enumerator2.MoveNext();
+                Assert.Equal("a", enumerator2.RemoveCurrent().Body);
+                Assert.Equal("b", enumerator2.RemoveCurrent().Body);
+                Assert.Equal("c", enumerator2.RemoveCurrent().Body);
+            }
+            finally
+            {
+                enumerator2.Close();
+            }
+        }
+
+
+        [Fact]
         public void Peeking_twice_different_queue_isntances_on_same_queue()
         {
             queue.Send("a");

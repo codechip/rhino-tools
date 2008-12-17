@@ -104,11 +104,20 @@ namespace Rhino.ServiceBus.LogsService
 
             using (MessageEnumerator enumerator = state.Queue.GetMessageEnumerator2())
             {
-                while (enumerator.MoveNext(TimeSpan.FromMilliseconds(100)) &&
-                    count > 0)
+                if (enumerator.MoveNext() == false)
+                    return;
+                while(count > 0)
                 {
-                    count -= 1;
-                    list.Add(enumerator.RemoveCurrent());
+                    try
+                    {
+                        list.Add(enumerator.RemoveCurrent());
+                    }
+                    catch(MessageQueueException e)
+                    {
+                        if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
+                            break;
+                        throw;
+                    }
                 }
 
                 var writer = new IndexWriter(indexDirectory, new StandardAnalyzer(), false);
