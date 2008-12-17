@@ -14,6 +14,7 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqTransport : ITransport
     {
+        private const int ErrorDescriptionMessageMarker = 0xe7707;
         private const int ShutDownMessageMarker = 1337;
         private const int AdministrativeMessageMarker = 42;
 
@@ -55,7 +56,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
-            if(haveStarted)
+            if (haveStarted)
                 return;
 
             logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
@@ -96,7 +97,7 @@ namespace Rhino.ServiceBus.Msmq
                 Label = "Shutdown bus, if you please",
                 AppSpecific = ShutDownMessageMarker
             }, transactionType);
-            
+
             WaitForProcessingToEnd();
 
             if (queue != null)
@@ -311,6 +312,12 @@ namespace Rhino.ServiceBus.Msmq
 
         private bool DispatchToErrorQueueIfNeeded(MessageQueue messageQueue, Message message)
         {
+            if (message.AppSpecific == ErrorDescriptionMessageMarker)
+            {
+                messageQueue.MoveToSubQueue("errors", message);
+                return true;
+            }
+
             string id = GetMessageId(message);
 
             readerWriterLock.EnterReadLock();
@@ -332,9 +339,17 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 failureCounts.Remove(id);
-                //not sure how to do this when moving queue
-                //message.Extension = Encoding.Unicode.GetBytes(errorCounter.ExceptionText);
                 messageQueue.MoveToSubQueue("errors", message);
+                var label = "Error description for " + message.Label;
+                if (label.Length > 249)
+                    label = label.Substring(0, 246) + "...";
+                messageQueue.Send(new Message
+                {
+                    AppSpecific = ErrorDescriptionMessageMarker,
+                    Label = label,
+                    Body = errorCounter.ExceptionText,
+                    CorrelationId = message.Id,
+                });
                 logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
                                   errorCounter.ExceptionText);
                 return true;

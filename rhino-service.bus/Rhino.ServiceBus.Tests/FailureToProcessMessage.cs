@@ -58,8 +58,8 @@ namespace Rhino.ServiceBus.Tests
             }
         }
 
-        [Fact(Skip = "Doesn't seem to be posible to do so using sub queues & moving messages")]
-        public void When_a_failed_message_arrives_to_error_queue_will_have_exception_information()
+        [Fact]
+        public void When_a_failed_message_arrives_to_error_queue_will_have_another_message_explaining_what_happened()
         {
             int count = 0;
             Transport.MessageArrived += o =>
@@ -72,12 +72,22 @@ namespace Rhino.ServiceBus.Tests
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
             {
+                errorQueue.Formatter = new XmlMessageFormatter(new[] {typeof (string)});
                 errorQueue.MessageReadPropertyFilter.SetAll();
-                var message = errorQueue.Peek();
-                var error = Encoding.Unicode.GetString(message.Extension);
+                errorQueue.Peek();//for debugging
+
+                var messageCausingError = errorQueue.Receive();
+                Assert.NotNull(messageCausingError);
+                errorQueue.Peek();//for debugging
+                var messageErrorDescription = errorQueue.Receive();
+                var error = (string)messageErrorDescription.Body;
                 Assert.Contains(
                     "System.InvalidOperationException: Operation is not valid due to the current state of the object.",
                     error);
+
+                Assert.Equal(
+                    CorrelationId.Parse(messageErrorDescription.Id).Id,
+                    CorrelationId.Parse(messageErrorDescription.CorrelationId).Id);
             }
         }
 
