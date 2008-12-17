@@ -88,7 +88,11 @@ namespace Rhino.ServiceBus.Msmq
         {
             ShouldStop = true;
             var transactionType = queue.Transactional ? MessageQueueTransactionType.Single : MessageQueueTransactionType.None;
-            queue.Send(new Message { AppSpecific = ShutDownMessageMarker }, transactionType);
+            queue.Send(new Message
+            {
+                Label = "Shutdown bus, if you please",
+                AppSpecific = ShutDownMessageMarker
+            }, transactionType);
             
             WaitForProcessingToEnd();
 

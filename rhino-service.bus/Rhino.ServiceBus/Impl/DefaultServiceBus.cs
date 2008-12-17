@@ -284,6 +284,18 @@ namespace Rhino.ServiceBus.Impl
 
             Type consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
             var consumers = (object[])kernel.ResolveAll(consumerType, new Hashtable());
+            foreach (var consumer in consumers)
+            {
+                var saga = consumer as ISaga;
+                if(saga==null)
+                    continue;
+
+                var type = saga.GetType();
+                if (sagas.Any(type.IsInstanceOfType))
+                    continue;
+
+                saga.Id = GuidCombGenerator.Generate();
+            }
             return instanceConsumers
                 .Union(sagas)
                 .Union(consumers)
@@ -296,16 +308,6 @@ namespace Rhino.ServiceBus.Impl
                 return new object[0];
 
             var instances = new List<object>();
-            Type sagaInitiatedByThisMessage = reflection.GetGenericTypeOf(typeof(InitiatedBy<>), sagaMessage);
-
-            var initiated = (object[])kernel.ResolveAll(sagaInitiatedByThisMessage, new Hashtable());
-
-            foreach (ISaga saga in initiated)
-            {
-                saga.Id = GuidCombGenerator.Generate();
-            }
-
-            instances.AddRange(initiated);
 
             Type messageType = reflection.GetGenericTypeOf(typeof(Orchestrates<>), sagaMessage);
 
@@ -320,7 +322,7 @@ namespace Rhino.ServiceBus.Impl
                 try
                 {
                     object sagaInstance = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
-                    if (sagaInstance != null)
+                    if (sagaInstance == null)
                         continue;
                     instances.Add(sagaInstance);
                 }

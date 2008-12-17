@@ -52,6 +52,28 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void When_creating_saga_entity_will_set_saga_id()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                bus.Send(bus.Endpoint, new NewOrderMessage());
+                wait.WaitOne();
+
+                var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
+                OrderProcessor processor = null;
+                while (processor == null)
+                {
+                    Thread.Sleep(500);
+                    processor = persister.Get(sagaId);
+                }
+
+                Assert.NotEqual(Guid.Empty, sagaId);
+            }
+        }
+
+        [Fact]
         public void Can_send_several_messaged_to_same_instance_of_saga_entity()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
@@ -96,7 +118,7 @@ namespace Rhino.ServiceBus.Tests
                     processor = persister.Get(sagaId);
                 }
 
-                bus.Send(bus.Endpoint, new SubmitOrderMessage() { CorrelationId = sagaId });
+                bus.Send(bus.Endpoint, new SubmitOrderMessage { CorrelationId = sagaId });
 
                 wait.WaitOne();
 
@@ -143,6 +165,7 @@ namespace Rhino.ServiceBus.Tests
 
             public void Consume(NewOrderMessage pong)
             {
+                sagaId = Id;
                 Messages.Add(pong);
                 wait.Set();
             }

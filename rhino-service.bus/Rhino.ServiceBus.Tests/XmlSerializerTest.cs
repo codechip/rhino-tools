@@ -48,7 +48,6 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_serialize_and_deserialize_array()
         {
-            long ticks = DateTime.Now.Ticks;
             var serializer = new XmlMessageSerializer(new DefaultReflection());
             var stream = new MemoryStream();
             serializer.Serialize(new object[]
@@ -92,6 +91,7 @@ namespace Rhino.ServiceBus.Tests
             var stream = new MemoryStream();
             serializer.Serialize(new[] {sample}, stream);
             stream.Position = 0;
+
             var order = (Order) serializer.Deserialize(stream)[0];
 
             Assert.Equal(sample.Url, order.Url);
