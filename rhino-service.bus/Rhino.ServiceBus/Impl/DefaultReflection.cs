@@ -43,12 +43,6 @@ namespace Rhino.ServiceBus.Impl
 
         #region IReflection Members
 
-        public object CreateInstance(string typeName)
-        {
-            Type type = Type.GetType(typeName, true);
-            return Activator.CreateInstance(type);
-        }
-
         public object CreateInstance(Type type, params object[] args)
         {
             try
@@ -91,11 +85,6 @@ namespace Rhino.ServiceBus.Impl
             }
             object value = generateValue(property.PropertyType);
             property.SetValue(instance, value, null);
-        }
-
-        public void Set(object instance, string name, object value)
-        {
-            Set(instance, name, t => value);
         }
 
         public object Get(object instance, string name)
@@ -240,20 +229,6 @@ namespace Rhino.ServiceBus.Impl
             }
             list.ExceptWith(toRemove);
             return list.ToArray();
-        }
-
-        public object ForAllOf<T>(object instance, Func<T, T> func)
-        {
-            if (instance is ValueType)
-                return instance;
-            foreach (PropertyInfo property in instance.GetType().GetProperties())
-            {
-                if (property.PropertyType != typeof (T))
-                    continue;
-                T converter = func((T) property.GetValue(instance, null));
-                property.SetValue(instance, converter, null);
-            }
-            return instance;
         }
 
         #endregion

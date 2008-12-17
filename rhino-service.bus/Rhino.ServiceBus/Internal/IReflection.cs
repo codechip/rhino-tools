@@ -6,15 +6,9 @@ namespace Rhino.ServiceBus.Internal
 {
     public interface IReflection
     {
-        object CreateInstance(string typeName);
-
         object CreateInstance(Type type, params object[]args);
 
         void Set(object instance, string name, Func<Type,object> generateValue);
-
-        void Set(object instance, string name, object value);
-
-        object ForAllOf<T>(object instance, Func<T, T> func);
 
         Type GetGenericTypeOf(Type type, object msg);
 
