@@ -59,7 +59,7 @@ namespace Rhino.ServiceBus.Impl
 
         protected override void Init()
         {
-            Kernel.ComponentRegistered += Kernel_OnComponentRegistered;
+            Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;
 
             ReadBusConfiguration();
             ReadMessageOwners();
@@ -107,6 +107,14 @@ namespace Rhino.ServiceBus.Impl
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
                 );
+        }
+
+        private static void Kernel_OnComponentModelCreated(ComponentModel model)
+        {
+            if (typeof(IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
+                return;
+
+            model.LifestyleType = LifestyleType.Transient;   
         }
 
         private void ReadMessageOwners()
@@ -159,13 +167,6 @@ namespace Rhino.ServiceBus.Impl
             return config;
         }
 
-        private static void Kernel_OnComponentRegistered(string key, IHandler handler)
-        {
-            if (typeof(IMessageConsumer).IsAssignableFrom(handler.ComponentModel.Implementation) == false)
-                return;
-
-            handler.ComponentModel.LifestyleType = LifestyleType.Transient;
-        }
 
         private void ReadBusConfiguration()
         {

@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bugs\Resolving_consumer_from_container.cs" />
     <Compile Include="Bugs\When_handler_consumes_two_messages.cs" />
     <Compile Include="Bugs\When_running_on_MTA_thread.cs" />
     <Compile Include="BugWithLogTest.cs" />
