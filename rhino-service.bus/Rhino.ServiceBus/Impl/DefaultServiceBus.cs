@@ -275,7 +275,7 @@ namespace Rhino.ServiceBus.Impl
                 reflection.InvokeSagaPersisterSave(persister, saga);
         }
 
-        private object[] GatherConsumers(CurrentMessageInformation msg)
+        public object[] GatherConsumers(CurrentMessageInformation msg)
         {
             object[] sagas = GetSagasFor(msg.Message as ISagaMessage);
 

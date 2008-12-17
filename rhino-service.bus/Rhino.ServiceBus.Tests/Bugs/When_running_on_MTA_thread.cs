@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests.Bugs
 {
-    public class When_running_on_MTA_thread
+    public class When_running_on_MTA_thread : MsmqTestBase
     {
 
         private readonly IWindsorContainer container;
