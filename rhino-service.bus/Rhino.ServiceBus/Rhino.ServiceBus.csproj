@@ -62,11 +62,11 @@
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
     <Compile Include="Exceptions\UnboundedResultSetException.cs" />
+    <Compile Include="Impl\DefaultServiceBus.cs" />
     <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
     <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
-    <Compile Include="DefaultServiceBus.cs" />
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
@@ -106,6 +106,9 @@
     <Compile Include="Sagas\Orchestrates.cs" />
     <Compile Include="Serializers\XmlMessageSerializer.cs" />
     <Compile Include="Util\GuidCombGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PublicApi.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

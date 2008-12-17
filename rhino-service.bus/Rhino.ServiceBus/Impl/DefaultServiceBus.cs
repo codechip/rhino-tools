@@ -5,14 +5,13 @@ using System.Linq;
 using Castle.MicroKernel;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
-using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Util;
 
-namespace Rhino.ServiceBus
+namespace Rhino.ServiceBus.Impl
 {
     public class DefaultServiceBus : IStartableServiceBus
     {
@@ -100,7 +99,7 @@ namespace Rhino.ServiceBus
                 Send(owner.Endpoint, messages);
                 sent = true;
             }
-            if(sent==false)
+            if (sent == false)
                 throw new MessagePublicationException("Could not find no message owner for " + messages[0]);
         }
 
@@ -108,9 +107,11 @@ namespace Rhino.ServiceBus
         {
             subscriptionStorage.AddInstanceSubscription(consumer);
             var weakRef = new WeakReference(consumer);
-            return new DisposableAction(()=>
+            return new DisposableAction(() =>
             {
                 var messageConsumer = weakRef.Target as IMessageConsumer;
+                if (messageConsumer == null)//nothing to do
+                    return;
                 subscriptionStorage.RemoveInstanceSubscription(messageConsumer);
             });
         }
@@ -137,10 +138,10 @@ namespace Rhino.ServiceBus
 
         public void Start()
         {
-            logger.DebugFormat("Starting the bus for {0}",Endpoint);
+            logger.DebugFormat("Starting the bus for {0}", Endpoint);
 
             var subscriptionAsModule = subscriptionStorage as IMessageModule;
-            if(subscriptionAsModule!=null)
+            if (subscriptionAsModule != null)
             {
                 logger.DebugFormat("Initating subscription storage as message module: {0}", subscriptionAsModule);
                 subscriptionAsModule.Init(transport);

@@ -2,6 +2,10 @@ using System;
 
 namespace Rhino.ServiceBus
 {
+    /// <summary>
+    /// The service bus abstraction, allow to publish messages and subscribe
+    /// or unsubscribe to messages
+    /// </summary>
     public interface IServiceBus
     {
         /// <summary>
@@ -47,12 +51,25 @@ namespace Rhino.ServiceBus
         /// </summary>
         IDisposable AddInstanceSubscription(IMessageConsumer consumer);
 
+        /// <summary>
+        /// Subscribe this endpoint to the message type
+        /// </summary>
+        /// <typeparam name="T">Message type</typeparam>
         void Subscribe<T>();
 
+        /// <summary>
+        /// Subscribe this endpoint to the message type
+        /// </summary>
         void Subscribe(Type type);
 
+        /// <summary>
+        /// Unsubscribe this endpoint from the message type
+        /// </summary>
         void Unsubscribe<T>();
 
+        /// <summary>
+        /// Unsubscribe this endpoint from the message type
+        /// </summary>
         void Unsubscribe(Type type);
     }
 }

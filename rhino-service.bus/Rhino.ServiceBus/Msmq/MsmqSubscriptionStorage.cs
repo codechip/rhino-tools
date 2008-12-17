@@ -186,22 +186,26 @@ namespace Rhino.ServiceBus.Msmq
                 readerWriterLock.ExitReadLock();
             }
 
-            readerWriterLock.EnterWriteLock();
-            try
-            {
-                var array = value
-                    .Select(x => x.Target)
-                    .Where(x => x != null)
-                    .ToArray();
+            var liveInstances = value
+                .Select(x => x.Target)
+                .Where(x => x != null)
+                .ToArray();
 
-                value.RemoveAll(x => x.IsAlive == false);
-
-                return array;
-            }
-            finally
+            if (liveInstances.Length != value.Count)//cleanup
             {
-                readerWriterLock.ExitWriteLock();
+                readerWriterLock.EnterWriteLock();
+                try
+                {
+                    value.RemoveAll(x => x.IsAlive == false);
+                }
+                finally
+                {
+                    readerWriterLock.ExitWriteLock();
+                }
+
             }
+
+            return liveInstances;
         }
 
         public void HandleAdministrativeMessage(CurrentMessageInformation msgInfo)

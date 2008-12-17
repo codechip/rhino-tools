@@ -39,6 +39,28 @@ namespace Rhino.ServiceBus.Tests
                     Assert.NotNull(message);
                 }
             }
+
+        }
+
+        [Fact]
+        public void Bus_will_not_hold_reference_to_consumer()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                var consumer = new PingConsumer(bus);
+                var weakConsumer = new WeakReference(consumer);
+
+                using (bus.AddInstanceSubscription(consumer))
+                {
+                    consumer = null;
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+             
+                    Assert.False(weakConsumer.IsAlive);
+                }
+            }
         }
 
         [Fact]
