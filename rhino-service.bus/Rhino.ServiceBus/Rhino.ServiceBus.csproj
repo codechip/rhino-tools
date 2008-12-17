@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="Exceptions\UnboundedResultSetException.cs" />
     <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
     <Compile Include="Impl\CorrelationId.cs" />

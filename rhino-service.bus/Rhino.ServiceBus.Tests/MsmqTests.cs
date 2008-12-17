@@ -39,6 +39,49 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void Peeking_twice()
+        {
+            queue.Send("a");
+
+            var peek1 = queue.Peek();
+
+            var peek2 = queue.Peek();
+
+            Assert.Equal(peek1.Id, peek2.Id);
+        }
+
+        [Fact]
+        public void Peeking_twice_different_queue_isntances_on_same_queue()
+        {
+            queue.Send("a");
+
+            var peek1 = queue.Peek();
+
+            using(var q2 = new MessageQueue(testQueuePath,QueueAccessMode.Receive))
+            {
+                var peek2 = q2.Peek();
+                Assert.Equal(peek1.Id, peek2.Id);
+            }
+        }
+
+        [Fact]
+        public void Competing_consumers()
+        {
+            queue.Send("a");
+
+            var peek1 = queue.Peek();
+
+            using (var q2 = new MessageQueue(testQueuePath, QueueAccessMode.Receive))
+            {
+                var peek2 = q2.Peek();
+                q2.ReceiveById(peek2.Id);
+            }
+
+            Assert.Throws<InvalidOperationException>(()=>queue.ReceiveById(peek1.Id))
+            ;
+        }
+
+        [Fact]
         public void Moving_to_subqueue_will_take_part_in_ambient_transaction()
         {
             queue.Send("a");

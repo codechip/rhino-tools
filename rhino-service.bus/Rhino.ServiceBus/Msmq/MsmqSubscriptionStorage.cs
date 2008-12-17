@@ -103,13 +103,11 @@ namespace Rhino.ServiceBus.Msmq
             {
                 try
                 {
-                    queue.ReceiveById(msgId,
-                                      MessageQueueTransactionType.Single);
+                    queue.ReceiveById(msgId, MessageQueueTransactionType.Single);
                 }
-                catch (MessageQueueException e)
+                catch (InvalidOperationException)
                 {
-                    if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
-                        throw;
+                    // could not find message in queue
                 }
             }
         }
@@ -241,10 +239,9 @@ namespace Rhino.ServiceBus.Msmq
                     msmqMsgInfo.MsmqMessage.Id,
                     msmqMsgInfo.TransactionType);
             }
-            catch (MessageQueueException e)
+            catch (InvalidOperationException)
             {
-                if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
-                    throw;
+                // could not find message on queue
             }
         }
 

@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using System.Linq;
 
@@ -13,6 +14,7 @@ namespace Rhino.ServiceBus.Serializers
 {
     public class XmlMessageSerializer : IMessageSerializer
     {
+        private const int MaxNumberOfAllowedItemsInCollection = 256;
         private readonly IReflection reflection;
 
         public XmlMessageSerializer(IReflection reflection)
@@ -22,6 +24,9 @@ namespace Rhino.ServiceBus.Serializers
 
         public void Serialize(object[] mesages, Stream messageStream)
         {
+            if(mesages.Length> MaxNumberOfAllowedItemsInCollection)
+                throw new UnboundedResultSetException("A message batch is limited to 256 messages");
+
             var namespaces = GetNamespaces(mesages);
             var messagesElement = new XElement(namespaces["esb"] + "messages");
             var xml = new XDocument(messagesElement);
@@ -69,10 +74,14 @@ namespace Rhino.ServiceBus.Serializers
             {
                 XElement list = GetContentWithNamespace(value, namespaces, name);
                 parent.Add(list);
+                var itemCount = 0;
                 foreach (var item in ((IEnumerable)value))
                 {
                     if (item == null)
                         continue;
+                    itemCount += 1;
+                    if(itemCount>MaxNumberOfAllowedItemsInCollection)
+                        throw new UnboundedResultSetException("You cannot send collections with more than 256 items ("+value+" "+name+")");
 
                     WriteObject("value", item, list, namespaces);
                 }

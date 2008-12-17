@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Serializers;
 using Xunit;
@@ -33,47 +34,6 @@ namespace Rhino.ServiceBus.Tests
         };
 
         [Fact]
-        public void Can_serialize_complex_object_graph()
-        {
-            var serializer = new XmlMessageSerializer(new DefaultReflection());
-            var stream = new MemoryStream();
-
-            serializer.Serialize(new[] {sample}, stream);
-            stream.Position = 0;
-            string serializedForm = new StreamReader(stream, Encoding.UTF8).ReadToEnd();
-            string expected =
-                @"<?xml version=""1.0"" encoding=""utf-8""?>
-<esb:messages xmlns:esb=""http://servicebus.hibernatingrhinos.com/2008/12/20/esb"" xmlns:tests.order=""Rhino.ServiceBus.Tests.XmlSerializerTest+Order, Rhino.ServiceBus.Tests"" xmlns:uri=""uri"" xmlns:int=""int"" xmlns:guid=""guid"" xmlns:datetime=""datetime"" xmlns:timespan=""timespan"" xmlns:array_of_tests.orderline=""Rhino.ServiceBus.Tests.XmlSerializerTest+OrderLine[], Rhino.ServiceBus.Tests"" xmlns:tests.orderline=""Rhino.ServiceBus.Tests.XmlSerializerTest+OrderLine, Rhino.ServiceBus.Tests"" xmlns:string=""string"" xmlns:generic.list_of_int=""System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"">
-  <tests.order:Order>
-    <uri:Url>msmq://www.ayende.com/</uri:Url>
-    <int:Count>5</int:Count>
-    <guid:OrderId>1909994f-8173-452c-a651-14725bb09cb6</guid:OrderId>
-    <datetime:At>2008-12-16T00:00:00.0000000</datetime:At>
-    <timespan:TimeToDelivery>P0Y0M1DT0H0M0S</timespan:TimeToDelivery>
-    <array_of_tests.orderline:OrderLines>
-      <tests.orderline:value>
-        <string:Product>milk</string:Product>
-        <generic.list_of_int:Fubar>
-          <int:value>1</int:value>
-          <int:value>2</int:value>
-          <int:value>3</int:value>
-        </generic.list_of_int:Fubar>
-      </tests.orderline:value>
-      <tests.orderline:value>
-        <string:Product>butter</string:Product>
-        <generic.list_of_int:Fubar>
-          <int:value>4</int:value>
-          <int:value>5</int:value>
-          <int:value>6</int:value>
-        </generic.list_of_int:Fubar>
-      </tests.orderline:value>
-    </array_of_tests.orderline:OrderLines>
-  </tests.order:Order>
-</esb:messages>";
-            Assert.Equal(expected, serializedForm);
-        }
-
-        [Fact]
         public void Can_serialize_and_deserialize_primitive()
         {
             long ticks = DateTime.Now.Ticks;
@@ -101,6 +61,28 @@ namespace Rhino.ServiceBus.Tests
             stream.Position = 0;
             var actual = (ClassWithObjectArray) serializer.Deserialize(stream)[0];
             Assert.Equal("ayende", ((OrderLine)actual.Items[0]).Product);
+        }
+
+        [Fact]
+        public void Trying_to_send_more_than_256_objects_will_fail()
+        {
+            var serializer = new XmlMessageSerializer(new DefaultReflection());
+            Assert.Throws<UnboundedResultSetException>(() => serializer.Serialize(new object[257], new MemoryStream()));
+        }
+
+        [Fact]
+        public void Trying_to_send_message_with_list_of_more_than_256_items_will_fail()
+        {
+            var serializer = new XmlMessageSerializer(new DefaultReflection());
+            var order = new Order
+            {
+                OrderLines = new OrderLine[257]
+            };
+            for (int i = 0; i < 257; i++)
+            {
+              order.OrderLines[i] = new OrderLine();  
+            }
+            Assert.Throws<UnboundedResultSetException>(() => serializer.Serialize(new[] { order }, new MemoryStream()));
         }
 
         [Fact]

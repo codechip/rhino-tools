@@ -14,12 +14,15 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqTransport : ITransport
     {
+        private const int ShutDownMessageMarker = 1337;
         private const int AdministrativeMessageMarker = 42;
-        [ThreadStatic] private static MsmqCurrentMessageInformation currentMessageInformation;
+
+        [ThreadStatic]
+        private static MsmqCurrentMessageInformation currentMessageInformation;
 
         private readonly Uri endpoint;
         private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
-        private readonly ILog logger = LogManager.GetLogger(typeof (MsmqTransport));
+        private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
         private readonly int numberOfRetries;
         private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IMessageSerializer serializer;
@@ -41,7 +44,7 @@ namespace Rhino.ServiceBus.Msmq
             waitHandles = new WaitHandle[threadCount + 1];
         }
 
-        public bool ShouldStop { get; set; }
+        public volatile bool ShouldStop;
 
         #region ITransport Members
 
@@ -61,7 +64,7 @@ namespace Rhino.ServiceBus.Msmq
                 waitHandles[t] = waitHandle;
                 try
                 {
-                    queue.BeginPeek(TimeSpan.FromSeconds(1), new QueueState
+                    queue.BeginPeek(TimeOutForPeek, new QueueState
                     {
                         Queue = queue,
                         WaitHandle = waitHandle
@@ -76,10 +79,17 @@ namespace Rhino.ServiceBus.Msmq
             haveStarted = true;
         }
 
+        private static TimeSpan TimeOutForPeek
+        {
+            get { return TimeSpan.FromHours(1); }
+        }
+
         public void Stop()
         {
             ShouldStop = true;
-
+            var transactionType = queue.Transactional ? MessageQueueTransactionType.Single : MessageQueueTransactionType.None;
+            queue.Send(new Message { AppSpecific = ShutDownMessageMarker }, transactionType);
+            
             WaitForProcessingToEnd();
 
             if (queue != null)
@@ -187,16 +197,24 @@ namespace Rhino.ServiceBus.Msmq
             if (peek == false) // error 
                 return;
 
-            var state = (QueueState) ar.AsyncState;
+            var state = (QueueState)ar.AsyncState;
             if (ShouldStop)
             {
                 state.WaitHandle.Set();
                 return;
             }
 
-            if (peek == null) //nothing was found
+            if (peek == null)//nothing was found 
             {
-                state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
+                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+                return;
+            }
+
+            if (message.AppSpecific == ShutDownMessageMarker)
+            {
+                // previously sent shutdown message we can safely consume & ignore it
+                TryGetMessageFromQueue(state, message.Id);
+                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
                 return;
             }
 
@@ -206,19 +224,19 @@ namespace Rhino.ServiceBus.Msmq
 
             if (DispatchToErrorQueueIfNeeded(state.Queue, message))
             {
-                state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
+                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
                 return;
             }
 
             if (HandleAdministrationMessage(state, message))
             {
-                state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
+                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
                 return;
             }
 
             ReceiveMessageInTransaction(state, message.Id);
 
-            state.Queue.BeginPeek(TimeSpan.FromSeconds(1), state, OnPeekMessage);
+            state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
         }
 
         private bool HandleAdministrationMessage(QueueState state, Message message)
@@ -251,23 +269,10 @@ namespace Rhino.ServiceBus.Msmq
                 try
                 {
                     state.Queue.MessageReadPropertyFilter.SetAll();
-                    message = state.Queue.ReceiveById(
-                        messageId,
-                        GetTransactionTypeBasedOnQueue(state.Queue));
-
+                    message = TryGetMessageFromQueue(state, messageId);
+                    if (message == null)
+                        return;// someone else ate our message, better luck next time
                     ProcessMessage(message, state, MessageArrived);
-                }
-                catch (MessageQueueException e)
-                {
-                    if (e.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
-                    {
-                        return; // someone got it before we did, better luck next time
-                    }
-                    else
-                    {
-                        ex = e;
-                        logger.Error("Failed to receive message", e);
-                    }
                 }
                 catch (Exception e)
                 {
@@ -278,6 +283,20 @@ namespace Rhino.ServiceBus.Msmq
                 {
                     HandleMessageCompletion(message, tx, state, ex);
                 }
+            }
+        }
+
+        private static Message TryGetMessageFromQueue(QueueState state, string messageId)
+        {
+            try
+            {
+                return state.Queue.ReceiveById(
+                    messageId,
+                    GetTransactionTypeBasedOnQueue(state.Queue));
+            }
+            catch (InvalidOperationException)// message was read before we could read it
+            {
+                return null;
             }
         }
 
@@ -413,7 +432,7 @@ namespace Rhino.ServiceBus.Msmq
 
         private bool? TryEndingPeek(IAsyncResult ar, out Message message)
         {
-            var state = (QueueState) ar.AsyncState;
+            var state = (QueueState)ar.AsyncState;
             try
             {
                 message = state.Queue.EndPeek(ar);
