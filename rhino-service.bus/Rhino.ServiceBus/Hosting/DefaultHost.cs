@@ -30,11 +30,16 @@ namespace Rhino.ServiceBus.Hosting
 
             CreateBootStrapper();
 
-            bootStrapper.BeforeStart();
-
             InitializeContainer();
 
-            StartBus();
+            bootStrapper.BeforeStart();
+
+            logger.Debug("Starting bus");
+            serviceBus = container.Resolve<IStartableServiceBus>();
+
+            serviceBus.Start();
+
+            bootStrapper.AfterStart();
         }
 
         private void InitializeContainer()
@@ -42,14 +47,6 @@ namespace Rhino.ServiceBus.Hosting
             bootStrapper.InitializeContainer(container);
         }
 
-        
-
-        private void StartBus()
-        {
-            logger.Debug("Starting bus");
-            serviceBus = container.Resolve<IStartableServiceBus>();
-            serviceBus.Start();
-        }
 
         private void CreateContainer()
         {

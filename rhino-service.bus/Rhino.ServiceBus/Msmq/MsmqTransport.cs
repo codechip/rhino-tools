@@ -14,7 +14,8 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqTransport : ITransport
     {
-        private const int ErrorDescriptionMessageMarker = 0xe7707;
+        private const int DiscardedMessageMarker = 0xD13574;
+        private const int ErrorDescriptionMessageMarker = 0xE7707;
         private const int ShutDownMessageMarker = 1337;
         private const int AdministrativeMessageMarker = 42;
 
@@ -120,7 +121,37 @@ namespace Rhino.ServiceBus.Msmq
         public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         public event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
+        public void Discard(object msg)
+        {
+            var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
+
+            message.AppSpecific = DiscardedMessageMarker;
+
+            SendMessageToQueue(message, Endpoint);
+
+        }
+
         public void Send(Uri uri, params object[] msgs)
+        {
+            var message = GenerateMsmqMessageFromMessageBatch(msgs);
+
+            SendMessageToQueue(message, uri);
+
+            var copy = MessageSent;
+            if (copy == null)
+                return;
+
+            copy(new CurrentMessageInformation
+            {
+                AllMessages = msgs,
+                Source = endpoint,
+                Destination = uri,
+                CorrelationId = CorrelationId.Parse(message.CorrelationId),
+                MessageId = CorrelationId.Parse(message.Id),
+            });
+        }
+
+        private Message GenerateMsmqMessageFromMessageBatch(object[] msgs)
         {
             var message = new Message();
 
@@ -143,19 +174,7 @@ namespace Rhino.ServiceBus.Msmq
                     return s;
                 })
                 .FirstOrDefault();
-
-            SendMessageToQueue(message, uri);
-            var copy = MessageSent;
-            if (copy == null)
-                return;
-            copy(new CurrentMessageInformation
-            {
-                AllMessages = msgs,
-                Source = endpoint,
-                Destination = uri,
-                CorrelationId = CorrelationId.Parse(message.CorrelationId),
-                MessageId = CorrelationId.Parse(message.Id),
-            });
+            return message;
         }
 
         public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
@@ -228,16 +247,25 @@ namespace Rhino.ServiceBus.Msmq
                 return;
             }
 
-            logger.DebugFormat("Got message {0} from {1}",
-                               message.Label,
-                               MsmqUtil.GetQueueUri(state.Queue));
+            if (message.AppSpecific == DiscardedMessageMarker)
+            {
+                state.Queue.MoveToSubQueue("discarded", message);
+                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+                return;
+            }
 
             if (DispatchToErrorQueueIfNeeded(state.Queue, message))
             {
                 state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
                 return;
             }
+            
 
+            logger.DebugFormat("Got message {0} from {1}",
+                               message.Label,
+                               MsmqUtil.GetQueueUri(state.Queue));
+
+          
             if (HandleAdministrationMessage(state, message))
             {
                 state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);

@@ -56,8 +56,12 @@ namespace Rhino.ServiceBus.NHibernate.Hosting
             sessionFactory = configuration.BuildSessionFactory();
             container.Kernel.AddComponentInstance<Configuration>(configuration);
             container.Kernel.AddComponentInstance<ISessionFactory>(sessionFactory);
+        }
 
-            container.Kernel.Resolver.AddSubResolver(new SessionResolver(sessionFactory));
+        protected override void ConfigureContainer()
+        {
+            container.Kernel.Resolver.AddSubResolver(new SessionResolver(container.Kernel));
+            base.ConfigureContainer();
         }
 
         public virtual Type Dialect

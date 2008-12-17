@@ -240,6 +240,7 @@ namespace Rhino.ServiceBus.Impl
 
             if (consumers.Length == 0)
             {
+                transport.Discard(msg.Message);
                 logger.ErrorFormat("Got message {0}, but had no consumers for it", msg);
                 return;
             }

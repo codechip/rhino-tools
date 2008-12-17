@@ -27,5 +27,7 @@ namespace Rhino.ServiceBus.Internal
         event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         
         event Action<CurrentMessageInformation> MessageProcessingCompleted;
+
+        void Discard(object msg);
     }
 }

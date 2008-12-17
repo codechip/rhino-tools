@@ -6,24 +6,35 @@ namespace Rhino.ServiceBus.NHibernate.Resolvers
 {
     public class SessionResolver : ISubDependencyResolver
     {
-        private readonly ISessionFactory sessionFactory;
+        private readonly IKernel kernel;
 
-        public SessionResolver(ISessionFactory sessionFactory)
+        public SessionResolver(IKernel kernel)
         {
-            this.sessionFactory = sessionFactory;
+            this.kernel = kernel;
         }
 
-        public object Resolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model, DependencyModel dependency)
+        private ISessionFactory SessionFactory
         {
-            if (dependency.TargetType == typeof(ISession))
-                return sessionFactory.OpenSession();
-            return sessionFactory.OpenStatelessSession();
+            get { return kernel.Resolve<ISessionFactory>(); }
         }
 
-        public bool CanResolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model, DependencyModel dependency)
+        #region ISubDependencyResolver Members
+
+        public object Resolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model,
+                              DependencyModel dependency)
         {
-            return dependency.TargetType == typeof (ISession) |
+            if (dependency.TargetType == typeof (ISession))
+                return SessionFactory.OpenSession();
+            return SessionFactory.OpenStatelessSession();
+        }
+
+        public bool CanResolve(CreationContext context, ISubDependencyResolver parentResolver, ComponentModel model,
+                               DependencyModel dependency)
+        {
+            return dependency.TargetType == typeof (ISession) ||
                    dependency.TargetType == typeof (IStatelessSession);
         }
+
+        #endregion
     }
 }
