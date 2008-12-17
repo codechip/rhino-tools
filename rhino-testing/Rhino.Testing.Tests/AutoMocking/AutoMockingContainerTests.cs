@@ -27,7 +27,40 @@ namespace Rhino.Testing.Tests.AutoMocking
 
 	    }
 
-	    [Test]
+        // It might be nice to test this on a class in a separate assembly...
+        [Test]
+        public void Create_WillResolveDependenciesOnInternalClassWithInternalConstructor()
+        {
+            InternalComponentBeingConfigured target = container.Create<InternalComponentBeingConfigured>();
+            Assert.IsNotNull(target.ReallyCoolService, "mocked ReallyCoolService dependency");
+            Assert.IsNotNull(target.Services, "mocked Services dependency");
+        }
+
+        [Test]
+        public void Create_WillResolveDependenciesPreferringInternalConstructor()
+        {
+            ComponentBeingConfiguredWithInternalCtor target = container.Create<ComponentBeingConfiguredWithInternalCtor>();
+            Assert.IsNotNull(target.ReallyCoolService, "mocked ReallyCoolService dependency");
+            Assert.IsNotNull(target.Services, "mocked Services dependency");
+        }
+
+        [Test]
+        public void Create_WillResolveDependenciesPreferringInternalConstructor_WithResolvePropertiesEnabled()
+        {
+            ComponentBeingConfiguredWithInternalCtor target = containerThatResolvesProperties.Create<ComponentBeingConfiguredWithInternalCtor>();
+            Assert.IsNotNull(target.ReallyCoolService, "mocked ReallyCoolService dependency");
+            Assert.IsNotNull(target.Services, "mocked Services dependency");
+        }
+
+        [Test]
+        public void Create_WillResolveDependenciesPreferringPrivateConstructor()
+        {
+            ComponentBeingConfiguredWithPrivateCtor target = container.Create<ComponentBeingConfiguredWithPrivateCtor>();
+            Assert.IsNotNull(target.ReallyCoolService, "mocked ReallyCoolService dependency");
+            Assert.IsNotNull(target.Services, "mocked Services dependency");
+        }
+
+        [Test]
         public void Create_WillResolveDependenciesAsMocks_ByDefault()
 	    {
             ComponentBeingConfigured target = container.Create<ComponentBeingConfigured>();

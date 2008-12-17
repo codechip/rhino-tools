@@ -79,9 +79,12 @@
     <Compile Include="AutoMocking\AutoMockingContainerTests.cs" />
     <Compile Include="AutoMocking\AutoMockingTests.cs" />
     <Compile Include="AutoMocking\ComponentBeingConfigured.cs" />
+    <Compile Include="AutoMocking\ComponentBeingConfiguredWithInternalCtor.cs" />
+    <Compile Include="AutoMocking\ComponentBeingConfiguredWithPrivateCtor.cs" />
     <Compile Include="AutoMocking\ComponentWithComplexProperty.cs" />
     <Compile Include="AutoMocking\DefaultCollectionOfServices.cs" />
     <Compile Include="AutoMocking\ICollectionOfServices.cs" />
+    <Compile Include="AutoMocking\InternalComponentBeingConfigured.cs" />
     <Compile Include="AutoMocking\IReallyCoolService.cs" />
     <Compile Include="AutoMocking\NeedIKernel.cs" />
     <Compile Include="CommentReaderFixture.cs" />

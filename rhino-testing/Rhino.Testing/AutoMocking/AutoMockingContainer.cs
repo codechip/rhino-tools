@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Castle.MicroKernel;
-using Castle.MicroKernel.SubSystems.Naming;
 using Castle.Windsor;
 using Rhino.Mocks;
-using System.Diagnostics;
 
 namespace Rhino.Testing.AutoMocking
 {
@@ -92,6 +90,7 @@ namespace Rhino.Testing.AutoMocking
 		{
 			Kernel.AddSubSystem(SubSystemConstants.NamingKey,new AutoMockingNamingSubSystem(this));
 			Kernel.AddFacility("AutoMockingFacility", new AutoMockingFacility(this));
+		    Kernel.ComponentModelBuilder.AddContributor(new NonPublicConstructorDependenciesModelInspector());
 			Kernel.ComponentModelCreated += Kernel_ComponentModelCreated;
 		}
 
@@ -99,8 +98,9 @@ namespace Rhino.Testing.AutoMocking
 		{
 			if (model.CustomComponentActivator!=null)
 				return;
-            if (!ResolveProperties)
-                model.CustomComponentActivator = typeof(AutoMockingComponentActivator);
+		    model.CustomComponentActivator = ResolveProperties
+		                                         ? typeof (AutoMockingComponentActivator)
+		                                         : typeof (NonPropertyResolvingComponentActivator);
 		}
 
 		private void AddComponentIfMissing<T>()

@@ -1,17 +1,17 @@
 namespace Rhino.Testing.Tests.AutoMocking
 {
-    public class ComponentBeingConfigured
+    public class ComponentBeingConfiguredWithInternalCtor
     {
         public IReallyCoolService ReallyCoolService;
         public ICollectionOfServices Services;
 
-        public ComponentBeingConfigured(IReallyCoolService reallyCoolService, ICollectionOfServices services)
+        internal ComponentBeingConfiguredWithInternalCtor(IReallyCoolService reallyCoolService, ICollectionOfServices services)
         {
             ReallyCoolService = reallyCoolService;
             Services = services;
         }
 
-        public ComponentBeingConfigured(IReallyCoolService reallyCoolService)
+        public ComponentBeingConfiguredWithInternalCtor(IReallyCoolService reallyCoolService)
         {
             ReallyCoolService = reallyCoolService;
         }

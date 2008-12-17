@@ -81,6 +81,8 @@
     <Compile Include="AutoMocking\IAutoMockingRepository.cs" />
     <Compile Include="AutoMocking\IMockingStrategy.cs" />
     <Compile Include="AutoMocking\NonMockedStrategy.cs" />
+    <Compile Include="AutoMocking\NonPropertyResolvingComponentActivator.cs" />
+    <Compile Include="AutoMocking\NonPublicConstructorDependenciesModelInspector.cs" />
     <Compile Include="AutoMocking\TypeMarker.cs" />
     <Compile Include="CommentReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

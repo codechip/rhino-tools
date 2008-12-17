@@ -2,30 +2,33 @@
 using Rhino.Mocks;
 using Rhino.Testing.AutoMocking;
 
-[TestFixture]
-public class AddComponentInstanceFixture
+namespace Rhino.Testing.Tests.AutoMocking
 {
-	private AutoMockingContainer container;
-	private MockRepository mocks;
+    [TestFixture]
+    public class AddComponentInstanceFixture
+    {
+        private AutoMockingContainer container;
+        private MockRepository mocks;
 
-	public class InstancedComponent
-	{
-	}
+        public class InstancedComponent
+        {
+        }
 
-	[SetUp]
-	public void SetUp()
-	{
-		mocks = new MockRepository();
-		container = new AutoMockingContainer(mocks);
-		container.Initialize();
-	}
+        [SetUp]
+        public void SetUp()
+        {
+            mocks = new MockRepository();
+            container = new AutoMockingContainer(mocks);
+            container.Initialize();
+        }
 
 
-	[Test]
-	public void AddComponentInstance_CanBeRetrieved()
-	{
-		InstancedComponent component = new InstancedComponent();
-		container.Kernel.AddComponentInstance("InstancedComponent", typeof (InstancedComponent), component);
-		Assert.AreEqual(component, container.Get<InstancedComponent>());
-	}
+        [Test]
+        public void AddComponentInstance_CanBeRetrieved()
+        {
+            InstancedComponent component = new InstancedComponent();
+            container.Kernel.AddComponentInstance("InstancedComponent", typeof(InstancedComponent), component);
+            Assert.AreEqual(component, container.Get<InstancedComponent>());
+        }
+    }
 }
