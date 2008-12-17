@@ -55,6 +55,9 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Start()
         {
+            if(haveStarted)
+                return;
+
             logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
             queue = InitalizeQueue(endpoint);
 
@@ -98,6 +101,8 @@ namespace Rhino.ServiceBus.Msmq
 
             if (queue != null)
                 queue.Close();
+
+            haveStarted = false;
         }
 
         public void Reply(params object[] messages)
