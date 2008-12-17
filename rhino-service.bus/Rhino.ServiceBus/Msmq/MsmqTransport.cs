@@ -42,7 +42,7 @@ namespace Rhino.ServiceBus.Msmq
             this.endpoint = endpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
-            waitHandles = new WaitHandle[threadCount + 1];
+            waitHandles = new WaitHandle[threadCount];
         }
 
         public volatile bool ShouldStop;
@@ -167,7 +167,7 @@ namespace Rhino.ServiceBus.Msmq
             if (haveStarted == false)
                 return;
 
-            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.MTA)
+            if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
             {
                 WaitHandle.WaitAll(waitHandles);
             }
