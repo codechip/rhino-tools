@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.ServiceBus.LogsServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.ServiceBus.NHibernate", "Rhino.ServiceBus.NHibernate\Rhino.ServiceBus.NHibernate.csproj", "{B60DF631-07EE-4E5E-BA81-638AF759D1A0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starbucks", "Starbucks", "{64DC50EF-F634-4E75-8375-ACC6D42E2DB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starbucks", "Samples\Starbucks\Starbucks.csproj", "{0FC43226-8030-46FC-A2AB-D064207FF364}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,8 +35,15 @@ Global
 		{B60DF631-07EE-4E5E-BA81-638AF759D1A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60DF631-07EE-4E5E-BA81-638AF759D1A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60DF631-07EE-4E5E-BA81-638AF759D1A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FC43226-8030-46FC-A2AB-D064207FF364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FC43226-8030-46FC-A2AB-D064207FF364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FC43226-8030-46FC-A2AB-D064207FF364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FC43226-8030-46FC-A2AB-D064207FF364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0FC43226-8030-46FC-A2AB-D064207FF364} = {64DC50EF-F634-4E75-8375-ACC6D42E2DB4}
 	EndGlobalSection
 EndGlobal

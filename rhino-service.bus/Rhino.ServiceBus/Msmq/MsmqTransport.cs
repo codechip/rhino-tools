@@ -32,18 +32,29 @@ namespace Rhino.ServiceBus.Msmq
         private readonly WaitHandle[] waitHandles;
         private bool haveStarted;
         private MessageQueue queue;
+        private IQueueStrategy queueStrategy;
 
         public MsmqTransport(
             IMessageSerializer serializer,
             Uri endpoint,
             int threadCount,
-            int numberOfRetries)
+            int numberOfRetries):this(serializer,endpoint,threadCount,numberOfRetries,new SubQueueStrategy())
+        {
+        }
+
+        public MsmqTransport(
+            IMessageSerializer serializer,
+            Uri endpoint,
+            int threadCount,
+            int numberOfRetries,
+            IQueueStrategy queueStrategy)
         {
             this.serializer = serializer;
             this.endpoint = endpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
             waitHandles = new WaitHandle[threadCount];
+            this.queueStrategy = queueStrategy;
         }
 
         public volatile bool ShouldStop;
@@ -92,12 +103,11 @@ namespace Rhino.ServiceBus.Msmq
         public void Stop()
         {
             ShouldStop = true;
-            var transactionType = queue.Transactional ? MessageQueueTransactionType.Single : MessageQueueTransactionType.None;
             queue.Send(new Message
             {
                 Label = "Shutdown bus, if you please",
                 AppSpecific = ShutDownMessageMarker
-            }, transactionType);
+            }, queue.GetSingleMessageTransactionType());
 
             WaitForProcessingToEnd();
 
@@ -260,7 +270,7 @@ namespace Rhino.ServiceBus.Msmq
 
             if (message.AppSpecific == DiscardedMessageMarker)
             {
-                state.Queue.MoveToSubQueue("discarded", message);
+                queueStrategy.MoveToDiscardedQueue(state.Queue,message);
                 state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
                 return;
             }
@@ -341,7 +351,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 return state.Queue.ReceiveById(
                     messageId,
-                    GetTransactionTypeBasedOnQueue(state.Queue));
+                    state.Queue.GetTransactionType());
             }
             catch (InvalidOperationException)// message was read before we could read it
             {
@@ -353,7 +363,7 @@ namespace Rhino.ServiceBus.Msmq
         {
             if (message.AppSpecific == ErrorDescriptionMessageMarker)
             {
-                messageQueue.MoveToSubQueue("errors", message);
+                queueStrategy.MoveToErrorsQueue(messageQueue,message);
                 return true;
             }
 
@@ -378,7 +388,7 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 failureCounts.Remove(id);
-                messageQueue.MoveToSubQueue("errors", message);
+                queueStrategy.MoveToErrorsQueue(messageQueue, message);
                 var label = "Error description for " + message.Label;
                 if (label.Length > 249)
                     label = label.Substring(0, 246) + "...";
@@ -397,16 +407,6 @@ namespace Rhino.ServiceBus.Msmq
             {
                 readerWriterLock.ExitWriteLock();
             }
-        }
-
-        private static MessageQueueTransactionType GetTransactionTypeBasedOnQueue(MessageQueue theQueueToCheck)
-        {
-            if (theQueueToCheck.Transactional == false)
-                return MessageQueueTransactionType.None;
-
-            return Transaction.Current == null
-                       ? MessageQueueTransactionType.Single
-                       : MessageQueueTransactionType.Automatic;
         }
 
         private void HandleMessageCompletion(
@@ -433,7 +433,7 @@ namespace Rhino.ServiceBus.Msmq
             if (message == null)
                 return;
             IncrementFailureCount(GetMessageId(message), exception);
-            if (state.Queue.Transactional == false)
+            if (state.Queue.Transactional == false)// put the item back in the queue
             {
                 state.Queue.Send(message, MessageQueueTransactionType.None);
             }
@@ -531,7 +531,7 @@ namespace Rhino.ServiceBus.Msmq
                         Destination = Endpoint,
                         Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
                         MsmqMessage = message,
-                        TransactionType = GetTransactionTypeBasedOnQueue(queue)
+                        TransactionType = queue.GetTransactionType()
                     };
 
                     if (messageRecieved != null)
@@ -611,7 +611,7 @@ namespace Rhino.ServiceBus.Msmq
                     sendQueueDescription,
                     QueueAccessMode.Send))
                 {
-                    MessageQueueTransactionType transactionType = GetTransactionTypeBasedOnQueue(sendQueue);
+                    MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
                     sendQueue.Send(message, transactionType);
                     logger.DebugFormat("Send message {0} to {1}", message.Label, uri);
                 }

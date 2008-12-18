@@ -24,6 +24,7 @@ namespace Rhino.ServiceBus.Impl
         private int numberOfRetries = 5;
         private readonly Type subscriptionStorageImpl = typeof (MsmqSubscriptionStorage);
         private int threadCount = 1;
+        private Type queueStrategyImpl = typeof (SubQueueStrategy);
 
         public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
@@ -32,6 +33,11 @@ namespace Rhino.ServiceBus.Impl
             return this;
         }
 
+        public RhinoServiceBusFacility ForFlatQueueStructure()
+        {
+            queueStrategyImpl = typeof (FlatQueueStrategy);
+            return this;
+        }
         protected override void Init()
         {
             Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;
@@ -65,6 +71,8 @@ namespace Rhino.ServiceBus.Impl
                     ),
                 Component.For<IReflection>()
                     .ImplementedBy<DefaultReflection>(),
+                Component.For<IQueueStrategy>()
+                    .ImplementedBy(queueStrategyImpl).DependsOn(new{endpoint}),
                 Component.For<ISubscriptionStorage>()
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new

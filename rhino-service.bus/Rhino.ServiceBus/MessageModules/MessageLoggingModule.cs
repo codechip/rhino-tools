@@ -14,7 +14,6 @@ namespace Rhino.ServiceBus.MessageModules
         private readonly IMessageSerializer messageSerializer;
         private readonly Uri logQueue;
         private MessageQueue queue;
-        private bool transactional;
 
         public MessageLoggingModule(IMessageSerializer messageSerializer, Uri logQueue)
         {
@@ -25,7 +24,6 @@ namespace Rhino.ServiceBus.MessageModules
         public void Init(ITransport transport)
         {
             queue = logQueue.CreateQueue(QueueAccessMode.Send);
-            transactional = queue.Transactional;
 
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.MessageProcessingFailure += Transport_OnMessageProcessingFailure;
@@ -47,7 +45,7 @@ namespace Rhino.ServiceBus.MessageModules
 
         private void Send(object obj)
         {
-            Send(obj, GetTransactionType());
+            Send(obj, queue.GetTransactionType());
         }
 
         private void Transport_OnMessageSent(CurrentMessageInformation info)
@@ -69,17 +67,6 @@ namespace Rhino.ServiceBus.MessageModules
             var msg = new Message();
             messageSerializer.Serialize(new[] { obj }, msg.BodyStream);
             queue.Send(msg, obj.ToString(), transactionType);
-        }
-
-        private MessageQueueTransactionType GetTransactionType()
-        {
-            if (transactional)
-            {
-                if (Transaction.Current != null)
-                    return MessageQueueTransactionType.Automatic;
-                return MessageQueueTransactionType.Single;
-            }
-            return MessageQueueTransactionType.None;
         }
 
         private void Transport_OnMessageSerializationException(CurrentMessageInformation info, Exception t)
@@ -116,7 +103,7 @@ namespace Rhino.ServiceBus.MessageModules
                 CorrelationId = info.CorrelationId,
                 Source = info.Source,
                 Message = info.Message
-            }, transactional ? MessageQueueTransactionType.Single : MessageQueueTransactionType.None);
+            }, queue.GetSingleMessageTransactionType());
         }
 
         private void Transport_OnMessageArrived(CurrentMessageInformation info)

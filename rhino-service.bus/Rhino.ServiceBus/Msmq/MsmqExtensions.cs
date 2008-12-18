@@ -9,8 +9,28 @@ namespace Rhino.ServiceBus.Msmq
 {
     public static class MsmqExtensions
     {
+        public static MessageQueueTransactionType GetTransactionType(this MessageQueue self)
+        {
+            if (self.Transactional)
+            {
+                if (Transaction.Current == null)
+                    return MessageQueueTransactionType.Single;
+                return MessageQueueTransactionType.Automatic;
+            }
+            return MessageQueueTransactionType.None;
+        }
+
+        public static MessageQueueTransactionType GetSingleMessageTransactionType(this MessageQueue self)
+        {
+            if (self.Transactional)
+            {
+                return MessageQueueTransactionType.Single;
+            }
+            return MessageQueueTransactionType.None;
+        }
+
         public static void MoveToSubQueue(
-            this MessageQueue queue, 
+            this MessageQueue queue,
             string subQueueName,
             Message message)
         {
@@ -18,7 +38,7 @@ namespace Rhino.ServiceBus.Msmq
             IntPtr queueHandle = IntPtr.Zero;
             var error = NativeMethods.MQOpenQueue(fullSubQueueName, NativeMethods.MQ_MOVE_ACCESS,
                                                    NativeMethods.MQ_DENY_NONE, ref queueHandle);
-            if(error!=0)
+            if (error != 0)
                 throw new TransportException("Failed to open queue: " + fullSubQueueName,
                     Marshal.GetExceptionForHR(error));
             try
@@ -30,7 +50,7 @@ namespace Rhino.ServiceBus.Msmq
                     transaction = TransactionInterop.GetDtcTransaction(current);
                 }
 
-                error = NativeMethods.MQMoveMessage(queue.ReadHandle, queueHandle, 
+                error = NativeMethods.MQMoveMessage(queue.ReadHandle, queueHandle,
                     message.LookupId, transaction);
                 if (error != 0)
                     throw new TransportException("Failed to move message to queue: " + fullSubQueueName,
@@ -42,7 +62,7 @@ namespace Rhino.ServiceBus.Msmq
                 if (error != 0)
                     throw new TransportException("Failed to close queue: " + fullSubQueueName,
                         Marshal.GetExceptionForHR(error));
-            
+
             }
         }
 

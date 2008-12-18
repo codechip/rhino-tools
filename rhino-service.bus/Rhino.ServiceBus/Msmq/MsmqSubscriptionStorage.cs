@@ -24,17 +24,26 @@ namespace Rhino.ServiceBus.Msmq
         private readonly IReflection reflection;
         private readonly IMessageSerializer messageSerializer;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
-
+        private readonly IQueueStrategy queueStrategy;
         public MsmqSubscriptionStorage(
             IReflection reflection,
             IMessageSerializer messageSerializer,
             Uri subscriptionQueue)
+            :this(reflection,messageSerializer,subscriptionQueue,new SubQueueStrategy())
+        {
+        }
+        public MsmqSubscriptionStorage(
+                    IReflection reflection,
+                    IMessageSerializer messageSerializer,
+                    Uri subscriptionQueue, 
+                    IQueueStrategy queueStrategy
+            )
         {
             this.reflection = reflection;
             this.messageSerializer = messageSerializer;
-            this.subscriptionQueue = new Uri(subscriptionQueue + ";subscriptions");
+            this.queueStrategy = queueStrategy;
+            this.subscriptionQueue = this.queueStrategy.CreateSubscriptionQueueUri(subscriptionQueue);
         }
-
         public void Initialize()
         {
             logger.DebugFormat("Initializing msmq subscription storage on: {0}", subscriptionQueue);
@@ -219,7 +228,7 @@ namespace Rhino.ServiceBus.Msmq
                 if (msmqMsgInfo != null)
                 {
                     if (newSubscription)
-                        msmqMsgInfo.Queue.MoveToSubQueue("subscriptions", msmqMsgInfo.MsmqMessage);
+                        queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue,msmqMsgInfo.MsmqMessage);
                     else
                         ConsumeMessageFromQueue(msmqMsgInfo);
                 }

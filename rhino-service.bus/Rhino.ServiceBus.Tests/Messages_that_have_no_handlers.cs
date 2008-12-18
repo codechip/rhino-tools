@@ -35,4 +35,38 @@ namespace Rhino.ServiceBus.Tests
             }
         }
     }
+    public class Flat_queue_structure:MsmqFlatQueueTestBase
+    {
+        public class Messages_that_have_no_handlers : Flat_queue_structure
+        {
+
+            private readonly IWindsorContainer container;
+
+            public Messages_that_have_no_handlers()
+            {
+                container = new WindsorContainer(new XmlInterpreter());
+                container.Kernel.AddFacility("rhino.esb", 
+                    new RhinoServiceBusFacility().ForFlatQueueStructure());
+            }
+
+
+            [Fact]
+            public void Should_go_to_discard_sibling_queue()
+            {
+                using (var bus = container.Resolve<IStartableServiceBus>())
+                {
+                    bus.Start();
+
+                    bus.Send(bus.Endpoint, "foobar");
+
+                    using (var discarded = new MessageQueue(testQueuePath + "#discarded"))
+                    {
+                        var message = discarded.Receive();
+                        Assert.NotNull(message);
+                    }
+                }
+            }
+        }
+    }
+    
 }

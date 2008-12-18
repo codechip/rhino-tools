@@ -100,9 +100,12 @@
     <Compile Include="Messages\MessageSentMessage.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Messages\SerializationErrorMessage.cs" />
+    <Compile Include="Msmq\FlatQueueStrategy.cs" />
+    <Compile Include="Msmq\IQueueStrategy.cs" />
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
+    <Compile Include="Msmq\SubQueueStrategy.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />

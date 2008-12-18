@@ -78,8 +78,9 @@
     <Compile Include="Hosting\Can_host_in_another_app_domain.cs" />
     <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
-    <Compile Include="MessageQueueExtensions.cs" />
     <Compile Include="Messages_that_have_no_handlers.cs" />
+    <Compile Include="MsmqFlatQueueSubscriptionTests.cs" />
+    <Compile Include="MsmqFlatQueueTestBase.cs" />
     <Compile Include="MsmqSubscriptionTests.cs" />
     <Compile Include="MsmqTestBase.cs" />
     <Compile Include="MsmqTests.cs" />
