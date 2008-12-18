@@ -202,10 +202,21 @@ namespace Rhino.ServiceBus.Msmq
 
         private static MessageQueue InitalizeQueue(Uri endpoint)
         {
-            string queueDescriptor = MsmqUtil.GetQueuePath(endpoint);
+            string path = MsmqUtil.GetQueuePath(endpoint);
+            if(MessageQueue.Exists(path)==false)
+            {
+                try
+                {
+                    MessageQueue.Create(path, true);
+                }
+                catch (Exception e)
+                {
+                    throw new TransportException("Queue " + endpoint + " doesn't exists and we failed to create it", e);   
+                }
+            }
             try
             {
-                var messageQueue = new MessageQueue(queueDescriptor, QueueAccessMode.SendAndReceive);
+                var messageQueue = new MessageQueue(path, QueueAccessMode.SendAndReceive);
                 var filter = new MessagePropertyFilter();
                 filter.SetAll();
                 messageQueue.MessageReadPropertyFilter = filter;
@@ -215,7 +226,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 throw new TransportException(
                     "Could not receive from queue: " + endpoint + Environment.NewLine +
-                    "Queue path: " + queueDescriptor, e);
+                    "Queue path: " + path, e);
             }
         }
 

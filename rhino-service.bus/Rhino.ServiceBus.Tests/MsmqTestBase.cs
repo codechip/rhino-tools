@@ -112,7 +112,7 @@ namespace Rhino.ServiceBus.Tests
 
         #region IDisposable Members
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             queue.Dispose();
             transactionalQueue.Dispose();

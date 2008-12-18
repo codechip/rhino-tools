@@ -11,12 +11,12 @@ namespace Rhino.ServiceBus.Tests
     {
         public MsmqBehaviorTests()
         {
-            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            using (var subqueue = new MessageQueue(testQueuePath + ";errors"))
             {
                 subqueue.Purge();
             }
 
-            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";error"))
+            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";errors"))
             {
                 subqueue.Purge();
             }
@@ -28,9 +28,9 @@ namespace Rhino.ServiceBus.Tests
             queue.Send("a");
 
             var peek = queue.Peek();
-            queue.MoveToSubQueue("error", peek);
+            queue.MoveToSubQueue("errors", peek);
 
-            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            using (var subqueue = new MessageQueue(testQueuePath + ";errors"))
             {
                 subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 var receive = subqueue.Receive();
@@ -111,11 +111,11 @@ namespace Rhino.ServiceBus.Tests
             var peek = queue.Peek();
             using (var tx = new TransactionScope())
             {
-                queue.MoveToSubQueue("error", peek);
+                queue.MoveToSubQueue("errors", peek);
                 tx.Complete();
             }
 
-            using (var subqueue = new MessageQueue(testQueuePath + ";error"))
+            using (var subqueue = new MessageQueue(testQueuePath + ";errors"))
             {
                 subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 var receive = subqueue.Receive();
@@ -135,11 +135,11 @@ namespace Rhino.ServiceBus.Tests
             using (new TransactionScope())
             {
                 var peek = transactionalQueue.Peek();
-                transactionalQueue.MoveToSubQueue("error", peek);
+                transactionalQueue.MoveToSubQueue("errors", peek);
                 //tx.Complete();
             }
 
-            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";error"))
+            using (var subqueue = new MessageQueue(transactionalTestQueuePath + ";errors"))
             {
                 subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 Assert.Equal(0, subqueue.GetAllMessages().Length);

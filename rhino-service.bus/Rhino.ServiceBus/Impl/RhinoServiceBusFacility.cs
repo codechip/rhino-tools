@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Reflection;
 using Castle.Core;
 using Castle.Core.Configuration;
-using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Rhino.ServiceBus.Internal;
@@ -18,42 +17,18 @@ namespace Rhino.ServiceBus.Impl
     {
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
+        private readonly Type serializerImpl = typeof (XmlMessageSerializer);
+        private readonly Type transportImpl = typeof (MsmqTransport);
         private Uri endpoint;
         private Uri logEndpoint;
         private int numberOfRetries = 5;
-        private readonly Type serializerImpl = typeof(XmlMessageSerializer);
-        private Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
+        private readonly Type subscriptionStorageImpl = typeof (MsmqSubscriptionStorage);
         private int threadCount = 1;
-        private Type transportImpl = typeof(MsmqTransport);
-
-        public RhinoServiceBusFacility UseMsmqSubscription()
-        {
-            subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
-            return this;
-        }
-
-        public RhinoServiceBusFacility UseMsmqTransport()
-        {
-            transportImpl = typeof(MsmqTransport);
-            return this;
-        }
 
         public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
         {
-            messageModules.Add(typeof(TModule));
-            return this;
-        }
-
-        public RhinoServiceBusFacility ThreadCount(int count)
-        {
-            threadCount = count;
-            return this;
-        }
-
-        public RhinoServiceBusFacility NumberOfRetries(int count)
-        {
-            numberOfRetries = count;
+            messageModules.Add(typeof (TModule));
             return this;
         }
 
@@ -64,7 +39,7 @@ namespace Rhino.ServiceBus.Impl
             ReadBusConfiguration();
             ReadMessageOwners();
 
-            foreach (var type in messageModules)
+            foreach (Type type in messageModules)
             {
                 Kernel.AddComponent(type.FullName, type);
             }
@@ -73,9 +48,9 @@ namespace Rhino.ServiceBus.Impl
             {
                 Kernel.Register(
                     Component.For<MessageLoggingModule>()
-                        .DependsOn(new{ logQueue = logEndpoint })
+                        .DependsOn(new {logQueue = logEndpoint})
                     );
-                messageModules.Insert(0, typeof(MessageLoggingModule));
+                messageModules.Insert(0, typeof (MessageLoggingModule));
             }
 
             Kernel.Register(
@@ -86,8 +61,8 @@ namespace Rhino.ServiceBus.Impl
                         messageOwners = messageOwners.ToArray(),
                     })
                     .Parameters(Parameter.ForKey("modules")
-                    .Eq(CreateModuleConfigurationNode())
-                ),
+                                    .Eq(CreateModuleConfigurationNode())
+                    ),
                 Component.For<IReflection>()
                     .ImplementedBy<DefaultReflection>(),
                 Component.For<ISubscriptionStorage>()
@@ -111,10 +86,10 @@ namespace Rhino.ServiceBus.Impl
 
         private static void Kernel_OnComponentModelCreated(ComponentModel model)
         {
-            if (typeof(IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
+            if (typeof (IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
                 return;
 
-            model.LifestyleType = LifestyleType.Transient;   
+            model.LifestyleType = LifestyleType.Transient;
         }
 
         private void ReadMessageOwners()

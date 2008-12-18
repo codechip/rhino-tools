@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
+    <Compile Include="DataStructures\Hashtable.cs" />
     <Compile Include="Exceptions\UnboundedResultSetException.cs" />
     <Compile Include="Hosting\AbstractBootStrapper.cs" />
     <Compile Include="Hosting\DefaultHost.cs" />

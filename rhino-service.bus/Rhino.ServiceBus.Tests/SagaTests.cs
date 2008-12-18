@@ -73,7 +73,7 @@ namespace Rhino.ServiceBus.Tests
             }
         }
 
-        [Fact(Skip = "there is a race condition in the test that we need to resolve")]
+        [Fact]
         public void Can_send_several_messaged_to_same_instance_of_saga_entity()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
@@ -83,18 +83,16 @@ namespace Rhino.ServiceBus.Tests
                 bus.Send(bus.Endpoint, new NewOrderMessage());
                 wait.WaitOne();
                 wait.Reset();
+                
+                var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
+                OrderProcessor processor = persister.Get(sagaId);
+
+                Assert.Equal(1, processor.Messages.Count);
 
                 bus.Send(bus.Endpoint, new AddLineItemMessage { CorrelationId = sagaId });
 
                 wait.WaitOne();
-                var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
-                OrderProcessor processor = null;
-                while (processor == null)
-                {
-                    Thread.Sleep(500);
-                    processor = persister.Get(sagaId);
-                }
-
+               
                 Assert.Equal(2, processor.Messages.Count);
             }
         }
@@ -165,8 +163,8 @@ namespace Rhino.ServiceBus.Tests
 
             public void Consume(NewOrderMessage pong)
             {
-                sagaId = Id;
                 Messages.Add(pong);
+                sagaId = Id;
                 wait.Set();
             }
 
