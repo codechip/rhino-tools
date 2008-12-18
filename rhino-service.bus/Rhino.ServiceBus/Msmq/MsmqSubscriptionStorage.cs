@@ -25,13 +25,7 @@ namespace Rhino.ServiceBus.Msmq
         private readonly IMessageSerializer messageSerializer;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
         private readonly IQueueStrategy queueStrategy;
-        public MsmqSubscriptionStorage(
-            IReflection reflection,
-            IMessageSerializer messageSerializer,
-            Uri subscriptionQueue)
-            :this(reflection,messageSerializer,subscriptionQueue,new SubQueueStrategy())
-        {
-        }
+
         public MsmqSubscriptionStorage(
                     IReflection reflection,
                     IMessageSerializer messageSerializer,

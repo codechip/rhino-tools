@@ -89,7 +89,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transport == null)
                 {
-                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()), TestQueueUri, 1, 5);
+                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()), TestQueueUri, 1, 5,new SubQueueStrategy());
                     transport.Start();
                 }
                 return transport;
@@ -103,7 +103,7 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()),
-                                                               TransactionalTestQueueUri, 1, 5);
+                                                               TransactionalTestQueueUri, 1, 5, new SubQueueStrategy());
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;

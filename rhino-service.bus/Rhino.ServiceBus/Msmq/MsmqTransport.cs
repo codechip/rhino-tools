@@ -32,15 +32,7 @@ namespace Rhino.ServiceBus.Msmq
         private readonly WaitHandle[] waitHandles;
         private bool haveStarted;
         private MessageQueue queue;
-        private IQueueStrategy queueStrategy;
-
-        public MsmqTransport(
-            IMessageSerializer serializer,
-            Uri endpoint,
-            int threadCount,
-            int numberOfRetries):this(serializer,endpoint,threadCount,numberOfRetries,new SubQueueStrategy())
-        {
-        }
+        private readonly IQueueStrategy queueStrategy;
 
         public MsmqTransport(
             IMessageSerializer serializer,

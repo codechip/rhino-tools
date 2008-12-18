@@ -33,11 +33,18 @@ namespace Rhino.ServiceBus.Impl
             return this;
         }
 
-        public RhinoServiceBusFacility ForFlatQueueStructure()
+        public RhinoServiceBusFacility UseFlatQueueStructure()
         {
             queueStrategyImpl = typeof (FlatQueueStrategy);
             return this;
         }
+
+        public RhinoServiceBusFacility UseSubqueuesQueueStructure()
+        {
+            queueStrategyImpl = typeof(FlatQueueStrategy);
+            return this;
+        }
+
         protected override void Init()
         {
             Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;

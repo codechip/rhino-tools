@@ -30,7 +30,8 @@ namespace Rhino.ServiceBus.Tests
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
                 serializer,
-                TestQueueUri);
+                TestQueueUri,
+                new SubQueueStrategy());
             subscriptionStorage.Initialize();
 
             var uri = subscriptionStorage
@@ -58,7 +59,8 @@ namespace Rhino.ServiceBus.Tests
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
                 serializer,
-                TestQueueUri);
+                TestQueueUri,
+                new SubQueueStrategy());
             subscriptionStorage.Initialize();
             subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TransactionalTestQueueUri.ToString());
 

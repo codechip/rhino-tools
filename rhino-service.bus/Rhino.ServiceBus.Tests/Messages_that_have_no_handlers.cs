@@ -46,7 +46,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 container = new WindsorContainer(new XmlInterpreter());
                 container.Kernel.AddFacility("rhino.esb", 
-                    new RhinoServiceBusFacility().ForFlatQueueStructure());
+                    new RhinoServiceBusFacility().UseFlatQueueStructure());
             }
 
 
