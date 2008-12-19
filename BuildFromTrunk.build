@@ -14,11 +14,11 @@
 	<property name="castle.test.console" value="nunit-console" overwrite="false"/>
 	<property name="enable.tests" value="true" overwrite="false"/>
 
-	<property name="nhibernate.lib.dir" value="${nhibernate.dir}/lib/net/2.0"/>
-	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.0.0.Alpha1/bin/${nant.settings.currentframework}"/>
-	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.0.0.Alpha1-debug/bin/${nant.settings.currentframework}" if="${configuration == 'debug'} " />
+	<property name="nhibernate.lib.dir" value="${nhibernate.dir}/lib/net/3.5"/>
+	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.1.0.Alpha1-debug/bin/${nant.settings.currentframework}"/>
+	<property name="nhibernate.build.dir" value="${nhibernate.dir}/build/NHibernate-2.1.0.Alpha1-debug/bin/${nant.settings.currentframework}" if="${configuration == 'debug'} " />
 	
-	<property name="castle.lib.dir" value="${castle.dir}/SharedLibs/net/2.0"/>
+	<property name="castle.lib.dir" value="${castle.dir}/SharedLibs/net/3.5"/>
 	<property name="castle.build.dir" value="${castle.dir}/build/${nant.settings.currentframework}/${configuration}"/>
 	
 	<property name="rhino.lib.dir" value="${rhino.dir}/SharedLibs"/>
@@ -31,6 +31,7 @@
 		<fileset id="nhibernate.assemblies" basedir="${nhibernate.build.dir}">
 		
 			<include name="NHibernate.???"/>
+			<include name="Iesi.Collections.???"/>
 			<include name="NHibernate.Mapping.Attributes.???"/>
 			<include name="NHibernate.Search.???"/>
 			<include name="NHibernate.Caches.Prevalence.???"/>
