@@ -7,10 +7,24 @@ namespace Rhino.ServiceBus.Hosting
 {
     public class RemoteAppDomainHost
     {
+        private readonly Type boosterType;
         private readonly string assembly;
         private readonly ILog logger = LogManager.GetLogger(typeof (RemoteAppDomainHost));
         private readonly string path;
         private HostedService current;
+        private string configurationFile;
+
+        public RemoteAppDomainHost Configuration(string configFile)
+        {
+            configurationFile = configFile;
+            return this;
+        }
+
+        public RemoteAppDomainHost(Type boosterType)
+            :this(boosterType.Assembly.Location)
+        {
+            this.boosterType = boosterType;
+        }
 
         public RemoteAppDomainHost(string assemblyPath)
         {
@@ -20,14 +34,14 @@ namespace Rhino.ServiceBus.Hosting
 
         public void Start()
         {
-            HostedService service = CreateNewAppDomain(path, assembly);
+            HostedService service = CreateNewAppDomain();
             var watcher = new FileSystemWatcher(path);
             bool wasCalled = false;
             var @lock = new object();
             FileSystemEventHandler handler = (sender, e) =>
             {
                 string extension = Path.GetExtension(e.FullPath);
-                if (extension != ".dll" && extension != ".config")
+                if (extension != ".dll" && extension != ".config" && extension != ".exe")
                     return;
                 watcher.Dispose();
                 lock (@lock)
@@ -56,25 +70,41 @@ namespace Rhino.ServiceBus.Hosting
             service.Start();
         }
 
-        private static HostedService CreateNewAppDomain(string path, string assembly)
+        private HostedService CreateNewAppDomain()
         {
             var appDomainSetup = new AppDomainSetup
             {
                 ApplicationBase = path,
                 ApplicationName = assembly,
-                ConfigurationFile = Path.Combine(path, assembly + ".dll.config"),
+                ConfigurationFile = ConfigurationFile,
                 ShadowCopyFiles = "true" //yuck
             };
             AppDomain appDomain = AppDomain.CreateDomain(assembly, null, appDomainSetup);
             object instance = appDomain.CreateInstanceAndUnwrap("Rhino.ServiceBus",
                                                                 "Rhino.ServiceBus.Hosting.DefaultHost");
             var hoster = (DefaultHost) instance;
+            
+            if (boosterType != null)
+                hoster.SetBootStrapperTypeName(boosterType.FullName);
 
             return new HostedService
             {
                 Stop = hoster.Close,
                 Start = () => hoster.Start(assembly)
             };
+        }
+
+        private string ConfigurationFile
+        {
+            get
+            {
+                if (configurationFile != null)
+                    return configurationFile;
+                configurationFile = Path.Combine(path, assembly + ".dll.config");
+                if (File.Exists(configurationFile) == false)
+                    configurationFile = Path.Combine(path, assembly + ".exe.config");
+                return configurationFile;
+            }
         }
 
         public void Close()

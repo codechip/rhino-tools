@@ -274,5 +274,24 @@ namespace Rhino.ServiceBus.Tests
 
             Assert.Equal(MessageQueueErrorCode.IOTimeout, errorCode);
         }
+
+        [Fact]
+        public void Count_will_count_items_in_subqueue()
+        {
+            using(var errors = new MessageQueue(testQueuePath + ";errors"))
+            {
+                errors.Purge();
+                
+                queue.Send("a");
+                queue.Send("b");
+
+                var msg = queue.Peek();
+                queue.MoveToSubQueue("errors", msg);
+
+                var count = queue.GetCount();
+                
+                Assert.Equal(2, count);
+            }
+        }
     }
 }

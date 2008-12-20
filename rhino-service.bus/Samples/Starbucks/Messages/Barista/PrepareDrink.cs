@@ -1,7 +1,7 @@
 using System;
 using Rhino.ServiceBus.Sagas;
 
-namespace Starbucks.Messages
+namespace Starbucks.Messages.Barista
 {
     public class PrepareDrink : ISagaMessage
     {

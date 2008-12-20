@@ -258,7 +258,7 @@ namespace Rhino.ServiceBus.Impl
             }
             finally
             {
-                foreach (object consumer in consumers)
+                foreach (var consumer in consumers)
                 {
                     kernel.ReleaseComponent(consumer);
                 }

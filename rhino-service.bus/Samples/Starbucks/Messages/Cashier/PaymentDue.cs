@@ -1,6 +1,6 @@
 using System;
 
-namespace Starbucks.Messages
+namespace Starbucks.Messages.Cashier
 {
     public class PaymentDue
     {

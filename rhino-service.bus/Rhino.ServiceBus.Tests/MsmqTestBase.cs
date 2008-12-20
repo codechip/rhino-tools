@@ -76,6 +76,12 @@ namespace Rhino.ServiceBus.Tests
                 errQueue3.Purge();
             }
 
+
+            using (var discardedQueue = new MessageQueue(testQueuePath + ";discarded"))
+            {
+                discardedQueue.Purge();
+            }
+
             subscriptions = new MessageQueue(subbscriptionQueuePath)
             {
                 Formatter = new XmlMessageFormatter(new[] { typeof(string) })

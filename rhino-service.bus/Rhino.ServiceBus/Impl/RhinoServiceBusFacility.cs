@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Reflection;
 using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
@@ -41,7 +40,7 @@ namespace Rhino.ServiceBus.Impl
 
         public RhinoServiceBusFacility UseSubqueuesQueueStructure()
         {
-            queueStrategyImpl = typeof(FlatQueueStrategy);
+            queueStrategyImpl = typeof(SubQueueStrategy);
             return this;
         }
 
@@ -118,16 +117,10 @@ namespace Rhino.ServiceBus.Impl
                 if (configuration.Name != "add")
                     throw new ConfigurationErrorsException("Unknown node 'messages/" + configuration.Name + "'");
 
-                string assemblyName = configuration.Attributes["assembly"];
-                Assembly asm;
-                try
-                {
-                    asm = Assembly.Load(assemblyName);
-                }
-                catch (Exception e)
-                {
-                    throw new ConfigurationErrorsException("Could not load assembly " + assemblyName, e);
-                }
+                string msgName = configuration.Attributes["name"];
+                if(string.IsNullOrEmpty(msgName))
+                    throw new ConfigurationErrorsException("Invalid name element in the <messages/> element");
+
                 string uriString = configuration.Attributes["endpoint"];
                 Uri ownerEndpoint;
                 try
@@ -141,7 +134,7 @@ namespace Rhino.ServiceBus.Impl
 
                 messageOwners.Add(new MessageOwner
                 {
-                    Assembly = asm,
+                    Name = msgName,
                     Endpoint = ownerEndpoint
                 });
             }

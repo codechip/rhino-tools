@@ -12,20 +12,19 @@ namespace Rhino.ServiceBus.Impl
 
         public TSaga Get(Guid id)
         {
-            TSaga val;
-            if(dictionary.TryGet(id, out val))
-                return val;
-            return null;
+            TSaga val = null;
+            dictionary.Read(get => get(id, out val));
+            return val;
         }
 
         public void Save(TSaga saga)
         {
-            dictionary.Write((add,remove) => add(saga.Id, saga));
+            dictionary.Write((add,remove, tryGet) => add(saga.Id, saga));
         }
 
         public void Complete(TSaga saga)
         {
-            dictionary.Write((add, remove) => remove(saga.Id));
+            dictionary.Write((add, remove, tryGet) => remove(saga.Id));
         }
     }
 }

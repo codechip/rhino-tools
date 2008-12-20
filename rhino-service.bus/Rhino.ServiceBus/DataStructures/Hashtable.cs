@@ -6,19 +6,29 @@ using System.Linq;
 
 namespace Rhino.ServiceBus.DataStructures
 {
+
+    public delegate void AddAction<TKey,TVal>(TKey key, TVal value);
+
+    public delegate void RemoveAction<TKey>(TKey key);
+
+    public delegate bool TryGetAction<TKey, TVal>(TKey key, out TVal value);
+
+    public delegate void ReadAction<TKey, TVal>(TryGetAction<TKey, TVal> tryGet);
+
+    public delegate void WriteAction<TKey, TVal>(AddAction<TKey, TVal> add, RemoveAction<TKey> remove, TryGetAction<TKey, TVal> tryGet);
+
+
     public class Hashtable<TKey,TVal> : IEnumerable<KeyValuePair<TKey,TVal>>
     {
         private readonly ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
         private readonly Dictionary<TKey,TVal> dictionary = new Dictionary<TKey, TVal>();
 
-        public delegate void WriteAction(Action<TKey, TVal> add, Action<TKey> remove);
-
-        public void Write(WriteAction action)
+        public void Write(WriteAction<TKey, TVal> action)
         {
             readerWriterLockSlim.EnterWriteLock();
             try
             {
-                action((key, val) => dictionary[key] = val,key => dictionary.Remove(key));
+                action((key, val) => dictionary[key] = val,key => dictionary.Remove(key), TryGetInternal);
             }
             finally
             {
@@ -26,18 +36,23 @@ namespace Rhino.ServiceBus.DataStructures
             }
         }
 
-        public bool TryGet(TKey key, out TVal val)
+        private bool TryGetInternal(TKey key, out TVal value)
         {
-            readerWriterLockSlim.EnterReadLock();
-            try
-            {
-                return dictionary.TryGetValue(key, out val);
-            }
-            finally
-            {
-                readerWriterLockSlim.ExitReadLock();
-            }
+            return dictionary.TryGetValue(key, out value);
         }
+
+        public void Read(ReadAction<TKey, TVal> read)
+       {
+           readerWriterLockSlim.EnterReadLock();
+           try
+           {
+               read(TryGetInternal);
+           }
+           finally
+           {
+               readerWriterLockSlim.ExitReadLock();
+           }
+       }
 
         public IEnumerator<KeyValuePair<TKey, TVal>> GetEnumerator()
         {

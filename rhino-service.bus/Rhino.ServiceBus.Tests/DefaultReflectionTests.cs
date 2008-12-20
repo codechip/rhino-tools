@@ -1,6 +1,7 @@
 using System;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Sagas;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
@@ -16,5 +17,83 @@ namespace Rhino.ServiceBus.Tests
             var type = reflection.GetType(typeName);
             Assert.NotNull(type);
         }
+
+        [Fact]
+        public void Will_throw_inner_exception_for_add()
+        {
+            Assert.Throws<InvalidCastException>(() => reflection.InvokeAdd(new ThrowingList(), 1));
+        }
+
+        [Fact]
+        public void Will_throw_inner_exception_for_consume()
+        {
+            Assert.Throws<NotImplementedException>(() => reflection.InvokeConsume(new ThrowingConsumer(), "1"));
+        }
+
+        [Fact]
+        public void Will_throw_inner_exception_for_complete()
+        {
+            Assert.Throws<NotImplementedException>(() => reflection.InvokeSagaPersisterComplete(new ThrowingPersister(), new ThrowingList()));
+        }
+
+        [Fact]
+        public void Will_throw_inner_exception_for_get()
+        {
+            Assert.Throws<NotImplementedException>(() => reflection.InvokeSagaPersisterGet(new ThrowingPersister(), Guid.NewGuid()));
+        }
+
+        [Fact]
+        public void Will_throw_inner_exception_for_save()
+        {
+            Assert.Throws<NotImplementedException>(() => reflection.InvokeSagaPersisterSave(new ThrowingPersister(), new ThrowingList()));
+        }
+
+        public class ThrowingConsumer : ConsumerOf<string>
+        {
+            public void Consume(string message)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        public class ThrowingList : ISaga
+        {
+            public void Add(object i)
+            {
+                throw new InvalidCastException();
+            }
+
+            public Guid Id
+            {
+                get { throw new System.NotImplementedException(); }
+                set { throw new System.NotImplementedException(); }
+            }
+
+            public bool IsCompleted
+            {
+                get { throw new System.NotImplementedException(); }
+                set { throw new System.NotImplementedException(); }
+            }
+        }
+    
+        public class ThrowingPersister : ISagaPersister<DefaultReflectionTests.ThrowingList>
+        {
+            public ThrowingList Get(Guid id)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Save(ThrowingList saga)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Complete(ThrowingList saga)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
+
+    
 }

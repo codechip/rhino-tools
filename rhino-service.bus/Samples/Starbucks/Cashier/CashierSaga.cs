@@ -2,6 +2,8 @@ using System;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Sagas;
 using Starbucks.Messages;
+using Starbucks.Messages.Barista;
+using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Cashier
 {
@@ -27,7 +29,7 @@ namespace Starbucks.Cashier
                 DrinkName = message.DrinkName,
                 Size = message.Size
             });
-            bus.Publish(new PaymentDue
+            bus.Reply(new PaymentDue
             {
                 CustomerName = message.CustomerName,
                 Amount = ((int) message.Size)*1.25m

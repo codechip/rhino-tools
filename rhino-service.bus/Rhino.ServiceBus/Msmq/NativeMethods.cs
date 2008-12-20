@@ -17,5 +17,35 @@ namespace Rhino.ServiceBus.Msmq
 
         [DllImport("mqrt.dll")]
         public static extern int MQMoveMessage(IntPtr sourceQueue, IntPtr targetQueue, long lookupID, IDtcTransaction transaction);
+
+        [DllImport("mqrt.dll")]
+        public static extern int MQMgmtGetInfo([MarshalAs(UnmanagedType.BStr)]string computerName, [MarshalAs(UnmanagedType.BStr)]string objectName, ref MQMGMTPROPS mgmtProps);
+
+        public const byte VT_NULL = 1;
+        public const byte VT_UI4 = 19;
+        public const int PROPID_MGMT_QUEUE_MESSAGE_COUNT = 7;
+
+        //size must be 16
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MQPROPVariant
+        {
+            public byte vt;       //0
+            public byte spacer;   //1
+            public short spacer2; //2
+            public int spacer3;   //4
+            public uint ulVal;    //8
+            public int spacer4;   //12
+        }
+
+        //size must be 16 in x86 and 28 in x64
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MQMGMTPROPS
+        {
+            public uint cProp;
+            public IntPtr aPropID;
+            public IntPtr aPropVar;
+            public IntPtr status;
+
+        }
     }
 }

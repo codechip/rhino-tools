@@ -5,12 +5,12 @@ namespace Rhino.ServiceBus.Impl
 {
     public class MessageOwner
     {
-        public Assembly Assembly;
+        public string Name;
         public Uri Endpoint;
 
         public bool IsOwner(Type msg)
         {
-            return msg.Assembly == Assembly;
+            return msg.FullName.StartsWith(Name);
         }
 
     }

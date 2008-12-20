@@ -17,6 +17,19 @@ namespace Rhino.ServiceBus.Hosting
         private AbstractBootStrapper bootStrapper;
         private IWindsorContainer container;
         private IStartableServiceBus serviceBus;
+        private string bootStrapperName;
+
+        public void SetBootStrapperTypeName(string typeName)
+        {
+            bootStrapperName = typeName;
+        }
+
+        public void Start<TBootStrapper>()
+            where TBootStrapper : AbstractBootStrapper
+        {
+            SetBootStrapperTypeName(typeof (TBootStrapper).FullName);
+            Start(typeof(TBootStrapper).Assembly.FullName);
+        }
 
         public void Start(string asmName)
         {
@@ -59,18 +72,49 @@ namespace Rhino.ServiceBus.Hosting
             logger.DebugFormat("Loading {0}", assebmlyName);
             var assembly = Assembly.Load(assebmlyName);
 
-            bootStrapper = assembly.GetTypes()
-                .Where(x => typeof (AbstractBootStrapper).IsAssignableFrom(x))
-                .Select(x => (AbstractBootStrapper) Activator.CreateInstance(x))
-                .FirstOrDefault();
+            Type bootStrapperType = null;
 
-            if (bootStrapper == null)
+            if (string.IsNullOrEmpty(bootStrapperName) == false)
+                bootStrapperType = assembly.GetType(bootStrapperName);
+                
+            bootStrapperType = bootStrapperType ?? 
+                GetAutoBootStrapperType(assembly);
+            try
+            {
+                bootStrapper = (AbstractBootStrapper)Activator.CreateInstance(bootStrapperType);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Failed to create " + bootStrapperType + ".", e);
+            }
+
+        }
+
+        public IWindsorContainer Container
+        {
+            get { return container; }
+        }
+
+        private static Type GetAutoBootStrapperType(Assembly assembly)
+        {
+            var bootStrappers = assembly.GetTypes()
+                .Where(x => typeof (AbstractBootStrapper).IsAssignableFrom(x))
+                .ToArray();
+         
+            if(bootStrappers.Length==0)
                 throw new InvalidOperationException("Could not find a boot strapper for " + assembly);
+
+            if (bootStrappers.Length == 2)
+                throw new InvalidOperationException("Found more than one boot strapper for " + assembly +
+                                                    " you need to specify which boot strapper to use");
+
+            return bootStrappers[0];
         }
 
         public void Close()
         {
-            serviceBus.Dispose();
+            if (serviceBus != null)
+                serviceBus.Dispose();
         }
 
         public override object InitializeLifetimeService()

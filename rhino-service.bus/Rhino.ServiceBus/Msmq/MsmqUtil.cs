@@ -26,7 +26,7 @@ namespace Rhino.ServiceBus.Msmq
             string localhost = Environment.MachineName.ToLowerInvariant();
 
             string hostName = uri.Host;
-            if (string.Compare(hostName, ".") == 0 || 
+            if (string.Compare(hostName, ".") == 0 ||
                 string.Compare(hostName, "localhost", true) == 0)
             {
                 hostName = localhost;
@@ -38,7 +38,9 @@ namespace Rhino.ServiceBus.Msmq
 
         public static Uri GetQueueUri(MessageQueue queue)
         {
-            return new Uri("msmq://"+queue.MachineName+"/"+
+            if (queue == null)
+                return null;
+            return new Uri("msmq://" + queue.MachineName + "/" +
                 queue.QueueName.Split('\\')[1]);
         }
     }

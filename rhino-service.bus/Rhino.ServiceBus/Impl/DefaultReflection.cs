@@ -14,9 +14,15 @@ namespace Rhino.ServiceBus.Impl
 
         private readonly IDictionary<Type, string> typeToWellKnownTypeName;
         private readonly IDictionary<string, Type> wellKnownTypeNameToType;
+        private readonly MethodInfo internalPreserveStackTraceMethod;
+
 
         public DefaultReflection()
         {
+            internalPreserveStackTraceMethod = typeof(Exception).GetMethod("InternalPreserveStackTrace",
+                                                                           BindingFlags.Instance | BindingFlags.NonPublic);
+
+
             wellKnownTypeNameToType = new Dictionary<string, Type>();
             typeToWellKnownTypeName = new Dictionary<Type, string>
             {
@@ -69,34 +75,61 @@ namespace Rhino.ServiceBus.Impl
 
         public void InvokeAdd(object instance, object item)
         {
-            Type type = instance.GetType();
-            MethodInfo method = type.GetMethod("Add", new[] {item.GetType()});
-            method.Invoke(instance, new[] {item});
+            try
+            {
+                Type type = instance.GetType();
+                MethodInfo method = type.GetMethod("Add", new[] {item.GetType()});
+                method.Invoke(instance, new[] {item});
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public void Set(object instance, string name, Func<Type, object> generateValue)
         {
-            Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(name);
-            if (property == null)
+            try
             {
-                logger.InfoFormat("Could not find property {0} to set on {1}", name, type);
-                return;
+                Type type = instance.GetType();
+                PropertyInfo property = type.GetProperty(name);
+                if (property == null)
+                {
+                    logger.InfoFormat("Could not find property {0} to set on {1}", name, type);
+                    return;
+                }
+                object value = generateValue(property.PropertyType);
+                property.SetValue(instance, value, null);
             }
-            object value = generateValue(property.PropertyType);
-            property.SetValue(instance, value, null);
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
+        }
+
+        private Exception InnerExceptionWhilePreservingStackTrace(TargetInvocationException e)
+        {
+            internalPreserveStackTraceMethod.Invoke(e.InnerException, new object[0]);
+            return e.InnerException;
         }
 
         public object Get(object instance, string name)
         {
-            Type type = instance.GetType();
-            PropertyInfo property = type.GetProperty(name);
-            if (property == null)
+            try
             {
-                logger.InfoFormat("Could not find property {0} to get on {1}", name, type);
-                return null;
+                Type type = instance.GetType();
+                PropertyInfo property = type.GetProperty(name);
+                if (property == null)
+                {
+                    logger.InfoFormat("Could not find property {0} to get on {1}", name, type);
+                    return null;
+                }
+                return property.GetValue(instance, null);
             }
-            return property.GetValue(instance, null);
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public Type GetGenericTypeOf(Type type, object msg)
@@ -111,30 +144,58 @@ namespace Rhino.ServiceBus.Impl
 
         public void InvokeConsume(object consumer, object msg)
         {
-            Type type = consumer.GetType();
-            MethodInfo consume = type.GetMethod("Consume", new[] {msg.GetType()});
-            consume.Invoke(consumer, new[] {msg});
+            try
+            {
+                Type type = consumer.GetType();
+                MethodInfo consume = type.GetMethod("Consume", new[] { msg.GetType() });
+                consume.Invoke(consumer, new[] { msg });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public object InvokeSagaPersisterGet(object persister, Guid correlationId)
         {
-            Type type = persister.GetType();
-            MethodInfo method = type.GetMethod("Get");
-            return method.Invoke(persister, new object[] {correlationId});
+            try
+            {
+                Type type = persister.GetType();
+                MethodInfo method = type.GetMethod("Get");
+                return method.Invoke(persister, new object[] {correlationId});
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public void InvokeSagaPersisterSave(object persister, ISaga entity)
         {
-            Type type = persister.GetType();
-            MethodInfo method = type.GetMethod("Save");
-            method.Invoke(persister, new object[] {entity});
+            try
+            {
+                Type type = persister.GetType();
+                MethodInfo method = type.GetMethod("Save");
+                method.Invoke(persister, new object[] {entity});
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public void InvokeSagaPersisterComplete(object persister, ISaga entity)
         {
-            Type type = persister.GetType();
-            MethodInfo method = type.GetMethod("Complete");
-            method.Invoke(persister, new object[] {entity});
+            try
+            {
+                Type type = persister.GetType();
+                MethodInfo method = type.GetMethod("Complete");
+                method.Invoke(persister, new object[] {entity});
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
         }
 
         public string GetNamespaceForXml(object msg)
@@ -186,7 +247,10 @@ namespace Rhino.ServiceBus.Impl
 
             Assembly assembly = type.Assembly;
             if (assembly.GlobalAssemblyCache == false)
-                return type.FullName + ", " + assembly.FullName.Split(',')[0];
+            {
+                string fullName = assembly.FullName ?? assembly.GetName().Name;
+                return type.FullName + ", " + fullName.Split(',')[0];
+            }
             return type.AssemblyQualifiedName;
         }
 

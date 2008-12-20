@@ -29,8 +29,15 @@ namespace Rhino.ServiceBus.Tests
         private ITransport transport;
         protected readonly MessageQueue testQueue2;
 
+        /// <summary>
+        /// we use this to initalize the defaults for the test
+        /// </summary>
+        private MsmqTestBase defaultTestBase;
+
         public MsmqFlatQueueTestBase()
         {
+            defaultTestBase = new MsmqTestBase();
+
             TestQueueUri = new Uri("msmq://localhost/test_queue");
             testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri);
 
@@ -43,8 +50,8 @@ namespace Rhino.ServiceBus.Tests
             SubscriptionsUri = TestQueueUri;
             subbscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
 
-            var errorsPathSuffix= "#errors";
-            var discardedPathSuffix= "#discarded";
+            var errorsPathSuffix = "#errors";
+            var discardedPathSuffix = "#discarded";
 
             if (MessageQueue.Exists(testQueuePath) == false)
                 MessageQueue.Create(testQueuePath);
@@ -55,14 +62,14 @@ namespace Rhino.ServiceBus.Tests
             if (MessageQueue.Exists(transactionalTestQueuePath) == false)
                 MessageQueue.Create(transactionalTestQueuePath, true);
 
-            if (MessageQueue.Exists(testQueuePath+errorsPathSuffix) == false)
+            if (MessageQueue.Exists(testQueuePath + errorsPathSuffix) == false)
                 MessageQueue.Create(testQueuePath + errorsPathSuffix);
 
             if (MessageQueue.Exists(testQueuePath2 + errorsPathSuffix) == false)
                 MessageQueue.Create(testQueuePath2 + errorsPathSuffix);
 
             if (MessageQueue.Exists(transactionalTestQueuePath + errorsPathSuffix) == false)
-                MessageQueue.Create(transactionalTestQueuePath + errorsPathSuffix,true);
+                MessageQueue.Create(transactionalTestQueuePath + errorsPathSuffix, true);
 
             if (MessageQueue.Exists(testQueuePath + discardedPathSuffix) == false)
                 MessageQueue.Create(testQueuePath + discardedPathSuffix);
@@ -74,6 +81,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 errQueue.Purge();
             }
+
             using (var discardedQueue = new MessageQueue(testQueuePath + discardedPathSuffix))
             {
                 discardedQueue.Purge();
@@ -123,7 +131,7 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()),
-                                                               TransactionalTestQueueUri, 1, 5,new FlatQueueStrategy(TransactionalTestQueueUri));
+                                                               TransactionalTestQueueUri, 1, 5, new FlatQueueStrategy(TransactionalTestQueueUri));
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;
@@ -134,6 +142,8 @@ namespace Rhino.ServiceBus.Tests
 
         public void Dispose()
         {
+            defaultTestBase.Dispose();
+
             queue.Dispose();
             transactionalQueue.Dispose();
             subscriptions.Dispose();

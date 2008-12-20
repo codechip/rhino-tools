@@ -3,6 +3,7 @@ using System.Threading;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Sagas;
 using Starbucks.Messages;
+using Starbucks.Messages.Barista;
 
 namespace Starbucks.Barista
 {
