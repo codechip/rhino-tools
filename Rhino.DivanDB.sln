@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DivanDB", "Rhino.DivanDB\Rhino.DivanDB.csproj", "{27C14338-A3E0-4AC9-AB9B-F12286FB4BF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DivanDB.Tests", "Rhino.DivanDB.Tests\Rhino.DivanDB.Tests.csproj", "{D9AF707F-DF25-42B6-BEB3-59686BB06473}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27C14338-A3E0-4AC9-AB9B-F12286FB4BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27C14338-A3E0-4AC9-AB9B-F12286FB4BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C14338-A3E0-4AC9-AB9B-F12286FB4BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27C14338-A3E0-4AC9-AB9B-F12286FB4BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9AF707F-DF25-42B6-BEB3-59686BB06473}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9AF707F-DF25-42B6-BEB3-59686BB06473}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9AF707F-DF25-42B6-BEB3-59686BB06473}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9AF707F-DF25-42B6-BEB3-59686BB06473}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
