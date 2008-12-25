@@ -41,6 +41,7 @@ namespace Rhino.Commons
     public class Registry64
     {
         private const int KEY_WOW64_64KEY = 0x100;
+        private const int KEY_WOW64_32KEY = 0x200;
         private const int READ_RIGHTS = 131097;
         private readonly IntPtr _hKey;
 
@@ -107,6 +108,8 @@ namespace Rhino.Commons
         {
             IntPtr openKey;
             int resultCode = RegOpenKeyEx(_hKey, subKey, 0, KEY_WOW64_64KEY | READ_RIGHTS, out openKey);
+            if (2 == resultCode)
+                resultCode = RegOpenKeyEx(_hKey, subKey, 0, KEY_WOW64_32KEY | READ_RIGHTS, out openKey);
             if (resultCode != 0) ThrowException(resultCode);
             return openKey;
         }

@@ -271,7 +271,7 @@ namespace Rhino.Commons.ForTesting
                 string sqlServerInstanceName = Registry64.LocalMachine.GetValue(sqlServerRegKey + @"Instance Names\SQL",
                                                                                 "MSSQLSERVER");
                 string sqlServerInstanceSetupRegKey = sqlServerRegKey + sqlServerInstanceName + @"\Setup";
-                return Registry64.LocalMachine.GetValue(sqlServerInstanceSetupRegKey, "SQLDataRoot");
+                return Registry64.LocalMachine.GetValue(sqlServerInstanceSetupRegKey, "SQLDataRoot") + @"\Data\";
             }
         }
 
