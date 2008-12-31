@@ -14,11 +14,6 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqTransport : ITransport
     {
-        private const int DiscardedMessageMarker = 0xD13574;
-        private const int ErrorDescriptionMessageMarker = 0xE7707;
-        private const int ShutDownMessageMarker = 1337;
-        private const int AdministrativeMessageMarker = 42;
-
         [ThreadStatic]
         private static MsmqCurrentMessageInformation currentMessageInformation;
 
@@ -34,6 +29,8 @@ namespace Rhino.ServiceBus.Msmq
         private MessageQueue queue;
         private readonly IQueueStrategy queueStrategy;
 
+		private readonly Dictionary<MessageType, Action<QueueState, Message>> actions;
+
         public MsmqTransport(
             IMessageSerializer serializer,
             Uri endpoint,
@@ -41,12 +38,20 @@ namespace Rhino.ServiceBus.Msmq
             int numberOfRetries,
             IQueueStrategy queueStrategy)
         {
-            this.serializer = serializer;
+        	this.serializer = serializer;
             this.endpoint = endpoint;
             this.threadCount = threadCount;
             this.numberOfRetries = numberOfRetries;
             waitHandles = new WaitHandle[threadCount];
             this.queueStrategy = queueStrategy;
+
+			actions = new Dictionary<MessageType, Action<QueueState, Message>>
+			{
+				{MessageType.DiscardedMessageMarker, MoveToDiscardedQueue},
+				{MessageType.AdministrativeMessageMarker, HandleAdministrationMessage},
+				{MessageType.ShutDownMessageMarker, ConsumeAndIgnoreMessage},
+                {MessageType.ErrorDescriptionMessageMarker, MoveToErrorQueue}
+			};
         }
 
         public volatile bool ShouldStop;
@@ -98,7 +103,7 @@ namespace Rhino.ServiceBus.Msmq
             queue.Send(new Message
             {
                 Label = "Shutdown bus, if you please",
-                AppSpecific = ShutDownMessageMarker
+                AppSpecific = (int)MessageType.ShutDownMessageMarker
             }, queue.GetSingleMessageTransactionType());
 
             WaitForProcessingToEnd();
@@ -127,7 +132,7 @@ namespace Rhino.ServiceBus.Msmq
         {
             var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
 
-            message.AppSpecific = DiscardedMessageMarker;
+            message.AppSpecific = (int)MessageType.DiscardedMessageMarker;
 
             SendMessageToQueue(message, Endpoint);
 
@@ -164,7 +169,7 @@ namespace Rhino.ServiceBus.Msmq
             SetCorrelationIdOnMessage(message);
 
             message.AppSpecific =
-                msgs[0] is AdministrativeMessage ? AdministrativeMessageMarker : 0;
+                msgs[0] is AdministrativeMessage ? (int)MessageType.AdministrativeMessageMarker : 0;
 
             message.Label = msgs
                 .Where(msg => msg != null)
@@ -252,48 +257,41 @@ namespace Rhino.ServiceBus.Msmq
                 return;
             }
 
-            if (message.AppSpecific == ShutDownMessageMarker)
-            {
-                // previously sent shutdown message we can safely consume & ignore it
-                TryGetMessageFromQueue(state, message.Id);
-                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-                return;
-            }
+			if (DispatchToErrorQueueIfNeeded(state.Queue, message))
+			{
+				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+				return;
+			}
 
-            if (message.AppSpecific == DiscardedMessageMarker)
-            {
-                queueStrategy.MoveToDiscardedQueue(state.Queue,message);
-                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-                return;
-            }
-
-            if (DispatchToErrorQueueIfNeeded(state.Queue, message))
-            {
-                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-                return;
-            }
-            
+        	Action<QueueState, Message> messageAction;
+        	if(actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
+        	{
+				messageAction(state, message);
+				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+				return;
+        	}
 
             logger.DebugFormat("Got message {0} from {1}",
                                message.Label,
                                MsmqUtil.GetQueueUri(state.Queue));
-
-          
-            if (HandleAdministrationMessage(state, message))
-            {
-                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-                return;
-            }
 
             ReceiveMessageInTransaction(state, message.Id);
 
             state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
         }
 
-        private bool HandleAdministrationMessage(QueueState state, Message message)
+    	private static void ConsumeAndIgnoreMessage(QueueState state, Message message)
+    	{
+    		TryGetMessageFromQueue(state, message.Id);
+    	}
+
+    	private void MoveToDiscardedQueue(QueueState state, Message message)
+    	{
+    		queueStrategy.MoveToDiscardedQueue(state.Queue,message);
+    	}
+
+    	private void HandleAdministrationMessage(QueueState state, Message message)
         {
-            if (message.AppSpecific != AdministrativeMessageMarker)
-                return false;
             Exception ex = null;
             try
             {
@@ -308,7 +306,6 @@ namespace Rhino.ServiceBus.Msmq
             {
                 HandleMessageCompletion(message, null, state, ex);
             }
-            return true;
         }
 
         private void ReceiveMessageInTransaction(QueueState state, string messageId)
@@ -353,13 +350,10 @@ namespace Rhino.ServiceBus.Msmq
 
         private bool DispatchToErrorQueueIfNeeded(MessageQueue messageQueue, Message message)
         {
-            if (message.AppSpecific == ErrorDescriptionMessageMarker)
-            {
-                queueStrategy.MoveToErrorsQueue(messageQueue,message);
-                return true;
-            }
+			if (message.AppSpecific != 0)
+				return false;
 
-            string id = GetMessageId(message);
+        	string id = GetMessageId(message);
 
             readerWriterLock.EnterReadLock();
             ErrorCounter errorCounter;
@@ -386,7 +380,7 @@ namespace Rhino.ServiceBus.Msmq
                     label = label.Substring(0, 246) + "...";
                 messageQueue.Send(new Message
                 {
-                    AppSpecific = ErrorDescriptionMessageMarker,
+					AppSpecific = (int)MessageType.ErrorDescriptionMessageMarker,
                     Label = label,
                     Body = errorCounter.ExceptionText,
                     CorrelationId = message.Id,
@@ -401,7 +395,12 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        private void HandleMessageCompletion(
+    	private void MoveToErrorQueue(QueueState state, Message message)
+    	{
+			queueStrategy.MoveToErrorsQueue(state.Queue, message);
+    	}
+
+    	private void HandleMessageCompletion(
             Message message,
             TransactionScope tx,
             QueueState state,

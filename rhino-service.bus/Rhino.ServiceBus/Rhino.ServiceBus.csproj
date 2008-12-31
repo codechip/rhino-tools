@@ -102,6 +102,7 @@
     <Compile Include="Messages\SerializationErrorMessage.cs" />
     <Compile Include="Msmq\FlatQueueStrategy.cs" />
     <Compile Include="Msmq\IQueueStrategy.cs" />
+    <Compile Include="Msmq\MessageType.cs" />
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />

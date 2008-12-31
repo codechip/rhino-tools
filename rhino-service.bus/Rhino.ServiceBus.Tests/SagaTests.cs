@@ -85,7 +85,15 @@ namespace Rhino.ServiceBus.Tests
                 wait.Reset();
                 
                 var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
-                OrderProcessor processor = persister.Get(sagaId);
+            	OrderProcessor processor = null;
+
+            	for (int i = 0; i < 1000; i++)
+            	{
+					processor = persister.Get(sagaId);
+					if (processor!=null)
+						break;
+					Thread.Sleep(250);
+            	}
 
                 Assert.Equal(1, processor.Messages.Count);
 
