@@ -76,11 +76,15 @@ namespace Rhino.ServiceBus.Tests
                 errQueue3.Purge();
             }
 
-
             using (var discardedQueue = new MessageQueue(testQueuePath + ";discarded"))
             {
                 discardedQueue.Purge();
             }
+
+			using (var timeoutQueue = new MessageQueue(testQueuePath + ";timeout"))
+			{
+				timeoutQueue.Purge();
+			}
 
             subscriptions = new MessageQueue(subbscriptionQueuePath)
             {

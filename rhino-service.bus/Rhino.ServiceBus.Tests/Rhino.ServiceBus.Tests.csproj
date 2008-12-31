@@ -70,6 +70,7 @@
     <Compile Include="BugWithLogTest.cs" />
     <Compile Include="BusSubscriptionTests.cs" />
     <Compile Include="CanRouteMessageToConsumerThroughContainer.cs" />
+    <Compile Include="DelayedMessages.cs" />
     <Compile Include="DataStructures\LRUSetTest.cs" />
     <Compile Include="DataStructures\HashtableTest.cs" />
     <Compile Include="DefaultReflectionTests.cs" />

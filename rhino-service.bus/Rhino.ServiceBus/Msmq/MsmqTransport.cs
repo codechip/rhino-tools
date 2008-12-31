@@ -12,250 +12,271 @@ using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus.Msmq
 {
-    public class MsmqTransport : ITransport
-    {
-        [ThreadStatic]
-        private static MsmqCurrentMessageInformation currentMessageInformation;
+	public class MsmqTransport : ITransport
+	{
+		[ThreadStatic]
+		private static MsmqCurrentMessageInformation currentMessageInformation;
 
-        private readonly Uri endpoint;
-        private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
-        private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
-        private readonly int numberOfRetries;
-        private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
-        private readonly IMessageSerializer serializer;
-        private readonly int threadCount;
-        private readonly WaitHandle[] waitHandles;
-        private bool haveStarted;
-        private MessageQueue queue;
-        private readonly IQueueStrategy queueStrategy;
+		private readonly Uri endpoint;
+		private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
+		private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
+		private readonly int numberOfRetries;
+		private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
+		private readonly IMessageSerializer serializer;
+		private readonly int threadCount;
+		private readonly WaitHandle[] waitHandles;
+		private bool haveStarted;
+		private MessageQueue queue;
+		private readonly IQueueStrategy queueStrategy;
+		private readonly SortedList<DateTime, string> timeoutMessageIds = new SortedList<DateTime, string>();
+		private Timer timeoutTimer;
 
-		private readonly Dictionary<MessageType, Action<QueueState, Message>> actions;
+		private readonly Dictionary<MessageType, Func<QueueState, Message, bool>> actions;
 
-        public MsmqTransport(
-            IMessageSerializer serializer,
-            Uri endpoint,
-            int threadCount,
-            int numberOfRetries,
-            IQueueStrategy queueStrategy)
-        {
-        	this.serializer = serializer;
-            this.endpoint = endpoint;
-            this.threadCount = threadCount;
-            this.numberOfRetries = numberOfRetries;
-            waitHandles = new WaitHandle[threadCount];
-            this.queueStrategy = queueStrategy;
+		public MsmqTransport(
+			IMessageSerializer serializer,
+			Uri endpoint,
+			int threadCount,
+			int numberOfRetries,
+			IQueueStrategy queueStrategy)
+		{
+			this.serializer = serializer;
+			this.endpoint = endpoint;
+			this.threadCount = threadCount;
+			this.numberOfRetries = numberOfRetries;
+			waitHandles = new WaitHandle[threadCount];
+			this.queueStrategy = queueStrategy;
 
-			actions = new Dictionary<MessageType, Action<QueueState, Message>>
+			actions = new Dictionary<MessageType, Func<QueueState, Message, bool>>
 			{
 				{MessageType.DiscardedMessageMarker, MoveToDiscardedQueue},
 				{MessageType.AdministrativeMessageMarker, HandleAdministrationMessage},
 				{MessageType.ShutDownMessageMarker, ConsumeAndIgnoreMessage},
-                {MessageType.ErrorDescriptionMessageMarker, MoveToErrorQueue}
+                {MessageType.ErrorDescriptionMessageMarker, MoveToErrorQueue},
+				{MessageType.TimeoutMessageMarker, MoveToTimeoutQueue}
 			};
-        }
+		}
 
-        public volatile bool ShouldStop;
 
-        #region ITransport Members
+		public volatile bool ShouldStop;
 
-        public Uri Endpoint
-        {
-            get { return endpoint; }
-        }
+		#region ITransport Members
 
-        public void Start()
-        {
-            if (haveStarted)
-                return;
+		public Uri Endpoint
+		{
+			get { return endpoint; }
+		}
 
-            logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
-            queue = InitalizeQueue(endpoint);
+		public void Start()
+		{
+			if (haveStarted)
+				return;
 
-            for (int t = 0; t < threadCount; t++)
-            {
-                var waitHandle = new ManualResetEvent(true);
-                waitHandles[t] = waitHandle;
-                try
-                {
-                    queue.BeginPeek(TimeOutForPeek, new QueueState
-                    {
-                        Queue = queue,
-                        WaitHandle = waitHandle
-                    }, OnPeekMessage);
-                    waitHandle.Reset();
-                }
-                catch (Exception e)
-                {
-                    throw new TransportException("Unable to start reading from queue: " + endpoint, e);
-                }
-            }
-            haveStarted = true;
-        }
+			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
+			queue = InitalizeQueue(endpoint);
 
-        private static TimeSpan TimeOutForPeek
-        {
-            get { return TimeSpan.FromHours(1); }
-        }
+			foreach (var message in queueStrategy.GetTimeoutMessages(queue))
+			{
+				timeoutMessageIds.Add(message.Time, message.Id);
+			}
 
-        public void Stop()
-        {
-            ShouldStop = true;
-            queue.Send(new Message
-            {
-                Label = "Shutdown bus, if you please",
-                AppSpecific = (int)MessageType.ShutDownMessageMarker
-            }, queue.GetSingleMessageTransactionType());
+			for (var t = 0; t < threadCount; t++)
+			{
+				var waitHandle = new ManualResetEvent(true);
+				waitHandles[t] = waitHandle;
+				try
+				{
+					queue.BeginPeek(TimeOutForPeek, new QueueState
+					{
+						Queue = queue,
+						WaitHandle = waitHandle
+					}, OnPeekMessage);
+					waitHandle.Reset();
+				}
+				catch (Exception e)
+				{
+					throw new TransportException("Unable to start reading from queue: " + endpoint, e);
+				}
+			}
 
-            WaitForProcessingToEnd();
+			timeoutTimer = new Timer(OnTimeoutCallback, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1));
+			haveStarted = true;
+		}
 
-            if (queue != null)
-                queue.Close();
+		private static TimeSpan TimeOutForPeek
+		{
+			get { return TimeSpan.FromHours(1); }
+		}
 
-            haveStarted = false;
-        }
+		public void Stop()
+		{
+			ShouldStop = true;
+			queue.Send(new Message
+			{
+				Label = "Shutdown bus, if you please",
+				AppSpecific = (int)MessageType.ShutDownMessageMarker
+			}, queue.GetSingleMessageTransactionType());
 
-        public void Reply(params object[] messages)
-        {
-            if (currentMessageInformation == null)
-                throw new TransactionException("There is no message to reply to, sorry.");
+			WaitForProcessingToEnd();
 
-            Send(currentMessageInformation.Source, messages);
-        }
+			if (queue != null)
+				queue.Close();
+			if (timeoutTimer != null)
+				timeoutTimer.Dispose();
+			haveStarted = false;
+		}
 
-        public event Action<CurrentMessageInformation> MessageSent;
-        public event Action<CurrentMessageInformation> AdministrativeMessageArrived;
-        public event Action<CurrentMessageInformation> MessageArrived;
-        public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
-        public event Action<CurrentMessageInformation> MessageProcessingCompleted;
+		public void Reply(params object[] messages)
+		{
+			if (currentMessageInformation == null)
+				throw new TransactionException("There is no message to reply to, sorry.");
 
-        public void Discard(object msg)
-        {
-            var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
+			Send(currentMessageInformation.Source, messages);
+		}
 
-            message.AppSpecific = (int)MessageType.DiscardedMessageMarker;
+		public event Action<CurrentMessageInformation> MessageSent;
+		public event Action<CurrentMessageInformation> AdministrativeMessageArrived;
+		public event Action<CurrentMessageInformation> MessageArrived;
+		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
+		public event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
-            SendMessageToQueue(message, Endpoint);
+		public void Discard(object msg)
+		{
+			var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
 
-        }
+			message.AppSpecific = (int)MessageType.DiscardedMessageMarker;
 
-        public void Send(Uri uri, params object[] msgs)
-        {
-            var message = GenerateMsmqMessageFromMessageBatch(msgs);
+			SendMessageToQueue(message, Endpoint);
+		}
 
-            SendMessageToQueue(message, uri);
+		public void Send(Uri uri, DateTime processAgainAt, object[] msgs)
+		{
+			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
-            var copy = MessageSent;
-            if (copy == null)
-                return;
+			message.Extension = BitConverter.GetBytes(processAgainAt.ToBinary());
+			message.AppSpecific = (int)MessageType.TimeoutMessageMarker;
 
-            copy(new CurrentMessageInformation
-            {
-                AllMessages = msgs,
-                Source = endpoint,
-                Destination = uri,
-                CorrelationId = CorrelationId.Parse(message.CorrelationId),
-                MessageId = CorrelationId.Parse(message.Id),
-            });
-        }
+			SendMessageToQueue(message, uri);
+		}
 
-        private Message GenerateMsmqMessageFromMessageBatch(object[] msgs)
-        {
-            var message = new Message();
+		public void Send(Uri uri, params object[] msgs)
+		{
+			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
-            serializer.Serialize(msgs, message.BodyStream);
+			SendMessageToQueue(message, uri);
 
-            message.ResponseQueue = queue;
+			var copy = MessageSent;
+			if (copy == null)
+				return;
 
-            SetCorrelationIdOnMessage(message);
+			copy(new CurrentMessageInformation
+			{
+				AllMessages = msgs,
+				Source = endpoint,
+				Destination = uri,
+				CorrelationId = CorrelationId.Parse(message.CorrelationId),
+				MessageId = CorrelationId.Parse(message.Id),
+			});
+		}
 
-            message.AppSpecific =
-                msgs[0] is AdministrativeMessage ? (int)MessageType.AdministrativeMessageMarker : 0;
+		private Message GenerateMsmqMessageFromMessageBatch(object[] msgs)
+		{
+			var message = new Message();
 
-            message.Label = msgs
-                .Where(msg => msg != null)
-                .Select(msg =>
-                {
-                    string s = msg.ToString();
-                    if (s.Length > 249)
-                        return s.Substring(0, 246) + "...";
-                    return s;
-                })
-                .FirstOrDefault();
-            return message;
-        }
+			serializer.Serialize(msgs, message.BodyStream);
 
-        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
+			message.ResponseQueue = queue;
 
-        #endregion
+			SetCorrelationIdOnMessage(message);
 
-        private void WaitForProcessingToEnd()
-        {
-            if (haveStarted == false)
-                return;
+			message.AppSpecific =
+				msgs[0] is AdministrativeMessage ? (int)MessageType.AdministrativeMessageMarker : 0;
 
-            if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
-            {
-                WaitHandle.WaitAll(waitHandles);
-            }
-            else
-            {
-                foreach (WaitHandle handle in waitHandles)
-                {
-                    if (handle != null)
-                        handle.WaitOne();
-                }
-            }
-        }
+			message.Label = msgs
+				.Where(msg => msg != null)
+				.Select(msg =>
+				{
+					string s = msg.ToString();
+					if (s.Length > 249)
+						return s.Substring(0, 246) + "...";
+					return s;
+				})
+				.FirstOrDefault();
+			return message;
+		}
 
-        private static MessageQueue InitalizeQueue(Uri endpoint)
-        {
-            string path = MsmqUtil.GetQueuePath(endpoint);
-            if(MessageQueue.Exists(path)==false)
-            {
-                try
-                {
-                    MessageQueue.Create(path, true);
-                }
-                catch (Exception e)
-                {
-                    throw new TransportException("Queue " + endpoint + " doesn't exists and we failed to create it", e);   
-                }
-            }
-            try
-            {
-                var messageQueue = new MessageQueue(path, QueueAccessMode.SendAndReceive);
-                var filter = new MessagePropertyFilter();
-                filter.SetAll();
-                messageQueue.MessageReadPropertyFilter = filter;
-                return messageQueue;
-            }
-            catch (Exception e)
-            {
-                throw new TransportException(
-                    "Could not receive from queue: " + endpoint + Environment.NewLine +
-                    "Queue path: " + path, e);
-            }
-        }
+		public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
 
-        private void OnPeekMessage(IAsyncResult ar)
-        {
-            Message message;
-            bool? peek = TryEndingPeek(ar, out message);
-            if (peek == false) // error 
-                return;
+		#endregion
 
-            var state = (QueueState)ar.AsyncState;
-            if (ShouldStop)
-            {
-                state.WaitHandle.Set();
-                return;
-            }
+		private void WaitForProcessingToEnd()
+		{
+			if (haveStarted == false)
+				return;
 
-            if (peek == null)//nothing was found 
-            {
-                state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-                return;
-            }
+			if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+			{
+				WaitHandle.WaitAll(waitHandles);
+			}
+			else
+			{
+				foreach (WaitHandle handle in waitHandles)
+				{
+					if (handle != null)
+						handle.WaitOne();
+				}
+			}
+		}
+
+		private static MessageQueue InitalizeQueue(Uri endpoint)
+		{
+			string path = MsmqUtil.GetQueuePath(endpoint);
+			if (MessageQueue.Exists(path) == false)
+			{
+				try
+				{
+					MessageQueue.Create(path, true);
+				}
+				catch (Exception e)
+				{
+					throw new TransportException("Queue " + endpoint + " doesn't exists and we failed to create it", e);
+				}
+			}
+			try
+			{
+				var messageQueue = new MessageQueue(path, QueueAccessMode.SendAndReceive);
+				var filter = new MessagePropertyFilter();
+				filter.SetAll();
+				messageQueue.MessageReadPropertyFilter = filter;
+				return messageQueue;
+			}
+			catch (Exception e)
+			{
+				throw new TransportException(
+					"Could not receive from queue: " + endpoint + Environment.NewLine +
+					"Queue path: " + path, e);
+			}
+		}
+
+		private void OnPeekMessage(IAsyncResult ar)
+		{
+			Message message;
+			bool? peek = TryEndingPeek(ar, out message);
+			if (peek == false) // error 
+				return;
+
+			var state = (QueueState)ar.AsyncState;
+			if (ShouldStop)
+			{
+				state.WaitHandle.Set();
+				return;
+			}
+
+			if (peek == null)//nothing was found 
+			{
+				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+				return;
+			}
 
 			if (DispatchToErrorQueueIfNeeded(state.Queue, message))
 			{
@@ -263,374 +284,466 @@ namespace Rhino.ServiceBus.Msmq
 				return;
 			}
 
-        	Action<QueueState, Message> messageAction;
-        	if(actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
-        	{
-				messageAction(state, message);
-				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+			Func<QueueState, Message, bool> messageAction;
+			if (actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
+			{
+				if (messageAction(state, message))
+				{
+					state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+					return;
+				}
+			}
+
+			logger.DebugFormat("Got message {0} from {1}",
+							   message.Label,
+							   MsmqUtil.GetQueueUri(state.Queue));
+
+			ReceiveMessageInTransaction(state, message.Id);
+
+			state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+		}
+
+		private static bool ConsumeAndIgnoreMessage(QueueState state, Message message)
+		{
+			TryGetMessageFromQueue(state, message.Id);
+			return true;
+		}
+
+		private void OnTimeoutCallback(object state)
+		{
+			bool haveTimeoutMessages = false;
+
+			if (readerWriterLock.TryEnterReadLock(0)==false)
 				return;
-        	}
+			try
+			{
+				foreach (var pair in timeoutMessageIds)
+				{
+					if (pair.Key <= CurrentTime)
+					{
+						haveTimeoutMessages = true;
+						break;
+					}
+					if (pair.Key > CurrentTime)
+					{
+						break;
+					}
+				}
+			}
+			finally
+			{
+				readerWriterLock.ExitReadLock();
+			}
 
-            logger.DebugFormat("Got message {0} from {1}",
-                               message.Label,
-                               MsmqUtil.GetQueueUri(state.Queue));
+			if (haveTimeoutMessages == false)
+				return;
 
-            ReceiveMessageInTransaction(state, message.Id);
+			if (readerWriterLock.TryEnterWriteLock(0)==false)
+				return;
+			try
+			{
+				while (timeoutMessageIds.Count != 0)
+				{
+					var pair = timeoutMessageIds.First();
+					if (pair.Key > CurrentTime)
+						return;
+					timeoutMessageIds.RemoveAt(0);
 
-            state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-        }
+					try
+					{
+						using(var tx = new TransactionScope())
+						{
+							queueStrategy.MoveTimeoutToMainQueue(queue, pair.Value);
+							tx.Complete();
+						}
+					}
+					catch (InvalidOperationException)
+					{
+						//message read by another thread
+					}
+				}
+			}
+			finally
+			{
+				readerWriterLock.ExitWriteLock();
+			}
+		}
 
-    	private static void ConsumeAndIgnoreMessage(QueueState state, Message message)
-    	{
-    		TryGetMessageFromQueue(state, message.Id);
-    	}
+		public static DateTime CurrentTime
+		{
+			get { return DateTime.Now; }
+		}
 
-    	private void MoveToDiscardedQueue(QueueState state, Message message)
-    	{
-    		queueStrategy.MoveToDiscardedQueue(state.Queue,message);
-    	}
+		private bool MoveToDiscardedQueue(QueueState state, Message message)
+		{
+			queueStrategy.MoveToDiscardedQueue(state.Queue, message);
+			return true;
+		}
 
-    	private void HandleAdministrationMessage(QueueState state, Message message)
-        {
-            Exception ex = null;
-            try
-            {
-                ProcessMessage(message, state, AdministrativeMessageArrived);
-            }
-            catch (Exception e)
-            {
-                ex = e;
-                logger.Error("Failed to process administrative message", e);
-            }
-            finally
-            {
-                HandleMessageCompletion(message, null, state, ex);
-            }
-        }
+		private bool HandleAdministrationMessage(QueueState state, Message message)
+		{
+			Exception ex = null;
+			try
+			{
+				ProcessMessage(message, state, AdministrativeMessageArrived);
+			}
+			catch (Exception e)
+			{
+				ex = e;
+				logger.Error("Failed to process administrative message", e);
+			}
+			finally
+			{
+				HandleMessageCompletion(message, null, state, ex);
+			}
+			return true;
+		}
 
-        private void ReceiveMessageInTransaction(QueueState state, string messageId)
-        {
-            using (var tx = new TransactionScope())
-            {
-                Message message = null;
-                Exception ex = null;
-                try
-                {
-                    state.Queue.MessageReadPropertyFilter.SetAll();
-                    message = TryGetMessageFromQueue(state, messageId);
-                    if (message == null)
-                        return;// someone else ate our message, better luck next time
-                    ProcessMessage(message, state, MessageArrived);
-                }
-                catch (Exception e)
-                {
-                    ex = e;
-                    logger.Error("Failed to receive message", e);
-                }
-                finally
-                {
-                    HandleMessageCompletion(message, tx, state, ex);
-                }
-            }
-        }
+		private void ReceiveMessageInTransaction(QueueState state, string messageId)
+		{
+			using (var tx = new TransactionScope())
+			{
+				Message message = null;
+				Exception ex = null;
+				try
+				{
+					state.Queue.MessageReadPropertyFilter.SetAll();
+					message = TryGetMessageFromQueue(state, messageId);
+					if (message == null)
+						return;// someone else ate our message, better luck next time
+					ProcessMessage(message, state, MessageArrived);
+				}
+				catch (Exception e)
+				{
+					ex = e;
+					logger.Error("Failed to receive message", e);
+				}
+				finally
+				{
+					HandleMessageCompletion(message, tx, state, ex);
+				}
+			}
+		}
 
-        private static Message TryGetMessageFromQueue(QueueState state, string messageId)
-        {
-            try
-            {
-                return state.Queue.ReceiveById(
-                    messageId,
-                    state.Queue.GetTransactionType());
-            }
-            catch (InvalidOperationException)// message was read before we could read it
-            {
-                return null;
-            }
-        }
+		private static Message TryGetMessageFromQueue(QueueState state, string messageId)
+		{
+			try
+			{
+				return state.Queue.ReceiveById(
+					messageId,
+					state.Queue.GetTransactionType());
+			}
+			catch (InvalidOperationException)// message was read before we could read it
+			{
+				return null;
+			}
+		}
 
-        private bool DispatchToErrorQueueIfNeeded(MessageQueue messageQueue, Message message)
-        {
+		private bool DispatchToErrorQueueIfNeeded(MessageQueue messageQueue, Message message)
+		{
 			if (message.AppSpecific != 0)
 				return false;
 
-        	string id = GetMessageId(message);
+			string id = GetMessageId(message);
 
-            readerWriterLock.EnterReadLock();
-            ErrorCounter errorCounter;
-            try
-            {
-                if (failureCounts.TryGetValue(id, out errorCounter) == false)
-                    return false;
-            }
-            finally
-            {
-                readerWriterLock.ExitReadLock();
-            }
+			readerWriterLock.EnterReadLock();
+			ErrorCounter errorCounter;
+			try
+			{
+				if (failureCounts.TryGetValue(id, out errorCounter) == false)
+					return false;
+			}
+			finally
+			{
+				readerWriterLock.ExitReadLock();
+			}
 
-            if (errorCounter.FailureCount < numberOfRetries)
-                return false;
+			if (errorCounter.FailureCount < numberOfRetries)
+				return false;
 
-            readerWriterLock.EnterWriteLock();
-            try
-            {
-                failureCounts.Remove(id);
-                queueStrategy.MoveToErrorsQueue(messageQueue, message);
-                var label = "Error description for " + message.Label;
-                if (label.Length > 249)
-                    label = label.Substring(0, 246) + "...";
-                messageQueue.Send(new Message
-                {
+			readerWriterLock.EnterWriteLock();
+			try
+			{
+				failureCounts.Remove(id);
+				queueStrategy.MoveToErrorsQueue(messageQueue, message);
+				var label = "Error description for " + message.Label;
+				if (label.Length > 249)
+					label = label.Substring(0, 246) + "...";
+				messageQueue.Send(new Message
+				{
 					AppSpecific = (int)MessageType.ErrorDescriptionMessageMarker,
-                    Label = label,
-                    Body = errorCounter.ExceptionText,
-                    CorrelationId = message.Id,
-                });
-                logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
-                                  errorCounter.ExceptionText);
-                return true;
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
-        }
+					Label = label,
+					Body = errorCounter.ExceptionText,
+					CorrelationId = message.Id,
+				});
+				logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
+								  errorCounter.ExceptionText);
+				return true;
+			}
+			finally
+			{
+				readerWriterLock.ExitWriteLock();
+			}
+		}
 
-    	private void MoveToErrorQueue(QueueState state, Message message)
-    	{
+		private bool MoveToErrorQueue(QueueState state, Message message)
+		{
 			queueStrategy.MoveToErrorsQueue(state.Queue, message);
-    	}
+			return true;
+		}
 
-    	private void HandleMessageCompletion(
-            Message message,
-            TransactionScope tx,
-            QueueState state,
-            Exception exception)
-        {
-            if (exception == null)
-            {
-                try
-                {
-                    if (tx != null)
-                        tx.Complete();
-                    if (message != null)
-                        RemoveMessageFromFailureTracking(message);
-                    return;
-                }
-                catch (Exception e)
-                {
-                    logger.Warn("Failed to complete transaction, moving to error mode", e);
-                }
-            }
-            if (message == null)
-                return;
-            IncrementFailureCount(GetMessageId(message), exception);
-            if (state.Queue.Transactional == false)// put the item back in the queue
-            {
-                state.Queue.Send(message, MessageQueueTransactionType.None);
-            }
-        }
+		private bool MoveToTimeoutQueue(QueueState state, Message message)
+		{
+			var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 0));
+			if (CurrentTime >= processMessageAt)
+				return false;
+			queueStrategy.MoveToTimeoutQueue(state.Queue, message);
+			readerWriterLock.EnterWriteLock();
+			try
+			{
+				timeoutMessageIds.Add(processMessageAt, message.Id);
+			}
+			finally
+			{
+				readerWriterLock.ExitWriteLock();
+			}
+			return true;
+		}
 
-        private static string GetMessageId(Message message)
-        {
-            string id = message.Id;
-            return id.Split('\\')[0];
-        }
+		private void HandleMessageCompletion(
+			Message message,
+			TransactionScope tx,
+			QueueState state,
+			Exception exception)
+		{
+			if (exception == null)
+			{
+				try
+				{
+					if (tx != null)
+						tx.Complete();
+					if (message != null)
+						RemoveMessageFromFailureTracking(message);
+					return;
+				}
+				catch (Exception e)
+				{
+					logger.Warn("Failed to complete transaction, moving to error mode", e);
+				}
+			}
+			if (message == null)
+				return;
+			IncrementFailureCount(GetMessageId(message), exception);
+			if (state.Queue.Transactional == false)// put the item back in the queue
+			{
+				state.Queue.Send(message, MessageQueueTransactionType.None);
+			}
+		}
 
-        private void IncrementFailureCount(string id, Exception e)
-        {
-            readerWriterLock.EnterWriteLock();
-            try
-            {
-                ErrorCounter errorCounter;
-                if (failureCounts.TryGetValue(id, out errorCounter) == false)
-                {
-                    errorCounter = new ErrorCounter
-                    {
-                        ExceptionText = e.ToString(),
-                        FailureCount = 0
-                    };
-                    failureCounts[id] = errorCounter;
-                }
-                errorCounter.FailureCount += 1;
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
-        }
+		private static string GetMessageId(Message message)
+		{
+			string id = message.Id;
+			return id.Split('\\')[0];
+		}
 
-        private void RemoveMessageFromFailureTracking(Message message)
-        {
-            string id = GetMessageId(message);
-            readerWriterLock.EnterReadLock();
-            try
-            {
-                if (failureCounts.ContainsKey(id) == false)
-                    return;
-            }
-            finally
-            {
-                readerWriterLock.ExitReadLock();
-            }
+		private void IncrementFailureCount(string id, Exception e)
+		{
+			readerWriterLock.EnterWriteLock();
+			try
+			{
+				ErrorCounter errorCounter;
+				if (failureCounts.TryGetValue(id, out errorCounter) == false)
+				{
+					errorCounter = new ErrorCounter
+					{
+						ExceptionText = e.ToString(),
+						FailureCount = 0
+					};
+					failureCounts[id] = errorCounter;
+				}
+				errorCounter.FailureCount += 1;
+			}
+			finally
+			{
+				readerWriterLock.ExitWriteLock();
+			}
+		}
 
-            readerWriterLock.EnterWriteLock();
-            try
-            {
-                failureCounts.Remove(id);
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
-        }
+		private void RemoveMessageFromFailureTracking(Message message)
+		{
+			string id = GetMessageId(message);
+			readerWriterLock.EnterReadLock();
+			try
+			{
+				if (failureCounts.ContainsKey(id) == false)
+					return;
+			}
+			finally
+			{
+				readerWriterLock.ExitReadLock();
+			}
 
-        private bool? TryEndingPeek(IAsyncResult ar, out Message message)
-        {
-            var state = (QueueState)ar.AsyncState;
-            try
-            {
-                message = state.Queue.EndPeek(ar);
-            }
-            catch (MessageQueueException e)
-            {
-                message = null;
-                if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
-                {
-                    logger.Error("Could not peek message from queue", e);
-                    return false;
-                }
-                return null; // nothing found
-            }
-            return true;
-        }
+			readerWriterLock.EnterWriteLock();
+			try
+			{
+				failureCounts.Remove(id);
+			}
+			finally
+			{
+				readerWriterLock.ExitWriteLock();
+			}
+		}
 
-        private void ProcessMessage(Message message, QueueState state, Action<CurrentMessageInformation> messageRecieved)
-        {
-            //deserialization errors do not count for module events
-            object[] messages = DeserializeMessages(state, message);
-            try
-            {
-                foreach (object msg in messages)
-                {
-                    currentMessageInformation = new MsmqCurrentMessageInformation
-                    {
-                        MessageId = CorrelationId.Parse(message.Id),
-                        AllMessages = messages,
-                        CorrelationId = CorrelationId.Parse(message.CorrelationId),
-                        Message = msg,
-                        Queue = queue,
-                        Destination = Endpoint,
-                        Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
-                        MsmqMessage = message,
-                        TransactionType = queue.GetTransactionType()
-                    };
+		private bool? TryEndingPeek(IAsyncResult ar, out Message message)
+		{
+			var state = (QueueState)ar.AsyncState;
+			try
+			{
+				message = state.Queue.EndPeek(ar);
+			}
+			catch (MessageQueueException e)
+			{
+				message = null;
+				if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
+				{
+					logger.Error("Could not peek message from queue", e);
+					return false;
+				}
+				return null; // nothing found
+			}
+			return true;
+		}
 
-                    if (messageRecieved != null)
-                        messageRecieved(currentMessageInformation);
-                }
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    Action<CurrentMessageInformation, Exception> copy = MessageProcessingFailure;
-                    if (copy != null)
-                        copy(currentMessageInformation, e);
-                }
-                catch (Exception moduleException)
-                {
-                    throw new TransportException("Module failed to process message failure: " + e.Message,
-                                                 moduleException);
-                }
-                throw;
-            }
-            finally
-            {
-                Action<CurrentMessageInformation> copy = MessageProcessingCompleted;
-                if (copy != null)
-                    copy(currentMessageInformation);
-                currentMessageInformation = null;
-            }
-        }
+		private void ProcessMessage(Message message, QueueState state, Action<CurrentMessageInformation> messageRecieved)
+		{
+			//deserialization errors do not count for module events
+			object[] messages = DeserializeMessages(state, message);
+			try
+			{
+				foreach (object msg in messages)
+				{
+					currentMessageInformation = new MsmqCurrentMessageInformation
+					{
+						MessageId = CorrelationId.Parse(message.Id),
+						AllMessages = messages,
+						CorrelationId = CorrelationId.Parse(message.CorrelationId),
+						Message = msg,
+						Queue = queue,
+						Destination = Endpoint,
+						Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
+						MsmqMessage = message,
+						TransactionType = queue.GetTransactionType()
+					};
 
-        private object[] DeserializeMessages(QueueState state, Message transportMessage)
-        {
-            object[] messages;
-            try
-            {
-                messages = serializer.Deserialize(transportMessage.BodyStream);
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    logger.Error("Error when serializing message", e);
-                    Action<CurrentMessageInformation, Exception> copy = MessageSerializationException;
-                    if (copy != null)
-                    {
-                        var information = new CurrentMessageInformation
-                        {
-                            Message = transportMessage,
-                            Source = MsmqUtil.GetQueueUri(state.Queue),
-                            MessageId = CorrelationId.Parse(transportMessage.Id)
-                        };
-                        copy(information, e);
-                    }
-                }
-                catch (Exception moduleEx)
-                {
-                    logger.Error("Error when notifying about serialization exception", moduleEx);
-                }
-                throw;
-            }
-            return messages;
-        }
+					if (messageRecieved != null)
+						messageRecieved(currentMessageInformation);
+				}
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					Action<CurrentMessageInformation, Exception> copy = MessageProcessingFailure;
+					if (copy != null)
+						copy(currentMessageInformation, e);
+				}
+				catch (Exception moduleException)
+				{
+					throw new TransportException("Module failed to process message failure: " + e.Message,
+												 moduleException);
+				}
+				throw;
+			}
+			finally
+			{
+				Action<CurrentMessageInformation> copy = MessageProcessingCompleted;
+				if (copy != null)
+					copy(currentMessageInformation);
+				currentMessageInformation = null;
+			}
+		}
 
-        private static void SetCorrelationIdOnMessage(Message message)
-        {
-            if (currentMessageInformation != null)
-                message.CorrelationId = currentMessageInformation.CorrelationId
-                    .Increment().ToString();
-        }
+		private object[] DeserializeMessages(QueueState state, Message transportMessage)
+		{
+			object[] messages;
+			try
+			{
+				messages = serializer.Deserialize(transportMessage.BodyStream);
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					logger.Error("Error when serializing message", e);
+					Action<CurrentMessageInformation, Exception> copy = MessageSerializationException;
+					if (copy != null)
+					{
+						var information = new CurrentMessageInformation
+						{
+							Message = transportMessage,
+							Source = MsmqUtil.GetQueueUri(state.Queue),
+							MessageId = CorrelationId.Parse(transportMessage.Id)
+						};
+						copy(information, e);
+					}
+				}
+				catch (Exception moduleEx)
+				{
+					logger.Error("Error when notifying about serialization exception", moduleEx);
+				}
+				throw;
+			}
+			return messages;
+		}
 
-        private void SendMessageToQueue(Message message, Uri uri)
-        {
-            string sendQueueDescription = MsmqUtil.GetQueuePath(uri);
-            try
-            {
-                using (var sendQueue = new MessageQueue(
-                    sendQueueDescription,
-                    QueueAccessMode.Send))
-                {
-                    MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
-                    sendQueue.Send(message, transactionType);
-                    logger.DebugFormat("Send message {0} to {1}", message.Label, uri);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new TransactionException("Failed to send message to " + uri, e);
-            }
-        }
+		private static void SetCorrelationIdOnMessage(Message message)
+		{
+			if (currentMessageInformation != null)
+				message.CorrelationId = currentMessageInformation.CorrelationId
+					.Increment().ToString();
+		}
 
-        #region Nested type: ErrorCounter
+		private void SendMessageToQueue(Message message, Uri uri)
+		{
+			if (haveStarted == false)
+				throw new TransportException("Cannot send message before transport is started");
 
-        private class ErrorCounter
-        {
-            public string ExceptionText;
-            public int FailureCount;
-        }
+			string sendQueueDescription = MsmqUtil.GetQueuePath(uri);
+			try
+			{
+				using (var sendQueue = new MessageQueue(
+					sendQueueDescription,
+					QueueAccessMode.Send))
+				{
+					MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
+					sendQueue.Send(message, transactionType);
+					logger.DebugFormat("Send message {0} to {1}", message.Label, uri);
+				}
+			}
+			catch (Exception e)
+			{
+				throw new TransactionException("Failed to send message to " + uri, e);
+			}
+		}
 
-        #endregion
+		#region Nested type: ErrorCounter
 
-        #region Nested type: QueueState
+		private class ErrorCounter
+		{
+			public string ExceptionText;
+			public int FailureCount;
+		}
 
-        private class QueueState
-        {
-            public MessageQueue Queue;
-            public ManualResetEvent WaitHandle;
-        }
+		#endregion
 
-        #endregion
-    }
+		#region Nested type: QueueState
+
+		private class QueueState
+		{
+			public MessageQueue Queue;
+			public ManualResetEvent WaitHandle;
+		}
+
+		#endregion
+	}
 }

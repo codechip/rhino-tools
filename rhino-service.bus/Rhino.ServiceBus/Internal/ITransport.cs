@@ -29,5 +29,7 @@ namespace Rhino.ServiceBus.Internal
         event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
         void Discard(object msg);
+
+    	void Send(Uri uri, DateTime processAgainAt, object[] msgs);
     }
 }

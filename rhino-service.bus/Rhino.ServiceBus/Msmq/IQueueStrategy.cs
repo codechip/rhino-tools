@@ -3,7 +3,9 @@ using System.Messaging;
 
 namespace Rhino.ServiceBus.Msmq
 {
-    /// <summary>
+	using System.Collections.Generic;
+
+	/// <summary>
     /// Encapsulates handling of messages based on queue layout
     /// </summary>
     public interface IQueueStrategy
@@ -32,5 +34,25 @@ namespace Rhino.ServiceBus.Msmq
         /// <param name="queue">The queue.</param>
         /// <param name="message">The message.</param>
         void MoveToDiscardedQueue(MessageQueue queue, Message message);
+
+		/// <summary>
+		/// Moves the <paramref name="message"/> to the timeout queue.
+		/// </summary>
+		/// <param name="queue">The queue.</param>
+		/// <param name="message">The message.</param>
+    	void MoveToTimeoutQueue(MessageQueue queue, Message message);
+
+		/// <summary>
+		/// Gets a listing of all timeout messages.
+		/// </summary>
+		/// <returns></returns>
+		IEnumerable<TimeoutInfo> GetTimeoutMessages(MessageQueue queue);
+
+		/// <summary>
+		/// Moves the message from the timeout queue to the main queue.
+		/// </summary>
+		/// <param name="queue">The queue.</param>
+		/// <param name="messageId">The message id.</param>
+		void MoveTimeoutToMainQueue(MessageQueue queue, string messageId);
     }
 }

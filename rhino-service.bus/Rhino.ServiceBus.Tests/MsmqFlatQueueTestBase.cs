@@ -32,7 +32,7 @@ namespace Rhino.ServiceBus.Tests
         /// <summary>
         /// we use this to initalize the defaults for the test
         /// </summary>
-        private MsmqTestBase defaultTestBase;
+        private readonly MsmqTestBase defaultTestBase;
 
         public MsmqFlatQueueTestBase()
         {

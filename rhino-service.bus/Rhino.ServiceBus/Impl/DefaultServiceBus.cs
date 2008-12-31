@@ -24,6 +24,8 @@ namespace Rhino.ServiceBus.Impl
         private readonly ITransport transport;
         private readonly MessageOwner[] messageOwners;
 
+    	[ThreadStatic] public static object currentMessage;
+
         public DefaultServiceBus(
             IKernel kernel,
             ITransport transport,
@@ -200,7 +202,26 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        private void AutomaticallySubscribeConsumerMessages()
+    	/// <summary>
+    	/// Handles the current message later.
+    	/// </summary>
+    	public void HandleCurrentMessageLater()
+    	{
+			transport.Send(Endpoint, DateTime.Now, currentMessage);
+    	}
+
+    	/// <summary>
+    	/// Send the message with a built in delay in its processing
+    	/// </summary>
+    	/// <param name="endpoint">The endpoint.</param>
+    	/// <param name="time">The time.</param>
+    	/// <param name="msgs">The messages.</param>
+    	public void DelaySend(Uri endpoint, DateTime time, params object[] msgs)
+    	{
+    		transport.Send(endpoint, time, msgs);
+    	}
+
+    	private void AutomaticallySubscribeConsumerMessages()
         {
             var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));
             foreach (var handler in handlers)
@@ -237,8 +258,9 @@ namespace Rhino.ServiceBus.Impl
         public void Transport_OnMessageArrived(CurrentMessageInformation msg)
         {
             object[] consumers = GatherConsumers(msg);
-
-            if (consumers.Length == 0)
+        	
+            
+			if (consumers.Length == 0)
             {
                 transport.Discard(msg.Message);
                 logger.ErrorFormat("Got message {0}, but had no consumers for it", msg.Message);
@@ -246,7 +268,9 @@ namespace Rhino.ServiceBus.Impl
             }
             try
             {
-                foreach (object consumer in consumers)
+				currentMessage = msg.Message;
+
+                foreach (var consumer in consumers)
                 {
                     reflection.InvokeConsume(consumer, msg.Message);
 
@@ -258,6 +282,8 @@ namespace Rhino.ServiceBus.Impl
             }
             finally
             {
+            	currentMessage = null;
+
                 foreach (var consumer in consumers)
                 {
                     kernel.ReleaseComponent(consumer);

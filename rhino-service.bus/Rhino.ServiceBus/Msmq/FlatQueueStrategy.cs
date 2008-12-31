@@ -3,7 +3,9 @@ using System.Messaging;
 
 namespace Rhino.ServiceBus.Msmq
 {
-    /// <summary>
+	using System.Collections.Generic;
+
+	/// <summary>
     /// Handles message moving to sibling queues.
     /// Suitable for MSMQ 3.0
     /// </summary>
@@ -81,7 +83,42 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        /// <summary>
+		/// <summary>
+		/// Moves the <paramref name="message"/> to the timeout queue.
+		/// </summary>
+		/// <param name="queue">The queue.</param>
+		/// <param name="message">The message.</param>
+		public void MoveToTimeoutQueue(MessageQueue queue, Message message)
+		{
+			using (var destinationQueue = new MessageQueue(GetTimeoutQueuePath(), QueueAccessMode.Send))
+			{
+				destinationQueue.Send(queue.ReceiveByLookupId(message.LookupId), destinationQueue.GetTransactionType());
+			}
+		}
+
+		/// <summary>
+		/// Gets a listing of all timeout messages.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<TimeoutInfo> GetTimeoutMessages(MessageQueue queue)
+		{
+			yield break;
+		}
+
+		/// <summary>
+		/// Moves the message from the timeout queue to the main queue.
+		/// </summary>
+		/// <param name="queue">The queue.</param>
+		/// <param name="messageId">The message id.</param>
+		public void MoveTimeoutToMainQueue(MessageQueue queue, string messageId)
+		{
+			using (var destinationQueue = new MessageQueue(GetTimeoutQueuePath(), QueueAccessMode.Receive))
+			{
+				queue.Send(destinationQueue.ReceiveById(messageId), destinationQueue.GetTransactionType());
+			}
+		}
+
+		/// <summary>
         /// Gets the errors queue path.
         /// </summary>
         /// <returns></returns>
@@ -100,5 +137,15 @@ namespace Rhino.ServiceBus.Msmq
             var path = MsmqUtil.GetQueuePath(endpoint);
             return path + "#discarded";
         }
+
+		/// <summary>
+		/// Gets the timeout queue path.
+		/// </summary>
+		/// <returns></returns>
+		private string GetTimeoutQueuePath()
+		{
+			var path = MsmqUtil.GetQueuePath(endpoint);
+			return path + "#timeout";
+		}
     }
 }
