@@ -31,6 +31,7 @@ namespace Rhino.ServiceBus.Hosting
                 AllTypes.FromAssembly(Assembly)
                     .Where(IsTypeAcceptableForThisBootStrapper)
                     .BasedOn(typeof(IMessageConsumer))
+					.Configure(registration => registration.Named(registration.Implementation.Name))
                 );
         }
 

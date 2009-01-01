@@ -97,8 +97,9 @@ namespace Rhino.ServiceBus.Msmq
 			var fullSubQueueName = queue.Path + ";timeout";
 			using (var timeoutQueue = new MessageQueue(fullSubQueueName, QueueAccessMode.Receive))
 			{
-				var message = timeoutQueue.ReceiveById(messageId);
-				queue.Send(message);
+				var message = timeoutQueue.ReceiveById(messageId, queue.GetTransactionType());
+				message.AppSpecific = 0;//reset timeout flag
+				queue.Send(message, queue.GetTransactionType());
 			}
 		}
 	}

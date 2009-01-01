@@ -36,7 +36,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
             container.Register(
                 AllTypes.FromAssemblyContaining<MyHandler>()
                     .BasedOn<IMessageConsumer>()
-                    .Where(x => x.Name == "MyHandler")
+                    .Where(x => x == typeof(MyHandler))
                 );
 
             var bus = (DefaultServiceBus)container.Resolve<IServiceBus>();

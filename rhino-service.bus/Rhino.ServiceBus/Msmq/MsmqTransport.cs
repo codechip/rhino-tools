@@ -272,35 +272,32 @@ namespace Rhino.ServiceBus.Msmq
 				return;
 			}
 
-			if (peek == null)//nothing was found 
+			try
 			{
-				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-				return;
-			}
-
-			if (DispatchToErrorQueueIfNeeded(state.Queue, message))
-			{
-				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-				return;
-			}
-
-			Func<QueueState, Message, bool> messageAction;
-			if (actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
-			{
-				if (messageAction(state, message))
-				{
-					state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+				if (peek == null)//nothing was found 
 					return;
+
+				if (DispatchToErrorQueueIfNeeded(state.Queue, message))
+					return;
+
+				Func<QueueState, Message, bool> messageAction;
+				if (actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
+				{
+					if (messageAction(state, message))
+						return;
 				}
+
+				logger.DebugFormat("Got message {0} from {1}",
+								   message.Label,
+								   MsmqUtil.GetQueueUri(state.Queue));
+
+				ReceiveMessageInTransaction(state, message.Id);
+
 			}
-
-			logger.DebugFormat("Got message {0} from {1}",
-							   message.Label,
-							   MsmqUtil.GetQueueUri(state.Queue));
-
-			ReceiveMessageInTransaction(state, message.Id);
-
-			state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+			finally
+			{
+				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+			}
 		}
 
 		private static bool ConsumeAndIgnoreMessage(QueueState state, Message message)

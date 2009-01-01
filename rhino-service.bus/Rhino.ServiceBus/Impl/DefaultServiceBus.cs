@@ -310,7 +310,7 @@ namespace Rhino.ServiceBus.Impl
                 .GetInstanceSubscriptions(msg.Message.GetType());
 
             Type consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
-            var consumers = (object[])kernel.ResolveAll(consumerType, new Hashtable());
+            var consumers = GetAllConsumers(consumerType);
             foreach (var consumer in consumers)
             {
                 var saga = consumer as ISaga;
@@ -329,7 +329,22 @@ namespace Rhino.ServiceBus.Impl
                 .ToArray();
         }
 
-        private object[] GetSagasFor(ISagaMessage sagaMessage)
+		/// <summary>
+		/// Here we don't use ResolveAll from Windsor because we want to get an error
+		/// if a component exists which isn't valid
+		/// </summary>
+    	private object[] GetAllConsumers(Type consumerType)
+    	{
+			var handlers = kernel.GetAssignableHandlers(consumerType);
+			var consumers = new List<object>(handlers.Length);
+			foreach (var handler in handlers)
+			{
+				consumers.Add(handler.Resolve(CreationContext.Empty));
+			}
+			return consumers.ToArray();
+    	}
+
+    	private object[] GetSagasFor(ISagaMessage sagaMessage)
         {
             if (sagaMessage == null)
                 return new object[0];
