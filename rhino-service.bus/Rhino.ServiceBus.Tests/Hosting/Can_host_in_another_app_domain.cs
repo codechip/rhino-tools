@@ -13,10 +13,10 @@ namespace Rhino.ServiceBus.Tests.Hosting
 {
     public class Can_host_in_another_app_domain : IDisposable, OccasionalConsumerOf<string>
     {
-        readonly RemoteAppDomainHost host = new RemoteAppDomainHost(Assembly.GetExecutingAssembly().Location);
+        readonly RemoteAppDomainHost host = new RemoteAppDomainHost(typeof(TestBootStrapper));
         private string reply;
 
-        private ManualResetEvent resetEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent resetEvent = new ManualResetEvent(false);
 
         private readonly IWindsorContainer container;
 
@@ -28,9 +28,19 @@ namespace Rhino.ServiceBus.Tests.Hosting
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
         }
 
+		[Fact]
+		public void Components_are_registered_using_name_only()
+		{
+			var windsorContainer = new WindsorContainer();
+			new SimpleBootStrapper().InitializeContainer(windsorContainer);
+			var handler = windsorContainer.Kernel.GetHandler(typeof(TestRemoteHandler).Name);
+			Assert.NotNull(handler);
+		}
+
         [Fact]
         public void And_accept_messages_from_there()
         {
+			
             host.Start();
 
             using(var bus = container.Resolve<IStartableServiceBus>())
@@ -59,6 +69,11 @@ namespace Rhino.ServiceBus.Tests.Hosting
             resetEvent.Set();
         }
     }
+
+	public class SimpleBootStrapper : AbstractBootStrapper
+	{
+		
+	}
 
     public class TestBootStrapper : AbstractBootStrapper
     {

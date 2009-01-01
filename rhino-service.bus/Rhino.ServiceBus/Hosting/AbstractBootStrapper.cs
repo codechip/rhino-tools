@@ -28,14 +28,22 @@ namespace Rhino.ServiceBus.Hosting
         protected virtual void ConfigureContainer()
         {
             container.Register(
-                AllTypes.FromAssembly(Assembly)
-                    .Where(IsTypeAcceptableForThisBootStrapper)
-                    .BasedOn(typeof(IMessageConsumer))
-					.Configure(registration => registration.Named(registration.Implementation.Name))
+                AllTypes
+					.FromAssembly(Assembly)
+					.Where(type => 
+						typeof(IMessageConsumer).IsAssignableFrom(type) && 
+						IsTypeAcceptableForThisBootStrapper(type)
+					)
+					.Configure((Action<ComponentRegistration>)ConfigureConsumer)
                 );
         }
 
-        protected virtual bool IsTypeAcceptableForThisBootStrapper(Type t)
+    	protected virtual void ConfigureConsumer(ComponentRegistration registration)
+    	{
+    		registration.Named(registration.Implementation.Name);
+    	}
+
+    	protected virtual bool IsTypeAcceptableForThisBootStrapper(Type t)
         {
             return true;
         }
