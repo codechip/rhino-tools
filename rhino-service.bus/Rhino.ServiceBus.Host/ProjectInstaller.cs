@@ -28,7 +28,8 @@ namespace Rhino.ServiceBus.Host
 		{
 			set
 			{
-				this.serviceInstaller1.DisplayName = value;
+				serviceInstaller1.DisplayName = value;
+				serviceInstaller1.ServiceName = value;
 			}
 		}
 

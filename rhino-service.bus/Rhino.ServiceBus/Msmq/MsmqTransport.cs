@@ -472,7 +472,7 @@ namespace Rhino.ServiceBus.Msmq
 					Label = label,
 					Body = errorCounter.ExceptionText,
 					CorrelationId = message.Id,
-				});
+				},messageQueue.GetTransactionType());
 				logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
 								  errorCounter.ExceptionText);
 				return true;

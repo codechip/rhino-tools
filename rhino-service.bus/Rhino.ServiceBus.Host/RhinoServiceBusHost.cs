@@ -1,19 +1,25 @@
-﻿using System.ServiceProcess;
-
-namespace Rhino.ServiceBus.Host
+﻿namespace Rhino.ServiceBus.Host
 {
+	using System.ServiceProcess;
+	using System.Threading;
 	using Hosting;
 
-	partial class RhinoServiceBusHost : ServiceBase
+	internal partial class RhinoServiceBusHost : ServiceBase
 	{
 		private RemoteAppDomainHost host;
+		private string[] args;
 
 		public RhinoServiceBusHost()
 		{
 			InitializeComponent();
 		}
 
-		protected override void OnStart(string[] args)
+		public void SetArguments(string[] arguments)
+		{
+			args = arguments;
+		}
+
+		protected override void OnStart(string[] ignored)
 		{
 			host = new RemoteAppDomainHost(args[0]);
 			host.Start();
