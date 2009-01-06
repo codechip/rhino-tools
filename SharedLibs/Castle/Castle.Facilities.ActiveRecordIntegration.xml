@@ -19,6 +19,11 @@
             Initializes a new instance of the <see cref="T:Castle.Facilities.ActiveRecordIntegration.ActiveRecordFacility"/> class.
             </summary>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.ActiveRecordFacility.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.ActiveRecordIntegration.ActiveRecordFacility"/> class.
+            </summary>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.ActiveRecordFacility.Init">
             <summary>
             The custom initialization for the Facility.
@@ -155,6 +160,16 @@
             <param name="lockMode">The lock level</param>
             <returns>the persistent instance</returns>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Load(System.String,System.Object,NHibernate.LockMode)">
+            <summary>
+            Return the persistent instance of the given entity class with the given identifier,
+            obtaining the specified lock mode.
+            </summary>
+            <param name="entityName">Name of the entity</param>
+            <param name="id">A valid identifier of an existing persistent instance of the class</param>
+            <param name="lockMode">The lock level</param>
+            <returns>the persistent instance</returns>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Load(System.Type,System.Object)">
             <summary>
             Return the persistent instance of the given entity class with the given identifier,
@@ -185,6 +200,14 @@
             <typeparam name="T"></typeparam>
             <param name="id">The id.</param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Load(System.String,System.Object)">
+            <summary>
+            Read the persistent state associated with the given identifier into the given transient
+            instance.
+            </summary>
+            <param name="entityName">Name of the entity</param>
+            <param name="id">A valid identifier of an existing persistent instance of the class</param>
         </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Load(System.Object,System.Object)">
             <summary>
@@ -473,6 +496,17 @@
             transient instance with an identifier associated with existing persistent state.
             </remarks>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Delete(System.String,System.Object)">
+            <summary>
+            Remove a persistent instance from the datastore.
+            </summary>
+            <param name="entityName">Name of the entity</param>
+            <param name="obj">The instance to be removed</param>
+            <remarks>
+            The argument may be an instance associated with the receiving <c>ISession</c> or a
+            transient instance with an identifier associated with existing persistent state.
+            </remarks>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.Find(System.String)">
             <summary>
             Execute a query
@@ -746,6 +780,21 @@
             <param name="alias">The alias of the entity</param>
             <returns>An ICriteria object</returns>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateCriteria(System.String)">
+            <summary>
+            Creates a new <c>Criteria</c> for the entity class with a specific alias
+            </summary>
+            <param name="entityName">Name of the entity</param>
+            <returns>An ICriteria object</returns>
+        </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateCriteria(System.String,System.String)">
+            <summary>
+            Creates a new <c>Criteria</c> for the entity class with a specific alias
+            </summary>
+            <param name="entityName">Name of the entity</param>
+            <param name="alias">The alias of the entity</param>
+            <returns>An ICriteria object</returns>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateQuery(System.String)">
             <summary>
             Create a new instance of <c>Query</c> for the given query string
@@ -899,6 +948,12 @@
             </summary>
             <value></value>
         </member>
+        <member name="P:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.ActiveEntityMode">
+            <summary>
+            Gets the active entity mode.
+            </summary>
+            <value>The active entity mode.</value>
+        </member>
         <member name="T:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate">
             <summary>
             Implements <see cref="T:NHibernate.ISessionFactory"/> allowing 
@@ -907,247 +962,12 @@
             is implemented
             </summary>
         </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.#ctor(Castle.ActiveRecord.Framework.ISessionFactoryHolder,System.Type)">
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Create(Castle.ActiveRecord.Framework.ISessionFactoryHolder,System.Type)">
             <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate"/> class.
+            Creates the specified session factory delegate from the holder and root type
             </summary>
-            <param name="holder">The holder.</param>
-            <param name="arRootType">Type of the ar root.</param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenSession(System.Data.IDbConnection)">
-            <summary>
-            Open a <c>ISession</c> on the given connection
-            </summary>
-            <param name="conn">A connection provided by the application</param>
-            <returns>A session</returns>
-            <remarks>
-            Note that the second-level cache will be disabled if you
-            supply a ADO.NET connection. NHibernate will not be able to track
-            any statements you might have executed in the same transaction.
-            Consider implementing your own <see cref="T:NHibernate.Connection.IConnectionProvider"/>.
-            </remarks>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenSession(NHibernate.IInterceptor)">
-            <summary>
-            Create database connection and open a <c>ISession</c> on it, specifying an interceptor
-            </summary>
-            <param name="interceptor">A session-scoped interceptor</param>
-            <returns>A session</returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenSession(System.Data.IDbConnection,NHibernate.IInterceptor)">
-            <summary>
-            Open a <c>ISession</c> on the given connection, specifying an interceptor
-            </summary>
-            <param name="conn">A connection provided by the application</param>
-            <param name="interceptor">A session-scoped interceptor</param>
-            <returns>A session</returns>
-            <remarks>
-            Note that the second-level cache will be disabled if you
-            supply a ADO.NET connection. NHibernate will not be able to track
-            any statements you might have executed in the same transaction.
-            Consider implementing your own <see cref="T:NHibernate.Connection.IConnectionProvider"/>.
-            </remarks>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenSession">
-            <summary>
-            Create a database connection and open a <c>ISession</c> on it
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenDatabinder">
-            <summary>
-            Create a new databinder.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetClassMetadata(System.Type)">
-            <summary>
-            Get the <c>ClassMetadata</c> associated with the given entity class
-            </summary>
-            <param name="persistentType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetClassMetadata(System.String)">
-            <summary>
-            Get the <see cref="T:NHibernate.Metadata.IClassMetadata"/> associated with the given entity name
-            </summary>
-            <param name="entityName">the given entity name.</param>
-            <returns>
-            The class metadata or <see langword="null"/> if not found.
-            </returns>
-            <seealso cref="T:NHibernate.Metadata.IClassMetadata"/>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetCollectionMetadata(System.String)">
-            <summary>
-            Get the <c>CollectionMetadata</c> associated with the named collection role
-            </summary>
-            <param name="roleName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetAllClassMetadata">
-            <summary>
-            Get all <see cref="T:NHibernate.Metadata.IClassMetadata"/> as a <see cref="T:System.Collections.IDictionary"/> from entityname <see langword="string"/>
-            to metadata object
-            </summary>
-            <returns>
-            A dictionary from <see langword="string"/> an entity name to <see cref="T:NHibernate.Metadata.IClassMetadata"/>
-            </returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetCurrentSession">
-            <summary>
-            Obtains the current session.
-            </summary>
-            <returns>The current session.</returns>
-            <remarks>Needed for NHibernate 1.2 from trunk</remarks>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Close">
-            <summary>
-            Destroy this <c>SessionFactory</c> and release all resources
-            connection pools, etc). It is the responsibility of the application
-            to ensure that there are no open <c>Session</c>s before calling
-            <c>close()</c>.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Evict(System.Type)">
-            <summary>
-            Evict all entries from the process-level cache.  This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy.  Use with care.
-            </summary>
-            <param name="persistentClass"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Evict(System.Type,System.Object)">
-            <summary>
-            Evict an entry from the process-level cache.  This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy.  Use with care.
-            </summary>
-            <param name="persistentClass"></param>
-            <param name="id"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictCollection(System.String)">
-            <summary>
-            Evict all entries from the process-level cache.  This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy.  Use with care.
-            </summary>
-            <param name="roleName"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictCollection(System.String,System.Object)">
-            <summary>
-            Evict an entry from the process-level cache.  This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy.  Use with care.
-            </summary>
-            <param name="roleName"></param>
-            <param name="id"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictQueries">
-            <summary>
-            Evict any query result sets cached in the default query cache region.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictQueries(System.String)">
-            <summary>
-            Evict any query result sets cached in the named query cache region.
-            </summary>
-            <param name="cacheRegion"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetFilterDefinition(System.String)">
-            <summary>
-            Obtain the definition of a filter by name.
-            </summary>
-            <param name="filterName">The name of the filter for which to obtain the definition.</param>
-            <returns></returns>
-            <return>The filter definition.</return>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictEntity(System.String)">
-            <summary>
-            Evict all entries from the second-level cache. This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy. Use with care.
-            </summary>
-            <param name="entityName"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.EvictEntity(System.String,System.Object)">
-            <summary>
-            Evict an entry from the second-level  cache. This method occurs outside
-            of any transaction; it performs an immediate "hard" remove, so does not respect
-            any transaction isolation semantics of the usage strategy. Use with care.
-            </summary>
-            <param name="entityName"></param>
-            <param name="id"></param>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenStatelessSession">
-            <summary>
-            Get a new stateless session.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.OpenStatelessSession(System.Data.IDbConnection)">
-            <summary>
-            Get a new stateless session for the given ADO.NET connection.
-            </summary>
-            <param name="connection"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Dispose">
-            <summary>
-            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.GetAllCollectionMetadata">
-            <summary>
-            Get all <c>CollectionMetadata</c> as a <c>IDictionary</c> from role name
-            to metadata object
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.ConnectionProvider">
-            <summary>
-            Get the <see cref="T:NHibernate.Connection.IConnectionProvider"/> used.
-            </summary>
-            <value></value>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Dialect">
-            <summary>
-            Get the SQL <c>Dialect</c>
-            </summary>
-            <value></value>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.DefinedFilterNames">
-            <summary>
-            Obtain a set of the names of all filters defined on this SessionFactory.
-            </summary>
-            <value></value>
-            <return>The set of filter names.</return>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Settings">
-            <summary>
-            Gets the settings.
-            </summary>
-            <value>The settings.</value>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Items">
-            <summary>
-            This collections allows external libraries
-            to add their own configuration to the NHibernate session factory.
-            This is needed in such cases where the library is tightly coupled to NHibernate, such
-            as the case of NHibernate Search
-            </summary>
-            <value></value>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.Statistics">
-            <summary>
-            Get the statistics for this session factory
-            </summary>
-            <value></value>
-        </member>
-        <member name="P:Castle.Facilities.ActiveRecordIntegration.SessionFactoryDelegate.IsClosed">
-            <summary>
-            Was this <see cref="T:NHibernate.ISessionFactory"/> already closed?
-            </summary>
-            <value></value>
+            <param name="sessionFactoryHolder">The session factory holder.</param>
+            <param name="arType">Type of the AR entity.</param>
         </member>
         <member name="T:Castle.Facilities.ActiveRecordIntegration.TransactionScopeResourceAdapter">
             <summary>
