@@ -5,7 +5,10 @@ using log4net;
 
 namespace Rhino.ServiceBus.Hosting
 {
-    public class RemoteAppDomainHost
+	using System.Reflection;
+	using System.Text;
+
+	public class RemoteAppDomainHost
     {
         private readonly Type boosterType;
         private readonly string assembly;
@@ -67,7 +70,19 @@ namespace Rhino.ServiceBus.Hosting
 
             current = service;
 
-            service.Start();
+        	try
+        	{
+        		service.Start();
+        	}
+			catch (ReflectionTypeLoadException e)
+			{
+				var sb = new StringBuilder();
+				foreach (var exception in e.LoaderExceptions)
+				{
+					sb.AppendLine(exception.ToString());
+				}
+				throw new TypeLoadException(sb.ToString(), e);
+			}
         }
 
         private HostedService CreateNewAppDomain()
