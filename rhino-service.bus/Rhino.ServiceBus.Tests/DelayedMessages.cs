@@ -23,31 +23,35 @@ namespace Rhino.ServiceBus.Tests
 		public void Can_handle_message_later()
 		{
 			HandleMessageLater.ResetEvent = new ManualResetEvent(false);
-			var bus = container.Resolve<IStartableServiceBus>();
-			bus.Start();
-			bus.Send(bus.Endpoint, "foobar");
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+                bus.Send(bus.Endpoint, "foobar");
 
-			HandleMessageLater.ResetEvent.WaitOne();
+                HandleMessageLater.ResetEvent.WaitOne();
 
-			Assert.True(HandleMessageLater.recievedFirst);
-			Assert.True(HandleMessageLater.recievedSecond);
+                Assert.True(HandleMessageLater.recievedFirst);
+                Assert.True(HandleMessageLater.recievedSecond);
+            }
 		}
 
 		[Fact]
 		public void Can_send_message_with_time_delay()
 		{
 			HandleMessageLater.ResetEvent = new ManualResetEvent(false);
-			var bus = container.Resolve<IStartableServiceBus>();
-			bus.Start();
-			
-			ProcessInteger.Timestamp = DateTime.MinValue;
-			ProcessInteger.ResetEvent = new ManualResetEvent(false);
-			
-			var beforeSend = DateTime.Now;
-			bus.DelaySend(bus.Endpoint,  DateTime.Now.AddMilliseconds(250), 5);
-			ProcessInteger.ResetEvent.WaitOne();
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
 
-			Assert.True( (DateTime.Now - beforeSend).TotalMilliseconds >= 250 );
+                ProcessInteger.Timestamp = DateTime.MinValue;
+                ProcessInteger.ResetEvent = new ManualResetEvent(false);
+
+                var beforeSend = DateTime.Now;
+                bus.DelaySend(bus.Endpoint, DateTime.Now.AddMilliseconds(250), 5);
+                ProcessInteger.ResetEvent.WaitOne();
+
+                Assert.True((DateTime.Now - beforeSend).TotalMilliseconds >= 250);
+            }
 		}
 
 		public class ProcessInteger: ConsumerOf<int>

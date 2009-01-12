@@ -23,17 +23,19 @@ namespace Rhino.ServiceBus.Tests.Bugs
 		[Fact]
 		public void Error_subqeueu_will_contain_error_details()
 		{
-			var bus = container.Resolve<IStartableServiceBus>();
-			bus.Start();
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
 
-			bus.Send(bus.Endpoint, DateTime.Now);
+                bus.Send(bus.Endpoint, DateTime.Now);
 
-			using(var errorSubQueue = new MessageQueue(MsmqUtil.GetQueuePath(bus.Endpoint+";errors")))
-			{
-				var originalMessage = errorSubQueue.Receive(MessageQueueTransactionType.Single);
-				var errorDescripotion = errorSubQueue.Receive(MessageQueueTransactionType.Single);
-				Assert.Equal("Error description for " + originalMessage.Label, errorDescripotion.Label);
-			}
+                using (var errorSubQueue = new MessageQueue(MsmqUtil.GetQueuePath(bus.Endpoint + ";errors")))
+                {
+                    var originalMessage = errorSubQueue.Receive(MessageQueueTransactionType.Single);
+                    var errorDescripotion = errorSubQueue.Receive(MessageQueueTransactionType.Single);
+                    Assert.Equal("Error description for " + originalMessage.Label, errorDescripotion.Label);
+                }
+            }
 		}
 
 		public class ThrowingConsumer : ConsumerOf<DateTime>
