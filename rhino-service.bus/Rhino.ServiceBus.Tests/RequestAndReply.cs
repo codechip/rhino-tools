@@ -49,17 +49,16 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                var consumer = new PingConsumer(bus);
-                var weakConsumer = new WeakReference(consumer);
+                var weakConsumer = new WeakReference(new PingConsumer(bus));
 
-                using (bus.AddInstanceSubscription(consumer))
+                using (bus.AddInstanceSubscription((IMessageConsumer)weakConsumer.Target))
                 {
-                    consumer = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-             
-                    Assert.False(weakConsumer.IsAlive);
+                  
                 }
+                GC.Collect(2);
+                GC.WaitForPendingFinalizers();
+             
+                Assert.False(weakConsumer.IsAlive);
             }
         }
 

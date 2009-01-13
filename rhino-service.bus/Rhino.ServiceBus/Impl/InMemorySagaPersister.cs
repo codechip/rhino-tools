@@ -13,18 +13,18 @@ namespace Rhino.ServiceBus.Impl
         public TSaga Get(Guid id)
         {
             TSaga val = null;
-            dictionary.Read(get => get(id, out val));
+            dictionary.Read(reader => reader.TryGetValue(id, out val));
             return val;
         }
 
         public void Save(TSaga saga)
         {
-            dictionary.Write((add,remove, tryGet) => add(saga.Id, saga));
+            dictionary.Write(writer => writer.Add(saga.Id, saga));
         }
 
         public void Complete(TSaga saga)
         {
-            dictionary.Write((add, remove, tryGet) => remove(saga.Id));
+            dictionary.Write(writer => writer.Remove(saga.Id));
         }
     }
 }

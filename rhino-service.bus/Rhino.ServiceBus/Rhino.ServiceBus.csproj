@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1B21C8A5-5E0E-412B-A7F4-9F28B4427F21}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
     <Compile Include="DataStructures\Hashtable.cs" />
     <Compile Include="Exceptions\UnboundedResultSetException.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Hosting\RemoteAppDomainHost.cs" />
     <Compile Include="Impl\DefaultServiceBus.cs" />
     <Compile Include="Impl\DisposableAction.cs" />
+    <Compile Include="Impl\InstanceSubscriptionInformation.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
     <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
@@ -88,12 +90,14 @@
     <Compile Include="Internal\ISubscriptionStorage.cs" />
     <Compile Include="MessageModules\IMessageModule.cs" />
     <Compile Include="MessageModules\MessageLoggingModule.cs" />
+    <Compile Include="Messages\AddInstanceSubscription.cs" />
     <Compile Include="Messages\AddSubscription.cs" />
     <Compile Include="Messages\AdministrativeMessage.cs" />
     <Compile Include="Messages\MessageArrivedMessage.cs" />
     <Compile Include="Messages\MessageProcessingFailedMessage.cs" />
     <Compile Include="Messages\MessageProcessingCompletedMessage.cs" />
     <Compile Include="Messages\MessageSentMessage.cs" />
+    <Compile Include="Messages\RemoveInstanceSubscription.cs" />
     <Compile Include="Messages\RemoveSubscription.cs" />
     <Compile Include="Messages\SerializationErrorMessage.cs" />
     <Compile Include="Msmq\FlatQueueStrategy.cs" />

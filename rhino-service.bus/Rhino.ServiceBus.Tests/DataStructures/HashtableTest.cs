@@ -13,20 +13,20 @@ namespace Rhino.ServiceBus.Tests.DataStructures
         public void Can_add_item_to_dictionary()
         {
             dic.Write(
-                delegate(AddAction<string, int> add, RemoveAction<string> remove, TryGetAction<string, int> tryGet)
+                writer=>
                 {
-                    add("a", 5);
-                    add("b", 7);
-                    add("c", 6);
+                    writer.Add("a", 5);
+                    writer.Add("b", 7);
+                    writer.Add("c", 6);
                 });
-            dic.Read(get =>
+            dic.Read(reader =>
             {
                 int val;
-                get("a", out val);
+                reader.TryGetValue("a", out val);
                 Assert.Equal(5, val);
-                get("b", out val);
+                reader.TryGetValue("b", out val);
                 Assert.Equal(7, val);
-                get("c", out val);
+                reader.TryGetValue("c", out val);
                 Assert.Equal(6, val);
             });
         }
@@ -34,15 +34,15 @@ namespace Rhino.ServiceBus.Tests.DataStructures
         [Fact]
         public void Can_remove_item_to_dictionary()
         {
-            dic.Write((add, remove, tryGet) =>
+            dic.Write(writer =>
             {
-                add("a", 5);
-                add("c", 6);
+                writer.Add("a", 5);
+                writer.Add("c", 6);
             });
-            dic.Read(get =>
+            dic.Read(reader =>
             {
                 int val;
-                bool result = get("b", out val);
+                bool result = reader.TryGetValue("b", out val);
                 Assert.False(result);
             });
         }
@@ -50,10 +50,10 @@ namespace Rhino.ServiceBus.Tests.DataStructures
         [Fact]
         public void Can_iterate_over_items_in_dictionary()
         {
-            dic.Write((add, remove, tryGet) =>
+            dic.Write(writer=>
             {
-                add("a", 5);
-                add("c", 6);
+                writer.Add("a", 5);
+                writer.Add("c", 6);
             });
 
             KeyValuePair<string, int>[] array = dic.OrderBy(x => x.Key)

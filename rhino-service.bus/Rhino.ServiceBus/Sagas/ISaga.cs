@@ -1,4 +1,5 @@
 using System;
+using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Sagas
 {

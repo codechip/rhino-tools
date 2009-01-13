@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
-using System.Threading;
 using log4net;
+using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
@@ -15,12 +15,12 @@ namespace Rhino.ServiceBus.Msmq
     public class MsmqSubscriptionStorage : ISubscriptionStorage, IMessageModule
     {
         private readonly Uri subscriptionQueue;
-        private readonly Dictionary<string, List<WeakReference>> consumers = new Dictionary<string, List<WeakReference>>();
+        private readonly Hashtable<string, List<WeakReference>> localInstanceSubscriptions = new Hashtable<string, List<WeakReference>>();
+        private readonly MultiValueIndexHashtable<Guid, string, Uri, string> remoteInstanceSubscriptions = new MultiValueIndexHashtable<Guid, string, Uri, string>();
 
-        private readonly Dictionary<string, HashSet<Uri>> subscriptions = new Dictionary<string, HashSet<Uri>>();
-        private readonly Dictionary<TypeAndUriKey, IList<string>> subscriptionMessageIds = new Dictionary<TypeAndUriKey, IList<string>>();
+        private readonly Hashtable<string, HashSet<Uri>> subscriptions = new Hashtable<string, HashSet<Uri>>();
+        private readonly Hashtable<TypeAndUriKey, IList<string>> subscriptionMessageIds = new Hashtable<TypeAndUriKey, IList<string>>();
 
-        private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
         private readonly IReflection reflection;
         private readonly IMessageSerializer messageSerializer;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Msmq
         public MsmqSubscriptionStorage(
                     IReflection reflection,
                     IMessageSerializer messageSerializer,
-                    Uri subscriptionQueue, 
+                    Uri subscriptionQueue,
                     IQueueStrategy queueStrategy
             )
         {
@@ -38,6 +38,7 @@ namespace Rhino.ServiceBus.Msmq
             this.queueStrategy = queueStrategy;
             this.subscriptionQueue = this.queueStrategy.CreateSubscriptionQueueUri(subscriptionQueue);
         }
+
         public void Initialize()
         {
             logger.DebugFormat("Initializing msmq subscription storage on: {0}", subscriptionQueue);
@@ -83,36 +84,38 @@ namespace Rhino.ServiceBus.Msmq
 
         private void AddMessageIdentifierForTracking(string messageId, string messageType, Uri uri)
         {
-            var key = new TypeAndUriKey { TypeName = messageType, Uri = uri };
-            IList<string> value;
-            if (subscriptionMessageIds.TryGetValue(key, out value) == false)
+            subscriptionMessageIds.Write(writer =>
             {
-                subscriptionMessageIds[key] = value = new List<string>();
-            }
-            value.Add(messageId);
+                var key = new TypeAndUriKey { TypeName = messageType, Uri = uri };
+                IList<string> value;
+                if (writer.TryGetValue(key, out value) == false)
+                {
+                    value = new List<string>();
+                    writer.Add(key, value);
+                }
+                value.Add(messageId);
+            });
         }
 
         private void RemoveSubscriptionMessageFromQueue(MessageQueue queue, string type, Uri uri)
         {
-            var key = new TypeAndUriKey
-            {
-                TypeName = type,
-                Uri = uri
-            };
-            IList<string> messageIds;
-            if (subscriptionMessageIds.TryGetValue(key, out messageIds) == false)
-                return;
-            foreach (var msgId in messageIds)
-            {
-                try
-                {
-                    queue.ReceiveById(msgId, MessageQueueTransactionType.Single);
-                }
-                catch (InvalidOperationException)
-                {
-                    // could not find message in queue
-                }
-            }
+            subscriptionMessageIds.Write(writer =>
+             {
+                 var key = new TypeAndUriKey
+                 {
+                     TypeName = type,
+                     Uri = uri
+                 };
+                 IList<string> messageIds;
+                 if (writer.TryGetValue(key, out messageIds) == false)
+                     return;
+                 foreach (var msgId in messageIds)
+                 {
+                     queue.ConsumeMessage(msgId);
+                 }
+                 writer.Remove(key);
+             });
+
         }
 
         private static MessageQueue CreateSubscriptionQueue(Uri subscriptionQueue, QueueAccessMode accessMode)
@@ -134,41 +137,44 @@ namespace Rhino.ServiceBus.Msmq
 
         public IEnumerable<Uri> GetSubscriptionsFor(Type type)
         {
-            readerWriterLock.EnterReadLock();
-            try
-            {
-                HashSet<Uri> subscriptionForType;
-                if (subscriptions.TryGetValue(type.FullName, out subscriptionForType) == false)
-                    return new Uri[0];
-                return subscriptionForType;
-            }
-            finally
-            {
-                readerWriterLock.ExitReadLock();
-            }
+            HashSet<Uri> subscriptionForType = null;
+            subscriptions.Read(reader => reader.TryGetValue(type.FullName, out subscriptionForType));
+            var subscriptionsFor = subscriptionForType ?? new HashSet<Uri>();
+
+            List<Uri> instanceSubscriptions;
+            remoteInstanceSubscriptions.TryGet(type.FullName, out instanceSubscriptions);
+
+            subscriptionsFor.UnionWith(instanceSubscriptions);
+
+            return subscriptionsFor;
         }
 
-        public void RemoveInstanceSubscription(IMessageConsumer consumer)
+        public void RemoveLocalInstanceSubscription(IMessageConsumer consumer)
         {
             var messagesConsumes = reflection.GetMessagesConsumed(consumer);
             bool changed = false;
-            readerWriterLock.EnterWriteLock();
-            try
+            var list = new List<WeakReference>();
+
+            localInstanceSubscriptions.Write(writer =>
             {
                 foreach (var type in messagesConsumes)
                 {
                     List<WeakReference> value;
 
-                    if (consumers.TryGetValue(type.FullName, out value) == false)
+                    if (writer.TryGetValue(type.FullName, out value) == false)
                         continue;
-
-                    if (value.RemoveAll(x => ReferenceEquals(x.Target, consumer)) > 0)
-                        changed = true;
+                    writer.Remove(type.FullName);
+                    list.AddRange(value);
                 }
-            }
-            finally
+            });
+
+            foreach (WeakReference reference in list)
             {
-                readerWriterLock.ExitWriteLock();
+                if (ReferenceEquals(reference.Target, consumer))
+                    continue;
+
+                changed = true;
+
             }
             if (changed)
                 RaiseSubscriptionChanged();
@@ -176,18 +182,12 @@ namespace Rhino.ServiceBus.Msmq
 
         public object[] GetInstanceSubscriptions(Type type)
         {
-            List<WeakReference> value;
+            List<WeakReference> value = null;
 
-            readerWriterLock.EnterReadLock();
-            try
-            {
-                if (consumers.TryGetValue(type.FullName, out value) == false)
-                    return new object[0];
-            }
-            finally
-            {
-                readerWriterLock.ExitReadLock();
-            }
+            localInstanceSubscriptions.Read(reader => reader.TryGetValue(type.FullName, out value));
+
+            if (value == null)
+                return new object[0];
 
             var liveInstances = value
                 .Select(x => x.Target)
@@ -196,75 +196,101 @@ namespace Rhino.ServiceBus.Msmq
 
             if (liveInstances.Length != value.Count)//cleanup
             {
-                readerWriterLock.EnterWriteLock();
-                try
-                {
-                    value.RemoveAll(x => x.IsAlive == false);
-                }
-                finally
-                {
-                    readerWriterLock.ExitWriteLock();
-                }
-
+                localInstanceSubscriptions.Write(writer => value.RemoveAll(x => x.IsAlive == false));
             }
 
             return liveInstances;
         }
 
-        public void HandleAdministrativeMessage(CurrentMessageInformation msgInfo)
+        public bool HandleAdministrativeMessage(CurrentMessageInformation msgInfo)
         {
-            var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
             var addSubscription = msgInfo.Message as AddSubscription;
             if (addSubscription != null)
             {
-                bool newSubscription = AddSubscription(addSubscription.Type, addSubscription.Endpoint);
-                AddMessageIdentifierForTracking(msgInfo.MessageId.ToString(), addSubscription.Type, new Uri(addSubscription.Endpoint));
-                if (msmqMsgInfo != null)
-                {
-                    if (newSubscription)
-                        queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue,msmqMsgInfo.MsmqMessage);
-                    else
-                        ConsumeMessageFromQueue(msmqMsgInfo);
-                }
-                return;
+                return ConsumeAddSubscription(msgInfo, addSubscription);
             }
             var removeSubscription = msgInfo.Message as RemoveSubscription;
-            if (removeSubscription == null)
-                return;
-            RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
-            ConsumeMessageFromQueue(msmqMsgInfo);
+            if (removeSubscription != null)
+            {
+                return ConsumeRemoveSubscription(removeSubscription);
+            }
+            var addInstanceSubscription = msgInfo.Message as AddInstanceSubscription;
+            if (addInstanceSubscription != null)
+            {
+                return ConsumeAddInstanceSubscription(msgInfo, addInstanceSubscription);
+            }
+            var removeInstanceSubscription = msgInfo.Message as RemoveInstanceSubscription;
+            if (removeInstanceSubscription != null)
+            {
+                return ConsumeRemoveInstanceSubscrion(removeInstanceSubscription);
+            }
+            return false;
         }
 
-        private static void ConsumeMessageFromQueue(MsmqCurrentMessageInformation msmqMsgInfo)
+        private bool ConsumeRemoveInstanceSubscrion(RemoveInstanceSubscription subscription)
         {
-            if (msmqMsgInfo == null)
-                return;
-                
-            try
+            string msgId;
+            if(remoteInstanceSubscriptions.TryRemove(subscription.InstanceSubscriptionKey,out msgId))
             {
-                msmqMsgInfo.Queue.ReceiveById(
-                    msmqMsgInfo.MsmqMessage.Id,
-                    msmqMsgInfo.TransactionType);
+                using (var queue = CreateSubscriptionQueue(subscriptionQueue, QueueAccessMode.Receive))
+                {
+                    queue.ConsumeMessage(msgId);
+                }
+                RaiseSubscriptionChanged();
             }
-            catch (InvalidOperationException)
-            {
-                // could not find message on queue
-            }
+            return true;
         }
+
+        private bool ConsumeAddInstanceSubscription(CurrentMessageInformation msgInfo, AddInstanceSubscription subscription)
+        {
+            remoteInstanceSubscriptions.Add(
+                subscription.InstanceSubscriptionKey, 
+                subscription.Type,
+                new Uri(subscription.Endpoint), 
+                msgInfo.MessageId);
+            var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
+            if (msmqMsgInfo != null)
+                queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue, msmqMsgInfo.MsmqMessage);
+            RaiseSubscriptionChanged();
+            return true;
+        }
+
+        private bool ConsumeRemoveSubscription(RemoveSubscription removeSubscription)
+        {
+            RemoveSubscription(removeSubscription.Type, removeSubscription.Endpoint);
+            return true;
+        }
+
+        private bool ConsumeAddSubscription(CurrentMessageInformation msgInfo, AddSubscription addSubscription)
+        {
+            bool newSubscription = AddSubscription(addSubscription.Type, addSubscription.Endpoint);
+
+            AddMessageIdentifierForTracking(msgInfo.MessageId.ToString(), addSubscription.Type,
+                                             new Uri(addSubscription.Endpoint));
+            
+            var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
+
+            if (msmqMsgInfo != null && newSubscription)
+            {
+                queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue, msmqMsgInfo.MsmqMessage);
+                return true;
+            }
+            return false;
+        }
+
 
         public event Action SubscriptionChanged;
 
         public bool AddSubscription(string type, string endpoint)
         {
-            bool added;
-            readerWriterLock.EnterWriteLock();
-            try
+            bool added = false;
+            subscriptions.Write(writer =>
             {
                 HashSet<Uri> subscriptionsForType;
-                if (subscriptions.TryGetValue(type, out subscriptionsForType) == false)
+                if (writer.TryGetValue(type, out subscriptionsForType) == false)
                 {
                     subscriptionsForType = new HashSet<Uri>();
-                    subscriptions[type] = subscriptionsForType;
+                    writer.Add(type, subscriptionsForType);
                 }
 
                 var uri = new Uri(endpoint);
@@ -272,11 +298,7 @@ namespace Rhino.ServiceBus.Msmq
 
                 logger.InfoFormat("Added subscription for {0} on {1}",
                                   type, uri);
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
+            });
 
             RaiseSubscriptionChanged();
             return added;
@@ -297,51 +319,40 @@ namespace Rhino.ServiceBus.Msmq
                 RemoveSubscriptionMessageFromQueue(queue, type, uri);
             }
 
-            readerWriterLock.EnterWriteLock();
-            try
+            subscriptions.Write(writer =>
             {
                 HashSet<Uri> subscriptionsForType;
 
-                if (subscriptions.TryGetValue(type, out subscriptionsForType) == false)
+                if (writer.TryGetValue(type, out subscriptionsForType) == false)
                 {
                     subscriptionsForType = new HashSet<Uri>();
-                    subscriptions[type] = subscriptionsForType;
+                    writer.Add(type, subscriptionsForType);
                 }
 
                 subscriptionsForType.Remove(uri);
 
                 logger.InfoFormat("Removed subscription for {0} on {1}",
                                   type, endpoint);
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
+            });
+
             RaiseSubscriptionChanged();
         }
 
-        public void AddInstanceSubscription(IMessageConsumer consumer)
+        public void AddLocalInstanceSubscription(IMessageConsumer consumer)
         {
-            var messagesConsumes = reflection.GetMessagesConsumed(consumer);
-
-            readerWriterLock.EnterWriteLock();
-            try
+            localInstanceSubscriptions.Write(writer =>
             {
-                foreach (var type in messagesConsumes)
+                foreach (var type in reflection.GetMessagesConsumed(consumer))
                 {
                     List<WeakReference> value;
-                    if (consumers.TryGetValue(type.FullName, out value) == false)
+                    if (writer.TryGetValue(type.FullName, out value) == false)
                     {
                         value = new List<WeakReference>();
-                        consumers[type.FullName] = value;
+                        writer.Add(type.FullName, value);
                     }
                     value.Add(new WeakReference(consumer));
                 }
-            }
-            finally
-            {
-                readerWriterLock.ExitWriteLock();
-            }
+            });
             RaiseSubscriptionChanged();
         }
 

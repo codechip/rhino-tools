@@ -2,13 +2,14 @@ using System;
 using System.Threading;
 using Rhino.ServiceBus;
 using Starbucks.Messages;
+using Starbucks.Messages.Barista;
 using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Customer
 {
     public class CustomerController : 
-        ConsumerOf<PaymentDue>,
-        ConsumerOf<DrinkReady>
+        OccasionalConsumerOf<PaymentDue>,
+        OccasionalConsumerOf<DrinkReady>
     {
         public string Name { get; set; }
         public string Drink { get; set; }
@@ -16,8 +17,11 @@ namespace Starbucks.Customer
         private readonly IServiceBus bus;
         private ManualResetEvent wait;
 
+        public CustomerUserInterface CustomerUserInterface { get; set; }
+
         public CustomerController(IServiceBus bus)
         {
+            CustomerUserInterface = new CustomerUserInterface();
             this.bus = bus;
         }
 
@@ -29,14 +33,14 @@ namespace Starbucks.Customer
 
                 bus.Send(new NewOrder {CustomerName = Name, DrinkName = Drink, Size = Size});
 
-                wait.WaitOne();
+                if(wait.WaitOne(TimeSpan.FromSeconds(30))==false)
+                    throw new InvalidOperationException("didn't get my coffee in time");
             }
         }
 
         public void Consume(PaymentDue message)
         {
-            Console.WriteLine("Payment due is: {0:D} y/n?", message.Amount);
-            if(Console.ReadKey().KeyChar!='y')
+            if(CustomerUserInterface.ShouldPayForDrink(Name, message.Amount)==false)
                 return;
 
             bus.Reply(new SubmitPayment
@@ -48,7 +52,7 @@ namespace Starbucks.Customer
 
         public void Consume(DrinkReady message)
         {
-            Console.WriteLine("{0}: Got the drink, coffee rush!", Name);
+            CustomerUserInterface.CoffeeRush(Name);
             if (wait != null)
                 wait.Set();
         }

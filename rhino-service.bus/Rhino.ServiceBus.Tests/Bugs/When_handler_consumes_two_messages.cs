@@ -2,6 +2,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests.Bugs

@@ -23,6 +23,17 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void Can_receive_message_from_non_transactional_queue_while_specifying_transaction_single()
+        {
+            queue.Send("a");
+
+            var msg = queue.Receive(MessageQueueTransactionType.Single);
+            Assert.Equal("a", msg.Body);
+            var count = queue.GetCount();
+            Assert.Equal(0, count);
+        }
+
+        [Fact]
         public void Can_move_message_to_sub_queue()
         {
             queue.Send("a");

@@ -7,28 +7,49 @@ using System.Linq;
 namespace Rhino.ServiceBus.DataStructures
 {
 
-    public delegate void AddAction<TKey,TVal>(TKey key, TVal value);
-
-    public delegate void RemoveAction<TKey>(TKey key);
-
-    public delegate bool TryGetAction<TKey, TVal>(TKey key, out TVal value);
-
-    public delegate void ReadAction<TKey, TVal>(TryGetAction<TKey, TVal> tryGet);
-
-    public delegate void WriteAction<TKey, TVal>(AddAction<TKey, TVal> add, RemoveAction<TKey> remove, TryGetAction<TKey, TVal> tryGet);
-
-
     public class Hashtable<TKey,TVal> : IEnumerable<KeyValuePair<TKey,TVal>>
     {
         private readonly ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
         private readonly Dictionary<TKey,TVal> dictionary = new Dictionary<TKey, TVal>();
 
-        public void Write(WriteAction<TKey, TVal> action)
+        public class Reader
+        {
+            protected Hashtable<TKey, TVal> parent;
+
+            public Reader(Hashtable<TKey, TVal> parent)
+            {
+                this.parent = parent;
+            }
+
+            public bool TryGetValue(TKey key, out TVal val)
+            {
+                return parent.dictionary.TryGetValue(key, out val);
+            }
+        }
+
+        public class Writer : Reader
+        {
+            public Writer(Hashtable<TKey, TVal> parent) : base(parent)
+            {
+            }
+
+            public void Add(TKey key, TVal val)
+            {
+                parent.dictionary[key] = val;
+            }
+
+            public bool Remove(TKey key)
+            {
+                return parent.dictionary.Remove(key);
+            }
+        }
+
+        public void Write(Action<Writer> action)
         {
             readerWriterLockSlim.EnterWriteLock();
             try
             {
-                action((key, val) => dictionary[key] = val,key => dictionary.Remove(key), TryGetInternal);
+                action(new Writer(this));
             }
             finally
             {
@@ -36,17 +57,12 @@ namespace Rhino.ServiceBus.DataStructures
             }
         }
 
-        private bool TryGetInternal(TKey key, out TVal value)
-        {
-            return dictionary.TryGetValue(key, out value);
-        }
-
-        public void Read(ReadAction<TKey, TVal> read)
+       public void Read(Action<Reader> read)
        {
            readerWriterLockSlim.EnterReadLock();
            try
            {
-               read(TryGetInternal);
+               read(new Reader(this));
            }
            finally
            {

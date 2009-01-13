@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starbucks", "Samples\Starbu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.ServiceBus.Host", "Rhino.ServiceBus.Host\Rhino.ServiceBus.Host.csproj", "{8FBBDD2A-A832-4827-9325-C670B6DC06FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starbucks.Tests", "Samples\Starbucks.Tests\Starbucks.Tests.csproj", "{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,11 +41,16 @@ Global
 		{8FBBDD2A-A832-4827-9325-C670B6DC06FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FBBDD2A-A832-4827-9325-C670B6DC06FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FBBDD2A-A832-4827-9325-C670B6DC06FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0FC43226-8030-46FC-A2AB-D064207FF364} = {64DC50EF-F634-4E75-8375-ACC6D42E2DB4}
+		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA} = {64DC50EF-F634-4E75-8375-ACC6D42E2DB4}
 	EndGlobalSection
 EndGlobal

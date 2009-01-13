@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
-    public class PublishingTests
+    public class PublishingTests : MsmqTestBase
     {
         private readonly IWindsorContainer container;
 

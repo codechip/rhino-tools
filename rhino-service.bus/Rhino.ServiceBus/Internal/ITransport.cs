@@ -18,7 +18,7 @@ namespace Rhino.ServiceBus.Internal
 
         event Action<CurrentMessageInformation> MessageSent;
 
-        event Action<CurrentMessageInformation> AdministrativeMessageArrived;
+        event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
         
         event Action<CurrentMessageInformation> MessageArrived;
 

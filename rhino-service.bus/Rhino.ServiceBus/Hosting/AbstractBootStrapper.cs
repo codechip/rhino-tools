@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Hosting
 {
@@ -32,6 +33,7 @@ namespace Rhino.ServiceBus.Hosting
 					.FromAssembly(Assembly)
 					.Where(type => 
 						typeof(IMessageConsumer).IsAssignableFrom(type) && 
+                        typeof(IOccasionalMessageConsumer).IsAssignableFrom(type) == false &&
 						IsTypeAcceptableForThisBootStrapper(type)
 					)
 					.Configure((Action<ComponentRegistration>)ConfigureConsumer)

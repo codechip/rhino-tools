@@ -4,6 +4,7 @@ using Rhino.ServiceBus;
 using Rhino.ServiceBus.Sagas;
 using Starbucks.Messages;
 using Starbucks.Messages.Barista;
+using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Barista
 {
@@ -31,7 +32,7 @@ namespace Starbucks.Barista
 
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine("preparing drink: " + drink);
+                Console.WriteLine("Barista: preparing drink: " + drink);
                 Thread.Sleep(500);
             }
             DrinkIsReady = true;
@@ -42,6 +43,7 @@ namespace Starbucks.Barista
         {
             if (GotPayment && DrinkIsReady)
             {
+                Console.WriteLine("Barista: drink is ready");
                 bus.Publish(new DrinkReady
                 {
                     CorrelationId = Id,
@@ -61,6 +63,7 @@ namespace Starbucks.Barista
 
         public void Consume(PaymentComplete message)
         {
+            Console.WriteLine("Barista: got payment notification");
             GotPayment = true;
             SubmitOrderIfDone();
         }

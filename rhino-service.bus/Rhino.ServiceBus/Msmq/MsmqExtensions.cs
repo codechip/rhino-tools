@@ -29,6 +29,24 @@ namespace Rhino.ServiceBus.Msmq
             return MessageQueueTransactionType.None;
         }
 
+        public static void ConsumeMessage(this MessageQueue queue, Message message)
+        {
+            ConsumeMessage(queue, message.Id);    
+        }
+
+        public static void ConsumeMessage(this MessageQueue queue, string msgId)
+        {
+            try
+            {
+                queue.ReceiveById(msgId, MessageQueueTransactionType.Single);
+            }
+            catch (InvalidOperationException)
+            {
+                // could not find message in queue
+            }
+        }
+
+
         public static void MoveToSubQueue(
             this MessageQueue queue,
             string subQueueName,

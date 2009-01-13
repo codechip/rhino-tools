@@ -107,14 +107,20 @@ namespace Rhino.ServiceBus.Impl
 
         public IDisposable AddInstanceSubscription(IMessageConsumer consumer)
         {
-            subscriptionStorage.AddInstanceSubscription(consumer);
-            var weakRef = new WeakReference(consumer);
+            var information = new InstanceSubscriptionInformation
+            {
+                Consumer = consumer,
+                InstanceSubscriptionKey = Guid.NewGuid(),
+                ConsumedMessages = reflection.GetMessagesConsumed(consumer),
+            };
+            subscriptionStorage.AddLocalInstanceSubscription(consumer);
+            SubscribeInstanceSubscription(information);
+            
             return new DisposableAction(() =>
             {
-                var messageConsumer = weakRef.Target as IMessageConsumer;
-                if (messageConsumer == null)//nothing to do
-                    return;
-                subscriptionStorage.RemoveInstanceSubscription(messageConsumer);
+                subscriptionStorage.RemoveLocalInstanceSubscription(information.Consumer);
+                UnsubscribeInstanceSubscription(information);
+                information.Dispose();
             });
         }
 
@@ -202,7 +208,45 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-    	/// <summary>
+        private void SubscribeInstanceSubscription(InstanceSubscriptionInformation information)
+        {
+            foreach (var message in information.ConsumedMessages)
+            {
+                foreach (var owner in messageOwners)
+                {
+                    if (owner.IsOwner(message) == false)
+                        continue;
+
+                    Send(owner.Endpoint, new AddInstanceSubscription
+                    {
+                        Endpoint = Endpoint.ToString(),
+                        Type = message.FullName,
+                        InstanceSubscriptionKey = information.InstanceSubscriptionKey
+                    });
+                }
+            }
+        }
+
+        public void UnsubscribeInstanceSubscription(InstanceSubscriptionInformation information)
+        {
+            foreach (var message in information.ConsumedMessages)
+            {
+                foreach (var owner in messageOwners)
+                {
+                    if (owner.IsOwner(message))
+                        continue;
+
+                    Send(owner.Endpoint, new RemoveInstanceSubscription
+                    {
+                        Endpoint = Endpoint.ToString(),
+                        Type = message.FullName,
+                        InstanceSubscriptionKey = information.InstanceSubscriptionKey
+                    });
+                }
+            }
+        }
+
+        /// <summary>
     	/// Handles the current message later.
     	/// </summary>
     	public void HandleCurrentMessageLater()
@@ -210,7 +254,7 @@ namespace Rhino.ServiceBus.Impl
 			transport.Send(Endpoint, DateTime.Now, currentMessage);
     	}
 
-    	/// <summary>
+        /// <summary>
     	/// Send the message with a built in delay in its processing
     	/// </summary>
     	/// <param name="endpoint">The endpoint.</param>
@@ -221,7 +265,7 @@ namespace Rhino.ServiceBus.Impl
     		transport.Send(endpoint, time, msgs);
     	}
 
-    	private void AutomaticallySubscribeConsumerMessages()
+        private void AutomaticallySubscribeConsumerMessages()
         {
             var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));
             foreach (var handler in handlers)
@@ -304,28 +348,34 @@ namespace Rhino.ServiceBus.Impl
 
         public object[] GatherConsumers(CurrentMessageInformation msg)
         {
-            object[] sagas = GetSagasFor(msg.Message as ISagaMessage);
+            var sagaMessage = msg.Message as ISagaMessage;
+            object[] sagas = GetSagasFor(sagaMessage);
 
             object[] instanceConsumers = subscriptionStorage
                 .GetInstanceSubscriptions(msg.Message.GetType());
 
             Type consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
-            var consumers = GetAllConsumers(consumerType);
-            foreach (var consumer in consumers)
+            var consumers = GetAllConsumers(consumerType, sagas);
+            for (var i = 0; i < consumers.Length; i++)
             {
-                var saga = consumer as ISaga;
-                if(saga==null)
+                var saga = consumers[i] as ISaga;
+                if (saga == null)
                     continue;
 
                 var type = saga.GetType();
                 if (sagas.Any(type.IsInstanceOfType))
+                {
+                    consumers[i] = null;
                     continue;
+                }
 
-                saga.Id = GuidCombGenerator.Generate();
+                saga.Id = sagaMessage != null ?
+                    sagaMessage.CorrelationId :
+                    GuidCombGenerator.Generate();
             }
             return instanceConsumers
                 .Union(sagas)
-                .Union(consumers)
+                .Union(consumers.Where(x => x != null))
                 .ToArray();
         }
 
@@ -333,12 +383,16 @@ namespace Rhino.ServiceBus.Impl
 		/// Here we don't use ResolveAll from Windsor because we want to get an error
 		/// if a component exists which isn't valid
 		/// </summary>
-    	private object[] GetAllConsumers(Type consumerType)
+    	private object[] GetAllConsumers(Type consumerType, object[] instanceOfTypesToSkipResolving)
     	{
 			var handlers = kernel.GetAssignableHandlers(consumerType);
 			var consumers = new List<object>(handlers.Length);
 			foreach (var handler in handlers)
 			{
+			    var implementation = handler.ComponentModel.Implementation;
+                if (instanceOfTypesToSkipResolving.Any(x => x.GetType() == implementation))
+                    continue;
+
 				consumers.Add(handler.Resolve(CreationContext.Empty));
 			}
 			return consumers.ToArray();

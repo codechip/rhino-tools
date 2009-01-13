@@ -1,8 +1,6 @@
 using System;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Sagas;
-using Starbucks.Messages;
-using Starbucks.Messages.Barista;
 using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Cashier
@@ -22,6 +20,7 @@ namespace Starbucks.Cashier
 
         public void Consume(NewOrder message)
         {
+            Console.WriteLine("Cashier: got new order");
             bus.Publish(new PrepareDrink
             {
                 CorrelationId = Id,
@@ -32,6 +31,7 @@ namespace Starbucks.Cashier
             bus.Reply(new PaymentDue
             {
                 CustomerName = message.CustomerName,
+                StarbucksTransactionId = Id,
                 Amount = ((int) message.Size)*1.25m
             });
         }
@@ -46,6 +46,7 @@ namespace Starbucks.Cashier
 
         public void Consume(SubmitPayment message)
         {
+            Console.WriteLine("Cashier: got payment");
             bus.Publish(new PaymentComplete
             {
                 CorrelationId = Id

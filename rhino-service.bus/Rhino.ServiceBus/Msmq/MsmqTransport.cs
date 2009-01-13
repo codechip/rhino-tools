@@ -135,7 +135,7 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		public event Action<CurrentMessageInformation> MessageSent;
-		public event Action<CurrentMessageInformation> AdministrativeMessageArrived;
+		public event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
 		public event Action<CurrentMessageInformation> MessageArrived;
 		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
 		public event Action<CurrentMessageInformation> MessageProcessingCompleted;
@@ -290,7 +290,7 @@ namespace Rhino.ServiceBus.Msmq
 
 		private static bool ConsumeAndIgnoreMessage(QueueState state, Message message)
 		{
-			TryGetMessageFromQueue(state, message.Id);
+			TryGetMessageFromQueue(state.Queue, message.Id);
 			return true;
 		}
 
@@ -370,7 +370,23 @@ namespace Rhino.ServiceBus.Msmq
 			Exception ex = null;
 			try
 			{
-				ProcessMessage(message, state, AdministrativeMessageArrived);
+			    var copy = AdministrativeMessageArrived;
+			    Action<CurrentMessageInformation> action = null;
+                if (copy != null)
+                {
+                    action = information =>
+                    {
+                        var msmqCurrentMessageInformation = (MsmqCurrentMessageInformation) information;
+                        var messageProcessedCorrectly = copy(information);
+
+                        if (messageProcessedCorrectly)
+                            return;
+
+                        msmqCurrentMessageInformation.Queue.ConsumeMessage(msmqCurrentMessageInformation.MsmqMessage);
+                    };
+                }
+
+			    ProcessMessage(message, state, action);
 			}
 			catch (Exception e)
 			{
@@ -393,7 +409,7 @@ namespace Rhino.ServiceBus.Msmq
 				try
 				{
 					state.Queue.MessageReadPropertyFilter.SetAll();
-					message = TryGetMessageFromQueue(state, messageId);
+					message = TryGetMessageFromQueue(state.Queue, messageId);
 					if (message == null)
 						return;// someone else ate our message, better luck next time
 					ProcessMessage(message, state, MessageArrived);
@@ -410,13 +426,13 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private static Message TryGetMessageFromQueue(QueueState state, string messageId)
+		private static Message TryGetMessageFromQueue(MessageQueue queue, string messageId)
 		{
 			try
 			{
-				return state.Queue.ReceiveById(
+				return queue.ReceiveById(
 					messageId,
-					state.Queue.GetTransactionType());
+					queue.GetTransactionType());
 			}
 			catch (InvalidOperationException)// message was read before we could read it
 			{
