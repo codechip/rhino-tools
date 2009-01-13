@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -126,7 +127,7 @@ namespace Rhino.ServiceBus.Serializers
                 return new Uri(value);
 
             if (type.IsPrimitive)
-                return Convert.ChangeType(value, type);
+                return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
 
             if (type == typeof(Guid))
                 return new Guid(value);
@@ -139,6 +140,9 @@ namespace Rhino.ServiceBus.Serializers
 
             if (type.IsEnum)
                 return Enum.Parse(type, value);
+
+            if (type == typeof(decimal))
+                return decimal.Parse(value, CultureInfo.InvariantCulture);
 
             throw new SerializationException("Don't know how to deserialize type: " + type + " from '" + value + "'");
         }
@@ -164,6 +168,9 @@ namespace Rhino.ServiceBus.Serializers
             if (value is Guid)
                 return ((Guid)value).ToString();
 
+            if (value is decimal)
+                return ((decimal) value).ToString(CultureInfo.InvariantCulture);
+            
             return value.ToString();
         }
 
@@ -245,6 +252,9 @@ namespace Rhino.ServiceBus.Serializers
                 return true;
 
             if (type.IsEnum)
+                return true;
+
+            if (type == typeof(decimal))
                 return true;
 
             return false;
