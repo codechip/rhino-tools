@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Runtime.Serialization;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
@@ -17,25 +19,24 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
-        public void Will_not_encrypt_wire_encrypted_string()
+        public void Will_throw_for_wire_encrypted_string()
         {
             var container = CreateContainer();
             var serializer = container.Resolve<IMessageSerializer>();
             var memoryStream = new MemoryStream();
-            serializer.Serialize(new[]
+            try
             {
-                new When_Security_Is_Specified_In_Config.ClassWithSecretField {ShouldBeEncrypted = "abc"}
-            }, memoryStream);
-            memoryStream.Position = 0;
-            var msg = new StreamReader(memoryStream).ReadToEnd();
-            Assert.Equal(@"<?xml version=""1.0"" encoding=""utf-8""?>
-<esb:messages xmlns:esb=""http://servicebus.hibernatingrhinos.com/2008/12/20/esb"" xmlns:tests.classwithsecretfield=""Rhino.ServiceBus.Tests.When_Security_Is_Specified_In_Config+ClassWithSecretField, Rhino.ServiceBus.Tests"" xmlns:datastructures.wireecryptedstring=""Rhino.ServiceBus.DataStructures.WireEcryptedString, Rhino.ServiceBus"" xmlns:string=""string"">
-  <tests.classwithsecretfield:ClassWithSecretField>
-    <datastructures.wireecryptedstring:ShouldBeEncrypted>
-      <string:Value>abc</string:Value>
-    </datastructures.wireecryptedstring:ShouldBeEncrypted>
-  </tests.classwithsecretfield:ClassWithSecretField>
-</esb:messages>", msg);
+                serializer.Serialize(new[]
+                {
+                    new When_Security_Is_Specified_In_Config.ClassWithSecretField {ShouldBeEncrypted = "abc"}
+                }, memoryStream);
+                Assert.True(false, "Expected exception");
+            }
+            catch (SerializationException e)
+            {
+                Assert.Equal("A message containing a WireEcryptedString field (ShouldBeEncrypted) cannot be sent if security configuration was not set",
+                    e.InnerException.Message);
+            }
         }
 
         [Fact]

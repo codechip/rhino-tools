@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using Castle.MicroKernel;
 using Rhino.ServiceBus.Exceptions;
@@ -82,7 +83,15 @@ namespace Rhino.ServiceBus.Tests
             {
               order.OrderLines[i] = new OrderLine();  
             }
-            Assert.Throws<UnboundedResultSetException>(() => serializer.Serialize(new[] { order }, new MemoryStream()));
+            try
+            {
+                serializer.Serialize(new[] {order}, new MemoryStream());
+                Assert.False(true, "should throw");
+            }
+            catch (SerializationException e)
+            {
+                Assert.IsType<UnboundedResultSetException>(e.InnerException);  
+            }
         }
 
         [Fact]

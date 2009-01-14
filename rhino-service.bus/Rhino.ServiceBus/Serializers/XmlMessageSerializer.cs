@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -42,7 +43,14 @@ namespace Rhino.ServiceBus.Serializers
                 if (m == null)
                     continue;
 
-                WriteObject(reflection.GetName(m), m, messagesElement, namespaces);
+                try
+                {
+                    WriteObject(reflection.GetName(m), m, messagesElement, namespaces);
+                }
+                catch (Exception e)
+                {
+                    throw new SerializationException("Could not serialize " + m.GetType() + ".", e);
+                }
             }
 
             messagesElement.Add(
@@ -82,6 +90,13 @@ namespace Rhino.ServiceBus.Serializers
 
                 parent.Add(new XElement(elementName, covertedValue));
             }
+            //TODO: I don't like this sepcial casing, we need to find a better way
+            // of doing this
+            else if (value is WireEcryptedString)
+            {
+                throw new SecurityException(
+                    "A message containing a WireEcryptedString field ("+name+") cannot be sent if security configuration was not set");
+            }
             else if (ShouldPutAsString(value))
             {
                 var ns = reflection.GetNamespaceForXml(value);
@@ -103,8 +118,8 @@ namespace Rhino.ServiceBus.Serializers
                     if (item == null)
                         continue;
                     itemCount += 1;
-                    if(itemCount>MaxNumberOfAllowedItemsInCollection)
-                        throw new UnboundedResultSetException("You cannot send collections with more than 256 items ("+value+" "+name+")");
+                    if (itemCount > MaxNumberOfAllowedItemsInCollection)
+                        throw new UnboundedResultSetException("You cannot send collections with more than 256 items (" + value + " " + name + ")");
 
                     WriteObject("value", item, list, namespaces);
                 }

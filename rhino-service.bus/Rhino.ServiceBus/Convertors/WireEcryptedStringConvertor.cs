@@ -8,19 +8,19 @@ namespace Rhino.ServiceBus.Convertors
 {
     public class WireEcryptedStringConvertor : IValueConvertor<WireEcryptedString>
     {
-        readonly byte[] rgbKey;
-        readonly byte[] rgbIV;
+        public byte[] Key{ get; set;}
+        public byte[] IV { get; set; }
 
         public WireEcryptedStringConvertor(byte[] key, byte[] iv)
         {
-            this.rgbKey = key;
-            this.rgbIV = iv;
+            Key = key;
+            IV = iv;
         }
 
         public string ToString(WireEcryptedString val)
         {
             using (var rijndael = new RijndaelManaged())
-            using (var encryptor = rijndael.CreateEncryptor(rgbKey, rgbIV))
+            using (var encryptor = rijndael.CreateEncryptor(Key, IV))
             using (var memoryStream = new MemoryStream())
             using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
             using (var writer = new StreamWriter(cryptoStream))
@@ -39,7 +39,7 @@ namespace Rhino.ServiceBus.Convertors
             var base64String = Convert.FromBase64String(val);
 
             using (var rijndael = new RijndaelManaged())
-            using (var decryptor = rijndael.CreateDecryptor(rgbKey,rgbIV))
+            using (var decryptor = rijndael.CreateDecryptor(Key,IV))
             using (var memoryStream = new MemoryStream(base64String))
             using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
             using (var reader = new StreamReader(cryptoStream))
