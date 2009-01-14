@@ -9,9 +9,9 @@ namespace Rhino.ServiceBus.Tests.Bugs
 
 	public class When_cannot_resolve_consumer_because_of_missing_dependecies: MsmqTestBase
 	{
-		   private readonly IWindsorContainer container;
+		private readonly IWindsorContainer container;
 
-		   public When_cannot_resolve_consumer_because_of_missing_dependecies()
+		public When_cannot_resolve_consumer_because_of_missing_dependecies()
         {
             container = new WindsorContainer(new XmlInterpreter());
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());

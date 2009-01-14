@@ -87,6 +87,35 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
+        public string InvokeToString(object instance, object item)
+        {
+            try
+            {
+                Type type = instance.GetType();
+                MethodInfo method = type.GetMethod("ToString", new[] { item.GetType() });
+                return (string)method.Invoke(instance, new[] { item });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
+        }
+
+        public object InvokeFromString(object instance, string value)
+        {
+            try
+            {
+                Type type = instance.GetType();
+                MethodInfo method = type.GetMethod("FromString", new[] { typeof(string)});
+                return method.Invoke(instance, new[] { value });
+            }
+            catch (TargetInvocationException e)
+            {
+                throw InnerExceptionWhilePreservingStackTrace(e);
+            }
+        }
+
+
         public void Set(object instance, string name, Func<Type, object> generateValue)
         {
             try

@@ -65,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsumerOf.cs" />
+    <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
+    <Compile Include="DataStructures\WireEcryptedString.cs" />
     <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
     <Compile Include="DataStructures\Hashtable.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Internal\IReflection.cs" />
     <Compile Include="Internal\ISagaPersister.cs" />
     <Compile Include="Internal\ISubscriptionStorage.cs" />
+    <Compile Include="Internal\IValueConvertor.cs" />
     <Compile Include="MessageModules\IMessageModule.cs" />
     <Compile Include="MessageModules\MessageLoggingModule.cs" />
     <Compile Include="Messages\AddInstanceSubscription.cs" />

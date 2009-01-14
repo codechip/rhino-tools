@@ -7,9 +7,11 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Castle.MicroKernel;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using System.Linq;
+using Rhino.ServiceBus.DataStructures;
 
 namespace Rhino.ServiceBus.Serializers
 {
@@ -17,10 +19,13 @@ namespace Rhino.ServiceBus.Serializers
     {
         private const int MaxNumberOfAllowedItemsInCollection = 256;
         private readonly IReflection reflection;
+        private readonly IKernel kernel;
+        private readonly Hashtable<Type, bool> typeHasConvertorCache = new Hashtable<Type, bool>();
 
-        public XmlMessageSerializer(IReflection reflection)
+        public XmlMessageSerializer(IReflection reflection, IKernel kernel )
         {
             this.reflection = reflection;
+            this.kernel = kernel;
         }
 
         public void Serialize(object[] mesages, Stream messageStream)
@@ -60,7 +65,24 @@ namespace Rhino.ServiceBus.Serializers
 
         private void WriteObject(string name, object value, XContainer parent, IDictionary<string, XNamespace> namespaces)
         {
-            if (ShouldPutAsString(value))
+            if(HaveCustomerSerializer(value.GetType()))
+            {
+                var valueConvertorType = reflection.GetGenericTypeOf(typeof (IValueConvertor<>), value);
+                var convertor = kernel.Resolve(valueConvertorType);
+
+                var ns = reflection.GetNamespaceForXml(value);
+                XNamespace xmlNs;
+                if (namespaces.TryGetValue(ns, out xmlNs) == false)
+                {
+                    namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
+                }
+                XName elementName = xmlNs + name;
+
+                string covertedValue = reflection.InvokeToString(convertor, value);
+
+                parent.Add(new XElement(elementName, covertedValue));
+            }
+            else if (ShouldPutAsString(value))
             {
                 var ns = reflection.GetNamespaceForXml(value);
                 XNamespace xmlNs;
@@ -99,6 +121,25 @@ namespace Rhino.ServiceBus.Serializers
                     WriteObject(property, propVal, content, namespaces);
                 }
             }
+        }
+
+        private bool HaveCustomerSerializer(Type type)
+        {
+            bool? hasConvertor = null;
+            typeHasConvertorCache.Read(
+                reader =>
+                {
+                    bool val;
+                    if (reader.TryGetValue(type, out val))
+                        hasConvertor = val;
+                });
+            if (hasConvertor != null)
+                return hasConvertor.Value;
+
+            var convertorType = reflection.GetGenericTypeOf(typeof(IValueConvertor<>),type);
+            var component = kernel.HasComponent(convertorType);
+            typeHasConvertorCache.Write(writer => writer.Add(type, component));
+            return component;
         }
 
         private XElement GetContentWithNamespace(object value, IDictionary<string, XNamespace> namespaces, string name)
@@ -209,6 +250,12 @@ namespace Rhino.ServiceBus.Serializers
 
         private object ReadObject(Type type, XElement element)
         {
+            if(HaveCustomerSerializer(type))
+            {
+                var convertorType = reflection.GetGenericTypeOf(typeof(IValueConvertor<>),type);
+                var convertor = kernel.Resolve(convertorType);
+                return reflection.InvokeFromString(convertor, element.Value);
+            }
             if (CanParseFromString(type))
             {
                 return FromString(type, element.Value);

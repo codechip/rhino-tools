@@ -39,5 +39,9 @@ namespace Rhino.ServiceBus.Internal
         Type GetType(string type);
 
         void InvokeAdd(object instance, object item);
+
+        object InvokeFromString(object covertor, string value);
+
+        string InvokeToString(object covertor, object value);
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Messaging;
+using Castle.MicroKernel;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
@@ -13,7 +14,7 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_read_subscription_from_queue()
         {
-            var serializer = new XmlMessageSerializer(new DefaultReflection());
+            var serializer = new XmlMessageSerializer(new DefaultReflection(),new DefaultKernel());
 
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
@@ -41,7 +42,7 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Adding_then_removing_will_result_in_no_subscriptions()
         {
-            var serializer = new XmlMessageSerializer(new DefaultReflection());
+            var serializer = new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel());
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
                                                   {

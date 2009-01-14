@@ -5,6 +5,8 @@ using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
+using Rhino.ServiceBus.Convertors;
+using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
@@ -51,6 +53,8 @@ namespace Rhino.ServiceBus.Impl
             ReadBusConfiguration();
             ReadMessageOwners();
 
+            AddWireEcryptedStringConvertorIfHasKey();
+
             foreach (Type type in messageModules)
             {
                 Kernel.AddComponent(type.FullName, type);
@@ -96,6 +100,31 @@ namespace Rhino.ServiceBus.Impl
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
                 );
+        }
+
+        private void AddWireEcryptedStringConvertorIfHasKey()
+        {
+            var security = FacilityConfig.Children["security"];
+            
+            if (security == null)
+                return;
+            
+            var key = security.Children["key"];
+            if (key == null || string.IsNullOrEmpty(key.Value))
+                throw new ConfigurationErrorsException("<security> element must have a <key> element with content");
+
+            var iv = security.Children["iv"];
+            if (iv == null || string.IsNullOrEmpty(iv.Value))
+                throw new ConfigurationErrorsException("<security> element must have an <iv> element with content");
+
+            Kernel.Register(
+                Component.For<IValueConvertor<WireEcryptedString>>()
+                    .ImplementedBy<WireEcryptedStringConvertor>()
+                    .DependsOn(
+                        Property.ForKey("key").Eq(Convert.FromBase64String(key.Value)),
+                        Property.ForKey("iv").Eq(Convert.FromBase64String(iv.Value))
+                    )
+                                    );
         }
 
         private static void Kernel_OnComponentModelCreated(ComponentModel model)

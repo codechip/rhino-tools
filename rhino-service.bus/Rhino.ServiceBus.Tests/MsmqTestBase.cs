@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Castle.MicroKernel;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Msmq;
@@ -99,7 +100,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transport == null)
                 {
-                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()), TestQueueUri, 1, 5,new SubQueueStrategy());
+                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()), TestQueueUri, 1, 5,new SubQueueStrategy());
                     transport.Start();
                 }
                 return transport;
@@ -112,7 +113,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transactionalTransport == null)
                 {
-                    transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection()),
+                    transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
                                                                TransactionalTestQueueUri, 1, 5, new SubQueueStrategy());
                     transactionalTransport.Start();
                 }

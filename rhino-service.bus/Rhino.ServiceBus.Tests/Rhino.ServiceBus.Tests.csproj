@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EAC59871-8B6B-4A1B-A2AE-69F7194F047E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bugs\Can_read_subscriptions_from_queue.cs" />
     <Compile Include="Bugs\Resolving_consumer_from_container.cs" />
     <Compile Include="Bugs\When_cannot_resolve_consumer_should_error.cs" />
     <Compile Include="Bugs\When_error_occured_on_transactional_queue.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="PublishingTests.cs" />
     <Compile Include="RequestAndReply.cs" />
     <Compile Include="SagaTests.cs" />
+    <Compile Include="When_Security_Is_Not_Specified_In_Config.cs" />
+    <Compile Include="When_Security_Is_Specified_In_Config.cs" />
     <Compile Include="SendAndReceiveMessages.cs" />
     <Compile Include="SendByMessageOwner.cs" />
     <Compile Include="TwoBusesCommunicating.cs" />
