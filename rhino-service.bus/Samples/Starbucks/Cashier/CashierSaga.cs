@@ -1,13 +1,13 @@
 using System;
 using Rhino.ServiceBus;
-using Rhino.ServiceBus.Sagas;
+using Rhino.ServiceBus.Util;
 using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Cashier
 {
     public class CashierSaga :
-        InitiatedBy<NewOrder>,
-        Orchestrates<SubmitPayment>
+        ConsumerOf<NewOrder>,
+        ConsumerOf<SubmitPayment>
     {
         private readonly IServiceBus bus;
 
@@ -21,9 +21,10 @@ namespace Starbucks.Cashier
         public void Consume(NewOrder message)
         {
             Console.WriteLine("Cashier: got new order");
+            var correlationId = GuidCombGenerator.Generate();
             bus.Publish(new PrepareDrink
             {
-                CorrelationId = Id,
+                CorrelationId = correlationId,
                 CustomerName = message.CustomerName,
                 DrinkName = message.DrinkName,
                 Size = message.Size
@@ -31,14 +32,10 @@ namespace Starbucks.Cashier
             bus.Reply(new PaymentDue
             {
                 CustomerName = message.CustomerName,
-                StarbucksTransactionId = Id,
+                StarbucksTransactionId = correlationId,
                 Amount = ((int) message.Size)*1.25m
             });
         }
-
-        public Guid Id { get; set; }
-
-        public bool IsCompleted { get; set; }
 
         #endregion
 
@@ -49,9 +46,8 @@ namespace Starbucks.Cashier
             Console.WriteLine("Cashier: got payment");
             bus.Publish(new PaymentComplete
             {
-                CorrelationId = Id
+                CorrelationId = message.CorrelationId
             });
-            IsCompleted = true;
         }
 
         #endregion

@@ -6,7 +6,7 @@ using Rhino.ServiceBus.Sagas;
 namespace Rhino.ServiceBus.Impl
 {
     public class InMemorySagaPersister<TSaga> : ISagaPersister<TSaga> 
-        where TSaga : class, ISaga
+        where TSaga : class, IAccessibleSaga
     {
         private readonly Hashtable<Guid, TSaga> dictionary = new Hashtable<Guid, TSaga>();
 

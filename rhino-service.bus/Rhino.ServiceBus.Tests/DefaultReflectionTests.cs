@@ -57,7 +57,7 @@ namespace Rhino.ServiceBus.Tests
             }
         }
 
-        public class ThrowingList : ISaga
+        public class ThrowingList : ISaga<int>
         {
             public void Add(object i)
             {
@@ -71,6 +71,12 @@ namespace Rhino.ServiceBus.Tests
             }
 
             public bool IsCompleted
+            {
+                get { throw new System.NotImplementedException(); }
+                set { throw new System.NotImplementedException(); }
+            }
+
+            public int State
             {
                 get { throw new System.NotImplementedException(); }
                 set { throw new System.NotImplementedException(); }

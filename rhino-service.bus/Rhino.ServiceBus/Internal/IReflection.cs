@@ -23,9 +23,9 @@ namespace Rhino.ServiceBus.Internal
 
         object InvokeSagaPersisterGet(object persister, Guid correlationId);
 
-        void InvokeSagaPersisterSave(object persister, ISaga entity);
+        void InvokeSagaPersisterSave(object persister, object saga);
 
-        void InvokeSagaPersisterComplete(object persister, ISaga entity);
+        void InvokeSagaPersisterComplete(object persister, object saga);
 
         string GetNamespaceForXml(Type type);
 

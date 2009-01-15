@@ -2,13 +2,13 @@ using System;
 using System.Threading;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Sagas;
-using Starbucks.Messages;
 using Starbucks.Messages.Barista;
 using Starbucks.Messages.Cashier;
 
 namespace Starbucks.Barista
 {
     public class BaristaSaga :
+        ISaga<BaristaState>,
         InitiatedBy<PrepareDrink>,
         Orchestrates<PaymentComplete>
     {
@@ -18,13 +18,10 @@ namespace Starbucks.Barista
         public BaristaSaga(IServiceBus bus)
         {
             this.bus = bus;
+            State = new BaristaState();
         }
 
-        public bool DrinkIsReady { get; set; }
-
-        public bool GotPayment { get; set; }
-
-        #region InitiatedBy<PrepareDrink> Members
+       #region InitiatedBy<PrepareDrink> Members
 
         public void Consume(PrepareDrink message)
         {
@@ -35,13 +32,13 @@ namespace Starbucks.Barista
                 Console.WriteLine("Barista: preparing drink: " + drink);
                 Thread.Sleep(500);
             }
-            DrinkIsReady = true;
+            State.DrinkIsReady = true;
             SubmitOrderIfDone();
         }
 
         private void SubmitOrderIfDone()
         {
-            if (GotPayment && DrinkIsReady)
+            if (State.GotPayment && State.DrinkIsReady)
             {
                 Console.WriteLine("Barista: drink is ready");
                 bus.Publish(new DrinkReady
@@ -64,10 +61,15 @@ namespace Starbucks.Barista
         public void Consume(PaymentComplete message)
         {
             Console.WriteLine("Barista: got payment notification");
-            GotPayment = true;
+            State.GotPayment = true;
             SubmitOrderIfDone();
         }
 
         #endregion
+
+        public BaristaState State
+        {
+            get; set;
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace Rhino.ServiceBus.Tests
                     processor = persister.Get(sagaId);
                 }
 
-                Assert.Equal(1, processor.Messages.Count);
+                Assert.Equal(1, processor.State.Count);
             }
         }
 
@@ -95,13 +95,13 @@ namespace Rhino.ServiceBus.Tests
 					Thread.Sleep(250);
             	}
 
-                Assert.Equal(1, processor.Messages.Count);
+                Assert.Equal(1, processor.State.Count);
 
                 bus.Send(bus.Endpoint, new AddLineItemMessage { CorrelationId = sagaId });
 
                 wait.WaitOne();
                
-                Assert.Equal(2, processor.Messages.Count);
+                Assert.Equal(2, processor.State.Count);
             }
         }
 
@@ -161,17 +161,21 @@ namespace Rhino.ServiceBus.Tests
 
         #region Nested type: OrderProcessor
 
-        public class OrderProcessor : InitiatedBy<NewOrderMessage>,
-                                      Orchestrates<AddLineItemMessage>,
-                                      Orchestrates<SubmitOrderMessage>
+        public class OrderProcessor : 
+                ISaga<List<object>>,
+                InitiatedBy<NewOrderMessage>,
+                Orchestrates<AddLineItemMessage>,
+                Orchestrates<SubmitOrderMessage>
         {
-            public List<object> Messages = new List<object>();
-
+            public OrderProcessor()
+            {
+                State = new List<object>();
+            }
             #region InitiatedBy<NewOrderMessage> Members
 
             public void Consume(NewOrderMessage pong)
             {
-                Messages.Add(pong);
+                State.Add(pong);
                 sagaId = Id;
                 wait.Set();
             }
@@ -185,7 +189,7 @@ namespace Rhino.ServiceBus.Tests
 
             public void Consume(AddLineItemMessage pong)
             {
-                Messages.Add(pong);
+                State.Add(pong);
                 sagaId = Id;
                 wait.Set();
             }
@@ -196,6 +200,11 @@ namespace Rhino.ServiceBus.Tests
             {
                 IsCompleted = true;
                 wait.Set();
+            }
+
+            public List<object> State
+            {
+                get; set;
             }
         }
 

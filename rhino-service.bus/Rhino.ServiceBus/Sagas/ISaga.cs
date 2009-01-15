@@ -1,11 +1,9 @@
-using System;
 using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Sagas
 {
-    public interface ISaga : IMessageConsumer
+    public interface ISaga<TState> : IAccessibleSaga 
     {
-        Guid Id { get; set; }
-        bool IsCompleted { get; set; }
+        TState State { get; set; }
     }
 }

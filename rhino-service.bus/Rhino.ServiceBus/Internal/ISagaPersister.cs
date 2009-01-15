@@ -4,7 +4,7 @@ using Rhino.ServiceBus.Sagas;
 namespace Rhino.ServiceBus.Internal
 {
     public interface ISagaPersister<TSaga>
-        where TSaga : class, ISaga
+        where TSaga : class, IAccessibleSaga
     {
         TSaga Get(Guid id);
         void Save(TSaga saga);

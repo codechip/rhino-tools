@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Xml.Linq;
 using log4net;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.Sagas;
 
 namespace Rhino.ServiceBus.Impl
 {
@@ -200,7 +199,7 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        public void InvokeSagaPersisterSave(object persister, ISaga entity)
+        public void InvokeSagaPersisterSave(object persister, object entity)
         {
             try
             {
@@ -214,7 +213,7 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        public void InvokeSagaPersisterComplete(object persister, ISaga entity)
+        public void InvokeSagaPersisterComplete(object persister, object entity)
         {
             try
             {

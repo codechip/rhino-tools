@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Barista\BaristaBootStrapper.cs" />
     <Compile Include="Barista\BaristaSaga.cs" />
+    <Compile Include="Barista\BaristaState.cs" />
     <Compile Include="Cashier\CashierBootStrapper.cs" />
     <Compile Include="Cashier\CashierSaga.cs" />
     <Compile Include="Customer\CustomerBootStrapper.cs" />

@@ -1,6 +1,6 @@
 namespace Rhino.ServiceBus.Sagas
 {
-    public interface Orchestrates<TMsg> : ConsumerOf<TMsg>, ISaga
+    public interface Orchestrates<TMsg> : ConsumerOf<TMsg>
         where TMsg: ISagaMessage
     {
     }

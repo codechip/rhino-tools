@@ -84,13 +84,6 @@ namespace Rhino.ServiceBus.Serializers
 
                 parent.Add(new XElement(elementName, covertedValue));
             }
-            //TODO: I don't like this sepcial casing, we need to find a better way
-            // of doing this
-            else if (value is WireEcryptedString)
-            {
-                throw new SecurityException(
-                    "A message containing a WireEcryptedString field ("+name+") cannot be sent if security configuration was not set");
-            }
             else if (ShouldPutAsString(value))
             {
                 var elementName = GetXmlNamespace(namespaces, value.GetType()) + name;

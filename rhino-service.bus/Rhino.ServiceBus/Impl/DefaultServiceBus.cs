@@ -318,7 +318,7 @@ namespace Rhino.ServiceBus.Impl
                 {
                     reflection.InvokeConsume(consumer, msg.Message);
 
-                    var sagaEntity = consumer as ISaga;
+                    var sagaEntity = consumer as IAccessibleSaga;
                     if (sagaEntity == null)
                         continue;
                     PersistSagaInstance(sagaEntity);
@@ -335,7 +335,7 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        private void PersistSagaInstance(ISaga saga)
+        private void PersistSagaInstance(IAccessibleSaga saga)
         {
             Type persisterType = reflection.GetGenericTypeOf(typeof(ISagaPersister<>), saga);
             object persister = kernel.Resolve(persisterType);
@@ -358,7 +358,7 @@ namespace Rhino.ServiceBus.Impl
             var consumers = GetAllConsumers(consumerType, sagas);
             for (var i = 0; i < consumers.Length; i++)
             {
-                var saga = consumers[i] as ISaga;
+                var saga = consumers[i] as IAccessibleSaga;
                 if (saga == null)
                     continue;
 
@@ -417,10 +417,10 @@ namespace Rhino.ServiceBus.Impl
                 object sagaPersister = kernel.Resolve(sagaPersisterType);
                 try
                 {
-                    object sagaInstance = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
-                    if (sagaInstance == null)
+                    object sagaState = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
+                    if (sagaState == null)
                         continue;
-                    instances.Add(sagaInstance);
+                    instances.Add(sagaState);
                 }
                 finally
                 {

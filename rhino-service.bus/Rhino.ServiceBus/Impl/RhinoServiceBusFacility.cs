@@ -107,7 +107,13 @@ namespace Rhino.ServiceBus.Impl
             var security = FacilityConfig.Children["security"];
             
             if (security == null)
+            {
+                Kernel.Register(
+                    Component.For<IValueConvertor<WireEcryptedString>>()
+                        .ImplementedBy<ThrowingWireEcryptedStringConvertor>()
+                    );
                 return;
+            }
             
             var key = security.Children["key"];
             if (key == null || string.IsNullOrEmpty(key.Value))
@@ -117,9 +123,9 @@ namespace Rhino.ServiceBus.Impl
                 Component.For<IValueConvertor<WireEcryptedString>>()
                     .ImplementedBy<WireEcryptedStringConvertor>()
                     .DependsOn(
-                        Property.ForKey("key").Eq(Convert.FromBase64String(key.Value))
+                    Property.ForKey("key").Eq(Convert.FromBase64String(key.Value))
                     )
-                                    );
+                );
         }
 
         private static void Kernel_OnComponentModelCreated(ComponentModel model)
