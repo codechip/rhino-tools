@@ -113,16 +113,11 @@ namespace Rhino.ServiceBus.Impl
             if (key == null || string.IsNullOrEmpty(key.Value))
                 throw new ConfigurationErrorsException("<security> element must have a <key> element with content");
 
-            var iv = security.Children["iv"];
-            if (iv == null || string.IsNullOrEmpty(iv.Value))
-                throw new ConfigurationErrorsException("<security> element must have an <iv> element with content");
-
             Kernel.Register(
                 Component.For<IValueConvertor<WireEcryptedString>>()
                     .ImplementedBy<WireEcryptedStringConvertor>()
                     .DependsOn(
-                        Property.ForKey("key").Eq(Convert.FromBase64String(key.Value)),
-                        Property.ForKey("iv").Eq(Convert.FromBase64String(iv.Value))
+                        Property.ForKey("key").Eq(Convert.FromBase64String(key.Value))
                     )
                                     );
         }

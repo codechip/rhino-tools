@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Rhino.ServiceBus.Sagas;
 
 namespace Rhino.ServiceBus.Internal
@@ -26,9 +27,9 @@ namespace Rhino.ServiceBus.Internal
 
         void InvokeSagaPersisterComplete(object persister, ISaga entity);
 
-        string GetNamespaceForXml(object msg);
+        string GetNamespaceForXml(Type type);
 
-        string GetAssemblyQualifiedNameWithoutVersion(object msg);
+        string GetAssemblyQualifiedNameWithoutVersion(Type type);
 
         IEnumerable<string> GetProperties(object value);
 
@@ -40,8 +41,8 @@ namespace Rhino.ServiceBus.Internal
 
         void InvokeAdd(object instance, object item);
 
-        object InvokeFromString(object covertor, string value);
+        object InvokeFromElement(object covertor, XElement value);
 
-        string InvokeToString(object covertor, object value);
+        XElement InvokeToElement(object covertor, object value, Func<Type, XNamespace> getNamespace);
     }
 }

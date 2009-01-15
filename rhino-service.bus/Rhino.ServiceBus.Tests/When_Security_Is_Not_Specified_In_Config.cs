@@ -52,7 +52,7 @@ namespace Rhino.ServiceBus.Tests
 
             var msg = (When_Security_Is_Specified_In_Config.ClassWithSecretField)serializer.Deserialize(memoryStream)[0];
 
-            Assert.Null(msg.ShouldBeEncrypted.Value);
+            Assert.True(msg.ShouldBeEncrypted.Value.EndsWith("=="));
         }
     }
 }

@@ -1,8 +1,11 @@
+using System;
+using System.Xml.Linq;
+
 namespace Rhino.ServiceBus.Internal
 {
     public interface IValueConvertor<T>
     {
-        string ToString(T val);
-        T FromString(string val);
+        XElement ToElement(T val, Func<Type, XNamespace> getNamespace);
+        T FromElement(XElement element);
     }
 }

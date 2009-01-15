@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using log4net;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Sagas;
@@ -87,13 +88,13 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        public string InvokeToString(object instance, object item)
+        public XElement InvokeToElement(object instance, object item, Func<Type, XNamespace> getNamespace)
         {
             try
             {
                 Type type = instance.GetType();
-                MethodInfo method = type.GetMethod("ToString", new[] { item.GetType() });
-                return (string)method.Invoke(instance, new[] { item });
+                MethodInfo method = type.GetMethod("ToElement", new[] { item.GetType(), typeof(Func<Type, XNamespace>) });
+                return (XElement)method.Invoke(instance, new [] { item, getNamespace });
             }
             catch (TargetInvocationException e)
             {
@@ -101,13 +102,13 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        public object InvokeFromString(object instance, string value)
+        public object InvokeFromElement(object instance, XElement value)
         {
             try
             {
                 Type type = instance.GetType();
-                MethodInfo method = type.GetMethod("FromString", new[] { typeof(string)});
-                return method.Invoke(instance, new[] { value });
+                MethodInfo method = type.GetMethod("FromElement", new[] { typeof(XElement) });
+                return method.Invoke(instance, new [] { value });
             }
             catch (TargetInvocationException e)
             {
@@ -227,13 +228,7 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
-        public string GetNamespaceForXml(object msg)
-        {
-            Type type = msg.GetType();
-            return GetNamespaceForXml(type);
-        }
-
-        private string GetNamespaceForXml(Type type)
+        public string GetNamespaceForXml(Type type)
         {
             string value;
             if(typeToWellKnownTypeName.TryGetValue(type, out value))
@@ -267,9 +262,8 @@ namespace Rhino.ServiceBus.Impl
             return msg.GetType().Name;
         }
 
-        public string GetAssemblyQualifiedNameWithoutVersion(object msg)
+        public string GetAssemblyQualifiedNameWithoutVersion(Type type)
         {
-            Type type = msg.GetType();
             string value;
             if(typeToWellKnownTypeName.TryGetValue(type, out value))
                 return value;

@@ -29,16 +29,16 @@ namespace Rhino.ServiceBus.Serializers
             this.kernel = kernel;
         }
 
-        public void Serialize(object[] mesages, Stream messageStream)
+        public void Serialize(object[] messages, Stream messageStream)
         {
-            if(mesages.Length> MaxNumberOfAllowedItemsInCollection)
+            if(messages.Length> MaxNumberOfAllowedItemsInCollection)
                 throw new UnboundedResultSetException("A message batch is limited to 256 messages");
 
-            var namespaces = GetNamespaces(mesages);
+            var namespaces = GetNamespaces(messages);
             var messagesElement = new XElement(namespaces["esb"] + "messages");
             var xml = new XDocument(messagesElement);
 
-            foreach (var m in mesages)
+            foreach (var m in messages)
             {
                 if (m == null)
                     continue;
@@ -78,15 +78,9 @@ namespace Rhino.ServiceBus.Serializers
                 var valueConvertorType = reflection.GetGenericTypeOf(typeof (IValueConvertor<>), value);
                 var convertor = kernel.Resolve(valueConvertorType);
 
-                var ns = reflection.GetNamespaceForXml(value);
-                XNamespace xmlNs;
-                if (namespaces.TryGetValue(ns, out xmlNs) == false)
-                {
-                    namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
-                }
-                XName elementName = xmlNs + name;
+                var elementName = GetXmlNamespace(namespaces, value.GetType()) + name;
 
-                string covertedValue = reflection.InvokeToString(convertor, value);
+                var covertedValue = reflection.InvokeToElement(convertor, value, v => GetXmlNamespace(namespaces, v));
 
                 parent.Add(new XElement(elementName, covertedValue));
             }
@@ -99,13 +93,7 @@ namespace Rhino.ServiceBus.Serializers
             }
             else if (ShouldPutAsString(value))
             {
-                var ns = reflection.GetNamespaceForXml(value);
-                XNamespace xmlNs;
-                if (namespaces.TryGetValue(ns, out xmlNs) == false)
-                {
-                    namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
-                }
-                XName elementName = xmlNs + name;
+                var elementName = GetXmlNamespace(namespaces, value.GetType()) + name;
                 parent.Add(new XElement(elementName, FormatAsString(value)));
             }
             else if (value is IEnumerable)
@@ -138,6 +126,17 @@ namespace Rhino.ServiceBus.Serializers
             }
         }
 
+        private XNamespace GetXmlNamespace(IDictionary<string, XNamespace> namespaces, Type type)
+        {
+            var ns = reflection.GetNamespaceForXml(type);
+            XNamespace xmlNs;
+            if (namespaces.TryGetValue(ns, out xmlNs) == false)
+            {
+                namespaces[ns] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(type);
+            }
+            return xmlNs;
+        }
+
         private bool HaveCustomerSerializer(Type type)
         {
             bool? hasConvertor = null;
@@ -159,17 +158,18 @@ namespace Rhino.ServiceBus.Serializers
 
         private XElement GetContentWithNamespace(object value, IDictionary<string, XNamespace> namespaces, string name)
         {
-            var xmlNsAlias = reflection.GetNamespaceForXml(value);
+            var type = value.GetType();
+            var xmlNsAlias = reflection.GetNamespaceForXml(type);
             XNamespace xmlNs;
             if (namespaces.TryGetValue(xmlNsAlias, out xmlNs) == false)
             {
-                namespaces[xmlNsAlias] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(value);
+                namespaces[xmlNsAlias] = xmlNs = reflection.GetAssemblyQualifiedNameWithoutVersion(type);
             }
 
             return new XElement(xmlNs + name);
         }
 
-        private bool ShouldPutAsString(object value)
+        private static bool ShouldPutAsString(object value)
         {
             return value is ValueType || value is string || value is Uri;
         }
@@ -238,7 +238,10 @@ namespace Rhino.ServiceBus.Serializers
             };
             foreach (var msg in mesages)
             {
-                namespaces.Add(reflection.GetNamespaceForXml(msg), reflection.GetAssemblyQualifiedNameWithoutVersion(msg));
+                if (msg == null)
+                    continue;
+                var type = msg.GetType();
+                namespaces.Add(reflection.GetNamespaceForXml(type), reflection.GetAssemblyQualifiedNameWithoutVersion(type));
             }
             return namespaces;
         }
@@ -269,7 +272,7 @@ namespace Rhino.ServiceBus.Serializers
             {
                 var convertorType = reflection.GetGenericTypeOf(typeof(IValueConvertor<>),type);
                 var convertor = kernel.Resolve(convertorType);
-                return reflection.InvokeFromString(convertor, element.Value);
+                return reflection.InvokeFromElement(convertor, element);
             }
             if (CanParseFromString(type))
             {
@@ -282,12 +285,13 @@ namespace Rhino.ServiceBus.Serializers
             object instance = reflection.CreateInstance(type);
             foreach (var prop in element.Elements())
             {
+                var property = prop;
                 reflection.Set(instance,
                     prop.Name.LocalName,
                     typeFromProperty =>
                     {
-                        var propType = reflection.GetType(prop.Name.NamespaceName);
-                        return ReadObject(propType ?? typeFromProperty, prop);
+                        var propType = reflection.GetType(property.Name.NamespaceName);
+                        return ReadObject(propType ?? typeFromProperty, property);
                     });
             }
             return instance;

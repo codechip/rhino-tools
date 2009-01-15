@@ -4,7 +4,7 @@ namespace Rhino.ServiceBus.Internal
 {
     public interface IMessageSerializer
     {
-        void Serialize(object[] mesages, Stream message);
+        void Serialize(object[] messages, Stream message);
 
         object[] Deserialize(Stream message);
     }

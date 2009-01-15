@@ -13,7 +13,8 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Can_roundtrip_uri()
         {
-            var typeName = reflection.GetAssemblyQualifiedNameWithoutVersion(new Uri("http://ayende.com"));
+            object msg = new Uri("http://ayende.com");
+            var typeName = reflection.GetAssemblyQualifiedNameWithoutVersion(msg.GetType());
             var type = reflection.GetType(typeName);
             Assert.NotNull(type);
         }
