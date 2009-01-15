@@ -36,7 +36,6 @@ namespace Rhino.ServiceBus.Tests.Bugs
         {
             container.Register(
                 AllTypes.FromAssemblyContaining<MyHandler>()
-                    .BasedOn<IMessageConsumer>()
                     .Where(x => x == typeof(MyHandler))
                 );
 
@@ -68,7 +67,6 @@ namespace Rhino.ServiceBus.Tests.Bugs
         {
             container.Register(
                 AllTypes.FromAssemblyContaining<MyHandler>()
-                    .BasedOn<IMessageConsumer>()
                     .Where(x => x.Name == "MyHandler")
                 );
 

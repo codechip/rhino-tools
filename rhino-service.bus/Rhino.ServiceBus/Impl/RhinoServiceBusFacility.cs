@@ -7,9 +7,11 @@ using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Rhino.ServiceBus.Convertors;
 using Rhino.ServiceBus.DataStructures;
+using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
+using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Serializers;
 
 namespace Rhino.ServiceBus.Impl
@@ -132,6 +134,21 @@ namespace Rhino.ServiceBus.Impl
         {
             if (typeof (IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
                 return;
+
+            if(model.Implementation.GetInterface(typeof(InitiatedBy<>).FullName)!=null &&
+                    model.Implementation.GetInterface(typeof(ISaga<>).FullName)==null)
+            {
+                throw new InvalidUsageException("Message consumer: " + model.Implementation+" implements InitiatedBy<TMsg> but doesn't implment ISaga<TState>. "+Environment.NewLine+
+                    "Did you forget to inherit from ISaga<TState> ?");
+            }
+
+            if (model.Implementation.GetInterface(typeof(InitiatedBy<>).FullName) == null &&
+                    model.Implementation.GetInterface(typeof(Orchestrates<>).FullName) != null)
+            {
+                throw new InvalidUsageException("Message consumer: " + model.Implementation + " implements Orchestrates<TMsg> but doesn't implment InitiatedBy<TState>. " + Environment.NewLine +
+                    "Did you forget to inherit from InitiatedBy<TState> ?");
+            }
+
 
             model.LifestyleType = LifestyleType.Transient;
         }
