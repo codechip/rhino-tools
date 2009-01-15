@@ -227,6 +227,20 @@ namespace Rhino.ServiceBus.Impl
             }
         }
 
+        public string GetNameForXml(Type type)
+        {
+            var typeName = type.Name;
+            var indexOf = typeName.IndexOf('`');
+            if (indexOf == -1)
+                return typeName;
+            typeName = typeName.Substring(0, indexOf) + "_of_";
+            foreach (var argument in type.GetGenericArguments())
+            {
+                typeName += GetNamespaceForXml(argument) + "_";
+            }
+            return typeName.Substring(0, typeName.Length - 1);
+        }
+
         public string GetNamespaceForXml(Type type)
         {
             string value;
@@ -254,11 +268,6 @@ namespace Rhino.ServiceBus.Impl
                 typeName += GetNamespaceForXml(argument) + "_";
             }
             return typeName.Substring(0,typeName.Length-1);
-        }
-
-        public string GetName(object msg)
-        {
-            return msg.GetType().Name;
         }
 
         public string GetAssemblyQualifiedNameWithoutVersion(Type type)

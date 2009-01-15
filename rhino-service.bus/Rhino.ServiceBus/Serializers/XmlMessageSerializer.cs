@@ -45,7 +45,7 @@ namespace Rhino.ServiceBus.Serializers
 
                 try
                 {
-                    WriteObject(reflection.GetName(m), m, messagesElement, namespaces);
+                    WriteObject(reflection.GetNameForXml(m.GetType()), m, messagesElement, namespaces);
                 }
                 catch (Exception e)
                 {

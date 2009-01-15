@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Castle.MicroKernel;
@@ -383,7 +382,7 @@ namespace Rhino.ServiceBus.Impl
 		/// Here we don't use ResolveAll from Windsor because we want to get an error
 		/// if a component exists which isn't valid
 		/// </summary>
-    	private object[] GetAllConsumers(Type consumerType, object[] instanceOfTypesToSkipResolving)
+    	private object[] GetAllConsumers(Type consumerType, IEnumerable<object> instanceOfTypesToSkipResolving)
     	{
 			var handlers = kernel.GetAssignableHandlers(consumerType);
 			var consumers = new List<object>(handlers.Length);

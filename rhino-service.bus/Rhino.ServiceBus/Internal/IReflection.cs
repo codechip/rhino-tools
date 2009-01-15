@@ -35,8 +35,6 @@ namespace Rhino.ServiceBus.Internal
 
         object Get(object instance, string name);
 
-        string GetName(object msg);
-
         Type GetType(string type);
 
         void InvokeAdd(object instance, object item);
@@ -44,5 +42,6 @@ namespace Rhino.ServiceBus.Internal
         object InvokeFromElement(object covertor, XElement value);
 
         XElement InvokeToElement(object covertor, object value, Func<Type, XNamespace> getNamespace);
+        string GetNameForXml(Type type);
     }
 }

@@ -19,6 +19,7 @@ namespace Rhino.ServiceBus.Tests
 
         public SagaTests()
         {
+            OrderProcessor.LastState = null;
             wait = new ManualResetEvent(false);
             container = new WindsorContainer(new XmlInterpreter());
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
@@ -84,24 +85,13 @@ namespace Rhino.ServiceBus.Tests
                 wait.WaitOne();
                 wait.Reset();
                 
-                var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
-            	OrderProcessor processor = null;
-
-            	for (int i = 0; i < 1000; i++)
-            	{
-					processor = persister.Get(sagaId);
-					if (processor!=null)
-						break;
-					Thread.Sleep(250);
-            	}
-
-                Assert.Equal(1, processor.State.Count);
+                Assert.Equal(1, OrderProcessor.LastState.Count);
 
                 bus.Send(bus.Endpoint, new AddLineItemMessage { CorrelationId = sagaId });
 
                 wait.WaitOne();
-               
-                Assert.Equal(2, processor.State.Count);
+
+                Assert.Equal(2, OrderProcessor.LastState.Count);
             }
         }
 
@@ -167,6 +157,8 @@ namespace Rhino.ServiceBus.Tests
                 Orchestrates<AddLineItemMessage>,
                 Orchestrates<SubmitOrderMessage>
         {
+            public static List<object> LastState;
+
             public OrderProcessor()
             {
                 State = new List<object>();
@@ -177,6 +169,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 State.Add(pong);
                 sagaId = Id;
+                LastState = State;
                 wait.Set();
             }
 
@@ -191,6 +184,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 State.Add(pong);
                 sagaId = Id;
+                LastState = State;
                 wait.Set();
             }
 
@@ -199,6 +193,7 @@ namespace Rhino.ServiceBus.Tests
             public void Consume(SubmitOrderMessage message)
             {
                 IsCompleted = true;
+                LastState = State; 
                 wait.Set();
             }
 
