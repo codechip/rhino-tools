@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache", "Rhino.Cache\Rhino.Cache.csproj", "{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Tests", "Rhino.Cache.Tests\Rhino.Cache.Tests.csproj", "{FE008F78-C172-4861-A50C-C1B25C0BD3BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Client", "Rhino.Cache.Client\Rhino.Cache.Client.csproj", "{AE960DA4-5C15-4608-84AB-27769FB851F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Client.Tests", "Rhino.Cache.Client.Tests\Rhino.Cache.Client.Tests.csproj", "{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE008F78-C172-4861-A50C-C1B25C0BD3BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE008F78-C172-4861-A50C-C1B25C0BD3BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE008F78-C172-4861-A50C-C1B25C0BD3BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE008F78-C172-4861-A50C-C1B25C0BD3BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE960DA4-5C15-4608-84AB-27769FB851F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE960DA4-5C15-4608-84AB-27769FB851F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE960DA4-5C15-4608-84AB-27769FB851F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE960DA4-5C15-4608-84AB-27769FB851F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
