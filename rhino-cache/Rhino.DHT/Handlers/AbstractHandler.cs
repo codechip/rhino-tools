@@ -1,5 +1,3 @@
-using System.Web;
-using Rhino.DHT.Abstractions;
 using Rhino.DHT.Abstractions;
 
 namespace Rhino.DHT.Handlers
@@ -25,11 +23,6 @@ namespace Rhino.DHT.Handlers
         public IHttpResponse Response
         {
             get { return context.Response; }
-        }
-
-        public System.Web.Caching.Cache InMemoryCache
-        {
-            get { return context.Cache; }
         }
     }
 }

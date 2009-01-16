@@ -1,6 +1,4 @@
 using System.IO;
-using System.Web;
-using Rhino.DHT.Abstractions;
 using Rhino.DHT.Abstractions;
 
 namespace Rhino.DHT.Handlers
@@ -34,7 +32,6 @@ namespace Rhino.DHT.Handlers
                     Data = ms.ToArray()
                 };
 
-                InMemoryCache[operation.Key] = operation;
                 PersistentCache.Put(operation);
 
                 Response.Status = "Accepted";

@@ -21,10 +21,5 @@ namespace Rhino.DHT.Abstractions
         {
             get { return new HttpListenerResponseAdapter(context); }
         }
-
-        public System.Web.Caching.Cache Cache
-        {
-            get { return HttpRuntime.Cache; }
-        }
     }
 }

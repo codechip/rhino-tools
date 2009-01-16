@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Rhino.DHT.Handlers;
-using Rhino.DHT.Handlers;
 using Xunit;
 
 namespace Rhino.DHT.Tests

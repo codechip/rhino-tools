@@ -2,8 +2,6 @@ using System.Net;
 using System.Web;
 using Rhino.DHT.Abstractions;
 using Rhino.DHT.Handlers;
-using Rhino.DHT.Abstractions;
-using Rhino.DHT.Handlers;
 
 namespace Rhino.DHT
 {

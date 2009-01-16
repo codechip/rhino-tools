@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using Microsoft.Isam.Esent.Interop;
 using Rhino.DHT.Handlers;
-using Rhino.DHT.Handlers;
 
 namespace Rhino.DHT
 {

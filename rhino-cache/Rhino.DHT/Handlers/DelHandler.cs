@@ -1,6 +1,3 @@
-using System.Net;
-using System.Web;
-using Rhino.DHT.Abstractions;
 using Rhino.DHT.Abstractions;
 
 namespace Rhino.DHT.Handlers
@@ -14,7 +11,6 @@ namespace Rhino.DHT.Handlers
         public override void Execute()
         {
             var key = Request.Path;
-            InMemoryCache.Remove(key);
             PersistentCache.Remove(key);
             Response.StatusCode = 205;
             Response.StatusDescription = "ResetContent";

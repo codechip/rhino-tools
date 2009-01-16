@@ -1,5 +1,3 @@
-using System.Web;
-using Rhino.DHT.Abstractions;
 using Rhino.DHT.Abstractions;
 
 namespace Rhino.DHT.Handlers
@@ -21,8 +19,7 @@ namespace Rhino.DHT.Handlers
                 Response.Status = "Bad Request";
                 return;
             }
-            var cache = InMemoryCache[key] as CacheItem ?? 
-                PersistentCache.Get(key);
+            var cache = PersistentCache.Get(key);
 
             if(cache==null)
             {
