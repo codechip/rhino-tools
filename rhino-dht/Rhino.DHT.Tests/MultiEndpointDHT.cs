@@ -1,0 +1,88 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.ServiceModel;
+using Xunit;
+
+namespace Rhino.DHT.Tests
+{
+    public class MultiEndpointDHT : IDisposable
+    {
+        private readonly MultiEndpointDistributedHashTable distributedHashTable;
+        private readonly RemoteAppDomainRunner[] runners;
+
+        public MultiEndpointDHT()
+        {
+            File.Delete("cache1.esent");
+            File.Delete("cache2.esent");
+            File.Delete("cache3.esent");
+
+            runners = new[]
+            {
+                RemoteAppDomainRunner.Start("cache1.esent","net.tcp://localhost:6212"),
+                RemoteAppDomainRunner.Start("cache2.esent","net.tcp://localhost:6213"),
+                RemoteAppDomainRunner.Start("cache3.esent","net.tcp://localhost:6214")
+            };
+
+            distributedHashTable = new MultiEndpointDistributedHashTable(
+                runners.Select(x => new Uri(x.Uri)).ToArray(), 
+                new NetTcpBinding());
+        }
+
+        [Fact]
+        public void Can_add_and_recieve_items_from_multiple_endpoints()
+        {
+            var versions = distributedHashTable.Put(new[]
+            {
+                new AddValue
+                {
+                    Key = "test74", 
+                    Bytes = new byte[] {74}
+                },
+                new AddValue
+                {
+                    Key = "test75", 
+                    Bytes = new byte[] {75}
+                },
+                new AddValue
+                {
+                    Key = "test77", 
+                    Bytes = new byte[] {77}
+                },
+            });
+
+            Assert.Equal(new[] {1, 1, 1}, versions);
+
+            var values = distributedHashTable.Get(new[]
+            {
+                new GetValue
+                {
+                    Key = "test74",
+                },
+                new GetValue
+                {
+                    Key = "test75",
+                },
+                new GetValue
+                {
+                    Key = "test77",
+                },
+            });
+            Assert.Equal(3, values.Length);
+            Assert.Equal(new byte[] { 74}, values[0][0].Data);
+            Assert.Equal(new byte[] { 75 }, values[1][0].Data);
+            Assert.Equal(new byte[] { 77 }, values[2][0].Data);
+        }
+
+        public void Dispose()
+        {
+            distributedHashTable.Dispose();
+            foreach (var host in runners)
+            {
+                host.Close();
+                AppDomain.Unload(host.AppDomain);
+            }
+        }
+    }
+}

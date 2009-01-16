@@ -1,32 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Isam.Esent.Interop;
-using System.Linq;
 
 namespace Rhino.DHT
 {
     public class PersistentHashTable : IDisposable
     {
-        private readonly Instance instance = new Instance("rhino-dht");
-
+        private readonly Instance instance;
+        private bool needToDisposeInstance;
         private readonly string database;
+
+        public Action<InstanceParameters> Configure;
 
         public PersistentHashTable(string database)
         {
+            instance = new Instance(database);
             this.database = database;
         }
 
         public void Initialize()
         {
             instance.Parameters.CircularLog = true;
+
+            if (Configure != null)
+                Configure(instance.Parameters);
+
             instance.Init();
+            needToDisposeInstance = true;
 
             using (var session = new Session(instance))
             {
                 try
                 {
                     Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
+                    Api.JetDetachDatabase(session, database);
+                    return;
                 }
                 catch (EsentException e)
                 {
@@ -40,7 +47,8 @@ namespace Rhino.DHT
 
         public void Dispose()
         {
-            instance.Dispose();
+            if (needToDisposeInstance)
+                instance.Dispose();
         }
 
         public void Batch(Action<PersistentHashTableActions> action)

@@ -8,6 +8,7 @@ namespace Rhino.DHT
 {
     public class PersistentHashTableActions : IDisposable
     {
+        private readonly string database;
         private readonly Session session;
         private readonly Transaction transaction;
         private readonly Table keys;
@@ -18,7 +19,10 @@ namespace Rhino.DHT
 
         public PersistentHashTableActions(Instance instance, string database)
         {
+            this.database = database;
             session = new Session(instance);
+
+            Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
             transaction = new Transaction(session);
             Api.JetOpenDatabase(session, database, null, out dbid, OpenDatabaseGrbit.None);
             keys = new Table(session, dbid, "keys", OpenTableGrbit.None);
@@ -29,16 +33,8 @@ namespace Rhino.DHT
 
         public int Put(string key, int[] parentVersions, byte[] bytes)
         {
-            var activeVersions = GatherActiveVersion(key)
-                            .OrderBy(x => x);
-
-            var allVersionsMatch =
-                parentVersions
-                    .OrderBy(x => x)
-                    .SequenceEqual(activeVersions.OrderBy(x => x));
-
-            if (allVersionsMatch)
-                DeactivateAllVersions(key, activeVersions);
+            if (DoesAllVersionsMatch(key, parentVersions))
+                DeactivateAllVersions(key, parentVersions);
 
             var bookmark = new byte[Api.BookmarkMost];
             int bookmarkSize;
@@ -63,6 +59,16 @@ namespace Rhino.DHT
             }
 
             return version.Value;
+        }
+
+        private bool DoesAllVersionsMatch(string key, IEnumerable<int> parentVersions)
+        {
+            var activeVersions = GatherActiveVersion(key)
+                .OrderBy(x => x);
+
+            return parentVersions
+                .OrderBy(x => x)
+                .SequenceEqual(activeVersions.OrderBy(x => x));
         }
 
         public Value[] Get(string key)
@@ -155,12 +161,25 @@ namespace Rhino.DHT
                 keys.Dispose();
             if (data != null)
                 data.Dispose();
+
             if (Equals(dbid, JET_DBID.Nil) == false)
                 Api.JetCloseDatabase(session, dbid, CloseDatabaseGrbit.None);
+            
             if (transaction != null)
                 transaction.Dispose();
+
+            Api.JetDetachDatabase(session, database);
+
             if (session != null)
                 session.Dispose();
+        }
+
+        public bool Remove(string key, int[] parentVersions)
+        {
+            var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
+            if (doesAllVersionsMatch)
+                DeactivateAllVersions(key, parentVersions);
+            return doesAllVersionsMatch;
         }
     }
 }
