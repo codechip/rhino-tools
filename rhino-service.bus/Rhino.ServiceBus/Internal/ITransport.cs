@@ -28,6 +28,8 @@ namespace Rhino.ServiceBus.Internal
         
         event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
+        event Action<CurrentMessageInformation> AdministrativeMessageProcessingCompleted;
+
         void Discard(object msg);
 
     	void Send(Uri uri, DateTime processAgainAt, object[] msgs);

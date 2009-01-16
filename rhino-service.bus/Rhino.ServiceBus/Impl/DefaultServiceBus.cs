@@ -302,7 +302,6 @@ namespace Rhino.ServiceBus.Impl
         {
             object[] consumers = GatherConsumers(msg);
         	
-            
 			if (consumers.Length == 0)
             {
                 transport.Discard(msg.Message);
@@ -350,8 +349,9 @@ namespace Rhino.ServiceBus.Impl
             var sagaMessage = msg.Message as ISagaMessage;
             object[] sagas = GetSagasFor(sagaMessage);
 
+            var msgType = msg.Message.GetType();
             object[] instanceConsumers = subscriptionStorage
-                .GetInstanceSubscriptions(msg.Message.GetType());
+                .GetInstanceSubscriptions(msgType);
 
             Type consumerType = reflection.GetGenericTypeOf(typeof(ConsumerOf<>), msg.Message);
             var consumers = GetAllConsumers(consumerType, sagas);
@@ -361,9 +361,20 @@ namespace Rhino.ServiceBus.Impl
                 if (saga == null)
                     continue;
 
+                // if there is an existing saga, we skip the new one
                 var type = saga.GetType();
                 if (sagas.Any(type.IsInstanceOfType))
                 {
+                    kernel.ReleaseComponent(consumers[i]);
+                    consumers[i] = null;
+                    continue;
+                }
+                // we do not create new sagas if the saga is not initiated by
+                // the message
+                var initiatedBy = reflection.GetGenericTypeOf(typeof(InitiatedBy<>),msgType);
+                if(initiatedBy.IsInstanceOfType(saga)==false)
+                {
+                    kernel.ReleaseComponent(consumers[i]);
                     consumers[i] = null;
                     continue;
                 }
@@ -404,9 +415,11 @@ namespace Rhino.ServiceBus.Impl
 
             var instances = new List<object>();
 
-            Type messageType = reflection.GetGenericTypeOf(typeof(Orchestrates<>), sagaMessage);
+            Type orchestratesType = reflection.GetGenericTypeOf(typeof(Orchestrates<>), sagaMessage);
+            Type initiatedByType = reflection.GetGenericTypeOf(typeof(InitiatedBy<>), sagaMessage);
 
-            IHandler[] handlers = kernel.GetAssignableHandlers(messageType);
+            var handlers = kernel.GetAssignableHandlers(orchestratesType)
+                                                   .Union(kernel.GetAssignableHandlers(initiatedByType));
 
             foreach (IHandler sagaPersisterHandler in handlers)
             {

@@ -139,6 +139,7 @@ namespace Rhino.ServiceBus.Msmq
 		public event Action<CurrentMessageInformation> MessageArrived;
 		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
 		public event Action<CurrentMessageInformation> MessageProcessingCompleted;
+        public event Action<CurrentMessageInformation> AdministrativeMessageProcessingCompleted;
 
 		public void Discard(object msg)
 		{
@@ -386,7 +387,7 @@ namespace Rhino.ServiceBus.Msmq
                     };
                 }
 
-			    ProcessMessage(message, state, action);
+                ProcessMessage(message, state, action, AdministrativeMessageProcessingCompleted);
 			}
 			catch (Exception e)
 			{
@@ -412,7 +413,7 @@ namespace Rhino.ServiceBus.Msmq
 					message = TryGetMessageFromQueue(state.Queue, messageId);
 					if (message == null)
 						return;// someone else ate our message, better luck next time
-					ProcessMessage(message, state, MessageArrived);
+					ProcessMessage(message, state, MessageArrived, MessageProcessingCompleted);
 				}
 				catch (Exception e)
 				{
@@ -615,7 +616,10 @@ namespace Rhino.ServiceBus.Msmq
 			return true;
 		}
 
-		private void ProcessMessage(Message message, QueueState state, Action<CurrentMessageInformation> messageRecieved)
+		private void ProcessMessage(Message message, 
+            QueueState state, 
+            Action<CurrentMessageInformation> messageRecieved,
+            Action<CurrentMessageInformation> messageCompleted)
 		{
 			//deserialization errors do not count for module events
 			object[] messages = DeserializeMessages(state, message);
@@ -657,9 +661,8 @@ namespace Rhino.ServiceBus.Msmq
 			}
 			finally
 			{
-				Action<CurrentMessageInformation> copy = MessageProcessingCompleted;
-				if (copy != null)
-					copy(currentMessageInformation);
+                if (messageCompleted != null)
+                    messageCompleted(currentMessageInformation);
 				currentMessageInformation = null;
 			}
 		}

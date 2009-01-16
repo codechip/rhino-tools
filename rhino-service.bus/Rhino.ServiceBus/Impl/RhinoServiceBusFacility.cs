@@ -13,6 +13,7 @@ using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Serializers;
+using System.Linq;
 
 namespace Rhino.ServiceBus.Impl
 {
@@ -20,25 +21,25 @@ namespace Rhino.ServiceBus.Impl
     {
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
-        private readonly Type serializerImpl = typeof (XmlMessageSerializer);
-        private readonly Type transportImpl = typeof (MsmqTransport);
+        private readonly Type serializerImpl = typeof(XmlMessageSerializer);
+        private readonly Type transportImpl = typeof(MsmqTransport);
         private Uri endpoint;
         private Uri logEndpoint;
         private int numberOfRetries = 5;
-        private readonly Type subscriptionStorageImpl = typeof (MsmqSubscriptionStorage);
+        private readonly Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
-        private Type queueStrategyImpl = typeof (SubQueueStrategy);
+        private Type queueStrategyImpl = typeof(SubQueueStrategy);
 
         public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
         {
-            messageModules.Add(typeof (TModule));
+            messageModules.Add(typeof(TModule));
             return this;
         }
 
         public RhinoServiceBusFacility UseFlatQueueStructure()
         {
-            queueStrategyImpl = typeof (FlatQueueStrategy);
+            queueStrategyImpl = typeof(FlatQueueStrategy);
             return this;
         }
 
@@ -66,9 +67,9 @@ namespace Rhino.ServiceBus.Impl
             {
                 Kernel.Register(
                     Component.For<MessageLoggingModule>()
-                        .DependsOn(new {logQueue = logEndpoint})
+                        .DependsOn(new { logQueue = logEndpoint })
                     );
-                messageModules.Insert(0, typeof (MessageLoggingModule));
+                messageModules.Insert(0, typeof(MessageLoggingModule));
             }
 
             Kernel.Register(
@@ -84,7 +85,7 @@ namespace Rhino.ServiceBus.Impl
                 Component.For<IReflection>()
                     .ImplementedBy<DefaultReflection>(),
                 Component.For<IQueueStrategy>()
-                    .ImplementedBy(queueStrategyImpl).DependsOn(new{endpoint}),
+                    .ImplementedBy(queueStrategyImpl).DependsOn(new { endpoint }),
                 Component.For<ISubscriptionStorage>()
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
@@ -107,7 +108,7 @@ namespace Rhino.ServiceBus.Impl
         private void AddWireEcryptedStringConvertorIfHasKey()
         {
             var security = FacilityConfig.Children["security"];
-            
+
             if (security == null)
             {
                 Kernel.Register(
@@ -116,7 +117,7 @@ namespace Rhino.ServiceBus.Impl
                     );
                 return;
             }
-            
+
             var key = security.Children["key"];
             if (key == null || string.IsNullOrEmpty(key.Value))
                 throw new ConfigurationErrorsException("<security> element must have a <key> element with content");
@@ -132,18 +133,23 @@ namespace Rhino.ServiceBus.Impl
 
         private static void Kernel_OnComponentModelCreated(ComponentModel model)
         {
-            if (typeof (IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
+            if (typeof(IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
                 return;
 
-            if(model.Implementation.GetInterface(typeof(InitiatedBy<>).FullName)!=null &&
-                    model.Implementation.GetInterface(typeof(ISaga<>).FullName)==null)
+            var interfaces = model.Implementation.GetInterfaces()
+                .Where(x => x.IsGenericType && x.IsGenericTypeDefinition == false)
+                .Select(x => x.GetGenericTypeDefinition())
+                .ToList();
+
+            if (interfaces.Contains(typeof(InitiatedBy<>)) &&
+                    interfaces.Contains(typeof(ISaga<>)) == false)
             {
-                throw new InvalidUsageException("Message consumer: " + model.Implementation+" implements InitiatedBy<TMsg> but doesn't implment ISaga<TState>. "+Environment.NewLine+
+                throw new InvalidUsageException("Message consumer: " + model.Implementation + " implements InitiatedBy<TMsg> but doesn't implment ISaga<TState>. " + Environment.NewLine +
                     "Did you forget to inherit from ISaga<TState> ?");
             }
 
-            if (model.Implementation.GetInterface(typeof(InitiatedBy<>).FullName) == null &&
-                    model.Implementation.GetInterface(typeof(Orchestrates<>).FullName) != null)
+            if (interfaces.Contains(typeof(InitiatedBy<>)) == false &&
+                    interfaces.Contains(typeof(Orchestrates<>)))
             {
                 throw new InvalidUsageException("Message consumer: " + model.Implementation + " implements Orchestrates<TMsg> but doesn't implment InitiatedBy<TState>. " + Environment.NewLine +
                     "Did you forget to inherit from InitiatedBy<TState> ?");
@@ -165,7 +171,7 @@ namespace Rhino.ServiceBus.Impl
                     throw new ConfigurationErrorsException("Unknown node 'messages/" + configuration.Name + "'");
 
                 string msgName = configuration.Attributes["name"];
-                if(string.IsNullOrEmpty(msgName))
+                if (string.IsNullOrEmpty(msgName))
                     throw new ConfigurationErrorsException("Invalid name element in the <messages/> element");
 
                 string uriString = configuration.Attributes["endpoint"];

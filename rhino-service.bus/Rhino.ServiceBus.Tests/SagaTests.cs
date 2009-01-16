@@ -31,6 +31,43 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
+        public void when_sending_non_initiating_message_saga_will_not_be_invoked()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                var transport = container.Resolve<ITransport>();
+                bus.Start();
+
+                transport.MessageProcessingCompleted += information => wait.Set();
+                bus.Send(bus.Endpoint, new AddLineItemMessage());
+                wait.WaitOne();
+
+                Assert.Null(OrderProcessor.LastState);
+            }
+        }
+
+        [Fact]
+        public void When_saga_with_same_correlation_id_exists_and_get_initiating_message_will_usage_same_saga()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                var guid = Guid.NewGuid();
+
+                bus.Send(bus.Endpoint, new NewOrderMessage { CorrelationId = guid });
+                wait.WaitOne();
+
+                wait.Reset();
+
+                bus.Send(bus.Endpoint, new NewOrderMessage { CorrelationId = guid });
+                wait.WaitOne();
+
+                Assert.Equal(2, OrderProcessor.LastState.Count);
+            }
+        }
+
+        [Fact]
         public void Can_create_saga_entity()
         {
             using (var bus = container.Resolve<IStartableServiceBus>())
@@ -59,7 +96,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
-                bus.Send(bus.Endpoint, new NewOrderMessage());
+                bus.Send(bus.Endpoint, new NewOrderMessage2());
                 wait.WaitOne();
 
                 var persister = container.Resolve<ISagaPersister<OrderProcessor>>();
@@ -84,7 +121,7 @@ namespace Rhino.ServiceBus.Tests
                 bus.Send(bus.Endpoint, new NewOrderMessage());
                 wait.WaitOne();
                 wait.Reset();
-                
+
                 Assert.Equal(1, OrderProcessor.LastState.Count);
 
                 bus.Send(bus.Endpoint, new AddLineItemMessage { CorrelationId = sagaId });
@@ -143,16 +180,22 @@ namespace Rhino.ServiceBus.Tests
 
         #region Nested type: NewOrderMessage
 
-        public class NewOrderMessage
+        public class NewOrderMessage : ISagaMessage
         {
+            public Guid CorrelationId
+            {
+                get;
+                set;
+            }
         }
 
         #endregion
 
         #region Nested type: OrderProcessor
 
-        public class OrderProcessor : 
+        public class OrderProcessor :
                 ISaga<List<object>>,
+                InitiatedBy<NewOrderMessage2>,
                 InitiatedBy<NewOrderMessage>,
                 Orchestrates<AddLineItemMessage>,
                 Orchestrates<SubmitOrderMessage>
@@ -193,13 +236,21 @@ namespace Rhino.ServiceBus.Tests
             public void Consume(SubmitOrderMessage message)
             {
                 IsCompleted = true;
-                LastState = State; 
+                LastState = State;
                 wait.Set();
             }
 
             public List<object> State
             {
-                get; set;
+                get;
+                set;
+            }
+
+            public void Consume(NewOrderMessage2 message)
+            {
+                LastState = State;
+                sagaId = Id;
+                wait.Set();
             }
         }
 
@@ -217,5 +268,9 @@ namespace Rhino.ServiceBus.Tests
         }
 
         #endregion
+    }
+
+    public class NewOrderMessage2
+    {
     }
 }
