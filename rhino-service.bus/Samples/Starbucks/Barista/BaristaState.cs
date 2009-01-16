@@ -5,5 +5,7 @@ namespace Starbucks.Barista
         public bool DrinkIsReady { get; set; }
 
         public bool GotPayment { get; set; }
+
+        public string Drink { get; set; }
     }
 }

@@ -13,7 +13,6 @@ namespace Starbucks.Barista
         Orchestrates<PaymentComplete>
     {
         private readonly IServiceBus bus;
-        private string drink;
 
         public BaristaSaga(IServiceBus bus)
         {
@@ -25,7 +24,7 @@ namespace Starbucks.Barista
 
         public void Consume(PrepareDrink message)
         {
-            drink = message.DrinkName;
+            State.Drink = message.DrinkName;
 
             for (int i = 0; i < 10; i++)
             {
@@ -44,7 +43,7 @@ namespace Starbucks.Barista
                 bus.Publish(new DrinkReady
                 {
                     CorrelationId = Id,
-                    Drink = drink
+                    Drink = State.Drink
                 });
                 IsCompleted = true;
             }
