@@ -13,9 +13,8 @@ namespace Rhino.Cache.Handlers
         public override void Execute()
         {
             var key = Request.Path;
-            var cache = new RemoveFromCache {Key = key};
-            InMemoryCache[key] = cache;
-            PersistentCache.Put(cache);
+            InMemoryCache.Remove(key);
+            PersistentCache.Remove(key);
             Response.StatusCode = 205;
             Response.StatusDescription = "ResetContent";
             Response.Status = "ResetContent";

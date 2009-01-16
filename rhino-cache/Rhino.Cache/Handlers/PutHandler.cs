@@ -26,7 +26,7 @@ namespace Rhino.Cache.Handlers
                 var key = Request.Path;
                 var type = Request.ContentType ?? "binary/octet-stream";
 
-                var operation = new AddToCache
+                var operation = new CacheItem
                 {
                     Key = key,
                     Type = type,

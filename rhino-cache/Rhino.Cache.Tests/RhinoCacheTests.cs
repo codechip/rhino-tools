@@ -95,7 +95,7 @@ namespace Rhino.Cache.Tests
             request = WebRequest.Create("http://localhost:6212/cache/test");
 
             var e = Assert.Throws<WebException>(() => request.GetResponse());
-            Assert.Equal(((HttpWebResponse)e.Response).StatusCode, HttpStatusCode.Gone);
+            Assert.Equal(((HttpWebResponse)e.Response).StatusCode, HttpStatusCode.NotFound);
         }
 
         public void Dispose()

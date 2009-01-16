@@ -1,7 +1,8 @@
 namespace Rhino.Cache.Handlers
 {
-    public class AddToCache: CacheOperation
+    public class CacheItem
     {
+        public string Key;
         public string Type;
         public byte[] Data;
     }

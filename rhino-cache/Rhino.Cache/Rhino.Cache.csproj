@@ -60,12 +60,10 @@
     <Compile Include="Abstractions\IHttpRequest.cs" />
     <Compile Include="Abstractions\IHttpResponse.cs" />
     <Compile Include="Handlers\AbstractHandler.cs" />
-    <Compile Include="Handlers\AddToCache.cs" />
-    <Compile Include="Handlers\CacheOperation.cs" />
+    <Compile Include="Handlers\CacheItem.cs" />
     <Compile Include="Handlers\DelHandler.cs" />
     <Compile Include="Handlers\GetHandler.cs" />
     <Compile Include="Handlers\PutHandler.cs" />
-    <Compile Include="Handlers\RemoveFromCache.cs" />
     <Compile Include="PersistentCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoCacheHandler.cs" />

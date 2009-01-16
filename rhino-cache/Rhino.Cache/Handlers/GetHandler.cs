@@ -20,29 +20,19 @@ namespace Rhino.Cache.Handlers
                 Response.Status = "Bad Request";
                 return;
             }
-            var cache = InMemoryCache[key] as CacheOperation;
-            if (cache == null)
-            {
-                cache = PersistentCache.Get(key);
-            }
+            var cache = InMemoryCache[key] as CacheItem ?? 
+                PersistentCache.Get(key);
 
             if(cache==null)
             {
                 Response.Status = "Not Found";
                 Response.StatusCode = 404;
             }
-            else if(cache is RemoveFromCache)
-            {
-                Response.Status = "Gone";
-                Response.StatusCode = 410;
-                return;
-            }
             else
             {
-                var item = (AddToCache) cache;
-                Response.ContentType = item.Type;
-                Response.AddHeader("rhino-cache-key", item.Key);
-                Response.OutputStream.Write(item.Data, 0, item.Data.Length);
+                Response.ContentType = cache.Type;
+                Response.AddHeader("rhino-cache-key", cache.Key);
+                Response.OutputStream.Write(cache.Data, 0, cache.Data.Length);
             }
         }
     }
