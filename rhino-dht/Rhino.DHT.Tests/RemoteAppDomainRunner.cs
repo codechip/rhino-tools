@@ -8,6 +8,7 @@ namespace Rhino.DHT.Tests
     public class RemoteAppDomainRunner : MarshalByRefObject
     {
         private ServiceHost host;
+        private DistributedHashTable instance;
 
         public static RemoteAppDomainRunner Start(string file, string uri)
         {
@@ -36,11 +37,19 @@ namespace Rhino.DHT.Tests
 
         public void Start()
         {
-            var uri = new Uri(Uri);
+            try
+            {
+                var uri = new Uri(Uri);
 
-            host = new ServiceHost(new DistributedHashTable(File, Configure), uri);
-            host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), uri);
-            host.Open();
+                instance = new DistributedHashTable(File, Configure);
+                host = new ServiceHost(instance, uri);
+                host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), uri);
+                host.Open();
+            }
+            catch (EsentException e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
 
         public void Configure(InstanceParameters ip)
@@ -62,6 +71,7 @@ namespace Rhino.DHT.Tests
         public void Close()
         {
             host.Close();
+            instance.Dispose();
         }
     }
 }

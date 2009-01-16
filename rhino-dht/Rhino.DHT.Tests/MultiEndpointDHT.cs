@@ -75,6 +75,72 @@ namespace Rhino.DHT.Tests
             Assert.Equal(new byte[] { 77 }, values[2][0].Data);
         }
 
+        [Fact]
+        public void Can_add_and_remove_items_from_multiple_endpoints()
+        {
+            var versions = distributedHashTable.Put(new[]
+            {
+                new AddValue
+                {
+                    Key = "test74", 
+                    Bytes = new byte[] {74}
+                },
+                new AddValue
+                {
+                    Key = "test75", 
+                    Bytes = new byte[] {75}
+                },
+                new AddValue
+                {
+                    Key = "test77", 
+                    Bytes = new byte[] {77}
+                },
+            });
+
+            Assert.Equal(new[] { 1, 1, 1 }, versions);
+
+            var removed = distributedHashTable.Remove(new[]
+            {
+                new RemoveValue()
+                {
+                    Key = "test74",
+                    ParentVersions = new []{1}
+                },
+                new RemoveValue
+                {
+                    Key = "test75",
+                    ParentVersions = new []{1}
+                },
+                new RemoveValue
+                {
+                    Key = "test77",
+                    ParentVersions = new []{1}
+                },
+            });
+
+            Assert.Equal(new[] {true, true, true}, removed);
+
+            var values = distributedHashTable.Get(new[]
+            {
+                new GetValue
+                {
+                    Key = "test74",
+                },
+                new GetValue
+                {
+                    Key = "test75",
+                },
+                new GetValue
+                {
+                    Key = "test77",
+                },
+            });
+            Assert.Equal(3, values.Length);
+            Assert.Equal(0, values[0].Length);
+            Assert.Equal(0, values[1].Length);
+            Assert.Equal(0, values[2].Length);
+        }
+
         public void Dispose()
         {
             distributedHashTable.Dispose();
