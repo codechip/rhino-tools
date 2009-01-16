@@ -15,8 +15,8 @@ namespace Rhino.DHT.Tests
             File.Delete("cache.esent");
 
             address = new Uri("net.tcp://localhost:6212/cache");
-            host = new ServiceHost(typeof (DistributedHashTable), address);
-            host.AddServiceEndpoint(typeof (IDistributedHashTable), new NetTcpBinding(), this.address);
+            host = new ServiceHost(typeof(DistributedHashTable), address);
+            host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), this.address);
             host.Open();
         }
 
@@ -46,7 +46,39 @@ namespace Rhino.DHT.Tests
                 },
             });
             Assert.Equal(1, values[0].Length);
-            Assert.Equal(new byte[]{123}, values[0][0].Data);
+            Assert.Equal(new byte[] { 123 }, values[0][0].Data);
+        }
+
+        [Fact]
+        public void Can_add_and_recieve_lots_of_items()
+        {
+            var distributedHashTable = ChannelFactory<IDistributedHashTable>
+                .CreateChannel(
+                    new NetTcpBinding(),
+                    new EndpointAddress(address)
+                );
+
+            for (int i = 0; i < 500; i++)
+            {
+                distributedHashTable.Put(new[]
+                {
+                    new AddValue
+                    {
+                        Key = "abc" + i,
+                        Bytes = new byte[] {123}
+                    },
+                });
+
+                var values = distributedHashTable.Get(new[]
+                {
+                    new GetValue
+                    {
+                        Key = "abc" + i,
+                    },
+                });
+                Assert.Equal(1, values[0].Length);
+                Assert.Equal(new byte[] {123}, values[0][0].Data);
+            }
         }
 
 

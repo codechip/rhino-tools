@@ -34,14 +34,13 @@ namespace Rhino.DHT
         public int Put(string key, int[] parentVersions, byte[] bytes)
         {
             if (DoesAllVersionsMatch(key, parentVersions))
-                DeactivateAllVersions(key, parentVersions);
+                DeleteInactiveVersions(key, parentVersions);
 
             var bookmark = new byte[Api.BookmarkMost];
             int bookmarkSize;
             using (var update = new Update(session, keys, JET_prep.Insert))
             {
-                Api.SetColumn(session, keys, keysColumns["key"], key, Encoding.UTF8);
-                Api.SetColumn(session, keys, keysColumns["is_active"], true);
+                Api.SetColumn(session, keys, keysColumns["key"], key, Encoding.Unicode);
 
                 update.Save(bookmark, bookmark.Length, out bookmarkSize);
             }
@@ -51,7 +50,7 @@ namespace Rhino.DHT
 
             using (var update = new Update(session, data, JET_prep.Insert))
             {
-                Api.SetColumn(session, data, dataColumns["key"], key, Encoding.UTF8);
+                Api.SetColumn(session, data, dataColumns["key"], key, Encoding.Unicode);
                 Api.SetColumn(session, data, dataColumns["version"], version.Value);
                 Api.SetColumn(session, data, dataColumns["data"], bytes);
 
@@ -79,6 +78,7 @@ namespace Rhino.DHT
                 values.Add(new Value
                 {
                     Version = version,
+                    Key = key,
                     Data = Api.RetrieveColumn(session, data, dataColumns["data"])
                 })
             );
@@ -92,6 +92,7 @@ namespace Rhino.DHT
             {
                 val = new Value
                 {
+                    Key = key,
                     Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
                     Version = specifiedVersion
                 };
@@ -104,17 +105,10 @@ namespace Rhino.DHT
             transaction.Commit(CommitTransactionGrbit.None);
         }
 
-        private void DeactivateAllVersions(string key, IEnumerable<int> versions)
+        private void DeleteInactiveVersions(string key, IEnumerable<int> versions)
         {
-            ApplyToKeyAndActiveVersions(keys, versions, key, version =>
-            {
-                using (var update = new Update(session, keys, JET_prep.Replace))
-                {
-                    Api.SetColumn(session, keys, keysColumns["is_active"], false);
-
-                    update.Save();
-                }
-            });
+            ApplyToKeyAndActiveVersions(keys, versions, key, 
+                version => Api.JetDelete(session, keys));
 
             ApplyToKeyAndActiveVersions(data, versions, key, version =>
                 Api.JetDelete(session, data));
@@ -125,7 +119,7 @@ namespace Rhino.DHT
             Api.JetSetCurrentIndex(session, table, "pk");
             foreach (var version in versions)
             {
-                Api.MakeKey(session, table, key, Encoding.UTF8, MakeKeyGrbit.NewKey);
+                Api.MakeKey(session, table, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
                 Api.MakeKey(session, table, version, MakeKeyGrbit.None);
 
                 if (Api.TrySeek(session, table, SeekGrbit.SeekEQ) == false)
@@ -137,14 +131,12 @@ namespace Rhino.DHT
 
         private int[] GatherActiveVersion(string key)
         {
-            Api.JetSetCurrentIndex(session, keys, "key_and_active_idx");
-            Api.MakeKey(session, keys, key, Encoding.UTF8, MakeKeyGrbit.NewKey);
-            Api.MakeKey(session, keys, true, MakeKeyGrbit.None);
-
+            Api.JetSetCurrentIndex(session, keys, "by_key");
+            Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
             var exists = Api.TrySeek(session, keys, SeekGrbit.SeekEQ);
             if (exists == false)
                 return new int[0];
-
+            
             var ids = new List<int>();
             var columns = Api.GetColumnDictionary(session, keys);
             do
@@ -178,7 +170,7 @@ namespace Rhino.DHT
         {
             var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
             if (doesAllVersionsMatch)
-                DeactivateAllVersions(key, parentVersions);
+                DeleteInactiveVersions(key, parentVersions);
             return doesAllVersionsMatch;
         }
     }

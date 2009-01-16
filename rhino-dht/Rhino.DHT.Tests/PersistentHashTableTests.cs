@@ -112,5 +112,25 @@ namespace Rhino.DHT.Tests
             }
         }
 
+        [Fact]
+        public void Cannot_query_with_partial_item_key()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 });
+                    var values = actions.Get("abc10");
+                    Assert.Equal(0, values.Length);
+
+                    values = actions.Get("abc1");
+                    Assert.NotEqual(0, values.Length);
+                });
+            }
+        }
+
+
     }
 }
