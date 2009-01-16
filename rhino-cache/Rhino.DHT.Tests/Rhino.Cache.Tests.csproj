@@ -56,7 +56,7 @@
     <Compile Include="RhinoCacheTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rhino.Cache\Rhino.Cache.csproj">
+    <ProjectReference Include="..\Rhino.DHT\Rhino.Cache.csproj">
       <Project>{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}</Project>
       <Name>Rhino.Cache</Name>
     </ProjectReference>

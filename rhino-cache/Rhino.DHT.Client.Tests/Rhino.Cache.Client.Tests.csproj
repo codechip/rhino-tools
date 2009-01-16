@@ -54,11 +54,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rhino.Cache.Client\Rhino.Cache.Client.csproj">
+    <ProjectReference Include="..\Rhino.DHT.Client\Rhino.Cache.Client.csproj">
       <Project>{AE960DA4-5C15-4608-84AB-27769FB851F5}</Project>
       <Name>Rhino.Cache.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rhino.Cache\Rhino.Cache.csproj">
+    <ProjectReference Include="..\Rhino.DHT\Rhino.Cache.csproj">
       <Project>{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}</Project>
       <Name>Rhino.Cache</Name>
     </ProjectReference>
