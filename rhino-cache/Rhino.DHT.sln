@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache", "Rhino.DHT\Rhino.Cache.csproj", "{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DHT", "Rhino.DHT\Rhino.DHT.csproj", "{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Client", "Rhino.DHT.Client\Rhino.Cache.Client.csproj", "{AE960DA4-5C15-4608-84AB-27769FB851F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DHT.Client", "Rhino.DHT.Client\Rhino.DHT.Client.csproj", "{AE960DA4-5C15-4608-84AB-27769FB851F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Client.Tests", "Rhino.DHT.Client.Tests\Rhino.Cache.Client.Tests.csproj", "{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DHT.Client.Tests", "Rhino.DHT.Client.Tests\Rhino.DHT.Client.Tests.csproj", "{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Cache.Tests", "Rhino.DHT.Tests\Rhino.Cache.Tests.csproj", "{FE008F78-C172-4861-A50C-C1B25C0BD3BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DHT.Tests", "Rhino.DHT.Tests\Rhino.DHT.Tests.csproj", "{FE008F78-C172-4861-A50C-C1B25C0BD3BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

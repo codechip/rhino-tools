@@ -1,9 +1,10 @@
 using System;
 using System.Text;
 using Microsoft.Isam.Esent.Interop;
-using Rhino.Cache.Handlers;
+using Rhino.DHT.Handlers;
+using Rhino.DHT.Handlers;
 
-namespace Rhino.Cache
+namespace Rhino.DHT
 {
     public class PersistentCache : IDisposable
     {

@@ -3,16 +3,16 @@ using System.IO;
 using System.Net;
 using Xunit;
 
-namespace Rhino.Cache.Tests
+namespace Rhino.DHT.Tests
 {
-    public class RhinoCacheTests : IDisposable
+    public class RhinoDHTTests : IDisposable
     {
         private readonly HttpListener listener;
 
-        public RhinoCacheTests()
+        public RhinoDHTTests()
         {
-            RhinoCacheHandler.FileName = "test.esent";
-            File.Delete(RhinoCacheHandler.FileName);
+            RhinoDHTHandler.FileName = "test.esent";
+            File.Delete(RhinoDHTHandler.FileName);
             listener = new HttpListener();
             listener.Prefixes.Add("http://localhost:6212/");
             listener.Start();
@@ -24,7 +24,7 @@ namespace Rhino.Cache.Tests
             try
             {
                 var context = listener.EndGetContext(ar);
-                new RhinoCacheHandler().ProcessRequest(context);
+                new RhinoDHTHandler().ProcessRequest(context);
                 listener.BeginGetContext(HandleRequest, null);
             }
             catch (ObjectDisposedException)
@@ -103,7 +103,7 @@ namespace Rhino.Cache.Tests
             listener.Stop();
             listener.Close();
 
-            RhinoCacheHandler.Reset();
+            RhinoDHTHandler.Reset();
         }
     }
 }

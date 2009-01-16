@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using Xunit;
 
-namespace Rhino.Cache.Client.Tests
+namespace Rhino.DHT.Client.Tests
 {
     public class CacheClientTests : IDisposable
     {
@@ -12,8 +12,8 @@ namespace Rhino.Cache.Client.Tests
 
         public CacheClientTests()
         {
-            RhinoCacheHandler.FileName = "test.esent";
-            File.Delete(RhinoCacheHandler.FileName);
+            RhinoDHTHandler.FileName = "test.esent";
+            File.Delete(RhinoDHTHandler.FileName);
 
             listeners = new[]
             {
@@ -47,7 +47,7 @@ namespace Rhino.Cache.Client.Tests
             {
                 var listener = (HttpListener) ar.AsyncState;
                 var context = listener.EndGetContext(ar);
-                new RhinoCacheHandler().ProcessRequest(context);
+                new RhinoDHTHandler().ProcessRequest(context);
                 listener.BeginGetContext(HandleRequest, listener);
             }
             catch (ObjectDisposedException)
@@ -113,7 +113,7 @@ namespace Rhino.Cache.Client.Tests
                 listener.Stop();
                 listener.Close();
             }
-            RhinoCacheHandler.Reset();
+            RhinoDHTHandler.Reset();
         }
     }
 }

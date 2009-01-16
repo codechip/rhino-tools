@@ -1,4 +1,4 @@
-namespace Rhino.Cache.Handlers
+namespace Rhino.DHT.Handlers
 {
     public class CacheItem
     {

@@ -1,14 +1,16 @@
 using System.Net;
 using System.Web;
-using Rhino.Cache.Abstractions;
-using Rhino.Cache.Handlers;
+using Rhino.DHT.Abstractions;
+using Rhino.DHT.Handlers;
+using Rhino.DHT.Abstractions;
+using Rhino.DHT.Handlers;
 
-namespace Rhino.Cache
+namespace Rhino.DHT
 {
-    public class RhinoCacheHandler : IHttpHandler
+    public class RhinoDHTHandler : IHttpHandler
     {
         public static string Version =
-            typeof(RhinoCacheHandler)
+            typeof(RhinoDHTHandler)
                 .Assembly
                 .GetName()
                 .Version.ToString();

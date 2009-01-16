@@ -1,7 +1,7 @@
 using System.IO;
 using System.Web;
 
-namespace Rhino.Cache.Abstractions
+namespace Rhino.DHT.Abstractions
 {
     public class HttpResponseAdapter : IHttpResponse
     {

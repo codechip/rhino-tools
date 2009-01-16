@@ -1,8 +1,9 @@
 using System.Net;
 using System.Web;
-using Rhino.Cache.Abstractions;
+using Rhino.DHT.Abstractions;
+using Rhino.DHT.Abstractions;
 
-namespace Rhino.Cache.Handlers
+namespace Rhino.DHT.Handlers
 {
     public class DelHandler : AbstractHandler
     {

@@ -1,6 +1,6 @@
 using System.Web;
 
-namespace Rhino.Cache.Abstractions
+namespace Rhino.DHT.Abstractions
 {
     public class HttpContextAdapter : IHttpContext
     {

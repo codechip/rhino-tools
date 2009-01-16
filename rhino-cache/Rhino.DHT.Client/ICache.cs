@@ -1,4 +1,4 @@
-﻿namespace Rhino.Cache.Client
+﻿namespace Rhino.DHT.Client
 {
     public interface ICache
     {

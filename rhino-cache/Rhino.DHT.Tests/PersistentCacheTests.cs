@@ -1,9 +1,10 @@
 using System;
 using System.IO;
-using Rhino.Cache.Handlers;
+using Rhino.DHT.Handlers;
+using Rhino.DHT.Handlers;
 using Xunit;
 
-namespace Rhino.Cache.Tests
+namespace Rhino.DHT.Tests
 {
     public class PersistentCacheTests : IDisposable
     {

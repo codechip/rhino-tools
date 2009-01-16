@@ -8,8 +8,8 @@
     <ProjectGuid>{AE960DA4-5C15-4608-84AB-27769FB851F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Cache.Client</RootNamespace>
-    <AssemblyName>Rhino.Cache.Client</AssemblyName>
+    <RootNamespace>Rhino.DHT.Client</RootNamespace>
+    <AssemblyName>Rhino.DHT.Client</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -8,8 +8,8 @@
     <ProjectGuid>{E27F2A3B-4EB0-471F-9B54-A6299B14ECEF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rhino.Cache.Client.Tests</RootNamespace>
-    <AssemblyName>Rhino.Cache.Client.Tests</AssemblyName>
+    <RootNamespace>Rhino.DHT.Client.Tests</RootNamespace>
+    <AssemblyName>Rhino.DHT.Client.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -54,13 +54,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rhino.DHT.Client\Rhino.Cache.Client.csproj">
+    <ProjectReference Include="..\Rhino.DHT.Client\Rhino.DHT.Client.csproj">
       <Project>{AE960DA4-5C15-4608-84AB-27769FB851F5}</Project>
-      <Name>Rhino.Cache.Client</Name>
+      <Name>Rhino.DHT.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rhino.DHT\Rhino.Cache.csproj">
+    <ProjectReference Include="..\Rhino.DHT\Rhino.DHT.csproj">
       <Project>{DB0FCFD4-C1AD-4924-9D78-64755BCDC513}</Project>
-      <Name>Rhino.Cache</Name>
+      <Name>Rhino.DHT</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

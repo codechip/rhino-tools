@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace Rhino.Cache.Client
+namespace Rhino.DHT.Client
 {
     public class Cache : ICache
     {
