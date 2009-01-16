@@ -20,7 +20,7 @@ namespace Starbucks.Barista
             State = new BaristaState();
         }
 
-       #region InitiatedBy<PrepareDrink> Members
+        #region InitiatedBy<PrepareDrink> Members
 
         public void Consume(PrepareDrink message)
         {
@@ -35,19 +35,11 @@ namespace Starbucks.Barista
             SubmitOrderIfDone();
         }
 
-        private void SubmitOrderIfDone()
-        {
-            if (State.GotPayment && State.DrinkIsReady)
-            {
-                Console.WriteLine("Barista: drink is ready");
-                bus.Publish(new DrinkReady
-                {
-                    CorrelationId = Id,
-                    Drink = State.Drink
-                });
-                IsCompleted = true;
-            }
-        }
+        #endregion
+
+        #region ISaga<BaristaState> Members
+
+        public BaristaState State { get; set; }
 
         public Guid Id { get; set; }
 
@@ -66,9 +58,18 @@ namespace Starbucks.Barista
 
         #endregion
 
-        public BaristaState State
+        private void SubmitOrderIfDone()
         {
-            get; set;
+            if (State.GotPayment && State.DrinkIsReady)
+            {
+                Console.WriteLine("Barista: drink is ready");
+                bus.Publish(new DrinkReady
+                {
+                    CorrelationId = Id,
+                    Drink = State.Drink
+                });
+                IsCompleted = true;
+            }
         }
     }
 }
