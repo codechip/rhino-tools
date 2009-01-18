@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Caching;
 using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT
@@ -16,10 +17,13 @@ namespace Rhino.DHT
         private readonly JET_DBID dbid;
         private readonly Dictionary<string, JET_COLUMNID> keysColumns;
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
+        private readonly Cache cache;
+        private readonly List<Action> commitSyncronization = new List<Action>();
 
-        public PersistentHashTableActions(Instance instance, string database)
+        public PersistentHashTableActions(Instance instance, string database, Cache cache)
         {
             this.database = database;
+            this.cache = cache;
             session = new Session(instance);
 
             Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
@@ -33,8 +37,19 @@ namespace Rhino.DHT
 
         public int Put(string key, int[] parentVersions, byte[] bytes)
         {
+            // always remove the active versions from the cache
+            commitSyncronization.Add(() => cache.Remove(GetKey(key)));
             if (DoesAllVersionsMatch(key, parentVersions))
+            {
+                // we only remove existing versions from the 
+                // cache if we delete them from the database
+                foreach (var parentVersion in parentVersions)
+                {
+                    var copy = parentVersion;
+                    commitSyncronization.Add(() => cache.Remove(GetKey(key, copy)));
+                }
                 DeleteInactiveVersions(key, parentVersions);
+            }
 
             var bookmark = new byte[Api.BookmarkMost];
             int bookmarkSize;
@@ -74,6 +89,23 @@ namespace Rhino.DHT
         {
             var values = new List<Value>();
             var activeVersions = GatherActiveVersion(key);
+
+            bool foundAllInCache = true;
+            foreach (var activeVersion in activeVersions)
+            {
+                var cachedValue = cache[GetKey(key, activeVersion)];
+                if (cachedValue == null ||
+                    cachedValue == DBNull.Value)
+                {
+                    values.Clear();
+                    foundAllInCache = false;
+                    break;
+                }
+                values.Add((Value)cachedValue);
+            }
+            if (foundAllInCache)
+                return values.ToArray();
+
             ApplyToKeyAndActiveVersions(data, activeVersions, key, version =>
                 values.Add(new Value
                 {
@@ -82,11 +114,26 @@ namespace Rhino.DHT
                     Data = Api.RetrieveColumn(session, data, dataColumns["data"])
                 })
             );
+
+            commitSyncronization.Add(delegate
+            {
+                foreach (var value in values)
+                {
+                    cache[GetKey(value.Key, value.Version)] = value;
+                }
+                cache[GetKey(key)] = activeVersions;
+            });
+
             return values.ToArray();
         }
 
         public Value Get(string key, int specifiedVersion)
         {
+            var cachedValue = cache[GetKey(key, specifiedVersion)];
+            if (cachedValue != null && 
+                cachedValue != DBNull.Value)
+                return (Value)cachedValue;
+
             Value val = null;
             ApplyToKeyAndActiveVersions(data, new[] { specifiedVersion }, key, version =>
             {
@@ -97,17 +144,32 @@ namespace Rhino.DHT
                     Version = specifiedVersion
                 };
             });
+            cache[GetKey(key, specifiedVersion)] = (object)val ?? DBNull.Value;
             return val;
+        }
+
+        private string GetKey(string key, int version)
+        {
+            return GetKey(key) + "#" + version;
+        }
+
+        private string GetKey(string key)
+        {
+            return "rhino.dht [" + database + "]: " + key;
         }
 
         public void Commit()
         {
             transaction.Commit(CommitTransactionGrbit.None);
+            foreach (var action in commitSyncronization)
+            {
+                action();
+            }
         }
 
         private void DeleteInactiveVersions(string key, IEnumerable<int> versions)
         {
-            ApplyToKeyAndActiveVersions(keys, versions, key, 
+            ApplyToKeyAndActiveVersions(keys, versions, key,
                 version => Api.JetDelete(session, keys));
 
             ApplyToKeyAndActiveVersions(data, versions, key, version =>
@@ -131,12 +193,16 @@ namespace Rhino.DHT
 
         private int[] GatherActiveVersion(string key)
         {
+            var cachedActiveVersions = cache[GetKey(key)];
+            if (cachedActiveVersions != null)
+                return (int[])cachedActiveVersions;
+
             Api.JetSetCurrentIndex(session, keys, "by_key");
             Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
             var exists = Api.TrySeek(session, keys, SeekGrbit.SeekEQ);
             if (exists == false)
                 return new int[0];
-            
+
             var ids = new List<int>();
             var columns = Api.GetColumnDictionary(session, keys);
             do
@@ -156,7 +222,7 @@ namespace Rhino.DHT
 
             if (Equals(dbid, JET_DBID.Nil) == false)
                 Api.JetCloseDatabase(session, dbid, CloseDatabaseGrbit.None);
-            
+
             if (transaction != null)
                 transaction.Dispose();
 

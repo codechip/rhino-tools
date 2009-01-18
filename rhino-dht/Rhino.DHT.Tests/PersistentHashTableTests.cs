@@ -61,6 +61,9 @@ namespace Rhino.DHT.Tests
                     Assert.Equal(new byte[] { 1 }, value.Data);
 
                     actions.Put("test", new[] {1, 2}, new byte[] {3});
+
+                    actions.Commit();
+
                     Assert.Null(actions.Get("test", version1));
                 });
             }

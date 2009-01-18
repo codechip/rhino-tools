@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Web;
+using System.Web.Caching;
 using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT
@@ -8,7 +10,6 @@ namespace Rhino.DHT
         private readonly Instance instance;
         private bool needToDisposeInstance;
         private readonly string database;
-
         public Action<InstanceParameters> Configure;
 
         public PersistentHashTable(string database)
@@ -53,7 +54,7 @@ namespace Rhino.DHT
 
         public void Batch(Action<PersistentHashTableActions> action)
         {
-            using(var pht = new PersistentHashTableActions(instance, database))
+            using(var pht = new PersistentHashTableActions(instance, database, HttpRuntime.Cache))
             {
                 action(pht);
             }
