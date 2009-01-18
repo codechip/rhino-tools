@@ -1,7 +1,5 @@
 using System;
 using System.Messaging;
-using System.Transactions;
-using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
@@ -80,7 +78,7 @@ namespace Rhino.ServiceBus.MessageModules
             });
         }
 
-        private void Transport_OnMessageProcessingCompleted(CurrentMessageInformation info)
+         private void Transport_OnMessageProcessingCompleted(CurrentMessageInformation info, Exception ex)
         {
             Send(new MessageProcessingCompletedMessage
             {

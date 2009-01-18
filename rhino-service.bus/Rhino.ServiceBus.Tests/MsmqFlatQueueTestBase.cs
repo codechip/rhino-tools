@@ -4,6 +4,7 @@ using Castle.MicroKernel;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Msmq;
+using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Serializers;
 
 namespace Rhino.ServiceBus.Tests
@@ -117,12 +118,29 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transport == null)
                 {
-                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()), TestQueueUri, 1, 5,
-                        new FlatQueueStrategy(TestQueueUri));
+                    transport = new MsmqTransport(
+                        new XmlMessageSerializer(
+                            new DefaultReflection(),
+                            new DefaultKernel()), TestQueueUri, 1,
+                        DefaultMessageActions(TestQueueUri));
                     transport.Start();
                 }
                 return transport;
             }
+        }
+
+        private IMessageAction[] DefaultMessageActions(Uri endpoint)
+        {
+            var qs = new FlatQueueStrategy(endpoint);
+            return new IMessageAction[]
+            {
+                new AdministrativeAction(),
+                new DiscardAction(qs),
+                new ErrorAction(5, qs),
+                new ErrorDescriptionAction(qs),
+                new ShutDownAction(),
+                new TimeoutAction(qs)
+            };
         }
 
         public ITransport TransactionalTransport
@@ -132,7 +150,7 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
-                                                               TransactionalTestQueueUri, 1, 5, new FlatQueueStrategy(TransactionalTestQueueUri));
+                                                               TransactionalTestQueueUri, 1, DefaultMessageActions(TransactionalTestQueueUri));
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;

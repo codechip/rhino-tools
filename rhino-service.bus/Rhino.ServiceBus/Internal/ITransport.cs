@@ -25,13 +25,14 @@ namespace Rhino.ServiceBus.Internal
         event Action<CurrentMessageInformation, Exception> MessageSerializationException;
         
         event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
-        
-        event Action<CurrentMessageInformation> MessageProcessingCompleted;
 
-        event Action<CurrentMessageInformation> AdministrativeMessageProcessingCompleted;
+        event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
+
+        event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
 
         void Discard(object msg);
 
     	void Send(Uri uri, DateTime processAgainAt, object[] msgs);
-    }
+
+      }
 }

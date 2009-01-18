@@ -5,12 +5,14 @@ using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Rhino.ServiceBus.Convertors;
 using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
 using Rhino.ServiceBus.Msmq;
+using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Sagas;
 using Rhino.ServiceBus.Serializers;
 using System.Linq;
@@ -52,13 +54,14 @@ namespace Rhino.ServiceBus.Impl
         protected override void Init()
         {
             Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;
+            Kernel.Resolver.AddSubResolver(new ArrayResolver(Kernel));
 
             ReadBusConfiguration();
             ReadMessageOwners();
 
             AddWireEcryptedStringConvertorIfHasKey();
 
-            foreach (Type type in messageModules)
+            foreach (var type in messageModules)
             {
                 Kernel.AddComponent(type.FullName, type);
             }
@@ -96,13 +99,28 @@ namespace Rhino.ServiceBus.Impl
                     .ImplementedBy(transportImpl)
                     .DependsOn(new
                     {
-                        numberOfRetries,
                         threadCount,
                         endpoint,
                     }),
                 Component.For<IMessageSerializer>()
                     .ImplementedBy(serializerImpl)
                 );
+
+            Kernel.Register(
+              Component.For<IMessageAction>()
+                  .ImplementedBy<DiscardAction>(),
+              Component.For<IMessageAction>()
+                  .ImplementedBy<AdministrativeAction>(),
+              Component.For<IMessageAction>()
+                  .ImplementedBy<ErrorAction>()
+                  .DependsOn(new { numberOfRetries, }),
+              Component.For<IMessageAction>()
+                  .ImplementedBy<ErrorDescriptionAction>(),
+              Component.For<IMessageAction>()
+                  .ImplementedBy<ShutDownAction>(),
+              Component.For<IMessageAction>()
+                  .ImplementedBy<TimeoutAction>()
+              );
         }
 
         private void AddWireEcryptedStringConvertorIfHasKey()

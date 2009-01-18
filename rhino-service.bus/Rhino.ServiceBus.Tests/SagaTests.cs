@@ -38,7 +38,7 @@ namespace Rhino.ServiceBus.Tests
                 var transport = container.Resolve<ITransport>();
                 bus.Start();
 
-                transport.MessageProcessingCompleted += information => wait.Set();
+                transport.MessageProcessingCompleted += (i,e) => wait.Set();
                 bus.Send(bus.Endpoint, new AddLineItemMessage());
                 wait.WaitOne();
 

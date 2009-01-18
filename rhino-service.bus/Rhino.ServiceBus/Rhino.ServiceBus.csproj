@@ -67,6 +67,7 @@
     <Compile Include="ConsumerOf.cs" />
     <Compile Include="Convertors\ThrowingWireEcryptedStringConvertor.cs" />
     <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
+    <Compile Include="DataStructures\OrderedList.cs" />
     <Compile Include="DataStructures\WireEcryptedString.cs" />
     <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Impl\RhinoServiceBusFacility.cs" />
     <Compile Include="Internal\IMessageConsumer.cs" />
     <Compile Include="Impl\DefaultReflection.cs" />
+    <Compile Include="Internal\IMsmqTrasport.cs" />
     <Compile Include="Internal\IReflection.cs" />
     <Compile Include="Internal\ISagaPersister.cs" />
     <Compile Include="Internal\ISubscriptionStorage.cs" />
@@ -111,8 +113,17 @@
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
+    <Compile Include="Msmq\QueueState.cs" />
     <Compile Include="Msmq\SubQueueStrategy.cs" />
     <Compile Include="Msmq\TimeoutInfo.cs" />
+    <Compile Include="Msmq\TransportActions\AdministrativeAction.cs" />
+    <Compile Include="Msmq\TransportActions\DiscardAction.cs" />
+    <Compile Include="Msmq\TransportActions\ErrorAction.cs" />
+    <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
+    <Compile Include="Msmq\TransportActions\AbstractMessageAction.cs" />
+    <Compile Include="Msmq\TransportActions\IMessageAction.cs" />
+    <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
+    <Compile Include="Msmq\TransportActions\TimeoutAction.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Internal\IAccessibleSaga.cs" />

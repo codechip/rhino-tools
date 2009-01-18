@@ -21,7 +21,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
         }
 
 		[Fact]
-		public void Error_subqeueu_will_contain_error_details()
+		public void Error_subqeueue_will_contain_error_details()
 		{
             using (var bus = container.Resolve<IStartableServiceBus>())
             {

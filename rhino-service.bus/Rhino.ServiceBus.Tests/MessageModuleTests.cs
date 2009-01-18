@@ -124,7 +124,7 @@ namespace Rhino.ServiceBus.Tests
                 transport.MessageProcessingCompleted+=Transport_OnMessageProcessingCompleted;
             }
 
-            private static void Transport_OnMessageProcessingCompleted(CurrentMessageInformation t)
+            private static void Transport_OnMessageProcessingCompleted(CurrentMessageInformation t, Exception e)
             {
                 Completion = true;
                 CompletionResetEvent.Set();

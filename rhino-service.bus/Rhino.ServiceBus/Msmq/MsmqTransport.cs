@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
 using System.Threading;
@@ -9,52 +8,35 @@ using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
+using Rhino.ServiceBus.Msmq.TransportActions;
 
 namespace Rhino.ServiceBus.Msmq
 {
-	public class MsmqTransport : ITransport
+	public class MsmqTransport : IMsmqTrasport
 	{
 		[ThreadStatic]
 		private static MsmqCurrentMessageInformation currentMessageInformation;
 
 		private readonly Uri endpoint;
-		private readonly Dictionary<string, ErrorCounter> failureCounts = new Dictionary<string, ErrorCounter>();
 		private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
-		private readonly int numberOfRetries;
-		private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
 		private readonly IMessageSerializer serializer;
 		private readonly int threadCount;
 		private readonly WaitHandle[] waitHandles;
 		private bool haveStarted;
 		private MessageQueue queue;
-		private readonly IQueueStrategy queueStrategy;
-		private readonly SortedList<DateTime, string> timeoutMessageIds = new SortedList<DateTime, string>();
-		private Timer timeoutTimer;
-
-		private readonly Dictionary<MessageType, Func<QueueState, Message, bool>> actions;
+	    private readonly IMessageAction[] messageActions;
 
 		public MsmqTransport(
 			IMessageSerializer serializer,
 			Uri endpoint,
 			int threadCount,
-			int numberOfRetries,
-			IQueueStrategy queueStrategy)
+            IMessageAction[] messageActions)
 		{
 			this.serializer = serializer;
-			this.endpoint = endpoint;
+		    this.messageActions = messageActions;
+		    this.endpoint = endpoint;
 			this.threadCount = threadCount;
-			this.numberOfRetries = numberOfRetries;
 			waitHandles = new WaitHandle[threadCount];
-			this.queueStrategy = queueStrategy;
-
-			actions = new Dictionary<MessageType, Func<QueueState, Message, bool>>
-			{
-				{MessageType.DiscardedMessageMarker, MoveToDiscardedQueue},
-				{MessageType.AdministrativeMessageMarker, HandleAdministrationMessage},
-				{MessageType.ShutDownMessageMarker, ConsumeAndIgnoreMessage},
-                {MessageType.ErrorDescriptionMessageMarker, MoveToErrorQueue},
-				{MessageType.TimeoutMessageMarker, MoveToTimeoutQueue}
-			};
 		}
 
 
@@ -75,10 +57,10 @@ namespace Rhino.ServiceBus.Msmq
 			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
 			queue = InitalizeQueue(endpoint);
 
-			foreach (var message in queueStrategy.GetTimeoutMessages(queue))
-			{
-				timeoutMessageIds.Add(message.Time, message.Id);
-			}
+		    foreach (var messageAction in messageActions)
+		    {
+		        messageAction.Init(this);
+		    }
 
 			for (var t = 0; t < threadCount; t++)
 			{
@@ -99,7 +81,6 @@ namespace Rhino.ServiceBus.Msmq
 				}
 			}
 
-			timeoutTimer = new Timer(OnTimeoutCallback, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(1));
 			haveStarted = true;
 		}
 
@@ -121,8 +102,6 @@ namespace Rhino.ServiceBus.Msmq
 
 			if (queue != null)
 				queue.Close();
-			if (timeoutTimer != null)
-				timeoutTimer.Dispose();
 			haveStarted = false;
 		}
 
@@ -138,8 +117,8 @@ namespace Rhino.ServiceBus.Msmq
 		public event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
 		public event Action<CurrentMessageInformation> MessageArrived;
 		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
-		public event Action<CurrentMessageInformation> MessageProcessingCompleted;
-        public event Action<CurrentMessageInformation> AdministrativeMessageProcessingCompleted;
+        public event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
+        public event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
 
 		public void Discard(object msg)
 		{
@@ -150,7 +129,27 @@ namespace Rhino.ServiceBus.Msmq
 			SendMessageToQueue(message, Endpoint);
 		}
 
-		public void Send(Uri uri, DateTime processAgainAt, object[] msgs)
+	    public bool RaiseAdministrativeMessageArrived(CurrentMessageInformation information)
+	    {
+            var copy = AdministrativeMessageArrived;
+            if (copy != null)
+                return copy(information);
+	        return false;
+        }
+
+	    public MessageQueue Queue
+	    {
+	        get { return queue; }
+	    }
+
+	    public void RaiseAdministrativeMessageProcessingCompleted(CurrentMessageInformation information, Exception ex)
+	    {
+	        var copy = AdministrativeMessageProcessingCompleted;
+            if (copy != null)
+                copy(information, ex);
+	    }
+
+	    public void Send(Uri uri, DateTime processAgainAt, object[] msgs)
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
@@ -266,20 +265,19 @@ namespace Rhino.ServiceBus.Msmq
 				if (peek == null)//nothing was found 
 					return;
 
-				if (DispatchToErrorQueueIfNeeded(state.Queue, message))
-					return;
+                logger.DebugFormat("Got message {0} from {1}",
+                                  message.Label,
+                                  MsmqUtil.GetQueueUri(state.Queue));
 
-				Func<QueueState, Message, bool> messageAction;
-				if (actions.TryGetValue((MessageType)message.AppSpecific, out messageAction))
-				{
-					if (messageAction(state, message))
-						return;
-				}
+			    foreach (var action in messageActions)
+			    {
+			        if (action.CanHandlePeekedMessage(message) == false) 
+                        continue;
 
-				logger.DebugFormat("Got message {0} from {1}",
-								   message.Label,
-								   MsmqUtil.GetQueueUri(state.Queue));
-
+			        if(action.HandlePeekedMessage(queue, message))
+			            return;
+			    }
+			   
 				ReceiveMessageInTransaction(state, message.Id);
 
 			}
@@ -289,233 +287,23 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private static bool ConsumeAndIgnoreMessage(QueueState state, Message message)
-		{
-			TryGetMessageFromQueue(state.Queue, message.Id);
-			return true;
-		}
-
-		private void OnTimeoutCallback(object state)
-		{
-			bool haveTimeoutMessages = false;
-
-			if (readerWriterLock.TryEnterReadLock(0)==false)
-				return;
-			try
-			{
-				foreach (var pair in timeoutMessageIds)
-				{
-					if (pair.Key <= CurrentTime)
-					{
-						haveTimeoutMessages = true;
-						break;
-					}
-					if (pair.Key > CurrentTime)
-					{
-						break;
-					}
-				}
-			}
-			finally
-			{
-				readerWriterLock.ExitReadLock();
-			}
-
-			if (haveTimeoutMessages == false)
-				return;
-
-			if (readerWriterLock.TryEnterWriteLock(0)==false)
-				return;
-			try
-			{
-				while (timeoutMessageIds.Count != 0)
-				{
-					var pair = timeoutMessageIds.First();
-					if (pair.Key > CurrentTime)
-						return;
-					timeoutMessageIds.RemoveAt(0);
-
-					try
-					{
-						using(var tx = new TransactionScope())
-						{
-							queueStrategy.MoveTimeoutToMainQueue(queue, pair.Value);
-							tx.Complete();
-						}
-					}
-					catch (InvalidOperationException)
-					{
-						//message read by another thread
-					}
-				}
-			}
-			finally
-			{
-				readerWriterLock.ExitWriteLock();
-			}
-		}
-
-		public static DateTime CurrentTime
-		{
-			get { return DateTime.Now; }
-		}
-
-		private bool MoveToDiscardedQueue(QueueState state, Message message)
-		{
-			queueStrategy.MoveToDiscardedQueue(state.Queue, message);
-			return true;
-		}
-
-		private bool HandleAdministrationMessage(QueueState state, Message message)
-		{
-			Exception ex = null;
-			try
-			{
-			    var copy = AdministrativeMessageArrived;
-			    Action<CurrentMessageInformation> action = null;
-                if (copy != null)
-                {
-                    action = information =>
-                    {
-                        var msmqCurrentMessageInformation = (MsmqCurrentMessageInformation) information;
-                        var messageProcessedCorrectly = copy(information);
-
-                        if (messageProcessedCorrectly)
-                            return;
-
-                        msmqCurrentMessageInformation.Queue.ConsumeMessage(msmqCurrentMessageInformation.MsmqMessage);
-                    };
-                }
-
-                ProcessMessage(message, state, action, AdministrativeMessageProcessingCompleted);
-			}
-			catch (Exception e)
-			{
-				ex = e;
-				logger.Error("Failed to process administrative message", e);
-			}
-			finally
-			{
-				HandleMessageCompletion(message, null, state, ex);
-			}
-			return true;
-		}
-
 		private void ReceiveMessageInTransaction(QueueState state, string messageId)
 		{
 			using (var tx = new TransactionScope())
 			{
-				Message message = null;
-				Exception ex = null;
-				try
-				{
-					state.Queue.MessageReadPropertyFilter.SetAll();
-					message = TryGetMessageFromQueue(state.Queue, messageId);
-					if (message == null)
-						return;// someone else ate our message, better luck next time
-					ProcessMessage(message, state, MessageArrived, MessageProcessingCompleted);
-				}
-				catch (Exception e)
-				{
-					ex = e;
-					logger.Error("Failed to receive message", e);
-				}
-				finally
-				{
-					HandleMessageCompletion(message, tx, state, ex);
-				}
-			}
-		}
+				Message message = state.Queue.TryGetMessageFromQueue(messageId);
+                
+                if (message == null)
+                    return;// someone else got our message, better luck next time
 
-		private static Message TryGetMessageFromQueue(MessageQueue queue, string messageId)
-		{
-			try
-			{
-				return queue.ReceiveById(
-					messageId,
-					queue.GetTransactionType());
+                ProcessMessage(message, state.Queue, tx, MessageArrived, MessageProcessingCompleted);
 			}
-			catch (InvalidOperationException)// message was read before we could read it
-			{
-				return null;
-			}
-		}
-
-		private bool DispatchToErrorQueueIfNeeded(MessageQueue messageQueue, Message message)
-		{
-			if (message.AppSpecific != 0)
-				return false;
-
-			string id = GetMessageId(message);
-
-			readerWriterLock.EnterReadLock();
-			ErrorCounter errorCounter;
-			try
-			{
-				if (failureCounts.TryGetValue(id, out errorCounter) == false)
-					return false;
-			}
-			finally
-			{
-				readerWriterLock.ExitReadLock();
-			}
-
-			if (errorCounter.FailureCount < numberOfRetries)
-				return false;
-
-			readerWriterLock.EnterWriteLock();
-			try
-			{
-				failureCounts.Remove(id);
-				queueStrategy.MoveToErrorsQueue(messageQueue, message);
-				var label = "Error description for " + message.Label;
-				if (label.Length > 249)
-					label = label.Substring(0, 246) + "...";
-				messageQueue.Send(new Message
-				{
-					AppSpecific = (int)MessageType.ErrorDescriptionMessageMarker,
-					Label = label,
-					Body = errorCounter.ExceptionText,
-					CorrelationId = message.Id,
-				},messageQueue.GetTransactionType());
-				logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
-								  errorCounter.ExceptionText);
-				return true;
-			}
-			finally
-			{
-				readerWriterLock.ExitWriteLock();
-			}
-		}
-
-		private bool MoveToErrorQueue(QueueState state, Message message)
-		{
-			queueStrategy.MoveToErrorsQueue(state.Queue, message);
-			return true;
-		}
-
-		private bool MoveToTimeoutQueue(QueueState state, Message message)
-		{
-			var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 0));
-			if (CurrentTime >= processMessageAt)
-				return false;
-			queueStrategy.MoveToTimeoutQueue(state.Queue, message);
-			readerWriterLock.EnterWriteLock();
-			try
-			{
-				timeoutMessageIds.Add(processMessageAt, message.Id);
-			}
-			finally
-			{
-				readerWriterLock.ExitWriteLock();
-			}
-			return true;
 		}
 
 		private void HandleMessageCompletion(
 			Message message,
 			TransactionScope tx,
-			QueueState state,
+            MessageQueue messageQueue,
 			Exception exception)
 		{
 			if (exception == null)
@@ -524,8 +312,6 @@ namespace Rhino.ServiceBus.Msmq
 				{
 					if (tx != null)
 						tx.Complete();
-					if (message != null)
-						RemoveMessageFromFailureTracking(message);
 					return;
 				}
 				catch (Exception e)
@@ -535,64 +321,25 @@ namespace Rhino.ServiceBus.Msmq
 			}
 			if (message == null)
 				return;
-			IncrementFailureCount(GetMessageId(message), exception);
-			if (state.Queue.Transactional == false)// put the item back in the queue
-			{
-				state.Queue.Send(message, MessageQueueTransactionType.None);
-			}
-		}
 
-		private static string GetMessageId(Message message)
-		{
-			string id = message.Id;
-			return id.Split('\\')[0];
-		}
+            try
+            {
+                Action<CurrentMessageInformation, Exception> copy = MessageProcessingFailure;
+                if (copy != null)
+                    copy(currentMessageInformation, exception);
+            }
+            catch (Exception moduleException)
+            {
+                string exMsg = "";
+                if (exception != null)
+                    exMsg = exception.Message;
+                logger.Error("Module failed to process message failure: " + exMsg,
+                                             moduleException);
+            }
 
-		private void IncrementFailureCount(string id, Exception e)
-		{
-			readerWriterLock.EnterWriteLock();
-			try
+            if (messageQueue.Transactional == false)// put the item back in the queue
 			{
-				ErrorCounter errorCounter;
-				if (failureCounts.TryGetValue(id, out errorCounter) == false)
-				{
-					errorCounter = new ErrorCounter
-					{
-						ExceptionText = e.ToString(),
-						FailureCount = 0
-					};
-					failureCounts[id] = errorCounter;
-				}
-				errorCounter.FailureCount += 1;
-			}
-			finally
-			{
-				readerWriterLock.ExitWriteLock();
-			}
-		}
-
-		private void RemoveMessageFromFailureTracking(Message message)
-		{
-			string id = GetMessageId(message);
-			readerWriterLock.EnterReadLock();
-			try
-			{
-				if (failureCounts.ContainsKey(id) == false)
-					return;
-			}
-			finally
-			{
-				readerWriterLock.ExitReadLock();
-			}
-
-			readerWriterLock.EnterWriteLock();
-			try
-			{
-				failureCounts.Remove(id);
-			}
-			finally
-			{
-				readerWriterLock.ExitWriteLock();
+                messageQueue.Send(message, MessageQueueTransactionType.None);
 			}
 		}
 
@@ -616,58 +363,68 @@ namespace Rhino.ServiceBus.Msmq
 			return true;
 		}
 
-		private void ProcessMessage(Message message, 
-            QueueState state, 
+	    public void ProcessMessage(Message message, 
+            MessageQueue messageQueue, 
+            TransactionScope tx,
             Action<CurrentMessageInformation> messageRecieved,
-            Action<CurrentMessageInformation> messageCompleted)
+            Action<CurrentMessageInformation, Exception> messageCompleted)
 		{
-			//deserialization errors do not count for module events
-			object[] messages = DeserializeMessages(state, message);
-			try
-			{
-				foreach (object msg in messages)
-				{
-					currentMessageInformation = new MsmqCurrentMessageInformation
-					{
-						MessageId = CorrelationId.Parse(message.Id),
-						AllMessages = messages,
-						CorrelationId = CorrelationId.Parse(message.CorrelationId),
-						Message = msg,
-						Queue = queue,
-						Destination = Endpoint,
-						Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
-						MsmqMessage = message,
-						TransactionType = queue.GetTransactionType()
-					};
+		    Exception ex = null;
+		    currentMessageInformation = CreateMessageInformation(message, null, null);
+            try
+            {
+                //deserialization errors do not count for module events
+                object[] messages = DeserializeMessages(messageQueue, message);
+                try
+                {
+                    foreach (object msg in messages)
+                    {
+                        currentMessageInformation = CreateMessageInformation(message, messages, msg);
 
-					if (messageRecieved != null)
-						messageRecieved(currentMessageInformation);
-				}
-			}
-			catch (Exception e)
-			{
-				try
-				{
-					Action<CurrentMessageInformation, Exception> copy = MessageProcessingFailure;
-					if (copy != null)
-						copy(currentMessageInformation, e);
-				}
-				catch (Exception moduleException)
-				{
-					throw new TransportException("Module failed to process message failure: " + e.Message,
-												 moduleException);
-				}
-				throw;
-			}
-			finally
-			{
-                if (messageCompleted != null)
-                    messageCompleted(currentMessageInformation);
-				currentMessageInformation = null;
-			}
+                        if (messageRecieved != null)
+                            messageRecieved(currentMessageInformation);
+                    }
+                }
+                catch (Exception e)
+                {
+                    ex = e;
+                    logger.Error("Failed to process message", e);
+                }
+                finally
+                {
+                    if (messageCompleted != null)
+                        messageCompleted(currentMessageInformation, ex);
+                }
+            }
+            catch (Exception e)
+            {
+                ex = e;
+                logger.Error("Failed to deserialize message", e);
+            }
+            finally
+		    {
+                HandleMessageCompletion(message, tx, messageQueue, ex);
+                currentMessageInformation = null;
+		    } 
 		}
 
-		private object[] DeserializeMessages(QueueState state, Message transportMessage)
+	    private MsmqCurrentMessageInformation CreateMessageInformation(Message message, object[] messages, object msg)
+	    {
+	        return new MsmqCurrentMessageInformation
+	        {
+	            MessageId = CorrelationId.Parse(message.Id),
+	            AllMessages = messages,
+	            CorrelationId = CorrelationId.Parse(message.CorrelationId),
+	            Message = msg,
+	            Queue = queue,
+	            Destination = Endpoint,
+	            Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
+	            MsmqMessage = message,
+	            TransactionType = queue.GetTransactionType()
+	        };
+	    }
+
+        private object[] DeserializeMessages(MessageQueue messageQueue, Message transportMessage)
 		{
 			object[] messages;
 			try
@@ -682,10 +439,13 @@ namespace Rhino.ServiceBus.Msmq
 					Action<CurrentMessageInformation, Exception> copy = MessageSerializationException;
 					if (copy != null)
 					{
-						var information = new CurrentMessageInformation
+						var information = new MsmqCurrentMessageInformation
 						{
+                            MsmqMessage = transportMessage,
+                            Queue = messageQueue,
+                            CorrelationId = CorrelationId.Parse(transportMessage.CorrelationId),
 							Message = transportMessage,
-							Source = MsmqUtil.GetQueueUri(state.Queue),
+                            Source = MsmqUtil.GetQueueUri(messageQueue),
 							MessageId = CorrelationId.Parse(transportMessage.Id)
 						};
 						copy(information, e);
@@ -702,12 +462,14 @@ namespace Rhino.ServiceBus.Msmq
 
 		private static void SetCorrelationIdOnMessage(Message message)
 		{
-			if (currentMessageInformation != null)
-				message.CorrelationId = currentMessageInformation.CorrelationId
-					.Increment().ToString();
+		    if (currentMessageInformation == null) 
+                return;
+
+		    message.CorrelationId = currentMessageInformation
+		        .CorrelationId.Increment().ToString();
 		}
 
-		private void SendMessageToQueue(Message message, Uri uri)
+	    private void SendMessageToQueue(Message message, Uri uri)
 		{
 			if (haveStarted == false)
 				throw new TransportException("Cannot send message before transport is started");
@@ -729,25 +491,5 @@ namespace Rhino.ServiceBus.Msmq
 				throw new TransactionException("Failed to send message to " + uri, e);
 			}
 		}
-
-		#region Nested type: ErrorCounter
-
-		private class ErrorCounter
-		{
-			public string ExceptionText;
-			public int FailureCount;
-		}
-
-		#endregion
-
-		#region Nested type: QueueState
-
-		private class QueueState
-		{
-			public MessageQueue Queue;
-			public ManualResetEvent WaitHandle;
-		}
-
-		#endregion
 	}
 }

@@ -28,7 +28,7 @@ namespace Starbucks.Barista
 
             for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine("Barista: preparing drink: " + drink);
+                Console.WriteLine("Barista: preparing drink: " + State.Drink);
                 Thread.Sleep(500);
             }
             State.DrinkIsReady = true;

@@ -9,6 +9,21 @@ namespace Rhino.ServiceBus.Msmq
 {
     public static class MsmqExtensions
     {
+        public static Message TryGetMessageFromQueue(this MessageQueue queue, string messageId)
+        {
+            try
+            {
+                return queue.ReceiveById(
+                    messageId,
+                    queue.GetTransactionType());
+            }
+            catch (InvalidOperationException)// message was read before we could read it
+            {
+                return null;
+            }
+        }
+
+
         public static MessageQueueTransactionType GetTransactionType(this MessageQueue self)
         {
             if (self.Transactional)

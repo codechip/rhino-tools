@@ -4,6 +4,7 @@ using Castle.MicroKernel;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Msmq;
+using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Serializers;
 
 namespace Rhino.ServiceBus.Tests
@@ -100,7 +101,12 @@ namespace Rhino.ServiceBus.Tests
             {
                 if (transport == null)
                 {
-                    transport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()), TestQueueUri, 1, 5,new SubQueueStrategy());
+                    transport = new MsmqTransport(
+                        new XmlMessageSerializer(
+                            new DefaultReflection(), 
+                            new DefaultKernel()), 
+                            TestQueueUri, 1, 
+                            DefaultMessageActions);
                     transport.Start();
                 }
                 return transport;
@@ -114,10 +120,27 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
-                                                               TransactionalTestQueueUri, 1, 5, new SubQueueStrategy());
+                                                               TransactionalTestQueueUri, 1, DefaultMessageActions);
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;
+            }
+        }
+
+        private static IMessageAction[] DefaultMessageActions
+        {
+            get
+            {
+                var qs = new SubQueueStrategy();
+                return new IMessageAction[]
+                {
+                    new AdministrativeAction(),
+                    new DiscardAction(qs),
+                    new ErrorAction(5, qs),
+                    new ErrorDescriptionAction(qs),
+                    new ShutDownAction(),
+                    new TimeoutAction(qs)
+                };
             }
         }
 

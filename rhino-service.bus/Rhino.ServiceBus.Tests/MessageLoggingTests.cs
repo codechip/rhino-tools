@@ -72,11 +72,12 @@ namespace Rhino.ServiceBus.Tests
             module.Init(transport);
 
             transport.Raise(x => x.MessageProcessingCompleted += null,
-                new CurrentMessageInformation
-                {
-                    MessageId = CorrelationId.New(),
-                    Message = "tst"
-                });
+                            new CurrentMessageInformation
+                            {
+                                MessageId = CorrelationId.New(),
+                                Message = "tst"
+                            },
+                            new Exception());
 
             var msg = queue.Receive();
 
