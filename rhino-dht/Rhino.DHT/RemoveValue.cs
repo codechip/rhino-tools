@@ -2,7 +2,7 @@ namespace Rhino.DHT
 {
     public class RemoveValue
     {
-        public string Key;
-        public int[] ParentVersions;
+        public string Key{ get; set;}
+        public int[] ParentVersions { get; set; }
     }
 }
