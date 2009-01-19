@@ -73,7 +73,7 @@ namespace Rhino.ServiceBus.Serializers
 
         private void WriteObject(string name, object value, XContainer parent, IDictionary<string, XNamespace> namespaces)
         {
-            if(HaveCustomerSerializer(value.GetType()))
+            if(HaveCustomSerializer(value.GetType()))
             {
                 var valueConvertorType = reflection.GetGenericTypeOf(typeof (IValueConvertor<>), value);
                 var convertor = kernel.Resolve(valueConvertorType);
@@ -130,7 +130,7 @@ namespace Rhino.ServiceBus.Serializers
             return xmlNs;
         }
 
-        private bool HaveCustomerSerializer(Type type)
+        private bool HaveCustomSerializer(Type type)
         {
             bool? hasConvertor = null;
             typeHasConvertorCache.Read(
@@ -253,6 +253,10 @@ namespace Rhino.ServiceBus.Serializers
             foreach (var element in document.Root.Elements())
             {
                 var type = reflection.GetType(element.Name.NamespaceName);
+                if (type==null)
+                {
+                    throw new SerializationException("Cannot find root message type: " + element.Name.Namespace);
+                }
                 var msg = ReadObject(type, element);
                 msgs.Add(msg);
             }
@@ -261,7 +265,10 @@ namespace Rhino.ServiceBus.Serializers
 
         private object ReadObject(Type type, XElement element)
         {
-            if(HaveCustomerSerializer(type))
+            if (type == null)
+                throw new ArgumentNullException("type");
+
+            if(HaveCustomSerializer(type))
             {
                 var convertorType = reflection.GetGenericTypeOf(typeof(IValueConvertor<>),type);
                 var convertor = kernel.Resolve(convertorType);
