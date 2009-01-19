@@ -86,7 +86,6 @@ namespace Rhino.DHT
             {
                 foreach (var value in valuesToRemove)
                 {
-
                     var removed = actions.Remove(
                         value.Key,
                         value.ParentVersions ?? new int[0]);

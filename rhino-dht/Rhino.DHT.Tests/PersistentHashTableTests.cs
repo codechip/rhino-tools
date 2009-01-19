@@ -30,6 +30,38 @@ namespace Rhino.DHT.Tests
         }
 
         [Fact]
+        public void Can_remove_item_from_table_when_there_is_more_than_single_item()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                int versionOfA = 0, versionOfC = 0;
+
+                table.Batch(actions =>
+                {
+                    versionOfA = actions.Put("a", new int[0], new byte[] {1});
+                    actions.Put("b", new int[0], new byte[] { 1 });
+                    versionOfC = actions.Put("c", new int[0], new byte[] {1});
+                    actions.Put("d", new int[0], new byte[] { 1 });
+
+                    actions.Commit();
+                });
+
+                table.Batch(actions =>
+                {
+                    var removed = actions.Remove("a", new []{ versionOfA });
+                    Assert.True(removed);
+                    removed = actions.Remove("c", new[] { versionOfC });
+                    Assert.True(removed);
+                    actions.Commit();
+                });
+
+
+            }
+        }
+
+        [Fact]
         public void Can_get_item_in_specific_version()
         {
             using (var table = new PersistentHashTable(testDatabase))

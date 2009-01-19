@@ -203,6 +203,10 @@ namespace Rhino.DHT
             if (exists == false)
                 return new int[0];
 
+            Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
+            Api.JetSetIndexRange(session, keys, 
+                SetIndexRangeGrbit.RangeUpperLimit | SetIndexRangeGrbit.RangeInclusive);
+
             var ids = new List<int>();
             var columns = Api.GetColumnDictionary(session, keys);
             do
@@ -236,7 +240,16 @@ namespace Rhino.DHT
         {
             var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
             if (doesAllVersionsMatch)
+            {
                 DeleteInactiveVersions(key, parentVersions);
+
+                foreach (var version in parentVersions)
+                {
+                    var copy = version;
+                    commitSyncronization.Add(() => cache.Remove(GetKey(key, copy)));
+                }
+                commitSyncronization.Add(() => cache.Remove(GetKey(key)));
+            }
             return doesAllVersionsMatch;
         }
     }
