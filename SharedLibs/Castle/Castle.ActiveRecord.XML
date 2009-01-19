@@ -2571,11 +2571,6 @@
             	<c>true</c> if models should be verified; otherwise, <c>false</c>.
             </value>
         </member>
-        <member name="P:Castle.ActiveRecord.Framework.IConfigurationSource.DefaultFlushType">
-            <summary>
-            Determines the default flushing behaviour of scopes.
-            </summary>
-        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource"/> class.
@@ -2670,12 +2665,6 @@
             </summary>
             <param name="pluralize">if set to <c>true</c> Active Record will pluralize inferred table names.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetDefaultFlushType(Castle.ActiveRecord.Framework.DefaultFlushType)">
-            <summary>
-            Sets the value determining flush behaviour
-            </summary>
-            <param name="flushType">The chosen default behaviour.</param>
-        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ProcessConfiguration(Castle.Core.Configuration.IConfiguration)">
             <summary>
             Processes the configuration applying any substitutions.
@@ -2732,11 +2721,6 @@
             <value>
             	<c>true</c> if models should be verified; otherwise, <c>false</c>.
             </value>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.DefaultFlushType">
-            <summary>
-            Determines the default flushing behaviour of scopes.
-            </summary>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.IsRunningInWebApp">
             <summary>
@@ -2795,37 +2779,6 @@
             Gets the sole instance.
             </summary>
             <value>The instance.</value>
-        </member>
-        <member name="T:Castle.ActiveRecord.Framework.DefaultFlushType">
-            <summary>
-            Determines the default flushing behaviour of <see cref="T:Castle.ActiveRecord.SessionScope"/>
-            and <see cref="T:Castle.ActiveRecord.TransactionScope"/>
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Classic">
-            <summary>
-            Classic flushing behaviour like in RC3 and before. <see cref="T:Castle.ActiveRecord.SessionScope"/>
-            flushes automatically, <see cref="T:Castle.ActiveRecord.TransactionScope"/> flushes on Disposal if
-            the transaction was committed.
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Auto">
-            <summary>
-            New recommended behaviour. Both types of scope flush automatically, consolidating behaviour between
-            scoped and non-scoped code.
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Leave">
-            <summary>
-            Both scope types do only flush on disposal.
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.Framework.DefaultFlushType.Transaction">
-            <summary>
-            NH2.0-alike behaviour. The <see cref="T:Castle.ActiveRecord.SessionScope"/> won't flush at all unless
-            called manually. <see cref="T:Castle.ActiveRecord.TransactionScope"/> flushes automatically. This
-            allows to use the scopes like the NH-ISession-ITransaction-block.
-            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Config.DatabaseType">
             <summary>
@@ -3312,12 +3265,11 @@
             Model for representing a Composite User type map.
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.#ctor(System.Reflection.MemberInfo,System.Type,Castle.ActiveRecord.CompositeUserTypeAttribute)">
+        <member name="M:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.CompositeUserTypeAttribute)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel"/> class.
             </summary>
-            <param name="member">The member marked with the attribute.</param>
-            <param name="memberType">The type of member marked with the attribute.</param>
+            <param name="prop">The property marked with the attribute.</param>
             <param name="attribute">The metadata attribute.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Accept(Castle.ActiveRecord.Framework.Internal.IVisitor)">
@@ -3326,17 +3278,11 @@
             </summary>
             <param name="visitor">The visitor.</param>
         </member>
-        <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Member">
+        <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Property">
             <summary>
-            Gets the member marked with the attribute.
+            Gets the property marked with the attribute.
             </summary>
-            <value>The member.</value>
-        </member>
-        <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.MemberType">
-            <summary>
-            Gets the type of member marked with the attribute.
-            </summary>
-            <value>The member.</value>
+            <value>The property.</value>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.CompositeUserTypeModel.Attribute">
             <summary>
@@ -4369,12 +4315,6 @@
             Validate that required information is specified
             Infer the other side of the assoication and grab require data from it
             </remarks>
-            <param name="model">The model.</param>
-        </member>
-        <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.GuessElementMappingBasedOnEnum(Castle.ActiveRecord.Framework.Internal.HasManyModel)">
-            <summary>
-            Guesses the element mapping based on enum.
-            </summary>
             <param name="model">The model.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.SemanticVerifierVisitor.VisitHasAndBelongsToMany(Castle.ActiveRecord.Framework.Internal.HasAndBelongsToManyModel)">
@@ -6184,12 +6124,6 @@
             </summary>
             <param name="session">The session.</param>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.ResetFlushMode">
-            <summary>
-            Notifies the scope that an inner scope that changed the flush mode, was
-            disposed. The scope should reset the flush mode to its default.
-            </summary>
-        </member>
         <member name="M:Castle.ActiveRecord.Framework.Scopes.AbstractScope.GetSessions">
             <summary>
             Gets the sessions.
@@ -6397,11 +6331,6 @@
             <summary>
             Flush need to be controlled manually. Best choice
             for readonly operations
-            </summary>
-        </member>
-        <member name="F:Castle.ActiveRecord.FlushAction.Config">
-            <summary>
-            Determine the flushing behaviour from configuration.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.Framework.Scopes.HybridWebThreadScopeInfo">
@@ -9079,11 +9008,6 @@
             <value>
             	<c>true</c> if it is initialized; otherwise, <c>false</c>.
             </value>
-        </member>
-        <member name="P:Castle.ActiveRecord.ActiveRecordStarter.ConfigurationSource">
-            <summary>
-            The current <see cref="T:Castle.ActiveRecord.Framework.IConfigurationSource"/>.
-            </summary>
         </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordValidationBase">
             <summary>

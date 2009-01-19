@@ -239,13 +239,6 @@
             </code>
             </example>
         </member>
-        <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.ElementProcessors.DefaultElementProcessor.Process(Castle.Windsor.Configuration.Interpreters.XmlProcessor.IXmlProcessorNodeList,Castle.Windsor.Configuration.Interpreters.XmlProcessor.IXmlProcessorEngine)">
-            <summary>
-            Processes the specified node list.
-            </summary>
-            <param name="nodeList">The node list.</param>
-            <param name="engine">The engine.</param>
-        </member>
         <member name="M:Castle.Windsor.Configuration.Interpreters.XmlProcessor.ElementProcessors.DefaultElementProcessor.ProcessAttributes(System.Xml.XmlElement,Castle.Windsor.Configuration.Interpreters.XmlProcessor.IXmlProcessorEngine)">
             <summary>
             Processes element attributes.
@@ -530,6 +523,11 @@
             <param name="container">Target container</param>
             <param name="store">Configuration store</param>
         </member>
+        <member name="M:Castle.Windsor.Installer.DefaultComponentInstaller.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.Windsor.Installer.DefaultComponentInstaller"/> class.
+            </summary>
+        </member>
         <member name="M:Castle.Windsor.Installer.DefaultComponentInstaller.SetUp(Castle.Windsor.IWindsorContainer,Castle.MicroKernel.IConfigurationStore)">
             <summary>
             Perform installation.
@@ -537,13 +535,12 @@
             <param name="container">Target container</param>
             <param name="store">Configuration store</param>
         </member>
-        <member name="M:Castle.Windsor.Proxy.AbstractProxyFactory.ObtainInterceptors(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel,Castle.MicroKernel.CreationContext)">
+        <member name="M:Castle.Windsor.Proxy.AbstractProxyFactory.ObtainInterceptors(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
             <summary>
             Obtains the interceptors associated with the component.
             </summary>
             <param name="kernel">The kernel instance</param>
             <param name="model">The component model</param>
-            <param name="context">The creation context</param>
             <returns>interceptors array</returns>
         </member>
         <member name="T:Castle.Windsor.Proxy.DefaultProxyFactory">
@@ -563,7 +560,7 @@
             Constructs a DefaultProxyFactory
             </summary>
         </member>
-        <member name="M:Castle.Windsor.Proxy.DefaultProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,Castle.MicroKernel.CreationContext,System.Object[])">
+        <member name="M:Castle.Windsor.Proxy.DefaultProxyFactory.Create(Castle.MicroKernel.IKernel,System.Object,Castle.Core.ComponentModel,System.Object[])">
             <summary>
             Creates the proxy for the supplied component.
             </summary>
@@ -571,7 +568,6 @@
             <param name="target">The target.</param>
             <param name="model">The model.</param>
             <param name="constructorArguments">The constructor arguments.</param>
-            <param name="context">The creation context</param>
             <returns>The component proxy.</returns>
         </member>
         <member name="M:Castle.Windsor.Proxy.DefaultProxyFactory.RequiresTargetInstance(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
@@ -586,6 +582,8 @@
             <summary>
             Gets the environment information (name). Implementors should 
             use to define their environments and how those affect the configuration.
+            It is also used by the <see cref="T:Castle.Windsor.Configuration.Interpreters.XmlInterpreter"/>
+            to define a flag with the environment name.
             </summary>
         </member>
         <member name="M:Castle.Windsor.IEnvironmentInfo.GetEnvironmentName">
@@ -756,7 +754,7 @@
             <param name="key"></param>		
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentProperties``2(System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -767,7 +765,7 @@
             <typeparam name="T"></typeparam>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentProperties``2(System.String,System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.IWindsorContainer.AddComponentLifeStyle``2(System.String,System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -782,16 +780,9 @@
             <summary>
             Registers the components provided by the <see cref="T:Castle.MicroKernel.Registration.IRegistration"/>s
             with the <see cref="T:Castle.Windsor.IWindsorContainer"/>.
-            <para/>
-            Create a new registration using <see cref="T:Castle.MicroKernel.Registration.Component"/>.For() or <see cref="T:Castle.MicroKernel.Registration.AllTypes"/>.
-            </summary>
-            <example>
-            <code>
-            container.Register(Component.For&lt;IService&gt;().ImplementedBy&lt;DefaultService&gt;());
-            </code>
-            </example>
             <param name="registrations">The component registrations.</param>
             <returns>The container.</returns>
+            </summary>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.Install(Castle.Windsor.IWindsorInstaller[])">
             <summary>
@@ -1068,7 +1059,7 @@
             </summary>
             <remarks>
             This constructs sets the Kernel.ProxyFactory property to
-            <c>Proxy.DefaultProxyFactory</c>
+            <see cref="T:Castle.Windsor.Proxy.DefaultProxyFactory"/>
             </remarks>
             <param name="kernel">Kernel instance</param>
             <param name="installer">Installer instance</param>
@@ -1080,7 +1071,7 @@
             </summary>
             <remarks>
             This constructs sets the Kernel.ProxyFactory property to
-            <c>Proxy.DefaultProxyFactory</c>
+            <see cref="T:Castle.Windsor.Proxy.DefaultProxyFactory"/>
             </remarks>
             <param name="name">Container's name</param>
             <param name="kernel">Kernel instance</param>
@@ -1244,7 +1235,7 @@
             <param name="key"></param>		
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentProperties``2(System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
@@ -1255,7 +1246,7 @@
             <typeparam name="T"></typeparam>
             <param name="extendedProperties"></param>
         </member>
-        <member name="M:Castle.Windsor.WindsorContainer.AddComponentProperties``2(System.String,System.Collections.IDictionary)">
+        <member name="M:Castle.Windsor.WindsorContainer.AddComponentLifeStyle``2(System.String,System.Collections.IDictionary)">
             <summary>
             Adds a concrete class and an interface 
             as a component and specify the extended properties.
