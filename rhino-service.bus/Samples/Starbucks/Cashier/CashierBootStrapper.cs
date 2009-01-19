@@ -1,7 +1,7 @@
 using Castle.MicroKernel.Registration;
 using Rhino.ServiceBus.Hosting;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.SagaPersisters;
+using Rhino.ServiceBus.Sagas.Persisters;
 
 namespace Starbucks.Cashier
 {

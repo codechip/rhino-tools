@@ -429,10 +429,10 @@ namespace Rhino.ServiceBus.Impl
                 object sagaPersister = kernel.Resolve(sagaPersisterType);
                 try
                 {
-                    object sagaState = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
-                    if (sagaState == null)
+                    object sagas = reflection.InvokeSagaPersisterGet(sagaPersister, sagaMessage.CorrelationId);
+                    if (sagas == null)
                         continue;
-                    instances.Add(sagaState);
+                    instances.Add(sagas);
                 }
                 finally
                 {

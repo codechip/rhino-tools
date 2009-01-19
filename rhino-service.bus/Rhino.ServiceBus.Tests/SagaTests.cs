@@ -6,8 +6,8 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.SagaPersisters;
 using Rhino.ServiceBus.Sagas;
+using Rhino.ServiceBus.Sagas.Persisters;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests

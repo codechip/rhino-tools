@@ -4,7 +4,7 @@ using Castle.MicroKernel;
 using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Internal;
 
-namespace Rhino.ServiceBus.SagaPersisters
+namespace Rhino.ServiceBus.Sagas.Persisters
 {
     public class InMemorySagaPersister<TSaga> : ISagaPersister<TSaga> 
         where TSaga : class, IAccessibleSaga

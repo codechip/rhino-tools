@@ -86,7 +86,10 @@
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
-    <Compile Include="SagaPersisters\InMemorySagaPersister.cs" />
+    <Compile Include="Messages\MergeSagaState.cs" />
+    <Compile Include="Sagas\ISagaStateMerger.cs" />
+    <Compile Include="Sagas\IVersionedSagaState.cs" />
+    <Compile Include="Sagas\Persisters\InMemorySagaPersister.cs" />
     <Compile Include="Impl\RhinoServiceBusFacility.cs" />
     <Compile Include="Internal\IMessageConsumer.cs" />
     <Compile Include="Impl\DefaultReflection.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Internal\IAccessibleSaga.cs" />
+    <Compile Include="Sagas\Persisters\DistributedHashTableSagaPersister.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Internal\ITransport.cs" />
@@ -144,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PublicApi.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\rhino-dht\Rhino.DHT\Rhino.DHT.csproj">
+      <Project>{F30B2D63-CED5-4C8A-908F-0B5503D984A9}</Project>
+      <Name>Rhino.DHT</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
@@ -11,11 +12,12 @@ using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
+using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Sagas;
+using Rhino.ServiceBus.Sagas.Persisters;
 using Rhino.ServiceBus.Serializers;
-using System.Linq;
 
 namespace Rhino.ServiceBus.Impl
 {
@@ -31,6 +33,7 @@ namespace Rhino.ServiceBus.Impl
         private readonly Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
+        private bool useDhtSagaPersister;
 
         public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
@@ -107,19 +110,15 @@ namespace Rhino.ServiceBus.Impl
                 );
 
             Kernel.Register(
-              Component.For<IMessageAction>()
-                  .ImplementedBy<DiscardAction>(),
-              Component.For<IMessageAction>()
-                  .ImplementedBy<AdministrativeAction>(),
-              Component.For<IMessageAction>()
-                  .ImplementedBy<ErrorAction>()
-                  .DependsOn(new { numberOfRetries, }),
-              Component.For<IMessageAction>()
-                  .ImplementedBy<ErrorDescriptionAction>(),
-              Component.For<IMessageAction>()
-                  .ImplementedBy<ShutDownAction>(),
-              Component.For<IMessageAction>()
-                  .ImplementedBy<TimeoutAction>()
+                AllTypes.Of<IMessageAction>()
+                    .FromAssembly(typeof(IMessageAction).Assembly)
+                    .WithService.FirstInterface()
+                    .Configure(registration =>
+                    {
+                        if (registration.Implementation != typeof(ErrorAction))
+                            return;
+                        registration.DependsOn(new {numberOfRetries});
+                    })
               );
         }
 
@@ -149,7 +148,7 @@ namespace Rhino.ServiceBus.Impl
                 );
         }
 
-        private static void Kernel_OnComponentModelCreated(ComponentModel model)
+        private void Kernel_OnComponentModelCreated(ComponentModel model)
         {
             if (typeof(IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
                 return;
@@ -173,8 +172,45 @@ namespace Rhino.ServiceBus.Impl
                     "Did you forget to inherit from InitiatedBy<TState> ?");
             }
 
-
             model.LifestyleType = LifestyleType.Transient;
+
+            if (useDhtSagaPersister)
+                RegisterDhtSagaPersister(model);
+        }
+
+        private void RegisterDhtSagaPersister(ComponentModel model)
+        {
+            var list = model.Implementation.GetInterfaces()
+                .Where(x => x.IsGenericType &&
+                            x.IsGenericTypeDefinition == false &&
+                            x.GetGenericTypeDefinition() == typeof (ISaga<>))
+                .ToList();
+            
+            if (list.Count == 0)
+                return;
+            
+            if (list.Count > 1)
+            {
+                throw new InvalidUsageException(model.Implementation +
+                                                " implements more than one ISaga<T>, this is not permitted");
+            }
+
+            var sagaType = list[0];
+            var sagaStateType = sagaType.GetGenericArguments()[0];
+            if (typeof(IVersionedSagaState).IsAssignableFrom(sagaStateType) == false)
+                throw new InvalidUsageException(model.Implementation + "'s state (" + sagaStateType + ") does not implement IVersionedSagaState");
+
+            if(typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation)==false)
+                throw new InvalidUsageException(model.Implementation + " must implement Orchestrates<MergeSagaState>, to handle state merges.");
+
+
+            Kernel.AddComponent(
+                "SagaPersister<"+model.Implementation+">",
+                typeof(ISagaPersister<>)
+                    .MakeGenericType(model.Implementation),
+                typeof(DistributedHashTableSagaPersister<,>)
+                    .MakeGenericType(model.Implementation, sagaStateType)
+                );
         }
 
         private void ReadMessageOwners()
@@ -252,6 +288,12 @@ namespace Rhino.ServiceBus.Impl
                 throw new ConfigurationErrorsException(
                     "Attribute 'logEndpoint' on 'bus' has an invalid value '" + uriString + "'");
             }
+        }
+
+        public RhinoServiceBusFacility UseDhtSagaPersister()
+        {
+            useDhtSagaPersister = true;
+            return this;
         }
     }
 }
