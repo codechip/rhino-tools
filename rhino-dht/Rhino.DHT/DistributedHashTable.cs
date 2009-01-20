@@ -6,16 +6,22 @@ using Microsoft.Isam.Esent.Interop;
 namespace Rhino.DHT
 {
     [ServiceBehavior(
-        InstanceContextMode = InstanceContextMode.Single, 
+        InstanceContextMode = InstanceContextMode.Single,
         ConcurrencyMode = ConcurrencyMode.Multiple
         )]
-    public class DistributedHashTable : IDistributedHashTable, IDisposable
+    public class DistributedHashTable : IDistributedHashTable
     {
         readonly PersistentHashTable hashTable;
 
         public DistributedHashTable()
             : this("cache.esent", null)
         {
+        }
+
+        public DistributedHashTable(string database)
+            : this(database, null)
+        {
+
         }
 
         public DistributedHashTable(string database, Action<InstanceParameters> configure)
@@ -44,8 +50,8 @@ namespace Rhino.DHT
                 foreach (var value in valuesToAdd)
                 {
                     var version = actions.Put(
-                        value.Key, 
-                        value.ParentVersions ?? new int[0], 
+                        value.Key,
+                        value.ParentVersions ?? new int[0],
                         value.Bytes);
                     versions.Add(version);
                 }
@@ -61,7 +67,7 @@ namespace Rhino.DHT
             {
                 foreach (var value in valuesToGet)
                 {
-                    if(value.SpecifiedVersion == null)
+                    if (value.SpecifiedVersion == null)
                     {
                         var version = actions.Get(value.Key);
                         values.Add(version);
@@ -69,9 +75,9 @@ namespace Rhino.DHT
                     else
                     {
                         var version = actions.Get(
-                            value.Key, 
+                            value.Key,
                             value.SpecifiedVersion.Value);
-                        values.Add(new []{version, });
+                        values.Add(new[] { version, });
                     }
                 }
                 actions.Commit();

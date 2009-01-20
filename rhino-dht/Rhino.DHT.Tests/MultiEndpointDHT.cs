@@ -14,9 +14,9 @@ namespace Rhino.DHT.Tests
 
         public MultiEndpointDHT()
         {
-            File.Delete("cache1.esent");
-            File.Delete("cache2.esent");
-            File.Delete("cache3.esent");
+            Delete("cache1.esent");
+            Delete("cache2.esent");
+            Delete("cache3.esent");
 
             runners = new[]
             {
@@ -28,6 +28,13 @@ namespace Rhino.DHT.Tests
             distributedHashTable = new MultiEndpointDistributedHashTable(
                 runners.Select(x => new Uri(x.Uri)).ToArray(), 
                 new NetTcpBinding());
+        }
+
+        private void Delete(string database)
+        {
+            if (Directory.Exists(database))
+                Directory.Delete(database, true);
+       
         }
 
         [Fact]

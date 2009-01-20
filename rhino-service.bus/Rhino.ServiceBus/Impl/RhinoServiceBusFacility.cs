@@ -81,6 +81,7 @@ namespace Rhino.ServiceBus.Impl
             Kernel.Register(
                 Component.For<IServiceBus, IStartableServiceBus>()
                     .ImplementedBy<DefaultServiceBus>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .DependsOn(new
                     {
                         messageOwners = messageOwners.ToArray(),
@@ -89,16 +90,20 @@ namespace Rhino.ServiceBus.Impl
                                     .Eq(CreateModuleConfigurationNode())
                     ),
                 Component.For<IReflection>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy<DefaultReflection>(),
                 Component.For<IQueueStrategy>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy(queueStrategyImpl).DependsOn(new { endpoint }),
                 Component.For<ISubscriptionStorage>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
                     {
                         subscriptionQueue = endpoint
                     }),
                 Component.For<ITransport>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy(transportImpl)
                     .DependsOn(new
                     {
@@ -106,6 +111,7 @@ namespace Rhino.ServiceBus.Impl
                         endpoint,
                     }),
                 Component.For<IMessageSerializer>()
+                    .LifeStyle.Is(LifestyleType.Singleton)
                     .ImplementedBy(serializerImpl)
                 );
 
@@ -115,6 +121,8 @@ namespace Rhino.ServiceBus.Impl
                     .WithService.FirstInterface()
                     .Configure(registration =>
                     {
+                        registration
+                            .LifeStyle.Is(LifestyleType.Singleton);
                         if (registration.Implementation != typeof(ErrorAction))
                             return;
                         registration.DependsOn(new {numberOfRetries});

@@ -20,7 +20,7 @@ namespace Rhino.ServiceBus.Tests.Dht
 
         public DistributedHashTableSagaPersisterTests()
         {
-            File.Delete("cache.esent");
+            Delete("cache.esent");
             BaristaSaga.WaitToCreateConflicts = new ManualResetEvent(true);
             BaristaSaga.FinishedConsumingMessage = new ManualResetEvent(false);
             container = new WindsorContainer(new XmlInterpreter());
@@ -31,6 +31,12 @@ namespace Rhino.ServiceBus.Tests.Dht
             container.AddComponent<IDistributedHashTable, DistributedHashTable>();
             container.AddComponent<BaristaSaga>();
             container.AddComponent<ISagaStateMerger<BaristaState>, BaristaStateMerger>();
+        }
+
+        private void Delete(string database)
+        {
+            if(Directory.Exists(database))
+                Directory.Delete(database, true);
         }
 
         [Fact]

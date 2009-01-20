@@ -1,9 +1,10 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 
 namespace Rhino.DHT
 {
     [ServiceContract]
-    public interface IDistributedHashTable
+    public interface IDistributedHashTable : IDisposable
     {
         [OperationContract]
         int[] Put(AddValue[] valuesToAdd);

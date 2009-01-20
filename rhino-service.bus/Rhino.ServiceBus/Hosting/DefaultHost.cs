@@ -39,9 +39,9 @@ namespace Rhino.ServiceBus.Hosting
 
             assebmlyName = asmName;
 
-            CreateContainer();
-
             CreateBootStrapper();
+
+            CreateContainer();
 
             InitializeContainer();
 
@@ -64,9 +64,12 @@ namespace Rhino.ServiceBus.Hosting
         private void CreateContainer()
         {
             container = new WindsorContainer(new XmlInterpreter());
-            container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
+            var facility = new RhinoServiceBusFacility();
+            bootStrapper.ConfigureBusFacility(facility);
+            container.Kernel.AddFacility("rhino.esb", facility);
         }
 
+       
         private void CreateBootStrapper()
         {
             logger.DebugFormat("Loading {0}", assebmlyName);

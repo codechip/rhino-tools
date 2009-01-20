@@ -11,7 +11,8 @@ namespace Rhino.DHT.Tests
 
         public PersistentHashTableTests()
         {
-            File.Delete(testDatabase);
+            if (Directory.Exists(testDatabase))
+                Directory.Delete(testDatabase, true);
         }
 
         [Fact]

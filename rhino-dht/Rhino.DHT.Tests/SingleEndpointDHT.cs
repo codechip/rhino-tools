@@ -12,12 +12,19 @@ namespace Rhino.DHT.Tests
 
         public SingleEndpointDHT()
         {
-            File.Delete("cache.esent");
+            Delete("cache.esent");
 
             address = new Uri("net.tcp://localhost:6212/cache");
             host = new ServiceHost(typeof(DistributedHashTable), address);
             host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), this.address);
             host.Open();
+        }
+
+        private void Delete(string database)
+        {
+            if (Directory.Exists(database))
+                Directory.Delete(database, true);
+       
         }
 
         [Fact]

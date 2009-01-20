@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Hosting
@@ -51,6 +52,11 @@ namespace Rhino.ServiceBus.Hosting
         }
 
         public virtual void BeforeStart()
+        {
+            
+        }
+
+        public virtual void ConfigureBusFacility(RhinoServiceBusFacility facility)
         {
             
         }
