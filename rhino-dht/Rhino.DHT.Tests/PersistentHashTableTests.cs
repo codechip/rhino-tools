@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Microsoft.Isam.Esent.Interop;
 using Xunit;
 
 namespace Rhino.DHT.Tests
@@ -166,6 +168,67 @@ namespace Rhino.DHT.Tests
             }
         }
 
+        [Fact]
+        public void Can_query_for_item_with_expiry()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
 
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 }, DateTime.Now.AddYears(1));
+
+                    var values = actions.Get("abc1");
+                    Assert.NotEqual(0, values.Length);
+                });
+            }
+        }
+
+        [Fact]
+        public void After_item_expires_it_cannot_be_retrieved()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 }, 
+                        DateTime.Now.AddYears(-1));
+                    var values = actions.Get("abc1");
+
+                    Assert.Equal(0, values.Length);
+                });
+            }
+        }
+
+        [Fact]
+        public void After_item_expires_it_will_be_removed_on_next_commit()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 },
+                        DateTime.Now);
+
+                    actions.Commit();
+                });
+
+                table.Batch(actions => actions.Commit());
+
+                int numRecords = -1;
+                table.Batch(actions =>
+                {
+                    Api.JetSetCurrentIndex(actions.Session, actions.Keys, null);//primary
+                    Api.JetIndexRecordCount(actions.Session, actions.Keys, out numRecords, 0);
+                });
+
+                Assert.Equal(0, numRecords);
+            }
+        }
     }
 }

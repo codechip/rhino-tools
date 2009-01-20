@@ -19,6 +19,40 @@ namespace Rhino.DHT
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
         private readonly Cache cache;
         private readonly List<Action> commitSyncronization = new List<Action>();
+        public JET_DBID DatabaseId
+        {
+            get{ return dbid;}
+        }
+
+        public Session Session
+        {
+            get { return session; }
+        }
+
+        public Transaction Transaction
+        {
+            get { return transaction; }
+        }
+
+        public Table Keys
+        {
+            get { return keys; }
+        }
+
+        public Table Data
+        {
+            get { return data; }
+        }
+
+        public Dictionary<string, JET_COLUMNID> KeysColumns
+        {
+            get { return keysColumns; }
+        }
+
+        public Dictionary<string, JET_COLUMNID> DataColumns
+        {
+            get { return dataColumns; }
+        }
 
         public PersistentHashTableActions(Instance instance, string database, Cache cache)
         {
@@ -36,6 +70,11 @@ namespace Rhino.DHT
         }
 
         public int Put(string key, int[] parentVersions, byte[] bytes)
+        {
+            return Put(key, parentVersions, bytes, null);
+        }
+
+        public int Put(string key, int[] parentVersions, byte[] bytes, DateTime? expiresAt)
         {
             // always remove the active versions from the cache
             commitSyncronization.Add(() => cache.Remove(GetKey(key)));
@@ -57,6 +96,9 @@ namespace Rhino.DHT
             {
                 Api.SetColumn(session, keys, keysColumns["key"], key, Encoding.Unicode);
 
+                if(expiresAt.HasValue)
+                    Api.SetColumn(session, keys, keysColumns["expiresAt"], expiresAt.Value.ToOADate());
+
                 update.Save(bookmark, bookmark.Length, out bookmarkSize);
             }
 
@@ -68,6 +110,8 @@ namespace Rhino.DHT
                 Api.SetColumn(session, data, dataColumns["key"], key, Encoding.Unicode);
                 Api.SetColumn(session, data, dataColumns["version"], version.Value);
                 Api.SetColumn(session, data, dataColumns["data"], bytes);
+                if (expiresAt.HasValue)
+                    Api.SetColumn(session, data, dataColumns["expiresAt"], expiresAt.Value.ToOADate());
 
                 update.Save();
             }
@@ -93,27 +137,29 @@ namespace Rhino.DHT
             bool foundAllInCache = true;
             foreach (var activeVersion in activeVersions)
             {
-                var cachedValue = cache[GetKey(key, activeVersion)];
-                if (cachedValue == null ||
-                    cachedValue == DBNull.Value)
+                var cachedValue = cache[GetKey(key, activeVersion)] as Value;
+                if (cachedValue == null || 
+                    (cachedValue.ExpiresAt.HasValue &&
+                    DateTime.Now < cachedValue.ExpiresAt.Value))
                 {
                     values.Clear();
                     foundAllInCache = false;
                     break;
                 }
-                values.Add((Value)cachedValue);
+                values.Add(cachedValue);
             }
             if (foundAllInCache)
                 return values.ToArray();
 
             ApplyToKeyAndActiveVersions(data, activeVersions, key, version =>
-                values.Add(new Value
-                {
-                    Version = version,
-                    Key = key,
-                    Data = Api.RetrieveColumn(session, data, dataColumns["data"])
-                })
-            );
+            {
+                var value = ReadValueFromDataTable(version, key);
+                
+                if (value != null)
+                    values.Add(value);
+                else
+                    commitSyncronization.Add(() => cache[GetKey(key, version)] = DBNull.Value);
+            });
 
             commitSyncronization.Add(delegate
             {
@@ -127,6 +173,25 @@ namespace Rhino.DHT
             return values.ToArray();
         }
 
+        private Value ReadValueFromDataTable(int version, string key)
+        {
+            var expiresAtBinary = Api.RetrieveColumnAsDouble(session, data, dataColumns["expiresAt"]);
+            DateTime? expiresAt = null;
+            if (expiresAtBinary.HasValue)
+            {
+                expiresAt = DateTime.FromOADate(expiresAtBinary.Value);
+                if (DateTime.Now > expiresAt)
+                    return null;
+            }
+            return new Value
+            {
+                Version = version,
+                Key = key,
+                Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
+                ExpiresAt = expiresAt
+            };
+        }
+
         public Value Get(string key, int specifiedVersion)
         {
             var cachedValue = cache[GetKey(key, specifiedVersion)];
@@ -137,12 +202,7 @@ namespace Rhino.DHT
             Value val = null;
             ApplyToKeyAndActiveVersions(data, new[] { specifiedVersion }, key, version =>
             {
-                val = new Value
-                {
-                    Key = key,
-                    Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
-                    Version = specifiedVersion
-                };
+                val = ReadValueFromDataTable(specifiedVersion, key);
             });
             cache[GetKey(key, specifiedVersion)] = (object)val ?? DBNull.Value;
             return val;
@@ -160,11 +220,32 @@ namespace Rhino.DHT
 
         public void Commit()
         {
+            CleanExpiredValues();
             transaction.Commit(CommitTransactionGrbit.None);
             foreach (var action in commitSyncronization)
             {
                 action();
             }
+        }
+
+        private void CleanExpiredValues()
+        {
+            Api.JetSetCurrentIndex(session, keys, "by_expiry");
+            Api.MakeKey(session, keys, DateTime.Now.ToOADate(), MakeKeyGrbit.NewKey);
+
+            if(Api.TrySeek(session, keys, SeekGrbit.SeekLT) == false)
+                return;
+
+            do
+            {
+                var key = Api.RetrieveColumnAsString(session, keys, keysColumns["key"],Encoding.Unicode);
+                var version = Api.RetrieveColumnAsInt32(session, keys, keysColumns["version"]).Value;
+
+                Api.JetDelete(session, keys);
+
+                ApplyToKeyAndActiveVersions(data, new[]{version},key, v => Api.JetDelete(session, data));
+
+            } while (Api.TryMovePrevious(session, keys));
         }
 
         private void DeleteInactiveVersions(string key, IEnumerable<int> versions)
@@ -203,7 +284,7 @@ namespace Rhino.DHT
             if (exists == false)
                 return new int[0];
 
-            Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
+               Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
             Api.JetSetIndexRange(session, keys, 
                 SetIndexRangeGrbit.RangeUpperLimit | SetIndexRangeGrbit.RangeInclusive);
 

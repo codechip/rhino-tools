@@ -1,3 +1,5 @@
+using System;
+
 namespace Rhino.DHT
 {
     public class GetValue

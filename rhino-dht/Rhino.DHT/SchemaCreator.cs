@@ -44,12 +44,23 @@ namespace Rhino.DHT
                 grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL | ColumndefGrbit.ColumnAutoincrement
             }, null, 0, out columnid);
 
+
+            Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.DateTime,
+                grbit = ColumndefGrbit.ColumnFixed
+            }, null, 0, out columnid);
+
             var indexDef = "+key\0+version\0\0";
             Api.JetCreateIndex(session, tableid, "pk", CreateIndexGrbit.IndexPrimary, indexDef, indexDef.Length,
                                100);
 
             indexDef = "+key\0\0";
             Api.JetCreateIndex(session, tableid, "by_key", CreateIndexGrbit.IndexDisallowNull, indexDef, indexDef.Length,
+                               100);
+
+            indexDef = "+expiresAt\0\0";
+            Api.JetCreateIndex(session, tableid, "by_expiry", CreateIndexGrbit.IndexIgnoreAnyNull, indexDef, indexDef.Length,
                                100);
         }
 
@@ -76,6 +87,11 @@ namespace Rhino.DHT
             {
                 coltyp = JET_coltyp.LongBinary,
                 grbit = ColumndefGrbit.ColumnNotNULL
+            }, null, 0, out columnid);
+            Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.DateTime,
+                grbit = ColumndefGrbit.ColumnFixed
             }, null, 0, out columnid);
 
 
