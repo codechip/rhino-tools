@@ -224,6 +224,15 @@
             are located and the namespace they are declared in.
             </summary>
         </member>
+        <member name="P:Castle.ActiveRecord.ActiveRecordAttribute.Tuplizer">
+            <summary>
+            From NHibernate documentation:
+            A tuplizer defines the contract for things which know how to manage
+            a particular representation of a piece of data, given that
+            representation's <see cref="T:NHibernate.EntityMode"/> (the entity-mode
+            essentially defining which representation).
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.ActiveRecordSkipAttribute">
             <summary>
             Denotes that the specific class - 
@@ -2437,6 +2446,30 @@
             A list of items - position in the list has meaning
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.SqlNamedQueryAttribute">
+            <summary>
+            This is used to define a named SQL query.
+            It represents the &lt;query&gt; element.
+            </summary>
+            <example>
+            [assembly: SqlNamedQuery("allAdultUsers", "select * from User where Age > 21")]
+            </example>
+        </member>
+        <member name="M:Castle.ActiveRecord.SqlNamedQueryAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Create a new instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.SqlNamedQueryAttribute.Name">
+            <summary>
+            The name of the query
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.SqlNamedQueryAttribute.Query">
+            <summary>
+            The query itself
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.TimestampAttribute">
             <summary>
             Specify that this property is used for timestamping this entity
@@ -2676,6 +2709,14 @@
             </summary>
             <param name="flushType">The chosen default behaviour.</param>
         </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.SetDefaultFlushType(System.String)">
+            <summary>
+            Sets the default flushing behaviour using the string value from the configuration
+            XML. This method has been moved from XmlConfigurationSource to avoid code
+            duplication in ActiveRecordIntegrationFacility.
+            </summary>
+            <param name="configurationValue">The configuration value</param>
+        </member>
         <member name="M:Castle.ActiveRecord.Framework.Config.InPlaceConfigurationSource.ProcessConfiguration(Castle.Core.Configuration.IConfiguration)">
             <summary>
             Processes the configuration applying any substitutions.
@@ -2789,6 +2830,13 @@
             <param name="configContext">Configuration context object.</param>
             <param name="section"></param>
             <returns>The created section handler object.</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Config.ActiveRecordSectionHandler.GetInstance">
+            <summary>
+            Returns the sole instance through a factory method for use with 
+            Spring.Net (see AR-ISSUE-213)
+            </summary>
+            <returns>the sole instance</returns>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Config.ActiveRecordSectionHandler.Instance">
             <summary>

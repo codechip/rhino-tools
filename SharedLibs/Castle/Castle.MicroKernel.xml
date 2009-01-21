@@ -2181,6 +2181,27 @@
             <param name="serviceType">Type of the service.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MicroKernel.Registration.AttributeDescriptor`1.#ctor(System.String,System.String)">
+            <summary>
+            Constructs the <see cref="T:Castle.MicroKernel.Registration.AttributeDescriptor`1"/> descriptor with name and value.
+            </summary>
+            <param name="name">The attribute name.</param>
+            <param name="value">The attribute value.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AttributeKeyDescriptor`1.#ctor(Castle.MicroKernel.Registration.ComponentRegistration{`0},System.String)">
+            <summary>
+            Constructs the <see cref="T:Castle.MicroKernel.Registration.AttributeKeyDescriptor`1"/> descriptor with name.
+            </summary>
+            <param name="component">The component.</param>
+            <param name="name">The attribute name.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.AttributeKeyDescriptor`1.Eq(System.Object)">
+            <summary>
+            Builds the <see cref="T:Castle.MicroKernel.Registration.AttributeKeyDescriptor`1"/> with value.
+            </summary>
+            <param name="value">The attribute value.</param>
+            <returns>The <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration`1"/></returns>
+        </member>
         <member name="T:Castle.MicroKernel.Registration.Component">
             <summary>
             Factory for creating <see cref="T:Castle.MicroKernel.Registration.ComponentRegistration"/> objects.
@@ -2518,6 +2539,13 @@
             Set configuration parameters with string or <see cref="T:Castle.Core.Configuration.IConfiguration"/> values.
             </summary>
             <param name="parameters">The parameters.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Attribute(System.String)">
+            <summary>
+            Creates an attribute descriptor.
+            </summary>
+            <param name="key">The attribute key.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.Registration.ComponentRegistration`1.Configuration(Castle.MicroKernel.Registration.Node[])">

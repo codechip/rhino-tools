@@ -110,7 +110,6 @@
             </summary>
             <remarks>
             TODO: 
-            - Use the interceptor selector if provided
             - Add tests and fixes for 'leaking this' problem
             </remarks>
         </member>
@@ -387,9 +386,9 @@
         </member>
         <member name="M:Castle.DynamicProxy.InternalsHelper.IsInternalToDynamicProxy(System.Reflection.Assembly)">
             <summary>
-            Determines whether this assembly has internals visisble to dynamic proxy.
+            Determines whether this assembly has internals visible to dynamic proxy.
             </summary>
-            <param name="asm">The asm.</param>
+            <param name="asm">The assembly to inspect.</param>
         </member>
         <member name="M:Castle.DynamicProxy.InternalsHelper.IsInternal(System.Reflection.MethodInfo)">
             <summary>
