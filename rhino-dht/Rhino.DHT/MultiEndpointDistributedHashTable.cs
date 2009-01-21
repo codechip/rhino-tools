@@ -31,11 +31,11 @@ namespace Rhino.DHT
             }
         }
 
-        public int[] Put(AddValue[] valuesToAdd)
+        public PutResult[] Put(AddValue[] valuesToAdd)
         {
             var groupedByUri = from x in valuesToAdd
                     group x by GetUrl(x.Key);
-            var versions = new int[valuesToAdd.Length];
+            var versions = new PutResult[valuesToAdd.Length];
             foreach (var values in groupedByUri)
             {
                 var array = values.ToArray();

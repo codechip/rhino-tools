@@ -70,16 +70,17 @@ namespace Rhino.DHT
             dataColumns = Api.GetColumnDictionary(session, data);
         }
 
-        public int Put(string key, int[] parentVersions, byte[] bytes)
+        public PutResult Put(string key, int[] parentVersions, byte[] bytes)
         {
             return Put(key, parentVersions, bytes, null);
         }
 
-        public int Put(string key, int[] parentVersions, byte[] bytes, DateTime? expiresAt)
+        public PutResult Put(string key, int[] parentVersions, byte[] bytes, DateTime? expiresAt)
         {
             // always remove the active versions from the cache
             commitSyncronization.Add(() => cache.Remove(GetKey(key)));
-            if (DoesAllVersionsMatch(key, parentVersions))
+            var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
+            if (doesAllVersionsMatch)
             {
                 // we only remove existing versions from the 
                 // cache if we delete them from the database
@@ -128,7 +129,11 @@ namespace Rhino.DHT
                 update.Save();
             }
 
-            return version.Value;
+            return new PutResult
+            {
+                ConflictExists = doesAllVersionsMatch ==false,
+                Version = version.Value
+            };
         }
 
         private bool DoesAllVersionsMatch(string key, IEnumerable<int> parentVersions)

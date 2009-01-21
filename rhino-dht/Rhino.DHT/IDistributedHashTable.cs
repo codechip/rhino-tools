@@ -7,7 +7,7 @@ namespace Rhino.DHT
     public interface IDistributedHashTable : IDisposable
     {
         [OperationContract]
-        int[] Put(AddValue[] valuesToAdd);
+        PutResult[] Put(AddValue[] valuesToAdd);
 
         [OperationContract]
         Value[][] Get(GetValue[] valuesToGet);

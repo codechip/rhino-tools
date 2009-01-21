@@ -42,9 +42,9 @@ namespace Rhino.DHT
             }
         }
 
-        public int[] Put(AddValue[] valuesToAdd)
+        public PutResult[] Put(AddValue[] valuesToAdd)
         {
-            var versions = new List<int>();
+            var versions = new List<PutResult>();
             hashTable.Batch(actions =>
             {
                 foreach (var value in valuesToAdd)

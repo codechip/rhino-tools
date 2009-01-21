@@ -59,7 +59,7 @@ namespace Rhino.DHT.Tests
                 },
             });
 
-            Assert.Equal(new[] {1, 1, 1}, versions);
+            Assert.Equal(new[] {1, 1, 1}, versions.Select(x=>x.Version).ToArray());
 
             var values = distributedHashTable.Get(new[]
             {
@@ -104,7 +104,7 @@ namespace Rhino.DHT.Tests
                 },
             });
 
-            Assert.Equal(new[] { 1, 1, 1 }, versions);
+            Assert.Equal(new[] { 1, 1, 1 }, versions.Select(e=>e.Version).ToArray());
 
             var removed = distributedHashTable.Remove(new[]
             {

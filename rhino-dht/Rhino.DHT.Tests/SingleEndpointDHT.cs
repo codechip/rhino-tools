@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.ServiceModel;
 using Xunit;
+using System.Linq;
 
 namespace Rhino.DHT.Tests
 {
@@ -112,7 +113,7 @@ namespace Rhino.DHT.Tests
                 new RemoveValue
                 {
                     Key = "abc",
-                    ParentVersions = versions
+                    ParentVersions = versions.Select(q=>q.Version).ToArray()
                 },
             });
             Assert.True(removed[0]);
