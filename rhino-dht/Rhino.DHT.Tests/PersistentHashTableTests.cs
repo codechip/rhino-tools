@@ -43,9 +43,9 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    versionOfA = actions.Put("a", new int[0], new byte[] {1});
+                    versionOfA = actions.Put("a", new int[0], new byte[] { 1 });
                     actions.Put("b", new int[0], new byte[] { 1 });
-                    versionOfC = actions.Put("c", new int[0], new byte[] {1});
+                    versionOfC = actions.Put("c", new int[0], new byte[] { 1 });
                     actions.Put("d", new int[0], new byte[] { 1 });
 
                     actions.Commit();
@@ -53,7 +53,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    var removed = actions.Remove("a", new []{ versionOfA });
+                    var removed = actions.Remove("a", new[] { versionOfA });
                     Assert.True(removed);
                     removed = actions.Remove("c", new[] { versionOfC });
                     Assert.True(removed);
@@ -76,7 +76,7 @@ namespace Rhino.DHT.Tests
                     var version1 = actions.Put("test", new int[0], new byte[] { 1 });
                     actions.Put("test", new int[0], new byte[] { 2 });
                     var value = actions.Get("test", version1);
-                    Assert.Equal(new byte[]{1}, value.Data);
+                    Assert.Equal(new byte[] { 1 }, value.Data);
                 });
             }
         }
@@ -95,7 +95,7 @@ namespace Rhino.DHT.Tests
                     var value = actions.Get("test", version1);
                     Assert.Equal(new byte[] { 1 }, value.Data);
 
-                    actions.Put("test", new[] {1, 2}, new byte[] {3});
+                    actions.Put("test", new[] { 1, 2 }, new byte[] { 3 });
 
                     actions.Commit();
 
@@ -140,11 +140,11 @@ namespace Rhino.DHT.Tests
                     actions.Put("test", new int[0], new byte[] { 2 });
                     var values = actions.Get("test");
                     Assert.Equal(2, values.Length);
-                    actions.Put("test", new[] {1, 2}, new byte[] {3});
+                    actions.Put("test", new[] { 1, 2 }, new byte[] { 3 });
 
                     values = actions.Get("test");
                     Assert.Equal(1, values.Length);
-                    Assert.Equal(new byte[] {3}, values[0].Data);
+                    Assert.Equal(new byte[] { 3 }, values[0].Data);
                     Assert.Equal(3, values[0].Version);
                 });
             }
@@ -187,6 +187,31 @@ namespace Rhino.DHT.Tests
         }
 
         [Fact]
+        public void Can_query_for_item_history()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 });
+
+                    actions.Put("abc1", new[] { 1 }, new byte[] { 1 });
+                    actions.Put("abc1", new[] { 1 }, new byte[] { 1 });
+                    actions.Put("abc1", new[] { 3 }, new byte[] { 1 });
+
+                    var values = actions.Get("abc1");
+                    Assert.Equal(3, values.Length);
+
+                    Assert.Equal(new[] { 1 }, values[0].ParentVersions);
+                    Assert.Equal(new[] { 1 }, values[1].ParentVersions);
+                    Assert.Equal(new[] { 3 }, values[2].ParentVersions);
+                });
+            }
+        }
+
+        [Fact]
         public void After_item_expires_it_cannot_be_retrieved()
         {
             using (var table = new PersistentHashTable(testDatabase))
@@ -195,7 +220,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 }, 
+                    actions.Put("abc1", new int[0], new byte[] { 1 },
                         DateTime.Now.AddYears(-1));
                     var values = actions.Get("abc1");
 

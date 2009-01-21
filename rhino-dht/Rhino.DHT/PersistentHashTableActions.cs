@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Caching;
@@ -21,7 +22,7 @@ namespace Rhino.DHT
         private readonly List<Action> commitSyncronization = new List<Action>();
         public JET_DBID DatabaseId
         {
-            get{ return dbid;}
+            get { return dbid; }
         }
 
         public Session Session
@@ -96,7 +97,7 @@ namespace Rhino.DHT
             {
                 Api.SetColumn(session, keys, keysColumns["key"], key, Encoding.Unicode);
 
-                if(expiresAt.HasValue)
+                if (expiresAt.HasValue)
                     Api.SetColumn(session, keys, keysColumns["expiresAt"], expiresAt.Value.ToOADate());
 
                 update.Save(bookmark, bookmark.Length, out bookmarkSize);
@@ -110,8 +111,19 @@ namespace Rhino.DHT
                 Api.SetColumn(session, data, dataColumns["key"], key, Encoding.Unicode);
                 Api.SetColumn(session, data, dataColumns["version"], version.Value);
                 Api.SetColumn(session, data, dataColumns["data"], bytes);
+
                 if (expiresAt.HasValue)
                     Api.SetColumn(session, data, dataColumns["expiresAt"], expiresAt.Value.ToOADate());
+
+                using (var stream = new ColumnStream(session, data, dataColumns["parentVersions"]))
+                {
+                    foreach (var parentVersion in parentVersions)
+                    {
+                        var versionAsBytes = BitConverter.GetBytes(parentVersion);
+                        stream.Write(versionAsBytes, 0, versionAsBytes.Length);
+                        stream.Itag += 1;
+                    }
+                }
 
                 update.Save();
             }
@@ -138,7 +150,7 @@ namespace Rhino.DHT
             foreach (var activeVersion in activeVersions)
             {
                 var cachedValue = cache[GetKey(key, activeVersion)] as Value;
-                if (cachedValue == null || 
+                if (cachedValue == null ||
                     (cachedValue.ExpiresAt.HasValue &&
                     DateTime.Now < cachedValue.ExpiresAt.Value))
                 {
@@ -154,7 +166,7 @@ namespace Rhino.DHT
             ApplyToKeyAndActiveVersions(data, activeVersions, key, version =>
             {
                 var value = ReadValueFromDataTable(version, key);
-                
+
                 if (value != null)
                     values.Add(value);
                 else
@@ -183,19 +195,45 @@ namespace Rhino.DHT
                 if (DateTime.Now > expiresAt)
                     return null;
             }
+            var versions = new List<int>();
+            using (var stream = new ColumnStream(session, data, dataColumns["parentVersions"]))
+            {
+                var parentVersion = ReadInt32(stream);
+                while(parentVersion!=null)
+                {
+                    versions.Add(parentVersion.Value);
+                    stream.Itag += 1;
+                    parentVersion = ReadInt32(stream);
+                }
+            }
             return new Value
             {
                 Version = version,
                 Key = key,
+                ParentVersions = versions.ToArray(),
                 Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
                 ExpiresAt = expiresAt
             };
         }
 
+        private int? ReadInt32(Stream stream)
+        {
+            var buffer = new byte[sizeof (int)];
+            var indexToStartReading = 0;
+            do
+            {
+                var readBytes = stream.Read(buffer, indexToStartReading, buffer.Length);
+                if (readBytes==0)
+                    return null;
+                indexToStartReading += readBytes;
+            } while (indexToStartReading < buffer.Length);
+            return BitConverter.ToInt32(buffer, 0);
+        }
+
         public Value Get(string key, int specifiedVersion)
         {
             var cachedValue = cache[GetKey(key, specifiedVersion)];
-            if (cachedValue != null && 
+            if (cachedValue != null &&
                 cachedValue != DBNull.Value)
                 return (Value)cachedValue;
 
@@ -233,17 +271,17 @@ namespace Rhino.DHT
             Api.JetSetCurrentIndex(session, keys, "by_expiry");
             Api.MakeKey(session, keys, DateTime.Now.ToOADate(), MakeKeyGrbit.NewKey);
 
-            if(Api.TrySeek(session, keys, SeekGrbit.SeekLT) == false)
+            if (Api.TrySeek(session, keys, SeekGrbit.SeekLT) == false)
                 return;
 
             do
             {
-                var key = Api.RetrieveColumnAsString(session, keys, keysColumns["key"],Encoding.Unicode);
+                var key = Api.RetrieveColumnAsString(session, keys, keysColumns["key"], Encoding.Unicode);
                 var version = Api.RetrieveColumnAsInt32(session, keys, keysColumns["version"]).Value;
 
                 Api.JetDelete(session, keys);
 
-                ApplyToKeyAndActiveVersions(data, new[]{version},key, v => Api.JetDelete(session, data));
+                ApplyToKeyAndActiveVersions(data, new[] { version }, key, v => Api.JetDelete(session, data));
 
             } while (Api.TryMovePrevious(session, keys));
         }
@@ -284,8 +322,8 @@ namespace Rhino.DHT
             if (exists == false)
                 return new int[0];
 
-               Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
-            Api.JetSetIndexRange(session, keys, 
+            Api.MakeKey(session, keys, key, Encoding.Unicode, MakeKeyGrbit.NewKey);
+            Api.JetSetIndexRange(session, keys,
                 SetIndexRangeGrbit.RangeUpperLimit | SetIndexRangeGrbit.RangeInclusive);
 
             var ids = new List<int>();

@@ -88,10 +88,17 @@ namespace Rhino.DHT
                 coltyp = JET_coltyp.LongBinary,
                 grbit = ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
+
             Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.DateTime,
                 grbit = ColumndefGrbit.ColumnFixed
+            }, null, 0, out columnid);
+
+            Api.JetAddColumn(session, tableid, "parentVersions", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Long,
+                grbit = ColumndefGrbit.ColumnTagged | ColumndefGrbit.ColumnMultiValued
             }, null, 0, out columnid);
 
 
