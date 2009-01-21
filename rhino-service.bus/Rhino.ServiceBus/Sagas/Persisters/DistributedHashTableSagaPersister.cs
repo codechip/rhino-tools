@@ -8,8 +8,7 @@ using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus.Sagas.Persisters
 {
-    public class DistributedHashTableSagaPersister<TSaga, TState> :
-        ISagaPersister<TSaga>
+    public class DistributedHashTableSagaPersister<TSaga, TState> : ISagaPersister<TSaga>
             where TSaga : class, ISaga<TState>
             where TState : IVersionedSagaState
     {
@@ -49,7 +48,7 @@ namespace Rhino.ServiceBus.Sagas.Persisters
                     {
                         object[] msgs = messageSerializer.Deserialize(ms);
                         states[i] = (TState)msgs[0];
-                        states[i].ParentVersions = states[i].ParentVersions ?? new int[0];
+                        states[i].ParentVersions = value.ParentVersions;
                         states[i].Version = value.Version;
                     }
                 }
@@ -79,7 +78,7 @@ namespace Rhino.ServiceBus.Sagas.Persisters
             {
                 var state = (TState)reflection.Get(saga, "State");
                 messageSerializer.Serialize(new object[] { state }, message);
-                distributedHashTable.Put(new[]
+                var putResults = distributedHashTable.Put(new[]
                 {
                     new AddValue
                     {
@@ -88,6 +87,13 @@ namespace Rhino.ServiceBus.Sagas.Persisters
                         ParentVersions = state.ParentVersions
                     },
                 });
+                if(putResults[0].ConflictExists)
+                {
+                    bus.Send(bus.Endpoint, new MergeSagaState
+                    {
+                        CorrelationId = saga.Id
+                    });
+                }
             }
         }
 
@@ -107,7 +113,10 @@ namespace Rhino.ServiceBus.Sagas.Persisters
                 });
                 if (removed[0] == false)
                 {
-                    bus.Send(bus.Endpoint, new MergeSagaState { CorrelationId = saga.Id });
+                    bus.Send(bus.Endpoint, new MergeSagaState
+                    {
+                        CorrelationId = saga.Id
+                    });
                 }
             }
         }
