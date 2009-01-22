@@ -9,6 +9,7 @@ using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq.TransportActions;
+using System.Diagnostics;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -289,7 +290,7 @@ namespace Rhino.ServiceBus.Msmq
 
 		private void ReceiveMessageInTransaction(QueueState state, string messageId)
 		{
-			using (var tx = new TransactionScope())
+			using (var tx = new TransactionScope(TransactionScopeOption.Required, GetTimeSpan()))
 			{
 				Message message = state.Queue.TryGetMessageFromQueue(messageId);
                 
@@ -300,7 +301,14 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private void HandleMessageCompletion(
+        private static TimeSpan GetTimeSpan()
+	    {
+            if (Debugger.IsAttached)
+                return TimeSpan.FromMinutes(45);
+	        return TimeSpan.Zero;
+	    }
+
+	    private void HandleMessageCompletion(
 			Message message,
 			TransactionScope tx,
             MessageQueue messageQueue,
