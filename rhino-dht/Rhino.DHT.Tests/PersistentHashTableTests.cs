@@ -256,5 +256,34 @@ namespace Rhino.DHT.Tests
                 Assert.Equal(0, numRecords);
             }
         }
+
+        [Fact]
+        public void Interleaved()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("abc1", new int[0], new byte[] { 1 });
+
+
+                    table.Batch(actions2=>
+                    {
+                        actions2.Put("dve", new int[0], new byte[] {3});
+                        actions2.Commit();
+                    });
+
+                    actions.Commit();
+                });
+
+                table.Batch(actions =>
+                {
+                    Assert.NotEmpty(actions.Get("abc1"));
+                    Assert.NotEmpty(actions.Get("dve"));
+                });
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
@@ -12,12 +13,14 @@ namespace Rhino.DHT
         private bool needToDisposeInstance;
         private readonly string database;
         public Action<InstanceParameters> Configure;
-        private string name;
+        private readonly string path;
 
         public PersistentHashTable(string database)
         {
             instance = new Instance(database);
-            this.name = database;
+            if (Path.IsPathRooted(database) == false)
+                database = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, database);
+            path = database;
             this.database = Path.Combine(database, Path.GetFileName(database));
         }
 
@@ -25,9 +28,9 @@ namespace Rhino.DHT
         {
             instance.Parameters.CircularLog = true;
             instance.Parameters.CreatePathIfNotExist = true;
-            instance.Parameters.TempDirectory = Path.Combine(name, "temp");
-            instance.Parameters.SystemDirectory = Path.Combine(name, "system");
-            instance.Parameters.LogFileDirectory = Path.Combine(name, "logs");
+            instance.Parameters.TempDirectory = Path.Combine(path, "temp");
+            instance.Parameters.SystemDirectory = Path.Combine(path, "system");
+            instance.Parameters.LogFileDirectory = Path.Combine(path, "logs");
 
             if (Configure != null)
                 Configure(instance.Parameters);
@@ -40,7 +43,6 @@ namespace Rhino.DHT
                 try
                 {
                     Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
-                    Api.JetDetachDatabase(session, database);
                     return;
                 }
                 catch (EsentException e)
@@ -50,13 +52,20 @@ namespace Rhino.DHT
                 }
 
                 new SchemaCreator(session).Create(database);
+                Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
             }
         }
 
         public void Dispose()
         {
             if (needToDisposeInstance)
+            {
+                using(var session = new Session(instance))
+                {
+                    Api.JetDetachDatabase(session, database);
+                }
                 instance.Dispose();
+            }
         }
 
         public void Batch(Action<PersistentHashTableActions> action)

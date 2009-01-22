@@ -61,7 +61,6 @@ namespace Rhino.DHT
             this.cache = cache;
             session = new Session(instance);
 
-            Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
             transaction = new Transaction(session);
             Api.JetOpenDatabase(session, database, null, out dbid, OpenDatabaseGrbit.None);
             keys = new Table(session, dbid, "keys", OpenTableGrbit.None);
@@ -353,8 +352,6 @@ namespace Rhino.DHT
 
             if (transaction != null)
                 transaction.Dispose();
-
-            Api.JetDetachDatabase(session, database);
 
             if (session != null)
                 session.Dispose();
