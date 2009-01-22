@@ -7,7 +7,7 @@ using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Hosting
 {
-    public abstract class AbstractBootStrapper
+    public abstract class AbstractBootStrapper : IDisposable
     {
         protected IWindsorContainer container;
 
@@ -57,6 +57,11 @@ namespace Rhino.ServiceBus.Hosting
         }
 
         public virtual void ConfigureBusFacility(RhinoServiceBusFacility facility)
+        {
+            
+        }
+
+        public virtual void Dispose()
         {
             
         }

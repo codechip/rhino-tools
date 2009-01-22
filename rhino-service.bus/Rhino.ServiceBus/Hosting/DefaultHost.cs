@@ -12,7 +12,7 @@ namespace Rhino.ServiceBus.Hosting
 {
     public class DefaultHost : MarshalByRefObject
     {
-        private readonly ILog logger = LogManager.GetLogger(typeof (DefaultHost));
+        private readonly ILog logger = LogManager.GetLogger(typeof(DefaultHost));
         private string assebmlyName;
         private AbstractBootStrapper bootStrapper;
         private IWindsorContainer container;
@@ -27,7 +27,7 @@ namespace Rhino.ServiceBus.Hosting
         public void Start<TBootStrapper>()
             where TBootStrapper : AbstractBootStrapper
         {
-            SetBootStrapperTypeName(typeof (TBootStrapper).FullName);
+            SetBootStrapperTypeName(typeof(TBootStrapper).FullName);
             Start(typeof(TBootStrapper).Assembly.FullName);
         }
 
@@ -69,7 +69,7 @@ namespace Rhino.ServiceBus.Hosting
             container.Kernel.AddFacility("rhino.esb", facility);
         }
 
-       
+
         private void CreateBootStrapper()
         {
             logger.DebugFormat("Loading {0}", assebmlyName);
@@ -79,8 +79,8 @@ namespace Rhino.ServiceBus.Hosting
 
             if (string.IsNullOrEmpty(bootStrapperName) == false)
                 bootStrapperType = assembly.GetType(bootStrapperName);
-                
-            bootStrapperType = bootStrapperType ?? 
+
+            bootStrapperType = bootStrapperType ??
                 GetAutoBootStrapperType(assembly);
             try
             {
@@ -101,10 +101,10 @@ namespace Rhino.ServiceBus.Hosting
         private static Type GetAutoBootStrapperType(Assembly assembly)
         {
             var bootStrappers = assembly.GetTypes()
-                .Where(x => typeof (AbstractBootStrapper).IsAssignableFrom(x))
+                .Where(x => typeof(AbstractBootStrapper).IsAssignableFrom(x))
                 .ToArray();
-         
-            if(bootStrappers.Length==0)
+
+            if (bootStrappers.Length == 0)
                 throw new InvalidOperationException("Could not find a boot strapper for " + assembly);
 
             if (bootStrappers.Length == 2)
@@ -116,8 +116,12 @@ namespace Rhino.ServiceBus.Hosting
 
         public void Close()
         {
+            if (bootStrapper != null)
+                bootStrapper.Dispose();
             if (serviceBus != null)
                 serviceBus.Dispose();
+            if (container != null)
+                container.Dispose();
         }
 
         public override object InitializeLifetimeService()
