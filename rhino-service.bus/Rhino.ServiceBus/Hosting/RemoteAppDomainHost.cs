@@ -12,7 +12,6 @@ namespace Rhino.ServiceBus.Hosting
     {
         private readonly Type boosterType;
         private readonly string assembly;
-        private readonly ILog logger = LogManager.GetLogger(typeof (RemoteAppDomainHost));
         private readonly string path;
         private HostedService current;
         private string configurationFile;
@@ -38,38 +37,7 @@ namespace Rhino.ServiceBus.Hosting
         public void Start()
         {
             HostedService service = CreateNewAppDomain();
-            var watcher = new FileSystemWatcher(path);
-            bool wasCalled = false;
-            var @lock = new object();
-            FileSystemEventHandler handler = (sender, e) =>
-            {
-                string extension = Path.GetExtension(e.FullPath);
-                if (extension != ".dll" && extension != ".config" && extension != ".exe")
-                    return;
-                watcher.Dispose();
-                lock (@lock)
-                {
-                    if (wasCalled)
-                        return;
-                    wasCalled = true;
-
-                    logger.WarnFormat("Got change request for {0}, disposing current AppDomain",
-                                      e.Name);
-                    service.Stop();
-
-                    Thread.Sleep(500); //allow for other events to happen
-                    logger.Warn("Restarting...");
-                    Start();
-                }
-            };
-            watcher.Deleted += handler;
-            watcher.Changed += handler;
-            watcher.Created += handler;
-
-            watcher.EnableRaisingEvents = true;
-
             current = service;
-
         	try
         	{
         		service.Start();
