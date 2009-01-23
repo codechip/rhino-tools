@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
                 {
                     var transport = container.Resolve<ITransport>();
                     transport.Start();
-                    transport.Stop();
+                    transport.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -53,7 +53,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
                 {
                     var transport = container.Resolve<ITransport>();
                     transport.Start();
-                    transport.Stop();
+                    transport.Dispose();
                 }
                 catch (Exception e)
                 {

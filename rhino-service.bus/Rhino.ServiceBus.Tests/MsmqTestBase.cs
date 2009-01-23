@@ -148,9 +148,9 @@ namespace Rhino.ServiceBus.Tests
         public virtual void Dispose()
         {
             if (transport != null)
-                transport.Stop();
+                transport.Dispose();
             if (transactionalTransport != null)
-                transactionalTransport.Stop();
+                transactionalTransport.Dispose();
 
             queue.Dispose();
             transactionalQueue.Dispose();

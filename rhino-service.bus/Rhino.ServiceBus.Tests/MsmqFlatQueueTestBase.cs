@@ -158,9 +158,9 @@ namespace Rhino.ServiceBus.Tests
             subscriptions.Dispose();
 
             if (transport != null)
-                transport.Stop();
+                transport.Dispose();
             if (transactionalTransport != null)
-                transactionalTransport.Stop();
+                transactionalTransport.Dispose();
 
 			DeleteQueues();
         }

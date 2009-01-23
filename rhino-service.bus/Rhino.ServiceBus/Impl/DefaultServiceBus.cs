@@ -131,7 +131,7 @@ namespace Rhino.ServiceBus.Impl
         public void Dispose()
         {
 			FireServiceBusAware(aware => aware.BusDisposing(this));
-            transport.Stop();
+            transport.Dispose();
             transport.MessageArrived -= Transport_OnMessageArrived;
 
             foreach (IMessageModule module in modules)

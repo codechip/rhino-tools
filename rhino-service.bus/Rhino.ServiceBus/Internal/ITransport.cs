@@ -4,11 +4,9 @@ using Rhino.ServiceBus.Impl;
 
 namespace Rhino.ServiceBus.Internal
 {
-    public interface ITransport
+    public interface ITransport : IDisposable
     {
         void Start();
-
-        void Stop();
 
         Uri Endpoint { get; }
 

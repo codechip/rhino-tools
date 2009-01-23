@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Messaging;
 using System.Threading;
 using log4net;
@@ -9,12 +8,29 @@ namespace Rhino.ServiceBus.Msmq
 {
     public abstract class AbstractMsmqListener
     {
-        protected Uri endpoint;
-        protected WaitHandle[] waitHandles;
-        protected bool haveStarted;
+        private readonly Uri endpoint;
+        private readonly WaitHandle[] waitHandles;
+        private bool haveStarted;
+
         protected MessageQueue queue;
-        public volatile bool ShouldStop;
+
+        private volatile bool ShouldStop;
+
         private readonly ILog logger = LogManager.GetLogger(typeof (AbstractMsmqListener));
+
+        private readonly int threadCount;
+
+        protected AbstractMsmqListener(Uri endpoint, int threadCount)
+        {
+            this.endpoint = endpoint;
+            this.threadCount = threadCount;
+            waitHandles = new WaitHandle[threadCount];
+        }
+
+        public bool HaveStarted
+        {
+            get { return haveStarted; }
+        }
 
         public Uri Endpoint
         {
@@ -26,7 +42,44 @@ namespace Rhino.ServiceBus.Msmq
             get { return TimeSpan.FromHours(1); }
         }
 
-        public void Stop()
+        public void Start()
+        {
+            if (haveStarted)
+                return;
+
+            logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
+            queue = InitalizeQueue(endpoint);
+
+            BeforeStart();
+
+            for (var t = 0; t < threadCount; t++)
+            {
+                var waitHandle = new ManualResetEvent(true);
+                waitHandles[t] = waitHandle;
+                try
+                {
+                    queue.BeginPeek(TimeOutForPeek, new QueueState
+                    {
+                        Queue = queue,
+                        WaitHandle = waitHandle
+                    }, OnPeekMessage);
+                    waitHandle.Reset();
+                }
+                catch (Exception e)
+                {
+                    throw new TransportException("Unable to start reading from queue: " + endpoint, e);
+                }
+            }
+
+            haveStarted = true;
+        }
+
+        protected virtual void BeforeStart()
+        {
+            
+        }
+
+        public void Dispose()
         {
             ShouldStop = true;
 

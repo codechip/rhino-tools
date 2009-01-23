@@ -20,54 +20,24 @@ namespace Rhino.ServiceBus.Msmq
 
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
 		private readonly IMessageSerializer serializer;
-		private readonly int threadCount;
         private readonly ITransportAction[] transportActions;
 
 		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, ITransportAction[] transportActions)
+            :base(endpoint, threadCount)
 		{
 			this.serializer = serializer;
 		    this.transportActions = transportActions;
-			this.endpoint = endpoint;
-			this.threadCount = threadCount;
-			waitHandles = new WaitHandle[threadCount];
 		}
 
         #region ITransport Members
 
-        public void Start()
-		{
-			if (haveStarted)
-				return;
-
-			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
-			queue = InitalizeQueue(endpoint);
-
-		    foreach (var messageAction in transportActions)
-		    {
-		        messageAction.Init(this);
-		    }
-
-			for (var t = 0; t < threadCount; t++)
-			{
-				var waitHandle = new ManualResetEvent(true);
-				waitHandles[t] = waitHandle;
-				try
-				{
-					queue.BeginPeek(TimeOutForPeek, new QueueState
-					{
-						Queue = queue,
-						WaitHandle = waitHandle
-					}, OnPeekMessage);
-					waitHandle.Reset();
-				}
-				catch (Exception e)
-				{
-					throw new TransportException("Unable to start reading from queue: " + endpoint, e);
-				}
-			}
-
-			haveStarted = true;
-		}
+        protected override void BeforeStart()
+        {
+            foreach (var messageAction in transportActions)
+            {
+                messageAction.Init(this);
+            }
+        }
 
         public void Reply(params object[] messages)
 		{
@@ -136,7 +106,7 @@ namespace Rhino.ServiceBus.Msmq
 			copy(new CurrentMessageInformation
 			{
 				AllMessages = msgs,
-				Source = endpoint,
+				Source = Endpoint,
 				Destination = uri,
 				CorrelationId = CorrelationId.Parse(message.CorrelationId),
 				MessageId = CorrelationId.Parse(message.Id),
@@ -359,7 +329,7 @@ namespace Rhino.ServiceBus.Msmq
 
 	    private void SendMessageToQueue(Message message, Uri uri)
 		{
-			if (haveStarted == false)
+			if (HaveStarted == false)
 				throw new TransportException("Cannot send message before transport is started");
 
 			string sendQueueDescription = MsmqUtil.GetQueuePath(uri);
