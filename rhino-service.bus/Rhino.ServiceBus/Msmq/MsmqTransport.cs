@@ -26,17 +26,11 @@ namespace Rhino.ServiceBus.Msmq
 		private bool haveStarted;
 		private MessageQueue queue;
 	    private readonly IMessageAction[] messageActions;
-		private readonly IQueueStrategy queueStrategy;
 
-		public MsmqTransport(IMessageSerializer serializer, 
-			Uri endpoint, 
-			int threadCount, 
-			IMessageAction[] messageActions, 
-			IQueueStrategy queueStrategy)
+		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, IMessageAction[] messageActions)
 		{
 			this.serializer = serializer;
 		    this.messageActions = messageActions;
-			this.queueStrategy = queueStrategy;
 			this.endpoint = endpoint;
 			this.threadCount = threadCount;
 			waitHandles = new WaitHandle[threadCount];
@@ -58,7 +52,7 @@ namespace Rhino.ServiceBus.Msmq
 				return;
 
 			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
-			queue = InitalizeQueue(queueStrategy, endpoint);
+			queue = InitalizeQueue(endpoint);
 
 		    foreach (var messageAction in messageActions)
 		    {
@@ -231,20 +225,25 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private static MessageQueue InitalizeQueue(IQueueStrategy queueStrategy, Uri endpoint)
+		private static MessageQueue InitalizeQueue(Uri endpoint)
 		{
-		    try
+			
+			try
 			{
+				var queue = new MessageQueue(MsmqUtil.GetQueuePath(endpoint), QueueAccessMode.SendAndReceive);
 				var filter = new MessagePropertyFilter();
 				filter.SetAll();
-				return queueStrategy.InitializeQueue(endpoint, filter);
+				queue.MessageReadPropertyFilter = filter;
+				return queue;
 			}
 			catch (Exception e)
 			{
 				throw new TransportException(
 					"Could not open queue: " + endpoint + Environment.NewLine +
-					"Queue path: " + MsmqUtil.GetQueuePath(endpoint), e);
+					"Queue path: " + MsmqUtil.GetQueuePath(endpoint) +
+					"Did you create the queue or disable the queue initialization module?",e);
 			}
+			
 		}
 
 		private void OnPeekMessage(IAsyncResult ar)

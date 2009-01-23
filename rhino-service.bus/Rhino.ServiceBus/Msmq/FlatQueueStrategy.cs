@@ -39,22 +39,14 @@ namespace Rhino.ServiceBus.Msmq
 			this.endpoint = endpoint;
 		}
 
-		public MessageQueue InitializeQueue(Uri endpoint, MessagePropertyFilter filter)
+		public MessageQueue InitializeQueue(Uri endpoint)
 		{
 			var accessMode = QueueAccessMode.SendAndReceive;
 			var root = endpoint.CreateQueue(accessMode);
-			var subqueues = new[]
-			                	{
-			                		MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode),
-			                		MsmqUtil.CreateQueue(GetErrorsQueuePath(),accessMode),
-			                		MsmqUtil.CreateQueue(GetDiscardedQueuePath(),accessMode),
-			                		MsmqUtil.CreateQueue(GetTimeoutQueuePath(),accessMode)
-			                	};
-			root.MessageReadPropertyFilter = filter;
-			foreach (var queue in subqueues)
-			{
-				queue.MessageReadPropertyFilter = filter;
-			}
+			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
+			MsmqUtil.CreateQueue(GetErrorsQueuePath(), accessMode);
+			MsmqUtil.CreateQueue(GetDiscardedQueuePath(), accessMode);
+			MsmqUtil.CreateQueue(GetTimeoutQueuePath(), accessMode);
 			
 			return root;
 		}

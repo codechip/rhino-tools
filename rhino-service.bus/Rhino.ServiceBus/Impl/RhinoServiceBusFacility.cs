@@ -34,12 +34,15 @@ namespace Rhino.ServiceBus.Impl
         private int threadCount = 1;
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
         private bool useDhtSagaPersister;
-
+    	private bool useInitializationModule=true;
     	public RhinoServiceBusFacility()
     	{
     		DetectQueueStrategy();
     	}
 
+		/// <summary>
+		/// Detects the valid queue strategy automatically.
+		/// </summary>
     	private void DetectQueueStrategy()
     	{
     		if( Environment.OSVersion.Version.Major <= 5 )
@@ -55,18 +58,49 @@ namespace Rhino.ServiceBus.Impl
             return this;
         }
 
+		/// <summary>
+		/// Implementation for MSMQ 3.0. 
+		/// </summary>
+		/// <remarks>
+		/// <list type="bullet">
+		/// <listheader>Queue structure requirements, where <c>my_root_queue</c> is the endpoint:</listheader>
+		/// <item>my_root_queue</item>
+		/// <item>my_root_queue<c>#subscriptions</c></item>
+		/// <item>my_root_queue<c>#errors</c></item>
+		/// <item>my_root_queue<c>#discarded</c></item>
+		/// <item>my_root_queue<c>#timeout</c></item>
+		/// </list>
+		/// </remarks>
+		/// <returns></returns>
         public RhinoServiceBusFacility UseFlatQueueStructure()
         {
             queueStrategyImpl = typeof(FlatQueueStrategy);
             return this;
         }
 
+		/// <summary>
+		/// <c>Default</c> - <b>For MSMQ 4.0 only</b>. Only a single physical queue is required.
+		/// </summary>
+		/// <returns></returns>
         public RhinoServiceBusFacility UseSubqueuesQueueStructure()
         {
             queueStrategyImpl = typeof(SubQueueStrategy);
             return this;
         }
 
+		/// <summary>
+		/// Disables the queue auto creation module
+		/// </summary>
+		/// <remarks>
+		/// <para>By default, the
+		/// <see cref="QueueInitializationModule"/> will create queue(s) automagically when the bus starts.</para>
+		/// </remarks>
+		/// <returns></returns>
+		public RhinoServiceBusFacility DisableQueueAutoCreation()
+		{
+			useInitializationModule = false;
+			return this;
+		}
         protected override void Init()
         {
             Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;
@@ -82,15 +116,22 @@ namespace Rhino.ServiceBus.Impl
                 Kernel.AddComponent(type.FullName, type);
             }
 
-            if (logEndpoint != null)
-            {
-                Kernel.Register(
-                    Component.For<MessageLoggingModule>()
-                        .DependsOn(new { logQueue = logEndpoint })
-                    );
-                messageModules.Insert(0, typeof(MessageLoggingModule));
-            }
+			if(useInitializationModule)
+			{
+				Kernel.Register(Component.For<QueueInitializationModule>());
+				messageModules.Insert(0,typeof(QueueInitializationModule));
+			}
 
+			if (logEndpoint != null)
+			{
+				Kernel.Register(
+					Component.For<MessageLoggingModule>()
+						.DependsOn(new { logQueue = logEndpoint })
+					);
+				var pos = useInitializationModule ? 1 : 0;
+				messageModules.Insert(pos, typeof(MessageLoggingModule));
+			}
+        	
             Kernel.Register(
                 Component.For<IServiceBus, IStartableServiceBus>()
                     .ImplementedBy<DefaultServiceBus>()

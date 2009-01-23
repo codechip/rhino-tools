@@ -87,6 +87,7 @@
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
+    <Compile Include="Msmq\QueueInitializationModule.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
     <Compile Include="Sagas\IVersionedSagaState.cs" />
     <Compile Include="Sagas\Persisters\InMemorySagaPersister.cs" />

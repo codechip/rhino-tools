@@ -5,13 +5,14 @@ using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
+using Rhino.ServiceBus.Msmq;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
 {
     public class MessageModuleTests : MsmqTestBase
     {
-        private readonly IWindsorContainer container;
+        private IWindsorContainer container;
 
         public MessageModuleTests()
         {
@@ -31,16 +32,35 @@ namespace Rhino.ServiceBus.Tests
         public void Can_specify_modules_to_register_in_the_service_bus()
         {
             var serviceBus = (DefaultServiceBus)container.Resolve<IServiceBus>();
-            Assert.Equal(2, serviceBus.Modules.Length);
+            Assert.Equal(3, serviceBus.Modules.Length);
         }
 
         [Fact]
         public void Can_specify_modules_in_order_to_be_registered_in_the_service_bus()
         {
             var serviceBus = (DefaultServiceBus)container.Resolve<IServiceBus>();
-            Assert.IsType<Module1>(serviceBus.Modules[0]);
-            Assert.IsType<Module2>(serviceBus.Modules[1]);
+			Assert.IsType<QueueInitializationModule>(serviceBus.Modules[0]);
+            Assert.IsType<Module1>(serviceBus.Modules[1]);
+            Assert.IsType<Module2>(serviceBus.Modules[2]);
         }
+
+		[Fact]
+		public void Disabling_queue_init_module()
+		{
+			Module2.Stopped = Module2.Started = false;
+
+			container = new WindsorContainer(new XmlInterpreter());
+			var facility = new RhinoServiceBusFacility()
+				.AddMessageModule<Module1>()
+				.AddMessageModule<Module2>()
+				.DisableQueueAutoCreation();
+
+			container.Kernel.AddFacility("rhino.esb", facility);
+
+			var serviceBus = (DefaultServiceBus)container.Resolve<IServiceBus>();
+			Assert.IsType<Module1>(serviceBus.Modules[0]);
+			Assert.IsType<Module2>(serviceBus.Modules[1]);
+		}
 
         [Fact]
         public void When_bus_is_started_modules_will_be_initalized()
