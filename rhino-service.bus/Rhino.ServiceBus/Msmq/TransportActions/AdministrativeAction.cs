@@ -7,14 +7,14 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 {
     public class AdministrativeAction : AbstractMessageAction
     {
-        private IMsmqTrasport transport;
+        private IMsmqTransport transport;
 
         public override MessageType HandledType
         {
             get { return MessageType.AdministrativeMessageMarker; }
         }
 
-        public override void Init(IMsmqTrasport parentTransport)
+        public override void Init(IMsmqTransport parentTransport)
         {
             transport = parentTransport;
         }

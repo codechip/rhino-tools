@@ -32,16 +32,15 @@ namespace Rhino.ServiceBus.Tests
         public void Can_specify_modules_to_register_in_the_service_bus()
         {
             var serviceBus = (DefaultServiceBus)container.Resolve<IServiceBus>();
-            Assert.Equal(3, serviceBus.Modules.Length);
+            Assert.Equal(2, serviceBus.Modules.Length);
         }
 
         [Fact]
         public void Can_specify_modules_in_order_to_be_registered_in_the_service_bus()
         {
             var serviceBus = (DefaultServiceBus)container.Resolve<IServiceBus>();
-			Assert.IsType<QueueInitializationModule>(serviceBus.Modules[0]);
-            Assert.IsType<Module1>(serviceBus.Modules[1]);
-            Assert.IsType<Module2>(serviceBus.Modules[2]);
+            Assert.IsType<Module1>(serviceBus.Modules[0]);
+            Assert.IsType<Module2>(serviceBus.Modules[1]);
         }
 
 		[Fact]

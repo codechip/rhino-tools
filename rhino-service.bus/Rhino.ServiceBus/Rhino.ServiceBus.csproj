@@ -77,6 +77,7 @@
     <Compile Include="Hosting\AbstractBootStrapper.cs" />
     <Compile Include="Hosting\DefaultHost.cs" />
     <Compile Include="Hosting\RemoteAppDomainHost.cs" />
+    <Compile Include="IServiceBusAware.cs" />
     <Compile Include="Impl\DefaultServiceBus.cs" />
     <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\InstanceSubscriptionInformation.cs" />
@@ -87,14 +88,14 @@
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
-    <Compile Include="Msmq\QueueInitializationModule.cs" />
+    <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
     <Compile Include="Sagas\IVersionedSagaState.cs" />
     <Compile Include="Sagas\Persisters\InMemorySagaPersister.cs" />
     <Compile Include="Impl\RhinoServiceBusFacility.cs" />
     <Compile Include="Internal\IMessageConsumer.cs" />
     <Compile Include="Impl\DefaultReflection.cs" />
-    <Compile Include="Internal\IMsmqTrasport.cs" />
+    <Compile Include="Internal\IMsmqTransport.cs" />
     <Compile Include="Internal\IReflection.cs" />
     <Compile Include="Internal\ISagaPersister.cs" />
     <Compile Include="Internal\ISubscriptionStorage.cs" />

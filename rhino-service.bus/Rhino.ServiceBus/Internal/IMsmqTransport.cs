@@ -6,7 +6,7 @@ using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus.Internal
 {
-    public interface IMsmqTrasport : ITransport
+    public interface IMsmqTransport : ITransport
     {
         MessageQueue Queue { get; }
 
@@ -17,7 +17,7 @@ namespace Rhino.ServiceBus.Internal
         void ProcessMessage(Message message,
                             MessageQueue messageQueue,
                             TransactionScope tx,
-                            Func<CurrentMessageInformation, bool> messageRecieved,
+                            Action<CurrentMessageInformation> messageRecieved,
                             Action<CurrentMessageInformation, Exception> messageCompleted);
     }
 }

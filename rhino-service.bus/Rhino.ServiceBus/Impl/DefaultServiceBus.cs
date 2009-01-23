@@ -22,7 +22,6 @@ namespace Rhino.ServiceBus.Impl
         private readonly ISubscriptionStorage subscriptionStorage;
         private readonly ITransport transport;
         private readonly MessageOwner[] messageOwners;
-
     	[ThreadStatic] public static object currentMessage;
 
         public DefaultServiceBus(
@@ -41,6 +40,7 @@ namespace Rhino.ServiceBus.Impl
             this.kernel = kernel;
         }
 
+		
         public IMessageModule[] Modules
         {
             get { return modules; }
@@ -130,6 +130,7 @@ namespace Rhino.ServiceBus.Impl
 
         public void Dispose()
         {
+			FireServiceBusAware(aware => aware.BusDisposing(this));
             transport.Stop();
             transport.MessageArrived -= Transport_OnMessageArrived;
 
@@ -141,10 +142,12 @@ namespace Rhino.ServiceBus.Impl
             var subscriptionAsModule = subscriptionStorage as IMessageModule;
             if (subscriptionAsModule != null)
                 subscriptionAsModule.Stop(transport);
+        	FireServiceBusAware(aware => aware.BusDisposed(this));
         }
 
         public void Start()
         {
+        	FireServiceBusAware(aware => aware.BusStarting(this));
             logger.DebugFormat("Starting the bus for {0}", Endpoint);
 
             var subscriptionAsModule = subscriptionStorage as IMessageModule;
@@ -164,9 +167,19 @@ namespace Rhino.ServiceBus.Impl
             subscriptionStorage.Initialize();
 
             AutomaticallySubscribeConsumerMessages();
+
+        	FireServiceBusAware(aware => aware.BusStarted(this));
         }
 
-        public void Subscribe(Type type)
+    	private void FireServiceBusAware(Action<IServiceBusAware> action)
+    	{
+    		foreach(var aware in kernel.ResolveAll<IServiceBusAware>())
+    		{
+    			action(aware);
+    		}
+    	}
+
+    	public void Subscribe(Type type)
         {
             foreach (var owner in messageOwners)
             {

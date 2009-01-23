@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace Rhino.ServiceBus.Msmq
 {
-	public class MsmqTransport : IMsmqTrasport
+	public class MsmqTransport : IMsmqTransport
 	{
 		[ThreadStatic]
 		private static MsmqCurrentMessageInformation currentMessageInformation;

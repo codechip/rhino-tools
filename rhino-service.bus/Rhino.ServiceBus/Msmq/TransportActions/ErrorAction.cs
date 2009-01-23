@@ -20,7 +20,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             this.queueStrategy = queueStrategy;
         }
 
-        public void Init(IMsmqTrasport transport)
+        public void Init(IMsmqTransport transport)
         {
             transport.MessageSerializationException += Transport_OnMessageSerializationException;
             transport.MessageProcessingFailure += Transport_OnMessageProcessingFailure;

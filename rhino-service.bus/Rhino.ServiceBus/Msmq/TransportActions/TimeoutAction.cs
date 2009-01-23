@@ -12,7 +12,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
     {
         private readonly IQueueStrategy queueStrategy;
         private Timer timeoutTimer;
-        private IMsmqTrasport parentTransport;
+        private IMsmqTransport parentTransport;
         private readonly OrderedList<DateTime, string> timeoutMessageIds =
             new OrderedList<DateTime, string>();
 
@@ -21,7 +21,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             this.queueStrategy = queueStrategy;
         }
 
-        public override void Init(IMsmqTrasport transport)
+        public override void Init(IMsmqTransport transport)
         {
             parentTransport = transport;
             timeoutMessageIds.Write(writer =>

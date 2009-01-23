@@ -34,7 +34,7 @@ namespace Rhino.ServiceBus.Impl
         private int threadCount = 1;
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
         private bool useDhtSagaPersister;
-    	private bool useInitializationModule=true;
+    	private bool useCreationModule=true;
     	public RhinoServiceBusFacility()
     	{
     		DetectQueueStrategy();
@@ -93,12 +93,12 @@ namespace Rhino.ServiceBus.Impl
 		/// </summary>
 		/// <remarks>
 		/// <para>By default, the
-		/// <see cref="QueueInitializationModule"/> will create queue(s) automagically when the bus starts.</para>
+		/// <see cref="QueueCreationModule"/> will create queue(s) automagically when the bus starts.</para>
 		/// </remarks>
 		/// <returns></returns>
 		public RhinoServiceBusFacility DisableQueueAutoCreation()
 		{
-			useInitializationModule = false;
+			useCreationModule = false;
 			return this;
 		}
         protected override void Init()
@@ -116,10 +116,9 @@ namespace Rhino.ServiceBus.Impl
                 Kernel.AddComponent(type.FullName, type);
             }
 
-			if(useInitializationModule)
+			if(useCreationModule)
 			{
-				Kernel.Register(Component.For<QueueInitializationModule>());
-				messageModules.Insert(0,typeof(QueueInitializationModule));
+				Kernel.Register(Component.For<QueueCreationModule>());
 			}
 
 			if (logEndpoint != null)
@@ -128,8 +127,7 @@ namespace Rhino.ServiceBus.Impl
 					Component.For<MessageLoggingModule>()
 						.DependsOn(new { logQueue = logEndpoint })
 					);
-				var pos = useInitializationModule ? 1 : 0;
-				messageModules.Insert(pos, typeof(MessageLoggingModule));
+				messageModules.Insert(0, typeof(MessageLoggingModule));
 			}
         	
             Kernel.Register(

@@ -42,12 +42,15 @@ namespace Rhino.ServiceBus.Msmq
 		public MessageQueue InitializeQueue(Uri endpoint)
 		{
 			var accessMode = QueueAccessMode.SendAndReceive;
+			var filter = new MessagePropertyFilter();
+			filter.SetAll();
 			var root = endpoint.CreateQueue(accessMode);
-			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
+
+			var sub = MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetErrorsQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetDiscardedQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetTimeoutQueuePath(), accessMode);
-			
+			sub.MessageReadPropertyFilter = filter;
 			return root;
 		}
 

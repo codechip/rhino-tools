@@ -59,28 +59,45 @@ namespace Rhino.ServiceBus.Tests
 		
 		private void SetupQueues()
 		{
+			ForEachQueuePath((path,transactional)=>
+			             	{
+								if (MessageQueue.Exists(path) == false)
+								{
+									MessageQueue.Create(path, transactional);
+								}
+								else
+								{
+									using (var cue = new MessageQueue(path))
+									{
+										cue.Purge();
+									}
+								}    		
+			             	});
+		}
+		private void DeleteQueues()
+		{
+			ForEachQueuePath((path, transactional) =>
+			{
+				if (MessageQueue.Exists(path) )
+				{
+					MessageQueue.Delete(path);
+				}
+			});
+		}
+		private void ForEachQueuePath(Action<string,bool> action)
+		{
 			var rootUris = new Dictionary<string, bool>
 			           	{
 			           		{testQueuePath, false},
 			           		{transactionalTestQueuePath, true}
 			           	};
-			var sub = new[] {"errors", "subscriptions", "discarded", "timeout"};
+			var sub = new[] { "errors", "subscriptions", "discarded", "timeout" };
 			foreach (var pair in rootUris)
 			{
 				foreach (var s in sub)
 				{
-					var q = pair.Key + "#" + s;
-					if (MessageQueue.Exists(q) == false)
-					{
-						MessageQueue.Create(q,pair.Value);
-					}
-					else
-					{
-						using (var cue = new MessageQueue(q))
-						{
-							cue.Purge();
-						}
-					}
+					var path= pair.Key + "#" + s;
+					action(path, pair.Value);
 				}
 
 			}
@@ -145,6 +162,8 @@ namespace Rhino.ServiceBus.Tests
                 transport.Stop();
             if (transactionalTransport != null)
                 transactionalTransport.Stop();
+
+			DeleteQueues();
         }
 
         #endregion
