@@ -129,7 +129,6 @@ namespace Rhino.ServiceBus.Tests
                 new DiscardAction(qs),
                 new ErrorAction(5, qs),
                 new ErrorDescriptionAction(qs),
-                new ShutDownAction(),
                 new TimeoutAction(qs)
             };
         }

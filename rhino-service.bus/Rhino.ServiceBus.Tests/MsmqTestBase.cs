@@ -138,7 +138,6 @@ namespace Rhino.ServiceBus.Tests
                     new DiscardAction(qs),
                     new ErrorAction(5, qs),
                     new ErrorDescriptionAction(qs),
-                    new ShutDownAction(),
                     new TimeoutAction(qs)
                 };
             }
@@ -148,14 +147,14 @@ namespace Rhino.ServiceBus.Tests
 
         public virtual void Dispose()
         {
-            queue.Dispose();
-            transactionalQueue.Dispose();
-            subscriptions.Dispose();
-
             if (transport != null)
                 transport.Stop();
             if (transactionalTransport != null)
                 transactionalTransport.Stop();
+
+            queue.Dispose();
+            transactionalQueue.Dispose();
+            subscriptions.Dispose();
         }
 
         #endregion

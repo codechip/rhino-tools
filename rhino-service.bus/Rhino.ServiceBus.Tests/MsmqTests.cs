@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Messaging;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Transactions;
 using Xunit;
@@ -31,6 +33,29 @@ namespace Rhino.ServiceBus.Tests
             Assert.Equal("a", msg.Body);
             var count = queue.GetCount();
             Assert.Equal(0, count);
+        }
+
+        [Fact]
+        public void Can_dispose_of_queue_when_there_is_a_pending_peek()
+        {
+            MessageQueueErrorCode code =MessageQueueErrorCode.AccessDenied;
+            var peekEnded = new ManualResetEvent(false);
+            queue.BeginPeek(TimeSpan.FromDays(1), null, ar =>
+            {
+                try
+                {
+                    queue.EndPeek(ar);
+                }
+                catch (MessageQueueException ex)
+                {
+                    code = ex.MessageQueueErrorCode;
+                }
+                peekEnded.Set();
+            });
+            queue.Dispose();
+            peekEnded.WaitOne();
+            var ioOperationCancelled = 0xc0000120;
+            Assert.Equal(ioOperationCancelled, (uint)code);
         }
 
         [Fact]

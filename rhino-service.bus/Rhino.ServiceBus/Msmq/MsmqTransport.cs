@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Messaging;
 using System.Threading;
@@ -9,23 +10,18 @@ using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq.TransportActions;
-using System.Diagnostics;
 
 namespace Rhino.ServiceBus.Msmq
 {
-	public class MsmqTransport : IMsmqTransport
+    public class MsmqTransport : AbstractMsmqListener, IMsmqTransport
 	{
 		[ThreadStatic]
 		private static MsmqCurrentMessageInformation currentMessageInformation;
 
-		private readonly Uri endpoint;
-		private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
+        private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
 		private readonly IMessageSerializer serializer;
 		private readonly int threadCount;
-		private readonly WaitHandle[] waitHandles;
-		private bool haveStarted;
-		private MessageQueue queue;
-	    private readonly ITransportAction[] transportActions;
+        private readonly ITransportAction[] transportActions;
 
 		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, ITransportAction[] transportActions)
 		{
@@ -36,17 +32,9 @@ namespace Rhino.ServiceBus.Msmq
 			waitHandles = new WaitHandle[threadCount];
 		}
 
+        #region ITransport Members
 
-		public volatile bool ShouldStop;
-
-		#region ITransport Members
-
-		public Uri Endpoint
-		{
-			get { return endpoint; }
-		}
-
-		public void Start()
+        public void Start()
 		{
 			if (haveStarted)
 				return;
@@ -81,28 +69,7 @@ namespace Rhino.ServiceBus.Msmq
 			haveStarted = true;
 		}
 
-		private static TimeSpan TimeOutForPeek
-		{
-			get { return TimeSpan.FromHours(1); }
-		}
-
-		public void Stop()
-		{
-			ShouldStop = true;
-			queue.Send(new Message
-			{
-				Label = "Shutdown bus, if you please",
-				AppSpecific = (int)MessageType.ShutDownMessageMarker
-			}, queue.GetSingleMessageTransactionType());
-
-			WaitForProcessingToEnd();
-
-			if (queue != null)
-				queue.Close();
-			haveStarted = false;
-		}
-
-		public void Reply(params object[] messages)
+        public void Reply(params object[] messages)
 		{
 			if (currentMessageInformation == null)
 				throw new TransactionException("There is no message to reply to, sorry.");
@@ -206,90 +173,9 @@ namespace Rhino.ServiceBus.Msmq
 
 		#endregion
 
-		private void WaitForProcessingToEnd()
+        protected void ReceiveMessageInTransaction(QueueState state, string messageId)
 		{
-			if (haveStarted == false)
-				return;
-
-			if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
-			{
-				WaitHandle.WaitAll(waitHandles);
-			}
-			else
-			{
-				foreach (WaitHandle handle in waitHandles)
-				{
-					if (handle != null)
-						handle.WaitOne();
-				}
-			}
-		}
-
-		private static MessageQueue InitalizeQueue(Uri endpoint)
-		{
-			
-			try
-			{
-				var queue = new MessageQueue(MsmqUtil.GetQueuePath(endpoint), QueueAccessMode.SendAndReceive);
-				var filter = new MessagePropertyFilter();
-				filter.SetAll();
-				queue.MessageReadPropertyFilter = filter;
-				return queue;
-			}
-			catch (Exception e)
-			{
-				throw new TransportException(
-					"Could not open queue: " + endpoint + Environment.NewLine +
-					"Queue path: " + MsmqUtil.GetQueuePath(endpoint) +
-					"Did you create the queue or disable the queue initialization module?",e);
-			}
-			
-		}
-
-		private void OnPeekMessage(IAsyncResult ar)
-		{
-			Message message;
-			bool? peek = TryEndingPeek(ar, out message);
-			if (peek == false) // error 
-				return;
-
-			var state = (QueueState)ar.AsyncState;
-			if (ShouldStop)
-			{
-				state.WaitHandle.Set();
-				return;
-			}
-
-			try
-			{
-				if (peek == null)//nothing was found 
-					return;
-
-                logger.DebugFormat("Got message {0} from {1}",
-                                  message.Label,
-                                  MsmqUtil.GetQueueUri(state.Queue));
-
-			    foreach (var action in transportActions)
-			    {
-			        if (action.CanHandlePeekedMessage(message) == false) 
-                        continue;
-
-			        if(action.HandlePeekedMessage(queue, message))
-			            return;
-			    }
-			   
-				ReceiveMessageInTransaction(state, message.Id);
-
-			}
-			finally
-			{
-				state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
-			}
-		}
-
-		private void ReceiveMessageInTransaction(QueueState state, string messageId)
-		{
-			using (var tx = new TransactionScope(TransactionScopeOption.Required, GetTimeSpan()))
+			using (var tx = new TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
 			{
 				Message message = state.Queue.TryGetMessageFromQueue(messageId);
                 
@@ -300,14 +186,15 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-        private static TimeSpan GetTimeSpan()
-	    {
+        protected static TimeSpan GetTransactionTimeout()
+        {
             if (Debugger.IsAttached)
                 return TimeSpan.FromMinutes(45);
-	        return TimeSpan.Zero;
-	    }
+            return TimeSpan.Zero;
+        }
 
-	    private void HandleMessageCompletion(
+
+        private void HandleMessageCompletion(
 			Message message,
 			TransactionScope tx,
             MessageQueue messageQueue,
@@ -350,27 +237,7 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private bool? TryEndingPeek(IAsyncResult ar, out Message message)
-		{
-			var state = (QueueState)ar.AsyncState;
-			try
-			{
-				message = state.Queue.EndPeek(ar);
-			}
-			catch (MessageQueueException e)
-			{
-				message = null;
-				if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
-				{
-					logger.Error("Could not peek message from queue", e);
-					return false;
-				}
-				return null; // nothing found
-			}
-			return true;
-		}
-
-	    public void ProcessMessage(Message message, 
+        public void ProcessMessage(Message message, 
             MessageQueue messageQueue, 
             TransactionScope tx,
             Func<CurrentMessageInformation, bool> messageRecieved,
@@ -512,5 +379,19 @@ namespace Rhino.ServiceBus.Msmq
 				throw new TransactionException("Failed to send message to " + uri, e);
 			}
 		}
+
+        protected override void HandlePeekedMessage(QueueState state, Message message)
+        {
+            foreach (var action in transportActions)
+            {
+                if(action.CanHandlePeekedMessage(message)==false)
+                    continue;
+
+                if (action.HandlePeekedMessage(queue, message))
+                    return;
+            }
+
+            ReceiveMessageInTransaction(state, message.Id);
+        }
 	}
 }

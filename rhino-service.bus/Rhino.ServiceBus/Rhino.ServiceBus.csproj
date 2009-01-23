@@ -88,6 +88,7 @@
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
+    <Compile Include="Msmq\AbstractMsmqListener.cs" />
     <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
     <Compile Include="Sagas\IVersionedSagaState.cs" />
@@ -127,7 +128,6 @@
     <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
     <Compile Include="Msmq\TransportActions\AbstractTransportAction.cs" />
     <Compile Include="Msmq\TransportActions\ITransportAction.cs" />
-    <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
     <Compile Include="Msmq\TransportActions\TimeoutAction.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
