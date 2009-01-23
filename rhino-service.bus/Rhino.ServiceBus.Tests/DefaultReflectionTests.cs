@@ -19,6 +19,21 @@ namespace Rhino.ServiceBus.Tests
             Assert.NotNull(type);
         }
 
+		[Fact]
+		public void Message_type_harvesting_returns_consumers()
+		{
+			var types = reflection.GetMessagesConsumed(typeof(SomeMsgConsumer), t => false);
+			Assert.Equal(1,types.Length);
+			Assert.Equal(types[0],typeof(SomeMsg));
+		}
+
+		[Fact]
+		public void Message_type_harvesting_ignores_open_generic_consumers()
+		{
+			var types = reflection.GetMessagesConsumed(typeof(GenericConsumer<>), t => false);
+			Assert.Empty(types);
+		}
+
         [Fact]
         public void Will_throw_inner_exception_for_add()
         {
@@ -48,6 +63,14 @@ namespace Rhino.ServiceBus.Tests
         {
             Assert.Throws<NotImplementedException>(() => reflection.InvokeSagaPersisterSave(new ThrowingPersister(), new ThrowingList()));
         }
+		public class SomeMsg{}
+		public class SomeMsgConsumer:GenericConsumer<SomeMsg>{}
+		public class GenericConsumer<T>:ConsumerOf<T>
+		{
+			public void Consume(T message)
+			{
+			}
+		}
 
         public class ThrowingConsumer : ConsumerOf<string>
         {

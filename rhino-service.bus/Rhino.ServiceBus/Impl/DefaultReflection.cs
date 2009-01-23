@@ -309,6 +309,9 @@ namespace Rhino.ServiceBus.Impl
                 if (type.IsGenericType == false)
                     continue;
 
+				if(type.GetGenericArguments()[0].IsGenericParameter)
+					continue;
+
                 Type definition = type.GetGenericTypeDefinition();
 
                 if (filter(definition))
