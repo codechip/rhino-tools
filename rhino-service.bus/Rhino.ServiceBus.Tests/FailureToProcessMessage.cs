@@ -110,7 +110,7 @@ namespace Rhino.ServiceBus.Tests
             }
         }
 
-        private Action<CurrentMessageInformation> ThrowOnFirstAction()
+        private Func<CurrentMessageInformation, bool> ThrowOnFirstAction()
         {
             return o =>
             {
@@ -127,6 +127,7 @@ namespace Rhino.ServiceBus.Tests
                     }
                 }
                 gotSecondMessage.WaitOne();
+                return true;
             };
         }
         
@@ -237,7 +238,7 @@ namespace Rhino.ServiceBus.Tests
                 }
             }
 
-            private Action<CurrentMessageInformation> ThrowOnFirstAction()
+            private Func<CurrentMessageInformation, bool> ThrowOnFirstAction()
             {
                 return o =>
                 {
@@ -254,6 +255,7 @@ namespace Rhino.ServiceBus.Tests
                         }
                     }
                     gotSecondMessage.WaitOne();
+                    return true;
                 };
             }
         }

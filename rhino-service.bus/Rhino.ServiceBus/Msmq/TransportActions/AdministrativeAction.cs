@@ -21,17 +21,19 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public override bool HandlePeekedMessage(MessageQueue queue, Message message)
         {
-            Action<CurrentMessageInformation> messageRecieved = information =>
+            Func<CurrentMessageInformation, bool> messageRecieved = information =>
             {
                 var msmqCurrentMessageInformation = (MsmqCurrentMessageInformation)information;
                 var messageProcessedCorrectly = transport.RaiseAdministrativeMessageArrived(information);
 
                 if (messageProcessedCorrectly)
-                    return;
+                    return true;
               
                 //consume unknown message
                 msmqCurrentMessageInformation.Queue
                     .ConsumeMessage(msmqCurrentMessageInformation.MsmqMessage);
+
+                return true;
             };
 
             transport.ProcessMessage(message, queue, null, 

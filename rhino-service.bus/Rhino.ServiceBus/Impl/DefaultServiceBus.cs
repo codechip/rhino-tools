@@ -298,15 +298,14 @@ namespace Rhino.ServiceBus.Impl
             return sentMsg;
         }
 
-        public void Transport_OnMessageArrived(CurrentMessageInformation msg)
+        public bool Transport_OnMessageArrived(CurrentMessageInformation msg)
         {
             object[] consumers = GatherConsumers(msg);
         	
 			if (consumers.Length == 0)
             {
-                transport.Discard(msg.Message);
                 logger.ErrorFormat("Got message {0}, but had no consumers for it", msg.Message);
-                return;
+                return false;
             }
             try
             {
@@ -321,6 +320,7 @@ namespace Rhino.ServiceBus.Impl
                         continue;
                     PersistSagaInstance(sagaEntity);
                 }
+                return true;
             }
             finally
             {

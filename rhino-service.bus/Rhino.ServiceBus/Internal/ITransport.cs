@@ -20,7 +20,7 @@ namespace Rhino.ServiceBus.Internal
 
         event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
         
-        event Action<CurrentMessageInformation> MessageArrived;
+        event Func<CurrentMessageInformation, bool> MessageArrived;
 
         event Action<CurrentMessageInformation, Exception> MessageSerializationException;
         
@@ -29,8 +29,6 @@ namespace Rhino.ServiceBus.Internal
         event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
 
         event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
-
-        void Discard(object msg);
 
     	void Send(Uri uri, DateTime processAgainAt, object[] msgs);
 

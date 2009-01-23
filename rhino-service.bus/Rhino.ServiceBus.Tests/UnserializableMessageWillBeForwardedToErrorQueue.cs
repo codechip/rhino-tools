@@ -10,7 +10,11 @@ namespace Rhino.ServiceBus.Tests
         {
             object o1 = null;
             
-            Transport.MessageArrived += o => o1 = o;
+            Transport.MessageArrived += o =>
+            {
+                o1 = o;
+                return true;
+            };
             queue.Send("blah blah not valid");
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
@@ -43,7 +47,11 @@ namespace Rhino.ServiceBus.Tests
         {
             object o1 = null;
 
-            Transport.MessageArrived += o => o1 = o;
+            Transport.MessageArrived += o =>
+            {
+                o1 = o;
+                return true;
+            };
             queue.Send("blah blah not valid");
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))

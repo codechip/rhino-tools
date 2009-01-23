@@ -104,7 +104,7 @@ namespace Rhino.ServiceBus.MessageModules
             }, queue.GetSingleMessageTransactionType());
         }
 
-        private void Transport_OnMessageArrived(CurrentMessageInformation info)
+        private bool Transport_OnMessageArrived(CurrentMessageInformation info)
         {
             Send(new MessageArrivedMessage
             {
@@ -115,6 +115,7 @@ namespace Rhino.ServiceBus.MessageModules
                 Source = info.Source,
                 Message = info.Message
             });
+            return false;
         }
     }
 }

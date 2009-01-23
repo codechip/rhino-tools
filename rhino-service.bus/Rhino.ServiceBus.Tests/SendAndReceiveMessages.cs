@@ -17,6 +17,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 receivedMsg = (TestMessage)msg.Message;
                 waitHandle.Set();
+                return true;
             };
             Transport.Send(TestQueueUri, new TestMessage
             {
@@ -52,6 +53,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 receivedMsg = (TestMessage)msg.Message;
                 waitHandle.Set();
+                return true;
             };
             Transport.Send(TestQueueUri, new TestMessage
             {

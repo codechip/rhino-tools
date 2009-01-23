@@ -112,7 +112,7 @@ namespace Rhino.ServiceBus.Msmq
 
 		public event Action<CurrentMessageInformation> MessageSent;
 		public event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
-		public event Action<CurrentMessageInformation> MessageArrived;
+		public event Func<CurrentMessageInformation, bool> MessageArrived;
 		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         public event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
         public event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
@@ -373,7 +373,7 @@ namespace Rhino.ServiceBus.Msmq
 	    public void ProcessMessage(Message message, 
             MessageQueue messageQueue, 
             TransactionScope tx,
-            Action<CurrentMessageInformation> messageRecieved,
+            Func<CurrentMessageInformation, bool> messageRecieved,
             Action<CurrentMessageInformation, Exception> messageCompleted)
 		{
 		    Exception ex = null;
@@ -388,8 +388,8 @@ namespace Rhino.ServiceBus.Msmq
                     {
                         currentMessageInformation = CreateMessageInformation(message, messages, msg);
 
-                        if (messageRecieved != null)
-                            messageRecieved(currentMessageInformation);
+                        if(ProcessSingleMessage(messageRecieved)==false)
+                            Discard(currentMessageInformation.Message);
                     }
                 }
                 catch (Exception e)
@@ -414,6 +414,20 @@ namespace Rhino.ServiceBus.Msmq
                 currentMessageInformation = null;
 		    } 
 		}
+
+	    private static bool ProcessSingleMessage(Func<CurrentMessageInformation, bool> messageRecieved)
+	    {
+	        if (messageRecieved == null)
+	            return false;
+	        foreach (Func<CurrentMessageInformation, bool> func in messageRecieved.GetInvocationList())
+	        {
+	            if (func(currentMessageInformation))
+	            {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
 
 	    private MsmqCurrentMessageInformation CreateMessageInformation(Message message, object[] messages, object msg)
 	    {

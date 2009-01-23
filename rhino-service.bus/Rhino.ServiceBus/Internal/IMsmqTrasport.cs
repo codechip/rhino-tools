@@ -17,7 +17,7 @@ namespace Rhino.ServiceBus.Internal
         void ProcessMessage(Message message,
                             MessageQueue messageQueue,
                             TransactionScope tx,
-                            Action<CurrentMessageInformation> messageRecieved,
+                            Func<CurrentMessageInformation, bool> messageRecieved,
                             Action<CurrentMessageInformation, Exception> messageCompleted);
     }
 }
