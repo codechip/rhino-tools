@@ -106,7 +106,7 @@ namespace Rhino.ServiceBus.Tests
                         	new DefaultReflection(), 
                         	new DefaultKernel()), 
                             TestQueueUri, 1, 
-                            DefaultMessageActions);
+                            defaultTransportActions);
                     transport.Start();
                 }
                 return transport;
@@ -120,19 +120,19 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
-                                                               TransactionalTestQueueUri, 1, DefaultMessageActions);
+                                                               TransactionalTestQueueUri, 1, defaultTransportActions);
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;
             }
         }
 
-        private static IMessageAction[] DefaultMessageActions
+        private static ITransportAction[] defaultTransportActions
         {
             get
             {
                 var qs = new SubQueueStrategy();
-                return new IMessageAction[]
+                return new ITransportAction[]
                 {
                     new AdministrativeAction(),
                     new DiscardAction(qs),

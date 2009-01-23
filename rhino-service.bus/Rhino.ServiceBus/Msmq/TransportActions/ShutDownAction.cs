@@ -2,7 +2,7 @@ using System.Messaging;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class ShutDownAction : AbstractMessageAction
+    public class ShutDownAction : AbstractTransportAction
     {
         public override MessageType HandledType
         {

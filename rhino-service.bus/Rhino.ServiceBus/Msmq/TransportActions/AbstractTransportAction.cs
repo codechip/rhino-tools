@@ -3,7 +3,7 @@ using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public abstract class AbstractMessageAction : IMessageAction
+    public abstract class AbstractTransportAction : ITransportAction
     {
         public abstract MessageType HandledType { get; }
 

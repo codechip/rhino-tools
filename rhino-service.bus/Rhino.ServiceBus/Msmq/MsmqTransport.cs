@@ -25,12 +25,12 @@ namespace Rhino.ServiceBus.Msmq
 		private readonly WaitHandle[] waitHandles;
 		private bool haveStarted;
 		private MessageQueue queue;
-	    private readonly IMessageAction[] messageActions;
+	    private readonly ITransportAction[] transportActions;
 
-		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, IMessageAction[] messageActions)
+		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, ITransportAction[] transportActions)
 		{
 			this.serializer = serializer;
-		    this.messageActions = messageActions;
+		    this.transportActions = transportActions;
 			this.endpoint = endpoint;
 			this.threadCount = threadCount;
 			waitHandles = new WaitHandle[threadCount];
@@ -54,7 +54,7 @@ namespace Rhino.ServiceBus.Msmq
 			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
 			queue = InitalizeQueue(endpoint);
 
-		    foreach (var messageAction in messageActions)
+		    foreach (var messageAction in transportActions)
 		    {
 		        messageAction.Init(this);
 		    }
@@ -111,7 +111,7 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		public event Action<CurrentMessageInformation> MessageSent;
-		public event Func<CurrentMessageInformation,bool> AdministrativeMessageArrived;
+	    public event Func<CurrentMessageInformation, bool> AdministrativeMessageArrived;
 		public event Func<CurrentMessageInformation, bool> MessageArrived;
 		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
         public event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
@@ -269,7 +269,7 @@ namespace Rhino.ServiceBus.Msmq
                                   message.Label,
                                   MsmqUtil.GetQueueUri(state.Queue));
 
-			    foreach (var action in messageActions)
+			    foreach (var action in transportActions)
 			    {
 			        if (action.CanHandlePeekedMessage(message) == false) 
                         continue;

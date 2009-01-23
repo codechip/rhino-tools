@@ -2,7 +2,7 @@ using System.Messaging;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class DiscardAction : AbstractMessageAction
+    public class DiscardAction : AbstractTransportAction
     {
         private readonly IQueueStrategy queueStrategy;
 

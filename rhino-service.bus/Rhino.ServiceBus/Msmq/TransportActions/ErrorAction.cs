@@ -7,7 +7,7 @@ using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class ErrorAction : IMessageAction
+    public class ErrorAction : ITransportAction
     {
         private readonly ILog logger = LogManager.GetLogger(typeof(ErrorAction));
         private readonly int numberOfRetries;

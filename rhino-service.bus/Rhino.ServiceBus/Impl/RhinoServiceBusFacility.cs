@@ -34,73 +34,74 @@ namespace Rhino.ServiceBus.Impl
         private int threadCount = 1;
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
         private bool useDhtSagaPersister;
-    	private bool useCreationModule=true;
-    	public RhinoServiceBusFacility()
-    	{
-    		DetectQueueStrategy();
-    	}
+        private bool useCreationModule = true;
 
-		/// <summary>
-		/// Detects the valid queue strategy automatically.
-		/// </summary>
-    	private void DetectQueueStrategy()
-    	{
-    		if( Environment.OSVersion.Version.Major <= 5 )
-    		{
-    			queueStrategyImpl = typeof (FlatQueueStrategy);
-    		}
-    	}
+        public RhinoServiceBusFacility()
+        {
+            DetectQueueStrategy();
+        }
 
-    	public RhinoServiceBusFacility AddMessageModule<TModule>()
+        /// <summary>
+        /// Detects the valid queue strategy automatically.
+        /// </summary>
+        private void DetectQueueStrategy()
+        {
+            if (Environment.OSVersion.Version.Major <= 5)
+            {
+                queueStrategyImpl = typeof(FlatQueueStrategy);
+            }
+        }
+
+        public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
         {
             messageModules.Add(typeof(TModule));
             return this;
         }
 
-		/// <summary>
-		/// Implementation for MSMQ 3.0. 
-		/// </summary>
-		/// <remarks>
-		/// <list type="bullet">
-		/// <listheader>Queue structure requirements, where <c>my_root_queue</c> is the endpoint:</listheader>
-		/// <item>my_root_queue</item>
-		/// <item>my_root_queue<c>#subscriptions</c></item>
-		/// <item>my_root_queue<c>#errors</c></item>
-		/// <item>my_root_queue<c>#discarded</c></item>
-		/// <item>my_root_queue<c>#timeout</c></item>
-		/// </list>
-		/// </remarks>
-		/// <returns></returns>
+        /// <summary>
+        /// Implementation for MSMQ 3.0. 
+        /// </summary>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <listheader>Queue structure requirements, where <c>my_root_queue</c> is the endpoint:</listheader>
+        /// <item>my_root_queue</item>
+        /// <item>my_root_queue<c>#subscriptions</c></item>
+        /// <item>my_root_queue<c>#errors</c></item>
+        /// <item>my_root_queue<c>#discarded</c></item>
+        /// <item>my_root_queue<c>#timeout</c></item>
+        /// </list>
+        /// </remarks>
+        /// <returns></returns>
         public RhinoServiceBusFacility UseFlatQueueStructure()
         {
             queueStrategyImpl = typeof(FlatQueueStrategy);
             return this;
         }
 
-		/// <summary>
-		/// <c>Default</c> - <b>For MSMQ 4.0 only</b>. Only a single physical queue is required.
-		/// </summary>
-		/// <returns></returns>
+        /// <summary>
+        /// <c>Default</c> - <b>For MSMQ 4.0 only</b>. Only a single physical queue is required.
+        /// </summary>
+        /// <returns></returns>
         public RhinoServiceBusFacility UseSubqueuesQueueStructure()
         {
             queueStrategyImpl = typeof(SubQueueStrategy);
             return this;
         }
 
-		/// <summary>
-		/// Disables the queue auto creation module
-		/// </summary>
-		/// <remarks>
-		/// <para>By default, the
-		/// <see cref="QueueCreationModule"/> will create queue(s) automagically when the bus starts.</para>
-		/// </remarks>
-		/// <returns></returns>
-		public RhinoServiceBusFacility DisableQueueAutoCreation()
-		{
-			useCreationModule = false;
-			return this;
-		}
+        /// <summary>
+        /// Disables the queue auto creation module
+        /// </summary>
+        /// <remarks>
+        /// <para>By default, the
+        /// <see cref="QueueCreationModule"/> will create queue(s) automagically when the bus starts.</para>
+        /// </remarks>
+        /// <returns></returns>
+        public RhinoServiceBusFacility DisableQueueAutoCreation()
+        {
+            useCreationModule = false;
+            return this;
+        }
         protected override void Init()
         {
             Kernel.ComponentModelCreated += Kernel_OnComponentModelCreated;
@@ -116,20 +117,20 @@ namespace Rhino.ServiceBus.Impl
                 Kernel.AddComponent(type.FullName, type);
             }
 
-			if(useCreationModule)
-			{
-				Kernel.Register(Component.For<QueueCreationModule>());
-			}
+            if (useCreationModule)
+            {
+                Kernel.Register(Component.For<QueueCreationModule>());
+            }
 
-			if (logEndpoint != null)
-			{
-				Kernel.Register(
-					Component.For<MessageLoggingModule>()
-						.DependsOn(new { logQueue = logEndpoint })
-					);
-				messageModules.Insert(0, typeof(MessageLoggingModule));
-			}
-        	
+            if (logEndpoint != null)
+            {
+                Kernel.Register(
+                    Component.For<MessageLoggingModule>()
+                        .DependsOn(new { logQueue = logEndpoint })
+                    );
+                messageModules.Insert(0, typeof(MessageLoggingModule));
+            }
+
             Kernel.Register(
                 Component.For<IServiceBus, IStartableServiceBus>()
                     .ImplementedBy<DefaultServiceBus>()
@@ -168,17 +169,15 @@ namespace Rhino.ServiceBus.Impl
                 );
 
             Kernel.Register(
-                AllTypes.Of<IMessageAction>()
-                    .FromAssembly(typeof(IMessageAction).Assembly)
+                Component.For<ITransportAction>()
+                    .ImplementedBy<ErrorAction>()
+                    .DependsOn(new { numberOfRetries }),
+                AllTypes.Of<ITransportAction>()
+                    .FromAssembly(typeof(ITransportAction).Assembly)
+                    .Unless(x => x == typeof(ErrorAction))
                     .WithService.FirstInterface()
                     .Configure(registration =>
-                    {
-                        registration
-                            .LifeStyle.Is(LifestyleType.Singleton);
-                        if (registration.Implementation != typeof(ErrorAction))
-                            return;
-                        registration.DependsOn(new {numberOfRetries});
-                    })
+                            registration.LifeStyle.Is(LifestyleType.Singleton))
               );
         }
 
@@ -243,12 +242,12 @@ namespace Rhino.ServiceBus.Impl
             var list = model.Implementation.GetInterfaces()
                 .Where(x => x.IsGenericType &&
                             x.IsGenericTypeDefinition == false &&
-                            x.GetGenericTypeDefinition() == typeof (ISaga<>))
+                            x.GetGenericTypeDefinition() == typeof(ISaga<>))
                 .ToList();
-            
+
             if (list.Count == 0)
                 return;
-            
+
             if (list.Count > 1)
             {
                 throw new InvalidUsageException(model.Implementation +
@@ -260,12 +259,12 @@ namespace Rhino.ServiceBus.Impl
             if (typeof(IVersionedSagaState).IsAssignableFrom(sagaStateType) == false)
                 throw new InvalidUsageException(model.Implementation + "'s state (" + sagaStateType + ") does not implement IVersionedSagaState");
 
-            if(typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation)==false)
+            if (typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation) == false)
                 throw new InvalidUsageException(model.Implementation + " must implement Orchestrates<MergeSagaState>, to handle state merges.");
 
 
             Kernel.AddComponent(
-                "SagaPersister<"+model.Implementation+">",
+                "SagaPersister<" + model.Implementation + ">",
                 typeof(ISagaPersister<>)
                     .MakeGenericType(model.Implementation),
                 typeof(DistributedHashTableSagaPersister<,>)

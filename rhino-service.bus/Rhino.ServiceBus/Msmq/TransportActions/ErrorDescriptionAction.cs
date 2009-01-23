@@ -2,7 +2,7 @@ using System.Messaging;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class ErrorDescriptionAction : AbstractMessageAction
+    public class ErrorDescriptionAction : AbstractTransportAction
     {
         private readonly IQueueStrategy queueStrategy;
 

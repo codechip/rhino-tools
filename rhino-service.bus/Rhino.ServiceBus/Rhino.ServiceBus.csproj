@@ -125,8 +125,8 @@
     <Compile Include="Msmq\TransportActions\DiscardAction.cs" />
     <Compile Include="Msmq\TransportActions\ErrorAction.cs" />
     <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
-    <Compile Include="Msmq\TransportActions\AbstractMessageAction.cs" />
-    <Compile Include="Msmq\TransportActions\IMessageAction.cs" />
+    <Compile Include="Msmq\TransportActions\AbstractTransportAction.cs" />
+    <Compile Include="Msmq\TransportActions\ITransportAction.cs" />
     <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
     <Compile Include="Msmq\TransportActions\TimeoutAction.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />

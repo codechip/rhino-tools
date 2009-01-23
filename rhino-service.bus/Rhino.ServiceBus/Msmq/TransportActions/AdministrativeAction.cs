@@ -5,7 +5,7 @@ using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class AdministrativeAction : AbstractMessageAction
+    public class AdministrativeAction : AbstractTransportAction
     {
         private IMsmqTransport transport;
 

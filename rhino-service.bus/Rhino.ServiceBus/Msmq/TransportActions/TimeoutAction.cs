@@ -8,7 +8,7 @@ using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
-    public class TimeoutAction : AbstractMessageAction, IDisposable
+    public class TimeoutAction : AbstractTransportAction, IDisposable
     {
         private readonly IQueueStrategy queueStrategy;
         private Timer timeoutTimer;
