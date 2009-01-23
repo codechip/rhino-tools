@@ -35,7 +35,20 @@ namespace Rhino.ServiceBus.Impl
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
         private bool useDhtSagaPersister;
 
-        public RhinoServiceBusFacility AddMessageModule<TModule>()
+    	public RhinoServiceBusFacility()
+    	{
+    		DetectQueueStrategy();
+    	}
+
+    	private void DetectQueueStrategy()
+    	{
+    		if( Environment.OSVersion.Version.Major <= 5 )
+    		{
+    			queueStrategyImpl = typeof (FlatQueueStrategy);
+    		}
+    	}
+
+    	public RhinoServiceBusFacility AddMessageModule<TModule>()
             where TModule : IMessageModule
         {
             messageModules.Add(typeof(TModule));
