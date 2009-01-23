@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Messaging;
 using Castle.MicroKernel;
 using Rhino.ServiceBus.Impl;
@@ -11,15 +12,12 @@ namespace Rhino.ServiceBus.Tests
 {
     public class MsmqFlatQueueTestBase : IDisposable
     {
-        private readonly string subbscriptionQueuePath;
+        private readonly string subscriptionQueuePath;
         protected readonly Uri SubscriptionsUri;
 
         protected readonly string testQueuePath;
         protected readonly Uri TestQueueUri;
-
-        protected readonly string testQueuePath2;
-        protected readonly Uri TestQueueUri2;
-
+        
         protected readonly string transactionalTestQueuePath;
         protected readonly Uri TransactionalTestQueueUri;
 
@@ -29,7 +27,6 @@ namespace Rhino.ServiceBus.Tests
 
         private ITransport transactionalTransport;
         private ITransport transport;
-        protected readonly MessageQueue testQueue2;
 
         /// <summary>
         /// we use this to initalize the defaults for the test
@@ -42,77 +39,54 @@ namespace Rhino.ServiceBus.Tests
 
             TestQueueUri = new Uri("msmq://localhost/test_queue");
             testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri);
-
-            TestQueueUri2 = new Uri("msmq://localhost/test_queue2");
-            testQueuePath2 = MsmqUtil.GetQueuePath(TestQueueUri2);
-
+            
             TransactionalTestQueueUri = new Uri("msmq://localhost/transactional_test_queue");
             transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
 
-            SubscriptionsUri = TestQueueUri;
-            subbscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
+			SubscriptionsUri = new Uri(TestQueueUri + "#" + subscriptions);
+			subscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
 
-            var errorsPathSuffix = "#errors";
-            var discardedPathSuffix = "#discarded";
 
-            if (MessageQueue.Exists(testQueuePath) == false)
-                MessageQueue.Create(testQueuePath);
-
-            if (MessageQueue.Exists(testQueuePath2) == false)
-                MessageQueue.Create(testQueuePath2);
-
-            if (MessageQueue.Exists(transactionalTestQueuePath) == false)
-                MessageQueue.Create(transactionalTestQueuePath, true);
-
-            if (MessageQueue.Exists(testQueuePath + errorsPathSuffix) == false)
-                MessageQueue.Create(testQueuePath + errorsPathSuffix);
-
-            if (MessageQueue.Exists(testQueuePath2 + errorsPathSuffix) == false)
-                MessageQueue.Create(testQueuePath2 + errorsPathSuffix);
-
-            if (MessageQueue.Exists(transactionalTestQueuePath + errorsPathSuffix) == false)
-                MessageQueue.Create(transactionalTestQueuePath + errorsPathSuffix, true);
-
-            if (MessageQueue.Exists(testQueuePath + discardedPathSuffix) == false)
-                MessageQueue.Create(testQueuePath + discardedPathSuffix);
+			SetupQueues();
 
             queue = new MessageQueue(testQueuePath);
-            queue.Purge();
-
-            using (var errQueue = new MessageQueue(testQueuePath + errorsPathSuffix))
-            {
-                errQueue.Purge();
-            }
-
-            using (var discardedQueue = new MessageQueue(testQueuePath + discardedPathSuffix))
-            {
-                discardedQueue.Purge();
-            }
-
-            testQueue2 = new MessageQueue(testQueuePath2);
-            testQueue2.Purge();
-
-            using (var errQueue2 = new MessageQueue(testQueuePath2 + errorsPathSuffix))
-            {
-                errQueue2.Purge();
-            }
-
             transactionalQueue = new MessageQueue(transactionalTestQueuePath);
-            transactionalQueue.Purge();
-
-            using (var errQueue3 = new MessageQueue(transactionalTestQueuePath + errorsPathSuffix))
-            {
-                errQueue3.Purge();
-            }
-
-            subscriptions = new MessageQueue(subbscriptionQueuePath)
+            subscriptions = new MessageQueue(subscriptionQueuePath)
             {
                 Formatter = new XmlMessageFormatter(new[] { typeof(string) })
             };
-            subscriptions.Purge();
         }
+		
+		private void SetupQueues()
+		{
+			var rootUris = new Dictionary<string, bool>
+			           	{
+			           		{testQueuePath, false},
+			           		{transactionalTestQueuePath, true}
+			           	};
+			var sub = new[] {"errors", "subscriptions", "discarded", "timeout"};
+			foreach (var pair in rootUris)
+			{
+				foreach (var s in sub)
+				{
+					var q = pair.Key + "#" + s;
+					if (MessageQueue.Exists(q) == false)
+					{
+						MessageQueue.Create(q,pair.Value);
+					}
+					else
+					{
+						using (var cue = new MessageQueue(q))
+						{
+							cue.Purge();
+						}
+					}
+				}
 
-        public ITransport Transport
+			}
+		}
+
+    	public ITransport Transport
         {
             get
             {

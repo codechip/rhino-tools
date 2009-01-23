@@ -11,14 +11,15 @@ namespace Rhino.ServiceBus.Msmq
 	/// </summary>
 	/// <remarks>
 	/// <para>
-	/// The endpoint is treated as the <c>subscriptions</c> queue.
-	/// This strategy presumes two additional queues than those defined by the endpoint.
+	/// This strategy presumes additional queues than those defined by the endpoint.
 	/// </para>
 	/// <list type="bullet">
 	/// <listheader>So your queue structure would be:</listheader>
 	/// <item>[my_queue_name]</item>
+	/// <item>[my_queue_name]<c>#subscriptions</c></item>
 	/// <item>[my_queue_name]<c>#errors</c></item>
 	/// <item>[my_queue_name]<c>#discarded</c></item>
+	/// <item>[my_queue_name]<c>#timeout</c></item>
 	/// </list>
 	/// </remarks>
 	public class FlatQueueStrategy : IQueueStrategy
@@ -41,7 +42,7 @@ namespace Rhino.ServiceBus.Msmq
 		/// <returns></returns>
 		public Uri CreateSubscriptionQueueUri(Uri subscriptionQueue)
 		{
-			return subscriptionQueue;
+			return new Uri(subscriptionQueue + "#subscriptions");
 		}
 
 		/// <summary>
@@ -52,7 +53,11 @@ namespace Rhino.ServiceBus.Msmq
 		public void MoveToSubscriptionQueue(MessageQueue queue, Message message)
 		{
 			//the endpoint IS the subscription queue
-			return;
+			using (var destinationQueue = new MessageQueue(GetSubscriptionQueuePath(), QueueAccessMode.Send))
+			{
+				destinationQueue.Send(queue.ReceiveByLookupId(message.LookupId),
+														  queue.GetTransactionType());
+			}
 		}
 
 		/// <summary>
@@ -65,10 +70,9 @@ namespace Rhino.ServiceBus.Msmq
 			using (var destinationQueue = new MessageQueue(GetErrorsQueuePath(), QueueAccessMode.Send))
 			{
 				destinationQueue.Send(queue.ReceiveByLookupId(message.LookupId),
-									  queue.GetTransactionType());
+														  queue.GetTransactionType());
 			}
 		}
-
 
 		/// <summary>
 		/// Moves the <paramref name="message"/> to discarded queue.
@@ -149,5 +153,12 @@ namespace Rhino.ServiceBus.Msmq
 			var path = MsmqUtil.GetQueuePath(endpoint);
 			return path + "#timeout";
 		}
+
+		private string GetSubscriptionQueuePath()
+		{
+			var path = MsmqUtil.GetQueuePath(endpoint);
+			return path + "#subscriptions";
+		}
 	}
+
 }

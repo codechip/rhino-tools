@@ -29,14 +29,14 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
-        public void Moving_to_subscription_queue_does_nothing()
+        public void Moving_to_subscription_queue_removes_message_from_root_queue()
         {
             var queueStrategy = new FlatQueueStrategy(TestQueueUri);
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
             queueStrategy.MoveToSubscriptionQueue(queue, msg);
-            Assert.Equal(1, queue.GetCount());
+            Assert.Equal(0, queue.GetCount());
         }
 
         #region Nested type: TestMessage
