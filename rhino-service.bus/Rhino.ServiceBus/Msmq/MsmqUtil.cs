@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Rhino.ServiceBus.Exceptions;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -43,5 +44,29 @@ namespace Rhino.ServiceBus.Msmq
             return new Uri("msmq://" + queue.MachineName + "/" +
                 queue.QueueName.Split('\\')[1]);
         }
+
+		public static MessageQueue CreateQueue(string queuePath,QueueAccessMode accessMode)
+		{
+			try
+			{
+				if (MessageQueue.Exists(queuePath) == false)
+				{
+					try
+					{
+						MessageQueue.Create(queuePath, true);
+					}
+					catch (Exception e)
+					{
+						throw new TransportException("Queue " + queuePath + " doesn't exists and we failed to create it", e);
+					}
+				}
+
+				return new MessageQueue(queuePath, accessMode);
+			}
+			catch (Exception e)
+			{
+				throw new MessagePublicationException("Could not open queue (" + queuePath + ")", e);
+			}
+		}
     }
 }

@@ -10,6 +10,7 @@ namespace Rhino.ServiceBus.Msmq
     /// </summary>
     public interface IQueueStrategy
     {
+		MessageQueue InitializeQueue(Uri endpoint, MessagePropertyFilter filter);
         /// <summary>
         /// Creates the subscription queue URI.
         /// </summary>

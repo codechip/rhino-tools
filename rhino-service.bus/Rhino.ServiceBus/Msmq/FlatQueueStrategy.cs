@@ -25,6 +25,10 @@ namespace Rhino.ServiceBus.Msmq
 	public class FlatQueueStrategy : IQueueStrategy
 	{
 		private readonly Uri endpoint;
+		private const string subscriptions = "#subscriptions";
+		private const string errors = "#errors";
+		private const string timeout = "#timeout";
+		private const string discarded = "#discarded";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FlatQueueStrategy"/> class.
@@ -33,6 +37,26 @@ namespace Rhino.ServiceBus.Msmq
 		public FlatQueueStrategy(Uri endpoint)
 		{
 			this.endpoint = endpoint;
+		}
+
+		public MessageQueue InitializeQueue(Uri endpoint, MessagePropertyFilter filter)
+		{
+			var accessMode = QueueAccessMode.SendAndReceive;
+			var root = endpoint.CreateQueue(accessMode);
+			var subqueues = new[]
+			                	{
+			                		MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode),
+			                		MsmqUtil.CreateQueue(GetErrorsQueuePath(),accessMode),
+			                		MsmqUtil.CreateQueue(GetDiscardedQueuePath(),accessMode),
+			                		MsmqUtil.CreateQueue(GetTimeoutQueuePath(),accessMode)
+			                	};
+			root.MessageReadPropertyFilter = filter;
+			foreach (var queue in subqueues)
+			{
+				queue.MessageReadPropertyFilter = filter;
+			}
+			
+			return root;
 		}
 
 		/// <summary>
@@ -131,7 +155,7 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetErrorsQueuePath()
 		{
 			var path = MsmqUtil.GetQueuePath(endpoint);
-			return path + "#errors";
+			return path + errors;
 		}
 
 		/// <summary>
@@ -141,7 +165,7 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetDiscardedQueuePath()
 		{
 			var path = MsmqUtil.GetQueuePath(endpoint);
-			return path + "#discarded";
+			return path + discarded;
 		}
 
 		/// <summary>
@@ -151,13 +175,13 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetTimeoutQueuePath()
 		{
 			var path = MsmqUtil.GetQueuePath(endpoint);
-			return path + "#timeout";
+			return path + timeout;
 		}
 
 		private string GetSubscriptionQueuePath()
 		{
 			var path = MsmqUtil.GetQueuePath(endpoint);
-			return path + "#subscriptions";
+			return path + subscriptions;
 		}
 	}
 

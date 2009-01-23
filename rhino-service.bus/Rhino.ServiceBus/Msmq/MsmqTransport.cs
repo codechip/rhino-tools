@@ -26,16 +26,18 @@ namespace Rhino.ServiceBus.Msmq
 		private bool haveStarted;
 		private MessageQueue queue;
 	    private readonly IMessageAction[] messageActions;
+		private readonly IQueueStrategy queueStrategy;
 
-		public MsmqTransport(
-			IMessageSerializer serializer,
-			Uri endpoint,
-			int threadCount,
-            IMessageAction[] messageActions)
+		public MsmqTransport(IMessageSerializer serializer, 
+			Uri endpoint, 
+			int threadCount, 
+			IMessageAction[] messageActions, 
+			IQueueStrategy queueStrategy)
 		{
 			this.serializer = serializer;
 		    this.messageActions = messageActions;
-		    this.endpoint = endpoint;
+			this.queueStrategy = queueStrategy;
+			this.endpoint = endpoint;
 			this.threadCount = threadCount;
 			waitHandles = new WaitHandle[threadCount];
 		}
@@ -56,7 +58,7 @@ namespace Rhino.ServiceBus.Msmq
 				return;
 
 			logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
-			queue = InitalizeQueue(endpoint);
+			queue = InitalizeQueue(queueStrategy, endpoint);
 
 		    foreach (var messageAction in messageActions)
 		    {
@@ -229,15 +231,13 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		private static MessageQueue InitalizeQueue(Uri endpoint)
+		private static MessageQueue InitalizeQueue(IQueueStrategy queueStrategy, Uri endpoint)
 		{
 		    try
 			{
-				var messageQueue = endpoint.CreateQueue(QueueAccessMode.SendAndReceive);
 				var filter = new MessagePropertyFilter();
 				filter.SetAll();
-				messageQueue.MessageReadPropertyFilter = filter;
-				return messageQueue;
+				return queueStrategy.InitializeQueue(endpoint, filter);
 			}
 			catch (Exception e)
 			{
