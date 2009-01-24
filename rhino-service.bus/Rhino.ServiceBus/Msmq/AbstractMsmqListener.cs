@@ -15,7 +15,7 @@ namespace Rhino.ServiceBus.Msmq
 
         protected MessageQueue queue;
 
-        private volatile bool ShouldStop;
+        private volatile bool shouldStop;
 
         private readonly ILog logger = LogManager.GetLogger(typeof (AbstractMsmqListener));
 
@@ -93,7 +93,7 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Dispose()
         {
-            ShouldStop = true;
+            shouldStop = true;
 
             if (queue != null)
                 queue.Close();
@@ -147,7 +147,7 @@ namespace Rhino.ServiceBus.Msmq
             Message message;
             var state = (QueueState)ar.AsyncState;
             bool? peek = TryEndingPeek(ar, out message);
-            if (ShouldStop ||
+            if (shouldStop ||
                 peek == false)// error peeking from queue
             {
                 state.WaitHandle.Set();
@@ -169,7 +169,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 try
                 {
-                    if(ShouldStop)
+                    if(shouldStop)
                     {
                         state.WaitHandle.Set();
                     }
