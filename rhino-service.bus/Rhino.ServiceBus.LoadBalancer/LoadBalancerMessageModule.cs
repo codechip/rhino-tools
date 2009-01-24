@@ -9,10 +9,9 @@ namespace Rhino.ServiceBus.LoadBalancer
 {
     public class LoadBalancerMessageModule : IMessageModule
     {
-        private readonly PerformanceCounter cpuTime = new PerformanceCounter("Process", "% Processor Time", "_Total", true);
         private ITransport theTransport;
 
-        private Uri loadBalancerEndpoint;
+        private readonly Uri loadBalancerEndpoint;
 
         public LoadBalancerMessageModule(Uri loadBalancerEndpoint)
         {
@@ -27,10 +26,6 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void Transport_OnMessageProcessingCompleted(CurrentMessageInformation t1, Exception t2)
         {
-            var value = cpuTime.NextValue();
-            if(value > 80.1)//note that 80% means GC collection in progress, so we ignore that
-                return;
-
             theTransport.Send(loadBalancerEndpoint, new ReadyToWork
             {
                 Endpoint = theTransport.Endpoint
