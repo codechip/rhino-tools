@@ -39,7 +39,9 @@ using Castle.DynamicProxy;
 using Rhino.Mocks.Exceptions;
 using Rhino.Mocks.Generated;
 using Rhino.Mocks.Impl;
+#if !SILVERLIGHT
 using Rhino.Mocks.Impl.RemotingMock;
+#endif
 using Rhino.Mocks.Interfaces;
 using Rhino.Mocks.MethodRecorders;
 
@@ -165,7 +167,8 @@ namespace Rhino.Mocks
 		protected ProxyStateDictionary proxies;
 
 		private static readonly ProxyGenerator generator = new ProxyGenerator();
-		private readonly Stack recorders;
+        // GuntherM
+		private readonly Stack<IMethodRecorder> recorders;
 		private readonly IMethodRecorder rootRecorder;
 		/// <summary>
 		/// This is here because we can't put it in any of the recorders, since repeatable methods
@@ -206,12 +209,15 @@ namespace Rhino.Mocks
 		/// </summary>
 		public MockRepository()
 		{
-			recorders = new Stack();
+            // GuntherM
+            recorders = new Stack<IMethodRecorder>();
 			repeatableMethods = new ProxyMethodExpectationsDictionary();
 			rootRecorder = new UnorderedMethodRecorder(repeatableMethods);
 			recorders.Push(rootRecorder);
 			proxies = new ProxyStateDictionary();
-			delegateProxies = new Hashtable(MockedObjectsEquality.Instance);
+            // GuntherM
+		    delegateProxies = new Dictionary<object, object>();
+			//delegateProxies = new Hashtable(MockedObjectsEquality.Instance);
 
 			// clean up Arg data to avoid the static data to be carried from one unit test
 			// to another.
@@ -537,12 +543,17 @@ namespace Rhino.Mocks
 		/// <param name="factory">Creates the mock state for this proxy</param>
 		private object RemotingMock(Type type, CreateMockState factory)
 		{
+#if SILVERLIGHT
+            // This is a bit of a hack, but should be ok since the code should always check whether to make a remoting proxy
+		    return null;
+#else
 			ProxyInstance rhinoProxy = new ProxyInstance(this, type);
 			RhinoInterceptor interceptor = new RhinoInterceptor(this, rhinoProxy);
 			object transparentProxy = new RemotingMockGenerator().CreateRemotingMock(type, interceptor, rhinoProxy);
 			IMockState value = factory(rhinoProxy);
 			proxies.Add(transparentProxy, value);
 			return transparentProxy;
+#endif
 		}
 
 
@@ -762,13 +773,15 @@ namespace Rhino.Mocks
 			RhinoInterceptor interceptor = new RhinoInterceptor(this, new ProxyInstance(this,
 																						implementedTypesForGenericInvocationDiscoverability
 																							.ToArray()));
-			ArrayList types = new ArrayList();
+			// GuntherM
+            var types = new List<Type>();
 			types.AddRange(extras);
 			types.Add(typeof(IMockedObject));
 			object proxy;
 			try
 			{
-				proxy = GetProxyGenerator(type).CreateClassProxy(type, (Type[])types.ToArray(typeof(Type)),
+                // GuntherM
+				proxy = GetProxyGenerator(type).CreateClassProxy(type, (Type[])types.ToArray(),
 												   ProxyGenerationOptions.Default,
 												   argumentsForConstructor, interceptor);
 			}
@@ -915,10 +928,12 @@ namespace Rhino.Mocks
 				return (IMockedObject)mockedInstance;
 			}
 
+#if !SILVERLIGHT
 			if (RemotingMockGenerator.IsRemotingProxy(mockedInstance))
 			{
 				return RemotingMockGenerator.GetMockedObjectFromProxy(mockedInstance);
 			}
+#endif
 
 			return null;
 		}
@@ -962,8 +977,11 @@ namespace Rhino.Mocks
 		{
 			if (proxies.Count == 0)
 				return;
-			foreach (object key in new ArrayList(proxies.Keys))
-			{
+            // GuntherM
+            List<object> proxyKeys = new List<object>();
+            proxyKeys.AddRange(proxies.Keys);
+            foreach (object key in proxyKeys)
+            {
 				BackToRecord(key, options);
 			}
 		}
@@ -984,8 +1002,11 @@ namespace Rhino.Mocks
 		{
 			if (proxies.Count == 0)
 				return;
-			foreach (object key in new ArrayList(proxies.Keys))
-			{
+            // GuntherM
+            List<object> proxyKeys = new List<object>();
+            proxyKeys.AddRange(proxies.Keys);
+            foreach (object key in proxyKeys)
+            {
 				if (proxies[key] is RecordMockState)
 					Replay(key);
 			}
@@ -1032,8 +1053,12 @@ namespace Rhino.Mocks
 				lastRepository = null;
 			if (proxies.Keys.Count == 0)
 				return;
-			StringCollection validationErrors = new StringCollection();
-			foreach (object key in new ArrayList(proxies.Keys))
+            // GuntherM
+            List<string> validationErrors = new List<string>();
+            // GuntherM
+            List<object> proxyKeys = new List<object>();
+            proxyKeys.AddRange(proxies.Keys);
+            foreach (object key in proxyKeys)
 			{
 				if (proxies[key] is VerifiedMockState)
 					continue;
@@ -1152,9 +1177,13 @@ namespace Rhino.Mocks
 
 		private static bool ShouldUseRemotingProxy(Type type, object[] argumentsForConstructor)
 		{
+#if SILVERLIGHT
+            return false;
+#else
 			return typeof(MarshalByRefObject).IsAssignableFrom(type) &&
 				(argumentsForConstructor == null || argumentsForConstructor.Length == 0);
-		}
+#endif
+        }
 
 		/*
 		 * Method: DynamicMock<T>

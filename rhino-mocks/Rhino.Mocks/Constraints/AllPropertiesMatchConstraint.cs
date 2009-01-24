@@ -276,7 +276,8 @@ namespace Rhino.Mocks.Constraints
             {
                 if (result.Length > 0)
                 {
-                    result.Insert(0, '.');
+                    // GuntherM
+                    result.Insert(0, ".");
                 }
                 result.Insert(0, name);
             }

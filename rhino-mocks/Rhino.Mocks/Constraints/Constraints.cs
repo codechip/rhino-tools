@@ -760,7 +760,8 @@ namespace Rhino.Mocks.Constraints
     public class ContainsAll : AbstractConstraint
     {
         private IEnumerable these;
-        private ArrayList missing = new ArrayList();
+        // GuntherM
+        private System.Collections.Generic.List<object> missing = new System.Collections.Generic.List<object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsAll"/> class.

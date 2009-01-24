@@ -290,7 +290,18 @@ You can use the property directly to achieve the same result: mockObject.SomePro
             // using the pattern {Namespace.IType1, Namespace.IType2}.
             string mockedTypes = string.Empty;
             if (this.mockedObject.ImplementedTypes.Length > 0) {
-                mockedTypes = string.Format("{{{0}}} ", string.Join(", ", Array.ConvertAll<Type, string>(this.mockedObject.ImplementedTypes, delegate(Type ty) { return ty.FullName; })));
+                // GuntherM
+                //mockedTypes = string.Format("{{{0}}} ", string.Join(", ", Array.ConvertAll<Type, string>(this.mockedObject.ImplementedTypes, delegate(Type ty) { return ty.FullName; })));
+                mockedTypes += "{";
+                bool first = true;
+                foreach (Type ty in this.mockedObject.ImplementedTypes) {
+                    if (first)
+                        first = false;
+                    else
+                        mockedTypes += ", "; 
+                    mockedTypes += ty.FullName;
+                }
+                mockedTypes += "} ";
             }
 
             return new InvalidOperationException(string.Format("This action is invalid when the mock object {0}is in record state.", mockedTypes));
@@ -299,7 +310,16 @@ You can use the property directly to achieve the same result: mockObject.SomePro
         private IExpectation BuildDefaultExpectation(IInvocation invocation, MethodInfo method, object[] args)
         {
             ParameterInfo[] parameters = method.GetParameters();
-            if (!Array.Exists(parameters, delegate(ParameterInfo p) { return p.IsOut; }))
+            //GuntherM
+            bool exists = false;
+            foreach (ParameterInfo p in parameters) {
+                if (p.IsOut) {
+                    exists = true;
+                    break;
+                }                
+            }
+            if (!exists)
+            //if (!Array..Exists(parameters, delegate(ParameterInfo p) { return p.IsOut; }))
             {
                 return new ArgsEqualExpectation(invocation, args, GetDefaultCallCountRangeExpectation());
             }

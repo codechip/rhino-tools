@@ -123,7 +123,6 @@ namespace Rhino.Mocks.Tests.Expectations
 			callbackCalled = true;
 			return true;
 		}
-
 		#endregion
 	}
 }

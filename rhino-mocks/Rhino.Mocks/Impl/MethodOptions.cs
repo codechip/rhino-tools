@@ -429,16 +429,24 @@ namespace Rhino.Mocks.Impl
 		{
 			string propName = method.Name.Substring(4);
 			ParameterInfo[] args = method.GetParameters();
-			ArrayList types = new ArrayList();
-			for (int i = 0; i < args.Length; i++)
+            // GuntherM
+            var types = new System.Collections.Generic.List<Type>();
+            for (int i = 0; i < args.Length; i++)
 			{
 				//remove the value parameter for finding the property if indexed
 				if (i == 0 && method.Name.StartsWith("set_"))
 					continue;
 				types.Add(args[i].ParameterType);
 			}
+            // GuntherM
+#if SILVERLIGHT
+		    PropertyInfo prop = expectation.Method.DeclaringType.GetProperty(propName,
+  	                                                                         method.ReturnType,
+                                                                             (Type[])types.ToArray());
+#else
 			PropertyInfo prop = expectation.Method.DeclaringType.GetProperty(propName,
-			                                                                 (Type[]) types.ToArray(typeof (Type)));
+			                                                                 (Type[]) types.ToArray());
+#endif
 			return prop;
 		}
 

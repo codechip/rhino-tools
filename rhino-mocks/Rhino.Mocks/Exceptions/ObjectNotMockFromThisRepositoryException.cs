@@ -41,7 +41,9 @@ namespace Rhino.Mocks.Exceptions
 	/// Signals that an object was call on a mock repostiroy which doesn't
 	/// belong to this mock repository or not a mock
 	/// </summary>
+#if !SILVERLIGHT
 	[Serializable()]
+#endif
 	public class ObjectNotMockFromThisRepositoryException : Exception
 	{
 		#region Constructors
@@ -54,12 +56,13 @@ namespace Rhino.Mocks.Exceptions
 		{
 		}
 		
+#if !SILVERLIGHT
 		/// <summary>
 		/// Serialization constructor
 		/// </summary>
 		protected ObjectNotMockFromThisRepositoryException(SerializationInfo info, StreamingContext context)
         :base(info,context){} 
-
+#endif
 		#endregion
 	}
 }

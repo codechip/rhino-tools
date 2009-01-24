@@ -1,0 +1,325 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3E2855A-1A6C-4788-B14B-5E727B314C42}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rhino.Mocks_3._5.Silverlight</RootNamespace>
+    <AssemblyName>Rhino.Mocks 3.5.Silverlight</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core-Silverlight, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.Core-Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy-Silverlight, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedLibs\Castle\Castle.DynamicProxy-Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Rhino.Mocks\Arg.cs">
+      <Link>Arg.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\ArgManager.cs">
+      <Link>ArgManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\BackToRecordOptions.cs">
+      <Link>BackToRecordOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\CompatabilityWith2.0.cs">
+      <Link>CompatabilityWith2.0.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\AbstractConstraint.cs">
+      <Link>Constraints\AbstractConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\AllPropertiesMatchConstraint.cs">
+      <Link>Constraints\AllPropertiesMatchConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\Constraints.cs">
+      <Link>Constraints\Constraints.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\Is.cs">
+      <Link>Constraints\Is.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\IsArg.cs">
+      <Link>Constraints\IsArg.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\List.cs">
+      <Link>Constraints\List.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\ListArg.cs">
+      <Link>Constraints\ListArg.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\OutRefArgDummy.cs">
+      <Link>Constraints\OutRefArgDummy.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\Property.cs">
+      <Link>Constraints\Property.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\PublicField.cs">
+      <Link>Constraints\PublicField.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\Text.cs">
+      <Link>Constraints\Text.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Constraints\TextArg.cs">
+      <Link>Constraints\TextArg.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Delegates.cs">
+      <Link>Delegates.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\DoNotExpect.cs">
+      <Link>DoNotExpect.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Exceptions\ExpectationViolationException.cs">
+      <Link>Exceptions\ExpectationViolationException.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Exceptions\ObjectNotMockFromThisRepositoryException.cs">
+      <Link>Exceptions\ObjectNotMockFromThisRepositoryException.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expect.cs">
+      <Link>Expect.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expectations\AbstractExpectation.cs">
+      <Link>Expectations\AbstractExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expectations\AnyArgsExpectation.cs">
+      <Link>Expectations\AnyArgsExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expectations\ArgsEqualExpectation.cs">
+      <Link>Expectations\ArgsEqualExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expectations\CallbackExpectation.cs">
+      <Link>Expectations\CallbackExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Expectations\ConstraintsExpectation.cs">
+      <Link>Expectations\ConstraintsExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\ExpectationVerificationInformation.cs">
+      <Link>ExpectationVerificationInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Generated\ExpectationsListGenerated.cs">
+      <Link>Generated\ExpectationsListGenerated.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Generated\ProxyMethodExpectationsDictionaryGenerated.cs">
+      <Link>Generated\ProxyMethodExpectationsDictionaryGenerated.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Generated\ProxyStateDictionaryGenerated.cs">
+      <Link>Generated\ProxyStateDictionaryGenerated.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\CreateMethodExpectation.cs">
+      <Link>Impl\CreateMethodExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\CreateMethodExpectationForSetupResult.cs">
+      <Link>Impl\CreateMethodExpectationForSetupResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\DelegateTargetInterfaceCreator.cs">
+      <Link>Impl\DelegateTargetInterfaceCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\EventRaiser.cs">
+      <Link>Impl\EventRaiser.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\MethodOptions.cs">
+      <Link>Impl\MethodOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\MockedObjectsEquality.cs">
+      <Link>Impl\MockedObjectsEquality.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\NullLogger.cs">
+      <Link>Impl\NullLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\ProxyInstance.cs">
+      <Link>Impl\ProxyInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\Range.cs">
+      <Link>Impl\Range.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\RecordDynamicMockState.cs">
+      <Link>Impl\RecordDynamicMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\RecordMockState.cs">
+      <Link>Impl\RecordMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\RecordPartialMockState.cs">
+      <Link>Impl\RecordPartialMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\RepeatableOption.cs">
+      <Link>Impl\RepeatableOption.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\ReplayDynamicMockState.cs">
+      <Link>Impl\ReplayDynamicMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\ReplayMockState.cs">
+      <Link>Impl\ReplayMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\ReplayPartialMockState.cs">
+      <Link>Impl\ReplayPartialMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\RhinoInterceptor.cs">
+      <Link>Impl\RhinoInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\StubRecordMockState.cs">
+      <Link>Impl\StubRecordMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\StubReplayMockState.cs">
+      <Link>Impl\StubReplayMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\TextWriterExpectationLogger.cs">
+      <Link>Impl\TextWriterExpectationLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\TraceWriterExpectationLogger.cs">
+      <Link>Impl\TraceWriterExpectationLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\TraceWriterWithStackTraceExpectationWriter.cs">
+      <Link>Impl\TraceWriterWithStackTraceExpectationWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\Validate.cs">
+      <Link>Impl\Validate.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Impl\VerifiedMockState.cs">
+      <Link>Impl\VerifiedMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\ICreateMethodExpectation.cs">
+      <Link>Interfaces\ICreateMethodExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IEventRaiser.cs">
+      <Link>Interfaces\IEventRaiser.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IExpectation.cs">
+      <Link>Interfaces\IExpectation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IExpectationLogger.cs">
+      <Link>Interfaces\IExpectationLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IMethodOptions.cs">
+      <Link>Interfaces\IMethodOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IMethodRecorder.cs">
+      <Link>Interfaces\IMethodRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IMockedObject.cs">
+      <Link>Interfaces\IMockedObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IMockState.cs">
+      <Link>Interfaces\IMockState.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IPartialMockMarker.cs">
+      <Link>Interfaces\IPartialMockMarker.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\IRepeat.cs">
+      <Link>Interfaces\IRepeat.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Interfaces\OriginalCallOptions.cs">
+      <Link>Interfaces\OriginalCallOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\LastCall.cs">
+      <Link>LastCall.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodInvocation.cs">
+      <Link>MethodInvocation.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\MethodRecorderBase.cs">
+      <Link>MethodRecorders\MethodRecorderBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\OrderedMethodRecorder.cs">
+      <Link>MethodRecorders\OrderedMethodRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\ProxyMethodExpectationTriplet.cs">
+      <Link>MethodRecorders\ProxyMethodExpectationTriplet.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\ProxyMethodPair.cs">
+      <Link>MethodRecorders\ProxyMethodPair.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\RecorderChanger.cs">
+      <Link>MethodRecorders\RecorderChanger.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MethodRecorders\UnorderedMethodRecorder.cs">
+      <Link>MethodRecorders\UnorderedMethodRecorder.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Mocker.cs">
+      <Link>Mocker.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MockRepository.cs">
+      <Link>MockRepository.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\MockRepositoryRecordPlayback.cs">
+      <Link>MockRepositoryRecordPlayback.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\RhinoMocks.cs">
+      <Link>RhinoMocks.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\RhinoMocksExtensions.cs">
+      <Link>RhinoMocksExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\SetupResult.cs">
+      <Link>SetupResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Utilities\GenericsUtil.cs">
+      <Link>Utilities\GenericsUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Utilities\MethodCallUtil.cs">
+      <Link>Utilities\MethodCallUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\Utilities\ReturnValueUtil.cs">
+      <Link>Utilities\ReturnValueUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Rhino.Mocks\With.cs">
+      <Link>With.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

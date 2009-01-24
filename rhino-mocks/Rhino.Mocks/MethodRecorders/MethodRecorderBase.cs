@@ -28,6 +28,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using Castle.Core.Interceptor;
@@ -50,7 +51,8 @@ namespace Rhino.Mocks.MethodRecorders
 		///		* Expectations
 		///		* Method Recorders
 		/// </summary>
-		protected IList recordedActions = new ArrayList();
+		/// GuntherM
+        protected IList recordedActions = new List<object>();
 
 		/// <summary>
 		/// The current recorder.
@@ -72,7 +74,8 @@ namespace Rhino.Mocks.MethodRecorders
 		/// for a spesific method call. A replayer gets into this list by calling 
 		/// ClearReplayerToCall() on its parent. This list is Clear()ed on each new invocation.
 		/// </summary>
-		private readonly IList replayersToIgnoreForThisCall = new ArrayList();
+		/// GuntherM
+        private readonly IList replayersToIgnoreForThisCall = new List<object>();
 
 		/// <summary>
 		/// All the repeatable methods calls.

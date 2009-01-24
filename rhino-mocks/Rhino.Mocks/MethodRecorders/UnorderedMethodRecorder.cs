@@ -28,6 +28,7 @@
 
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Castle.Core.Interceptor;
@@ -264,7 +265,9 @@ namespace Rhino.Mocks.MethodRecorders
 			Validate.IsNotNull(args, "args");
 			// Need this because we may want to modify the recordedAction list as we traverse it
 			// See: ClearReplayerToCall();
-			ArrayList traversalSafeCopy = new ArrayList(recordedActions);
+            // GuntherM
+            List<object> traversalSafeCopy = new List<object>();
+            traversalSafeCopy.AddRange(recordedActions as List<object>);
 			bool allSatisfied = true;
 			foreach (object action in traversalSafeCopy)
 			{

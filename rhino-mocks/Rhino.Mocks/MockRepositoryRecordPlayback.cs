@@ -84,6 +84,10 @@ namespace Rhino.Mocks
 		{
 			//If we're running under Mono, then we don't want to call Marshall.GetExceptionCode as it
 			// currently is not implemented
+            // GuntherM - not implemented under Silverlight either
+#if SILVERLIGHT
+		    return false;
+#else
 			Type t = Type.GetType("Mono.Runtime");
 			if (t == null)
 			{
@@ -94,6 +98,7 @@ namespace Rhino.Mocks
 				}
 			}
 			return false;
+#endif
 		}
 	}
 

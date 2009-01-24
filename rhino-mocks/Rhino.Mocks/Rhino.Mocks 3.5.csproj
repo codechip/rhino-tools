@@ -15,7 +15,7 @@
     <RootNamespace>Rhino.Mocks</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\ayende-open-source.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>ayende-open-source.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -261,10 +261,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="With.cs" />
-    <None Include="..\..\ayende-open-source.snk">
-      <Link>ayende-open-source.snk</Link>
-    </None>
     <Compile Include="CompatabilityWith2.0.cs" />
+    <None Include="ayende-open-source.snk" />
     <None Include="Diagram.cd" />
   </ItemGroup>
   <ItemGroup>

@@ -39,7 +39,9 @@ namespace Rhino.Mocks.Exceptions
 	/// <summary>
 	/// An expectaton violation was detected.
 	/// </summary>
+#if !SILVERLIGHT
 	[Serializable()]
+#endif
 	public class ExpectationViolationException : Exception
 	{
 		#region Constructors
@@ -53,12 +55,13 @@ namespace Rhino.Mocks.Exceptions
 		}
 		
 		
+#if !SILVERLIGHT
 		/// <summary>
 		/// Serialization constructor
 		/// </summary>
 		protected ExpectationViolationException(SerializationInfo info, StreamingContext context)
         :base(info,context){} 
-
+#endif
 		#endregion
 	}
 }

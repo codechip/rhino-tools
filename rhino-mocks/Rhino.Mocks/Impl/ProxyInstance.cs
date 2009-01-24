@@ -41,7 +41,11 @@ namespace Rhino.Mocks.Impl
 	/// This is a dummy type that is used merely to give DynamicProxy the proxy instance that
 	/// it needs to create IProxy's types.
 	/// </summary>
+#if SILVERLIGHT
+    public class ProxyInstance : IMockedObject
+#else
 	public class ProxyInstance : MarshalByRefObject, IMockedObject
+#endif
 	{
 		private readonly MockRepository repository;
 		private readonly int hashCode;
@@ -108,7 +112,8 @@ namespace Rhino.Mocks.Impl
 		public void RegisterMethodForCallingOriginal(MethodInfo method)
 		{
 			if (originalMethodsToCall == null)
-				originalMethodsToCall = new ArrayList();
+                // GuntherM
+				originalMethodsToCall = new List<MethodInfo>();
 			originalMethodsToCall.Add(method);
 		}
 
@@ -119,7 +124,8 @@ namespace Rhino.Mocks.Impl
 		public bool RegisterPropertyBehaviorFor(PropertyInfo prop)
 		{
 			if (propertiesToSimulate == null)
-				propertiesToSimulate = new ArrayList();
+                // GuntherM
+				propertiesToSimulate = new List<MethodInfo>();
 			MethodInfo getMethod = prop.GetGetMethod(true);
             MethodInfo setMethod = prop.GetSetMethod(true);
 			if (propertiesToSimulate.Contains(getMethod) == false)
@@ -176,7 +182,8 @@ namespace Rhino.Mocks.Impl
 		public object HandleProperty(MethodInfo method, object[] args)
 		{
 			if (propertiesValues == null)
-				propertiesValues = new Hashtable();
+                // GuntherM
+                propertiesValues = new Dictionary<object, object>();
 		    
             if (method.Name.StartsWith("get_"))
 			{
@@ -203,7 +210,8 @@ namespace Rhino.Mocks.Impl
 		public void HandleEvent(MethodInfo method, object[] args)
 		{
 			if (eventsSubscribers == null)
-				eventsSubscribers = new Hashtable();
+                // GuntherM
+                eventsSubscribers = new Dictionary<object, object>();
 
 			Delegate subscriber = (Delegate) args[0];
 			if (method.Name.StartsWith("add_"))
@@ -255,10 +263,10 @@ namespace Rhino.Mocks.Impl
 	        set { constructorArguments = value; }
 	    }
 
+        private object mockedObjectInstance;
         /// <summary>
         /// The mocked instance that this is representing
         /// </summary>
-		private object mockedObjectInstance;
         public object MockedObjectInstance
         {
             get { return mockedObjectInstance; } 

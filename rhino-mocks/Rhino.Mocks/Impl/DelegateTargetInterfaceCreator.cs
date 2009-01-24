@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
@@ -49,7 +50,7 @@ namespace Rhino.Mocks.Impl
         /// </summary>
         private ModuleScope moduleScope = new ModuleScope();
 
-        private IDictionary delegateTargetInterfaces = new Hashtable();
+        private IDictionary delegateTargetInterfaces = new Dictionary<object,object>();
         
         /// <summary>
         /// Gets a type with an "Invoke" method suitable for use as a target of the

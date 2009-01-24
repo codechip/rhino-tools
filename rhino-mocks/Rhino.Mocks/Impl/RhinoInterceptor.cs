@@ -39,7 +39,11 @@ namespace Rhino.Mocks.Impl
 	/// <summary>
 	/// Summary description for RhinoInterceptor.
 	/// </summary>
+#if SILVERLIGHT
+    public class RhinoInterceptor : IInterceptor
+#else
 	public class RhinoInterceptor : MarshalByRefObject, IInterceptor
+#endif
 	{
 		private readonly MockRepository repository;
 		private readonly IMockedObject proxyInstance;
