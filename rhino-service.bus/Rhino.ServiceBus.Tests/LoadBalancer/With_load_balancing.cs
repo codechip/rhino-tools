@@ -6,6 +6,7 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.LoadBalancer.Msmq;
+using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using Xunit;
 
@@ -55,13 +56,54 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
                 Assert.Equal("abcdefg", MyHandler.Value);
             }
+        }
 
+        [Fact]
+        public void Will_send_administrative_messages_to_all_nodes()
+        {
+            using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                loadBalancer.Start();
+                bus.Start();
+
+                bus.Send(loadBalancer.Endpoint, new ReadyToWork
+                {
+                    Endpoint = TransactionalTestQueueUri
+                });
+
+                bus.Send(loadBalancer.Endpoint, new ReadyToWork
+                {
+                    Endpoint = TestQueueUri2
+                });
+
+                bus.Send(loadBalancer.Endpoint, new AddSubscription
+                {
+                    Endpoint = bus.Endpoint.ToString(),
+                    Type = "foobar"
+                });
+            }
+
+            using(var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
+            {
+                var message = q.Receive(MessageQueueTransactionType.Single);
+                Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
+            }
+
+            using (var q = new MessageQueue(MsmqUtil.GetQueuePath(TestQueueUri2)))
+            {
+                var message = q.Receive(MessageQueueTransactionType.Single);
+                Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
+            }
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            MessageQueue.Delete(MsmqUtil.GetQueuePath(loadBalancerQueue));
+            using(var q = new MessageQueue(MsmqUtil.GetQueuePath(loadBalancerQueue)))
+            {
+                q.Purge();
+            }
         }
 
         public class MyHandler : ConsumerOf<string>

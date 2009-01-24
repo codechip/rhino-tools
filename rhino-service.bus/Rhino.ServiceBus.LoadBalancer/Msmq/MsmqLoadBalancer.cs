@@ -18,6 +18,7 @@ namespace Rhino.ServiceBus.LoadBalancer.Msmq
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqLoadBalancer));
 
         private readonly Queue<Uri> readyForWork = new Queue<Uri>();
+        private readonly Set<Uri> knownWorkers = new Set<Uri>();
 
         public MsmqLoadBalancer(
             IMessageSerializer serializer,
@@ -62,7 +63,11 @@ namespace Rhino.ServiceBus.LoadBalancer.Msmq
                     HandleLoadBalancerMessage(message, true);
                     return;
                 }
-
+                if (message.AppSpecific==(int)MessageType.AdministrativeMessageMarker)
+                {
+                    HandleAdministrativeMessage(message);
+                    return;
+                }
                 using(var tx = new  TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
                 {
                     message = state.Queue.TryGetMessageFromQueue(message.Id);
@@ -85,6 +90,21 @@ namespace Rhino.ServiceBus.LoadBalancer.Msmq
             catch (Exception e)
             {
                 logger.Error("Fail to process message properly", e);
+            }
+        }
+
+        private void HandleAdministrativeMessage(Message message)
+        {
+            using(var tx = new TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
+            {
+                foreach (var worker in knownWorkers.GetValues())
+                {
+                    using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(worker), QueueAccessMode.Send))
+                    {
+                        workerQueue.Send(message, workerQueue.GetTransactionType());
+                    } 
+                }
+                tx.Complete();
             }
         }
 
@@ -115,6 +135,7 @@ namespace Rhino.ServiceBus.LoadBalancer.Msmq
                 var work = msg as ReadyToWork;
                 if (work != null)
                 {
+                    knownWorkers.Add(work.Endpoint);
                     readyForWork.Enqueue(work.Endpoint);
                 }
             }
