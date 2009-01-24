@@ -68,6 +68,7 @@
     <Compile Include="Convertors\ThrowingWireEcryptedStringConvertor.cs" />
     <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
     <Compile Include="DataStructures\OrderedList.cs" />
+    <Compile Include="DataStructures\Queue.cs" />
     <Compile Include="DataStructures\WireEcryptedString.cs" />
     <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />

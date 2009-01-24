@@ -1,8 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Messaging;
-using System.Threading;
 using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
@@ -155,14 +153,6 @@ namespace Rhino.ServiceBus.Msmq
                 ProcessMessage(message, state.Queue, tx, MessageArrived, MessageProcessingCompleted);
 			}
 		}
-
-        protected static TimeSpan GetTransactionTimeout()
-        {
-            if (Debugger.IsAttached)
-                return TimeSpan.FromMinutes(45);
-            return TimeSpan.Zero;
-        }
-
 
         private void HandleMessageCompletion(
 			Message message,

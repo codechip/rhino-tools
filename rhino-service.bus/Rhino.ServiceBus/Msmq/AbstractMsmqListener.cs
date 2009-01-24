@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Messaging;
 using System.Threading;
 using log4net;
@@ -201,6 +202,13 @@ namespace Rhino.ServiceBus.Msmq
                 return false;
             }
             return true;
+        }
+
+        protected static TimeSpan GetTransactionTimeout()
+        {
+            if (Debugger.IsAttached)
+                return TimeSpan.FromMinutes(45);
+            return TimeSpan.Zero;
         }
     }
 }
