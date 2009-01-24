@@ -1,12 +1,11 @@
 using System;
 using System.Configuration;
 using Castle.Core.Configuration;
-using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.MessageModules;
 
-namespace Rhino.ServiceBus.Configuration
+namespace Rhino.ServiceBus.Config
 {
     public class LoggingConfiguration : IBusConfigurationAware
     {

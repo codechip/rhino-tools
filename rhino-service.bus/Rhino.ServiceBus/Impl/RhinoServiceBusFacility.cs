@@ -7,7 +7,7 @@ using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
-using Rhino.ServiceBus.Configuration;
+using Rhino.ServiceBus.Config;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;

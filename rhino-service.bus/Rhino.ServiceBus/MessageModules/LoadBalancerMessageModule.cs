@@ -1,11 +1,9 @@
 using System;
-using System.Diagnostics;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.LoadBalancer.Messages;
-using Rhino.ServiceBus.MessageModules;
+using Rhino.ServiceBus.Messages;
 
-namespace Rhino.ServiceBus.LoadBalancer
+namespace Rhino.ServiceBus.MessageModules
 {
     public class LoadBalancerMessageModule : IMessageModule
     {
@@ -22,9 +20,16 @@ namespace Rhino.ServiceBus.LoadBalancer
         {
             transport.MessageProcessingCompleted+=Transport_OnMessageProcessingCompleted;
             theTransport = transport;
+
+            theTransport.Started += TellLoadBalancerThatWeAreReadyForWork;
         }
 
         private void Transport_OnMessageProcessingCompleted(CurrentMessageInformation t1, Exception t2)
+        {
+            TellLoadBalancerThatWeAreReadyForWork();
+        }
+
+        private void TellLoadBalancerThatWeAreReadyForWork()
         {
             theTransport.Send(loadBalancerEndpoint, new ReadyToWork
             {

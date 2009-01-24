@@ -90,6 +90,7 @@
     <Compile Include="CanCreateInstancesOfServiceBusFromContainer.cs" />
     <Compile Include="FlatQueueStrategyTests.cs" />
     <Compile Include="Hosting\Can_host_in_another_app_domain.cs" />
+    <Compile Include="LoadBalancer\With_load_balancing.cs" />
     <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
     <Compile Include="Messages_that_have_no_handlers.cs" />
@@ -119,6 +120,10 @@
       <Project>{F30B2D63-CED5-4C8A-908F-0B5503D984A9}</Project>
       <Name>Rhino.DHT</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rhino.ServiceBus.LoadBalancer\Rhino.ServiceBus.LoadBalancer.csproj">
+      <Project>{2F64B713-1536-4CA2-B961-05F703207216}</Project>
+      <Name>Rhino.ServiceBus.LoadBalancer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhino.ServiceBus\Rhino.ServiceBus.csproj">
       <Project>{1B21C8A5-5E0E-412B-A7F4-9F28B4427F21}</Project>
       <Name>Rhino.ServiceBus</Name>
@@ -133,6 +138,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="BusOnTransactionalQueue.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadBalancer\BusWithLoadBalancer.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="InitBus.config">

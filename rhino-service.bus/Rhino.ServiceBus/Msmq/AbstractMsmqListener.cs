@@ -7,7 +7,7 @@ using Rhino.ServiceBus.Exceptions;
 
 namespace Rhino.ServiceBus.Msmq
 {
-    public abstract class AbstractMsmqListener
+    public abstract class AbstractMsmqListener : IDisposable
     {
         private readonly Uri endpoint;
         private readonly WaitHandle[] waitHandles;
@@ -28,9 +28,16 @@ namespace Rhino.ServiceBus.Msmq
             waitHandles = new WaitHandle[threadCount];
         }
 
+        public event Action Started;
+
         public bool HaveStarted
         {
             get { return haveStarted; }
+        }
+
+        public int ThreadCount
+        {
+            get { return threadCount; }
         }
 
         public Uri Endpoint
@@ -73,6 +80,10 @@ namespace Rhino.ServiceBus.Msmq
             }
 
             haveStarted = true;
+
+            var copy = Started;
+            if (copy != null)
+                copy();
         }
 
         protected virtual void BeforeStart()

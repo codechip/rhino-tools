@@ -54,10 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILoadBalancer.cs" />
-    <Compile Include="LoadBalancerMessageModule.cs" />
-    <Compile Include="Messages\ReadyToWork.cs" />
-    <Compile Include="Msmq\MessageType.cs" />
     <Compile Include="Msmq\MsmqLoadBalancer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

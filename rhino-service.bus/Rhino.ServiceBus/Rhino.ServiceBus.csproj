@@ -64,9 +64,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\LoggingConfiguration.cs" />
-    <Compile Include="Configuration\SecurityConfiguration.cs" />
-    <Compile Include="Configuration\IBusConfigurationAware.cs" />
+    <Compile Include="Config\IBusConfigurationAware.cs" />
+    <Compile Include="Config\LoadBalancerConfiguration.cs" />
+    <Compile Include="Config\LoggingConfiguration.cs" />
+    <Compile Include="Config\SecurityConfiguration.cs" />
     <Compile Include="ConsumerOf.cs" />
     <Compile Include="Convertors\ThrowingWireEcryptedStringConvertor.cs" />
     <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
@@ -91,7 +92,10 @@
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
+    <Compile Include="MessageModules\LoadBalancerMessageModule.cs" />
+    <Compile Include="Messages\LoadBalancerMessage.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
+    <Compile Include="Messages\ReadyToWork.cs" />
     <Compile Include="Msmq\AbstractMsmqListener.cs" />
     <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />

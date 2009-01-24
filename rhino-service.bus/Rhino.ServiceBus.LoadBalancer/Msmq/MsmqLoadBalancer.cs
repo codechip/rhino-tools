@@ -5,28 +5,44 @@ using log4net;
 using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.LoadBalancer.Messages;
+using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
+using MessageType=Rhino.ServiceBus.Msmq.MessageType;
 
 namespace Rhino.ServiceBus.LoadBalancer.Msmq
 {
-    public class MsmqLoadBalancer : AbstractMsmqListener, ILoadBalancer
+    public class MsmqLoadBalancer : AbstractMsmqListener
     {
         private readonly IMessageSerializer serializer;
+        private readonly IQueueStrategy queueStrategy;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqLoadBalancer));
 
         private readonly Queue<Uri> readyForWork = new Queue<Uri>();
 
         public MsmqLoadBalancer(
             IMessageSerializer serializer,
-            Uri endpoint, int threadCount)
+            IQueueStrategy queueStrategy,
+            Uri endpoint, 
+            int threadCount)
             : base(endpoint, threadCount)
         {
             this.serializer = serializer;
+            this.queueStrategy = queueStrategy;
         }
 
         protected override void BeforeStart()
         {
+            try
+            {
+                queueStrategy.InitializeQueue(Endpoint);
+            }
+            catch (Exception e)
+            {
+                throw new TransportException(
+                    "Could not open queue for load balancer: " + Endpoint + Environment.NewLine +
+                    "Queue path: " + MsmqUtil.GetQueuePath(Endpoint), e);
+            }
+
             using (var workersQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint + ";Workers"), QueueAccessMode.Receive))
             {
                 var messages = workersQueue.GetAllMessages();

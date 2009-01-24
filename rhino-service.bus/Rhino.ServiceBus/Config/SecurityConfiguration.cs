@@ -8,7 +8,7 @@ using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 
-namespace Rhino.ServiceBus.Configuration
+namespace Rhino.ServiceBus.Config
 {
     public class SecurityConfiguration : IBusConfigurationAware
     {

@@ -16,6 +16,11 @@ namespace Rhino.ServiceBus.Msmq
 		[ThreadStatic]
 		private static MsmqCurrentMessageInformation currentMessageInformation;
 
+        public static MsmqCurrentMessageInformation CurrentMessageInformation
+        {
+            get { return currentMessageInformation; }
+        }
+
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
 		private readonly IMessageSerializer serializer;
         private readonly ITransportAction[] transportActions;
@@ -45,11 +50,16 @@ namespace Rhino.ServiceBus.Msmq
 			Send(currentMessageInformation.Source, messages);
 		}
 
-		public event Action<CurrentMessageInformation> MessageSent;
-	    public event Func<CurrentMessageInformation, bool> AdministrativeMessageArrived;
-		public event Func<CurrentMessageInformation, bool> MessageArrived;
-		public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
+        public event Action<CurrentMessageInformation> MessageSent;
+	    
+        public event Func<CurrentMessageInformation, bool> AdministrativeMessageArrived;
+		
+        public event Func<CurrentMessageInformation, bool> MessageArrived;
+		
+        public event Action<CurrentMessageInformation, Exception> MessageProcessingFailure;
+        
         public event Action<CurrentMessageInformation, Exception> MessageProcessingCompleted;
+        
         public event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
 
 		public void Discard(object msg)
@@ -91,7 +101,7 @@ namespace Rhino.ServiceBus.Msmq
 			SendMessageToQueue(message, uri);
 		}
 
-		public void Send(Uri uri, params object[] msgs)
+        public void Send(Uri uri, params object[] msgs)
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
@@ -121,8 +131,7 @@ namespace Rhino.ServiceBus.Msmq
 
 			SetCorrelationIdOnMessage(message);
 
-			message.AppSpecific =
-				msgs[0] is AdministrativeMessage ? (int)MessageType.AdministrativeMessageMarker : 0;
+			message.AppSpecific = GetAppSpecificMarker(msgs);
 
 			message.Label = msgs
 				.Where(msg => msg != null)
@@ -137,7 +146,17 @@ namespace Rhino.ServiceBus.Msmq
 			return message;
 		}
 
-		public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
+        private static int GetAppSpecificMarker(object[] msgs)
+        {
+            var msg = msgs[0];
+            if (msg is AdministrativeMessage)
+                return (int) MessageType.AdministrativeMessageMarker;
+            if (msg is LoadBalancerMessage)
+                return (int) MessageType.LoadBalancerMessage;
+            return 0;
+        }
+
+        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
 
 		#endregion
 
