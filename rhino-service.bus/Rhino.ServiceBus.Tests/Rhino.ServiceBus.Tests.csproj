@@ -90,6 +90,7 @@
     <Compile Include="CanCreateInstancesOfServiceBusFromContainer.cs" />
     <Compile Include="FlatQueueStrategyTests.cs" />
     <Compile Include="Hosting\Can_host_in_another_app_domain.cs" />
+    <Compile Include="LoadBalancer\With_load_balancing.cs" />
     <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
     <Compile Include="Messages_that_have_no_handlers.cs" />
@@ -137,6 +138,9 @@
     </None>
     <None Include="InitBus.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadBalancer\BusWithLoadBalancer.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

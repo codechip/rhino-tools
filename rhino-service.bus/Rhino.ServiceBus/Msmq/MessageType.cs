@@ -8,5 +8,6 @@ namespace Rhino.ServiceBus.Msmq
 		ShutDownMessageMarker = 1337,
 		AdministrativeMessageMarker = 42,
 		TimeoutMessageMarker = 0x1e023abc,
+	    LoadBalancerMessage = 0xae3fbac
 	}
 }

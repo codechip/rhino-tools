@@ -30,5 +30,6 @@ namespace Rhino.ServiceBus.Internal
 
     	void Send(Uri uri, DateTime processAgainAt, object[] msgs);
 
-      }
+        event Action Started;
+    }
 }

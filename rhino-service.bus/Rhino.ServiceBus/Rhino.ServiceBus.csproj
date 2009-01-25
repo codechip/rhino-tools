@@ -72,6 +72,7 @@
     <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
     <Compile Include="DataStructures\OrderedList.cs" />
     <Compile Include="DataStructures\Queue.cs" />
+    <Compile Include="DataStructures\Set.cs" />
     <Compile Include="DataStructures\WireEcryptedString.cs" />
     <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
@@ -91,7 +92,11 @@
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
+    <Compile Include="LoadBalancer\MsmqLoadBalancer.cs" />
+    <Compile Include="MessageModules\LoadBalancerMessageModule.cs" />
+    <Compile Include="Messages\LoadBalancerMessage.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
+    <Compile Include="Messages\ReadyToWork.cs" />
     <Compile Include="Msmq\AbstractMsmqListener.cs" />
     <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />

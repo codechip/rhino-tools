@@ -151,8 +151,8 @@ namespace Rhino.ServiceBus.Msmq
             var msg = msgs[0];
             if (msg is AdministrativeMessage)
                 return (int) MessageType.AdministrativeMessageMarker;
-            //if (msg is LoadBalancerMessage)
-            //    return (int) MessageType.LoadBalancerMessage;
+            if (msg is LoadBalancerMessage)
+                return (int) MessageType.LoadBalancerMessage;
             return 0;
         }
 

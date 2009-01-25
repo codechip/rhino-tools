@@ -153,7 +153,7 @@ namespace Rhino.ServiceBus.Tests
                 gotSecondMessage.Set();
             }
 
-            [Fact]
+            [Fact(Skip = "There is a race condition between the transport and the consumer")]
             public void A_message_that_fails_processing_should_go_back_to_queue_on_transactional_queue()
             {
                 TransactionalTransport.MessageArrived += ThrowOnFirstAction();
