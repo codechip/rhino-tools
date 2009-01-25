@@ -35,14 +35,14 @@ namespace Rhino.ServiceBus.Tests
             module.Init(transport);
 
             transport.Raise(x => x.MessageSerializationException += null,
-                new CurrentMessageInformation { MessageId = CorrelationId.New() },
+                new CurrentMessageInformation { MessageId = Guid.NewGuid() },
                 new InvalidOperationException());
 
             var msg = queue.Receive();
 
             var serializationError = (SerializationErrorMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.Equal("System.InvalidOperationException: Operation is not valid due to the current state of the object.", serializationError.Error);
-            Assert.NotEqual(CorrelationId.Empty, serializationError.MessageId);
+            Assert.NotEqual(Guid.Empty, serializationError.MessageId);
         }
 
         [Fact]
@@ -54,14 +54,14 @@ namespace Rhino.ServiceBus.Tests
             transport.Raise(x => x.MessageArrived += null,
                 new CurrentMessageInformation
                 {
-                    MessageId = CorrelationId.New(),
+                    MessageId = Guid.NewGuid(),
                     Message = "tst"
                 });
 
             var msg = queue.Receive();
 
             var messageArrivedMessage = (MessageArrivedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
-            Assert.NotEqual(CorrelationId.Empty, messageArrivedMessage.MessageId);
+            Assert.NotEqual(Guid.Empty, messageArrivedMessage.MessageId);
             Assert.Equal("tst", messageArrivedMessage.Message);
         }
 
@@ -74,7 +74,7 @@ namespace Rhino.ServiceBus.Tests
             transport.Raise(x => x.MessageProcessingCompleted += null,
                             new CurrentMessageInformation
                             {
-                                MessageId = CorrelationId.New(),
+                                MessageId = Guid.NewGuid(),
                                 Message = "tst"
                             },
                             new Exception());
@@ -82,7 +82,7 @@ namespace Rhino.ServiceBus.Tests
             var msg = queue.Receive();
 
             var processingCompletedMessage = (MessageProcessingCompletedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
-            Assert.NotEqual(CorrelationId.Empty, processingCompletedMessage.MessageId);
+            Assert.NotEqual(Guid.Empty, processingCompletedMessage.MessageId);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Rhino.ServiceBus.Tests
             transport.Raise(x => x.MessageProcessingFailure += null,
                 new CurrentMessageInformation
                 {
-                    MessageId = CorrelationId.New(),
+                    MessageId = Guid.NewGuid(),
                     Message = "tst"
                 },
                 new IndexOutOfRangeException());
@@ -102,7 +102,7 @@ namespace Rhino.ServiceBus.Tests
             var msg = queue.Receive();
 
             var failedMessage = (MessageProcessingFailedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
-            Assert.NotEqual(CorrelationId.Empty, failedMessage.MessageId);
+            Assert.NotEqual(Guid.Empty, failedMessage.MessageId);
             Assert.Equal("System.IndexOutOfRangeException: Index was outside the bounds of the array.", failedMessage.ErrorText);
             Assert.Equal("tst",failedMessage.Message);
         }
@@ -116,14 +116,14 @@ namespace Rhino.ServiceBus.Tests
             transport.Raise(x => x.MessageSent += null,
                 new CurrentMessageInformation
                 {
-                    MessageId = CorrelationId.New(),
+                    MessageId = Guid.NewGuid(),
                     AllMessages = new[]{"test"}
                 });
 
             var msg = queue.Receive();
 
             var failedMessage = (MessageSentMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
-            Assert.NotEqual(CorrelationId.Empty, failedMessage.MessageId);
+            Assert.NotEqual(Guid.Empty, failedMessage.MessageId);
             Assert.Equal(new[] { "test" }, failedMessage.Message);
         }
 
@@ -138,7 +138,7 @@ namespace Rhino.ServiceBus.Tests
                 transport.Raise(x => x.MessageProcessingFailure += null,
                 new CurrentMessageInformation
                 {
-                    MessageId = CorrelationId.New(),
+                    MessageId = Guid.NewGuid(),
                     Message = "tst"
                 },
                 new IndexOutOfRangeException());
@@ -147,7 +147,7 @@ namespace Rhino.ServiceBus.Tests
             var msg = queue.Receive();
 
             var failedMessage = (MessageProcessingFailedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
-            Assert.NotEqual(CorrelationId.Empty, failedMessage.MessageId);
+            Assert.NotEqual(Guid.Empty, failedMessage.MessageId);
             Assert.Equal("System.IndexOutOfRangeException: Index was outside the bounds of the array.", failedMessage.ErrorText);
             Assert.Equal("tst", failedMessage.Message);
         }

@@ -48,10 +48,9 @@ namespace Rhino.ServiceBus.MessageModules
 
         private void Transport_OnMessageSent(CurrentMessageInformation info)
         {
-            Send(new MessageSentMessage()
+            Send(new MessageSentMessage
             {
                 MessageId = info.MessageId,
-                CorrelationId = info.CorrelationId,
                 Source = info.Source,
                 Message = info.AllMessages,
                 MessageType = info.AllMessages[0].ToString(),
@@ -72,7 +71,6 @@ namespace Rhino.ServiceBus.MessageModules
             Send(new SerializationErrorMessage
             {
                 MessageId = info.MessageId,
-                CorrelationId = info.CorrelationId,
                 Error = t.ToString(),
                 Source = info.Source,
             });
@@ -85,7 +83,6 @@ namespace Rhino.ServiceBus.MessageModules
                 Timestamp = DateTime.Now,
                 MessageType = info.Message.ToString(),
                 MessageId = info.MessageId,
-                CorrelationId = info.CorrelationId,
                 Source = info.Source,
             });
         }
@@ -98,7 +95,6 @@ namespace Rhino.ServiceBus.MessageModules
                 Timestamp = DateTime.Now,
                 MessageType = info.Message.ToString(),
                 MessageId = info.MessageId,
-                CorrelationId = info.CorrelationId,
                 Source = info.Source,
                 Message = info.Message
             }, queue.GetSingleMessageTransactionType());
@@ -111,7 +107,6 @@ namespace Rhino.ServiceBus.MessageModules
                 Timestamp = DateTime.Now,
                 MessageType = info.Message.ToString(),
                 MessageId = info.MessageId,
-                CorrelationId = info.CorrelationId,
                 Source = info.Source,
                 Message = info.Message
             });

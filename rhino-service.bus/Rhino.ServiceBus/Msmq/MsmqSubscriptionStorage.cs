@@ -67,9 +67,9 @@ namespace Rhino.ServiceBus.Msmq
                             HandleAdministrativeMessage(new CurrentMessageInformation
                             {
                                 AllMessages = msgs,
-                                CorrelationId = CorrelationId.Empty,
                                 Message = msg,
-                                MessageId = CorrelationId.Parse(current.Id),
+                                TransportMessageId = current.Id,
+                                MessageId = current.GetMessageId(),
                                 Source = subscriptionQueue,
                             });
                         }
@@ -93,6 +93,10 @@ namespace Rhino.ServiceBus.Msmq
                     value = new List<string>();
                     writer.Add(key, value);
                 }
+                
+                if(string.IsNullOrEmpty(messageId))
+                    throw new ArgumentException("messageId must have value");
+
                 value.Add(messageId);
             });
         }
@@ -100,7 +104,7 @@ namespace Rhino.ServiceBus.Msmq
         private void RemoveSubscriptionMessageFromQueue(MessageQueue queue, string type, Uri uri)
         {
             subscriptionMessageIds.Write(writer =>
-             {
+            {
                  var key = new TypeAndUriKey
                  {
                      TypeName = type,
@@ -132,6 +136,7 @@ namespace Rhino.ServiceBus.Msmq
                 throw new SubscriptionException("Could not open subscription queue (" + subscriptionQueue + ")", e);
             }
             queue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+            queue.MessageReadPropertyFilter.Extension = true;
             return queue;
         }
 
@@ -247,7 +252,7 @@ namespace Rhino.ServiceBus.Msmq
                 subscription.InstanceSubscriptionKey, 
                 subscription.Type,
                 new Uri(subscription.Endpoint), 
-                msgInfo.MessageId);
+                msgInfo.TransportMessageId);
             var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
             if (msmqMsgInfo != null)
                 queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue, msmqMsgInfo.MsmqMessage);
@@ -265,8 +270,9 @@ namespace Rhino.ServiceBus.Msmq
         {
             bool newSubscription = AddSubscription(addSubscription.Type, addSubscription.Endpoint);
 
-            AddMessageIdentifierForTracking(msgInfo.MessageId.ToString(), addSubscription.Type,
-                                             new Uri(addSubscription.Endpoint));
+            AddMessageIdentifierForTracking(msgInfo.TransportMessageId, 
+                addSubscription.Type,
+                new Uri(addSubscription.Endpoint));
             
             var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
 

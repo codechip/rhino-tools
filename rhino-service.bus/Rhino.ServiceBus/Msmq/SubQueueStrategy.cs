@@ -41,9 +41,10 @@ namespace Rhino.ServiceBus.Msmq
 		/// </summary>
 		/// <param name="queue">The queue.</param>
 		/// <param name="message">The message.</param>
-		public void MoveToErrorsQueue(MessageQueue queue, Message message)
+		public string MoveToErrorsQueue(MessageQueue queue, Message message)
 		{
 			queue.MoveToSubQueue("errors", message);
+		    return message.Id;
 		}
 
 		/// <summary>

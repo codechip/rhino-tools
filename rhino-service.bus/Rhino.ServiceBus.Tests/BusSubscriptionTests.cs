@@ -97,7 +97,7 @@ namespace Rhino.ServiceBus.Tests
 
                 count = 0;
                 var enumerator2 = subscriptions.GetMessageEnumerator2();
-                while (enumerator2.MoveNext(TimeSpan.FromSeconds(0)))
+                while (enumerator2.MoveNext(TimeSpan.FromSeconds(1)))
                     count += 1;
                 Assert.Equal(1, count);
             }

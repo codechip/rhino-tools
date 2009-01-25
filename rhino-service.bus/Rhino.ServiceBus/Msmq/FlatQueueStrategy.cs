@@ -82,12 +82,13 @@ namespace Rhino.ServiceBus.Msmq
 		/// </summary>
 		/// <param name="queue">The queue.</param>
 		/// <param name="message">The message.</param>
-		public void MoveToErrorsQueue(MessageQueue queue, Message message)
+		public string MoveToErrorsQueue(MessageQueue queue, Message message)
 		{
 			using (var destinationQueue = new MessageQueue(GetErrorsQueuePath(), QueueAccessMode.Send))
 			{
-				destinationQueue.Send(queue.ReceiveByLookupId(message.LookupId),
-														  queue.GetTransactionType());
+			    var sentMessage = queue.ReceiveByLookupId(message.LookupId);
+			    destinationQueue.Send(sentMessage, queue.GetTransactionType());
+			    return sentMessage.Id;
 			}
 		}
 

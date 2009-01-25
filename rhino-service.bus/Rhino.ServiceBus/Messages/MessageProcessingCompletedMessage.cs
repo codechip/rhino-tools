@@ -10,8 +10,6 @@ namespace Rhino.ServiceBus.Messages
 
         public string MessageType { get; set; }
 
-        public string MessageId { get; set; }
-
-        public string CorrelationId { get; set; }
+        public Guid MessageId { get; set; }
     }
 }

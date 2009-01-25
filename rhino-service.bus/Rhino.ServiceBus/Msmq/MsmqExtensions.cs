@@ -23,6 +23,12 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
+        public static Guid GetMessageId(this Message self)
+        {
+            if (self.Extension.Length == 0)
+                self.Extension = Guid.NewGuid().ToByteArray();
+            return new Guid(self.Extension);
+        }
 
         public static MessageQueueTransactionType GetTransactionType(this MessageQueue self)
         {

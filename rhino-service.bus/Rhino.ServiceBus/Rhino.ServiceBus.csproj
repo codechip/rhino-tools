@@ -87,7 +87,6 @@
     <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\InstanceSubscriptionInformation.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
-    <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />

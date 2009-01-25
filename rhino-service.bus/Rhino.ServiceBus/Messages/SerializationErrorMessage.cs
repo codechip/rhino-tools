@@ -5,12 +5,10 @@ namespace Rhino.ServiceBus.Messages
 {
     public class SerializationErrorMessage
     {
-        public string MessageId { get; set; }
+        public Guid MessageId { get; set; }
 
         public string Error { get; set; }
 
         public Uri Source { get; set; }
-
-        public CorrelationId CorrelationId { get; set; }
     }
 }

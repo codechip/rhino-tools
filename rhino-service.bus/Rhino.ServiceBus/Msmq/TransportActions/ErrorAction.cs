@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void Transport_OnMessageSerializationException(CurrentMessageInformation information, Exception exception)
         {
-            failureCounts.Write(writer => writer.Add(information.MessageId.Id, new ErrorCounter
+            failureCounts.Write(writer => writer.Add(information.MessageId, new ErrorCounter
             {
                 FailureCount = numberOfRetries + 1,
                 ExceptionText = exception.ToString()
@@ -42,7 +42,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
                 return;
 
             ErrorCounter val = null;
-            var id = information.MessageId.Id;
+            var id = information.MessageId;
             failureCounts.Read(reader => reader.TryGetValue(id, out val));
             if (val == null)
                 return;
@@ -51,7 +51,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void Transport_OnMessageProcessingFailure(CurrentMessageInformation information, Exception exception)
         {
-            var id = information.MessageId.Id;
+            var id = information.MessageId;
             failureCounts.Write(writer =>
             {
                 ErrorCounter errorCounter;
@@ -75,7 +75,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public bool HandlePeekedMessage(MessageQueue queue, Message message)
         {
-            var id = CorrelationId.Parse(message.Id).Id;
+            var id = message.GetMessageId();
             ErrorCounter errorCounter = null;
 
             failureCounts.Read(reader => reader.TryGetValue(id, out errorCounter));
@@ -97,7 +97,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void MoveToErrorQueue(MessageQueue queue, Message message, string exceptionText)
         {
-            queueStrategy.MoveToErrorsQueue(queue, message);
+            var msgId = queueStrategy.MoveToErrorsQueue(queue, message);
             var label = "Error description for " + message.Label;
             if (label.Length > 249)
                 label = label.Substring(0, 246) + "...";
@@ -106,7 +106,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
                 AppSpecific = (int)MessageType.ErrorDescriptionMessageMarker,
                 Label = label,
                 Body = exceptionText,
-                CorrelationId = message.Id,
+                CorrelationId = msgId,
             }, queue.GetTransactionType());
 
             logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,

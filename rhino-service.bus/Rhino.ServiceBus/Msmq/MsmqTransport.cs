@@ -8,6 +8,7 @@ using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq.TransportActions;
+using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -116,8 +117,7 @@ namespace Rhino.ServiceBus.Msmq
 				AllMessages = msgs,
 				Source = Endpoint,
 				Destination = uri,
-                CorrelationId = CorrelationId.Parse(message.CorrelationId),
-                MessageId = CorrelationId.Parse(message.Id),
+                MessageId = message.GetMessageId(),
 			});
 		}
 
@@ -129,7 +129,7 @@ namespace Rhino.ServiceBus.Msmq
 
 			message.ResponseQueue = queue;
 
-			SetCorrelationIdOnMessage(message);
+		    message.Extension = Guid.NewGuid().ToByteArray();
 
 			message.AppSpecific = GetAppSpecificMarker(msgs);
 
@@ -279,11 +279,11 @@ namespace Rhino.ServiceBus.Msmq
 	    {
 	        return new MsmqCurrentMessageInformation
 	        {
-                MessageId = CorrelationId.Parse(message.Id),
+                MessageId = message.GetMessageId(),
 	            AllMessages = messages,
-                CorrelationId = CorrelationId.Parse(message.CorrelationId),
 	            Message = msg,
 	            Queue = queue,
+                TransportMessageId = message.Id,
 	            Destination = Endpoint,
 	            Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
 	            MsmqMessage = message,
@@ -310,10 +310,9 @@ namespace Rhino.ServiceBus.Msmq
 						{
                             MsmqMessage = transportMessage,
                             Queue = messageQueue,
-                            CorrelationId = CorrelationId.Parse(transportMessage.CorrelationId),
 							Message = transportMessage,
                             Source = MsmqUtil.GetQueueUri(messageQueue),
-                            MessageId = CorrelationId.Parse(transportMessage.Id)
+                            MessageId = transportMessage.GetMessageId()
 						};
 						copy(information, e);
 					}
@@ -325,15 +324,6 @@ namespace Rhino.ServiceBus.Msmq
 				throw;
 			}
 			return messages;
-		}
-
-		private static void SetCorrelationIdOnMessage(Message message)
-		{
-		    if (currentMessageInformation == null) 
-                return;
-
-		    message.CorrelationId = currentMessageInformation.CorrelationId ??
-		                            currentMessageInformation.MessageId;
 		}
 
 	    private void SendMessageToQueue(Message message, Uri uri)
