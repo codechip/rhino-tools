@@ -10,7 +10,7 @@ using Rhino.ServiceBus.Impl;
 
 namespace Rhino.ServiceBus.Hosting
 {
-    public class DefaultHost : MarshalByRefObject
+    public class DefaultHost : MarshalByRefObject, IDisposable
     {
         private readonly ILog logger = LogManager.GetLogger(typeof(DefaultHost));
         private string assebmlyName;
@@ -114,7 +114,7 @@ namespace Rhino.ServiceBus.Hosting
             return bootStrappers[0];
         }
 
-        public void Close()
+        public void Dispose()
         {
             if (bootStrapper != null)
                 bootStrapper.Dispose();

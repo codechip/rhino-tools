@@ -63,21 +63,30 @@ namespace Rhino.ServiceBus.Hosting
                 ShadowCopyFiles = "true" //yuck
             };
             AppDomain appDomain = AppDomain.CreateDomain(assembly, null, appDomainSetup);
-            object instance = appDomain.CreateInstanceAndUnwrap("Rhino.ServiceBus",
-                                                                "Rhino.ServiceBus.Hosting.DefaultHost");
-            var hoster = (DefaultHost) instance;
-            
-            if (boosterType != null)
-                hoster.SetBootStrapperTypeName(boosterType.FullName);
-
-            return new HostedService
-            {
-                Stop = hoster.Close,
-                Start = () => hoster.Start(assembly)
-            };
+            return CreateRemoteHost(appDomain);
         }
 
-        private string ConfigurationFile
+        protected virtual HostedService CreateRemoteHost(AppDomain appDomain)
+	    {
+	        object instance = appDomain.CreateInstanceAndUnwrap("Rhino.ServiceBus",
+	                                                            "Rhino.ServiceBus.Hosting.DefaultHost");
+	        var hoster = (DefaultHost) instance;
+            
+	        if (boosterType != null)
+	            hoster.SetBootStrapperTypeName(boosterType.FullName);
+
+	        return new HostedService
+	        {
+	            Stop = ()=>
+	            {
+	                hoster.Dispose();
+	                AppDomain.Unload(appDomain);
+	            },
+	            Start = () => hoster.Start(assembly)
+	        };
+	    }
+
+	    private string ConfigurationFile
         {
             get
             {
@@ -98,7 +107,7 @@ namespace Rhino.ServiceBus.Hosting
 
         #region Nested type: HostedService
 
-        private class HostedService
+	    protected class HostedService
         {
             public Action Start;
             public Action Stop;
