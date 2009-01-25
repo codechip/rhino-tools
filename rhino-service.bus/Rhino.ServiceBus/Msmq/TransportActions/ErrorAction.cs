@@ -11,7 +11,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
     {
         private readonly ILog logger = LogManager.GetLogger(typeof(ErrorAction));
         private readonly int numberOfRetries;
-        private readonly Hashtable<Guid, ErrorCounter> failureCounts = new Hashtable<Guid, ErrorCounter>();
+        private readonly Hashtable<string, ErrorCounter> failureCounts = new Hashtable<string, ErrorCounter>();
         private readonly IQueueStrategy queueStrategy;
 
         public ErrorAction(int numberOfRetries, IQueueStrategy queueStrategy)
@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void Transport_OnMessageSerializationException(CurrentMessageInformation information, Exception exception)
         {
-            failureCounts.Write(writer => writer.Add(information.MessageId.Id, new ErrorCounter
+            failureCounts.Write(writer => writer.Add(information.MessageId, new ErrorCounter
             {
                 FailureCount = numberOfRetries + 1,
                 ExceptionText = exception.ToString()
@@ -42,7 +42,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
                 return;
 
             ErrorCounter val = null;
-            var id = information.MessageId.Id;
+            var id = information.MessageId;
             failureCounts.Read(reader => reader.TryGetValue(id, out val));
             if (val == null)
                 return;
@@ -51,7 +51,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void Transport_OnMessageProcessingFailure(CurrentMessageInformation information, Exception exception)
         {
-            var id = information.MessageId.Id;
+            var id = information.MessageId;
             failureCounts.Write(writer =>
             {
                 ErrorCounter errorCounter;
@@ -75,7 +75,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public bool HandlePeekedMessage(MessageQueue queue, Message message)
         {
-            var id = CorrelationId.Parse(message.Id).Id;
+            var id = message.Id;
             ErrorCounter errorCounter = null;
 
             failureCounts.Read(reader => reader.TryGetValue(id, out errorCounter));

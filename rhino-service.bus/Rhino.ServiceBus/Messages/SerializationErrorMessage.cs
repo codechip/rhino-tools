@@ -11,6 +11,6 @@ namespace Rhino.ServiceBus.Messages
 
         public Uri Source { get; set; }
 
-        public CorrelationId CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
     }
 }

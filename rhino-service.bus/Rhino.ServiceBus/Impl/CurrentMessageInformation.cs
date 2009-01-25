@@ -4,9 +4,9 @@ namespace Rhino.ServiceBus.Impl
 {
     public class CurrentMessageInformation
     {
-        public CorrelationId MessageId { get; set; }
+        public string MessageId { get; set; }
 
-        public CorrelationId CorrelationId { get; set; }
+        public string CorrelationId { get; set; }
 
         public Uri Source { get; set; }
 

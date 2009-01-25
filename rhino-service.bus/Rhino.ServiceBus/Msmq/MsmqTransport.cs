@@ -116,8 +116,8 @@ namespace Rhino.ServiceBus.Msmq
 				AllMessages = msgs,
 				Source = Endpoint,
 				Destination = uri,
-				CorrelationId = CorrelationId.Parse(message.CorrelationId),
-				MessageId = CorrelationId.Parse(message.Id),
+				CorrelationId = message.CorrelationId,
+				MessageId = message.Id,
 			});
 		}
 
@@ -279,9 +279,9 @@ namespace Rhino.ServiceBus.Msmq
 	    {
 	        return new MsmqCurrentMessageInformation
 	        {
-	            MessageId = CorrelationId.Parse(message.Id),
+	            MessageId = message.Id,
 	            AllMessages = messages,
-	            CorrelationId = CorrelationId.Parse(message.CorrelationId),
+	            CorrelationId = message.CorrelationId,
 	            Message = msg,
 	            Queue = queue,
 	            Destination = Endpoint,
@@ -310,10 +310,10 @@ namespace Rhino.ServiceBus.Msmq
 						{
                             MsmqMessage = transportMessage,
                             Queue = messageQueue,
-                            CorrelationId = CorrelationId.Parse(transportMessage.CorrelationId),
+                            CorrelationId = transportMessage.CorrelationId,
 							Message = transportMessage,
                             Source = MsmqUtil.GetQueueUri(messageQueue),
-							MessageId = CorrelationId.Parse(transportMessage.Id)
+							MessageId = transportMessage.Id
 						};
 						copy(information, e);
 					}
@@ -332,8 +332,8 @@ namespace Rhino.ServiceBus.Msmq
 		    if (currentMessageInformation == null) 
                 return;
 
-		    message.CorrelationId = currentMessageInformation
-		        .CorrelationId.Increment().ToString();
+		    message.CorrelationId = currentMessageInformation.CorrelationId ??
+		                            currentMessageInformation.MessageId;
 		}
 
 	    private void SendMessageToQueue(Message message, Uri uri)
