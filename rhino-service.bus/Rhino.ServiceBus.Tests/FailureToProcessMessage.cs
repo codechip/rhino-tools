@@ -86,8 +86,8 @@ namespace Rhino.ServiceBus.Tests
                     error);
 
                 Assert.Equal(
-                    messageErrorDescription.Id,
-                    messageErrorDescription.CorrelationId);
+                    CorrelationId.Parse(messageErrorDescription.Id).Id,
+                    CorrelationId.Parse(messageErrorDescription.CorrelationId).Id);
             }
         }
 
@@ -214,8 +214,8 @@ namespace Rhino.ServiceBus.Tests
                         error);
 
                     Assert.Equal(
-                        messageErrorDescription.Id,
-                        messageErrorDescription.CorrelationId);
+                        CorrelationId.Parse(messageErrorDescription.Id).Id,
+                        CorrelationId.Parse(messageErrorDescription.CorrelationId).Id);
                 }
             }
 

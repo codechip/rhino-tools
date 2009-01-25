@@ -14,7 +14,7 @@ namespace Rhino.ServiceBus.NHibernate.Hosting
 	{
 		private ISessionFactory sessionFactory;
 
-		public virtual void ConfigureNHibernate(global::NHibernate.Cfg.Configuration configuration)
+		public virtual void ConfigureNHibernate(Configuration configuration)
 		{
 			var model = CreatePersistenceModel();
 
@@ -48,7 +48,7 @@ namespace Rhino.ServiceBus.NHibernate.Hosting
 
 		public override void BeforeStart()
 		{
-			var configuration = new global::NHibernate.Cfg.Configuration()
+			var configuration = new Configuration()
 				.SetProperty(Environment.ProxyFactoryFactoryClass, "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle")
 				.SetProperty(Environment.ConnectionStringName, Assembly.GetName().Name)
 				.SetProperty(Environment.Dialect, Dialect.AssemblyQualifiedName);
@@ -56,7 +56,7 @@ namespace Rhino.ServiceBus.NHibernate.Hosting
 			ConfigureNHibernate(configuration);
 
 			sessionFactory = configuration.BuildSessionFactory();
-			container.Kernel.AddComponentInstance<global::NHibernate.Cfg.Configuration>(configuration);
+			container.Kernel.AddComponentInstance<Configuration>(configuration);
 			container.Kernel.AddComponentInstance<ISessionFactory>(sessionFactory);
 		}
 

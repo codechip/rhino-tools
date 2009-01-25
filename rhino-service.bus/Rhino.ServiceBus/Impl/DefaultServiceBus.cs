@@ -22,7 +22,7 @@ namespace Rhino.ServiceBus.Impl
         private readonly ISubscriptionStorage subscriptionStorage;
         private readonly ITransport transport;
         private readonly MessageOwner[] messageOwners;
-    	[ThreadStatic] private static object currentMessage;
+    	[ThreadStatic] public static object currentMessage;
 
         public DefaultServiceBus(
             IKernel kernel,

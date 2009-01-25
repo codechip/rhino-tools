@@ -9,13 +9,10 @@ namespace Rhino.ServiceBus.Internal
         void Start();
 
         Uri Endpoint { get; }
-        int ThreadCount { get; }
 
         void Send(Uri uri, params object[] msgs);
 
         void Reply(params object[] messages);
-
-        event Action Started;
 
         event Action<CurrentMessageInformation> MessageSent;
 

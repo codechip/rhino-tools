@@ -116,8 +116,8 @@ namespace Rhino.ServiceBus.Msmq
 				AllMessages = msgs,
 				Source = Endpoint,
 				Destination = uri,
-				CorrelationId = message.CorrelationId,
-				MessageId = message.Id,
+                CorrelationId = CorrelationId.Parse(message.CorrelationId),
+                MessageId = CorrelationId.Parse(message.Id),
 			});
 		}
 
@@ -151,8 +151,8 @@ namespace Rhino.ServiceBus.Msmq
             var msg = msgs[0];
             if (msg is AdministrativeMessage)
                 return (int) MessageType.AdministrativeMessageMarker;
-            if (msg is LoadBalancerMessage)
-                return (int) MessageType.LoadBalancerMessage;
+            //if (msg is LoadBalancerMessage)
+            //    return (int) MessageType.LoadBalancerMessage;
             return 0;
         }
 
@@ -279,9 +279,9 @@ namespace Rhino.ServiceBus.Msmq
 	    {
 	        return new MsmqCurrentMessageInformation
 	        {
-	            MessageId = message.Id,
+                MessageId = CorrelationId.Parse(message.Id),
 	            AllMessages = messages,
-	            CorrelationId = message.CorrelationId,
+                CorrelationId = CorrelationId.Parse(message.CorrelationId),
 	            Message = msg,
 	            Queue = queue,
 	            Destination = Endpoint,
@@ -310,10 +310,10 @@ namespace Rhino.ServiceBus.Msmq
 						{
                             MsmqMessage = transportMessage,
                             Queue = messageQueue,
-                            CorrelationId = transportMessage.CorrelationId,
+                            CorrelationId = CorrelationId.Parse(transportMessage.CorrelationId),
 							Message = transportMessage,
                             Source = MsmqUtil.GetQueueUri(messageQueue),
-							MessageId = transportMessage.Id
+                            MessageId = CorrelationId.Parse(transportMessage.Id)
 						};
 						copy(information, e);
 					}

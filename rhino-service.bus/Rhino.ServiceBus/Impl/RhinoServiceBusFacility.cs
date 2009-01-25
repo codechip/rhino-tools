@@ -7,7 +7,8 @@ using Castle.Core.Configuration;
 using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
-using Rhino.ServiceBus.Config;
+using Rhino.ServiceBus.Convertors;
+using Rhino.ServiceBus.DataStructures;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
@@ -27,6 +28,7 @@ namespace Rhino.ServiceBus.Impl
         private readonly Type serializerImpl = typeof(XmlMessageSerializer);
         private readonly Type transportImpl = typeof(MsmqTransport);
         private Uri endpoint;
+        private Uri logEndpoint;
         private int numberOfRetries = 5;
         private readonly Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
@@ -54,13 +56,6 @@ namespace Rhino.ServiceBus.Impl
             where TModule : IMessageModule
         {
             messageModules.Add(typeof(TModule));
-            return this;
-        }
-
-        public RhinoServiceBusFacility InsertMessageModuleAtFirst<TModule>()
-            where TModule : IMessageModule
-        {
-            messageModules.Insert(0, typeof (TModule));
             return this;
         }
 
@@ -115,25 +110,25 @@ namespace Rhino.ServiceBus.Impl
             ReadBusConfiguration();
             ReadMessageOwners();
 
-            Kernel.Register(
-                AllTypes.Of<IBusConfigurationAware>()
-                    .FromAssembly(typeof(IBusConfigurationAware).Assembly)
-                );
+            AddWireEcryptedStringConvertorIfHasKey();
 
-            foreach (var configurationAware in Kernel.ResolveAll<IBusConfigurationAware>())
-            {
-                configurationAware.Configure(this, FacilityConfig);
-            }
-            
             foreach (var type in messageModules)
             {
-                if (Kernel.HasComponent(type) == false)
-                    Kernel.AddComponent(type.FullName, type);
+                Kernel.AddComponent(type.FullName, type);
             }
 
             if (useCreationModule)
             {
                 Kernel.Register(Component.For<QueueCreationModule>());
+            }
+
+            if (logEndpoint != null)
+            {
+                Kernel.Register(
+                    Component.For<MessageLoggingModule>()
+                        .DependsOn(new { logQueue = logEndpoint })
+                    );
+                messageModules.Insert(0, typeof(MessageLoggingModule));
             }
 
             Kernel.Register(
@@ -186,6 +181,31 @@ namespace Rhino.ServiceBus.Impl
               );
         }
 
+        private void AddWireEcryptedStringConvertorIfHasKey()
+        {
+            var security = FacilityConfig.Children["security"];
+
+            if (security == null)
+            {
+                Kernel.Register(
+                    Component.For<IValueConvertor<WireEcryptedString>>()
+                        .ImplementedBy<ThrowingWireEcryptedStringConvertor>()
+                    );
+                return;
+            }
+
+            var key = security.Children["key"];
+            if (key == null || string.IsNullOrEmpty(key.Value))
+                throw new ConfigurationErrorsException("<security> element must have a <key> element with content");
+
+            Kernel.Register(
+                Component.For<IValueConvertor<WireEcryptedString>>()
+                    .ImplementedBy<WireEcryptedStringConvertor>()
+                    .DependsOn(
+                    Property.ForKey("key").Eq(Convert.FromBase64String(key.Value))
+                    )
+                );
+        }
 
         private void Kernel_OnComponentModelCreated(ComponentModel model)
         {
@@ -319,7 +339,14 @@ namespace Rhino.ServiceBus.Impl
                     "Attribute 'endpoint' on 'bus' has an invalid value '" + uriString + "'");
             }
 
-            
+            uriString = busConfig.Attributes["logEndpoint"];
+            if (uriString == null)
+                return;
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out logEndpoint) == false)
+            {
+                throw new ConfigurationErrorsException(
+                    "Attribute 'logEndpoint' on 'bus' has an invalid value '" + uriString + "'");
+            }
         }
 
         public RhinoServiceBusFacility UseDhtSagaPersister()

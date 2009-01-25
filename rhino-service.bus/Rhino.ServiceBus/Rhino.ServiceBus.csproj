@@ -64,16 +64,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\IBusConfigurationAware.cs" />
-    <Compile Include="Config\LoadBalancerConfiguration.cs" />
-    <Compile Include="Config\LoggingConfiguration.cs" />
-    <Compile Include="Config\SecurityConfiguration.cs" />
     <Compile Include="ConsumerOf.cs" />
     <Compile Include="Convertors\ThrowingWireEcryptedStringConvertor.cs" />
     <Compile Include="Convertors\WireEcryptedStringConvertor.cs" />
     <Compile Include="DataStructures\OrderedList.cs" />
-    <Compile Include="DataStructures\Queue.cs" />
-    <Compile Include="DataStructures\Set.cs" />
     <Compile Include="DataStructures\WireEcryptedString.cs" />
     <Compile Include="DataStructures\MultiValueIndexHashtable.cs" />
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
@@ -88,14 +82,12 @@
     <Compile Include="Impl\DisposableAction.cs" />
     <Compile Include="Impl\InstanceSubscriptionInformation.cs" />
     <Compile Include="Impl\MessageOwner.cs" />
+    <Compile Include="Impl\CorrelationId.cs" />
     <Compile Include="Impl\CurrentMessageInformation.cs" />
     <Compile Include="Exceptions\MessagePublicationException.cs" />
     <Compile Include="Exceptions\SubscriptionException.cs" />
     <Compile Include="Exceptions\TransportException.cs" />
-    <Compile Include="MessageModules\LoadBalancerMessageModule.cs" />
-    <Compile Include="Messages\LoadBalancerMessage.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
-    <Compile Include="Messages\ReadyToWork.cs" />
     <Compile Include="Msmq\AbstractMsmqListener.cs" />
     <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
@@ -136,6 +128,7 @@
     <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
     <Compile Include="Msmq\TransportActions\AbstractTransportAction.cs" />
     <Compile Include="Msmq\TransportActions\ITransportAction.cs" />
+    <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
     <Compile Include="Msmq\TransportActions\TimeoutAction.cs" />
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />

@@ -67,9 +67,9 @@ namespace Rhino.ServiceBus.Msmq
                             HandleAdministrativeMessage(new CurrentMessageInformation
                             {
                                 AllMessages = msgs,
-                                CorrelationId = Guid.Empty.ToString(),
+                                CorrelationId = CorrelationId.Empty,
                                 Message = msg,
-                                MessageId = current.Id,
+                                MessageId = CorrelationId.Parse(current.Id),
                                 Source = subscriptionQueue,
                             });
                         }

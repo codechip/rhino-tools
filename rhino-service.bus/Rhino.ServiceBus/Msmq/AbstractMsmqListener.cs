@@ -95,6 +95,12 @@ namespace Rhino.ServiceBus.Msmq
         {
             shouldStop = true;
 
+            queue.Send(new Message
+            {
+                Label = "Shutdown bus",
+                AppSpecific = (int)MessageType.ShutDownMessageMarker
+            }, queue.GetSingleMessageTransactionType());
+
             if (queue != null)
                 queue.Close();
             
