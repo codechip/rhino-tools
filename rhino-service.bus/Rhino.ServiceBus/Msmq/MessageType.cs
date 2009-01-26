@@ -3,11 +3,11 @@ namespace Rhino.ServiceBus.Msmq
 	public enum MessageType
 	{
 		StandardMessage = 0,
-		DiscardedMessageMarker = 0xD13574,
-		ErrorDescriptionMessageMarker = 0xE7707,
-		ShutDownMessageMarker = 1337,
-		AdministrativeMessageMarker = 42,
-		TimeoutMessageMarker = 0x1e023abc,
-	    LoadBalancerMessage = 0xae3fbac
+		DiscardedMessageMarker = 1,
+		ErrorDescriptionMessageMarker = 2,
+		ShutDownMessageMarker = 3,
+		AdministrativeMessageMarker = 4,
+		TimeoutMessageMarker = 5,
+	    LoadBalancerMessage = 6
 	}
 }
