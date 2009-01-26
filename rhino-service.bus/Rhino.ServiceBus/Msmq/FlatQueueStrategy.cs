@@ -142,7 +142,26 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		/// <summary>
+	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue)
+	    {
+            using (var destinationQueue = new MessageQueue(queue.Path + "#" + subQueue, QueueAccessMode.Send))
+            {
+                Message receiveById;
+                try
+                {
+                    receiveById = queue.ReceiveById(message.Id, queue.GetTransactionType());
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                message.AppSpecific = 0;//reset flag
+                destinationQueue.Send(receiveById, destinationQueue.GetTransactionType());
+                return true;
+            }
+	    }
+
+	    /// <summary>
 		/// Gets the errors queue path.
 		/// </summary>
 		/// <returns></returns>

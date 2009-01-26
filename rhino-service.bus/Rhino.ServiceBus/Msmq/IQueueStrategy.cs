@@ -11,24 +11,28 @@ namespace Rhino.ServiceBus.Msmq
     public interface IQueueStrategy
     {
 		MessageQueue InitializeQueue(Uri endpoint);
+        
         /// <summary>
         /// Creates the subscription queue URI.
         /// </summary>
         /// <param name="subscriptionQueue">The subscription queue.</param>
         /// <returns></returns>
         Uri CreateSubscriptionQueueUri(Uri subscriptionQueue);
+        
         /// <summary>
         /// Moves the <paramref name="message"/> to subscription queue.
         /// </summary>
         /// <param name="queue">The queue.</param>
         /// <param name="message">The message.</param>
         void MoveToSubscriptionQueue(MessageQueue queue, Message message);
+        
         /// <summary>
         /// Moves the <paramref name="message"/> to errors queue.
         /// </summary>
         /// <param name="queue">The queue.</param>
         /// <param name="message">The message.</param>
         string MoveToErrorsQueue(MessageQueue queue, Message message);
+        
         /// <summary>
         /// Moves the <paramref name="message"/> to discarded queue.
         /// </summary>
@@ -55,5 +59,7 @@ namespace Rhino.ServiceBus.Msmq
 		/// <param name="queue">The queue.</param>
 		/// <param name="messageId">The message id.</param>
 		void MoveTimeoutToMainQueue(MessageQueue queue, string messageId);
+
+        bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue);
     }
 }

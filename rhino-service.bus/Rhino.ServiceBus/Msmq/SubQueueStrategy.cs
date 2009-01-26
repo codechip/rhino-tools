@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Rhino.ServiceBus.Exceptions;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -109,5 +110,18 @@ namespace Rhino.ServiceBus.Msmq
 				queue.Send(message, queue.GetTransactionType());
 			}
 		}
+
+	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue)
+	    {
+	        try
+	        {
+	            queue.MoveToSubQueue(subQueue.ToString(), message);
+	            return true;
+	        }
+	        catch (TransportException)
+	        {
+	            return false;
+	        }
+	    }
 	}
 }

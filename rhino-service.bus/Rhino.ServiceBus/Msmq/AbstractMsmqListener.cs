@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Messaging;
 using System.Threading;
+using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
 
@@ -9,6 +10,7 @@ namespace Rhino.ServiceBus.Msmq
 {
     public abstract class AbstractMsmqListener : IDisposable
     {
+        private readonly IQueueStrategy queueStrategy;
         private readonly Uri endpoint;
         private readonly WaitHandle[] waitHandles;
         private bool haveStarted;
@@ -21,8 +23,9 @@ namespace Rhino.ServiceBus.Msmq
 
         private readonly int threadCount;
 
-        protected AbstractMsmqListener(Uri endpoint, int threadCount)
+        protected AbstractMsmqListener(IQueueStrategy queueStrategy, Uri endpoint, int threadCount)
         {
+            this.queueStrategy = queueStrategy;
             this.endpoint = endpoint;
             this.threadCount = threadCount;
             waitHandles = new WaitHandle[threadCount];
@@ -164,6 +167,17 @@ namespace Rhino.ServiceBus.Msmq
             {
                 if (peek == null)//nothing was found 
                     return;
+
+                if ((MessageType)((message.AppSpecific & 0xFFFF0000)>>16) == MessageType.MoveMessageMarker)
+                {
+                    var subQueue = (SubQueue) (0x0000FFFF & message.AppSpecific);
+                    using(var tx = new TransactionScope())
+                    {
+                        queueStrategy.TryMoveMessage(queue, message, subQueue);
+                        tx.Complete();
+                    }
+                    return;
+                }
 
                 logger.DebugFormat("Got message {0} from {1}",
                                    message.Label,

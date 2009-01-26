@@ -26,8 +26,8 @@ namespace Rhino.ServiceBus.Msmq
 		private readonly IMessageSerializer serializer;
         private readonly ITransportAction[] transportActions;
 
-		public MsmqTransport(IMessageSerializer serializer, Uri endpoint, int threadCount, ITransportAction[] transportActions)
-            :base(endpoint, threadCount)
+		public MsmqTransport(IMessageSerializer serializer, IQueueStrategy queueStrategy, Uri endpoint, int threadCount, ITransportAction[] transportActions)
+            :base(queueStrategy,endpoint, threadCount)
 		{
 			this.serializer = serializer;
 		    this.transportActions = transportActions;
@@ -67,7 +67,7 @@ namespace Rhino.ServiceBus.Msmq
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
 
-			message.AppSpecific = (int)MessageType.DiscardedMessageMarker;
+			message.AppSpecific = (int)MessageType.MoveMessageMarker<<16 | (int)SubQueue.Discarded;
 
 			SendMessageToQueue(message, Endpoint);
 		}
@@ -152,7 +152,7 @@ namespace Rhino.ServiceBus.Msmq
             if (msg is AdministrativeMessage)
                 return (int) MessageType.AdministrativeMessageMarker;
             if (msg is LoadBalancerMessage)
-                return (int) MessageType.LoadBalancerMessage;
+                return (int) MessageType.LoadBalancerMessageMarker;
             return 0;
         }
 

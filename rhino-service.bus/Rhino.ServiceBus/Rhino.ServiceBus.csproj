@@ -100,6 +100,7 @@
     <Compile Include="Messages\ReadyToWork.cs" />
     <Compile Include="Msmq\AbstractMsmqListener.cs" />
     <Compile Include="Msmq\QueueCreationModule.cs" />
+    <Compile Include="Msmq\SubQueue.cs" />
     <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
     <Compile Include="Sagas\IVersionedSagaState.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Msmq\SubQueueStrategy.cs" />
     <Compile Include="Msmq\TimeoutInfo.cs" />
     <Compile Include="Msmq\TransportActions\AdministrativeAction.cs" />
-    <Compile Include="Msmq\TransportActions\DiscardAction.cs" />
     <Compile Include="Msmq\TransportActions\ErrorAction.cs" />
     <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
     <Compile Include="Msmq\TransportActions\AbstractTransportAction.cs" />

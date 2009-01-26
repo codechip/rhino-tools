@@ -25,7 +25,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             IQueueStrategy queueStrategy,
             Uri endpoint, 
             int threadCount)
-            : base(endpoint, threadCount)
+            : base(queueStrategy, endpoint, threadCount)
         {
             this.serializer = serializer;
             this.queueStrategy = queueStrategy;
@@ -58,7 +58,7 @@ namespace Rhino.ServiceBus.LoadBalancer
         {
             try
             {
-                if (message.AppSpecific == (int)MessageType.LoadBalancerMessage)
+                if (message.AppSpecific == (int)MessageType.LoadBalancerMessageMarker)
                 {
                     HandleLoadBalancerMessage(message, true);
                     return;
