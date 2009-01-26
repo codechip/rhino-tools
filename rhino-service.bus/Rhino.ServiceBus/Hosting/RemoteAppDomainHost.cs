@@ -8,9 +8,9 @@ namespace Rhino.ServiceBus.Hosting
 	using System.Reflection;
 	using System.Text;
 
-	public class RemoteAppDomainHost
+    public class RemoteAppDomainHost
     {
-        private readonly Type boosterType;
+	    private readonly Type boosterType;
         private readonly string assembly;
         private readonly string path;
         private HostedService current;
@@ -23,13 +23,14 @@ namespace Rhino.ServiceBus.Hosting
         }
 
         public RemoteAppDomainHost(Type boosterType)
-            :this(boosterType.Assembly.Location)
+            :this(boosterType.Assembly.Location, null)
         {
             this.boosterType = boosterType;
         }
 
-        public RemoteAppDomainHost(string assemblyPath)
+        public RemoteAppDomainHost(string assemblyPath, string config)
         {
+            configurationFile = config;
             assembly = Path.GetFileNameWithoutExtension(assemblyPath);
             path = Path.GetDirectoryName(assemblyPath);
         }

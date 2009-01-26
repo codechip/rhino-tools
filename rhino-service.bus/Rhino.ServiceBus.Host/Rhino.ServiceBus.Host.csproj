@@ -48,6 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\DebugAction.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\InstallAction.cs" />
+    <Compile Include="Actions\ServerAction.cs" />
+    <Compile Include="Actions\UninstallAction.cs" />
+    <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="Action.cs" />
+    <Compile Include="ExecutingOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

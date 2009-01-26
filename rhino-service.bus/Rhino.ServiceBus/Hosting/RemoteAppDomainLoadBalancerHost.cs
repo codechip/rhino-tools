@@ -9,7 +9,8 @@ namespace Rhino.ServiceBus.Hosting
         {
         }
 
-        public RemoteAppDomainLoadBalancerHost(string assemblyPath) : base(assemblyPath)
+        public RemoteAppDomainLoadBalancerHost(string assemblyPath, string configuration)
+            : base(assemblyPath, configuration)
         {
         }
 
