@@ -49,16 +49,6 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		/// <summary>
-		/// Moves the <paramref name="message"/> to discarded queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-		public void MoveToDiscardedQueue(MessageQueue queue, Message message)
-		{
-			queue.MoveToSubQueue("discarded", message);
-		}
-
-		/// <summary>
 		/// Moves the <paramref name="message"/> to the timeout queue.
 		/// </summary>
 		/// <param name="queue">The queue.</param>

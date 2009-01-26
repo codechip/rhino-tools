@@ -33,13 +33,6 @@ namespace Rhino.ServiceBus.Msmq
         /// <param name="message">The message.</param>
         string MoveToErrorsQueue(MessageQueue queue, Message message);
         
-        /// <summary>
-        /// Moves the <paramref name="message"/> to discarded queue.
-        /// </summary>
-        /// <param name="queue">The queue.</param>
-        /// <param name="message">The message.</param>
-        void MoveToDiscardedQueue(MessageQueue queue, Message message);
-
 		/// <summary>
 		/// Moves the <paramref name="message"/> to the timeout queue.
 		/// </summary>
