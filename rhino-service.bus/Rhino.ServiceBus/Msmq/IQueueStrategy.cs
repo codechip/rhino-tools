@@ -20,13 +20,6 @@ namespace Rhino.ServiceBus.Msmq
         Uri CreateSubscriptionQueueUri(Uri subscriptionQueue);
         
         /// <summary>
-        /// Moves the <paramref name="message"/> to subscription queue.
-        /// </summary>
-        /// <param name="queue">The queue.</param>
-        /// <param name="message">The message.</param>
-        void MoveToSubscriptionQueue(MessageQueue queue, Message message);
-        
-        /// <summary>
         /// Moves the <paramref name="message"/> to errors queue.
         /// </summary>
         /// <param name="queue">The queue.</param>

@@ -145,6 +145,7 @@ namespace Rhino.ServiceBus.Tests
                 };
 
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
+                subscriptions.Peek();
                 bus.Unsubscribe<MsmqSubscriptionTests.TestMessage>();
                 
                 wait.WaitOne();

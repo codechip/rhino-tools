@@ -23,20 +23,12 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
         {
             Func<CurrentMessageInformation, bool> messageRecieved = information =>
             {
-                var msmqCurrentMessageInformation = (MsmqCurrentMessageInformation)information;
-                var messageProcessedCorrectly = transport.RaiseAdministrativeMessageArrived(information);
-
-                if (messageProcessedCorrectly)
-                    return true;
-              
-                //consume unknown message
-                msmqCurrentMessageInformation.Queue
-                    .ConsumeMessage(msmqCurrentMessageInformation.MsmqMessage);
+                transport.RaiseAdministrativeMessageArrived(information);
 
                 return true;
             };
 
-            transport.ProcessMessage(message, queue, null, 
+            transport.ReceiveMessageInTransaction(message.Id,
                 messageRecieved,
                 transport.RaiseAdministrativeMessageProcessingCompleted);
 

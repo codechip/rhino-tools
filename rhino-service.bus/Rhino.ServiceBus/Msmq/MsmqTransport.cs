@@ -8,7 +8,6 @@ using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq.TransportActions;
-using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -67,9 +66,7 @@ namespace Rhino.ServiceBus.Msmq
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(new[] { msg });
 
-			message.AppSpecific = (int)MessageType.MoveMessageMarker<<16 | (int)SubQueue.Discarded;
-
-			SendMessageToQueue(message, Endpoint);
+            SendMessageToQueue(message.SetSubQueueToSendTo(SubQueue.Discarded), Endpoint);
 		}
 
 	    public bool RaiseAdministrativeMessageArrived(CurrentMessageInformation information)
@@ -160,16 +157,16 @@ namespace Rhino.ServiceBus.Msmq
 
 		#endregion
 
-        protected void ReceiveMessageInTransaction(QueueState state, string messageId)
+        public void ReceiveMessageInTransaction(string messageId, Func<CurrentMessageInformation, bool> messageArrived, Action<CurrentMessageInformation, Exception> messageProcessingCompleted)
 		{
 			using (var tx = new TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
 			{
-				Message message = state.Queue.TryGetMessageFromQueue(messageId);
+				var message = queue.TryGetMessageFromQueue(messageId);
                 
                 if (message == null)
                     return;// someone else got our message, better luck next time
 
-                ProcessMessage(message, state.Queue, tx, MessageArrived, MessageProcessingCompleted);
+                ProcessMessage(message, queue, tx, messageArrived, messageProcessingCompleted);
 			}
 		}
 
@@ -216,7 +213,7 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-        public void ProcessMessage(Message message, 
+        private void ProcessMessage(Message message, 
             MessageQueue messageQueue, 
             TransactionScope tx,
             Func<CurrentMessageInformation, bool> messageRecieved,
@@ -360,7 +357,7 @@ namespace Rhino.ServiceBus.Msmq
                     return;
             }
 
-            ReceiveMessageInTransaction(state, message.Id);
+            ReceiveMessageInTransaction(message.Id, MessageArrived, MessageProcessingCompleted);
         }
 	}
 }

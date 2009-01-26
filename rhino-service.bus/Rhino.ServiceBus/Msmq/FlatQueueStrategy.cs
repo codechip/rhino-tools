@@ -63,21 +63,6 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		/// <summary>
-		/// Moves the <paramref name="message"/> to subscription queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-		public void MoveToSubscriptionQueue(MessageQueue queue, Message message)
-		{
-			//the endpoint IS the subscription queue
-			using (var destinationQueue = new MessageQueue(GetSubscriptionQueuePath(), QueueAccessMode.Send))
-			{
-				destinationQueue.Send(queue.ReceiveByLookupId(message.LookupId),
-														  queue.GetTransactionType());
-			}
-		}
-
-		/// <summary>
 		/// Moves the <paramref name="message"/> to errors queue.
 		/// </summary>
 		/// <param name="queue">The queue.</param>

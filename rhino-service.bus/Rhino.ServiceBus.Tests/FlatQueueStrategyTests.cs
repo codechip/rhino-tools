@@ -35,7 +35,7 @@ namespace Rhino.ServiceBus.Tests
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
-            queueStrategy.MoveToSubscriptionQueue(queue, msg);
+            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Subscriptions);
             Assert.Equal(0, queue.GetCount());
         }
 

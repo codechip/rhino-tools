@@ -22,6 +22,7 @@ namespace Rhino.ServiceBus.Msmq
         private readonly ILog logger = LogManager.GetLogger(typeof (AbstractMsmqListener));
 
         private readonly int threadCount;
+        public event Action MessageMoved;
 
         protected AbstractMsmqListener(IQueueStrategy queueStrategy, Uri endpoint, int threadCount)
         {
@@ -176,6 +177,9 @@ namespace Rhino.ServiceBus.Msmq
                         queueStrategy.TryMoveMessage(queue, message, subQueue);
                         tx.Complete();
                     }
+                    var copy = MessageMoved;
+                    if (copy != null)
+                        copy();
                     return;
                 }
 

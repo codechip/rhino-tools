@@ -9,6 +9,12 @@ namespace Rhino.ServiceBus.Msmq
 {
     public static class MsmqExtensions
     {
+        public static Message SetSubQueueToSendTo(this Message self, SubQueue queue)
+        {
+            self.AppSpecific = ((int) MessageType.MoveMessageMarker << 16) | (int) queue;
+            return self;
+        }
+
         public static Message TryGetMessageFromQueue(this MessageQueue queue, string messageId)
         {
             try
@@ -48,11 +54,6 @@ namespace Rhino.ServiceBus.Msmq
                 return MessageQueueTransactionType.Single;
             }
             return MessageQueueTransactionType.None;
-        }
-
-        public static void ConsumeMessage(this MessageQueue queue, Message message)
-        {
-            ConsumeMessage(queue, message.Id);    
         }
 
         public static void ConsumeMessage(this MessageQueue queue, string msgId)

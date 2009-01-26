@@ -14,10 +14,8 @@ namespace Rhino.ServiceBus.Internal
 
         bool RaiseAdministrativeMessageArrived(CurrentMessageInformation information);
 
-        void ProcessMessage(Message message,
-                            MessageQueue messageQueue,
-                            TransactionScope tx,
-                            Func<CurrentMessageInformation, bool> messageRecieved,
-                            Action<CurrentMessageInformation, Exception> messageCompleted);
+        void ReceiveMessageInTransaction(string messageId, 
+            Func<CurrentMessageInformation, bool> messageArrived,
+            Action<CurrentMessageInformation, Exception> messageProcessingCompleted);
     }
 }

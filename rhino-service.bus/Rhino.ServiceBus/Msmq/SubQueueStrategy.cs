@@ -28,16 +28,6 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		/// <summary>
-		/// Moves the <paramref name="message"/> to subscription queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-		public void MoveToSubscriptionQueue(MessageQueue queue, Message message)
-		{
-			queue.MoveToSubQueue("subscriptions", message);
-		}
-
-		/// <summary>
 		/// Moves the <paramref name="message"/> to errors queue.
 		/// </summary>
 		/// <param name="queue">The queue.</param>

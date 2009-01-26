@@ -5,6 +5,7 @@ using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
+using Rhino.ServiceBus.Msmq;
 using Xunit;
 using System.Linq;
 
@@ -25,12 +26,12 @@ namespace Rhino.ServiceBus.Tests.Bugs
             var container = CreateContainer();
 
             var subscriptionChanged = new ManualResetEvent(false);
-            var subscriptionStorage = container.Resolve<ISubscriptionStorage>();
-            subscriptionStorage.SubscriptionChanged += () => subscriptionChanged.Set();
             IStartableServiceBus bus;
             using(bus = container.Resolve<IStartableServiceBus>())
             {
                 bus.Start();
+                ((AbstractMsmqListener) container.Resolve<ITransport>()).MessageMoved += 
+                    () => subscriptionChanged.Set();
                 bus.Send(bus.Endpoint,new AddSubscription
                 {
                     Endpoint = bus.Endpoint.ToString(),

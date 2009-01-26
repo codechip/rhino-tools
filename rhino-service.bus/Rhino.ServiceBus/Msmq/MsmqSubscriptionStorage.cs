@@ -255,7 +255,11 @@ namespace Rhino.ServiceBus.Msmq
                 msgInfo.TransportMessageId);
             var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
             if (msmqMsgInfo != null)
-                queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue, msmqMsgInfo.MsmqMessage);
+            {
+                msmqMsgInfo.Queue.Send(
+                    msmqMsgInfo.MsmqMessage.SetSubQueueToSendTo(SubQueue.Subscriptions), 
+                    msmqMsgInfo.Queue.GetTransactionType());
+            }
             RaiseSubscriptionChanged();
             return true;
         }
@@ -270,17 +274,28 @@ namespace Rhino.ServiceBus.Msmq
         {
             bool newSubscription = AddSubscription(addSubscription.Type, addSubscription.Endpoint);
 
-            AddMessageIdentifierForTracking(msgInfo.TransportMessageId, 
-                addSubscription.Type,
-                new Uri(addSubscription.Endpoint));
             
             var msmqMsgInfo = msgInfo as MsmqCurrentMessageInformation;
 
             if (msmqMsgInfo != null && newSubscription)
             {
-                queueStrategy.MoveToSubscriptionQueue(msmqMsgInfo.Queue, msmqMsgInfo.MsmqMessage);
+                Message message = msmqMsgInfo.MsmqMessage;
+                msmqMsgInfo.Queue.Send(
+                   message.SetSubQueueToSendTo(SubQueue.Subscriptions),
+                   msmqMsgInfo.Queue.GetTransactionType());
+            
+                AddMessageIdentifierForTracking(
+                    message.Id,
+                    addSubscription.Type,
+                    new Uri(addSubscription.Endpoint));
+            
                 return true;
             }
+            
+            AddMessageIdentifierForTracking(
+                msgInfo.TransportMessageId,
+                addSubscription.Type,
+                new Uri(addSubscription.Endpoint));
             return false;
         }
 
