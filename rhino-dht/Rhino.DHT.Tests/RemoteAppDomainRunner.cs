@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.ServiceModel;
+using Microsoft.Isam.Esent;
 using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT.Tests

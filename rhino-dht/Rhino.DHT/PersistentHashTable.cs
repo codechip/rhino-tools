@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Web;
 using System.Web.Caching;
+using Microsoft.Isam.Esent;
 using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT
@@ -45,7 +46,7 @@ namespace Rhino.DHT
                     Api.JetAttachDatabase(session, database, AttachDatabaseGrbit.None);
                     return;
                 }
-                catch (EsentException e)
+                catch (EsentErrorException e)
                 {
                     if (e.Error != JET_err.FileNotFound)
                         throw;
@@ -60,10 +61,6 @@ namespace Rhino.DHT
         {
             if (needToDisposeInstance)
             {
-                using(var session = new Session(instance))
-                {
-                    Api.JetDetachDatabase(session, database);
-                }
                 instance.Dispose();
             }
         }
