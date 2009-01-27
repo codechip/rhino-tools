@@ -20,13 +20,6 @@ namespace Rhino.ServiceBus.Msmq
         Uri CreateSubscriptionQueueUri(Uri subscriptionQueue);
         
 		/// <summary>
-		/// Moves the <paramref name="message"/> to the timeout queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-    	void MoveToTimeoutQueue(MessageQueue queue, Message message);
-
-		/// <summary>
 		/// Gets a listing of all timeout messages.
 		/// </summary>
 		/// <returns></returns>

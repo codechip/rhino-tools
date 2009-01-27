@@ -46,12 +46,25 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public override bool HandlePeekedMessage(MessageQueue queue, Message message)
         {
-            var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 16));
-            if (CurrentTime >= processMessageAt)
-                return false;
-            queueStrategy.MoveToTimeoutQueue(queue, message);
-            timeoutMessageIds.Write(writer => writer.Add(processMessageAt, message.Id));
-            return true;
+          using(var tx = new TransactionScope())
+          {
+              var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 16));
+              if (CurrentTime >= processMessageAt)
+                  return false;
+
+              var msg = queue.TryGetMessageFromQueue(message.Id);
+              if (msg == null)
+                  return false;
+
+
+              queue.Send(message.SetSubQueueToSendTo(SubQueue.Timeout),queue.GetTransactionType());
+
+              tx.Complete();
+
+              timeoutMessageIds.Write(writer => writer.Add(processMessageAt, message.Id));
+
+              return true;
+          }
         }
 
         private void OnTimeoutCallback(object state)
