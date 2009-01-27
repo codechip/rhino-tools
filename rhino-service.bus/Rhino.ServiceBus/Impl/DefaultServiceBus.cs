@@ -85,23 +85,26 @@ namespace Rhino.ServiceBus.Impl
 
         public void Send(params object[] messages)
         {
+            Send(GetEndpointForMessageBatch(messages), messages);
+        }
+
+        private Uri GetEndpointForMessageBatch(object[] messages)
+        {
             if (messages == null)
                 throw new ArgumentNullException("messages");
 
             if (messages.Length == 0)
                 throw new MessagePublicationException("Cannot send empty message batch");
 
-            bool sent = false;
-            foreach (var owner in messageOwners)
-            {
-                if (owner.IsOwner(messages[0].GetType()) == false)
-                    continue;
-
-                Send(owner.Endpoint, messages);
-                sent = true;
-            }
-            if (sent == false)
+            Uri endpoint = messageOwners
+                .Where(x=>x.IsOwner(messages[0].GetType()))
+                .Select(x=>x.Endpoint)
+                .FirstOrDefault();
+            
+            if (endpoint == null)
                 throw new MessagePublicationException("Could not find no message owner for " + messages[0]);
+
+            return endpoint;
         }
 
         public IDisposable AddInstanceSubscription(IMessageConsumer consumer)
@@ -277,6 +280,16 @@ namespace Rhino.ServiceBus.Impl
     		transport.Send(endpoint, time, msgs);
     	}
 
+        /// <summary>
+        /// Send the message with a built in delay in its processing
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="msgs">The messages.</param>
+        public void DelaySend(DateTime time, params object[] msgs)
+        {
+            DelaySend(GetEndpointForMessageBatch(msgs), time, msgs);
+        }
+        
         private void AutomaticallySubscribeConsumerMessages()
         {
             var handlers = kernel.GetAssignableHandlers(typeof(IMessageConsumer));

@@ -85,5 +85,12 @@ namespace Rhino.ServiceBus
 		/// <param name="time">The time.</param>
 		/// <param name="msgs">The messages.</param>
 		void DelaySend(Uri endpoint, DateTime time, params object[] msgs);
+
+        /// <summary>
+        /// Send the message with a built in delay in its processing
+        /// </summary>
+        /// <param name="time">The time.</param>
+        /// <param name="msgs">The messages.</param>
+        void DelaySend(DateTime time, params object[] msgs);
     }
 }
