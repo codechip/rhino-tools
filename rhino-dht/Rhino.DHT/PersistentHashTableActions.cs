@@ -71,14 +71,24 @@ namespace Rhino.DHT
 
         public PutResult Put(string key, int[] parentVersions, byte[] bytes)
         {
-            return Put(key, parentVersions, bytes, null);
+            return Put(key, parentVersions, bytes, null, true);
         }
 
-        public PutResult Put(string key, int[] parentVersions, byte[] bytes, DateTime? expiresAt)
+        public PutResult Put(string key, int[] parentVersions, byte[] bytes, DateTime? expiresAt, bool allowConflict)
         {
+            var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
+
+            if(doesAllVersionsMatch == false && allowConflict == false)
+            {
+                return new PutResult
+                {
+                    ConflictExists = true,
+                    Version = -1
+                };
+            }
+
             // always remove the active versions from the cache
             commitSyncronization.Add(() => cache.Remove(GetKey(key)));
-            var doesAllVersionsMatch = DoesAllVersionsMatch(key, parentVersions);
             if (doesAllVersionsMatch)
             {
                 // we only remove existing versions from the 

@@ -52,7 +52,9 @@ namespace Rhino.DHT
                     var version = actions.Put(
                         value.Key,
                         value.ParentVersions ?? new int[0],
-                        value.Bytes);
+                        value.Bytes,
+                        value.ExpiresAt,
+                        value.OptimisticConcurrency);
                     versions.Add(version);
                 }
                 actions.Commit();

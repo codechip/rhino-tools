@@ -21,7 +21,7 @@ namespace Rhino.DHT.Tests
             host.Open();
         }
 
-        private void Delete(string database)
+        private static void Delete(string database)
         {
             if (Directory.Exists(database))
                 Directory.Delete(database, true);

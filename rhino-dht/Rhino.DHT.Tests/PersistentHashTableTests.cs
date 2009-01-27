@@ -105,6 +105,27 @@ namespace Rhino.DHT.Tests
         }
 
         [Fact]
+        public void Can_use_optimistic_concurrency()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    actions.Put("test", new int[0], new byte[] { 1 });
+                    var put = actions.Put("test", new int[0], new byte[] {2}, null, false);
+                    Assert.True(put.ConflictExists);
+
+                    actions.Commit();
+
+                    Assert.Equal(1, actions.Get("test").Length);
+                });
+            }
+        }
+
+
+        [Fact]
         public void Save_several_items_for_same_version_will_save_all_of_them()
         {
             using (var table = new PersistentHashTable(testDatabase))
@@ -178,7 +199,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 }, DateTime.Now.AddYears(1));
+                    actions.Put("abc1", new int[0], new byte[] { 1 }, DateTime.Now.AddYears(1), true);
 
                     var values = actions.Get("abc1");
                     Assert.NotEqual(0, values.Length);
@@ -221,7 +242,7 @@ namespace Rhino.DHT.Tests
                 table.Batch(actions =>
                 {
                     actions.Put("abc1", new int[0], new byte[] { 1 },
-                        DateTime.Now.AddYears(-1));
+                        DateTime.Now.AddYears(-1), true);
                     var values = actions.Get("abc1");
 
                     Assert.Equal(0, values.Length);
@@ -239,7 +260,7 @@ namespace Rhino.DHT.Tests
                 table.Batch(actions =>
                 {
                     actions.Put("abc1", new int[0], new byte[] { 1 },
-                        DateTime.Now);
+                        DateTime.Now, true);
 
                     actions.Commit();
                 });
