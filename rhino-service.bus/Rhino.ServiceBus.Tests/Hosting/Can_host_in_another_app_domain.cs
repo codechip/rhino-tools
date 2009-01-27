@@ -40,7 +40,6 @@ namespace Rhino.ServiceBus.Tests.Hosting
         [Fact]
         public void And_accept_messages_from_there()
         {
-			
             host.Start();
 
             using(var bus = container.Resolve<IStartableServiceBus>())

@@ -29,11 +29,18 @@ namespace Rhino.ServiceBus.Sagas.Persisters
             this.reflection = reflection;
         }
 
+
+        private static string CreateKey(Guid id)
+        {
+            return typeof(TSaga).FullName + "-" + id;
+        }
+
+
         public TSaga Get(Guid id)
         {
             var values = distributedHashTable.Get(new[]
             {
-                new GetValue {Key = id.ToString()},
+                new GetValue {Key = CreateKey(id)},
             }).First();
             if (values.Length == 0)
                 return null;
@@ -83,7 +90,7 @@ namespace Rhino.ServiceBus.Sagas.Persisters
                     new AddValue
                     {
                         Bytes = message.ToArray(),
-                        Key = saga.Id.ToString(),
+                        Key = CreateKey(saga.Id),
                         ParentVersions = state.ParentVersions
                     },
                 });
@@ -104,7 +111,7 @@ namespace Rhino.ServiceBus.Sagas.Persisters
             {
                 new RemoveValue
                 {
-                    Key = saga.Id.ToString(),
+                    Key = CreateKey(saga.Id),
                     ParentVersions = state.ParentVersions
                 },
             });

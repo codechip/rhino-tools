@@ -14,8 +14,8 @@ namespace Rhino.ServiceBus.Tests
     public class MessageLoggingTests : MsmqTestBase
     {
         private readonly IWindsorContainer container;
-        private ITransport transport;
-        private IMessageSerializer messageSerializer;
+        private readonly ITransport transport;
+        private readonly IMessageSerializer messageSerializer;
 
         public MessageLoggingTests()
         {

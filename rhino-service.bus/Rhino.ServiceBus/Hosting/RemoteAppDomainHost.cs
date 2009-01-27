@@ -12,7 +12,7 @@ namespace Rhino.ServiceBus.Hosting
     {
 	    private readonly Type boosterType;
         private readonly string assembly;
-        private readonly string path;
+        private string path;
         private HostedService current;
         private string configurationFile;
 

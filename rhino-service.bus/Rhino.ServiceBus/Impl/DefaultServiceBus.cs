@@ -373,7 +373,7 @@ namespace Rhino.ServiceBus.Impl
         public object[] GatherConsumers(CurrentMessageInformation msg)
         {
             var sagaMessage = msg.Message as ISagaMessage;
-            object[] sagas = GetSagasFor(sagaMessage);
+                object[] sagas = GetSagasFor(sagaMessage);
 
             var msgType = msg.Message.GetType();
             object[] instanceConsumers = subscriptionStorage

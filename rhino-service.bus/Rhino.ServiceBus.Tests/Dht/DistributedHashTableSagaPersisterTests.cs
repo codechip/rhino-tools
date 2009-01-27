@@ -67,7 +67,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 {
                     new GetValue
                     {
-                        Key = guid.ToString()
+                        Key = typeof(BaristaSaga) + "-" + guid
                     },
                 }).First();
             } while (values.Length==0);
@@ -119,7 +119,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 {
                     new GetValue
                     {
-                        Key = guid.ToString()
+                        Key = typeof(BaristaSaga) +"-" +guid
                     },
                 }).First();
             } while (values.Length != 0);
