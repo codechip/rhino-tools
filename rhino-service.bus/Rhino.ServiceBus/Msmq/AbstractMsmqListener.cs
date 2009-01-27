@@ -51,7 +51,7 @@ namespace Rhino.ServiceBus.Msmq
 
         protected static TimeSpan TimeOutForPeek
         {
-            get { return TimeSpan.FromSeconds(1); }
+            get { return TimeSpan.FromHours(1); }
         }
 
         public void Start()
