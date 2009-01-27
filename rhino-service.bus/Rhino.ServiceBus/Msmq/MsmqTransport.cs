@@ -348,7 +348,7 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-        protected override void HandlePeekedMessage(QueueState state, Message message)
+        protected override void HandlePeekedMessage(Message message)
         {
             foreach (var action in transportActions)
             {

@@ -78,6 +78,7 @@
     <Compile Include="DataStructures\LeastRecentlyUsedSet.cs" />
     <Compile Include="DataStructures\Hashtable.cs" />
     <Compile Include="Exceptions\InvalidUsageException.cs" />
+    <Compile Include="Exceptions\OptimisticConcurrencyException.cs" />
     <Compile Include="Exceptions\UnboundedResultSetException.cs" />
     <Compile Include="Hosting\AbstractBootStrapper.cs" />
     <Compile Include="Hosting\DefaultHost.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Msmq\QueueCreationModule.cs" />
     <Compile Include="Msmq\SubQueue.cs" />
     <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
+    <Compile Include="Msmq\TransportState.cs" />
     <Compile Include="Sagas\ISagaStateMerger.cs" />
     <Compile Include="Sagas\IVersionedSagaState.cs" />
     <Compile Include="Sagas\Persisters\InMemorySagaPersister.cs" />
@@ -131,7 +133,6 @@
     <Compile Include="Msmq\MsmqCurrentMessageInformation.cs" />
     <Compile Include="Msmq\MsmqExtensions.cs" />
     <Compile Include="Msmq\NativeMethods.cs" />
-    <Compile Include="Msmq\QueueState.cs" />
     <Compile Include="Msmq\SubQueueStrategy.cs" />
     <Compile Include="Msmq\TimeoutInfo.cs" />
     <Compile Include="Msmq\TransportActions\AdministrativeAction.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="Sagas\ISaga.cs" />
     <Compile Include="Sagas\ISagaMessage.cs" />
     <Compile Include="Sagas\Orchestrates.cs" />
+    <Compile Include="Sagas\Persisters\OptimisticDistributedHashTableSagaPersister.cs" />
+    <Compile Include="Sagas\SupportsOptimisticConcurrency.cs" />
     <Compile Include="Serializers\XmlMessageSerializer.cs" />
     <Compile Include="Util\GuidCombGenerator.cs" />
   </ItemGroup>

@@ -236,20 +236,32 @@ namespace Rhino.ServiceBus.Impl
 
             var sagaType = list[0];
             var sagaStateType = sagaType.GetGenericArguments()[0];
-            if (typeof(IVersionedSagaState).IsAssignableFrom(sagaStateType) == false)
-                throw new InvalidUsageException(model.Implementation + "'s state (" + sagaStateType + ") does not implement IVersionedSagaState");
-
-            if (typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation) == false)
-                throw new InvalidUsageException(model.Implementation + " must implement Orchestrates<MergeSagaState>, to handle state merges.");
-
-
-            Kernel.AddComponent(
-                "SagaPersister<" + model.Implementation + ">",
-                typeof(ISagaPersister<>)
-                    .MakeGenericType(model.Implementation),
-                typeof(DistributedHashTableSagaPersister<,>)
-                    .MakeGenericType(model.Implementation, sagaStateType)
-                );
+            
+            if (typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation))
+            {
+                Kernel.AddComponent(
+                    "SagaPersister<" + model.Implementation + ">",
+                    typeof (ISagaPersister<>)
+                        .MakeGenericType(model.Implementation),
+                    typeof (DistributedHashTableSagaPersister<,>)
+                        .MakeGenericType(model.Implementation, sagaStateType)
+                    );
+            }
+            else if (typeof(SupportsOptimisticConcurrency).IsAssignableFrom(model.Implementation))
+            {
+                Kernel.AddComponent(
+                     "SagaPersister<" + model.Implementation + ">",
+                     typeof(ISagaPersister<>)
+                         .MakeGenericType(model.Implementation),
+                     typeof(OptimisticDistributedHashTableSagaPersister<,>)
+                         .MakeGenericType(model.Implementation, sagaStateType)
+                     ); 
+            }
+            else
+            {
+                throw new InvalidUsageException(
+                    "When using DHT for saga state, you must specify either SupportsOptimisticConcurrency or Orchestrates<MergeSagaState>");
+            }
         }
 
         private void ReadMessageOwners()

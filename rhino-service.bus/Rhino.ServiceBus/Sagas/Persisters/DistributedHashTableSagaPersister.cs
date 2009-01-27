@@ -99,25 +99,21 @@ namespace Rhino.ServiceBus.Sagas.Persisters
 
         public void Complete(TSaga saga)
         {
-            using (var message = new MemoryStream())
+            var state = (TState) reflection.Get(saga, "State");
+            var removed = distributedHashTable.Remove(new[]
             {
-                var state = (TState)reflection.Get(saga, "State");
-                messageSerializer.Serialize(new object[] { state }, message);
-                var removed = distributedHashTable.Remove(new[]
+                new RemoveValue
                 {
-                    new RemoveValue
-                    {
-                        Key = saga.Id.ToString(),
-                        ParentVersions = state.ParentVersions
-                    },
+                    Key = saga.Id.ToString(),
+                    ParentVersions = state.ParentVersions
+                },
+            });
+            if (removed[0] == false)
+            {
+                bus.Send(bus.Endpoint, new MergeSagaState
+                {
+                    CorrelationId = saga.Id
                 });
-                if (removed[0] == false)
-                {
-                    bus.Send(bus.Endpoint, new MergeSagaState
-                    {
-                        CorrelationId = saga.Id
-                    });
-                }
             }
         }
     }

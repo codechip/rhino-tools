@@ -19,7 +19,7 @@ namespace Rhino.ServiceBus.Tests.Dht
             var exception = Assert.Throws<InvalidUsageException>(
                 () => container.AddComponent<InvalidBaristaSaga>());
             Assert.Equal(
-                "Rhino.ServiceBus.Tests.Dht.InvalidBaristaSaga must implement Orchestrates<MergeSagaState>, to handle state merges.", 
+                "When using DHT for saga state, you must specify either SupportsOptimisticConcurrency or Orchestrates<MergeSagaState>",
                 exception.Message);
         }
     }

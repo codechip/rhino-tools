@@ -54,7 +54,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             }
         }
 
-        protected override void HandlePeekedMessage(QueueState state, Message message)
+        protected override void HandlePeekedMessage(Message message)
         {
             try
             {
@@ -70,12 +70,12 @@ namespace Rhino.ServiceBus.LoadBalancer
                 }
                 using(var tx = new  TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
                 {
-                    message = state.Queue.TryGetMessageFromQueue(message.Id);
+                    message = queue.TryGetMessageFromQueue(message.Id);
                     var worker = readyForWork.Dequeue();
 
                     if(worker==null)// handle message later
                     {
-                        state.Queue.Send(message);
+                        queue.Send(message);
                     }
                     else
                     {

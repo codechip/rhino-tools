@@ -12,14 +12,14 @@ namespace Rhino.ServiceBus.Msmq
     {
         private readonly IQueueStrategy queueStrategy;
         private readonly Uri endpoint;
-        private readonly WaitHandle[] waitHandles;
+        private readonly Thread[] threads;
         private bool haveStarted;
 
         protected MessageQueue queue;
 
         private volatile bool shouldStop;
 
-        private readonly ILog logger = LogManager.GetLogger(typeof (AbstractMsmqListener));
+        private readonly ILog logger = LogManager.GetLogger(typeof(AbstractMsmqListener));
 
         private readonly int threadCount;
         public event Action MessageMoved;
@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Msmq
             this.queueStrategy = queueStrategy;
             this.endpoint = endpoint;
             this.threadCount = threadCount;
-            waitHandles = new WaitHandle[threadCount];
+            threads = new Thread[threadCount];
         }
 
         public event Action Started;
@@ -51,36 +51,30 @@ namespace Rhino.ServiceBus.Msmq
 
         protected static TimeSpan TimeOutForPeek
         {
-            get { return TimeSpan.FromHours(1); }
+            get { return TimeSpan.FromSeconds(1); }
         }
 
         public void Start()
         {
             if (haveStarted)
                 return;
-
             logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
             queue = InitalizeQueue(endpoint);
 
             BeforeStart();
 
+            shouldStop = false;
+            TransportState = TransportState.Started;
+
             for (var t = 0; t < threadCount; t++)
             {
-                var waitHandle = new ManualResetEvent(true);
-                waitHandles[t] = waitHandle;
-                try
+                var thread = new Thread(PeekMessageOnBackgroundThread)
                 {
-                    queue.BeginPeek(TimeOutForPeek, new QueueState
-                    {
-                        Queue = queue,
-                        WaitHandle = waitHandle
-                    }, OnPeekMessage);
-                    waitHandle.Reset();
-                }
-                catch (Exception e)
-                {
-                    throw new TransportException("Unable to start reading from queue: " + endpoint, e);
-                }
+                    Name = "Rhino Service Bus Worker Thread #" + t,
+                    IsBackground = true
+                };
+                threads[t] = thread;
+                thread.Start();
             }
 
             haveStarted = true;
@@ -92,7 +86,7 @@ namespace Rhino.ServiceBus.Msmq
 
         protected virtual void BeforeStart()
         {
-            
+
         }
 
         public void Dispose()
@@ -107,10 +101,11 @@ namespace Rhino.ServiceBus.Msmq
 
             if (queue != null)
                 queue.Close();
-            
+
             WaitForProcessingToEnd();
 
             haveStarted = false;
+            TransportState = TransportState.Stopped;
         }
 
         private void WaitForProcessingToEnd()
@@ -118,17 +113,9 @@ namespace Rhino.ServiceBus.Msmq
             if (haveStarted == false)
                 return;
 
-            if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+            foreach (var thread in threads)
             {
-                WaitHandle.WaitAll(waitHandles);
-            }
-            else
-            {
-                foreach (WaitHandle handle in waitHandles)
-                {
-                    if (handle != null)
-                        handle.WaitOne();
-                }
+                thread.Join();
             }
         }
 
@@ -137,7 +124,7 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 var queue = new MessageQueue(MsmqUtil.GetQueuePath(endpoint), QueueAccessMode.SendAndReceive);
-				queue.MessageReadPropertyFilter.SetAll();
+                queue.MessageReadPropertyFilter.SetAll();
                 return queue;
             }
             catch (Exception e)
@@ -145,82 +132,73 @@ namespace Rhino.ServiceBus.Msmq
                 throw new TransportException(
                     "Could not open queue: " + endpoint + Environment.NewLine +
                     "Queue path: " + MsmqUtil.GetQueuePath(endpoint) +
-                    "Did you create the queue or disable the queue initialization module?",e);
+                    "Did you create the queue or disable the queue initialization module?", e);
             }
-			
+
         }
 
-        protected void OnPeekMessage(IAsyncResult ar)
+        protected void PeekMessageOnBackgroundThread()
         {
-            Message message;
-            var state = (QueueState)ar.AsyncState;
-        	state.Queue.MessageReadPropertyFilter.SetAll();
-        	
-            bool? peek = TryEndingPeek(ar, out message);
-            if (shouldStop ||
-                peek == false)// error peeking from queue
-            {
-                state.WaitHandle.Set();
-                return;
-            }
-
-            try
-            {
-                if (peek == null)//nothing was found 
-                    return;
-
-				if ((MessageType)((message.AppSpecific & 0xFFFF0000) >> 16) == MessageType.MoveMessageMarker)
-				{
-					var subQueue = (SubQueue)(0x0000FFFF & message.AppSpecific);
-					using (var tx = new TransactionScope())
-					{
-					    string msgId;
-					    queueStrategy.TryMoveMessage(queue, message, subQueue, out msgId);
-						tx.Complete();
-					}
-					var copy = MessageMoved;
-					if (copy != null)
-						copy();
-					return;
-				}
-				logger.DebugFormat("Got message {0} from {1}",
-							  message.Label,
-							  MsmqUtil.GetQueueUri(state.Queue));
-
-				HandlePeekedMessage(state, message);
-
-               
-            }
-            finally
+            while (shouldStop == false)
             {
                 try
                 {
-                    if(shouldStop)
+                    Message message;
+                    bool? peek = TryPeek(out message);
+
+                    if (peek == false)//error reading from queue
                     {
-                        state.WaitHandle.Set();
+                        TransportState = TransportState.FailedToReadFromQueue;
+                        return; // return from method, we have failed}
                     }
-                    else
+                    if (peek == null) //nothing was found 
+                        continue;
+
+                    if ((MessageType)((message.AppSpecific & 0xFFFF0000) >> 16) == MessageType.MoveMessageMarker)
                     {
-                        state.Queue.BeginPeek(TimeOutForPeek, state, OnPeekMessage);
+                        var subQueue = (SubQueue)(0x0000FFFF & message.AppSpecific);
+                        using (var tx = new TransactionScope())
+                        {
+                            string msgId;
+                            queueStrategy.TryMoveMessage(queue, message, subQueue, out msgId);
+                            tx.Complete();
+                        }
+                        var copy = MessageMoved;
+                        if (copy != null)
+                            copy();
+                        continue;
                     }
+                    logger.DebugFormat("Got message {0} from {1}",
+                                       message.Label,
+                                       MsmqUtil.GetQueueUri(queue));
+
+                    HandlePeekedMessage(message);
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Could not begin peeking from queue", e);
-                    state.WaitHandle.Set();
+                    Debugger.Break();
+                    Debug.Fail("should not happen", e.ToString());
                 }
             }
+
         }
 
-        protected abstract void HandlePeekedMessage(QueueState state, Message message);
+        private TransportState transportState;
 
-       
-        private bool? TryEndingPeek(IAsyncResult ar, out Message message)
+        public TransportState TransportState
         {
-            var state = (QueueState)ar.AsyncState;
+            get { return transportState; }
+            set { transportState = value; }
+        }
+
+        protected abstract void HandlePeekedMessage(Message message);
+
+
+        private bool? TryPeek(out Message message)
+        {
             try
             {
-                message = state.Queue.EndPeek(ar);
+                message = queue.Peek(TimeOutForPeek);
             }
             catch (MessageQueueException e)
             {
@@ -232,7 +210,7 @@ namespace Rhino.ServiceBus.Msmq
                 }
                 return null; // nothing found
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 message = null;
                 logger.Error("Could not peek message from queue", e);
