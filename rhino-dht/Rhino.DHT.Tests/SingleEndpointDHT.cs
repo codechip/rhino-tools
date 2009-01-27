@@ -14,6 +14,7 @@ namespace Rhino.DHT.Tests
         public SingleEndpointDHT()
         {
             Delete("cache.esent");
+            Delete("test.esent");
 
             address = new Uri("net.tcp://localhost:6212/cache");
             host = new ServiceHost(typeof(DistributedHashTable), address);
