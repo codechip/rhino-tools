@@ -88,7 +88,7 @@ namespace Rhino.ServiceBus.Sagas.Persisters
                 new RemoveValue
                 {
                     Key = CreateKey(saga.Id),
-                    ParentVersions = state.ParentVersions
+                    ParentVersions = new []{state.Version}
                 },
             });
             if (removed[0] == false)
