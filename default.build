@@ -9,13 +9,18 @@
 	
 	<fileset id="buildfiles.all">
 		<!-- Files have to be in dependency order -->
+		
 		<include name="rhino-mocks/default.build" />
+		<!--
 		<include name="rhino-testing/default.build" />		
 		<include name="rhino-dsl/default.build" />
 		<include name="rhino-commons/default.build" />
 		<include name="rhino-security/default.build" />
 		<include name="rhino-etl/default.build" />
 		<include name="rhino-igloo/default.build" />
+		-->
+		<include name="rhino-dht/default.build" />
+		<include name="rhino-service.bus/default.build" />
 		<!--<include name="NHibernate.Query.Generator/default.build" />-->
 	</fileset>
 
@@ -121,7 +126,7 @@
 		</copy>
 		
 		<foreach item="String" delim=" " property="dependency.dir" 
-			in="Boo Castle FileHelpers ICSharpCode Interop NHibernate SqlCE SqLite.Net System VisualStudio">
+			in="Boo Castle FileHelpers ICSharpCode Interop NHibernate SqlCE SqLite.Net System VisualStudio Esent xunit">
 			
 			<!-- Copy framework-neutral libraries -->
 			<copy todir="${build.dir}" >

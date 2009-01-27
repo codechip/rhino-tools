@@ -14,6 +14,7 @@
 
     <assemblyfileset id="project.references" basedir="${build.dir}">
       <include name="xunit.dll"/>
+      <include name="Esent.Interop.dll"/>
       <include name="Rhino.DHT.dll" />
       <include name="System.dll" />
       <include name="System.Core.dll" />
