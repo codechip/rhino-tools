@@ -46,7 +46,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public override bool HandlePeekedMessage(MessageQueue queue, Message message)
         {
-            var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 0));
+            var processMessageAt = DateTime.FromBinary(BitConverter.ToInt64(message.Extension, 16));
             if (CurrentTime >= processMessageAt)
                 return false;
             queueStrategy.MoveToTimeoutQueue(queue, message);

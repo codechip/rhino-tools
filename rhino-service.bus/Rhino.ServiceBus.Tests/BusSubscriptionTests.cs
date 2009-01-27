@@ -6,6 +6,7 @@ using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Msmq;
 using Xunit;
 
 namespace Rhino.ServiceBus.Tests
@@ -28,18 +29,22 @@ namespace Rhino.ServiceBus.Tests
                 bus.Start();
 
                 var storage = container.Resolve<ISubscriptionStorage>();
-                var wait = new ManualResetEvent(false);
+                var listener = (AbstractMsmqListener)container.Resolve<ITransport>();
+                var waitSubscriptions = new ManualResetEvent(false);
+                var waitListener = new ManualResetEvent(false);
                 int count = 0;
+                listener.MessageMoved += () => waitListener.Set();
                 storage.SubscriptionChanged += () =>
                 {
                     if (Interlocked.Increment(ref count) == 2)
-                        wait.Set();
+                        waitSubscriptions.Set();
                 };
 
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
 
-                wait.WaitOne();
+                waitListener.WaitOne();
+                waitSubscriptions.WaitOne();
 
                 Assert.Equal(1, subscriptions.GetAllMessages().Length);
             }
@@ -79,19 +84,23 @@ namespace Rhino.ServiceBus.Tests
             {
                 bus.Start();
 
+                var listener = (AbstractMsmqListener) container.Resolve<ITransport>();
                 var storage = container.Resolve<ISubscriptionStorage>();
-                var wait = new ManualResetEvent(false);
+                var waitSubscriptions = new ManualResetEvent(false);
+                var waitListener = new ManualResetEvent(false);
                 int count = 0;
+                listener.MessageMoved += () => waitListener.Set();
                 storage.SubscriptionChanged += () =>
                 {
                     if (Interlocked.Increment(ref count) == 2)
-                        wait.Set();
+                        waitSubscriptions.Set();
                 };
 
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
                 bus.Subscribe<OnBusStart.TestMessage>();
 
-                wait.WaitOne();
+                waitListener.WaitOne();
+                waitSubscriptions.WaitOne();
 
                 storage.RemoveSubscription(typeof(MsmqSubscriptionTests.TestMessage).FullName, TestQueueUri.ToString());
 

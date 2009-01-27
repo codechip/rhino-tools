@@ -19,13 +19,6 @@ namespace Rhino.ServiceBus.Msmq
         /// <returns></returns>
         Uri CreateSubscriptionQueueUri(Uri subscriptionQueue);
         
-        /// <summary>
-        /// Moves the <paramref name="message"/> to errors queue.
-        /// </summary>
-        /// <param name="queue">The queue.</param>
-        /// <param name="message">The message.</param>
-        string MoveToErrorsQueue(MessageQueue queue, Message message);
-        
 		/// <summary>
 		/// Moves the <paramref name="message"/> to the timeout queue.
 		/// </summary>
@@ -46,6 +39,6 @@ namespace Rhino.ServiceBus.Msmq
 		/// <param name="messageId">The message id.</param>
 		void MoveTimeoutToMainQueue(MessageQueue queue, string messageId);
 
-        bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue);
+        bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId);
     }
 }

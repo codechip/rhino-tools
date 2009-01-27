@@ -13,7 +13,8 @@ namespace Rhino.ServiceBus.Tests
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
-            queueStrategy.MoveToErrorsQueue(queue, msg);
+            string msgId;
+            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Errors,out msgId);
             Assert.Equal(0, queue.GetCount());
         }
 
@@ -24,7 +25,8 @@ namespace Rhino.ServiceBus.Tests
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
-            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Discarded);
+            string msgId;
+            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Discarded, out msgId);
             Assert.Equal(0, queue.GetCount());
         }
 
@@ -35,7 +37,8 @@ namespace Rhino.ServiceBus.Tests
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
-            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Subscriptions);
+            string msgId;
+            queueStrategy.TryMoveMessage(queue, msg, SubQueue.Subscriptions,out msgId);
             Assert.Equal(0, queue.GetCount());
         }
 

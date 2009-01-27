@@ -97,19 +97,21 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         private void MoveToErrorQueue(MessageQueue queue, Message message, string exceptionText)
         {
-            var msgId = queueStrategy.MoveToErrorsQueue(queue, message);
+            string msgId;
+            if(queueStrategy.TryMoveMessage(queue, message, SubQueue.Errors,out msgId) == false)
+                return;
             var label = "Error description for " + message.Label;
-            if (label.Length > 249)
-                label = label.Substring(0, 246) + "...";
-            queue.Send(new Message
-            {
-                AppSpecific = (int)MessageType.ErrorDescriptionMessageMarker,
-                Label = label,
-                Body = exceptionText,
-                CorrelationId = msgId,
-            }, queue.GetTransactionType());
+			if (label.Length > 249)
+				label = label.Substring(0, 246) + "...";
+            var desc = new Message
+			{
+				Label = label,
+				Body = exceptionText,
+                CorrelationId = msgId
+			}.SetSubQueueToSendTo(SubQueue.Errors);
+			queue.Send(desc, queue.GetTransactionType());
 
-            logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
+        	logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
                               exceptionText);
         }
 

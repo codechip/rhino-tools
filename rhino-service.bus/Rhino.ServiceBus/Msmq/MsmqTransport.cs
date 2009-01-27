@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
 using System.Transactions;
@@ -92,8 +93,9 @@ namespace Rhino.ServiceBus.Msmq
 	    public void Send(Uri uri, DateTime processAgainAt, object[] msgs)
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
-
-			message.Extension = BitConverter.GetBytes(processAgainAt.ToBinary());
+	        var bytes = new List<byte>(message.Extension);
+	        bytes.AddRange(BitConverter.GetBytes(processAgainAt.ToBinary()));
+	        message.Extension = bytes.ToArray();
 			message.AppSpecific = (int)MessageType.TimeoutMessageMarker;
 
 			SendMessageToQueue(message, uri);

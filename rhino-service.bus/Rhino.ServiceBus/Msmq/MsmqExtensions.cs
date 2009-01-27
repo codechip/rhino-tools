@@ -31,9 +31,11 @@ namespace Rhino.ServiceBus.Msmq
 
         public static Guid GetMessageId(this Message self)
         {
-            if (self.Extension.Length == 0)
+            if (self.Extension.Length < 16)
                 self.Extension = Guid.NewGuid().ToByteArray();
-            return new Guid(self.Extension);
+            var guid = new byte[16];
+            Buffer.BlockCopy(self.Extension, 0, guid, 0, 16);
+            return new Guid(guid);
         }
 
         public static MessageQueueTransactionType GetTransactionType(this MessageQueue self)

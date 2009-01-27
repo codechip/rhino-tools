@@ -28,17 +28,6 @@ namespace Rhino.ServiceBus.Msmq
 		}
 
 		/// <summary>
-		/// Moves the <paramref name="message"/> to errors queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-		public string MoveToErrorsQueue(MessageQueue queue, Message message)
-		{
-			queue.MoveToSubQueue("errors", message);
-		    return message.Id;
-		}
-
-		/// <summary>
 		/// Moves the <paramref name="message"/> to the timeout queue.
 		/// </summary>
 		/// <param name="queue">The queue.</param>
@@ -91,15 +80,17 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue)
+	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId)
 	    {
 	        try
 	        {
 	            queue.MoveToSubQueue(subQueue.ToString(), message);
+	            msgId = message.Id;
 	            return true;
 	        }
 	        catch (TransportException)
 	        {
+	            msgId = null;
 	            return false;
 	        }
 	    }

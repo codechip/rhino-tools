@@ -42,11 +42,10 @@ namespace Rhino.ServiceBus.Msmq
 		public MessageQueue InitializeQueue(Uri endpoint)
 		{
 			var accessMode = QueueAccessMode.SendAndReceive;
-			
 			var root = endpoint.CreateQueue(accessMode);
-
-			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
+			
 			MsmqUtil.CreateQueue(GetErrorsQueuePath(), accessMode);
+			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetDiscardedQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetTimeoutQueuePath(), accessMode);
 			return root;
@@ -60,21 +59,6 @@ namespace Rhino.ServiceBus.Msmq
 		public Uri CreateSubscriptionQueueUri(Uri subscriptionQueue)
 		{
 			return new Uri(subscriptionQueue + "#subscriptions");
-		}
-
-		/// <summary>
-		/// Moves the <paramref name="message"/> to errors queue.
-		/// </summary>
-		/// <param name="queue">The queue.</param>
-		/// <param name="message">The message.</param>
-		public string MoveToErrorsQueue(MessageQueue queue, Message message)
-		{
-			using (var destinationQueue = new MessageQueue(GetErrorsQueuePath(), QueueAccessMode.Send))
-			{
-			    var sentMessage = queue.ReceiveByLookupId(message.LookupId);
-			    destinationQueue.Send(sentMessage, queue.GetTransactionType());
-			    return sentMessage.Id;
-			}
 		}
 
 		/// <summary>
@@ -114,7 +98,7 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue)
+	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId)
 	    {
             using (var destinationQueue = new MessageQueue(queue.Path + "#" + subQueue, QueueAccessMode.Send))
             {
@@ -125,10 +109,12 @@ namespace Rhino.ServiceBus.Msmq
                 }
                 catch (InvalidOperationException)
                 {
+                    msgId = null;
                     return false;
                 }
                 message.AppSpecific = 0;//reset flag
                 destinationQueue.Send(receiveById, destinationQueue.GetTransactionType());
+                msgId = receiveById.Id;
                 return true;
             }
 	    }

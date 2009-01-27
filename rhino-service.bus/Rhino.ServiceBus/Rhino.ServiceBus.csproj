@@ -136,7 +136,6 @@
     <Compile Include="Msmq\TimeoutInfo.cs" />
     <Compile Include="Msmq\TransportActions\AdministrativeAction.cs" />
     <Compile Include="Msmq\TransportActions\ErrorAction.cs" />
-    <Compile Include="Msmq\TransportActions\ErrorDescriptionAction.cs" />
     <Compile Include="Msmq\TransportActions\AbstractTransportAction.cs" />
     <Compile Include="Msmq\TransportActions\ITransportAction.cs" />
     <Compile Include="Msmq\TransportActions\TimeoutAction.cs" />

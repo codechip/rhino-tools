@@ -137,9 +137,7 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 var queue = new MessageQueue(MsmqUtil.GetQueuePath(endpoint), QueueAccessMode.SendAndReceive);
-                var filter = new MessagePropertyFilter();
-                filter.SetAll();
-                queue.MessageReadPropertyFilter = filter;
+				queue.MessageReadPropertyFilter.SetAll();
                 return queue;
             }
             catch (Exception e)
@@ -156,6 +154,8 @@ namespace Rhino.ServiceBus.Msmq
         {
             Message message;
             var state = (QueueState)ar.AsyncState;
+        	state.Queue.MessageReadPropertyFilter.SetAll();
+        	
             bool? peek = TryEndingPeek(ar, out message);
             if (shouldStop ||
                 peek == false)// error peeking from queue
@@ -169,25 +169,27 @@ namespace Rhino.ServiceBus.Msmq
                 if (peek == null)//nothing was found 
                     return;
 
-                if ((MessageType)((message.AppSpecific & 0xFFFF0000)>>16) == MessageType.MoveMessageMarker)
-                {
-                    var subQueue = (SubQueue) (0x0000FFFF & message.AppSpecific);
-                    using(var tx = new TransactionScope())
-                    {
-                        queueStrategy.TryMoveMessage(queue, message, subQueue);
-                        tx.Complete();
-                    }
-                    var copy = MessageMoved;
-                    if (copy != null)
-                        copy();
-                    return;
-                }
+				if ((MessageType)((message.AppSpecific & 0xFFFF0000) >> 16) == MessageType.MoveMessageMarker)
+				{
+					var subQueue = (SubQueue)(0x0000FFFF & message.AppSpecific);
+					using (var tx = new TransactionScope())
+					{
+					    string msgId;
+					    queueStrategy.TryMoveMessage(queue, message, subQueue, out msgId);
+						tx.Complete();
+					}
+					var copy = MessageMoved;
+					if (copy != null)
+						copy();
+					return;
+				}
+				logger.DebugFormat("Got message {0} from {1}",
+							  message.Label,
+							  MsmqUtil.GetQueueUri(state.Queue));
 
-                logger.DebugFormat("Got message {0} from {1}",
-                                   message.Label,
-                                   MsmqUtil.GetQueueUri(state.Queue));
+				HandlePeekedMessage(state, message);
 
-                HandlePeekedMessage(state, message);
+               
             }
             finally
             {
