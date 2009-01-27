@@ -258,20 +258,46 @@
 		description="Run MbUnit tests">
 
 		<if test="${common.testrunner.enabled}">
-			<echo message="Running tests in '${project::get-name()}'" />
+			<call target="detect.xunit"/>
+			
+			<if test="${use.xunit}">
+				<loadtasks assembly="${lib.dir}\xUnit\XUnit.NAntTasks.dll" />
 
-			<exec
-				program="${mbunit-console}"
-				workingdir="${build.dir}"
-				commandline='${project::get-name()}.dll /rf:"${testresults.dir}" /rnf:"${project::get-name()}.dll-results" /rt:Html /rt:Xml'
-				failonerror="${common.testrunner.failonerror}"
-			/>
+					<xunit assembly="${build.dir}/${project::get-name()}.dll"
+					   html="${testresults.dir}\${project::get-name()}.dll-results.html"
+					   xml="${testresults.dir}\${project::get-name()}.dll-results.xml"
+					   workingDir="${build.dir}" />
+				
+			</if>
+			<if test="${not use.xunit}">					
+				<echo message="Running tests in '${project::get-name()}'" />
+				<exec
+					program="${mbunit-console}"
+					workingdir="${build.dir}"
+					commandline='${project::get-name()}.dll /rf:"${testresults.dir}" /rnf:"${project::get-name()}.dll-results" /rt:Html /rt:Xml'
+					failonerror="${common.testrunner.failonerror}"
+				/>
 
+			</if>			
 		</if>
 		<if test="${not common.testrunner.enabled}">
 			<echo message="Tests are disabled for '${project::get-name()}'" />
 		</if>
 
+	</target>
+	
+	<target name="detect.xunit" description="Discover whether to use xunit">
+		<property name="use.xunit" value="false" overwrite="false"/>
+		<foreach item="File" property="reference">
+			<in>
+				<items refid="project.references" />
+			</in>
+			<do>
+				<if test="${string::contains(reference,'xunit')}">
+					<property name="use.xunit" value="true"/>
+				</if>				
+			</do>
+		</foreach>
 	</target>
 
 	<target name="common.run-database-tests"
