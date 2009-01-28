@@ -19,7 +19,7 @@ namespace Rhino.ServiceBus.Tests
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
                                                   {
-                                                      Endpoint = TransactionalTestQueueUri.ToString(),
+                                                      Endpoint = TransactionalTestQueueUri.Uri.ToString(),
                                                       Type = typeof(TestMessage).FullName,
                                                   }}, msg.BodyStream);
 
@@ -28,15 +28,16 @@ namespace Rhino.ServiceBus.Tests
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
                                                                   serializer,
-                                                                  TestQueueUri,
-                                                                  new FlatQueueStrategy(TestQueueUri));
+                                                                  TestQueueUri.Uri,
+                                                                  new EndpointRouter(),
+                                                                  new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri));
             subscriptionStorage.Initialize();
 
             var uri = subscriptionStorage
                 .GetSubscriptionsFor(typeof(TestMessage))
                 .Single();
 
-            Assert.Equal(TransactionalTestQueueUri, uri);
+            Assert.Equal(TransactionalTestQueueUri.Uri, uri);
         }
 
         [Fact]
@@ -46,7 +47,7 @@ namespace Rhino.ServiceBus.Tests
             var msg = new Message();
             serializer.Serialize(new object[]{new AddSubscription
                                                   {
-                                                      Endpoint = TransactionalTestQueueUri.ToString(),
+                                                      Endpoint = TransactionalTestQueueUri.Uri.ToString(),
                                                       Type = typeof(TestMessage).FullName,
                                                   }}, msg.BodyStream);
 
@@ -55,10 +56,11 @@ namespace Rhino.ServiceBus.Tests
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
                                                                   serializer,
-                                                                  TestQueueUri,
-                                                                  new FlatQueueStrategy(TestQueueUri));
+                                                                  TestQueueUri.Uri,
+                                                                  new EndpointRouter(),
+                                                                  new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri));
             subscriptionStorage.Initialize();
-            subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TransactionalTestQueueUri.ToString());
+            subscriptionStorage.RemoveSubscription(typeof(TestMessage).FullName, TransactionalTestQueueUri.Uri.ToString());
 
             var uris = subscriptionStorage
                 .GetSubscriptionsFor(typeof(TestMessage));

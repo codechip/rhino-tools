@@ -8,9 +8,10 @@ namespace Rhino.ServiceBus.Internal
     {
         void Start();
 
-        Uri Endpoint { get; }
+        Endpoint Endpoint { get; }
+        int ThreadCount { get; }
 
-        void Send(Uri uri, params object[] msgs);
+        void Send(Endpoint endpoint, params object[] msgs);
 
         void Reply(params object[] messages);
 
@@ -28,7 +29,7 @@ namespace Rhino.ServiceBus.Internal
 
         event Action<CurrentMessageInformation, Exception> AdministrativeMessageProcessingCompleted;
 
-    	void Send(Uri uri, DateTime processAgainAt, object[] msgs);
+    	void Send(Endpoint endpoint, DateTime processAgainAt, object[] msgs);
 
         event Action Started;
     }

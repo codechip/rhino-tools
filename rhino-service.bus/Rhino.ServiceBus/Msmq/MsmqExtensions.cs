@@ -108,7 +108,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 		
-        public static MessageQueue CreateQueue(this Uri queueUri, QueueAccessMode accessMode)
+        public static MessageQueue CreateQueue(this Endpoint queueUri, QueueAccessMode accessMode)
         {
             var queuePath = MsmqUtil.GetQueuePath(queueUri);
         	return MsmqUtil.CreateQueue(queuePath, accessMode);

@@ -13,13 +13,13 @@ namespace Rhino.ServiceBus.Tests
     public class MsmqFlatQueueTestBase : IDisposable
     {
         private readonly string subscriptionQueuePath;
-        protected readonly Uri SubscriptionsUri;
+        protected readonly Endpoint SubscriptionsUri;
 
         protected readonly string testQueuePath;
-        protected readonly Uri TestQueueUri;
+        protected readonly Endpoint TestQueueUri;
         
         protected readonly string transactionalTestQueuePath;
-        protected readonly Uri TransactionalTestQueueUri;
+        protected readonly Endpoint TransactionalTestQueueUri;
 
         protected MessageQueue queue;
         protected MessageQueue subscriptions;
@@ -37,13 +37,22 @@ namespace Rhino.ServiceBus.Tests
         {
             defaultTestBase = new MsmqTestBase();
 
-            TestQueueUri = new Uri("msmq://localhost/test_queue");
+            TestQueueUri = new Endpoint
+            {
+                Uri = new Uri("msmq://localhost/test_queue")
+            };
             testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri);
-            
-            TransactionalTestQueueUri = new Uri("msmq://localhost/transactional_test_queue");
+
+            TransactionalTestQueueUri = new Endpoint
+            {
+                Uri = new Uri("msmq://localhost/transactional_test_queue")
+            };
             transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
 
-			SubscriptionsUri = new Uri(TestQueueUri + "#" + subscriptions);
+            SubscriptionsUri = new Endpoint
+            {
+                Uri = new Uri(TestQueueUri.Uri + "#" + subscriptions)
+            };
 			subscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
 
 
@@ -113,9 +122,10 @@ namespace Rhino.ServiceBus.Tests
                         new XmlMessageSerializer(
                         	new DefaultReflection(),
                         	new DefaultKernel()),
-                            new FlatQueueStrategy(TestQueueUri),
-                            TestQueueUri, 1,
-                        DefaultTransportActions(TestQueueUri));
+                            new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri),
+                            TestQueueUri.Uri, 1,
+                        DefaultTransportActions(TestQueueUri.Uri),
+                            new EndpointRouter());
                     transport.Start();
                 }
                 return transport;
@@ -124,7 +134,7 @@ namespace Rhino.ServiceBus.Tests
 
         private static ITransportAction[] DefaultTransportActions(Uri endpoint)
         {
-            var qs = new FlatQueueStrategy(endpoint);
+            var qs = new FlatQueueStrategy(new EndpointRouter(),endpoint);
             return new ITransportAction[]
             {
                 new AdministrativeAction(),
@@ -142,8 +152,9 @@ namespace Rhino.ServiceBus.Tests
                 {
                     transactionalTransport = new MsmqTransport(
                         new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
-                        new FlatQueueStrategy(TransactionalTestQueueUri),
-                        TransactionalTestQueueUri, 1, DefaultTransportActions(TransactionalTestQueueUri));
+                        new FlatQueueStrategy(new EndpointRouter(),TransactionalTestQueueUri.Uri),
+                        TransactionalTestQueueUri.Uri, 1, DefaultTransportActions(TransactionalTestQueueUri.Uri),
+                            new EndpointRouter());
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;

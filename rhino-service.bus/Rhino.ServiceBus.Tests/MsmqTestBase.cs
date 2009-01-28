@@ -12,16 +12,16 @@ namespace Rhino.ServiceBus.Tests
     public class MsmqTestBase : IDisposable
     {
         private readonly string subbscriptionQueuePath;
-        protected readonly Uri SubscriptionsUri;
+        protected readonly Endpoint SubscriptionsUri;
 
         protected readonly string testQueuePath;
-        protected readonly Uri TestQueueUri;
+        protected readonly Endpoint TestQueueUri;
 
         protected readonly string testQueuePath2;
-        protected readonly Uri TestQueueUri2;
+        protected readonly Endpoint TestQueueUri2;
 
         protected readonly string transactionalTestQueuePath;
-        protected readonly Uri TransactionalTestQueueUri;
+        protected readonly Endpoint TransactionalTestQueueUri;
 
         protected MessageQueue queue;
         protected MessageQueue subscriptions;
@@ -30,19 +30,23 @@ namespace Rhino.ServiceBus.Tests
         private ITransport transactionalTransport;
         private ITransport transport;
         protected readonly MessageQueue testQueue2;
+        private string subbscriptionQueuePath2;
 
         public MsmqTestBase()
         {
-            TestQueueUri = new Uri("msmq://localhost/test_queue");
+            TestQueueUri = new Uri("msmq://localhost/test_queue").ToEndpoint();
             testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri);
 
-            TestQueueUri2 = new Uri("msmq://localhost/test_queue2");
+            TestQueueUri2 = new Uri("msmq://localhost/test_queue2").ToEndpoint();
             testQueuePath2 = MsmqUtil.GetQueuePath(TestQueueUri2);
 
-            TransactionalTestQueueUri = new Uri("msmq://localhost/transactional_test_queue");
+            TransactionalTestQueueUri = new Uri("msmq://localhost/transactional_test_queue").ToEndpoint();
             transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
 
-            SubscriptionsUri = new Uri("msmq://localhost/test_queue;subscriptions");
+            SubscriptionsUri2 = new Uri("msmq://localhost/test_queue2;subscriptions").ToEndpoint();
+            subbscriptionQueuePath2 = MsmqUtil.GetQueuePath(SubscriptionsUri2);
+
+            SubscriptionsUri = new Uri("msmq://localhost/test_queue;subscriptions").ToEndpoint();
             subbscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
 
             if (MessageQueue.Exists(testQueuePath) == false)
@@ -93,7 +97,14 @@ namespace Rhino.ServiceBus.Tests
                 Formatter = new XmlMessageFormatter(new[] { typeof(string) })
             };
             subscriptions.Purge();
+
+            using(var subscriptions2 = new MessageQueue(subbscriptionQueuePath2))
+            {
+                subscriptions2.Purge();
+            }
         }
+
+        public Endpoint SubscriptionsUri2 { get; set; }
 
         public ITransport Transport
         {
@@ -106,8 +117,9 @@ namespace Rhino.ServiceBus.Tests
                         	new DefaultReflection(), 
                         	new DefaultKernel()), 
                             new SubQueueStrategy(),
-                            TestQueueUri, 1, 
-                            defaultTransportActions);
+                            TestQueueUri.Uri, 1, 
+                            defaultTransportActions,
+                            new EndpointRouter());
                     transport.Start();
                 }
                 return transport;
@@ -121,8 +133,12 @@ namespace Rhino.ServiceBus.Tests
                 if (transactionalTransport == null)
                 {
                     transactionalTransport = new MsmqTransport(
-                        new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()), new SubQueueStrategy(),
-                                                               TransactionalTestQueueUri, 1, defaultTransportActions);
+                        new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()), 
+                        new SubQueueStrategy(),
+                        TransactionalTestQueueUri.Uri, 
+                        1,
+                        defaultTransportActions,
+                            new EndpointRouter());
                     transactionalTransport.Start();
                 }
                 return transactionalTransport;

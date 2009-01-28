@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Rhino.ServiceBus;
 using Rhino.ServiceBus.Msmq;
 
 namespace Starbucks
@@ -9,7 +10,10 @@ namespace Starbucks
         public static void Prepare(string queueName)
         {
             var queueUri = new Uri(queueName);
-            var queuePath = MsmqUtil.GetQueuePath(queueUri);
+            var queuePath = MsmqUtil.GetQueuePath(new Endpoint
+            {
+                Uri = queueUri
+            });
             CreateQueueIfNotExists(queuePath);
             PurgeQueue(queuePath);
             PurgeSubqueues(queuePath);

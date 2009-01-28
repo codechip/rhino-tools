@@ -10,18 +10,43 @@ namespace Rhino.ServiceBus.MessageModules
         private ITransport theTransport;
 
         private readonly Uri loadBalancerEndpoint;
+        private readonly IEndpointRouter endpointRouter;
 
-        public LoadBalancerMessageModule(Uri loadBalancerEndpoint)
+        public LoadBalancerMessageModule(Uri loadBalancerEndpoint, IEndpointRouter endpointRouter)
         {
             this.loadBalancerEndpoint = loadBalancerEndpoint;
+            this.endpointRouter = endpointRouter;
         }
 
         public void Init(ITransport transport)
         {
-            transport.MessageProcessingCompleted+=Transport_OnMessageProcessingCompleted;
+            transport.MessageProcessingCompleted += Transport_OnMessageProcessingCompleted;
             theTransport = transport;
+            theTransport.MessageArrived += TheTransport_OnMessageArrived;
+            theTransport.Started += TellLoadBalancerThatWeAreReadyToWorkForAllThreads;
+        }
 
-            theTransport.Started += TellLoadBalancerThatWeAreReadyForWork;
+        private bool TheTransport_OnMessageArrived(CurrentMessageInformation message)
+        {
+            var acceptingWork = message.Message as AcceptingWork;
+
+            if (acceptingWork != null)
+            {
+                TellLoadBalancerThatWeAreReadyToWorkForAllThreads();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void TellLoadBalancerThatWeAreReadyToWorkForAllThreads()
+        {
+            var readyToWork = new object[theTransport.ThreadCount];
+            for (var i = 0; i < theTransport.ThreadCount; i++)
+            {
+                readyToWork[i] = new ReadyToWork { Endpoint = loadBalancerEndpoint };
+            }
+            theTransport.Send(endpointRouter.GetRoutedEndpoint(loadBalancerEndpoint), readyToWork);
         }
 
         private void Transport_OnMessageProcessingCompleted(CurrentMessageInformation t1, Exception t2)
@@ -31,10 +56,7 @@ namespace Rhino.ServiceBus.MessageModules
 
         private void TellLoadBalancerThatWeAreReadyForWork()
         {
-            theTransport.Send(loadBalancerEndpoint, new ReadyToWork
-            {
-                Endpoint = theTransport.Endpoint
-            });
+            theTransport.Send(endpointRouter.GetRoutedEndpoint(loadBalancerEndpoint), new ReadyToWork { Endpoint = loadBalancerEndpoint });
         }
 
         public void Stop(ITransport transport)

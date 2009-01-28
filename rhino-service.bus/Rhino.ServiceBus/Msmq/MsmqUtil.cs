@@ -6,13 +6,9 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqUtil
     {
-        public static string GetQueuePath(string uri)
+        public static string GetQueuePath(Endpoint endpoint)
         {
-            return GetQueuePath(new Uri(uri));
-        }
-
-        public static string GetQueuePath(Uri uri)
-        {
+            var uri = endpoint.Uri;
             if (uri.AbsolutePath.IndexOf("/", 1) >= 0)
             {
                 throw new InvalidOperationException(

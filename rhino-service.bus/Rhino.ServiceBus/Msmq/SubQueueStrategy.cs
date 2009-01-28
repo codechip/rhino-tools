@@ -11,9 +11,9 @@ namespace Rhino.ServiceBus.Msmq
 	/// </summary>
 	public class SubQueueStrategy : IQueueStrategy
 	{
-		public MessageQueue InitializeQueue(Uri endpoint)
+		public MessageQueue InitializeQueue(Endpoint queueEndpoint)
 		{
-			var queue = endpoint.CreateQueue(QueueAccessMode.SendAndReceive);
+			var queue = queueEndpoint.CreateQueue(QueueAccessMode.SendAndReceive);
 			return queue;
 		}
 

@@ -84,6 +84,9 @@
     <Compile Include="Hosting\DefaultHost.cs" />
     <Compile Include="Hosting\RemoteAppDomainHost.cs" />
     <Compile Include="Hosting\RemoteAppDomainLoadBalancerHost.cs" />
+    <Compile Include="Impl\EndpointRouter.cs" />
+    <Compile Include="Endpoint.cs" />
+    <Compile Include="Internal\IEndpointRouter.cs" />
     <Compile Include="IServiceBusAware.cs" />
     <Compile Include="Impl\DefaultServiceBus.cs" />
     <Compile Include="Impl\DisposableAction.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="LoadBalancer\LoadBalancerHost.cs" />
     <Compile Include="LoadBalancer\MsmqLoadBalancer.cs" />
     <Compile Include="MessageModules\LoadBalancerMessageModule.cs" />
+    <Compile Include="Messages\AcceptingWork.cs" />
     <Compile Include="Messages\LoadBalancerMessage.cs" />
     <Compile Include="Messages\MergeSagaState.cs" />
     <Compile Include="Messages\ReadyToWork.cs" />

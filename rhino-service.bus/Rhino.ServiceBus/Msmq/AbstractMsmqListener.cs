@@ -1,10 +1,14 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Messaging;
 using System.Threading;
 using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
+using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -19,14 +23,22 @@ namespace Rhino.ServiceBus.Msmq
 
         private volatile bool shouldStop;
 
+        private readonly IMessageSerializer messageSerializer;
         private readonly ILog logger = LogManager.GetLogger(typeof(AbstractMsmqListener));
 
         private readonly int threadCount;
         public event Action MessageMoved;
 
-        protected AbstractMsmqListener(IQueueStrategy queueStrategy, Uri endpoint, int threadCount)
+        protected AbstractMsmqListener(
+            IQueueStrategy queueStrategy, 
+            Uri endpoint, 
+            int threadCount, 
+            IMessageSerializer messageSerializer,
+            IEndpointRouter endpointRouter)
         {
             this.queueStrategy = queueStrategy;
+            this.messageSerializer = messageSerializer;
+            this.endpointRouter = endpointRouter;
             this.endpoint = endpoint;
             this.threadCount = threadCount;
             threads = new Thread[threadCount];
@@ -44,9 +56,12 @@ namespace Rhino.ServiceBus.Msmq
             get { return threadCount; }
         }
 
-        public Uri Endpoint
+        public Endpoint Endpoint
         {
-            get { return endpoint; }
+            get
+            {
+                return endpointRouter.GetRoutedEndpoint(endpoint);
+            }
         }
 
         protected static TimeSpan TimeOutForPeek
@@ -59,14 +74,14 @@ namespace Rhino.ServiceBus.Msmq
             if (haveStarted)
                 return;
             logger.DebugFormat("Starting msmq transport on: {0}", Endpoint);
-            queue = InitalizeQueue(endpoint);
+            queue = InitalizeQueue(Endpoint);
 
             BeforeStart();
 
             shouldStop = false;
             TransportState = TransportState.Started;
 
-            for (var t = 0; t < threadCount; t++)
+            for (var t = 0; t < ThreadCount; t++)
             {
                 var thread = new Thread(PeekMessageOnBackgroundThread)
                 {
@@ -82,6 +97,13 @@ namespace Rhino.ServiceBus.Msmq
             var copy = Started;
             if (copy != null)
                 copy();
+
+            AfterStart();
+        }
+
+        protected virtual void AfterStart()
+        {
+            
         }
 
         protected virtual void BeforeStart()
@@ -119,7 +141,7 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        protected static MessageQueue InitalizeQueue(Uri endpoint)
+        protected static MessageQueue InitalizeQueue(Endpoint endpoint)
         {
             try
             {
@@ -183,13 +205,9 @@ namespace Rhino.ServiceBus.Msmq
 
         }
 
-        private TransportState transportState;
+        protected IEndpointRouter endpointRouter;
 
-        public TransportState TransportState
-        {
-            get { return transportState; }
-            set { transportState = value; }
-        }
+        public TransportState TransportState { get; set; }
 
         protected abstract void HandlePeekedMessage(Message message);
 
@@ -224,6 +242,73 @@ namespace Rhino.ServiceBus.Msmq
             if (Debugger.IsAttached)
                 return TimeSpan.FromMinutes(45);
             return TimeSpan.Zero;
+        }
+
+        protected Message GenerateMsmqMessageFromMessageBatch(params object[] msgs)
+        {
+            var message = new Message();
+
+            messageSerializer.Serialize(msgs, message.BodyStream);
+
+            message.ResponseQueue = queue;
+
+            message.Extension = Guid.NewGuid().ToByteArray();
+
+            message.AppSpecific = GetAppSpecificMarker(msgs);
+
+            message.Label = msgs
+                .Where(msg => msg != null)
+                .Select(msg =>
+                {
+                    string s = msg.ToString();
+                    if (s.Length > 249)
+                        return s.Substring(0, 246) + "...";
+                    return s;
+                })
+                .FirstOrDefault();
+            return message;
+        }
+
+        protected static int GetAppSpecificMarker(object[] msgs)
+        {
+            var msg = msgs[0];
+            if (msg is AdministrativeMessage)
+                return (int)MessageType.AdministrativeMessageMarker;
+            if (msg is LoadBalancerMessage)
+                return (int)MessageType.LoadBalancerMessageMarker;
+            return 0;
+        }
+
+        protected object[] DeserializeMessages(MessageQueue messageQueue, Message transportMessage, Action<CurrentMessageInformation, Exception> messageSerializationException)
+        {
+            try
+            {
+                return messageSerializer.Deserialize(transportMessage.BodyStream);
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    logger.Error("Error when serializing message", e);
+                    if (messageSerializationException != null)
+                    {
+                        var information = new MsmqCurrentMessageInformation
+                        {
+                            MsmqMessage = transportMessage,
+                            Queue = messageQueue,
+                            Message = transportMessage,
+                            Source = MsmqUtil.GetQueueUri(messageQueue),
+                            MessageId = transportMessage.GetMessageId()
+                        };
+                        messageSerializationException(information, e);
+                    }
+                }
+                catch (Exception moduleEx)
+                {
+                    logger.Error("Error when notifying about serialization exception", moduleEx);
+                }
+                throw;
+            }
         }
     }
 }

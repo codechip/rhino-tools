@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
 
                 bus.Send(bus.Endpoint, DateTime.Now);
 
-                using (var errorSubQueue = new MessageQueue(MsmqUtil.GetQueuePath(bus.Endpoint + ";errors")))
+                using (var errorSubQueue = new MessageQueue(MsmqUtil.GetQueuePath(bus.Endpoint.ForSubQueue(SubQueue.Errors))))
                 {
                     var originalMessage = errorSubQueue.Receive(MessageQueueTransactionType.Single);
                     var errorDescripotion = errorSubQueue.Receive(MessageQueueTransactionType.Single);

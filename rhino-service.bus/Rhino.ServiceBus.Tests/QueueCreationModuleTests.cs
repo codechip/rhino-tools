@@ -11,7 +11,7 @@ namespace Rhino.ServiceBus.Tests
 {
 	public class QueueCreationModuleTests : IDisposable
 	{
-		private readonly Uri endPoint = new Uri("msmq://localhost/init_test");
+		private readonly Endpoint endPoint = new Uri("msmq://localhost/init_test").ToEndpoint();
 		private WindsorContainer container;
 
 		public QueueCreationModuleTests()

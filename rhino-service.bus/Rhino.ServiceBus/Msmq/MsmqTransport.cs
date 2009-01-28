@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Messaging;
 using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
-using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq.TransportActions;
 
 namespace Rhino.ServiceBus.Msmq
@@ -23,15 +21,13 @@ namespace Rhino.ServiceBus.Msmq
         }
 
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqTransport));
-		private readonly IMessageSerializer serializer;
         private readonly ITransportAction[] transportActions;
 
-		public MsmqTransport(IMessageSerializer serializer, IQueueStrategy queueStrategy, Uri endpoint, int threadCount, ITransportAction[] transportActions)
-            :base(queueStrategy,endpoint, threadCount)
-		{
-			this.serializer = serializer;
-		    this.transportActions = transportActions;
-		}
+        public MsmqTransport(IMessageSerializer serializer, IQueueStrategy queueStrategy, Uri endpoint, int threadCount, ITransportAction[] transportActions, IEndpointRouter endpointRouter)
+            :base(queueStrategy,endpoint, threadCount, serializer,endpointRouter)
+        {
+            this.transportActions = transportActions;
+        }
 
         #region ITransport Members
 
@@ -48,7 +44,7 @@ namespace Rhino.ServiceBus.Msmq
 			if (currentMessageInformation == null)
 				throw new TransactionException("There is no message to reply to, sorry.");
 
-			Send(currentMessageInformation.Source, messages);
+            Send(endpointRouter.GetRoutedEndpoint(currentMessageInformation.Source), messages);
 		}
 
         public event Action<CurrentMessageInformation> MessageSent;
@@ -90,7 +86,7 @@ namespace Rhino.ServiceBus.Msmq
                 copy(information, ex);
 	    }
 
-	    public void Send(Uri uri, DateTime processAgainAt, object[] msgs)
+	    public void Send(Endpoint endpoint, DateTime processAgainAt, object[] msgs)
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 	        var bytes = new List<byte>(message.Extension);
@@ -98,14 +94,14 @@ namespace Rhino.ServiceBus.Msmq
 	        message.Extension = bytes.ToArray();
 			message.AppSpecific = (int)MessageType.TimeoutMessageMarker;
 
-			SendMessageToQueue(message, uri);
+            SendMessageToQueue(message, endpoint);
 		}
 
-        public void Send(Uri uri, params object[] msgs)
+        public void Send(Endpoint endpoint, params object[] msgs)
 		{
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
-			SendMessageToQueue(message, uri);
+            SendMessageToQueue(message, endpoint);
 
 			var copy = MessageSent;
 			if (copy == null)
@@ -114,48 +110,13 @@ namespace Rhino.ServiceBus.Msmq
 			copy(new CurrentMessageInformation
 			{
 				AllMessages = msgs,
-				Source = Endpoint,
-				Destination = uri,
+				Source = Endpoint.Uri,
+				Destination = endpoint.Uri,
                 MessageId = message.GetMessageId(),
 			});
 		}
 
-		private Message GenerateMsmqMessageFromMessageBatch(object[] msgs)
-		{
-			var message = new Message();
-
-			serializer.Serialize(msgs, message.BodyStream);
-
-			message.ResponseQueue = queue;
-
-		    message.Extension = Guid.NewGuid().ToByteArray();
-
-			message.AppSpecific = GetAppSpecificMarker(msgs);
-
-			message.Label = msgs
-				.Where(msg => msg != null)
-				.Select(msg =>
-				{
-					string s = msg.ToString();
-					if (s.Length > 249)
-						return s.Substring(0, 246) + "...";
-					return s;
-				})
-				.FirstOrDefault();
-			return message;
-		}
-
-        private static int GetAppSpecificMarker(object[] msgs)
-        {
-            var msg = msgs[0];
-            if (msg is AdministrativeMessage)
-                return (int) MessageType.AdministrativeMessageMarker;
-            if (msg is LoadBalancerMessage)
-                return (int) MessageType.LoadBalancerMessageMarker;
-            return 0;
-        }
-
-        public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
+		public event Action<CurrentMessageInformation, Exception> MessageSerializationException;
 
 		#endregion
 
@@ -226,7 +187,7 @@ namespace Rhino.ServiceBus.Msmq
             try
             {
                 //deserialization errors do not count for module events
-                object[] messages = DeserializeMessages(messageQueue, message);
+                object[] messages = DeserializeMessages(messageQueue, message, MessageSerializationException);
                 try
                 {
                     foreach (object msg in messages)
@@ -283,54 +244,19 @@ namespace Rhino.ServiceBus.Msmq
 	            Message = msg,
 	            Queue = queue,
                 TransportMessageId = message.Id,
-	            Destination = Endpoint,
+	            Destination = Endpoint.Uri,
 	            Source = MsmqUtil.GetQueueUri(message.ResponseQueue),
 	            MsmqMessage = message,
 	            TransactionType = queue.GetTransactionType()
 	        };
 	    }
 
-        private object[] DeserializeMessages(MessageQueue messageQueue, Message transportMessage)
-		{
-			object[] messages;
-			try
-			{
-				messages = serializer.Deserialize(transportMessage.BodyStream);
-			}
-			catch (Exception e)
-			{
-				try
-				{
-					logger.Error("Error when serializing message", e);
-					Action<CurrentMessageInformation, Exception> copy = MessageSerializationException;
-					if (copy != null)
-					{
-						var information = new MsmqCurrentMessageInformation
-						{
-                            MsmqMessage = transportMessage,
-                            Queue = messageQueue,
-							Message = transportMessage,
-                            Source = MsmqUtil.GetQueueUri(messageQueue),
-                            MessageId = transportMessage.GetMessageId()
-						};
-						copy(information, e);
-					}
-				}
-				catch (Exception moduleEx)
-				{
-					logger.Error("Error when notifying about serialization exception", moduleEx);
-				}
-				throw;
-			}
-			return messages;
-		}
-
-	    private void SendMessageToQueue(Message message, Uri uri)
+        private void SendMessageToQueue(Message message, Endpoint endpoint)
 		{
 			if (HaveStarted == false)
 				throw new TransportException("Cannot send message before transport is started");
 
-			string sendQueueDescription = MsmqUtil.GetQueuePath(uri);
+            string sendQueueDescription = MsmqUtil.GetQueuePath(endpoint);
 			try
 			{
 				using (var sendQueue = new MessageQueue(
@@ -339,12 +265,12 @@ namespace Rhino.ServiceBus.Msmq
 				{
 					MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
 					sendQueue.Send(message, transactionType);
-					logger.DebugFormat("Send message {0} to {1}", message.Label, uri);
+					logger.DebugFormat("Send message {0} to {1}", message.Label, endpoint);
 				}
 			}
 			catch (Exception e)
 			{
-				throw new TransactionException("Failed to send message to " + uri, e);
+				throw new TransactionException("Failed to send message to " + endpoint, e);
 			}
 		}
 

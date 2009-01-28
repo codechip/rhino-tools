@@ -34,7 +34,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
                     () => subscriptionChanged.Set();
                 bus.Send(bus.Endpoint,new AddSubscription
                 {
-                    Endpoint = bus.Endpoint.ToString(),
+                    Endpoint = bus.Endpoint.Uri.ToString(),
                     Type = typeof(int).FullName
                 });
 
@@ -53,7 +53,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
                 var subscriptionsFor = subscriptionStorage2.GetSubscriptionsFor(typeof(int))
                     .ToArray();
 
-                Assert.Equal(bus2.Endpoint, subscriptionsFor[0]);
+                Assert.Equal(bus2.Endpoint.Uri, subscriptionsFor[0]);
             }
         }
 

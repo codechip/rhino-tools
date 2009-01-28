@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Rhino.ServiceBus.Tests.Hosting
 {
-    public class Can_host_in_another_app_domain : IDisposable, OccasionalConsumerOf<string>
+    public class Can_host_in_another_app_domain : MsmqTestBase, IDisposable, OccasionalConsumerOf<string>
     {
         readonly RemoteAppDomainHost host = new RemoteAppDomainHost(typeof(TestBootStrapper));
         private string reply;
@@ -48,7 +48,7 @@ namespace Rhino.ServiceBus.Tests.Hosting
 
                 using(bus.AddInstanceSubscription(this))
                 {
-                    bus.Send(new Uri("msmq://localhost/test_queue"), "hello");
+                    bus.Send(new Uri("msmq://localhost/test_queue").ToEndpoint(), "hello");
 
                     resetEvent.WaitOne();
 

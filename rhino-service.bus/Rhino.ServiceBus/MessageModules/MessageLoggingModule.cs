@@ -10,18 +10,20 @@ namespace Rhino.ServiceBus.MessageModules
     public class MessageLoggingModule : IMessageModule
     {
         private readonly IMessageSerializer messageSerializer;
+        private readonly IEndpointRouter endpointRouter;
         private readonly Uri logQueue;
         private MessageQueue queue;
 
-        public MessageLoggingModule(IMessageSerializer messageSerializer, Uri logQueue)
+        public MessageLoggingModule(IMessageSerializer messageSerializer, IEndpointRouter endpointRouter, Uri logQueue)
         {
             this.messageSerializer = messageSerializer;
+            this.endpointRouter = endpointRouter;
             this.logQueue = logQueue;
         }
 
         public void Init(ITransport transport)
         {
-            queue = logQueue.CreateQueue(QueueAccessMode.Send);
+            queue = endpointRouter.GetRoutedEndpoint(logQueue).CreateQueue(QueueAccessMode.Send);
 
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.MessageProcessingFailure += Transport_OnMessageProcessingFailure;

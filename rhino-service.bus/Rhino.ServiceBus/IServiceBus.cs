@@ -33,7 +33,7 @@ namespace Rhino.ServiceBus
         /// <summary>
         /// Send the message directly to the specified endpoint
         /// </summary>
-        void Send(Uri endpoint, params object[] messages);
+        void Send(Endpoint endpoint, params object[] messages);
 
         /// <summary>
         /// Send the message directly to the default endpoint
@@ -44,7 +44,7 @@ namespace Rhino.ServiceBus
         /// <summary>
         /// Get the endpoint of the bus
         /// </summary>
-        Uri Endpoint { get; }
+        Endpoint Endpoint { get; }
 
         /// <summary>
         /// Create a weak reference subscription for all the registered consumers 
@@ -84,7 +84,7 @@ namespace Rhino.ServiceBus
 		/// <param name="endpoint">The endpoint.</param>
 		/// <param name="time">The time.</param>
 		/// <param name="msgs">The messages.</param>
-		void DelaySend(Uri endpoint, DateTime time, params object[] msgs);
+		void DelaySend(Endpoint endpoint, DateTime time, params object[] msgs);
 
         /// <summary>
         /// Send the message with a built in delay in its processing

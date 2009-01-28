@@ -23,6 +23,7 @@ namespace Rhino.ServiceBus.Msmq
 
         private readonly IReflection reflection;
         private readonly IMessageSerializer messageSerializer;
+        private readonly IEndpointRouter endpointRouter;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqSubscriptionStorage));
         private readonly IQueueStrategy queueStrategy;
 
@@ -30,11 +31,13 @@ namespace Rhino.ServiceBus.Msmq
                     IReflection reflection,
                     IMessageSerializer messageSerializer,
                     Uri subscriptionQueue,
+                    IEndpointRouter  endpointRouter,
                     IQueueStrategy queueStrategy
             )
         {
             this.reflection = reflection;
             this.messageSerializer = messageSerializer;
+            this.endpointRouter = endpointRouter;
             this.queueStrategy = queueStrategy;
             this.subscriptionQueue = this.queueStrategy.CreateSubscriptionQueueUri(subscriptionQueue);
         }
@@ -122,18 +125,18 @@ namespace Rhino.ServiceBus.Msmq
 
         }
 
-        private static MessageQueue CreateSubscriptionQueue(Uri subscriptionQueue, QueueAccessMode accessMode)
+        private MessageQueue CreateSubscriptionQueue(Uri subscriptionQueueUri, QueueAccessMode accessMode)
         {
-            var description = MsmqUtil.GetQueuePath(subscriptionQueue);
+            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(subscriptionQueueUri));
 
             MessageQueue queue;
             try
             {
-                queue = new MessageQueue(description, accessMode);
+                queue = new MessageQueue(path, accessMode);
             }
             catch (Exception e)
             {
-                throw new SubscriptionException("Could not open subscription queue (" + subscriptionQueue + ")", e);
+                throw new SubscriptionException("Could not open subscription queue (" + subscriptionQueueUri + ")", e);
             }
             queue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
             queue.MessageReadPropertyFilter.Extension = true;

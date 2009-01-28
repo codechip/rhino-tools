@@ -1,4 +1,5 @@
 using System.Messaging;
+using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Msmq;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Moving_to_errors_queue_removes_message_from_subscriptions_queue()
         {
-            var queueStrategy = new FlatQueueStrategy(TestQueueUri);
+            var queueStrategy = new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri);
             queue.Send(new TestMessage {Name = "ayende"});
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
@@ -21,8 +22,8 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Moving_to_discarded_queue_removes_message_from_subscriptions_queue()
         {
-            var queueStrategy = new FlatQueueStrategy(TestQueueUri);
-            queue.Send(new TestMessage {Name = "ayende"});
+            var queueStrategy = new FlatQueueStrategy(new EndpointRouter(), TestQueueUri.Uri);
+            queue.Send(new TestMessage { Name = "ayende" });
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
             string msgId;
@@ -33,8 +34,8 @@ namespace Rhino.ServiceBus.Tests
         [Fact]
         public void Moving_to_subscription_queue_removes_message_from_root_queue()
         {
-            var queueStrategy = new FlatQueueStrategy(TestQueueUri);
-            queue.Send(new TestMessage {Name = "ayende"});
+            var queueStrategy = new FlatQueueStrategy(new EndpointRouter(), TestQueueUri.Uri);
+            queue.Send(new TestMessage { Name = "ayende" });
             Message msg = queue.Peek();
             Assert.Equal(1, queue.GetCount());
             string msgId;

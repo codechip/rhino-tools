@@ -1,5 +1,6 @@
 using System;
 using System.Messaging;
+using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq
 {
@@ -24,7 +25,8 @@ namespace Rhino.ServiceBus.Msmq
 	/// </remarks>
 	public class FlatQueueStrategy : IQueueStrategy
 	{
-		private readonly Uri endpoint;
+	    private readonly IEndpointRouter endpointRouter;
+	    private readonly Uri endpoint;
 		private const string subscriptions = "#subscriptions";
 		private const string errors = "#errors";
 		private const string timeout = "#timeout";
@@ -33,16 +35,16 @@ namespace Rhino.ServiceBus.Msmq
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FlatQueueStrategy"/> class.
 		/// </summary>
-		/// <param name="endpoint">The endpoint.</param>
-		public FlatQueueStrategy(Uri endpoint)
+		public FlatQueueStrategy(IEndpointRouter endpointRouter,Uri endpoint)
 		{
-			this.endpoint = endpoint;
+		    this.endpointRouter = endpointRouter;
+		    this.endpoint = endpoint;
 		}
 
-		public MessageQueue InitializeQueue(Uri endpoint)
+	    public MessageQueue InitializeQueue(Endpoint queueEndpoint)
 		{
 			var accessMode = QueueAccessMode.SendAndReceive;
-			var root = endpoint.CreateQueue(accessMode);
+			var root = queueEndpoint.CreateQueue(accessMode);
 			
 			MsmqUtil.CreateQueue(GetErrorsQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
@@ -112,7 +114,7 @@ namespace Rhino.ServiceBus.Msmq
 		/// <returns></returns>
 		private string GetErrorsQueuePath()
 		{
-			var path = MsmqUtil.GetQueuePath(endpoint);
+            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
 			return path + errors;
 		}
 
@@ -122,7 +124,7 @@ namespace Rhino.ServiceBus.Msmq
 		/// <returns></returns>
 		private string GetDiscardedQueuePath()
 		{
-			var path = MsmqUtil.GetQueuePath(endpoint);
+            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
 			return path + discarded;
 		}
 
@@ -132,13 +134,13 @@ namespace Rhino.ServiceBus.Msmq
 		/// <returns></returns>
 		private string GetTimeoutQueuePath()
 		{
-			var path = MsmqUtil.GetQueuePath(endpoint);
+            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
 			return path + timeout;
 		}
 
 		private string GetSubscriptionQueuePath()
 		{
-			var path = MsmqUtil.GetQueuePath(endpoint);
+            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
 			return path + subscriptions;
 		}
 	}

@@ -174,6 +174,8 @@ namespace Rhino.ServiceBus.Impl
                 );
 
             Kernel.Register(
+                Component.For<IEndpointRouter>()
+                    .ImplementedBy<EndpointRouter>(),
                 Component.For<ITransportAction>()
                     .ImplementedBy<ErrorAction>()
                     .DependsOn(new { numberOfRetries }),

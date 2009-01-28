@@ -206,10 +206,8 @@ namespace Rhino.ServiceBus.Tests
 
                     var messageCausingError = errorQueue.Receive();
                     Assert.NotNull(messageCausingError);
-					Console.WriteLine(messageCausingError.Id + " is my id");
                     errorQueue.Peek();//for debugging
                     var messageErrorDescription = errorQueue.Receive();
-					Console.WriteLine(messageErrorDescription.CorrelationId + " is correlation");
                     var error = (string)messageErrorDescription.Body;
                     Assert.Contains(
                         "System.InvalidOperationException: Operation is not valid due to the current state of the object.",

@@ -105,6 +105,7 @@
     <Compile Include="QueueCreationModuleTests.cs" />
     <Compile Include="RequestAndReply.cs" />
     <Compile Include="SagaTests.cs" />
+    <Compile Include="TestExtensions.cs" />
     <Compile Include="Warnings\Warnings_would_be_generated.cs" />
     <Compile Include="When_Security_Is_Not_Specified_In_Config.cs" />
     <Compile Include="When_Security_Is_Specified_In_Config.cs" />

@@ -7,13 +7,12 @@ using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
-using MessageType=Rhino.ServiceBus.Msmq.MessageType;
+using MessageType = Rhino.ServiceBus.Msmq.MessageType;
 
 namespace Rhino.ServiceBus.LoadBalancer
 {
     public class MsmqLoadBalancer : AbstractMsmqListener
     {
-        private readonly IMessageSerializer serializer;
         private readonly IQueueStrategy queueStrategy;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqLoadBalancer));
 
@@ -23,11 +22,11 @@ namespace Rhino.ServiceBus.LoadBalancer
         public MsmqLoadBalancer(
             IMessageSerializer serializer,
             IQueueStrategy queueStrategy,
-            Uri endpoint, 
+            IEndpointRouter endpointRouter,
+            Uri endpoint,
             int threadCount)
-            : base(queueStrategy, endpoint, threadCount)
+            : base(queueStrategy, endpoint, threadCount, serializer,endpointRouter)
         {
-            this.serializer = serializer;
             this.queueStrategy = queueStrategy;
         }
 
@@ -44,45 +43,45 @@ namespace Rhino.ServiceBus.LoadBalancer
                     "Queue path: " + MsmqUtil.GetQueuePath(Endpoint), e);
             }
 
-            using (var workersQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint + ";Workers"), QueueAccessMode.Receive))
+            using (var workersQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(SubQueue.Workers)), QueueAccessMode.Receive))
             {
                 var messages = workersQueue.GetAllMessages();
                 foreach (var message in messages)
                 {
-                    HandleLoadBalancerMessage(message, false);
+                    HandleLoadBalancerMessage(message, LoadBalancerOptions.None);
                 }
             }
+        }
+
+        protected override void AfterStart()
+        {
+            var acceptingWork = new AcceptingWork {Endpoint = Endpoint.Uri};
+            SendToAllWorkers(
+                GenerateMsmqMessageFromMessageBatch(acceptingWork)
+                );
         }
 
         protected override void HandlePeekedMessage(Message message)
         {
             try
             {
-                if (message.AppSpecific == (int)MessageType.LoadBalancerMessageMarker)
-                {
-                    HandleLoadBalancerMessage(message, true);
-                    return;
-                }
-                if (message.AppSpecific==(int)MessageType.AdministrativeMessageMarker)
-                {
-                    HandleAdministrativeMessage(message);
-                    return;
-                }
-                using(var tx = new  TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
+                using (var tx = new TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
                 {
                     message = queue.TryGetMessageFromQueue(message.Id);
-                    var worker = readyForWork.Dequeue();
+                    if (message == null)
+                        return;
 
-                    if(worker==null)// handle message later
+                    switch ((MessageType)message.AppSpecific)
                     {
-                        queue.Send(message);
-                    }
-                    else
-                    {
-                        using(var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(worker),QueueAccessMode.Send))
-                        {
-                            workerQueue.Send(message, workerQueue.GetTransactionType());
-                        }
+                        case MessageType.LoadBalancerMessageMarker:
+                            HandleLoadBalancerMessage(message, LoadBalancerOptions.RegisterWorkersAsReadyToWork | LoadBalancerOptions.RegisterWorkersInQueue);
+                            break;
+                        case MessageType.AdministrativeMessageMarker:
+                            SendToAllWorkers(message);
+                            break;
+                        default:
+                            HandleStandardMessage(message);
+                            break;
                     }
                     tx.Complete();
                 }
@@ -93,52 +92,64 @@ namespace Rhino.ServiceBus.LoadBalancer
             }
         }
 
-        private void HandleAdministrativeMessage(Message message)
+        private void HandleStandardMessage(Message message)
         {
-            using(var tx = new TransactionScope(TransactionScopeOption.Required, GetTransactionTimeout()))
+            var worker = readyForWork.Dequeue();
+
+            if (worker == null) // handle message later
             {
-                foreach (var worker in knownWorkers.GetValues())
+                queue.Send(message, queue.GetTransactionType());
+            }
+            else
+            {
+                var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
+                using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(workerEndpoint), QueueAccessMode.Send))
                 {
-                    using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(worker), QueueAccessMode.Send))
-                    {
-                        workerQueue.Send(message, workerQueue.GetTransactionType());
-                    } 
+                    workerQueue.Send(message, workerQueue.GetTransactionType());
                 }
-                tx.Complete();
             }
         }
 
-        private void HandleLoadBalancerMessage(Message message, bool moveToWorkersQueue)
+        private void SendToAllWorkers(Message message)
         {
-            object[] msgs;
-            try
+            foreach (var worker in knownWorkers.GetValues())
             {
-                msgs = serializer.Deserialize(message.BodyStream);
-            }
-            catch (Exception e)
-            {
-                logger.Error("Failed to deserialize message", e);
-                return;
-            }
-
-            try
-            {
-                if (moveToWorkersQueue)
-                    queue.MoveToSubQueue("Workers", message);
-            }
-            catch (TransportException)
-            {
-                return;// probably picked by another thread
-            }
-            foreach (var msg in msgs)
-            {
-                var work = msg as ReadyToWork;
-                if (work != null)
+                var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
+                using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(workerEndpoint), QueueAccessMode.Send))
                 {
-                    knownWorkers.Add(work.Endpoint);
-                    readyForWork.Enqueue(work.Endpoint);
+                    workerQueue.Send(message, workerQueue.GetTransactionType());
                 }
             }
+        }
+
+        private void HandleLoadBalancerMessage(Message message, LoadBalancerOptions options)
+        {
+            foreach (var msg in DeserializeMessages(queue, message, null))
+            {
+                var work = msg as ReadyToWork;
+
+                if (work == null)
+                    continue;
+
+                var needToAddToQueue = knownWorkers.Add(work.Endpoint);
+
+                var shouldRegisterInQueue = (options & LoadBalancerOptions.RegisterWorkersInQueue) == LoadBalancerOptions.RegisterWorkersInQueue;
+                if (needToAddToQueue && shouldRegisterInQueue)
+                {
+                    queue.Send(message.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
+                }
+
+                if ((options & LoadBalancerOptions.RegisterWorkersAsReadyToWork) == LoadBalancerOptions.RegisterWorkersAsReadyToWork)
+                    readyForWork.Enqueue(work.Endpoint);
+            }
+        }
+
+        [Flags]
+        private enum LoadBalancerOptions
+        {
+            None = 0,
+            RegisterWorkersInQueue = 1,
+            RegisterWorkersAsReadyToWork = 2
         }
     }
 }

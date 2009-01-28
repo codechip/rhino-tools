@@ -102,7 +102,7 @@ namespace Rhino.ServiceBus.Tests
                 waitListener.WaitOne();
                 waitSubscriptions.WaitOne();
 
-                storage.RemoveSubscription(typeof(MsmqSubscriptionTests.TestMessage).FullName, TestQueueUri.ToString());
+                storage.RemoveSubscription(typeof(MsmqSubscriptionTests.TestMessage).FullName, TestQueueUri.Uri.ToString());
 
                 count = 0;
                 var enumerator2 = subscriptions.GetMessageEnumerator2();
