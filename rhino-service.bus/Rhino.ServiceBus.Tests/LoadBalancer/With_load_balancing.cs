@@ -36,6 +36,36 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 );
         }
 
+
+        [Fact]
+        public void Can_ReRoute_messages()
+        {
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+                var endpointRouter = container.Resolve<IEndpointRouter>();
+                var original = new Uri("msmq://foo/original");
+
+                var routedEndpoint = endpointRouter.GetRoutedEndpoint(original);
+                Assert.Equal(original, routedEndpoint.Uri);
+
+                var wait = new ManualResetEvent(false);
+                bus.ReroutedEndpoint += x => wait.Set();
+
+                var newEndPoint = new Uri("msmq://new/endpoint");
+                bus.Send(bus.Endpoint,
+                         new Reroute
+                         {
+                             OriginalEndPoint = original,
+                             NewEndPoint = newEndPoint
+                         });
+
+                wait.WaitOne();
+                routedEndpoint = endpointRouter.GetRoutedEndpoint(original);
+                Assert.Equal(newEndPoint, routedEndpoint.Uri);
+            }
+        }
+
         [Fact]
         public void Can_send_message_through_load_balancer()
         {

@@ -1,4 +1,5 @@
 using System;
+using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus
 {

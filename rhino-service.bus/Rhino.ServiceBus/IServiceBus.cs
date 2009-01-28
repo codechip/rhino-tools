@@ -1,5 +1,6 @@
 using System;
 using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.Messages;
 
 namespace Rhino.ServiceBus
 {
@@ -9,6 +10,12 @@ namespace Rhino.ServiceBus
     /// </summary>
     public interface IServiceBus
     {
+
+        /// <summary>
+        /// Occurs when the bus has rerouted an endpoint
+        /// </summary>
+        event Action<Reroute> ReroutedEndpoint;
+
         /// <summary>
         /// Publish a message to all subscribers.
         /// If there are no subscribers, it will throw.

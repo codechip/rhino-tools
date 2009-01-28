@@ -50,6 +50,8 @@ namespace Rhino.ServiceBus.Impl
 
         #region IStartableServiceBus Members
 
+        public event Action<Reroute> ReroutedEndpoint;
+
         public void Publish(params object[] messages)
         {
             if (PublishInternal(messages) == false)
@@ -168,6 +170,8 @@ namespace Rhino.ServiceBus.Impl
             }
             transport.MessageArrived += Transport_OnMessageArrived;
 
+            transport.AdministrativeMessageArrived += Transport_OnAdministrativeMessageArrived;
+
             transport.Start();
             subscriptionStorage.Initialize();
 
@@ -176,7 +180,22 @@ namespace Rhino.ServiceBus.Impl
         	FireServiceBusAware(aware => aware.BusStarted(this));
         }
 
-    	private void FireServiceBusAware(Action<IServiceBusAware> action)
+        private bool Transport_OnAdministrativeMessageArrived(CurrentMessageInformation info)
+        {
+            var route = info.Message as Reroute;
+
+            if (route == null)
+                return false;
+
+            endpointRouter.RemapEndpoint(route.OriginalEndPoint, route.NewEndPoint);
+            var reroutedEndpoint = ReroutedEndpoint;
+            if(reroutedEndpoint!=null)
+                reroutedEndpoint(route);
+            
+            return true;
+        }
+
+        private void FireServiceBusAware(Action<IServiceBusAware> action)
     	{
     		foreach(var aware in kernel.ResolveAll<IServiceBusAware>())
     		{

@@ -169,6 +169,7 @@
     <Compile Include="Config\LoadBalancerConfiguration.cs" />
     <Compile Include="Exceptions\LoadBalancerException.cs" />
     <Compile Include="Messages\HeartBeat.cs" />
+    <Compile Include="Messages\Reroute.cs" />
     <None Include="PublicApi.cd" />
   </ItemGroup>
   <ItemGroup>
