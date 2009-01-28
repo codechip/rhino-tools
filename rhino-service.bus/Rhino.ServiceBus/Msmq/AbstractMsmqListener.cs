@@ -27,7 +27,9 @@ namespace Rhino.ServiceBus.Msmq
         private readonly ILog logger = LogManager.GetLogger(typeof(AbstractMsmqListener));
 
         private readonly int threadCount;
+
         public event Action MessageMoved;
+        public event Action TransportMessageArrived;
 
         protected AbstractMsmqListener(
             IQueueStrategy queueStrategy, 
@@ -115,14 +117,17 @@ namespace Rhino.ServiceBus.Msmq
         {
             shouldStop = true;
             OnStop();
-            queue.Send(new Message
-            {
-                Label = "Shutdown bus",
-                AppSpecific = (int)MessageType.ShutDownMessageMarker
-            }, queue.GetSingleMessageTransactionType());
-
             if (queue != null)
+            {
+                queue.Send(new Message
+                {
+                    Label = "Shutdown bus",
+                    AppSpecific = (int) MessageType.ShutDownMessageMarker
+                },
+                           queue.GetSingleMessageTransactionType());
+
                 queue.Close();
+            }
 
             WaitForProcessingToEnd();
 
@@ -190,14 +195,14 @@ namespace Rhino.ServiceBus.Msmq
                             queueStrategy.TryMoveMessage(queue, message, subQueue, out msgId);
                             tx.Complete();
                         }
-                        var copy = MessageMoved;
-                        if (copy != null)
-                            copy();
+                        Raise(MessageMoved);
                         continue;
                     }
                     logger.DebugFormat("Got message {0} from {1}",
                                        message.Label,
                                        MsmqUtil.GetQueueUri(queue));
+
+                    Raise(TransportMessageArrived);
 
                     HandlePeekedMessage(message);
                 }
@@ -208,6 +213,13 @@ namespace Rhino.ServiceBus.Msmq
                 }
             }
 
+        }
+
+        private static void Raise(Action action)
+        {
+            var copy = action;
+            if (copy != null)
+                copy();
         }
 
         protected IEndpointRouter endpointRouter;
@@ -263,7 +275,13 @@ namespace Rhino.ServiceBus.Msmq
 
             message.Label = msgs
                 .Where(msg => msg != null)
-                .Select(msg => msg.ToString().EnsureLabelLength())
+                .Select(msg =>
+                {
+                    string s = msg.ToString();
+                    if (s.Length > 249)
+                        return s.Substring(0, 246) + "...";
+                    return s;
+                })
                 .FirstOrDefault();
             return message;
         }

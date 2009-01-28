@@ -69,6 +69,11 @@ namespace Rhino.ServiceBus.LoadBalancer
             get { return knownEndpoints; }
         }
 
+        public int NumberOfWorkersReadyToHandleMessages
+        {
+            get { return readyForWork.TotalCount; }
+        }
+
         protected override void BeforeStart()
         {
             try
@@ -82,30 +87,55 @@ namespace Rhino.ServiceBus.LoadBalancer
                     "Queue path: " + MsmqUtil.GetQueuePath(Endpoint), e);
             }
 
-            using (var workersQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(SubQueue.Workers)), QueueAccessMode.Receive))
+            ReadUrisFromSubQueue(KnownWorkers, SubQueue.Workers);
+
+            ReadUrisFromSubQueue(KnownEndpoints, SubQueue.Endpoints);
+
+            RemoveAllReadyToWorkMessages();
+        }
+
+        private void ReadUrisFromSubQueue(Set<Uri> set, SubQueue subQueue)
+        {
+            using (var messageQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(subQueue)), QueueAccessMode.Receive))
             {
-                workersQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                var messages = workersQueue.GetAllMessages();
+                messageQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+                var messages = messageQueue.GetAllMessages();
                 foreach (var message in messages)
                 {
-                    var knownWorker = message.Body.ToString();
-                    KnownWorkers.Add(new Uri(knownWorker));
+                    var uriString = message.Body.ToString();
+                    set.Add(new Uri(uriString));
                 }
             }
+        }
 
 
-            using (var endPointsQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(SubQueue.Endpoints)), QueueAccessMode.Receive))
+        private void RemoveAllReadyToWorkMessages()
+        {
+            using(var tx = new TransactionScope())
+            using (var readyForWorkQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint), QueueAccessMode.Receive))
+            using (var enumerator = readyForWorkQueue.GetMessageEnumerator2())
             {
-                endPointsQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                var messages = endPointsQueue.GetAllMessages();
-                foreach (var message in messages)
+                try
                 {
-                    var knownEndpoint = message.Body.ToString();
-                    KnownEndpoints.Add(new Uri(knownEndpoint));
+                    while (enumerator.MoveNext())
+                    {
+                        while (
+                            enumerator.Current != null &&
+                            enumerator.Current.Label == typeof(ReadyToWork).FullName)
+                        {
+                            var current = enumerator.RemoveCurrent(readyForWorkQueue.GetTransactionType());
+                            HandleLoadBalancerMessage(current);
+                        }
+                    }
                 }
+                catch (MessageQueueException e)
+                {
+                    if (e.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
+                        throw;
+                }
+                readyForWork.Clear();
+                tx.Complete();
             }
-
-
         }
 
         protected override void AfterStart()
@@ -115,7 +145,8 @@ namespace Rhino.ServiceBus.LoadBalancer
                 SendHeartBeatToSecondaryServer(null);
                 heartBeatTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
             }
-            var acceptingWork = new AcceptingWork {Endpoint = Endpoint.Uri};
+
+            var acceptingWork = new AcceptingWork { Endpoint = Endpoint.Uri };
             SendToAllWorkers(
                 GenerateMsmqMessageFromMessageBatch(acceptingWork)
                 );
@@ -167,7 +198,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             {
                 var persistedEndPoint = new Message
                 {
-                    Formatter = new XmlMessageFormatter(new[] {typeof (string)}),
+                    Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
                     Body = queueUri.ToString(),
                     Label = ("Known end point: " + queueUri).EnsureLabelLength()
                 };

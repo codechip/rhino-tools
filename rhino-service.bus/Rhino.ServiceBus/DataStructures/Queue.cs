@@ -7,6 +7,15 @@ namespace Rhino.ServiceBus.DataStructures
     {
         private readonly LinkedList<T> list = new LinkedList<T>();
 
+        public int TotalCount
+        {
+            get
+            {
+                lock (list)
+                    return list.Count;
+            }
+        }
+
         public void Enqueue(T value)
         {
             lock (list)
@@ -23,6 +32,12 @@ namespace Rhino.ServiceBus.DataStructures
                 list.RemoveFirst();
                 return value;
             }
+        }
+
+        public void Clear()
+        {
+            lock(list)
+                list.Clear();
         }
     }
 }

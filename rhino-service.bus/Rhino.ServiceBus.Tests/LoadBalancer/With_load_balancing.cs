@@ -69,7 +69,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
                 using (var workers = new MessageQueue(loadBalancerQueuePath + ";Workers", QueueAccessMode.SendAndReceive))
                 {
-                    workers.Formatter = new XmlMessageFormatter(new[] {typeof (string)});
+                    workers.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                     var knownWorker = workers.Peek();
                     Assert.Equal(bus.Endpoint.Uri.ToString(), knownWorker.Body.ToString());
                 }
@@ -174,7 +174,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 wait.WaitOne();
             }
 
-            using(var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
+            using (var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
             {
                 var message = q.Receive(MessageQueueTransactionType.Single);
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
@@ -184,6 +184,88 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             {
                 var message = q.Receive(MessageQueueTransactionType.Single);
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
+            }
+        }
+
+        [Fact]
+        public void Will_remove_all_ReadyToWorkMessages_from_the_queue()
+        {
+            using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
+            {
+                using (var bus = container.Resolve<IStartableServiceBus>())
+                {
+                    bus.Start();
+
+                    bus.Send(loadBalancer.Endpoint,
+                             new ReadyToWork
+                             {
+                                 Endpoint = TransactionalTestQueueUri.Uri
+                             });
+
+                    bus.Send(loadBalancer.Endpoint,
+                             new ReadyToWork
+                             {
+                                 Endpoint = TestQueueUri2.Uri
+                             });
+
+                }
+
+                var wait = new ManualResetEvent(false);
+
+                loadBalancer.TransportMessageArrived += () => wait.Set();
+
+                loadBalancer.Start();
+
+                bool messagesWereProcess = wait.WaitOne(TimeSpan.FromMilliseconds(250));
+
+                Assert.False(messagesWereProcess);
+            }
+        }
+
+        [Fact]
+        public void Can_send_message_through_load_balancer_when_load_balcner_is_start_after_bus()
+        {
+            MyHandler.ResetEvent = new ManualResetEvent(false);
+
+            using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
+            using (var bus = container.Resolve<IStartableServiceBus>())
+            {
+                bus.Start();
+
+                bus.Send(loadBalancer.Endpoint, "abcdefg");
+
+                loadBalancer.Start();
+
+                MyHandler.ResetEvent.WaitOne();
+                Assert.True(
+                    MyHandler.Message.ResponseQueue.Path.Contains(@"private$\test_queue")
+                    );
+
+                Assert.Equal("abcdefg", MyHandler.Value);
+            }
+        }
+
+        [Fact]
+        public void Will_remove_all_ReadyToWorkMessages_from_the_queue_and_leave_other_Messages()
+        {
+            using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
+            {
+                using (var bus = container.Resolve<IStartableServiceBus>())
+                {
+                    bus.Start();
+
+                    bus.Send(loadBalancer.Endpoint,
+                             new ReadyToWork
+                             {
+                                 Endpoint = TransactionalTestQueueUri.Uri
+                             });
+
+                    bus.Send(loadBalancer.Endpoint,
+                             new ReadyToWork
+                             {
+                                 Endpoint = TestQueueUri2.Uri
+                             });
+                }
             }
         }
 
