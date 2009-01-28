@@ -114,7 +114,7 @@ namespace Rhino.ServiceBus.Msmq
         public void Dispose()
         {
             shouldStop = true;
-
+            OnStop();
             queue.Send(new Message
             {
                 Label = "Shutdown bus",
@@ -128,6 +128,11 @@ namespace Rhino.ServiceBus.Msmq
 
             haveStarted = false;
             TransportState = TransportState.Stopped;
+        }
+
+        protected virtual void OnStop()
+        {
+            
         }
 
         private void WaitForProcessingToEnd()

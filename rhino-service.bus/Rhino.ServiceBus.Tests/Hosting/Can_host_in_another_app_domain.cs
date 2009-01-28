@@ -57,8 +57,9 @@ namespace Rhino.ServiceBus.Tests.Hosting
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             host.Close();
         }
 

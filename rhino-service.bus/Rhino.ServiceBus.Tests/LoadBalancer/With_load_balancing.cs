@@ -13,27 +13,13 @@ using Xunit;
 
 namespace Rhino.ServiceBus.Tests.LoadBalancer
 {
-    public class With_load_balancing : MsmqTestBase
+    public class With_load_balancing : LoadBalancingTestBase
     {
         private readonly IWindsorContainer container;
 
-        private const string loadBalancerQueue = "msmq://localhost/test_queue.balancer";
-
         public With_load_balancing()
         {
-            var queuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint());
-            if (MessageQueue.Exists(queuePath) == false)
-                MessageQueue.Create(queuePath, true);
-            using(var loadBalancer = new MessageQueue(queuePath, QueueAccessMode.SendAndReceive))
-            {
-                loadBalancer.Purge();
-            }
-
-            using (var loadBalancer = new MessageQueue(queuePath +";Workers", QueueAccessMode.SendAndReceive))
-            {
-                loadBalancer.Purge();
-            }
-
+           
             var interpreter = new XmlInterpreter(@"LoadBalancer\BusWithLoadBalancer.config");
             container = new WindsorContainer(interpreter);
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
