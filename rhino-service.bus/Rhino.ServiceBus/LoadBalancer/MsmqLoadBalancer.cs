@@ -19,6 +19,8 @@ namespace Rhino.ServiceBus.LoadBalancer
         private readonly Queue<Uri> readyForWork = new Queue<Uri>();
         private readonly Set<Uri> knownWorkers = new Set<Uri>();
 
+        public event Action<Message> MessageBatchSentToAllWorkers;
+
         public MsmqLoadBalancer(
             IMessageSerializer serializer,
             IQueueStrategy queueStrategy,
@@ -88,7 +90,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             }
             catch (Exception e)
             {
-                logger.Error("Fail to process message properly", e);
+                logger.Error("Fail to process load balanced message properly", e);
             }
         }
 
@@ -112,7 +114,8 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void SendToAllWorkers(Message message)
         {
-            foreach (var worker in knownWorkers.GetValues())
+            var values = knownWorkers.GetValues();
+            foreach (var worker in values)
             {
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
                 using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(workerEndpoint), QueueAccessMode.Send))
@@ -120,6 +123,12 @@ namespace Rhino.ServiceBus.LoadBalancer
                     workerQueue.Send(message, workerQueue.GetTransactionType());
                 }
             }
+            if (values.Length == 0) 
+                return;
+
+            var copy = MessageBatchSentToAllWorkers;
+            if (copy != null)
+                copy(message);
         }
 
         private void HandleLoadBalancerMessage(Message message, LoadBalancerOptions options)

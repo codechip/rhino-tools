@@ -168,7 +168,7 @@ namespace Rhino.ServiceBus.Msmq
                     Message message;
                     bool? peek = TryPeek(out message);
 
-                    if (peek == false)//error reading from queue
+                    if (peek == false || shouldStop)//error reading from queue
                     {
                         TransportState = TransportState.FailedToReadFromQueue;
                         return; // return from method, we have failed}

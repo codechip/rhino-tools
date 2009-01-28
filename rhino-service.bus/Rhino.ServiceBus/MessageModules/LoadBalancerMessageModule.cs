@@ -44,7 +44,10 @@ namespace Rhino.ServiceBus.MessageModules
             var readyToWork = new object[theTransport.ThreadCount];
             for (var i = 0; i < theTransport.ThreadCount; i++)
             {
-                readyToWork[i] = new ReadyToWork { Endpoint = loadBalancerEndpoint };
+                readyToWork[i] = new ReadyToWork
+                {
+                    Endpoint = theTransport.Endpoint.Uri
+                };
             }
             theTransport.Send(endpointRouter.GetRoutedEndpoint(loadBalancerEndpoint), readyToWork);
         }
@@ -56,7 +59,10 @@ namespace Rhino.ServiceBus.MessageModules
 
         private void TellLoadBalancerThatWeAreReadyForWork()
         {
-            theTransport.Send(endpointRouter.GetRoutedEndpoint(loadBalancerEndpoint), new ReadyToWork { Endpoint = loadBalancerEndpoint });
+            theTransport.Send(endpointRouter.GetRoutedEndpoint(loadBalancerEndpoint), new ReadyToWork
+            {
+                Endpoint = theTransport.Endpoint.Uri
+            });
         }
 
         public void Stop(ITransport transport)

@@ -5,6 +5,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.LoadBalancer;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
@@ -20,6 +21,19 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
         public With_load_balancing()
         {
+            var queuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint());
+            if (MessageQueue.Exists(queuePath) == false)
+                MessageQueue.Create(queuePath, true);
+            using(var loadBalancer = new MessageQueue(queuePath, QueueAccessMode.SendAndReceive))
+            {
+                loadBalancer.Purge();
+            }
+
+            using (var loadBalancer = new MessageQueue(queuePath +";Workers", QueueAccessMode.SendAndReceive))
+            {
+                loadBalancer.Purge();
+            }
+
             var interpreter = new XmlInterpreter(@"LoadBalancer\BusWithLoadBalancer.config");
             container = new WindsorContainer(interpreter);
             container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
@@ -36,7 +50,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 );
         }
 
-        [Fact(Skip = "broke load balancer while working on it")]
+        [Fact]
         public void Can_send_message_through_load_balancer()
         {
             MyHandler.ResetEvent = new ManualResetEvent(false);
@@ -58,12 +72,16 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             }
         }
 
-        [Fact(Skip = "broke load balancer while working on it")]
+        [Fact]
         public void Will_send_administrative_messages_to_all_nodes()
         {
             using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
             using (var bus = container.Resolve<IStartableServiceBus>())
             {
+                var wait = new ManualResetEvent(false);
+
+                loadBalancer.MessageBatchSentToAllWorkers += message => wait.Set();
+
                 loadBalancer.Start();
                 bus.Start();
 
@@ -82,6 +100,8 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                     Endpoint = bus.Endpoint.Uri.ToString(),
                     Type = "foobar"
                 });
+
+                wait.WaitOne();
             }
 
             using(var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
@@ -94,15 +114,6 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             {
                 var message = q.Receive(MessageQueueTransactionType.Single);
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
-            }
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            using (var q = new MessageQueue(MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint())))
-            {
-                q.Purge();
             }
         }
 
