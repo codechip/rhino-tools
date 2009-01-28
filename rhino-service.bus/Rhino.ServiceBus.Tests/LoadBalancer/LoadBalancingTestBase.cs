@@ -7,22 +7,26 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
     public class LoadBalancingTestBase : MsmqTestBase
     {
         protected const string loadBalancerQueue = "msmq://localhost/test_queue.balancer";
+        protected readonly string loadBalancerQueuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint());
 
         public LoadBalancingTestBase()
         {
-            var queuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint());
-            if (MessageQueue.Exists(queuePath) == false)
-                MessageQueue.Create(queuePath, true);
-            using (var loadBalancer = new MessageQueue(queuePath, QueueAccessMode.SendAndReceive))
+            if (MessageQueue.Exists(loadBalancerQueuePath) == false)
+                MessageQueue.Create(loadBalancerQueuePath, true);
+            using (var loadBalancer = new MessageQueue(loadBalancerQueuePath, QueueAccessMode.SendAndReceive))
             {
                 loadBalancer.Purge();
             }
 
-            using (var loadBalancer = new MessageQueue(queuePath + ";Workers", QueueAccessMode.SendAndReceive))
+            using (var loadBalancer = new MessageQueue(loadBalancerQueuePath + ";Workers", QueueAccessMode.SendAndReceive))
             {
                 loadBalancer.Purge();
             }
- 
+
+            using (var loadBalancer = new MessageQueue(loadBalancerQueuePath + ";Endpoints", QueueAccessMode.SendAndReceive))
+            {
+                loadBalancer.Purge();
+            }
         }
     }
 }

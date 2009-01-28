@@ -22,6 +22,8 @@ namespace Rhino.ServiceBus.LoadBalancer
         private readonly Queue<Uri> readyForWork = new Queue<Uri>();
         private readonly Set<Uri> knownWorkers = new Set<Uri>();
         private readonly Timer heartBeatTimer;
+        private readonly Set<Uri> knownEndpoints = new Set<Uri>();
+
         public event Action<Message> MessageBatchSentToAllWorkers;
 
         public MsmqLoadBalancer(
@@ -30,7 +32,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             IEndpointRouter endpointRouter,
             Uri endpoint,
             int threadCount)
-            : base(queueStrategy, endpoint, threadCount, serializer,endpointRouter)
+            : base(queueStrategy, endpoint, threadCount, serializer, endpointRouter)
         {
             heartBeatTimer = new Timer(SendHeartBeatToSecondaryServer);
             this.queueStrategy = queueStrategy;
@@ -57,6 +59,16 @@ namespace Rhino.ServiceBus.LoadBalancer
         }
 
 
+        public Set<Uri> KnownWorkers
+        {
+            get { return knownWorkers; }
+        }
+
+        public Set<Uri> KnownEndpoints
+        {
+            get { return knownEndpoints; }
+        }
+
         protected override void BeforeStart()
         {
             try
@@ -72,12 +84,28 @@ namespace Rhino.ServiceBus.LoadBalancer
 
             using (var workersQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(SubQueue.Workers)), QueueAccessMode.Receive))
             {
+                workersQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 var messages = workersQueue.GetAllMessages();
                 foreach (var message in messages)
                 {
-                    HandleLoadBalancerMessage(message, LoadBalancerOptions.None);
+                    var knownWorker = message.Body.ToString();
+                    KnownWorkers.Add(new Uri(knownWorker));
                 }
             }
+
+
+            using (var endPointsQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(SubQueue.Endpoints)), QueueAccessMode.Receive))
+            {
+                endPointsQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
+                var messages = endPointsQueue.GetAllMessages();
+                foreach (var message in messages)
+                {
+                    var knownEndpoint = message.Body.ToString();
+                    KnownEndpoints.Add(new Uri(knownEndpoint));
+                }
+            }
+
+
         }
 
         protected override void AfterStart()
@@ -108,10 +136,12 @@ namespace Rhino.ServiceBus.LoadBalancer
                     if (message == null)
                         return;
 
+                    PersistEndPoint(message);
+
                     switch ((MessageType)message.AppSpecific)
                     {
                         case MessageType.LoadBalancerMessageMarker:
-                            HandleLoadBalancerMessage(message, LoadBalancerOptions.RegisterWorkersAsReadyToWork | LoadBalancerOptions.RegisterWorkersInQueue);
+                            HandleLoadBalancerMessage(message);
                             break;
                         case MessageType.AdministrativeMessageMarker:
                             SendToAllWorkers(message);
@@ -126,6 +156,22 @@ namespace Rhino.ServiceBus.LoadBalancer
             catch (Exception e)
             {
                 logger.Error("Fail to process load balanced message properly", e);
+            }
+        }
+
+        private void PersistEndPoint(Message message)
+        {
+            var queueUri = MsmqUtil.GetQueueUri(message.ResponseQueue);
+            bool needToPersist = knownEndpoints.Add(queueUri);
+            if (needToPersist)
+            {
+                var persistedEndPoint = new Message
+                {
+                    Formatter = new XmlMessageFormatter(new[] {typeof (string)}),
+                    Body = queueUri.ToString(),
+                    Label = ("Known end point: " + queueUri).EnsureLabelLength()
+                };
+                queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints), queue.GetTransactionType());
             }
         }
 
@@ -149,7 +195,7 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void SendToAllWorkers(Message message)
         {
-            var values = knownWorkers.GetValues();
+            var values = KnownWorkers.GetValues();
             foreach (var worker in values)
             {
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
@@ -158,7 +204,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                     workerQueue.Send(message, workerQueue.GetTransactionType());
                 }
             }
-            if (values.Length == 0) 
+            if (values.Length == 0)
                 return;
 
             var copy = MessageBatchSentToAllWorkers;
@@ -166,7 +212,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                 copy(message);
         }
 
-        private void HandleLoadBalancerMessage(Message message, LoadBalancerOptions options)
+        private void HandleLoadBalancerMessage(Message message)
         {
             foreach (var msg in DeserializeMessages(queue, message, null))
             {
@@ -175,25 +221,21 @@ namespace Rhino.ServiceBus.LoadBalancer
                 if (work == null)
                     continue;
 
-                var needToAddToQueue = knownWorkers.Add(work.Endpoint);
+                var needToAddToQueue = KnownWorkers.Add(work.Endpoint);
 
-                var shouldRegisterInQueue = (options & LoadBalancerOptions.RegisterWorkersInQueue) == LoadBalancerOptions.RegisterWorkersInQueue;
-                if (needToAddToQueue && shouldRegisterInQueue)
+                if (needToAddToQueue)
                 {
-                    queue.Send(message.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
+                    var persistedWorker = new Message
+                    {
+                        Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
+                        Body = work.Endpoint.ToString(),
+                        Label = ("Known worker: " + work.Endpoint).EnsureLabelLength()
+                    };
+                    queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
                 }
 
-                if ((options & LoadBalancerOptions.RegisterWorkersAsReadyToWork) == LoadBalancerOptions.RegisterWorkersAsReadyToWork)
-                    readyForWork.Enqueue(work.Endpoint);
+                readyForWork.Enqueue(work.Endpoint);
             }
-        }
-
-        [Flags]
-        private enum LoadBalancerOptions
-        {
-            None = 0,
-            RegisterWorkersInQueue = 1,
-            RegisterWorkersAsReadyToWork = 2
         }
     }
 }

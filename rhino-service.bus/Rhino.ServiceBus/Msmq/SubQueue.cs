@@ -6,6 +6,7 @@ namespace Rhino.ServiceBus.Msmq
         Timeout = 2,
         Subscriptions = 3,
         Discarded = 4,
-        Workers = 5
+        Workers = 5,
+        Endpoints = 6
     }
 }

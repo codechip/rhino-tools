@@ -9,6 +9,13 @@ namespace Rhino.ServiceBus.Msmq
 {
     public static class MsmqExtensions
     {
+        public static string EnsureLabelLength(this string label)
+        {
+            if (label.Length > 249)
+                label = label.Substring(0, 246) + "...";
+            return label;
+        }
+
         public static Message SetSubQueueToSendTo(this Message self, SubQueue queue)
         {
             self.AppSpecific = ((int) MessageType.MoveMessageMarker << 16) | (int) queue;

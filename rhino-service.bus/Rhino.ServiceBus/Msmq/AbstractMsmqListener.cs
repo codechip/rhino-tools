@@ -263,13 +263,7 @@ namespace Rhino.ServiceBus.Msmq
 
             message.Label = msgs
                 .Where(msg => msg != null)
-                .Select(msg =>
-                {
-                    string s = msg.ToString();
-                    if (s.Length > 249)
-                        return s.Substring(0, 246) + "...";
-                    return s;
-                })
+                .Select(msg => msg.ToString().EnsureLabelLength())
                 .FirstOrDefault();
             return message;
         }

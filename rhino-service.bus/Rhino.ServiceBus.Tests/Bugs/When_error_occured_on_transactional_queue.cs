@@ -33,7 +33,7 @@ namespace Rhino.ServiceBus.Tests.Bugs
                 {
                     var originalMessage = errorSubQueue.Receive(MessageQueueTransactionType.Single);
                     var errorDescripotion = errorSubQueue.Receive(MessageQueueTransactionType.Single);
-                    Assert.Equal("Error description for " + originalMessage.Label, errorDescripotion.Label);
+                    Assert.Equal("Error description for: " + originalMessage.Label, errorDescripotion.Label);
                 }
             }
 		}

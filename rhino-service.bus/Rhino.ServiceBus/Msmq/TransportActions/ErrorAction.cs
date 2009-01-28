@@ -100,12 +100,10 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             string msgId;
             if(queueStrategy.TryMoveMessage(queue, message, SubQueue.Errors,out msgId) == false)
                 return;
-            var label = "Error description for " + message.Label;
-			if (label.Length > 249)
-				label = label.Substring(0, 246) + "...";
+            
             var desc = new Message
 			{
-				Label = label,
+				Label = ("Error description for: " + message.Label).EnsureLabelLength(),
 				Body = exceptionText,
                 CorrelationId = msgId
 			}.SetSubQueueToSendTo(SubQueue.Errors);
