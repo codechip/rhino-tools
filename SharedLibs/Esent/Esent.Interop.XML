@@ -5519,11 +5519,21 @@
             (Nothing in Visual Basic) if no inner exception is specified.
             </param>
         </member>
+        <member name="M:Microsoft.Isam.Esent.EsentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserialization ctor
+            </summary>
+        </member>
         <member name="M:Microsoft.Isam.Esent.Interop.EsentErrorException.#ctor(Microsoft.Isam.Esent.Interop.JET_err)">
             <summary>
             Initializes a new instance of the EsentErrorException class.
             </summary>
             <param name="err">The error code of the exception.</param>
+        </member>
+        <member name="M:Microsoft.Isam.Esent.Interop.EsentErrorException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserialization ctor
+            </summary>
         </member>
         <member name="P:Microsoft.Isam.Esent.Interop.EsentErrorException.Message">
             <summary>
