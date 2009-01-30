@@ -215,7 +215,7 @@ namespace Rhino.ServiceBus.Msmq
 
         }
 
-        private static void Raise(Action action)
+        protected static void Raise(Action action)
         {
             var copy = action;
             if (copy != null)

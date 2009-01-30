@@ -25,6 +25,8 @@ namespace Rhino.ServiceBus.LoadBalancer
         private readonly Set<Uri> knownEndpoints = new Set<Uri>();
 
         public event Action<Message> MessageBatchSentToAllWorkers;
+        public event Action SentNewWorkerPersisted;
+        public event Action SentNewEndpointPersisted;
 
         public MsmqLoadBalancer(
             IMessageSerializer serializer,
@@ -40,22 +42,11 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         protected void SendHeartBeatToSecondaryServer(object ignored)
         {
-            try
+            SendToSecondaryQueue(new HeartBeat
             {
-                using (var secondaryLoadBalancerQueue = new MessageQueue(MsmqUtil.GetQueuePath(new Endpoint { Uri = SecondaryLoadBalancer })))
-                {
-                    var message = GenerateMsmqMessageFromMessageBatch(new HeartBeat
-                    {
-                        From = Endpoint.Uri,
-                        At = DateTime.Now,
-                    });
-                    secondaryLoadBalancerQueue.Send(message);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new LoadBalancerException("Could not send heat beat to secondary load balancer: " + SecondaryLoadBalancer, e);
-            }
+                From = Endpoint.Uri,
+                At = DateTime.Now,
+            });
         }
 
 
@@ -107,7 +98,6 @@ namespace Rhino.ServiceBus.LoadBalancer
                 }
             }
         }
-
 
         private void RemoveAllReadyToWorkMessages()
         {
@@ -167,7 +157,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                     if (message == null)
                         return;
 
-                    PersistEndPoint(message);
+                    PersistEndpoint(message);
 
                     switch ((MessageType)message.AppSpecific)
                     {
@@ -190,19 +180,42 @@ namespace Rhino.ServiceBus.LoadBalancer
             }
         }
 
-        private void PersistEndPoint(Message message)
+        private void PersistEndpoint(Message message)
         {
             var queueUri = MsmqUtil.GetQueueUri(message.ResponseQueue);
             bool needToPersist = knownEndpoints.Add(queueUri);
-            if (needToPersist)
+            if (!needToPersist) 
+                return;
+            var persistedEndPoint = new Message
             {
-                var persistedEndPoint = new Message
+                Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
+                Body = queueUri.ToString(),
+                Label = ("Known end point: " + queueUri).EnsureLabelLength()
+            };
+            queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints), queue.GetTransactionType());
+            
+            SendToSecondaryQueue(new NewEndpointPersisted
+            {
+                PersistedEndpoint = queueUri
+            });
+            Raise(SentNewEndpointPersisted);
+        }
+
+        private void SendToSecondaryQueue(object msg)
+        {
+            if (SecondaryLoadBalancer == null)
+                return;
+
+            try
+            {
+                using (var secondaryLoadBalancerQueue = new MessageQueue(MsmqUtil.GetQueuePath(new Endpoint { Uri = SecondaryLoadBalancer })))
                 {
-                    Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
-                    Body = queueUri.ToString(),
-                    Label = ("Known end point: " + queueUri).EnsureLabelLength()
-                };
-                queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints), queue.GetTransactionType());
+                    secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msg),secondaryLoadBalancerQueue.GetTransactionType());
+                }
+            }
+            catch (Exception e)
+            {
+                throw new LoadBalancerException("Could not send message to secondary load balancer: " + SecondaryLoadBalancer, e);
             }
         }
 
@@ -255,18 +268,27 @@ namespace Rhino.ServiceBus.LoadBalancer
                 var needToAddToQueue = KnownWorkers.Add(work.Endpoint);
 
                 if (needToAddToQueue)
-                {
-                    var persistedWorker = new Message
-                    {
-                        Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
-                        Body = work.Endpoint.ToString(),
-                        Label = ("Known worker: " + work.Endpoint).EnsureLabelLength()
-                    };
-                    queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
-                }
+                    AddWorkerToQueue(work);
 
                 readyForWork.Enqueue(work.Endpoint);
             }
+        }
+
+        private void AddWorkerToQueue(ReadyToWork work)
+        {
+            var persistedWorker = new Message
+            {
+                Formatter = new XmlMessageFormatter(new[] { typeof(string) }),
+                Body = work.Endpoint.ToString(),
+                Label = ("Known worker: " + work.Endpoint).EnsureLabelLength()
+            };
+            queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
+
+            SendToSecondaryQueue(new NewWorkerPersisted
+            {
+                Endpoint = work.Endpoint
+            });
+            Raise(SentNewWorkerPersisted);
         }
     }
 }
