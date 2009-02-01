@@ -60,7 +60,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                              NewEndPoint = newEndPoint
                          });
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
                 routedEndpoint = endpointRouter.GetRoutedEndpoint(original);
                 Assert.Equal(newEndPoint, routedEndpoint.Uri);
             }
@@ -79,7 +79,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
                 bus.Send(loadBalancer.Endpoint, "abcdefg");
 
-                MyHandler.ResetEvent.WaitOne();
+                MyHandler.ResetEvent.WaitOne(TimeSpan.FromSeconds(30));
                 Assert.True(
                     MyHandler.Message.ResponseQueue.Path.Contains(@"private$\test_queue")
                     );
@@ -100,7 +100,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 using (var workers = new MessageQueue(loadBalancerQueuePath + ";Workers", QueueAccessMode.SendAndReceive))
                 {
                     workers.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                    var knownWorker = workers.Peek();
+                    var knownWorker = workers.Peek(TimeSpan.FromSeconds(30));
                     Assert.Equal(bus.Endpoint.Uri.ToString(), knownWorker.Body.ToString());
                 }
 
@@ -115,7 +115,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             {
                 workers.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 workers.Send(new Message(TestQueueUri.Uri.ToString()), workers.GetTransactionType());
-                var peek = workers.Peek();
+                var peek = workers.Peek(TimeSpan.FromSeconds(30));
                 string ignored;
                 new SubQueueStrategy().TryMoveMessage(workers, peek, SubQueue.Workers, out ignored);
             }
@@ -142,7 +142,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 using (var endpoints = new MessageQueue(loadBalancerQueuePath + ";EndPoints", QueueAccessMode.SendAndReceive))
                 {
                     endpoints.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                    var knownEndpoint = endpoints.Peek();
+                    var knownEndpoint = endpoints.Peek(TimeSpan.FromSeconds(30));
                     var busUri = bus.Endpoint.Uri.ToString().Replace("localhost", Environment.MachineName).ToLowerInvariant();
                     Assert.Equal(
                         busUri,
@@ -159,7 +159,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             {
                 endPointsQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 endPointsQueue.Send(new Message(TestQueueUri.Uri.ToString()), endPointsQueue.GetTransactionType());
-                var peek = endPointsQueue.Peek();
+                var peek = endPointsQueue.Peek(TimeSpan.FromSeconds(30));
                 string ignored;
                 new SubQueueStrategy().TryMoveMessage(endPointsQueue, peek, SubQueue.Endpoints, out ignored);
             }
@@ -201,7 +201,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                     Type = "foobar"
                 });
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
             }
 
             using (var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
@@ -266,7 +266,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
                 loadBalancer.Start();
 
-                MyHandler.ResetEvent.WaitOne();
+                MyHandler.ResetEvent.WaitOne(TimeSpan.FromSeconds(30));
                 Assert.True(
                     MyHandler.Message.ResponseQueue.Path.Contains(@"private$\test_queue")
                     );

@@ -234,7 +234,7 @@ namespace Rhino.ServiceBus.Serializers
                 if (msg == null)
                     continue;
                 var type = msg.GetType();
-                namespaces.Add(reflection.GetNamespaceForXml(type), reflection.GetAssemblyQualifiedNameWithoutVersion(type));
+                namespaces[reflection.GetNamespaceForXml(type)] = reflection.GetAssemblyQualifiedNameWithoutVersion(type);
             }
             return namespaces;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
@@ -30,7 +31,7 @@ namespace Rhino.ServiceBus.Tests
 
                 bus.Send(new TestMessage());
 
-                TestHandler.ResetEvent.WaitOne();
+                TestHandler.ResetEvent.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.True(TestHandler.GotMessage);
             }

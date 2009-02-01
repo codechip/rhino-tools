@@ -38,13 +38,13 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Send("a");
 
-            var peek = queue.Peek();
+            var peek = queue.Peek(TimeSpan.FromSeconds(30));
             queue.MoveToSubQueue("errors", peek);
 
             using (var subqueue = new MessageQueue(testQueuePath + ";errors"))
             {
                 subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                var receive = subqueue.Receive();
+                var receive = subqueue.Receive(TimeSpan.FromSeconds(30));
                 Assert.Equal("a", receive.Body);
             }
         }
@@ -54,9 +54,9 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Send("a");
 
-            var peek1 = queue.Peek();
+            var peek1 = queue.Peek(TimeSpan.FromSeconds(30));
 
-            var peek2 = queue.Peek();
+            var peek2 = queue.Peek(TimeSpan.FromSeconds(30));
 
             Assert.Equal(peek1.Id, peek2.Id);
         }
@@ -88,11 +88,11 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Send("a");
 
-            var peek1 = queue.Peek();
+            var peek1 = queue.Peek(TimeSpan.FromSeconds(30));
 
             using(var q2 = new MessageQueue(testQueuePath,QueueAccessMode.Receive))
             {
-                var peek2 = q2.Peek();
+                var peek2 = q2.Peek(TimeSpan.FromSeconds(30));
                 Assert.Equal(peek1.Id, peek2.Id);
             }
         }
@@ -102,11 +102,11 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Send("a");
 
-            var peek1 = queue.Peek();
+            var peek1 = queue.Peek(TimeSpan.FromSeconds(30));
 
             using (var q2 = new MessageQueue(testQueuePath, QueueAccessMode.Receive))
             {
-                var peek2 = q2.Peek();
+                var peek2 = q2.Peek(TimeSpan.FromSeconds(30));
                 q2.ReceiveById(peek2.Id);
             }
 
@@ -119,7 +119,7 @@ namespace Rhino.ServiceBus.Tests
         {
             queue.Send("a");
 
-            var peek = queue.Peek();
+            var peek = queue.Peek(TimeSpan.FromSeconds(30));
             using (var tx = new TransactionScope())
             {
                 queue.MoveToSubQueue("errors", peek);
@@ -129,7 +129,7 @@ namespace Rhino.ServiceBus.Tests
             using (var subqueue = new MessageQueue(testQueuePath + ";errors"))
             {
                 subqueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                var receive = subqueue.Receive();
+                var receive = subqueue.Receive(TimeSpan.FromSeconds(30));
                 Assert.Equal("a", receive.Body);
             }
         }
@@ -145,7 +145,7 @@ namespace Rhino.ServiceBus.Tests
             
             using (new TransactionScope())
             {
-                var peek = transactionalQueue.Peek();
+                var peek = transactionalQueue.Peek(TimeSpan.FromSeconds(30));
                 transactionalQueue.MoveToSubQueue("errors", peek);
                 //tx.Complete();
             }
@@ -207,7 +207,7 @@ namespace Rhino.ServiceBus.Tests
             queue.Send("test1", MessageQueueTransactionType.None);
             queue.Send("test2", MessageQueueTransactionType.None);
 
-            wait.WaitOne();
+            wait.WaitOne(TimeSpan.FromSeconds(30));
 
             Assert.Equal(1, count);
         }
@@ -233,7 +233,7 @@ namespace Rhino.ServiceBus.Tests
 
             queue.Send("test1");
             queue.Send("test2");
-            wait.WaitOne();
+            wait.WaitOne(TimeSpan.FromSeconds(30));
 
             Assert.Equal(2, count);
         }
@@ -253,7 +253,7 @@ namespace Rhino.ServiceBus.Tests
         {
             IAsyncResult asyncResult = queue.BeginPeek(
                 TimeSpan.FromMilliseconds(1), null, delegate { });
-            asyncResult.AsyncWaitHandle.WaitOne();
+            asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(30));
 
             Assert.False(asyncResult.CompletedSynchronously);
 
@@ -268,7 +268,7 @@ namespace Rhino.ServiceBus.Tests
         {
             IAsyncResult asyncResult = queue.BeginPeek(
                 TimeSpan.FromMilliseconds(1), null, delegate { });
-            asyncResult.AsyncWaitHandle.WaitOne();
+            asyncResult.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(30));
 
             Assert.False(asyncResult.CompletedSynchronously);
 
@@ -296,7 +296,7 @@ namespace Rhino.ServiceBus.Tests
                 queue.Send("a");
                 queue.Send("b");
 
-                var msg = queue.Peek();
+                var msg = queue.Peek(TimeSpan.FromSeconds(30));
                 queue.MoveToSubQueue("errors", msg);
 
                 var count = queue.GetCount();

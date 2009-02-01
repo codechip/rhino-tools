@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Xml.Serialization;
 using Castle.Windsor;
@@ -43,11 +44,11 @@ namespace Rhino.ServiceBus.Tests
                 PongHandler.ResetEvent = new ManualResetEvent(false);
                 PongHandler.GotReply = false;
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 bus2.Publish(new Ping());
 
-                PongHandler.ResetEvent.WaitOne();
+                PongHandler.ResetEvent.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.True(PongHandler.GotReply);
             }

@@ -54,7 +54,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                     DrinkName = "Coffee"
                 });
 
-                BaristaSaga.FinishedConsumingMessage.WaitOne();
+                BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
             }
 
             var distributedHashTable = container.Resolve<IDistributedHashTable>();
@@ -96,7 +96,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                     DrinkName = "Coffee"
                 });
 
-                BaristaSaga.FinishedConsumingMessage.WaitOne();
+                BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
                 BaristaSaga.FinishedConsumingMessage.Reset();
 
                 using(bus.AddInstanceSubscription(this))
@@ -105,7 +105,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                     {
                         CorrelationId = guid,
                     });
-                    BaristaSaga.FinishedConsumingMessage.WaitOne();
+                    BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
                 }
             }
 
@@ -143,7 +143,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                     DrinkName = "Coffee"
                 });
 
-                BaristaSaga.FinishedConsumingMessage.WaitOne();
+                BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
                 BaristaSaga.FinishedConsumingMessage.Reset();
 
                 BaristaSaga.WaitToCreateConflicts = new ManualResetEvent(false);
@@ -154,7 +154,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                     {
                         CorrelationId = guid,
                     });
-                    BaristaSaga.FinishedConsumingMessage.WaitOne();
+                    BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
 
                     BaristaSaga.FinishedConsumingMessage.Reset();
                     
@@ -168,7 +168,7 @@ namespace Rhino.ServiceBus.Tests.Dht
 
                     BaristaSaga.WaitToCreateConflicts.Set();
                 }
-                BaristaSaga.FinishedConsumingMessage.WaitOne();
+                BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
             }
 
 

@@ -34,7 +34,7 @@ namespace Rhino.ServiceBus.Tests
                 {
                     bus.Send(bus.Endpoint, new PingMessage());
 
-                    handle.WaitOne();
+                    handle.WaitOne(TimeSpan.FromSeconds(30));
 
                     Assert.NotNull(message);
                 }
@@ -73,7 +73,7 @@ namespace Rhino.ServiceBus.Tests
                 {
                     bus.Send(bus.Endpoint, new PingMessage());
 
-                    handle.WaitOne();
+                    handle.WaitOne(TimeSpan.FromSeconds(30));
 
                     Assert.NotNull(message);
                 }
@@ -84,7 +84,7 @@ namespace Rhino.ServiceBus.Tests
                 container.Resolve<ITransport>().MessageArrived += m => handle.Set();
                 bus.Send(bus.Endpoint, new PingMessage());
 
-                handle.WaitOne();
+                handle.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.Null(message);
             }

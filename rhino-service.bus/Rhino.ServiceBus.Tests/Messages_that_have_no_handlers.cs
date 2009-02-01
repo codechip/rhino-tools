@@ -1,3 +1,4 @@
+using System;
 using System.Messaging;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
@@ -29,7 +30,7 @@ namespace Rhino.ServiceBus.Tests
 
                 using(var discarded = new MessageQueue(testQueuePath+";discarded"))
                 {
-                    var message = discarded.Receive();
+                    var message = discarded.Receive(TimeSpan.FromSeconds(30));
                     Assert.NotNull(message);
                 }
             }
@@ -61,7 +62,7 @@ namespace Rhino.ServiceBus.Tests
 
                     using (var discarded = new MessageQueue(testQueuePath + "#discarded"))
                     {
-                        var message = discarded.Receive();
+                        var message = discarded.Receive(TimeSpan.FromSeconds(30));
                         Assert.NotNull(message);
                     }
                 }

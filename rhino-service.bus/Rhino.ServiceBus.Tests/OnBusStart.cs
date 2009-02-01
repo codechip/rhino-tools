@@ -35,11 +35,11 @@ namespace Rhino.ServiceBus.Tests
               
                 bus.Start();
                 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 var serializer = container.Resolve<IMessageSerializer>();
                 bool found = false;
-                subscriptions.Peek();
+                subscriptions.Peek(TimeSpan.FromSeconds(30));
                 var messagesEnum = subscriptions.GetMessageEnumerator2();
                 while (messagesEnum.MoveNext(TimeSpan.FromSeconds(0)))
                 {
@@ -65,10 +65,10 @@ namespace Rhino.ServiceBus.Tests
 
                 subscriptionStorage.SubscriptionChanged += () => wait.Set();
                 bus.Start();
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 var serializer = container.Resolve<IMessageSerializer>();
-                subscriptions.Peek();
+                subscriptions.Peek(TimeSpan.FromSeconds(30));
                 var messages = subscriptions.GetAllMessages();
                 foreach (var message in messages)
                 {

@@ -9,13 +9,13 @@ using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using MessageType = Rhino.ServiceBus.Msmq.MessageType;
+using System.Linq;
 
 namespace Rhino.ServiceBus.LoadBalancer
 {
     public class MsmqLoadBalancer : AbstractMsmqListener
     {
         public Uri SecondaryLoadBalancer { get; set; }
-        public Uri PrimaryLoadBalancer { get; set; }
         private readonly IQueueStrategy queueStrategy;
         private readonly ILog logger = LogManager.GetLogger(typeof(MsmqLoadBalancer));
 
@@ -42,13 +42,12 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         protected void SendHeartBeatToSecondaryServer(object ignored)
         {
-            SendToSecondaryQueue(new HeartBeat
+            SendToQueue(SecondaryLoadBalancer, new Heartbeat
             {
                 From = Endpoint.Uri,
                 At = DateTime.Now,
             });
         }
-
 
         public Set<Uri> KnownWorkers
         {
@@ -101,7 +100,7 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void RemoveAllReadyToWorkMessages()
         {
-            using(var tx = new TransactionScope())
+            using (var tx = new TransactionScope())
             using (var readyForWorkQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint), QueueAccessMode.Receive))
             using (var enumerator = readyForWorkQueue.GetMessageEnumerator2())
             {
@@ -136,6 +135,20 @@ namespace Rhino.ServiceBus.LoadBalancer
                 heartBeatTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
             }
 
+            if (ShouldNotifyWorkersLoaderIsReadyToAcceptWorkOnStartup)
+                NotifyWorkersThatLoaderIsReadyToAcceptWork();
+        }
+
+        protected virtual bool ShouldNotifyWorkersLoaderIsReadyToAcceptWorkOnStartup
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        protected void NotifyWorkersThatLoaderIsReadyToAcceptWork()
+        {
             var acceptingWork = new AcceptingWork { Endpoint = Endpoint.Uri };
             SendToAllWorkers(
                 GenerateMsmqMessageFromMessageBatch(acceptingWork)
@@ -183,8 +196,10 @@ namespace Rhino.ServiceBus.LoadBalancer
         private void PersistEndpoint(Message message)
         {
             var queueUri = MsmqUtil.GetQueueUri(message.ResponseQueue);
+            if (queueUri == null)
+                return;
             bool needToPersist = knownEndpoints.Add(queueUri);
-            if (!needToPersist) 
+            if (needToPersist == false)
                 return;
             var persistedEndPoint = new Message
             {
@@ -193,29 +208,29 @@ namespace Rhino.ServiceBus.LoadBalancer
                 Label = ("Known end point: " + queueUri).EnsureLabelLength()
             };
             queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints), queue.GetTransactionType());
-            
-            SendToSecondaryQueue(new NewEndpointPersisted
+
+            SendToQueue(SecondaryLoadBalancer, new NewEndpointPersisted
             {
                 PersistedEndpoint = queueUri
             });
             Raise(SentNewEndpointPersisted);
         }
 
-        private void SendToSecondaryQueue(object msg)
+        protected void SendToQueue(Uri queueUri, params object[] msgs)
         {
-            if (SecondaryLoadBalancer == null)
+            if (queueUri == null)
                 return;
 
             try
             {
-                using (var secondaryLoadBalancerQueue = new MessageQueue(MsmqUtil.GetQueuePath(new Endpoint { Uri = SecondaryLoadBalancer })))
+                using (var secondaryLoadBalancerQueue = new MessageQueue(MsmqUtil.GetQueuePath(new Endpoint { Uri = queueUri })))
                 {
-                    secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msg),secondaryLoadBalancerQueue.GetTransactionType());
+                    secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msgs), secondaryLoadBalancerQueue.GetTransactionType());
                 }
             }
             catch (Exception e)
             {
-                throw new LoadBalancerException("Could not send message to secondary load balancer: " + SecondaryLoadBalancer, e);
+                throw new LoadBalancerException("Could not send message to queue: " + queueUri, e);
             }
         }
 
@@ -260,18 +275,73 @@ namespace Rhino.ServiceBus.LoadBalancer
         {
             foreach (var msg in DeserializeMessages(queue, message, null))
             {
-                var work = msg as ReadyToWork;
-
-                if (work == null)
+                var query = msg as QueryForAllKnownWorkersAndEndpoints;
+                if (query != null)
+                {
+                    SendKnownWorkersAndKnownEndpoints(message.ResponseQueue);
                     continue;
+                }
 
-                var needToAddToQueue = KnownWorkers.Add(work.Endpoint);
+                var work = msg as ReadyToWork;
+                if (work != null)
+                {
+                    var needToAddToQueue = KnownWorkers.Add(work.Endpoint);
 
-                if (needToAddToQueue)
-                    AddWorkerToQueue(work);
+                    if (needToAddToQueue)
+                        AddWorkerToQueue(work);
 
-                readyForWork.Enqueue(work.Endpoint);
+                    readyForWork.Enqueue(work.Endpoint);
+                }
+
+                HandleLoadBalancerMessages(msg);
             }
+        }
+
+        private void SendKnownWorkersAndKnownEndpoints(MessageQueue responseQueue)
+        {
+            if (responseQueue == null)
+                return;
+            try
+            {
+                var endpoints = KnownEndpoints.GetValues();
+                var workers = KnownWorkers.GetValues();
+
+                var index = 0;
+                while (index < endpoints.Length)
+                {
+                    var endpointsBatch = endpoints
+                        .Skip(index)
+                        .Take(256)
+                        .Select(x => new NewEndpointPersisted { PersistedEndpoint = x })
+                        .ToArray();
+                    index += endpointsBatch.Length;
+
+                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(endpointsBatch),
+                                       responseQueue.GetTransactionType());
+                }
+
+                index = 0;
+                while (index < workers.Length)
+                {
+                    var workersBatch = workers
+                        .Skip(index)
+                        .Take(256)
+                        .Select(x => new NewWorkerPersisted() { Endpoint = x })
+                        .ToArray();
+                    index += workersBatch.Length;
+
+                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(workersBatch),
+                                       responseQueue.GetTransactionType());
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Failed to send known endpoints and known workers", e);
+            }
+        }
+
+        protected virtual void HandleLoadBalancerMessages(object msg)
+        {
         }
 
         private void AddWorkerToQueue(ReadyToWork work)
@@ -284,7 +354,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             };
             queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
 
-            SendToSecondaryQueue(new NewWorkerPersisted
+            SendToQueue(SecondaryLoadBalancer, new NewWorkerPersisted
             {
                 Endpoint = work.Endpoint
             });

@@ -25,7 +25,7 @@ namespace Rhino.ServiceBus.Tests
             }}, msg.BodyStream);
 
             queue.Send(msg, MessageQueueTransactionType.None);
-            msg = queue.Peek();
+            msg = queue.Peek(TimeSpan.FromSeconds(30));
             queue.MoveToSubQueue("subscriptions", msg);
 
 
@@ -56,7 +56,7 @@ namespace Rhino.ServiceBus.Tests
 
 
             queue.Send(msg, MessageQueueTransactionType.None);
-            msg = queue.Peek();
+            msg = queue.Peek(TimeSpan.FromSeconds(30));
             queue.MoveToSubQueue("subscriptions",msg);
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),

@@ -62,7 +62,7 @@ namespace Rhino.ServiceBus.Tests.Dht
             }
             SagaId = Id;
             FinishedConsumingMessage.Set();
-            WaitToCreateConflicts.WaitOne();
+            WaitToCreateConflicts.WaitOne(TimeSpan.FromSeconds(30));
         }
 
         public void Consume(MergeSagaState message)

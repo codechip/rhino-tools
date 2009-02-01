@@ -1,3 +1,4 @@
+using System;
 using System.Messaging;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Msmq;
@@ -12,7 +13,7 @@ namespace Rhino.ServiceBus.Tests
         {
             var queueStrategy = new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri);
             queue.Send(new TestMessage {Name = "ayende"});
-            Message msg = queue.Peek();
+            Message msg = queue.Peek(TimeSpan.FromSeconds(30));
             Assert.Equal(1, queue.GetCount());
             string msgId;
             queueStrategy.TryMoveMessage(queue, msg, SubQueue.Errors,out msgId);
@@ -24,7 +25,7 @@ namespace Rhino.ServiceBus.Tests
         {
             var queueStrategy = new FlatQueueStrategy(new EndpointRouter(), TestQueueUri.Uri);
             queue.Send(new TestMessage { Name = "ayende" });
-            Message msg = queue.Peek();
+            Message msg = queue.Peek(TimeSpan.FromSeconds(30));
             Assert.Equal(1, queue.GetCount());
             string msgId;
             queueStrategy.TryMoveMessage(queue, msg, SubQueue.Discarded, out msgId);
@@ -36,7 +37,7 @@ namespace Rhino.ServiceBus.Tests
         {
             var queueStrategy = new FlatQueueStrategy(new EndpointRouter(), TestQueueUri.Uri);
             queue.Send(new TestMessage { Name = "ayende" });
-            Message msg = queue.Peek();
+            Message msg = queue.Peek(TimeSpan.FromSeconds(30));
             Assert.Equal(1, queue.GetCount());
             string msgId;
             queueStrategy.TryMoveMessage(queue, msg, SubQueue.Subscriptions,out msgId);

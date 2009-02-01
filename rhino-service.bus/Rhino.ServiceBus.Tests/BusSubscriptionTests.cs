@@ -43,8 +43,8 @@ namespace Rhino.ServiceBus.Tests
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
 
-                waitListener.WaitOne();
-                waitSubscriptions.WaitOne();
+                waitListener.WaitOne(TimeSpan.FromSeconds(30));
+                waitSubscriptions.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.Equal(1, subscriptions.GetAllMessages().Length);
             }
@@ -70,7 +70,7 @@ namespace Rhino.ServiceBus.Tests
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 var uris = storage.GetSubscriptionsFor(typeof(MsmqSubscriptionTests.TestMessage));
                 Assert.Equal(1, uris.Count());
@@ -99,8 +99,8 @@ namespace Rhino.ServiceBus.Tests
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
                 bus.Subscribe<OnBusStart.TestMessage>();
 
-                waitListener.WaitOne();
-                waitSubscriptions.WaitOne();
+                waitListener.WaitOne(TimeSpan.FromSeconds(30));
+                waitSubscriptions.WaitOne(TimeSpan.FromSeconds(30));
 
                 storage.RemoveSubscription(typeof(MsmqSubscriptionTests.TestMessage).FullName, TestQueueUri.Uri.ToString());
 
@@ -127,9 +127,9 @@ namespace Rhino.ServiceBus.Tests
 
                 bus.Subscribe<OnBusStart.TestMessage>();
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
-                var peek = subscriptions.Peek();
+                var peek = subscriptions.Peek(TimeSpan.FromSeconds(30));
 
                 Assert.NotNull(peek);
             }
@@ -154,10 +154,10 @@ namespace Rhino.ServiceBus.Tests
                 };
 
                 bus.Subscribe<MsmqSubscriptionTests.TestMessage>();
-                subscriptions.Peek();
+                subscriptions.Peek(TimeSpan.FromSeconds(30));
                 bus.Unsubscribe<MsmqSubscriptionTests.TestMessage>();
                 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
                 try
                 {
                     subscriptions.Peek(TimeSpan.FromSeconds(0));

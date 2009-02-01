@@ -20,7 +20,7 @@ namespace Rhino.ServiceBus.Tests
 
             Transport.Send(TestQueueUri, DateTime.Today);
 
-            gotFirstMessage.WaitOne();
+            gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
             gotSecondMessage.Set();
         }
@@ -32,7 +32,7 @@ namespace Rhino.ServiceBus.Tests
 
             TransactionalTransport.Send(TransactionalTestQueueUri, DateTime.Today);
 
-            gotFirstMessage.WaitOne();
+            gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
             Assert.NotNull(transactionalQueue.Peek());
 
@@ -74,12 +74,12 @@ namespace Rhino.ServiceBus.Tests
             {
                 errorQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 errorQueue.MessageReadPropertyFilter.SetAll();
-                errorQueue.Peek();//for debugging
+                errorQueue.Peek(TimeSpan.FromSeconds(30));//for debugging
 
-                var messageCausingError = errorQueue.Receive();
+                var messageCausingError = errorQueue.Receive(TimeSpan.FromSeconds(30));
                 Assert.NotNull(messageCausingError);
-                errorQueue.Peek();//for debugging
-                var messageErrorDescription = errorQueue.Receive();
+                errorQueue.Peek(TimeSpan.FromSeconds(30));//for debugging
+                var messageErrorDescription = errorQueue.Receive(TimeSpan.FromSeconds(30));
                 var error = (string)messageErrorDescription.Body;
                 Assert.Contains(
                     "System.InvalidOperationException: Operation is not valid due to the current state of the object.",
@@ -126,7 +126,7 @@ namespace Rhino.ServiceBus.Tests
                         gotFirstMessage.Set();
                     }
                 }
-                gotSecondMessage.WaitOne();
+                gotSecondMessage.WaitOne(TimeSpan.FromSeconds(30));
                 return true;
             };
         }
@@ -148,7 +148,7 @@ namespace Rhino.ServiceBus.Tests
 
                 Transport.Send(TestQueueUri, DateTime.Today);
 
-                gotFirstMessage.WaitOne();
+                gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
                 gotSecondMessage.Set();
             }
@@ -160,7 +160,7 @@ namespace Rhino.ServiceBus.Tests
 
                 TransactionalTransport.Send(TransactionalTestQueueUri, DateTime.Today);
 
-                gotFirstMessage.WaitOne();
+                gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
                 Assert.NotNull(transactionalQueue.Peek());
 
@@ -202,12 +202,12 @@ namespace Rhino.ServiceBus.Tests
                 {
                     errorQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 	errorQueue.MessageReadPropertyFilter.SetAll();
-                    errorQueue.Peek();//for debugging
+                    errorQueue.Peek(TimeSpan.FromSeconds(30));//for debugging
 
-                    var messageCausingError = errorQueue.Receive();
+                    var messageCausingError = errorQueue.Receive(TimeSpan.FromSeconds(30));
                     Assert.NotNull(messageCausingError);
-                    errorQueue.Peek();//for debugging
-                    var messageErrorDescription = errorQueue.Receive();
+                    errorQueue.Peek(TimeSpan.FromSeconds(30));//for debugging
+                    var messageErrorDescription = errorQueue.Receive(TimeSpan.FromSeconds(30));
                     var error = (string)messageErrorDescription.Body;
                     Assert.Contains(
                         "System.InvalidOperationException: Operation is not valid due to the current state of the object.",
@@ -254,7 +254,7 @@ namespace Rhino.ServiceBus.Tests
                             gotFirstMessage.Set();
                         }
                     }
-                    gotSecondMessage.WaitOne();
+                    gotSecondMessage.WaitOne(TimeSpan.FromSeconds(30));
                     return true;
                 };
             }

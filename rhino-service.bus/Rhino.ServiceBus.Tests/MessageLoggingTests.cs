@@ -38,7 +38,7 @@ namespace Rhino.ServiceBus.Tests
                 new CurrentMessageInformation { MessageId = Guid.NewGuid() },
                 new InvalidOperationException());
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var serializationError = (SerializationErrorMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.Equal("System.InvalidOperationException: Operation is not valid due to the current state of the object.", serializationError.Error);
@@ -58,7 +58,7 @@ namespace Rhino.ServiceBus.Tests
                     Message = "tst"
                 });
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var messageArrivedMessage = (MessageArrivedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.NotEqual(Guid.Empty, messageArrivedMessage.MessageId);
@@ -79,7 +79,7 @@ namespace Rhino.ServiceBus.Tests
                             },
                             new Exception());
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var processingCompletedMessage = (MessageProcessingCompletedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.NotEqual(Guid.Empty, processingCompletedMessage.MessageId);
@@ -99,7 +99,7 @@ namespace Rhino.ServiceBus.Tests
                 },
                 new IndexOutOfRangeException());
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var failedMessage = (MessageProcessingFailedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.NotEqual(Guid.Empty, failedMessage.MessageId);
@@ -120,7 +120,7 @@ namespace Rhino.ServiceBus.Tests
                     AllMessages = new[]{"test"}
                 });
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var failedMessage = (MessageSentMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.NotEqual(Guid.Empty, failedMessage.MessageId);
@@ -144,7 +144,7 @@ namespace Rhino.ServiceBus.Tests
                 new IndexOutOfRangeException());
             }
 
-            var msg = queue.Receive();
+            var msg = queue.Receive(TimeSpan.FromSeconds(30));
 
             var failedMessage = (MessageProcessingFailedMessage)messageSerializer.Deserialize(msg.BodyStream)[0];
             Assert.NotEqual(Guid.Empty, failedMessage.MessageId);

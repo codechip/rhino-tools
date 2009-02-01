@@ -1,3 +1,4 @@
+using System;
 using System.Messaging;
 using Xunit;
 
@@ -19,7 +20,7 @@ namespace Rhino.ServiceBus.Tests
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
             {
-                var errMsg = errorQueue.Receive();
+                var errMsg = errorQueue.Receive(TimeSpan.FromSeconds(30));
                 Assert.NotNull(errMsg);
                 Assert.Null(o1);
             }
@@ -34,7 +35,7 @@ namespace Rhino.ServiceBus.Tests
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
             {
-                errorQueue.Receive();// wait for message to be processed.
+                errorQueue.Receive(TimeSpan.FromSeconds(30));// wait for message to be processed.
             }
 
             Assert.True(wasCalled);
@@ -56,7 +57,7 @@ namespace Rhino.ServiceBus.Tests
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
             {
-                var errMsg = errorQueue.Receive();
+                var errMsg = errorQueue.Receive(TimeSpan.FromSeconds(30));
                 Assert.NotNull(errMsg);
                 Assert.Null(o1);
             }
@@ -71,7 +72,7 @@ namespace Rhino.ServiceBus.Tests
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
             {
-                errorQueue.Receive();// wait for message to be processed.
+                errorQueue.Receive(TimeSpan.FromSeconds(30));// wait for message to be processed.
             }
 
             Assert.True(wasCalled);

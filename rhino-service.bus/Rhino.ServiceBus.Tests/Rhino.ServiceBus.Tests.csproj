@@ -93,6 +93,7 @@
     <Compile Include="LoadBalancer\LoadBalancingTestBase.cs" />
     <Compile Include="LoadBalancer\With_fail_over.cs" />
     <Compile Include="LoadBalancer\With_load_balancing.cs" />
+    <Compile Include="LoadBalancer\with_secondary_failover.cs" />
     <Compile Include="MessageLoggingTests.cs" />
     <Compile Include="MessageModuleTests.cs" />
     <Compile Include="Messages_that_have_no_handlers.cs" />

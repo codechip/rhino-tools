@@ -10,6 +10,8 @@ using Rhino.ServiceBus.LoadBalancer;
 using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using Xunit;
+using MessageType = Rhino.ServiceBus.Msmq.MessageType;
+using System.Linq;
 
 namespace Rhino.ServiceBus.Tests.LoadBalancer
 {
@@ -41,11 +43,11 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             {
                 loadBalancer.Start();
 
-                Message peek = testQueue2.Peek();
+                Message peek = testQueue2.Peek(TimeSpan.FromSeconds(30));
                 object[] msgs = container.Resolve<IMessageSerializer>().Deserialize(peek.BodyStream);
 
-                Assert.IsType<HeartBeat>(msgs[0]);
-                var beat = (HeartBeat)msgs[0];
+                Assert.IsType<Heartbeat>(msgs[0]);
+                var beat = (Heartbeat)msgs[0];
                 Assert.Equal(loadBalancer.Endpoint.Uri, beat.From);
             }
         }
@@ -62,6 +64,8 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 loadBalancer.SentNewWorkerPersisted += () =>
                 {
                     timesCalled += 1;
+                    //we get three ReadyToWork mesages, one from the bus itself
+                    //the other two from the mesages that we are explicitly sending.
                     if (timesCalled == 3)
                         wait.Set();
                 };
@@ -90,12 +94,13 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                          });
 
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 var messageSerializer = container.Resolve<IMessageSerializer>();
 
                 using (var workers = new MessageQueue(testQueuePath2, QueueAccessMode.SendAndReceive))
                 {
+                    int busUri = 0;
                     int app1 = 0;
                     int app2 = 0;
 
@@ -111,6 +116,9 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                             app1 += 1;
                         else if (newWorkerPersisted.Endpoint.ToString() == "msmq://app2/work1")
                             app2 += 1;
+                        else if (newWorkerPersisted.Endpoint.ToString().ToLower().Replace(Environment.MachineName.ToLower(), "localhost") ==
+                            bus.Endpoint.Uri.ToString().ToLower())
+                            busUri += 1;
                     }
 
                     Assert.Equal(app1, 1);
@@ -161,7 +169,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 }
 
 
-                wait.WaitOne();
+                wait.WaitOne(TimeSpan.FromSeconds(30));
 
                 var messageSerializer = container.Resolve<IMessageSerializer>();
 
@@ -190,8 +198,64 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                     Assert.Equal(work1, 1);
                     Assert.Equal(work2, 1);
                 }
+            }
+        }
 
+        [Fact]
+        public void When_Primary_loadBalacer_gets_SendAllKnownWorkersAndEndpoints_will_send_them()
+        {
+            using (var loadBalancer = container.Resolve<MsmqLoadBalancer>())
+            {
+                loadBalancer.KnownWorkers.Add(new Uri("msmq://test1/bar"));
+                loadBalancer.KnownWorkers.Add(new Uri("msmq://test2/bar"));
 
+                loadBalancer.KnownEndpoints.Add(new Uri("msmq://test3/foo"));
+                loadBalancer.KnownEndpoints.Add(new Uri("msmq://test4/foo"));
+
+                testQueue2.Purge();// removing existing ones.
+
+                SendMessageToBalancer(testQueue2, new QueryForAllKnownWorkersAndEndpoints());
+
+                var workers = loadBalancer.KnownWorkers.GetValues().ToList();
+                var endpoints = loadBalancer.KnownEndpoints.GetValues().ToList();
+                var messageSerializer = container.Resolve<IMessageSerializer>();
+               
+                while (workers.Count == 0 && endpoints.Count == 0)
+                {
+                    var transportMesage = testQueue2.Receive(TimeSpan.FromSeconds(30));
+                    var msgs = messageSerializer.Deserialize(transportMesage.BodyStream);
+                    foreach (var msg in msgs)
+                    {
+                        if (msg is Heartbeat)
+                            continue;
+
+                        if(msg is NewEndpointPersisted)
+                        {
+                            endpoints.Remove(((NewEndpointPersisted) msg).PersistedEndpoint);
+                        }
+                        if(msg is NewWorkerPersisted)
+                        {
+                            workers.Remove(((NewWorkerPersisted) msg).Endpoint);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SendMessageToBalancer(
+            MessageQueue reply,
+            LoadBalancerMessage msg)
+        {
+            var messageSerializer = container.Resolve<IMessageSerializer>();
+            var message = new Message
+            {
+                ResponseQueue = reply,
+                AppSpecific = (int)MessageType.LoadBalancerMessageMarker
+            };
+            messageSerializer.Serialize(new[] { msg }, message.BodyStream);
+            using (var q = new MessageQueue(loadBalancerQueuePath))
+            {
+                q.Send(message, q.GetTransactionType());
             }
         }
     }
