@@ -256,12 +256,9 @@ namespace Rhino.ServiceBus.Msmq
 			if (HaveStarted == false)
 				throw new TransportException("Cannot send message before transport is started");
 
-            string sendQueueDescription = MsmqUtil.GetQueuePath(endpoint);
-			try
+            try
 			{
-				using (var sendQueue = new MessageQueue(
-					sendQueueDescription,
-					QueueAccessMode.Send))
+				using (var sendQueue = MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.Send))
 				{
 					MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
 					sendQueue.Send(message, transactionType);

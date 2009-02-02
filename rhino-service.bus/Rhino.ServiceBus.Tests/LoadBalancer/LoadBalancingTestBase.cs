@@ -7,7 +7,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
     public class LoadBalancingTestBase : MsmqTestBase
     {
         protected const string loadBalancerQueue = "msmq://localhost/test_queue.balancer";
-        protected readonly string loadBalancerQueuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint());
+        protected readonly string loadBalancerQueuePath = MsmqUtil.GetQueuePath(new Uri(loadBalancerQueue).ToEndpoint()).QueuePath;
 
         public LoadBalancingTestBase()
         {

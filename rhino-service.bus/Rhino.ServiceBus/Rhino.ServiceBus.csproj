@@ -175,6 +175,7 @@
     <Compile Include="Messages\NewWorkerPersisted.cs" />
     <Compile Include="Messages\QueryForAllKnownWorkersAndEndpoints.cs" />
     <Compile Include="Messages\Reroute.cs" />
+    <Compile Include="Msmq\QueueInfo.cs" />
     <None Include="PublicApi.cd" />
   </ItemGroup>
   <ItemGroup>

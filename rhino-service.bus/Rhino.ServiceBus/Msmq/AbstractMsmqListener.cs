@@ -123,8 +123,7 @@ namespace Rhino.ServiceBus.Msmq
                 {
                     Label = "Shutdown bus",
                     AppSpecific = (int) MessageType.ShutDownMessageMarker
-                },
-                           queue.GetSingleMessageTransactionType());
+                },queue.GetSingleMessageTransactionType());
 
                 queue.Close();
             }
@@ -155,7 +154,7 @@ namespace Rhino.ServiceBus.Msmq
         {
             try
             {
-                var queue = new MessageQueue(MsmqUtil.GetQueuePath(endpoint), QueueAccessMode.SendAndReceive);
+				var queue = MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.SendAndReceive);
                 queue.MessageReadPropertyFilter.SetAll();
                 return queue;
             }

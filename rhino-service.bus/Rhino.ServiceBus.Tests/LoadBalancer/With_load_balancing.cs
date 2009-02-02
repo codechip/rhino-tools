@@ -204,13 +204,13 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 wait.WaitOne(TimeSpan.FromSeconds(30));
             }
 
-            using (var q = new MessageQueue(MsmqUtil.GetQueuePath(TransactionalTestQueueUri)))
+			using (var q = MsmqUtil.GetQueuePath(TransactionalTestQueueUri).Open())
             {
                 var message = q.Receive(MessageQueueTransactionType.Single);
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
             }
 
-            using (var q = new MessageQueue(MsmqUtil.GetQueuePath(TestQueueUri2)))
+			using (var q = MsmqUtil.GetQueuePath(TestQueueUri2).Open())
             {
                 var message = q.Receive(MessageQueueTransactionType.Single);
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);

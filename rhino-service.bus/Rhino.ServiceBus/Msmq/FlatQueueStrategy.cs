@@ -41,16 +41,15 @@ namespace Rhino.ServiceBus.Msmq
 		    this.endpoint = endpoint;
 		}
 
-	    public MessageQueue InitializeQueue(Endpoint queueEndpoint)
+	    public void InitializeQueue(Endpoint queueEndpoint)
 		{
 			var accessMode = QueueAccessMode.SendAndReceive;
-			var root = queueEndpoint.CreateQueue(accessMode);
+			MsmqUtil.GetQueuePath(queueEndpoint).Create();
 			
 			MsmqUtil.CreateQueue(GetErrorsQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetSubscriptionQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetDiscardedQueuePath(), accessMode);
 			MsmqUtil.CreateQueue(GetTimeoutQueuePath(), accessMode);
-			return root;
 		}
 
 		/// <summary>
@@ -115,7 +114,7 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetErrorsQueuePath()
 		{
             var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
-			return path + errors;
+			return path.QueuePath + errors;
 		}
 
 		/// <summary>
@@ -125,7 +124,7 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetDiscardedQueuePath()
 		{
             var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
-			return path + discarded;
+			return path.QueuePath + discarded;
 		}
 
 		/// <summary>
@@ -135,13 +134,13 @@ namespace Rhino.ServiceBus.Msmq
 		private string GetTimeoutQueuePath()
 		{
             var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
-			return path + timeout;
+			return path.QueuePath + timeout;
 		}
 
 		private string GetSubscriptionQueuePath()
 		{
             var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(endpoint));
-			return path + subscriptions;
+			return path.QueuePath + subscriptions;
 		}
 	}
 

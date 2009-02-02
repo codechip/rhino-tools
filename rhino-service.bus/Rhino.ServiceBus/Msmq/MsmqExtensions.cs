@@ -115,14 +115,6 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 		
-        public static MessageQueue CreateQueue(this Endpoint queueUri, QueueAccessMode accessMode)
-        {
-            var queuePath = MsmqUtil.GetQueuePath(queueUri);
-        	return MsmqUtil.CreateQueue(queuePath, accessMode);
-        }
-
-		
-
         /// <summary>
         /// Gets the count.
         /// http://blog.codebeside.org/archive/2008/08/27/counting-the-number-of-messages-in-a-message-queue-in.aspx

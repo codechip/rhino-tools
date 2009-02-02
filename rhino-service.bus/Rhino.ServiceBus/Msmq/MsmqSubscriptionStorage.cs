@@ -127,12 +127,11 @@ namespace Rhino.ServiceBus.Msmq
 
         private MessageQueue CreateSubscriptionQueue(Uri subscriptionQueueUri, QueueAccessMode accessMode)
         {
-            var path = MsmqUtil.GetQueuePath(endpointRouter.GetRoutedEndpoint(subscriptionQueueUri));
-
-            MessageQueue queue;
+        	MessageQueue queue;
             try
             {
-                queue = new MessageQueue(path, accessMode);
+            	var endpoint = endpointRouter.GetRoutedEndpoint(subscriptionQueueUri);
+            	queue = MsmqUtil.GetQueuePath(endpoint).Open(accessMode);
             }
             catch (Exception e)
             {

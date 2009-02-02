@@ -23,7 +23,8 @@ namespace Rhino.ServiceBus.MessageModules
 
         public void Init(ITransport transport)
         {
-            queue = endpointRouter.GetRoutedEndpoint(logQueue).CreateQueue(QueueAccessMode.Send);
+        	var endpoint = endpointRouter.GetRoutedEndpoint(logQueue);
+        	queue = MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.Send);
 
             transport.MessageArrived += Transport_OnMessageArrived;
             transport.MessageProcessingFailure += Transport_OnMessageProcessingFailure;

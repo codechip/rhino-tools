@@ -145,25 +145,25 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                 loadBalancer.Start();
 
 
-                using (var loadBalancerMsmqQueue = new MessageQueue(MsmqUtil.GetQueuePath(loadBalancer.Endpoint), QueueAccessMode.SendAndReceive))
+				using (var loadBalancerMsmqQueue = MsmqUtil.GetQueuePath(loadBalancer.Endpoint).Open(QueueAccessMode.SendAndReceive))
                 {
                     var queuePath = MsmqUtil.GetQueuePath(TestQueueUri2);
                     loadBalancerMsmqQueue.Send(new Message
                     {
-                        ResponseQueue = new MessageQueue(queuePath),
+						ResponseQueue = queuePath.Open(),
                         Body = "a"
                     }, loadBalancerMsmqQueue.GetTransactionType());
 
                     loadBalancerMsmqQueue.Send(new Message
                     {
-                        ResponseQueue = new MessageQueue(queuePath),
+						ResponseQueue = queuePath.Open(),
                         Body = "a"
                     }, loadBalancerMsmqQueue.GetTransactionType());
 
                     queuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
                     loadBalancerMsmqQueue.Send(new Message
                     {
-                        ResponseQueue = new MessageQueue(queuePath),
+						ResponseQueue = queuePath.Open(),
                         Body = "a"
                     }, loadBalancerMsmqQueue.GetTransactionType());
                 }

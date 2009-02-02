@@ -38,7 +38,7 @@ namespace Rhino.ServiceBus.Tests
 			using (var bus = container.Resolve<IStartableServiceBus>())
 			{
 				bus.Start();
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint)));
+				Assert.True(MsmqUtil.GetQueuePath(endPoint).Exists);
 			}
 		}
 
@@ -53,36 +53,34 @@ namespace Rhino.ServiceBus.Tests
 			{
 				bus.Start();
 
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint)));
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#subscriptions"));
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#errors"));
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#discarded"));
-				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#timeout"));
+				Assert.True(MsmqUtil.GetQueuePath(endPoint).Exists);
+				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#subscriptions"));
+				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#errors"));
+				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#discarded"));
+				Assert.True(MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#timeout"));
 			}
 			CleanQueue();
 		}
 
 		private void CleanQueue()
 		{
-			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint)))
+			MsmqUtil.GetQueuePath(endPoint).Delete();
+
+			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#subscriptions"))
 			{
-				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint));
+				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#subscriptions");
 			}
-			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#subscriptions"))
+			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#errors"))
 			{
-				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint) + "#subscriptions");
+				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#errors");
 			}
-			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#errors"))
+			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#discarded"))
 			{
-				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint) + "#errors");
+				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#discarded");
 			}
-			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#discarded"))
+			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#timeout"))
 			{
-				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint) + "#discarded");
-			}
-			if (MessageQueue.Exists(MsmqUtil.GetQueuePath(endPoint) + "#timeout"))
-			{
-				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint) + "#timeout");
+				MessageQueue.Delete(MsmqUtil.GetQueuePath(endPoint).QueuePath + "#timeout");
 			}
 		}
 	}

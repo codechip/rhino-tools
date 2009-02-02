@@ -86,7 +86,7 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void ReadUrisFromSubQueue(Set<Uri> set, SubQueue subQueue)
         {
-            using (var messageQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(subQueue)), QueueAccessMode.Receive))
+            using (var messageQueue = MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(subQueue)).Open(QueueAccessMode.Receive))
             {
                 messageQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
                 var messages = messageQueue.GetAllMessages();
@@ -101,7 +101,7 @@ namespace Rhino.ServiceBus.LoadBalancer
         private void RemoveAllReadyToWorkMessages()
         {
             using (var tx = new TransactionScope())
-            using (var readyForWorkQueue = new MessageQueue(MsmqUtil.GetQueuePath(Endpoint), QueueAccessMode.Receive))
+            using (var readyForWorkQueue = MsmqUtil.GetQueuePath(Endpoint).Open(QueueAccessMode.Receive))
             using (var enumerator = readyForWorkQueue.GetMessageEnumerator2())
             {
                 try
@@ -223,7 +223,7 @@ namespace Rhino.ServiceBus.LoadBalancer
 
             try
             {
-                using (var secondaryLoadBalancerQueue = new MessageQueue(MsmqUtil.GetQueuePath(new Endpoint { Uri = queueUri })))
+                using (var secondaryLoadBalancerQueue = MsmqUtil.GetQueuePath(new Endpoint { Uri = queueUri }).Open(QueueAccessMode.Send))
                 {
                     secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msgs), secondaryLoadBalancerQueue.GetTransactionType());
                 }
@@ -245,7 +245,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             else
             {
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
-                using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(workerEndpoint), QueueAccessMode.Send))
+				using (var workerQueue = MsmqUtil.GetQueuePath(workerEndpoint).Open(QueueAccessMode.Send))
                 {
                     workerQueue.Send(message, workerQueue.GetTransactionType());
                 }
@@ -258,7 +258,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             foreach (var worker in values)
             {
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
-                using (var workerQueue = new MessageQueue(MsmqUtil.GetQueuePath(workerEndpoint), QueueAccessMode.Send))
+				using (var workerQueue = MsmqUtil.GetQueuePath(workerEndpoint).Open(QueueAccessMode.Send))
                 {
                     workerQueue.Send(message, workerQueue.GetTransactionType());
                 }

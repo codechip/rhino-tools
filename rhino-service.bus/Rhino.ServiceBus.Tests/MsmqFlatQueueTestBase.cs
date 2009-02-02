@@ -41,19 +41,19 @@ namespace Rhino.ServiceBus.Tests
             {
                 Uri = new Uri("msmq://localhost/test_queue")
             };
-            testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri);
+            testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri).QueuePath;
 
             TransactionalTestQueueUri = new Endpoint
             {
                 Uri = new Uri("msmq://localhost/transactional_test_queue")
             };
-            transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
+			transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri).QueuePath;
 
             SubscriptionsUri = new Endpoint
             {
                 Uri = new Uri(TestQueueUri.Uri + "#" + subscriptions)
             };
-			subscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri);
+			subscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri).QueuePath;
 
 
 			SetupQueues();

@@ -14,9 +14,9 @@ namespace Starbucks
             {
                 Uri = queueUri
             });
-            CreateQueueIfNotExists(queuePath);
-            PurgeQueue(queuePath);
-            PurgeSubqueues(queuePath);
+            CreateQueueIfNotExists(queuePath.QueuePath);
+            PurgeQueue(queuePath.QueuePath);
+            PurgeSubqueues(queuePath.QueuePath);
         }
 
         private static void CreateQueueIfNotExists(string queuePath)
