@@ -49,12 +49,12 @@ namespace Rhino.DHT
             {
                 foreach (var value in valuesToAdd)
                 {
-                    var version = actions.Put(
-                        value.Key,
-                        value.ParentVersions ?? new int[0],
-                        value.Bytes,
-                        value.ExpiresAt,
-                        value.OptimisticConcurrency);
+                	var version = actions.Put(
+                		value.Key,
+                		value.ParentVersions ?? new int[0],
+                		value.Bytes,
+                		value.ExpiresAt,
+                		value.OptimisticConcurrency == false);
                     versions.Add(version);
                 }
                 actions.Commit();

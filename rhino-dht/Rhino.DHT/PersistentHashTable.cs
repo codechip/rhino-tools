@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Web;
-using System.Web.Caching;
-using Microsoft.Isam.Esent;
 using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT
@@ -18,7 +15,7 @@ namespace Rhino.DHT
 
         public PersistentHashTable(string database)
         {
-            instance = new Instance(database);
+            instance = new Instance(Guid.NewGuid().ToString());
             if (Path.IsPathRooted(database) == false)
                 database = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, database);
             path = database;
