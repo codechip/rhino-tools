@@ -18,20 +18,20 @@ namespace Rhino.ServiceBus.Host
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append(" /action:").Append(Action)
-                .Append(" /load-balancer:")
+            sb.Append(" /Action:").Append(Action)
+                .Append(" /UseLoadBalancer:")
                 .Append(UseLoadBalancer ? "+" : "-")
-                .Append(" /name:")
+                .Append(" /Name:")
                 .Append(Name);
 
             if (string.IsNullOrEmpty(Assembly) == false)
             {
-                sb.Append(" /asm:")
+                sb.Append(" /Assembly:")
                     .Append(Assembly);
             }
             if (string.IsNullOrEmpty(ConfigFile) == false)
             {
-                sb.Append(" /cfg:")
+                sb.Append(" /ConfigFile:")
                     .Append(ConfigFile);
             }
             return sb.ToString();
