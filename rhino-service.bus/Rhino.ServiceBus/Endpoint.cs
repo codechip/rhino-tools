@@ -1,5 +1,4 @@
 using System;
-using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus
 {
@@ -7,16 +6,7 @@ namespace Rhino.ServiceBus
     {
         public Uri Uri { get; set; }
 
-        public Endpoint ForSubQueue(SubQueue subQueue)
-        {
-            return new Endpoint
-            {
-                Uri = new Uri(Uri + ";" + subQueue)
-            };
-        }
-
-        [Obsolete("a",true)]
-        public new string ToString()
+        public override string ToString()
         {
             return string.Format("Uri: {0}", Uri);
         }

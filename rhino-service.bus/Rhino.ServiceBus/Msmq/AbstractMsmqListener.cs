@@ -19,7 +19,7 @@ namespace Rhino.ServiceBus.Msmq
         private readonly Thread[] threads;
         private bool haveStarted;
 
-        protected MessageQueue queue;
+        protected OpenedQueue queue;
 
         private volatile bool shouldStop;
 
@@ -119,13 +119,13 @@ namespace Rhino.ServiceBus.Msmq
             OnStop();
             if (queue != null)
             {
-                queue.Send(new Message
+                queue.SendInSingleTransaction(new Message
                 {
                     Label = "Shutdown bus",
                     AppSpecific = (int) MessageType.ShutDownMessageMarker
-                },queue.GetSingleMessageTransactionType());
+                });
 
-                queue.Close();
+                queue.Dispose();
             }
 
             WaitForProcessingToEnd();
@@ -150,13 +150,11 @@ namespace Rhino.ServiceBus.Msmq
             }
         }
 
-        protected static MessageQueue InitalizeQueue(Endpoint endpoint)
+		protected static OpenedQueue InitalizeQueue(Endpoint endpoint)
         {
             try
             {
-				var queue = MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.SendAndReceive);
-                queue.MessageReadPropertyFilter.SetAll();
-                return queue;
+            	return MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.SendAndReceive);
             }
             catch (Exception e)
             {
@@ -199,7 +197,7 @@ namespace Rhino.ServiceBus.Msmq
                     }
                     logger.DebugFormat("Got message {0} from {1}",
                                        message.Label,
-                                       MsmqUtil.GetQueueUri(queue));
+									   queue.Uri);
 
                     Raise(TransportMessageArrived);
 
@@ -266,7 +264,7 @@ namespace Rhino.ServiceBus.Msmq
 
             messageSerializer.Serialize(msgs, message.BodyStream);
 
-            message.ResponseQueue = queue;
+        	message.ResponseQueue = queue.ToResponseQueue();
 
             message.Extension = Guid.NewGuid().ToByteArray();
 
@@ -295,7 +293,7 @@ namespace Rhino.ServiceBus.Msmq
             return 0;
         }
 
-        protected object[] DeserializeMessages(MessageQueue messageQueue, Message transportMessage, Action<CurrentMessageInformation, Exception> messageSerializationException)
+        protected object[] DeserializeMessages(OpenedQueue messageQueue, Message transportMessage, Action<CurrentMessageInformation, Exception> messageSerializationException)
         {
             try
             {
@@ -313,7 +311,7 @@ namespace Rhino.ServiceBus.Msmq
                             MsmqMessage = transportMessage,
                             Queue = messageQueue,
                             Message = transportMessage,
-                            Source = MsmqUtil.GetQueueUri(messageQueue),
+							Source = messageQueue.Uri,
                             MessageId = transportMessage.GetMessageId()
                         };
                         messageSerializationException(information, e);

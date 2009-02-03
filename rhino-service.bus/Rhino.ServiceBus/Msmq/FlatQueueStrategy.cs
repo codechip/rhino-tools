@@ -62,11 +62,12 @@ namespace Rhino.ServiceBus.Msmq
 			return new Uri(subscriptionQueue + "#subscriptions");
 		}
 
+
 		/// <summary>
 		/// Gets a listing of all timeout messages.
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeoutInfo> GetTimeoutMessages(MessageQueue queue)
+		public IEnumerable<TimeoutInfo> GetTimeoutMessages(OpenedQueue queue)
 		{
 			yield break;
 		}
@@ -76,24 +77,24 @@ namespace Rhino.ServiceBus.Msmq
 		/// </summary>
 		/// <param name="queue">The queue.</param>
 		/// <param name="messageId">The message id.</param>
-		public void MoveTimeoutToMainQueue(MessageQueue queue, string messageId)
+		public void MoveTimeoutToMainQueue(OpenedQueue queue, string messageId)
 		{
 			using (var destinationQueue = new MessageQueue(GetTimeoutQueuePath(), QueueAccessMode.Receive))
 			{
-				var message = destinationQueue.ReceiveById(messageId, queue.GetTransactionType());
+				var message = destinationQueue.ReceiveById(messageId);
 				message.AppSpecific = 0;//reset timeout flag
-				queue.Send(message, destinationQueue.GetTransactionType());
+				queue.Send(message);
 			}
 		}
 
-	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId)
+	    public bool TryMoveMessage(OpenedQueue queue, Message message, SubQueue subQueue, out string msgId)
 	    {
-            using (var destinationQueue = new MessageQueue(queue.Path + "#" + subQueue, QueueAccessMode.Send))
+            using (var destinationQueue = queue.OpenSiblngQueue(subQueue, QueueAccessMode.Send))
             {
                 Message receiveById;
                 try
                 {
-                    receiveById = queue.ReceiveById(message.Id, queue.GetTransactionType());
+                    receiveById = queue.ReceiveById(message.Id);
                 }
                 catch (InvalidOperationException)
                 {
@@ -101,7 +102,7 @@ namespace Rhino.ServiceBus.Msmq
                     return false;
                 }
                 message.AppSpecific = 0;//reset flag
-                destinationQueue.Send(receiveById, destinationQueue.GetTransactionType());
+                destinationQueue.Send(receiveById);
                 msgId = receiveById.Id;
                 return true;
             }

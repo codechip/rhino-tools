@@ -86,10 +86,10 @@ namespace Rhino.ServiceBus.LoadBalancer
 
         private void ReadUrisFromSubQueue(Set<Uri> set, SubQueue subQueue)
         {
-            using (var messageQueue = MsmqUtil.GetQueuePath(Endpoint.ForSubQueue(subQueue)).Open(QueueAccessMode.Receive))
+			using (var q  = MsmqUtil.GetQueuePath(Endpoint).Open(QueueAccessMode.Receive))
+            using (var sq = q.OpenSubQueue(subQueue, QueueAccessMode.SendAndReceive))
             {
-                messageQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                var messages = messageQueue.GetAllMessages();
+                var messages = sq.GetAllMessagesWithStringFormatter();
                 foreach (var message in messages)
                 {
                     var uriString = message.Body.ToString();
@@ -207,7 +207,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                 Body = queueUri.ToString(),
                 Label = ("Known end point: " + queueUri).EnsureLabelLength()
             };
-            queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints), queue.GetTransactionType());
+            queue.Send(persistedEndPoint.SetSubQueueToSendTo(SubQueue.Endpoints));
 
             SendToQueue(SecondaryLoadBalancer, new NewEndpointPersisted
             {
@@ -225,7 +225,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             {
                 using (var secondaryLoadBalancerQueue = MsmqUtil.GetQueuePath(new Endpoint { Uri = queueUri }).Open(QueueAccessMode.Send))
                 {
-                    secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msgs), secondaryLoadBalancerQueue.GetTransactionType());
+                    secondaryLoadBalancerQueue.Send(GenerateMsmqMessageFromMessageBatch(msgs));
                 }
             }
             catch (Exception e)
@@ -240,14 +240,14 @@ namespace Rhino.ServiceBus.LoadBalancer
 
             if (worker == null) // handle message later
             {
-                queue.Send(message, queue.GetTransactionType());
+                queue.Send(message);
             }
             else
             {
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
 				using (var workerQueue = MsmqUtil.GetQueuePath(workerEndpoint).Open(QueueAccessMode.Send))
                 {
-                    workerQueue.Send(message, workerQueue.GetTransactionType());
+                    workerQueue.Send(message);
                 }
             }
         }
@@ -260,7 +260,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                 var workerEndpoint = endpointRouter.GetRoutedEndpoint(worker);
 				using (var workerQueue = MsmqUtil.GetQueuePath(workerEndpoint).Open(QueueAccessMode.Send))
                 {
-                    workerQueue.Send(message, workerQueue.GetTransactionType());
+                    workerQueue.Send(message);
                 }
             }
             if (values.Length == 0)
@@ -316,8 +316,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                         .ToArray();
                     index += endpointsBatch.Length;
 
-                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(endpointsBatch),
-                                       responseQueue.GetTransactionType());
+                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(endpointsBatch));
                 }
 
                 index = 0;
@@ -326,12 +325,11 @@ namespace Rhino.ServiceBus.LoadBalancer
                     var workersBatch = workers
                         .Skip(index)
                         .Take(256)
-                        .Select(x => new NewWorkerPersisted() { Endpoint = x })
+                        .Select(x => new NewWorkerPersisted { Endpoint = x })
                         .ToArray();
                     index += workersBatch.Length;
 
-                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(workersBatch),
-                                       responseQueue.GetTransactionType());
+                    responseQueue.Send(GenerateMsmqMessageFromMessageBatch(workersBatch));
                 }
             }
             catch (Exception e)
@@ -352,7 +350,7 @@ namespace Rhino.ServiceBus.LoadBalancer
                 Body = work.Endpoint.ToString(),
                 Label = ("Known worker: " + work.Endpoint).EnsureLabelLength()
             };
-            queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers), queue.GetTransactionType());
+            queue.Send(persistedWorker.SetSubQueueToSendTo(SubQueue.Workers));
 
             SendToQueue(SecondaryLoadBalancer, new NewWorkerPersisted
             {

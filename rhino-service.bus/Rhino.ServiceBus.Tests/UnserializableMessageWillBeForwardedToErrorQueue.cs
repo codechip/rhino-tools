@@ -53,7 +53,7 @@ namespace Rhino.ServiceBus.Tests
                 o1 = o;
                 return true;
             };
-            queue.Send("blah blah not valid");
+			queue.Send(new Message("blah blah not valid"));
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
             {
@@ -68,7 +68,7 @@ namespace Rhino.ServiceBus.Tests
         {
             bool wasCalled = false;
             Transport.MessageSerializationException += (info, exception) => wasCalled = true;
-            queue.Send("blah blah not valid");
+			queue.Send(new Message("blah blah not valid"));
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
             {

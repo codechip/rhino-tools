@@ -5,7 +5,7 @@ namespace Rhino.ServiceBus.Msmq
 {
     public class MsmqCurrentMessageInformation : CurrentMessageInformation
     {
-        public MessageQueue Queue { get; set; }
+        public OpenedQueue Queue { get; set; }
         public Message MsmqMessage { get; set; }
 
         public MessageQueueTransactionType TransactionType { get; set; }

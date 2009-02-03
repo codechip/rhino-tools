@@ -44,7 +44,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             get { return DateTime.Now; }
         }
 
-        public override bool HandlePeekedMessage(MessageQueue queue, Message message)
+        public override bool HandlePeekedMessage(OpenedQueue queue, Message message)
         {
           using(var tx = new TransactionScope())
           {
@@ -57,7 +57,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
                   return false;
 
 
-              queue.Send(message.SetSubQueueToSendTo(SubQueue.Timeout),queue.GetTransactionType());
+              queue.Send(message.SetSubQueueToSendTo(SubQueue.Timeout));
 
               tx.Complete();
 

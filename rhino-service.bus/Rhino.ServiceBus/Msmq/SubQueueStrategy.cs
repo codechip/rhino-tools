@@ -31,13 +31,10 @@ namespace Rhino.ServiceBus.Msmq
 		/// Gets a listing of all timeout messages.
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<TimeoutInfo> GetTimeoutMessages(MessageQueue queue)
+		public IEnumerable<TimeoutInfo> GetTimeoutMessages(OpenedQueue queue)
 		{
-			var fullSubQueueName = queue.Path + ";timeout";
-			using (var timeoutQueue = new MessageQueue(fullSubQueueName, QueueAccessMode.Receive))
+			using (var timeoutQueue = queue.OpenSubQueue(SubQueue.Timeout,QueueAccessMode.Receive))
 			{
-				timeoutQueue.MessageReadPropertyFilter.Extension = true;
-
 				var enumerator2 = timeoutQueue.GetMessageEnumerator2();
 				while(enumerator2.MoveNext())
 				{
@@ -59,22 +56,21 @@ namespace Rhino.ServiceBus.Msmq
 		/// </summary>
 		/// <param name="queue">The queue.</param>
 		/// <param name="messageId">The message id.</param>
-		public void MoveTimeoutToMainQueue(MessageQueue queue, string messageId)
+		public void MoveTimeoutToMainQueue(OpenedQueue queue, string messageId)
 		{
-			var fullSubQueueName = queue.Path + ";timeout";
-			using (var timeoutQueue = new MessageQueue(fullSubQueueName, QueueAccessMode.Receive))
+			using (var timeoutQueue = queue.OpenSubQueue(SubQueue.Timeout, QueueAccessMode.Receive))
 			{
-				var message = timeoutQueue.ReceiveById(messageId, queue.GetTransactionType());
+				var message = timeoutQueue.ReceiveById(messageId);
 				message.AppSpecific = 0;//reset timeout flag
-				queue.Send(message, queue.GetTransactionType());
+				queue.Send(message);
 			}
 		}
 
-	    public bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId)
+		public bool TryMoveMessage(OpenedQueue queue, Message message, SubQueue subQueue, out string msgId)
 	    {
 	        try
 	        {
-	            queue.MoveToSubQueue(subQueue.ToString(), message);
+	            queue.MoveToSubQueue(subQueue, message);
 	            msgId = message.Id;
 	            return true;
 	        }

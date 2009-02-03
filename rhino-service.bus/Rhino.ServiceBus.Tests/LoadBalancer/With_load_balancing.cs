@@ -17,8 +17,9 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
     public class With_load_balancing : LoadBalancingTestBase
     {
         private readonly IWindsorContainer container;
+    	private readonly Endpoint loadBalancerEndpoint = new Endpoint { Uri = new Uri(loadBalancerQueue) };
 
-        public With_load_balancing()
+    	public With_load_balancing()
         {
             var interpreter = new XmlInterpreter(@"LoadBalancer\BusWithLoadBalancer.config");
             container = new WindsorContainer(interpreter);
@@ -111,10 +112,15 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
         [Fact]
         public void When_load_balancer_starts_will_read_known_workers_from_workers_sub_queue()
         {
-            using (var workers = new MessageQueue(loadBalancerQueuePath, QueueAccessMode.SendAndReceive))
+        	
+        	using (var workers = MsmqUtil.GetQueuePath(loadBalancerEndpoint)
+				.Open(QueueAccessMode.SendAndReceive,
+					new XmlMessageFormatter(new[]
+					{
+						typeof(string)
+					})))
             {
-                workers.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                workers.Send(new Message(TestQueueUri.Uri.ToString()), workers.GetTransactionType());
+                workers.Send(new Message(TestQueueUri.Uri.ToString()));
                 var peek = workers.Peek(TimeSpan.FromSeconds(30));
                 string ignored;
                 new SubQueueStrategy().TryMoveMessage(workers, peek, SubQueue.Workers, out ignored);
@@ -155,10 +161,14 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
         [Fact]
         public void When_load_balancer_starts_will_read_known_endpoints_from_endpoints_sub_queue()
         {
-            using (var endPointsQueue = new MessageQueue(loadBalancerQueuePath, QueueAccessMode.SendAndReceive))
+            	using (var endPointsQueue = MsmqUtil.GetQueuePath(loadBalancerEndpoint)
+				.Open(QueueAccessMode.SendAndReceive,
+					new XmlMessageFormatter(new[]
+					{
+						typeof(string)
+					})))
             {
-                endPointsQueue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-                endPointsQueue.Send(new Message(TestQueueUri.Uri.ToString()), endPointsQueue.GetTransactionType());
+                endPointsQueue.Send(new Message(TestQueueUri.Uri.ToString()));
                 var peek = endPointsQueue.Peek(TimeSpan.FromSeconds(30));
                 string ignored;
                 new SubQueueStrategy().TryMoveMessage(endPointsQueue, peek, SubQueue.Endpoints, out ignored);
@@ -206,13 +216,13 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
 
 			using (var q = MsmqUtil.GetQueuePath(TransactionalTestQueueUri).Open())
             {
-                var message = q.Receive(MessageQueueTransactionType.Single);
+                var message = q.Receive();
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
             }
 
 			using (var q = MsmqUtil.GetQueuePath(TestQueueUri2).Open())
             {
-                var message = q.Receive(MessageQueueTransactionType.Single);
+                var message = q.Receive();
                 Assert.Equal("Rhino.ServiceBus.Messages.AddSubscription", message.Label);
             }
         }

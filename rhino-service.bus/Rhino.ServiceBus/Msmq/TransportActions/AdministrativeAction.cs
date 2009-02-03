@@ -19,7 +19,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             transport = parentTransport;
         }
 
-        public override bool HandlePeekedMessage(MessageQueue queue, Message message)
+        public override bool HandlePeekedMessage(OpenedQueue queue, Message message)
         {
             Func<CurrentMessageInformation, bool> messageRecieved = information =>
             {

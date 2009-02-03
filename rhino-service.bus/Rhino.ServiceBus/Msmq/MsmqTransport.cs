@@ -74,7 +74,7 @@ namespace Rhino.ServiceBus.Msmq
 	        return false;
         }
 
-	    public MessageQueue Queue
+	    public OpenedQueue Queue
 	    {
 	        get { return queue; }
 	    }
@@ -136,7 +136,7 @@ namespace Rhino.ServiceBus.Msmq
         private void HandleMessageCompletion(
 			Message message,
 			TransactionScope tx,
-            MessageQueue messageQueue,
+            OpenedQueue messageQueue,
 			Exception exception)
 		{
 			if (exception == null)
@@ -170,14 +170,15 @@ namespace Rhino.ServiceBus.Msmq
                                              moduleException);
             }
 
-            if (messageQueue.Transactional == false)// put the item back in the queue
+            if (messageQueue.IsTransactional == false)// put the item back in the queue
 			{
-                messageQueue.Send(message, MessageQueueTransactionType.None);
+                messageQueue.Send(message);
 			}
 		}
 
-        private void ProcessMessage(Message message, 
-            MessageQueue messageQueue, 
+        private void ProcessMessage(
+			Message message, 
+            OpenedQueue messageQueue, 
             TransactionScope tx,
             Func<CurrentMessageInformation, bool> messageRecieved,
             Action<CurrentMessageInformation, Exception> messageCompleted)
@@ -260,8 +261,7 @@ namespace Rhino.ServiceBus.Msmq
 			{
 				using (var sendQueue = MsmqUtil.GetQueuePath(endpoint).Open(QueueAccessMode.Send))
 				{
-					MessageQueueTransactionType transactionType = sendQueue.GetTransactionType();
-					sendQueue.Send(message, transactionType);
+					sendQueue.Send(message);
 					logger.DebugFormat("Send message {0} to {1}", message.Label, endpoint);
 				}
 			}

@@ -23,15 +23,15 @@ namespace Rhino.ServiceBus.Msmq
 		/// Gets a listing of all timeout messages.
 		/// </summary>
 		/// <returns></returns>
-		IEnumerable<TimeoutInfo> GetTimeoutMessages(MessageQueue queue);
+		IEnumerable<TimeoutInfo> GetTimeoutMessages(OpenedQueue queue);
 
 		/// <summary>
 		/// Moves the message from the timeout queue to the main queue.
 		/// </summary>
 		/// <param name="queue">The queue.</param>
 		/// <param name="messageId">The message id.</param>
-		void MoveTimeoutToMainQueue(MessageQueue queue, string messageId);
+		void MoveTimeoutToMainQueue(OpenedQueue queue, string messageId);
 
-        bool TryMoveMessage(MessageQueue queue, Message message, SubQueue subQueue, out string msgId);
+		bool TryMoveMessage(OpenedQueue queue, Message message, SubQueue subQueue, out string msgId);
     }
 }

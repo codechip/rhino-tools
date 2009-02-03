@@ -73,7 +73,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             return message.AppSpecific == 0;
         }
 
-        public bool HandlePeekedMessage(MessageQueue queue, Message message)
+        public bool HandlePeekedMessage(OpenedQueue queue, Message message)
         {
             var id = message.GetMessageId();
             ErrorCounter errorCounter = null;
@@ -95,7 +95,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             return true;
         }
 
-        private void MoveToErrorQueue(MessageQueue queue, Message message, string exceptionText)
+        private void MoveToErrorQueue(OpenedQueue queue, Message message, string exceptionText)
         {
             string msgId;
             if(queueStrategy.TryMoveMessage(queue, message, SubQueue.Errors,out msgId) == false)
@@ -107,7 +107,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 				Body = exceptionText,
                 CorrelationId = msgId
 			}.SetSubQueueToSendTo(SubQueue.Errors);
-			queue.Send(desc, queue.GetTransactionType());
+			queue.Send(desc);
 
         	logger.WarnFormat("Moving message {0} to errors subqueue because: {1}", message.Id,
                               exceptionText);

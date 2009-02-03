@@ -104,7 +104,7 @@ namespace Rhino.ServiceBus.Msmq
             });
         }
 
-        private void RemoveSubscriptionMessageFromQueue(MessageQueue queue, string type, Uri uri)
+        private void RemoveSubscriptionMessageFromQueue(OpenedQueue queue, string type, Uri uri)
         {
             subscriptionMessageIds.Write(writer =>
             {
@@ -125,20 +125,18 @@ namespace Rhino.ServiceBus.Msmq
 
         }
 
-        private MessageQueue CreateSubscriptionQueue(Uri subscriptionQueueUri, QueueAccessMode accessMode)
+        private OpenedQueue CreateSubscriptionQueue(Uri subscriptionQueueUri, QueueAccessMode accessMode)
         {
-        	MessageQueue queue;
+        	OpenedQueue queue;
             try
             {
             	var endpoint = endpointRouter.GetRoutedEndpoint(subscriptionQueueUri);
-            	queue = MsmqUtil.GetQueuePath(endpoint).Open(accessMode);
+				queue = MsmqUtil.GetQueuePath(endpoint).Open(accessMode, new XmlMessageFormatter(new[] { typeof(string) }));
             }
             catch (Exception e)
             {
                 throw new SubscriptionException("Could not open subscription queue (" + subscriptionQueueUri + ")", e);
             }
-            queue.Formatter = new XmlMessageFormatter(new[] { typeof(string) });
-            queue.MessageReadPropertyFilter.Extension = true;
             return queue;
         }
 
@@ -259,8 +257,7 @@ namespace Rhino.ServiceBus.Msmq
             if (msmqMsgInfo != null)
             {
                 msmqMsgInfo.Queue.Send(
-                    msmqMsgInfo.MsmqMessage.SetSubQueueToSendTo(SubQueue.Subscriptions), 
-                    msmqMsgInfo.Queue.GetTransactionType());
+                    msmqMsgInfo.MsmqMessage.SetSubQueueToSendTo(SubQueue.Subscriptions));
             }
             RaiseSubscriptionChanged();
             return true;
@@ -283,8 +280,7 @@ namespace Rhino.ServiceBus.Msmq
             {
                 Message message = msmqMsgInfo.MsmqMessage;
                 msmqMsgInfo.Queue.Send(
-                   message.SetSubQueueToSendTo(SubQueue.Subscriptions),
-                   msmqMsgInfo.Queue.GetTransactionType());
+                   message.SetSubQueueToSendTo(SubQueue.Subscriptions));
             
                 AddMessageIdentifierForTracking(
                     message.Id,

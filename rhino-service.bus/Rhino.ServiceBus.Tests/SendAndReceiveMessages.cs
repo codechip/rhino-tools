@@ -55,7 +55,7 @@ namespace Rhino.ServiceBus.Tests
                 waitHandle.Set();
                 return true;
             };
-            Transport.Send(TestQueueUri, new TestMessage
+            Transport.Send(testQueueEndPoint, new TestMessage
             {
                 Count = 1,
                 Name = "ayende",

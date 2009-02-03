@@ -150,22 +150,22 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
                     var queuePath = MsmqUtil.GetQueuePath(TestQueueUri2);
                     loadBalancerMsmqQueue.Send(new Message
                     {
-						ResponseQueue = queuePath.Open(),
+						ResponseQueue = queuePath.Open().ToResponseQueue(),
                         Body = "a"
-                    }, loadBalancerMsmqQueue.GetTransactionType());
+                    });
 
                     loadBalancerMsmqQueue.Send(new Message
                     {
-						ResponseQueue = queuePath.Open(),
+						ResponseQueue = queuePath.Open().ToResponseQueue(),
                         Body = "a"
-                    }, loadBalancerMsmqQueue.GetTransactionType());
+                    });
 
                     queuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri);
                     loadBalancerMsmqQueue.Send(new Message
                     {
-						ResponseQueue = queuePath.Open(),
+						ResponseQueue = queuePath.Open().ToResponseQueue(),
                         Body = "a"
-                    }, loadBalancerMsmqQueue.GetTransactionType());
+                    });
                 }
 
 
@@ -255,7 +255,7 @@ namespace Rhino.ServiceBus.Tests.LoadBalancer
             messageSerializer.Serialize(new[] { msg }, message.BodyStream);
             using (var q = new MessageQueue(loadBalancerQueuePath))
             {
-                q.Send(message, q.GetTransactionType());
+                q.Send(message);
             }
         }
     }

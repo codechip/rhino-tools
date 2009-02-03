@@ -30,7 +30,7 @@ namespace Rhino.ServiceBus.Tests
         private ITransport transactionalTransport;
         private ITransport transport;
         protected readonly MessageQueue testQueue2;
-        private string subbscriptionQueuePath2;
+        private readonly string subbscriptionQueuePath2;
 
         public MsmqTestBase()
         {
@@ -44,10 +44,10 @@ namespace Rhino.ServiceBus.Tests
 			transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri).QueuePath;
 
             SubscriptionsUri2 = new Uri("msmq://localhost/test_queue2;subscriptions").ToEndpoint();
-			subbscriptionQueuePath2 = MsmqUtil.GetQueuePath(SubscriptionsUri2).QueuePath;
+			subbscriptionQueuePath2 = MsmqUtil.GetQueuePath(SubscriptionsUri2).QueuePathWithSubQueue;
 
             SubscriptionsUri = new Uri("msmq://localhost/test_queue;subscriptions").ToEndpoint();
-			subbscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri).QueuePath;
+			subbscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri).QueuePathWithSubQueue;
 
             if (MessageQueue.Exists(testQueuePath) == false)
                 MessageQueue.Create(testQueuePath);

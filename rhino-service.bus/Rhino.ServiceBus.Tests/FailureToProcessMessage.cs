@@ -146,7 +146,7 @@ namespace Rhino.ServiceBus.Tests
             {
                 Transport.MessageArrived += ThrowOnFirstAction();
 
-                Transport.Send(TestQueueUri, DateTime.Today);
+                Transport.Send(testQueueEndPoint, DateTime.Today);
 
                 gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
@@ -158,11 +158,11 @@ namespace Rhino.ServiceBus.Tests
             {
                 TransactionalTransport.MessageArrived += ThrowOnFirstAction();
 
-                TransactionalTransport.Send(TransactionalTestQueueUri, DateTime.Today);
+                TransactionalTransport.Send(transactionalTestQueueEndpoint, DateTime.Today);
 
                 gotFirstMessage.WaitOne(TimeSpan.FromSeconds(30));
 
-                Assert.NotNull(transactionalQueue.Peek());
+                Assert.NotNull(transactionalQueue.Peek(TimeSpan.FromSeconds(30)));
 
                 gotSecondMessage.Set();
             }
@@ -177,7 +177,7 @@ namespace Rhino.ServiceBus.Tests
                     throw new InvalidOperationException();
                 };
 
-                Transport.Send(TestQueueUri, DateTime.Today);
+                Transport.Send(testQueueEndPoint, DateTime.Today);
 
                 using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
                 {
@@ -196,7 +196,7 @@ namespace Rhino.ServiceBus.Tests
                     throw new InvalidOperationException();
                 };
 
-                Transport.Send(TestQueueUri, DateTime.Today);
+                Transport.Send(testQueueEndPoint, DateTime.Today);
 
                 using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
                 {
@@ -229,7 +229,7 @@ namespace Rhino.ServiceBus.Tests
                     throw new InvalidOperationException();
                 };
 
-                TransactionalTransport.Send(TransactionalTestQueueUri, DateTime.Today);
+                TransactionalTransport.Send(transactionalTestQueueEndpoint, DateTime.Today);
 
                 using (var errorQueue = new MessageQueue(transactionalTestQueuePath + "#errors"))
                 {

@@ -13,17 +13,17 @@ namespace Rhino.ServiceBus.Tests
     public class MsmqFlatQueueTestBase : IDisposable
     {
         private readonly string subscriptionQueuePath;
-        protected readonly Endpoint SubscriptionsUri;
+        protected readonly Endpoint subscriptionsEndpoint;
 
         protected readonly string testQueuePath;
-        protected readonly Endpoint TestQueueUri;
+        protected readonly Endpoint testQueueEndPoint;
         
         protected readonly string transactionalTestQueuePath;
-        protected readonly Endpoint TransactionalTestQueueUri;
+        protected readonly Endpoint transactionalTestQueueEndpoint;
 
-        protected MessageQueue queue;
-        protected MessageQueue subscriptions;
-        protected MessageQueue transactionalQueue;
+        protected OpenedQueue queue;
+		protected OpenedQueue subscriptions;
+		protected OpenedQueue transactionalQueue;
 
         private ITransport transactionalTransport;
         private ITransport transport;
@@ -37,33 +37,34 @@ namespace Rhino.ServiceBus.Tests
         {
             defaultTestBase = new MsmqTestBase();
 
-            TestQueueUri = new Endpoint
+            testQueueEndPoint = new Endpoint
             {
                 Uri = new Uri("msmq://localhost/test_queue")
             };
-            testQueuePath = MsmqUtil.GetQueuePath(TestQueueUri).QueuePath;
+            testQueuePath = MsmqUtil.GetQueuePath(testQueueEndPoint).QueuePath;
 
-            TransactionalTestQueueUri = new Endpoint
+            transactionalTestQueueEndpoint = new Endpoint
             {
                 Uri = new Uri("msmq://localhost/transactional_test_queue")
             };
-			transactionalTestQueuePath = MsmqUtil.GetQueuePath(TransactionalTestQueueUri).QueuePath;
+			transactionalTestQueuePath = MsmqUtil.GetQueuePath(transactionalTestQueueEndpoint).QueuePath;
 
-            SubscriptionsUri = new Endpoint
+            subscriptionsEndpoint = new Endpoint
             {
-                Uri = new Uri(TestQueueUri.Uri + "#" + subscriptions)
+                Uri = new Uri(testQueueEndPoint.Uri + "#" + subscriptions)
             };
-			subscriptionQueuePath = MsmqUtil.GetQueuePath(SubscriptionsUri).QueuePath;
+			subscriptionQueuePath = MsmqUtil.GetQueuePath(subscriptionsEndpoint).QueuePath;
 
 
 			SetupQueues();
 
-            queue = new MessageQueue(testQueuePath);
-            transactionalQueue = new MessageQueue(transactionalTestQueuePath);
-            subscriptions = new MessageQueue(subscriptionQueuePath)
-            {
-                Formatter = new XmlMessageFormatter(new[] { typeof(string) })
-            };
+        	queue = MsmqUtil.GetQueuePath(testQueueEndPoint).Open();
+        	transactionalQueue = MsmqUtil.GetQueuePath(transactionalTestQueueEndpoint).Open();
+        	subscriptions = MsmqUtil.GetQueuePath(subscriptionsEndpoint).Open(QueueAccessMode.SendAndReceive,
+				new XmlMessageFormatter(new[]
+				{
+					typeof (string)
+				}));
         }
 		
 		private void SetupQueues()
@@ -122,9 +123,9 @@ namespace Rhino.ServiceBus.Tests
                         new XmlMessageSerializer(
                         	new DefaultReflection(),
                         	new DefaultKernel()),
-                            new FlatQueueStrategy(new EndpointRouter(),TestQueueUri.Uri),
-                            TestQueueUri.Uri, 1,
-                        DefaultTransportActions(TestQueueUri.Uri),
+                            new FlatQueueStrategy(new EndpointRouter(),testQueueEndPoint.Uri),
+                            testQueueEndPoint.Uri, 1,
+                        DefaultTransportActions(testQueueEndPoint.Uri),
                             new EndpointRouter());
                     transport.Start();
                 }
@@ -152,8 +153,8 @@ namespace Rhino.ServiceBus.Tests
                 {
                     transactionalTransport = new MsmqTransport(
                         new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel()),
-                        new FlatQueueStrategy(new EndpointRouter(),TransactionalTestQueueUri.Uri),
-                        TransactionalTestQueueUri.Uri, 1, DefaultTransportActions(TransactionalTestQueueUri.Uri),
+                        new FlatQueueStrategy(new EndpointRouter(),transactionalTestQueueEndpoint.Uri),
+                        transactionalTestQueueEndpoint.Uri, 1, DefaultTransportActions(transactionalTestQueueEndpoint.Uri),
                             new EndpointRouter());
                     transactionalTransport.Start();
                 }
@@ -163,7 +164,7 @@ namespace Rhino.ServiceBus.Tests
 
         #region IDisposable Members
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             defaultTestBase.Dispose();
 

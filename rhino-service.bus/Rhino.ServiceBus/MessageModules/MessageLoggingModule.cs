@@ -12,7 +12,7 @@ namespace Rhino.ServiceBus.MessageModules
         private readonly IMessageSerializer messageSerializer;
         private readonly IEndpointRouter endpointRouter;
         private readonly Uri logQueue;
-        private MessageQueue queue;
+        private OpenedQueue queue;
 
         public MessageLoggingModule(IMessageSerializer messageSerializer, IEndpointRouter endpointRouter, Uri logQueue)
         {
@@ -44,11 +44,6 @@ namespace Rhino.ServiceBus.MessageModules
             queue.Dispose();
         }
 
-        private void Send(object obj)
-        {
-            Send(obj, queue.GetTransactionType());
-        }
-
         private void Transport_OnMessageSent(CurrentMessageInformation info)
         {
             Send(new MessageSentMessage
@@ -62,11 +57,14 @@ namespace Rhino.ServiceBus.MessageModules
             });
         }
 
-        private void Send(object obj, MessageQueueTransactionType transactionType)
+        private void Send(object obj)
         {
-            var msg = new Message();
+            var msg = new Message
+            {
+            	Label = obj.ToString()
+            };
             messageSerializer.Serialize(new[] { obj }, msg.BodyStream);
-            queue.Send(msg, obj.ToString(), transactionType);
+            queue.Send(msg);
         }
 
         private void Transport_OnMessageSerializationException(CurrentMessageInformation info, Exception t)
@@ -92,7 +90,7 @@ namespace Rhino.ServiceBus.MessageModules
 
         internal void Transport_OnMessageProcessingFailure(CurrentMessageInformation info, Exception e)
         {
-            Send(new MessageProcessingFailedMessage
+            SendInSingleTransaction(new MessageProcessingFailedMessage
             {
                 ErrorText = e.ToString(),
                 Timestamp = DateTime.Now,
@@ -100,10 +98,20 @@ namespace Rhino.ServiceBus.MessageModules
                 MessageId = info.MessageId,
                 Source = info.Source,
                 Message = info.Message
-            }, queue.GetSingleMessageTransactionType());
+            });
         }
 
-        private bool Transport_OnMessageArrived(CurrentMessageInformation info)
+    	private void SendInSingleTransaction(object msg)
+    	{
+    		var message = new Message
+    		{
+    			Label = msg.ToString()
+    		};
+			messageSerializer.Serialize(new[]{msg},message.BodyStream);
+    		queue.SendInSingleTransaction(message);
+    	}
+
+    	private bool Transport_OnMessageArrived(CurrentMessageInformation info)
         {
             Send(new MessageArrivedMessage
             {

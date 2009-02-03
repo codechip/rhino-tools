@@ -5,7 +5,27 @@ namespace Rhino.ServiceBus.Msmq
 
 	public class QueueInfo
 	{
-		public string QueuePath { get; set; }
+		private string queuePath;
+		public string QueuePath
+		{
+			get { return queuePath; }
+			set
+			{
+				if(value.Contains(";"))
+				{
+					var parts = value.Split(new[] { ';' },
+						StringSplitOptions.RemoveEmptyEntries);
+					queuePath = parts[0];
+					SubQueue = (SubQueue)Enum.Parse(typeof(SubQueue), parts[1], true);
+				}
+				else
+				{
+					queuePath = value;
+				}
+			}
+		}
+
+		public SubQueue? SubQueue { get; set;}
 		public Uri QueueUri { get; set; }
 		public bool IsLocal { get; set; }
 
@@ -19,25 +39,49 @@ namespace Rhino.ServiceBus.Msmq
 			}
 		}
 
-		public MessageQueue Open()
+		public string QueuePathWithSubQueue
 		{
-			return new MessageQueue(QueuePath);
+			get
+			{
+				if (SubQueue == null)
+					return QueuePath;
+				return QueuePath + ";" + SubQueue;
+			}
 		}
 
-		public MessageQueue Open(QueueAccessMode access)
+		public OpenedQueue Open()
 		{
-			return new MessageQueue(QueuePath, access);
+			return Open(QueueAccessMode.SendAndReceive);
+		}
+
+		public OpenedQueue Open(QueueAccessMode access)
+		{
+			return Open(access, null);
+		}
+
+		public OpenedQueue Open(QueueAccessMode access, IMessageFormatter formatter)
+		{
+			var messageQueue = new MessageQueue(QueuePath, access);
+			if (formatter != null)
+				messageQueue.Formatter = formatter;
+			var openedQueue = new OpenedQueue(this, messageQueue)
+			{
+				Formatter = formatter
+			};
+			if (SubQueue != null)
+				return openedQueue.OpenSubQueue(SubQueue.Value, access);
+			return openedQueue;
 		}
 
 		public void Delete()
 		{
-			if(Exists && IsLocal)
+			if (Exists && IsLocal)
 				MessageQueue.Delete(QueuePath);
 		}
 
 		public void Create()
 		{
-			if (IsLocal==false || Exists)
+			if (IsLocal == false || Exists)
 				return;
 			MessageQueue.Create(QueuePath, true);
 		}

@@ -13,29 +13,30 @@ namespace Rhino.ServiceBus.Tests.Bugs
 
 		private readonly IWindsorContainer container;
 
-        public When_error_occured_on_transactional_queue()
-        {
+		public When_error_occured_on_transactional_queue()
+		{
 			container = new WindsorContainer(new XmlInterpreter("BusOnTransactionalQueue.config"));
-            container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
-        	container.AddComponent<ThrowingConsumer>();
-        }
+			container.Kernel.AddFacility("rhino.esb", new RhinoServiceBusFacility());
+			container.AddComponent<ThrowingConsumer>();
+		}
 
 		[Fact]
 		public void Error_subqeueue_will_contain_error_details()
 		{
-            using (var bus = container.Resolve<IStartableServiceBus>())
-            {
-                bus.Start();
+			using (var bus = container.Resolve<IStartableServiceBus>())
+			{
+				bus.Start();
 
-                bus.Send(bus.Endpoint, DateTime.Now);
+				bus.Send(bus.Endpoint, DateTime.Now);
 
-				using (var errorSubQueue = MsmqUtil.GetQueuePath(bus.Endpoint.ForSubQueue(SubQueue.Errors)).Open())
-                {
-                    var originalMessage = errorSubQueue.Receive(MessageQueueTransactionType.Single);
-                    var errorDescripotion = errorSubQueue.Receive(MessageQueueTransactionType.Single);
-                    Assert.Equal("Error description for: " + originalMessage.Label, errorDescripotion.Label);
-                }
-            }
+				using (var q = MsmqUtil.GetQueuePath(bus.Endpoint).Open())
+				using (var errorSubQueue = q.OpenSubQueue(SubQueue.Errors, QueueAccessMode.SendAndReceive))
+				{
+					var originalMessage = errorSubQueue.Receive();
+					var errorDescripotion = errorSubQueue.Receive();
+					Assert.Equal("Error description for: " + originalMessage.Label, errorDescripotion.Label);
+				}
+			}
 		}
 
 		public class ThrowingConsumer : ConsumerOf<DateTime>

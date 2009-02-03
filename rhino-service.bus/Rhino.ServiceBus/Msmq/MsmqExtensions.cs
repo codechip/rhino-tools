@@ -22,20 +22,6 @@ namespace Rhino.ServiceBus.Msmq
             return self;
         }
 
-        public static Message TryGetMessageFromQueue(this MessageQueue queue, string messageId)
-        {
-            try
-            {
-                return queue.ReceiveById(
-                    messageId,
-                    queue.GetTransactionType());
-            }
-            catch (InvalidOperationException)// message was read before we could read it
-            {
-                return null;
-            }
-        }
-
         public static Guid GetMessageId(this Message self)
         {
             if (self.Extension.Length < 16)
@@ -44,39 +30,6 @@ namespace Rhino.ServiceBus.Msmq
             Buffer.BlockCopy(self.Extension, 0, guid, 0, 16);
             return new Guid(guid);
         }
-
-        public static MessageQueueTransactionType GetTransactionType(this MessageQueue self)
-        {
-            if (self.Transactional)
-            {
-                if (Transaction.Current == null)
-                    return MessageQueueTransactionType.Single;
-                return MessageQueueTransactionType.Automatic;
-            }
-            return MessageQueueTransactionType.None;
-        }
-
-        public static MessageQueueTransactionType GetSingleMessageTransactionType(this MessageQueue self)
-        {
-            if (self.Transactional)
-            {
-                return MessageQueueTransactionType.Single;
-            }
-            return MessageQueueTransactionType.None;
-        }
-
-        public static void ConsumeMessage(this MessageQueue queue, string msgId)
-        {
-            try
-            {
-                queue.ReceiveById(msgId, MessageQueueTransactionType.Single);
-            }
-            catch (InvalidOperationException)
-            {
-                // could not find message in queue
-            }
-        }
-
 
         public static void MoveToSubQueue(
             this MessageQueue queue,
