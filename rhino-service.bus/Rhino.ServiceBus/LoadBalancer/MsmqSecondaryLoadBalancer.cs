@@ -13,11 +13,16 @@ namespace Rhino.ServiceBus.LoadBalancer
         private volatile bool tookOverWork;
         private Timeout timeout;
         private readonly Timer checkPrimaryHearteat;
-        public TimeSpan TimeoutForHeartBeatFromPrimary = TimeSpan.FromSeconds(10);
+        public TimeSpan TimeoutForHeartBeatFromPrimary { get; set; }
 
         public Uri PrimaryLoadBalancer
         {
             get { return primaryLoadBalancer; }
+        }
+
+        public bool TookOverWork
+        {
+            get { return tookOverWork; }
         }
 
         public event Action TookOverAsActiveLoadBalancer;
@@ -31,6 +36,7 @@ namespace Rhino.ServiceBus.LoadBalancer
             int threadCount)
             : base(serializer, queueStrategy, endpointRouter, endpoint, threadCount)
         {
+            TimeoutForHeartBeatFromPrimary = TimeSpan.FromSeconds(10);
             this.primaryLoadBalancer = primaryLoadBalancer;
             checkPrimaryHearteat = new Timer(OnCheckPrimaryHeartbeat);
             tookOverWork = false;
