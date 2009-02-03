@@ -35,7 +35,7 @@ namespace Rhino.ServiceBus.Msmq
 			return new QueueInfo
 			{
 				IsLocal = false,
-				QueuePath = "FormatName:DIRECT=OS:" + hostName + @"\private$\" + uri.AbsolutePath.Substring(1),
+				QueuePath = "FormatName:DIRECT=TCP:" + hostName + @"\private$\" + uri.AbsolutePath.Substring(1),
                 QueueUri = uri
 			};
 		}
