@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
+using System.Text;
 using System.Xml;
 
 namespace Rhino.Licensing
@@ -25,13 +26,15 @@ namespace Rhino.Licensing
                 var signature = GetXmlDigitalSignature(doc, rsa);
                 doc.FirstChild.AppendChild(doc.ImportNode(signature, true));
 
-                var textWriter = new StringWriter();
-                var writer = XmlWriter.Create(textWriter,new XmlWriterSettings
+                var ms = new MemoryStream();
+                var writer = XmlWriter.Create(ms,new XmlWriterSettings
                 {
-                    Indent = true
+                    Indent = true,
+                    Encoding = Encoding.UTF8
                 });
                 doc.Save(writer);
-                return textWriter.GetStringBuilder().ToString();
+                ms.Position = 0;
+                return new StreamReader(ms).ReadToEnd();
             }
         }
 

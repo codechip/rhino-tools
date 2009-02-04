@@ -13,7 +13,6 @@ namespace Rhino.Licensing
 
         public DateTime ExpirationDate { get; private set; }
         public LicenseType LicenseType { get; private set; }
-        public bool IsTrial { get; set; }
         public Guid UserId { get; private set; }
         public string Name { get; private set; }
 
@@ -41,7 +40,7 @@ namespace Rhino.Licensing
                 if (File.Exists(licensePath) == false)
                     return false;
 
-                if (TryValidate(File.ReadAllText(licensePath)) == false)
+                if (TryValidate() == false)
                     return false;
 
                 return DateTime.Now < ExpirationDate;
@@ -57,12 +56,12 @@ namespace Rhino.Licensing
             File.Delete(licensePath);
         }
 
-        private bool TryValidate(string licenseKey)
+        private bool TryValidate()
         {
             try
             {
                 XmlDocument doc;
-                if (TryGetValidDocument(licenseKey, out doc) == false)
+                if (TryGetValidDocument(out doc) == false)
                     return false;
 
                 if (doc.FirstChild == null)
@@ -100,13 +99,13 @@ namespace Rhino.Licensing
             }
         }
 
-        private bool TryGetValidDocument(string licenseKey, out XmlDocument doc)
+        private bool TryGetValidDocument(out XmlDocument doc)
         {
             var rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(publicKey);
 
             doc = new XmlDocument();
-            doc.LoadXml(licenseKey);
+            doc.Load(licensePath);
 
             var nsMgr = new XmlNamespaceManager(doc.NameTable);
             nsMgr.AddNamespace("sig", "http://www.w3.org/2000/09/xmldsig#");
