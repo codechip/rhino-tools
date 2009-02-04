@@ -11,16 +11,17 @@ namespace Rhino.Licensing
         private readonly string licensePath;
         private readonly string publicKey;
 
+        public DateTime ExpirationDate { get; private set; }
+        public LicenseType LicenseType { get; private set; }
+        public bool IsTrial { get; set; }
+        public Guid UserId { get; private set; }
+        public string Name { get; private set; }
+
         public LicenseValidator(string publicKey, string licensePath)
         {
             this.publicKey = publicKey;
             this.licensePath = licensePath;
         }
-
-        public DateTime ExpirationDate { get; private set; }
-        public LicenseType LicenseType { get; private set; }
-        public bool IsTrial { get; set; }
-        public Guid UserId { get; private set; }
 
         public void AssertValidLicense()
         {
@@ -84,6 +85,12 @@ namespace Rhino.Licensing
                     return false;
 
                 LicenseType = (LicenseType) Enum.Parse(typeof (LicenseType), licenseType.Value);
+
+                XmlNode name = doc.SelectSingleNode("/license/name/text()");
+                if (name == null)
+                    return false;
+
+                Name = name.Value;
 
                 return true;
             }

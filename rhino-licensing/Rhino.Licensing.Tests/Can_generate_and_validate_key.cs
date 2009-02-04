@@ -22,6 +22,7 @@ namespace Rhino.Licensing.Tests
             
             Assert.Equal(guid, validator.UserId);
             Assert.Equal(expiration, validator.ExpirationDate);
+            Assert.Equal("Oren Eini", validator.Name);
             Assert.Equal(LicenseType.Trial, validator.LicenseType);
         }
 
