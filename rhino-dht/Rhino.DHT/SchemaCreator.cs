@@ -95,6 +95,13 @@ namespace Rhino.DHT
                 grbit = ColumndefGrbit.ColumnFixed
             }, null, 0, out columnid);
 
+            Api.JetAddColumn(session, tableid, "sha256_hash", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Binary,
+                grbit = ColumndefGrbit.ColumnFixed,
+                cbMax = 32
+            }, null, 0, out columnid);
+
             Api.JetAddColumn(session, tableid, "parentVersions", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.Long,

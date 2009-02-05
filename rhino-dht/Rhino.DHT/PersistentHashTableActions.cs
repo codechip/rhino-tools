@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web.Caching;
 using Microsoft.Isam.Esent.Interop;
@@ -121,6 +122,10 @@ namespace Rhino.DHT
                 Api.SetColumn(session, data, dataColumns["key"], key, Encoding.Unicode);
                 Api.SetColumn(session, data, dataColumns["version"], version.Value);
                 Api.SetColumn(session, data, dataColumns["data"], bytes);
+                using (var sha256 = SHA256.Create())
+                {
+                    Api.SetColumn(session, data, dataColumns["sha256_hash"], sha256.ComputeHash(bytes));
+                }
 
                 if (expiresAt.HasValue)
                     Api.SetColumn(session, data, dataColumns["expiresAt"], expiresAt.Value.ToOADate());
@@ -226,6 +231,7 @@ namespace Rhino.DHT
                 Key = key,
                 ParentVersions = versions.ToArray(),
                 Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
+                Sha256Hash = Api.RetrieveColumn(session, data, dataColumns["sha256_hash"]),
                 ExpiresAt = expiresAt
             };
         }

@@ -9,5 +9,6 @@ namespace Rhino.DHT
         public int Version { get; set; }
         public int[] ParentVersions { get; set; }
         public byte[] Data { get; set; }
+        public byte[] Sha256Hash { get; set; }
     }
 }

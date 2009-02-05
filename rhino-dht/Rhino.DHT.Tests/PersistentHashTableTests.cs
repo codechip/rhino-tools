@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Isam.Esent.Interop;
 using Xunit;
 
@@ -28,6 +30,26 @@ namespace Rhino.DHT.Tests
                     var values = actions.Get("test");
                     Assert.Equal(1, values[0].Version);
                     Assert.Equal(new byte[] { 1 }, values[0].Data);
+                });
+            }
+        }
+
+        [Fact]
+        public void Can_get_hash_from_cache()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                table.Batch(actions =>
+                {
+                    var bytes = Encoding.UTF8.GetBytes("abcdefgiklmnqrstwxyz");
+                    actions.Put("test", new int[0], bytes);
+                    var values = actions.Get("test");
+                    Assert.Equal(
+                        SHA256.Create().ComputeHash(bytes),
+                        values[0].Sha256Hash
+                        );
                 });
             }
         }
