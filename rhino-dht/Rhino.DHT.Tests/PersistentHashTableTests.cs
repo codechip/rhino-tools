@@ -17,6 +17,28 @@ namespace Rhino.DHT.Tests
                 Directory.Delete(testDatabase, true);
         }
 
+		[Fact]
+		public void Id_of_table_is_persistent()
+		{
+			Guid id;
+			using (var table = new PersistentHashTable(testDatabase))
+			{
+				table.Initialize();
+
+				id = table.Id;
+				Assert.NotEqual(Guid.Empty, id);
+			}
+
+			using (var table = new PersistentHashTable(testDatabase))
+			{
+				table.Initialize();
+
+				Assert.NotEqual(Guid.Empty, table.Id);
+				Assert.Equal(id,table.Id);
+			}
+		}
+
+
         [Fact]
         public void Can_save_and_load_item_from_cache()
         {

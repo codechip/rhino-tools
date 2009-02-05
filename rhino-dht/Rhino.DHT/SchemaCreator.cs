@@ -2,7 +2,9 @@ using Microsoft.Isam.Esent.Interop;
 
 namespace Rhino.DHT
 {
-    public class SchemaCreator
+	using System;
+
+	public class SchemaCreator
     {
         private readonly Session session;
 
@@ -18,6 +20,7 @@ namespace Rhino.DHT
 
             using (var tx = new Transaction(session))
             {
+				CreateDetailsTable(dbid);
                 CreateKeysTable(dbid);
                 CreateDataTable(dbid);
 
@@ -25,7 +28,27 @@ namespace Rhino.DHT
             }
         }
 
-        private void CreateKeysTable(JET_DBID dbid)
+		private void CreateDetailsTable(JET_DBID dbid)
+    	{
+			JET_TABLEID tableid;
+			Api.JetCreateTable(session, dbid, "details", 16, 100, out tableid);
+			JET_COLUMNID columnid;
+			Api.JetAddColumn(session, tableid, "id", new JET_COLUMNDEF
+			{
+				cbMax = 16,
+				coltyp = JET_coltyp.Binary,
+				grbit = ColumndefGrbit.ColumnNotNULL|ColumndefGrbit.ColumnFixed
+			}, null, 0, out columnid);
+
+
+			using(var update = new Update(session, tableid, JET_prep.Insert))
+			{
+				Api.SetColumn(session, tableid, columnid, Guid.NewGuid().ToByteArray());
+				update.Save();
+			}
+    	}
+
+    	private void CreateKeysTable(JET_DBID dbid)
         {
             JET_TABLEID tableid;
             Api.JetCreateTable(session, dbid, "keys", 16, 100, out tableid);
