@@ -4,6 +4,8 @@ using Rhino.ServiceBus.Exceptions;
 
 namespace Rhino.ServiceBus.Msmq
 {
+	using System.Text.RegularExpressions;
+
 	public class MsmqUtil
 	{
 		public static QueueInfo GetQueuePath(Endpoint endpoint)
@@ -40,12 +42,14 @@ namespace Rhino.ServiceBus.Msmq
 			};
 		}
 
+		static readonly Regex queuePath = new Regex(@"FormatName:DIRECT=(?<transport>\w+):(?<machineName>[\w\d-_.#$;]+)\\private\$\\(?<queueName>[\w\d-_.#$;]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 		public static Uri GetQueueUri(MessageQueue queue)
 		{
 			if (queue == null)
 				return null;
-			return new Uri("msmq://" + queue.MachineName + "/" +
-				queue.QueueName.Split('\\')[1]);
+			var match = queuePath .Match(queue.Path);
+			return new Uri("msmq://" + match.Groups["machineName"] + "/" +
+				match.Groups["queueName"]);
 		}
 
 		public static MessageQueue CreateQueue(string queuePath, QueueAccessMode accessMode)
