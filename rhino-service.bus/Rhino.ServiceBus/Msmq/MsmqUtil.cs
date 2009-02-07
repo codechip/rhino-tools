@@ -29,7 +29,7 @@ namespace Rhino.ServiceBus.Msmq
 				return  new QueueInfo
 				{
 					IsLocal = true,
-					QueuePath = @".\private$\" + uri.AbsolutePath.Substring(1),
+					QueuePath = Environment.MachineName +  @"\private$\" + uri.AbsolutePath.Substring(1),
                     QueueUri = uri
 				};
 			}
