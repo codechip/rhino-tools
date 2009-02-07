@@ -71,7 +71,7 @@ namespace Rhino.DHT.Tests
 
         public void Close()
         {
-            host.Close();
+            host.Close(new TimeSpan(0));
             instance.Dispose();
         }
     }
