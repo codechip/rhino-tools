@@ -66,6 +66,46 @@ namespace Rhino.DHT.Tests
         }
 
         [Fact]
+        public void Will_failover_if_preferred_node_is_not_available_read()
+        {
+            distributedHashTable.Put(new AddValue
+            {
+                Bytes = new byte[] { 1, 2, 3, 4, 5 },
+                ParentVersions = new ValueVersion[0],
+                Key = "test"
+            });
+
+
+            // wait for replication
+            WaitForValueInEndpoint(distributedHashTable.Endpoints[0]);
+            WaitForValueInEndpoint(distributedHashTable.Endpoints[1]);
+            WaitForValueInEndpoint(distributedHashTable.Endpoints[2]);
+
+            //shut down preferred node
+            runners[Math.Abs("test".GetHashCode() % runners.Length)].Close();
+
+            var values = distributedHashTable.Get(new GetValue { Key = "test" });
+            Assert.Equal(new byte[] { 1, 2, 3, 4, 5 }, values[0][0].Data);
+        }
+
+        [Fact]
+        public void Will_failover_if_preferred_node_is_not_available_write_and_read()
+        {
+            //shut down preferred node
+            runners[Math.Abs("test".GetHashCode() % runners.Length)].Close();
+
+            distributedHashTable.Put(new AddValue
+            {
+                Bytes = new byte[] { 1, 2, 3, 4, 5 },
+                ParentVersions = new ValueVersion[0],
+                Key = "test"
+            });
+
+            var values = distributedHashTable.Get(new GetValue { Key = "test" });
+            Assert.Equal(new byte[] { 1, 2, 3, 4, 5 }, values[0][0].Data);
+        }
+
+        [Fact]
         public void When_removing_item_in_one_node_will_be_replicated_to_all_others()
         {
             var results = distributedHashTable.Put(new AddValue

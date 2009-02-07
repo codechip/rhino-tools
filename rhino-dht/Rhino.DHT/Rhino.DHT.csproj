@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddValue.cs" />
+    <Compile Include="ArrayExtension.cs" />
     <Compile Include="DistributedHashTable.cs" />
     <Compile Include="EsentExtension.cs" />
     <Compile Include="GetValue.cs" />

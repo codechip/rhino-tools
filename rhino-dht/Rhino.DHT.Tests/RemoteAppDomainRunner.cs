@@ -10,6 +10,7 @@ namespace Rhino.DHT.Tests
     {
         private ServiceHost host;
         private DistributedHashTable instance;
+        private bool closed;
 
         public static RemoteAppDomainRunner Start(string file, string uri)
         {
@@ -71,8 +72,11 @@ namespace Rhino.DHT.Tests
 
         public void Close()
         {
+            if(closed)
+                return;
             instance.Dispose();
             host.Close(new TimeSpan(0));
+            closed = true;
         }
 
         public string[] GetReplicationDestinations()
