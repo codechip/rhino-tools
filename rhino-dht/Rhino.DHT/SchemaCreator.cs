@@ -23,12 +23,63 @@ namespace Rhino.DHT
 				CreateDetailsTable(dbid);
                 CreateKeysTable(dbid);
                 CreateDataTable(dbid);
+                CreateReplicationDestinationsTable(dbid);
+                CreateReplicationActionsTable(dbid);
 
                 tx.Commit(CommitTransactionGrbit.None);
             }
         }
 
-		private void CreateDetailsTable(JET_DBID dbid)
+	    private void CreateReplicationActionsTable(JET_DBID dbid)
+	    {
+            JET_TABLEID tableid;
+            Api.JetCreateTable(session, dbid, "replication_actions", 16, 100, out tableid);
+            
+            JET_COLUMNID columnid;
+            Api.JetAddColumn(session, tableid, "action_type", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Long,
+                grbit = ColumndefGrbit.ColumnNotNULL|ColumndefGrbit.ColumnFixed,
+            }, null, 0, out columnid);
+
+            Api.JetAddColumn(session, tableid, "version_number", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Long,
+                grbit = ColumndefGrbit.ColumnFixed
+            }, null, 0, out columnid);
+
+
+            Api.JetAddColumn(session, tableid, "version_instance_id", new JET_COLUMNDEF
+            {
+                cbMax = 16,
+                coltyp = JET_coltyp.Binary,
+                grbit = ColumndefGrbit.ColumnFixed
+            }, null, 0, out columnid);
+
+            Api.JetAddColumn(session, tableid, "key", new JET_COLUMNDEF
+            {
+                cbMax = 255,
+                coltyp = JET_coltyp.Text,
+                cp = JET_CP.Unicode,
+                grbit = ColumndefGrbit.ColumnNotNULL
+            }, null, 0, out columnid);
+	    }
+
+	    private void CreateReplicationDestinationsTable(JET_DBID dbid)
+	    {
+            JET_TABLEID tableid;
+            Api.JetCreateTable(session, dbid, "replication_destinations", 16, 100, out tableid);
+            JET_COLUMNID columnid;
+            Api.JetAddColumn(session, tableid, "destination", new JET_COLUMNDEF
+            {
+                cbMax = 255,
+                coltyp = JET_coltyp.Text,
+                grbit = ColumndefGrbit.ColumnNotNULL,
+                cp = JET_CP.Unicode
+            }, null, 0, out columnid);
+	    }
+
+	    private void CreateDetailsTable(JET_DBID dbid)
     	{
 			JET_TABLEID tableid;
 			Api.JetCreateTable(session, dbid, "details", 16, 100, out tableid);

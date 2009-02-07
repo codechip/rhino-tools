@@ -21,7 +21,6 @@ namespace Rhino.DHT
         public DistributedHashTable(string database)
             : this(database, null)
         {
-
         }
 
         public DistributedHashTable(string database, Action<InstanceParameters> configure)

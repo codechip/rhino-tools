@@ -55,11 +55,13 @@
   <ItemGroup>
     <Compile Include="AddValue.cs" />
     <Compile Include="DistributedHashTable.cs" />
+    <Compile Include="EsentExtension.cs" />
     <Compile Include="GetValue.cs" />
     <Compile Include="IDistributedHashTable.cs" />
     <Compile Include="MultiEndpointDistributedHashTable.cs" />
     <Compile Include="PutResult.cs" />
     <Compile Include="RemoveValue.cs" />
+    <Compile Include="ReplicationAction.cs" />
     <Compile Include="Value.cs" />
     <Compile Include="PersistentHashTable.cs" />
     <Compile Include="PersistentHashTableActions.cs" />

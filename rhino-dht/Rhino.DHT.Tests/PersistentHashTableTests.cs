@@ -38,6 +38,106 @@ namespace Rhino.DHT.Tests
 			}
 		}
 
+        [Fact]
+        public void Replication_destination_is_persistent()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.AddReplicationDestination("net.tcp://foo.bar");
+                table.AddReplicationDestination("net.tcp://baz.ban");
+            }
+
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                Assert.Equal("net.tcp://foo.bar", table.ReplicationDestinations[0]);
+                Assert.Equal("net.tcp://baz.ban", table.ReplicationDestinations[1]);
+            }
+        }
+
+        [Fact]
+        public void Will_record_addition_for_replication()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.AddReplicationDestination("dummy");
+                table.Batch(actions =>
+                {
+                    actions.Put("test", new ValueVersion[0], new byte[] {123, 12, 12});
+
+                    Api.TryMoveFirst(actions.Session, actions.ReplicationActions);
+                    var columns = Api.GetColumnDictionary(actions.Session, actions.ReplicationActions);
+                    var key = Api.RetrieveColumnAsString(actions.Session, actions.ReplicationActions, columns["key"],
+                                                       Encoding.Unicode);
+
+                    var replicationAction = (ReplicationAction)Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions, columns["action_type"]).Value;
+
+                    Assert.Equal("test", key);
+                    Assert.Equal(ReplicationAction.Added, replicationAction);
+                });
+            }
+        }
+
+        [Fact]
+        public void Will_record_removal_for_replication()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.AddReplicationDestination("dummy");
+                
+                table.Batch(actions =>
+                {
+                    var result = actions.Put("test", new ValueVersion[0], new byte[] { 123, 12, 12 });
+                    actions.Remove("test", new [] {result.Version});
+
+                    Api.TryMoveFirst(actions.Session, actions.ReplicationActions);
+
+                    //skip add item
+                    Api.TryMoveNext(actions.Session, actions.ReplicationActions);
+                    var columns = Api.GetColumnDictionary(actions.Session, actions.ReplicationActions);
+                    var key = Api.RetrieveColumnAsString(actions.Session, actions.ReplicationActions, columns["key"],
+                                                       Encoding.Unicode);
+
+                    var replicationAction = (ReplicationAction)Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions, columns["action_type"]).Value;
+
+                    Assert.Equal("test", key);
+                    Assert.Equal(ReplicationAction.Removed, replicationAction);
+                });
+            }
+        }
+
+        [Fact]
+        public void Can_remove_destination()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.AddReplicationDestination("net.tcp://foo.bar");
+                table.AddReplicationDestination("net.tcp://baz.ban");
+            }
+
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.RemoveReplicationSource("net.tcp://baz.ban");
+
+                Assert.Equal(1, table.ReplicationDestinations.Length);
+            }
+
+            //and now we test that this is persistent
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+
+                Assert.Equal(1, table.ReplicationDestinations.Length);
+            }
+        }
+
+
 
         [Fact]
         public void Can_save_and_load_item_from_cache()

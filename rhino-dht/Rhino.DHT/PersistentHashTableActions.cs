@@ -16,13 +16,16 @@ namespace Rhino.DHT
         private readonly Transaction transaction;
         private readonly Table keys;
         private readonly Table data;
+        private readonly Table replicationActions;
         private readonly Guid instanceId;
+        private readonly bool recordChangedForReplication;
         private readonly JET_DBID dbid;
         private readonly Dictionary<string, JET_COLUMNID> keysColumns;
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
+        private readonly Dictionary<string, JET_COLUMNID> replicationActionsColumns;
         private readonly Cache cache;
         private readonly List<Action> commitSyncronization = new List<Action>();
-
+        
         public JET_DBID DatabaseId
         {
             get { return dbid; }
@@ -48,6 +51,11 @@ namespace Rhino.DHT
             get { return data; }
         }
 
+        public Table ReplicationActions
+        {
+            get { return replicationActions; }
+        }
+
         public Dictionary<string, JET_COLUMNID> KeysColumns
         {
             get { return keysColumns; }
@@ -58,19 +66,22 @@ namespace Rhino.DHT
             get { return dataColumns; }
         }
 
-        public PersistentHashTableActions(Instance instance, string database, Cache cache, Guid instanceId)
+        public PersistentHashTableActions(Instance instance, string database, Cache cache, Guid instanceId, bool recordChangedForReplication)
         {
             this.database = database;
             this.cache = cache;
             this.instanceId = instanceId;
+            this.recordChangedForReplication = recordChangedForReplication;
             session = new Session(instance);
 
             transaction = new Transaction(session);
             Api.JetOpenDatabase(session, database, null, out dbid, OpenDatabaseGrbit.None);
             keys = new Table(session, dbid, "keys", OpenTableGrbit.None);
             data = new Table(session, dbid, "data", OpenTableGrbit.None);
+            replicationActions = new Table(session, dbid, "replication_actions", OpenTableGrbit.None);
             keysColumns = Api.GetColumnDictionary(session, keys);
             dataColumns = Api.GetColumnDictionary(session, data);
+            replicationActionsColumns = Api.GetColumnDictionary(session, replicationActions);
         }
 
         public PutResult Put(string key, ValueVersion[] parentVersions, byte[] bytes)
@@ -148,6 +159,16 @@ namespace Rhino.DHT
                 }
 
                 update.Save();
+            }
+
+            using (var addReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+            {
+                Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"],(int)ReplicationAction.Added);
+                Api.SetColumn(session, replicationActions, replicationActionsColumns["version_number"], version.Value);
+                Api.SetColumn(session, replicationActions, replicationActionsColumns["version_instance_id"],instanceId.ToByteArray());
+                Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key, Encoding.Unicode);
+
+                addReplicationAction.Save();
             }
 
             return new PutResult
@@ -417,6 +438,14 @@ namespace Rhino.DHT
             if (doesAllVersionsMatch)
             {
                 DeleteInactiveVersions(key, parentVersions);
+
+                using (var removeReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+                {
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"], (int)ReplicationAction.Removed);
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key, Encoding.Unicode);
+
+                    removeReplicationAction.Save();
+                }
 
                 foreach (var version in parentVersions)
                 {
