@@ -58,7 +58,6 @@
     <Compile Include="EsentExtension.cs" />
     <Compile Include="GetValue.cs" />
     <Compile Include="IDistributedHashTable.cs" />
-    <Compile Include="IReplicatedDistributedHashTable.cs" />
     <Compile Include="MultiEndpointDistributedHashTable.cs" />
     <Compile Include="PutResult.cs" />
     <Compile Include="RemoveValue.cs" />

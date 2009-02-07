@@ -71,8 +71,13 @@ namespace Rhino.DHT.Tests
 
         public void Close()
         {
-            host.Close(new TimeSpan(0));
             instance.Dispose();
+            host.Close(new TimeSpan(0));
+        }
+
+        public string[] GetReplicationDestinations()
+        {
+            return instance.ReplicationDestinations;
         }
     }
 }

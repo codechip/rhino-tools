@@ -30,7 +30,7 @@ namespace Rhino.DHT.Tests
                 new NetTcpBinding());
         }
 
-        private void Delete(string database)
+        private static void Delete(string database)
         {
             if (Directory.Exists(database))
                 Directory.Delete(database, true);

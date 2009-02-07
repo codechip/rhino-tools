@@ -7,12 +7,18 @@ namespace Rhino.DHT
     public interface IDistributedHashTable : IDisposable
     {
         [OperationContract]
-        PutResult[] Put(AddValue[] valuesToAdd);
+        PutResult[] Put(params AddValue[] valuesToAdd);
 
         [OperationContract]
-        Value[][] Get(GetValue[] valuesToGet);
+        Value[][] Get(params GetValue[] valuesToGet);
 
         [OperationContract]
-        bool[] Remove(RemoveValue[] valuesToRemove);
+        bool[] Remove(params RemoveValue[] valuesToRemove);
+
+        [OperationContract]
+        void Replicate(ReplicationValue[] valuesToReplicate);
+
+        [OperationContract]
+        void RegisterNodes(Uri[] uris);
     }
 }

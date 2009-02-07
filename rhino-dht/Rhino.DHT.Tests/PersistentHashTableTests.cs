@@ -59,6 +59,30 @@ namespace Rhino.DHT.Tests
         }
 
         [Fact]
+        public void Can_consume_replication_actions()
+        {
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
+                table.Batch(actions =>
+                {
+                    actions.RecordChangedForReplication = true;
+                    actions.Put("test", new ValueVersion[0], new byte[] {123, 12, 12});
+
+                    actions.Commit();
+                });
+
+                table.Batch(actions =>
+                {
+                    var values = actions.ConsumeReplicationValues();
+                    Assert.Equal(1, values.Length);
+                    Assert.Equal(ReplicationAction.Added, values[0].Action);
+                    Assert.Equal("test", values[0].Key);
+                });
+            }
+        }
+
+        [Fact]
         public void Will_record_addition_for_replication()
         {
             using (var table = new PersistentHashTable(testDatabase))

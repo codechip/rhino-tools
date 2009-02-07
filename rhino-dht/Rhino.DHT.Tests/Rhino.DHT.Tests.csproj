@@ -60,6 +60,7 @@
     <Compile Include="PersistentHashTableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteAppDomainRunner.cs" />
+    <Compile Include="ReplicationFixture.cs" />
     <Compile Include="SingleEndpointDHT.cs" />
   </ItemGroup>
   <ItemGroup>

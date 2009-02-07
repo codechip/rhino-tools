@@ -10,7 +10,7 @@ namespace Rhino.DHT
         InstanceContextMode = InstanceContextMode.Single,
         ConcurrencyMode = ConcurrencyMode.Multiple
         )]
-    public class DistributedHashTable : IDistributedHashTable, IReplicatedDistributedHashTable
+    public class DistributedHashTable : IDistributedHashTable
     {
         readonly PersistentHashTable hashTable;
 
@@ -22,6 +22,11 @@ namespace Rhino.DHT
         public DistributedHashTable(string database)
             : this(database, null)
         {
+        }
+
+        public string[] ReplicationDestinations
+        {
+            get { return hashTable.ReplicationDestinations; }
         }
 
         public DistributedHashTable(string database, Action<InstanceParameters> configure)
@@ -136,6 +141,14 @@ namespace Rhino.DHT
 
                 actions.Commit();
             });
+        }
+
+        public void RegisterNodes(Uri[] uris)
+        {
+            foreach (var uri in uris)
+            {
+                hashTable.AddReplicationDestination(uri.ToString());
+            }
         }
     }
 }

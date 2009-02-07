@@ -5,9 +5,14 @@ using System.Linq;
 
 namespace Rhino.DHT
 {
-    public class MultiEndpointDistributedHashTable : IDistributedHashTable, IDisposable
+    public class MultiEndpointDistributedHashTable
     {
         private readonly IDistributedHashTable[] endpoints;
+
+        public IDistributedHashTable[] Endpoints
+        {
+            get { return endpoints; }
+        }
 
         public MultiEndpointDistributedHashTable(Uri[] uris, Binding binding)
         {
@@ -18,6 +23,13 @@ namespace Rhino.DHT
                 {
                     endpoints[i] = ChannelFactory<IDistributedHashTable>
                         .CreateChannel(binding, new EndpointAddress(uris[i]));
+
+                    var copy = i;
+                    endpoints[i].RegisterNodes(
+                        uris
+                        .Where(x => x != uris[copy])
+                        .ToArray()
+                        );
                 }
             }
             catch (Exception)
@@ -31,10 +43,10 @@ namespace Rhino.DHT
             }
         }
 
-        public PutResult[] Put(AddValue[] valuesToAdd)
+        public PutResult[] Put(params AddValue[] valuesToAdd)
         {
             var groupedByUri = from x in valuesToAdd
-                    group x by GetUrl(x.Key);
+                               group x by GetUrl(x.Key);
             var versions = new PutResult[valuesToAdd.Length];
             foreach (var values in groupedByUri)
             {
@@ -48,7 +60,7 @@ namespace Rhino.DHT
             return versions;
         }
 
-        public Value[][] Get(GetValue[] valuesToGet)
+        public Value[][] Get(params GetValue[] valuesToGet)
         {
             var groupedByUri = from x in valuesToGet
                                group x by GetUrl(x.Key);
@@ -65,7 +77,7 @@ namespace Rhino.DHT
             return valuesFromEndpoints;
         }
 
-        public bool[] Remove(RemoveValue[] valuesToRemove)
+        public bool[] Remove(params RemoveValue[] valuesToRemove)
         {
             var groupedByUri = from x in valuesToRemove
                                group x by GetUrl(x.Key);

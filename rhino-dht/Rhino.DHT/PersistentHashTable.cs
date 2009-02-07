@@ -17,11 +17,13 @@ namespace Rhino.DHT
         private readonly string database;
         public Action<InstanceParameters> Configure;
         private readonly string path;
+        private ManualResetEvent waitForDisposable;
         private Thread replicationThread;
         private readonly HashSet<string> replicationDestinations = new HashSet<string>();
         private volatile bool recordChangedForReplication;
+        private readonly string name;
 
-        private bool    RecordChangedForReplication
+        private bool RecordChangedForReplication
         {
             get { return recordChangedForReplication; }
             set
@@ -29,15 +31,20 @@ namespace Rhino.DHT
                 recordChangedForReplication = value;
                 if (recordChangedForReplication && replicationThread == null)
                 {
+                    waitForDisposable = new ManualResetEvent(false);
                     replicationThread = new Thread(HandleReplication)
                     {
                         IsBackground = true,
+                        Name = "DHT: " + name
                     };
                     replicationThread.Start();
                 }
                 if (recordChangedForReplication == false && replicationThread != null)
                 {
+                    waitForDisposable.Set();
                     replicationThread.Join();
+                    waitForDisposable.Close();
+                    waitForDisposable = null;
                     replicationThread = null;
                 }
             }
@@ -58,10 +65,11 @@ namespace Rhino.DHT
 
         public PersistentHashTable(string database)
         {
+            this.name = database;
             this.database = database;
             if (Path.IsPathRooted(database) == false)
                 this.database = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, database);
-            path = database;
+            path = this.database;
             this.database = Path.Combine(this.database, Path.GetFileName(database));
 
             instance = new Instance(database + "_" + Guid.NewGuid());
@@ -227,7 +235,7 @@ namespace Rhino.DHT
                 bool shouldWait = false;
                 Batch(actions =>
                 {
-                    var replicationValues = GetReplicationValues(actions);
+                    var replicationValues = actions.ConsumeReplicationValues();
                     if (replicationValues.Length == 0)
                     {
                         shouldWait = true;
@@ -236,7 +244,7 @@ namespace Rhino.DHT
                     var destinations = ReplicationDestinations;
                     foreach (var destination in destinations)
                     {
-                        var channel = ChannelFactory<IReplicatedDistributedHashTable>.CreateChannel(
+                        var channel = ChannelFactory<IDistributedHashTable>.CreateChannel(
                             new NetTcpBinding(),
                             new EndpointAddress(destination));
                         try
@@ -254,66 +262,13 @@ namespace Rhino.DHT
                                 communicationObject.Close();
                         }
                     }
+
+                    actions.Commit();
                 });
 
                 if (shouldWait)
-                    Thread.Sleep(TimeSpan.FromSeconds(30));
+                    waitForDisposable.WaitOne(TimeSpan.FromSeconds(30));
             }
-        }
-
-        private static ReplicationValue[] GetReplicationValues(PersistentHashTableActions actions)
-        {
-            var replicationActions = new List<ReplicationValue>();
-            var columns = Api.GetColumnDictionary(actions.Session, actions.ReplicationActions);
-            Api.MoveBeforeFirst(actions.Session, actions.ReplicationActions);
-            while (Api.TryMoveNext(actions.Session, actions.ReplicationActions))
-            {
-                var replicationAction = (ReplicationAction)
-                                        Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions,
-                                                                  columns["action_type"]).Value;
-                var key = Api.RetrieveColumnAsString(actions.Session, actions.ReplicationActions, columns["key"],
-                                                     Encoding.Unicode);
-
-                if (replicationAction == ReplicationAction.Added)
-                {
-                    var versionNumber = Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions, columns["version_number"]).Value;
-                    var columnAsBytes = Api.RetrieveColumn(actions.Session, actions.ReplicationActions,
-                                                           columns["version_instance_id"]);
-                    var instanceId = new Guid(columnAsBytes);
-
-                    var actualValue = actions.Get(key, new ValueVersion
-                    {
-                        InstanceId = instanceId,
-                        Version = versionNumber
-                    });
-
-                    if (actualValue == null)//it was removed in the meantime, so we ignore this
-                        continue;
-
-                    replicationActions.Add(new ReplicationValue
-                    {
-                        Action = ReplicationAction.Added,
-                        Key = key,
-                        Bytes = actualValue.Data,
-                        ExpiresAt = actualValue.ExpiresAt,
-                        ParentVersions = actualValue.ParentVersions
-                    });
-                }
-                else
-                {
-                    replicationActions.Add(new ReplicationValue
-                    {
-                        Action = ReplicationAction.Removed,
-                        Key = key,
-                    });
-                }
-
-                Api.JetDelete(actions.Session, actions.ReplicationActions);
-                if (replicationActions.Count < 100)
-                    break;
-            }
-
-            return replicationActions.ToArray();
         }
     }
 }

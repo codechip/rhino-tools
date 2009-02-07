@@ -18,7 +18,6 @@ namespace Rhino.DHT
         private readonly Table data;
         private readonly Table replicationActions;
         private readonly Guid instanceId;
-        private bool recordChangedForReplication;
         private readonly JET_DBID dbid;
         private readonly Dictionary<string, JET_COLUMNID> keysColumns;
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
@@ -36,11 +35,7 @@ namespace Rhino.DHT
             get { return session; }
         }
 
-        public bool RecordChangedForReplication
-        {
-            get { return recordChangedForReplication; }
-            set { recordChangedForReplication = value; }
-        }
+        public bool RecordChangedForReplication { get; set; }
 
         public Transaction Transaction
         {
@@ -77,7 +72,7 @@ namespace Rhino.DHT
             this.database = database;
             this.cache = cache;
             this.instanceId = instanceId;
-            this.recordChangedForReplication = recordChangedForReplication;
+            this.RecordChangedForReplication = recordChangedForReplication;
             session = new Session(instance);
 
             transaction = new Transaction(session);
@@ -157,7 +152,7 @@ namespace Rhino.DHT
                 update.Save();
             }
 
-            if (recordChangedForReplication)
+            if (RecordChangedForReplication)
             {
                 using (var addReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
                 {
@@ -463,7 +458,7 @@ namespace Rhino.DHT
             {
                 DeleteInactiveVersions(key, parentVersions);
 
-                if (recordChangedForReplication)
+                if (RecordChangedForReplication)
                 {
                     using (var removeReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
                     {
@@ -484,6 +479,60 @@ namespace Rhino.DHT
                 commitSyncronization.Add(() => cache.Remove(GetKey(key)));
             }
             return doesAllVersionsMatch;
+        }
+
+        public ReplicationValue[] ConsumeReplicationValues()
+        {
+            var replicationValues = new List<ReplicationValue>();
+            var columns = Api.GetColumnDictionary(Session, ReplicationActions);
+            Api.MoveBeforeFirst(Session, ReplicationActions);
+            while (Api.TryMoveNext(Session, ReplicationActions))
+            {
+                var replicationAction = (ReplicationAction)
+                                        Api.RetrieveColumnAsInt32(Session, ReplicationActions,
+                                                                  columns["action_type"]).Value;
+                var key = Api.RetrieveColumnAsString(Session, ReplicationActions, columns["key"],
+                                                     Encoding.Unicode);
+
+                if (replicationAction == ReplicationAction.Added)
+                {
+                    var versionNumber = Api.RetrieveColumnAsInt32(Session, ReplicationActions, columns["version_number"]).Value;
+                    var columnAsBytes = Api.RetrieveColumn(Session, ReplicationActions,
+                                                           columns["version_instance_id"]);
+
+                    var actualValue = Get(key, new ValueVersion
+                    {
+                        InstanceId = new Guid(columnAsBytes),
+                        Version = versionNumber
+                    });
+
+                    if (actualValue == null)//it was removed in the meantime, so we ignore this
+                        continue;
+
+                    replicationValues.Add(new ReplicationValue
+                    {
+                        Action = ReplicationAction.Added,
+                        Key = key,
+                        Bytes = actualValue.Data,
+                        ExpiresAt = actualValue.ExpiresAt,
+                        ParentVersions = actualValue.ParentVersions
+                    });
+                }
+                else
+                {
+                    replicationValues.Add(new ReplicationValue
+                    {
+                        Action = ReplicationAction.Removed,
+                        Key = key,
+                    });
+                }
+
+                Api.JetDelete(Session, ReplicationActions);
+                if (replicationValues.Count < 100)
+                    break;
+            }
+
+            return replicationValues.ToArray();
         }
     }
 }
