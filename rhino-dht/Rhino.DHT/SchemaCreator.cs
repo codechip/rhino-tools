@@ -53,6 +53,7 @@ namespace Rhino.DHT
             JET_TABLEID tableid;
             Api.JetCreateTable(session, dbid, "keys", 16, 100, out tableid);
             JET_COLUMNID columnid;
+
             Api.JetAddColumn(session, tableid, "key", new JET_COLUMNDEF
             {
                 cbMax = 255,
@@ -61,12 +62,18 @@ namespace Rhino.DHT
                 grbit = ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
 
-            Api.JetAddColumn(session, tableid, "version", new JET_COLUMNDEF
+            Api.JetAddColumn(session, tableid, "version_instance_id", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Binary,
+                cbMax = 16,
+                grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL
+            }, null, 0, out columnid);
+
+            Api.JetAddColumn(session, tableid, "version_number", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.Long,
                 grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL | ColumndefGrbit.ColumnAutoincrement
             }, null, 0, out columnid);
-
 
             Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF
             {
@@ -74,7 +81,7 @@ namespace Rhino.DHT
                 grbit = ColumndefGrbit.ColumnFixed
             }, null, 0, out columnid);
 
-            var indexDef = "+key\0+version\0\0";
+            var indexDef = "+key\0+version_number\0+version_instance_id\0\0";
             Api.JetCreateIndex(session, tableid, "pk", CreateIndexGrbit.IndexPrimary, indexDef, indexDef.Length,
                                100);
 
@@ -100,10 +107,17 @@ namespace Rhino.DHT
                 grbit = ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
 
-            Api.JetAddColumn(session, tableid, "version", new JET_COLUMNDEF
+            Api.JetAddColumn(session, tableid, "version_instance_id", new JET_COLUMNDEF
+            {
+                coltyp = JET_coltyp.Binary,
+                cbMax = 16,
+                grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL
+            }, null, 0, out columnid);
+
+            Api.JetAddColumn(session, tableid, "version_number", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.Long,
-                grbit = ColumndefGrbit.ColumnNotNULL
+                grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
 
             Api.JetAddColumn(session, tableid, "data", new JET_COLUMNDEF
@@ -127,12 +141,13 @@ namespace Rhino.DHT
 
             Api.JetAddColumn(session, tableid, "parentVersions", new JET_COLUMNDEF
             {
-                coltyp = JET_coltyp.Long,
+                coltyp = JET_coltyp.Binary,
+                cbMax = 20, /*16 + 4*/
                 grbit = ColumndefGrbit.ColumnTagged | ColumndefGrbit.ColumnMultiValued
             }, null, 0, out columnid);
 
 
-            var indexDef = "+key\0+version\0\0";
+            var indexDef = "+key\0+version_number\0+version_instance_id\0\0";
             Api.JetCreateIndex(session, tableid, "pk", CreateIndexGrbit.IndexPrimary, indexDef, indexDef.Length,
                                100);
         }

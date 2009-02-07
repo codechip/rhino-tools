@@ -59,7 +59,7 @@ namespace Rhino.DHT.Tests
                 },
             });
 
-            Assert.Equal(new[] {1, 1, 1}, versions.Select(x=>x.Version).ToArray());
+            Assert.Equal(new[] {1, 1, 1}, versions.Select(x=>x.Version.Version).ToArray());
 
             var values = distributedHashTable.Get(new[]
             {
@@ -104,28 +104,28 @@ namespace Rhino.DHT.Tests
                 },
             });
 
-            Assert.Equal(new[] { 1, 1, 1 }, versions.Select(e=>e.Version).ToArray());
+            Assert.Equal(new[] { 1, 1, 1 }, versions.Select(e => e.Version.Version).ToArray());
 
             var removed = distributedHashTable.Remove(new[]
             {
                 new RemoveValue()
                 {
                     Key = "test74",
-                    ParentVersions = new []{1}
+                    ParentVersions = new []{versions[0].Version}
                 },
                 new RemoveValue
                 {
                     Key = "test75",
-                    ParentVersions = new []{1}
+                    ParentVersions = new []{versions[1].Version}
                 },
                 new RemoveValue
                 {
                     Key = "test77",
-                    ParentVersions = new []{1}
+                    ParentVersions = new []{versions[2].Version}
                 },
             });
 
-            Assert.Equal(new[] {true, true, true}, removed);
+            Assert.Equal(new[] { true, true, true }, removed);
 
             var values = distributedHashTable.Get(new[]
             {

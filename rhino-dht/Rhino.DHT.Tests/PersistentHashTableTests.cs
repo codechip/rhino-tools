@@ -48,9 +48,9 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("test", new int[0], new byte[] { 1 });
+                    actions.Put("test", new ValueVersion[0], new byte[] { 1 });
                     var values = actions.Get("test");
-                    Assert.Equal(1, values[0].Version);
+                    Assert.Equal(1, values[0].Version.Version);
                     Assert.Equal(new byte[] { 1 }, values[0].Data);
                 });
             }
@@ -66,7 +66,7 @@ namespace Rhino.DHT.Tests
                 table.Batch(actions =>
                 {
                     var bytes = Encoding.UTF8.GetBytes("abcdefgiklmnqrstwxyz");
-                    actions.Put("test", new int[0], bytes);
+                    actions.Put("test", new ValueVersion[0], bytes);
                     var values = actions.Get("test");
                     Assert.Equal(
                         SHA256.Create().ComputeHash(bytes),
@@ -83,14 +83,14 @@ namespace Rhino.DHT.Tests
             {
                 table.Initialize();
 
-                int versionOfA = 0, versionOfC = 0;
+                ValueVersion versionOfA = null, versionOfC = null;
 
                 table.Batch(actions =>
                 {
-                    versionOfA = actions.Put("a", new int[0], new byte[] { 1 }).Version;
-                    actions.Put("b", new int[0], new byte[] { 1 });
-                    versionOfC = actions.Put("c", new int[0], new byte[] { 1 }).Version;
-                    actions.Put("d", new int[0], new byte[] { 1 });
+                    versionOfA = actions.Put("a", new ValueVersion[0], new byte[] { 1 }).Version;
+                    actions.Put("b", new ValueVersion[0], new byte[] { 1 });
+                    versionOfC = actions.Put("c", new ValueVersion[0], new byte[] { 1 }).Version;
+                    actions.Put("d", new ValueVersion[0], new byte[] { 1 });
 
                     actions.Commit();
                 });
@@ -117,8 +117,8 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    var version1 = actions.Put("test", new int[0], new byte[] { 1 });
-                    actions.Put("test", new int[0], new byte[] { 2 });
+                    var version1 = actions.Put("test", new ValueVersion[0], new byte[] { 1 });
+                    actions.Put("test", new ValueVersion[0], new byte[] { 2 });
                     var value = actions.Get("test", version1.Version);
                     Assert.Equal(new byte[] { 1 }, value.Data);
                 });
@@ -134,12 +134,16 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    var version1 = actions.Put("test", new int[0], new byte[] { 1 });
-                    actions.Put("test", new int[0], new byte[] { 2 });
+                    var version1 = actions.Put("test", new ValueVersion[0], new byte[] { 1 });
+                    var version2 = actions.Put("test", new ValueVersion[0], new byte[] { 2 });
                     var value = actions.Get("test", version1.Version);
                     Assert.Equal(new byte[] { 1 }, value.Data);
 
-                    actions.Put("test", new[] { 1, 2 }, new byte[] { 3 });
+                    actions.Put("test", new[]
+                    {
+                        version1.Version,
+                        version2.Version
+                    }, new byte[] {3});
 
                     actions.Commit();
 
@@ -157,8 +161,8 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("test", new int[0], new byte[] { 1 });
-                    var put = actions.Put("test", new int[0], new byte[] {2}, null, false);
+                    actions.Put("test", new ValueVersion[0], new byte[] { 1 });
+                    var put = actions.Put("test", new ValueVersion[0], new byte[] { 2 }, null, false);
                     Assert.True(put.ConflictExists);
 
                     actions.Commit();
@@ -178,15 +182,15 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("test", new int[0], new byte[] { 1 });
-                    actions.Put("test", new int[0], new byte[] { 2 });
+                    actions.Put("test", new ValueVersion[0], new byte[] { 1 });
+                    actions.Put("test", new ValueVersion[0], new byte[] { 2 });
                     var values = actions.Get("test");
                     Assert.Equal(2, values.Length);
 
-                    Assert.Equal(1, values[0].Version);
+                    Assert.Equal(1, values[0].Version.Version);
                     Assert.Equal(new byte[] { 1 }, values[0].Data);
 
-                    Assert.Equal(2, values[1].Version);
+                    Assert.Equal(2, values[1].Version.Version);
                     Assert.Equal(new byte[] { 2 }, values[1].Data);
                 });
             }
@@ -201,16 +205,16 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("test", new int[0], new byte[] { 1 });
-                    actions.Put("test", new int[0], new byte[] { 2 });
+                    var version1 = actions.Put("test", new ValueVersion[0], new byte[] { 1 });
+                    var version2 = actions.Put("test", new ValueVersion[0], new byte[] { 2 });
                     var values = actions.Get("test");
                     Assert.Equal(2, values.Length);
-                    actions.Put("test", new[] { 1, 2 }, new byte[] { 3 });
+                    actions.Put("test", new[] { version1.Version, version2.Version }, new byte[] { 3 });
 
                     values = actions.Get("test");
                     Assert.Equal(1, values.Length);
                     Assert.Equal(new byte[] { 3 }, values[0].Data);
-                    Assert.Equal(3, values[0].Version);
+                    Assert.Equal(3, values[0].Version.Version);
                 });
             }
         }
@@ -224,7 +228,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 });
+                    actions.Put("abc1", new ValueVersion[0], new byte[] { 1 });
                     var values = actions.Get("abc10");
                     Assert.Equal(0, values.Length);
 
@@ -243,7 +247,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 }, DateTime.Now.AddYears(1), true);
+                    actions.Put("abc1", new ValueVersion[0], new byte[] { 1 }, DateTime.Now.AddYears(1), true);
 
                     var values = actions.Get("abc1");
                     Assert.NotEqual(0, values.Length);
@@ -260,11 +264,18 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 });
+                    var version1 = actions.Put("abc1", new ValueVersion[0], new byte[] { 1 });
 
-                    actions.Put("abc1", new[] { 1 }, new byte[] { 1 });
-                    actions.Put("abc1", new[] { 1 }, new byte[] { 1 });
-                    actions.Put("abc1", new[] { 3 }, new byte[] { 1 });
+                    actions.Put("abc1", new[] { version1.Version}, new byte[] { 1 });
+                    actions.Put("abc1", new[] { version1.Version }, new byte[] { 1 });
+                    actions.Put("abc1", new[]
+                    {
+                        new ValueVersion
+                        {
+                            InstanceId = version1.Version.InstanceId,
+                            Version = 3
+                        },
+                    }, new byte[] {1});
 
                     var values = actions.Get("abc1");
                     Assert.Equal(3, values.Length);
@@ -285,7 +296,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 },
+                    actions.Put("abc1", new ValueVersion[0], new byte[] { 1 },
                         DateTime.Now.AddYears(-1), true);
                     var values = actions.Get("abc1");
 
@@ -303,7 +314,7 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 },
+                    actions.Put("abc1", new ValueVersion[0], new byte[] { 1 },
                         DateTime.Now, true);
 
                     actions.Commit();
@@ -331,12 +342,12 @@ namespace Rhino.DHT.Tests
 
                 table.Batch(actions =>
                 {
-                    actions.Put("abc1", new int[0], new byte[] { 1 });
+                    actions.Put("abc1", new ValueVersion[0], new byte[] { 1 });
 
 
-                    table.Batch(actions2=>
+                    table.Batch(actions2 =>
                     {
-                        actions2.Put("dve", new int[0], new byte[] {3});
+                        actions2.Put("dve", new ValueVersion[0], new byte[] { 3 });
                         actions2.Commit();
                     });
 

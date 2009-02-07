@@ -51,7 +51,7 @@ namespace Rhino.DHT
                 {
                 	var version = actions.Put(
                 		value.Key,
-                		value.ParentVersions ?? new int[0],
+                        value.ParentVersions ?? new ValueVersion[0],
                 		value.Bytes,
                 		value.ExpiresAt,
                 		value.OptimisticConcurrency == false);
@@ -78,7 +78,7 @@ namespace Rhino.DHT
                     {
                         var version = actions.Get(
                             value.Key,
-                            value.SpecifiedVersion.Value);
+                            value.SpecifiedVersion);
                         values.Add(new[] { version, });
                     }
                 }
@@ -96,7 +96,7 @@ namespace Rhino.DHT
                 {
                     var removed = actions.Remove(
                         value.Key,
-                        value.ParentVersions ?? new int[0]);
+                        value.ParentVersions ?? new ValueVersion[0]);
                     values.Add(removed);
                 }
                 actions.Commit();

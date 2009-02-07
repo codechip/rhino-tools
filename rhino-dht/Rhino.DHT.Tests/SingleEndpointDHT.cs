@@ -18,7 +18,7 @@ namespace Rhino.DHT.Tests
 
             address = new Uri("net.tcp://localhost:6212/cache");
             host = new ServiceHost(typeof(DistributedHashTable), address);
-            host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), this.address);
+            host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), address);
             host.Open();
         }
 
