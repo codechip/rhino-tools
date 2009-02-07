@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Web;
 using Microsoft.Isam.Esent.Interop;
 using System.Linq;
@@ -15,10 +17,31 @@ namespace Rhino.DHT
         private readonly string database;
         public Action<InstanceParameters> Configure;
         private readonly string path;
-        private Guid id;
-
+        private Thread replicationThread;
         private readonly HashSet<string> replicationDestinations = new HashSet<string>();
-        private bool recordChangedForReplication;
+        private volatile bool recordChangedForReplication;
+
+        private bool    RecordChangedForReplication
+        {
+            get { return recordChangedForReplication; }
+            set
+            {
+                recordChangedForReplication = value;
+                if (recordChangedForReplication && replicationThread == null)
+                {
+                    replicationThread = new Thread(HandleReplication)
+                    {
+                        IsBackground = true,
+                    };
+                    replicationThread.Start();
+                }
+                if (recordChangedForReplication == false && replicationThread != null)
+                {
+                    replicationThread.Join();
+                    replicationThread = null;
+                }
+            }
+        }
 
         public string[] ReplicationDestinations
         {
@@ -31,10 +54,7 @@ namespace Rhino.DHT
             }
         }
 
-        public Guid Id
-        {
-            get { return id; }
-        }
+        public Guid Id { get; private set; }
 
         public PersistentHashTable(string database)
         {
@@ -82,7 +102,7 @@ namespace Rhino.DHT
                                                                      Encoding.Unicode);
                         replicationDestinations.Add(destination);
                     } while (Api.TryMoveNext(session, details));
-                    recordChangedForReplication = replicationDestinations.Count > 0;
+                    RecordChangedForReplication = replicationDestinations.Count > 0;
                 }
             });
         }
@@ -96,7 +116,7 @@ namespace Rhino.DHT
                     Api.JetMove(session, details, JET_Move.First, MoveGrbit.None);
                     var columnids = Api.GetColumnDictionary(session, details);
                     var column = Api.RetrieveColumn(session, details, columnids["id"]);
-                    id = new Guid(column);
+                    Id = new Guid(column);
                 }
             });
         }
@@ -123,6 +143,8 @@ namespace Rhino.DHT
 
         public void Dispose()
         {
+            //SIDE EFFECT - Close the thread for replication
+            RecordChangedForReplication = false;
             if (needToDisposeInstance)
             {
                 instance.Dispose();
@@ -138,7 +160,7 @@ namespace Rhino.DHT
                     if (replicationDestinations.Add(destination) == false)
                         return;
 
-                    using(var tx = new Transaction(session))
+                    using (var tx = new Transaction(session))
                     using (var details = new Table(session, dbid, "replication_destinations", OpenTableGrbit.None))
                     using (var update = new Update(session, details, JET_prep.Insert))
                     {
@@ -149,7 +171,7 @@ namespace Rhino.DHT
                         update.Save();
                         tx.Commit(CommitTransactionGrbit.None);
                     }
-                    recordChangedForReplication = replicationDestinations.Count > 0;
+                    RecordChangedForReplication = replicationDestinations.Count > 0;
                 }
             });
         }
@@ -162,7 +184,7 @@ namespace Rhino.DHT
                 {
                     if (replicationDestinations.Remove(destination) == false)
                         return;
-                    
+
                     using (var tx = new Transaction(session))
                     using (var details = new Table(session, dbid, "replication_destinations", OpenTableGrbit.None))
                     {
@@ -170,13 +192,13 @@ namespace Rhino.DHT
 
                         if (Api.TryMoveFirst(session, details) == false)
                             return;
-                        
+
                         do
                         {
-                            var destinationInTable = 
+                            var destinationInTable =
                                 Api.RetrieveColumnAsString(session, details, columns["destination"]);
-                            
-                            if (destinationInTable != destination) 
+
+                            if (destinationInTable != destination)
                                 continue;
 
                             Api.JetDelete(session, details);
@@ -185,17 +207,113 @@ namespace Rhino.DHT
 
                         tx.Commit(CommitTransactionGrbit.None);
                     }
-                    recordChangedForReplication = replicationDestinations.Count > 0;
+                    RecordChangedForReplication = replicationDestinations.Count > 0;
                 }
             });
         }
 
         public void Batch(Action<PersistentHashTableActions> action)
         {
-            using (var pht = new PersistentHashTableActions(instance, database, HttpRuntime.Cache, id, recordChangedForReplication))
+            using (var pht = new PersistentHashTableActions(instance, database, HttpRuntime.Cache, Id, RecordChangedForReplication))
             {
                 action(pht);
             }
+        }
+
+        private void HandleReplication()
+        {
+            while (recordChangedForReplication)
+            {
+                bool shouldWait = false;
+                Batch(actions =>
+                {
+                    var replicationValues = GetReplicationValues(actions);
+                    if (replicationValues.Length == 0)
+                    {
+                        shouldWait = true;
+                        return;
+                    }
+                    var destinations = ReplicationDestinations;
+                    foreach (var destination in destinations)
+                    {
+                        var channel = ChannelFactory<IReplicatedDistributedHashTable>.CreateChannel(
+                            new NetTcpBinding(),
+                            new EndpointAddress(destination));
+                        try
+                        {
+                            channel.Replicate(replicationValues);
+                        }
+                        catch
+                        {
+                            // ignore replication failure, it might be the node is dead
+                        }
+                        finally
+                        {
+                            var communicationObject = channel as ICommunicationObject;
+                            if (communicationObject != null)
+                                communicationObject.Close();
+                        }
+                    }
+                });
+
+                if (shouldWait)
+                    Thread.Sleep(TimeSpan.FromSeconds(30));
+            }
+        }
+
+        private static ReplicationValue[] GetReplicationValues(PersistentHashTableActions actions)
+        {
+            var replicationActions = new List<ReplicationValue>();
+            var columns = Api.GetColumnDictionary(actions.Session, actions.ReplicationActions);
+            Api.MoveBeforeFirst(actions.Session, actions.ReplicationActions);
+            while (Api.TryMoveNext(actions.Session, actions.ReplicationActions))
+            {
+                var replicationAction = (ReplicationAction)
+                                        Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions,
+                                                                  columns["action_type"]).Value;
+                var key = Api.RetrieveColumnAsString(actions.Session, actions.ReplicationActions, columns["key"],
+                                                     Encoding.Unicode);
+
+                if (replicationAction == ReplicationAction.Added)
+                {
+                    var versionNumber = Api.RetrieveColumnAsInt32(actions.Session, actions.ReplicationActions, columns["version_number"]).Value;
+                    var columnAsBytes = Api.RetrieveColumn(actions.Session, actions.ReplicationActions,
+                                                           columns["version_instance_id"]);
+                    var instanceId = new Guid(columnAsBytes);
+
+                    var actualValue = actions.Get(key, new ValueVersion
+                    {
+                        InstanceId = instanceId,
+                        Version = versionNumber
+                    });
+
+                    if (actualValue == null)//it was removed in the meantime, so we ignore this
+                        continue;
+
+                    replicationActions.Add(new ReplicationValue
+                    {
+                        Action = ReplicationAction.Added,
+                        Key = key,
+                        Bytes = actualValue.Data,
+                        ExpiresAt = actualValue.ExpiresAt,
+                        ParentVersions = actualValue.ParentVersions
+                    });
+                }
+                else
+                {
+                    replicationActions.Add(new ReplicationValue
+                    {
+                        Action = ReplicationAction.Removed,
+                        Key = key,
+                    });
+                }
+
+                Api.JetDelete(actions.Session, actions.ReplicationActions);
+                if (replicationActions.Count < 100)
+                    break;
+            }
+
+            return replicationActions.ToArray();
         }
     }
 }

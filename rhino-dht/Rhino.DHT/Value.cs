@@ -8,7 +8,7 @@ namespace Rhino.DHT
         public DateTime Timestamp { get; set; }
         public string Key { get; set; }
         public ValueVersion Version { get; set; }
-        public int[] ParentVersions { get; set; }
+        public ValueVersion[] ParentVersions { get; set; }
         public byte[] Data { get; set; }
         public byte[] Sha256Hash { get; set; }
     }

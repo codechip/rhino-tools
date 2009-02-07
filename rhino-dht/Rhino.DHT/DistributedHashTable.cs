@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using Microsoft.Isam.Esent.Interop;
+using System.Linq;
 
 namespace Rhino.DHT
 {
@@ -9,7 +10,7 @@ namespace Rhino.DHT
         InstanceContextMode = InstanceContextMode.Single,
         ConcurrencyMode = ConcurrencyMode.Multiple
         )]
-    public class DistributedHashTable : IDistributedHashTable
+    public class DistributedHashTable : IDistributedHashTable, IReplicatedDistributedHashTable
     {
         readonly PersistentHashTable hashTable;
 
@@ -48,12 +49,12 @@ namespace Rhino.DHT
             {
                 foreach (var value in valuesToAdd)
                 {
-                	var version = actions.Put(
-                		value.Key,
+                    var version = actions.Put(
+                        value.Key,
                         value.ParentVersions ?? new ValueVersion[0],
-                		value.Bytes,
-                		value.ExpiresAt,
-                		value.OptimisticConcurrency == false);
+                        value.Bytes,
+                        value.ExpiresAt,
+                        value.OptimisticConcurrency == false);
                     versions.Add(version);
                 }
                 actions.Commit();
@@ -106,6 +107,35 @@ namespace Rhino.DHT
         public void Dispose()
         {
             hashTable.Dispose();
+        }
+
+        public void Replicate(ReplicationValue[] valuesToReplicate)
+        {
+            hashTable.Batch(actions =>
+            {
+                //we want to avoid cycles in replication
+                actions.RecordChangedForReplication = false;
+
+                foreach (var value in valuesToReplicate)
+                {
+                    if (value.Action == ReplicationAction.Added)
+                    {
+                        actions.Put(value.Key, value.ParentVersions, value.Bytes, value.ExpiresAt, true);
+                    }
+                    else
+                    {
+                        // some node accepted the removal, so we always remove it
+                        // not trying to check if this is fine from versioning 
+                        // perspective or not.
+                        var existingVersions = actions.Get(value.Key)
+                            .Select(x => x.Version)
+                            .ToArray();
+                        actions.Remove(value.Key, existingVersions);
+                    }
+                }
+
+                actions.Commit();
+            });
         }
     }
 }

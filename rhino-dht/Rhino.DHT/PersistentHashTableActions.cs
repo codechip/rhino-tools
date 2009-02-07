@@ -18,14 +18,14 @@ namespace Rhino.DHT
         private readonly Table data;
         private readonly Table replicationActions;
         private readonly Guid instanceId;
-        private readonly bool recordChangedForReplication;
+        private bool recordChangedForReplication;
         private readonly JET_DBID dbid;
         private readonly Dictionary<string, JET_COLUMNID> keysColumns;
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
         private readonly Dictionary<string, JET_COLUMNID> replicationActionsColumns;
         private readonly Cache cache;
         private readonly List<Action> commitSyncronization = new List<Action>();
-        
+
         public JET_DBID DatabaseId
         {
             get { return dbid; }
@@ -34,6 +34,12 @@ namespace Rhino.DHT
         public Session Session
         {
             get { return session; }
+        }
+
+        public bool RecordChangedForReplication
+        {
+            get { return recordChangedForReplication; }
+            set { recordChangedForReplication = value; }
         }
 
         public Transaction Transaction
@@ -146,29 +152,25 @@ namespace Rhino.DHT
                 if (expiresAt.HasValue)
                     Api.SetColumn(session, data, dataColumns["expiresAt"], expiresAt.Value.ToOADate());
 
-                using (var stream = new ColumnStream(session, data, dataColumns["parentVersions"]))
-                {
-                    foreach (var parentVersion in parentVersions)
-                    {
-                        var versionAsBytes = parentVersion.InstanceId.ToByteArray();
-                        stream.Write(versionAsBytes, 0, versionAsBytes.Length);
-                        versionAsBytes = BitConverter.GetBytes(parentVersion.Version);
-                        stream.Write(versionAsBytes, 0, versionAsBytes.Length);
-                        stream.Itag += 1;
-                    }
-                }
+                WriteAllParentVersions(parentVersions);
 
                 update.Save();
             }
 
-            using (var addReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+            if (recordChangedForReplication)
             {
-                Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"],(int)ReplicationAction.Added);
-                Api.SetColumn(session, replicationActions, replicationActionsColumns["version_number"], version.Value);
-                Api.SetColumn(session, replicationActions, replicationActionsColumns["version_instance_id"],instanceId.ToByteArray());
-                Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key, Encoding.Unicode);
+                using (var addReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+                {
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"],
+                                  (int)ReplicationAction.Added);
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["version_number"],
+                                  version.Value);
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["version_instance_id"],
+                                  instanceId.ToByteArray());
+                    Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key, Encoding.Unicode);
 
-                addReplicationAction.Save();
+                    addReplicationAction.Save();
+                }
             }
 
             return new PutResult
@@ -180,6 +182,25 @@ namespace Rhino.DHT
                     Version = version.Value
                 }
             };
+        }
+
+        private void WriteAllParentVersions(ValueVersion[] parentVersions)
+        {
+            var index = 1;
+            foreach (var parentVersion in parentVersions)
+            {
+                var buffer = new byte[20];
+                var versionAsBytes = parentVersion.InstanceId.ToByteArray();
+                Buffer.BlockCopy(versionAsBytes, 0, buffer, 0, 16);
+                versionAsBytes = BitConverter.GetBytes(parentVersion.Version);
+                Buffer.BlockCopy(versionAsBytes, 0, buffer, 16, 4);
+
+                Api.JetSetColumn(session, data, dataColumns["parentVersions"], buffer, buffer.Length, SetColumnGrbit.None, new JET_SETINFO
+                {
+                    itagSequence = index
+                });
+                index += 1;
+            }
         }
 
         private bool DoesAllVersionsMatch(string key, ValueVersion[] parentVersions)
@@ -197,7 +218,7 @@ namespace Rhino.DHT
 
             for (int i = 0; i < activeVersions.Length; i++)
             {
-                if(activeVersions[i].Version != parentVersions[i].Version || 
+                if (activeVersions[i].Version != parentVersions[i].Version ||
                     activeVersions[i].InstanceId != parentVersions[i].InstanceId)
                     return false;
             }
@@ -258,40 +279,43 @@ namespace Rhino.DHT
                 if (DateTime.Now > expiresAt)
                     return null;
             }
-            var versions = new List<int>();
-            using (var stream = new ColumnStream(session, data, dataColumns["parentVersions"]))
-            {
-                var parentVersion = ReadInt32(stream);
-                while (parentVersion != null)
-                {
-                    versions.Add(parentVersion.Value);
-                    stream.Itag += 1;
-                    parentVersion = ReadInt32(stream);
-                }
-            }
             return new Value
             {
                 Version = version,
                 Key = key,
-                ParentVersions = versions.ToArray(),
+                ParentVersions = GetParentVersions(),
                 Data = Api.RetrieveColumn(session, data, dataColumns["data"]),
                 Sha256Hash = Api.RetrieveColumn(session, data, dataColumns["sha256_hash"]),
                 ExpiresAt = expiresAt
             };
         }
 
-        private static int? ReadInt32(Stream stream)
+        private ValueVersion[] GetParentVersions()
         {
-            var buffer = new byte[sizeof(int)];
-            var indexToStartReading = 0;
-            do
+            var versions = new List<ValueVersion>();
+
+            int index = 1;
+            int size = -1;
+            while (size != 0)
             {
-                var readBytes = stream.Read(buffer, indexToStartReading, buffer.Length);
-                if (readBytes == 0)
-                    return null;
-                indexToStartReading += readBytes;
-            } while (indexToStartReading < buffer.Length);
-            return BitConverter.ToInt32(buffer, 0);
+                var buffer = new byte[20];
+                Api.JetRetrieveColumn(session, data, dataColumns["parentVersions"], buffer, 20, out size,
+                                      RetrieveColumnGrbit.None, new JET_RETINFO
+                                      {
+                                          itagSequence = index
+                                      });
+                if (size == 0)
+                    break;
+                index += 1;
+                var guidBuffer = new byte[16];
+                Buffer.BlockCopy(buffer, 0, guidBuffer, 0, 16);
+                versions.Add(new ValueVersion
+                {
+                    InstanceId = new Guid(guidBuffer),
+                    Version = BitConverter.ToInt32(buffer, 16)
+                });
+            }
+            return versions.ToArray();
         }
 
         public Value Get(string key, ValueVersion specifiedVersion)
@@ -439,12 +463,17 @@ namespace Rhino.DHT
             {
                 DeleteInactiveVersions(key, parentVersions);
 
-                using (var removeReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+                if (recordChangedForReplication)
                 {
-                    Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"], (int)ReplicationAction.Removed);
-                    Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key, Encoding.Unicode);
+                    using (var removeReplicationAction = new Update(session, replicationActions, JET_prep.Insert))
+                    {
+                        Api.SetColumn(session, replicationActions, replicationActionsColumns["action_type"],
+                                      (int)ReplicationAction.Removed);
+                        Api.SetColumn(session, replicationActions, replicationActionsColumns["key"], key,
+                                      Encoding.Unicode);
 
-                    removeReplicationAction.Save();
+                        removeReplicationAction.Save();
+                    }
                 }
 
                 foreach (var version in parentVersions)

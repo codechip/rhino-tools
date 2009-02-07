@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Isam.Esent.Interop;
 using Xunit;
+using System.Linq;
 
 namespace Rhino.DHT.Tests
 {
@@ -17,26 +18,26 @@ namespace Rhino.DHT.Tests
                 Directory.Delete(testDatabase, true);
         }
 
-		[Fact]
-		public void Id_of_table_is_persistent()
-		{
-			Guid id;
-			using (var table = new PersistentHashTable(testDatabase))
-			{
-				table.Initialize();
+        [Fact]
+        public void Id_of_table_is_persistent()
+        {
+            Guid id;
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
 
-				id = table.Id;
-				Assert.NotEqual(Guid.Empty, id);
-			}
+                id = table.Id;
+                Assert.NotEqual(Guid.Empty, id);
+            }
 
-			using (var table = new PersistentHashTable(testDatabase))
-			{
-				table.Initialize();
+            using (var table = new PersistentHashTable(testDatabase))
+            {
+                table.Initialize();
 
-				Assert.NotEqual(Guid.Empty, table.Id);
-				Assert.Equal(id,table.Id);
-			}
-		}
+                Assert.NotEqual(Guid.Empty, table.Id);
+                Assert.Equal(id, table.Id);
+            }
+        }
 
         [Fact]
         public void Replication_destination_is_persistent()
@@ -66,7 +67,7 @@ namespace Rhino.DHT.Tests
                 table.AddReplicationDestination("dummy");
                 table.Batch(actions =>
                 {
-                    actions.Put("test", new ValueVersion[0], new byte[] {123, 12, 12});
+                    actions.Put("test", new ValueVersion[0], new byte[] { 123, 12, 12 });
 
                     Api.TryMoveFirst(actions.Session, actions.ReplicationActions);
                     var columns = Api.GetColumnDictionary(actions.Session, actions.ReplicationActions);
@@ -88,11 +89,11 @@ namespace Rhino.DHT.Tests
             {
                 table.Initialize();
                 table.AddReplicationDestination("dummy");
-                
+
                 table.Batch(actions =>
                 {
                     var result = actions.Put("test", new ValueVersion[0], new byte[] { 123, 12, 12 });
-                    actions.Remove("test", new [] {result.Version});
+                    actions.Remove("test", new[] { result.Version });
 
                     Api.TryMoveFirst(actions.Session, actions.ReplicationActions);
 
@@ -243,7 +244,7 @@ namespace Rhino.DHT.Tests
                     {
                         version1.Version,
                         version2.Version
-                    }, new byte[] {3});
+                    }, new byte[] { 3 });
 
                     actions.Commit();
 
@@ -366,7 +367,7 @@ namespace Rhino.DHT.Tests
                 {
                     var version1 = actions.Put("abc1", new ValueVersion[0], new byte[] { 1 });
 
-                    actions.Put("abc1", new[] { version1.Version}, new byte[] { 1 });
+                    actions.Put("abc1", new[] { version1.Version }, new byte[] { 1 });
                     actions.Put("abc1", new[] { version1.Version }, new byte[] { 1 });
                     actions.Put("abc1", new[]
                     {
@@ -375,14 +376,14 @@ namespace Rhino.DHT.Tests
                             InstanceId = version1.Version.InstanceId,
                             Version = 3
                         },
-                    }, new byte[] {1});
+                    }, new byte[] { 1 });
 
                     var values = actions.Get("abc1");
                     Assert.Equal(3, values.Length);
 
-                    Assert.Equal(new[] { 1 }, values[0].ParentVersions);
-                    Assert.Equal(new[] { 1 }, values[1].ParentVersions);
-                    Assert.Equal(new[] { 3 }, values[2].ParentVersions);
+                    Assert.Equal(new[] { 1 }, values[0].ParentVersions.Select(x => x.Version).ToArray());
+                    Assert.Equal(new[] { 1 }, values[1].ParentVersions.Select(x => x.Version).ToArray());
+                    Assert.Equal(new[] { 3 }, values[2].ParentVersions.Select(x => x.Version).ToArray());
                 });
             }
         }
