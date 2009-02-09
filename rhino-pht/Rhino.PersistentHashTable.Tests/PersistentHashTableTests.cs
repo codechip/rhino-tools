@@ -6,7 +6,7 @@ using Microsoft.Isam.Esent.Interop;
 using Xunit;
 using System.Linq;
 
-namespace Rhino.DHT.Tests
+namespace Rhino.PersistentHashTable.Tests
 {
 	public class PersistentHashTableTests
 	{

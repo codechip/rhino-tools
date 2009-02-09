@@ -1,4 +1,4 @@
-namespace Rhino.DHT
+namespace Rhino.PersistentHashTable
 {
     public class RemoveRequest
     {

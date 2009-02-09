@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Isam.Esent.Interop;
 
-namespace Rhino.DHT
+namespace Rhino.PersistentHashTable
 {
     public static class EsentExtension
     {

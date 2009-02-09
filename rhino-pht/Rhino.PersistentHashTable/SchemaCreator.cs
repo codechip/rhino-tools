@@ -1,6 +1,6 @@
 using Microsoft.Isam.Esent.Interop;
 
-namespace Rhino.DHT
+namespace Rhino.PersistentHashTable
 {
 	using System;
 

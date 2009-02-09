@@ -4,7 +4,7 @@ using System.Text;
 using System.Web;
 using Microsoft.Isam.Esent.Interop;
 
-namespace Rhino.DHT
+namespace Rhino.PersistentHashTable
 {
     public class PersistentHashTable : IDisposable
     {

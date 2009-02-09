@@ -1,6 +1,6 @@
 using System;
 
-namespace Rhino.DHT
+namespace Rhino.PersistentHashTable
 {
     public class PutRequest
     {

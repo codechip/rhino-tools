@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <project
-	name="Rhino.DHT.Tests"
+	name="Rhino.PersistentHashTable.Tests"
 	default="test"
 	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
 >
@@ -13,16 +13,12 @@
   <target name="init" depends="common.init">
 
     <assemblyfileset id="project.references" basedir="${build.dir}">
+      
       <include name="xunit.dll"/>
       <include name="Esent.Interop.dll"/>
-      <include name="Rhino.DHT.dll" />
+      <include name="Rhino.PersistentHashTable.dll" />
       <include name="System.dll" />
       <include name="System.Core.dll" />
-      <include name="System.Data.dll" />
-      <include name="System.Data.DataSetExtensions.dll" />
-      <include name="System.ServiceModel.dll" />
-      <include name="System.Xml.dll" />
-      <include name="System.Xml.Linq.dll" />
       
     </assemblyfileset>
 
