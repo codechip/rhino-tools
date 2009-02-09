@@ -18,7 +18,7 @@
 		<include name="rhino-etl/default.build" />
 		<include name="rhino-igloo/default.build" />	
 		<include name="rhino-licensing/default.build" />		
-		<include name="rhino-dht/default.build" />
+		<include name="rhino-pht/default.build" />
 		<include name="rhino-service.bus/default.build" />
 		<!--<include name="NHibernate.Query.Generator/default.build" />-->
 	</fileset>
