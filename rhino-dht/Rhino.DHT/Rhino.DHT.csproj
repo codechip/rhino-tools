@@ -39,31 +39,14 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.ServiceModel">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddValue.cs" />
-    <Compile Include="ArrayExtension.cs" />
-    <Compile Include="DistributedHashTable.cs" />
+    <Compile Include="PutRequest.cs" />
     <Compile Include="EsentExtension.cs" />
-    <Compile Include="GetValue.cs" />
-    <Compile Include="IDistributedHashTable.cs" />
-    <Compile Include="MultiEndpointDistributedHashTable.cs" />
+    <Compile Include="GetRequest.cs" />
     <Compile Include="PutResult.cs" />
-    <Compile Include="RemoveValue.cs" />
-    <Compile Include="ReplicationAction.cs" />
-    <Compile Include="ReplicationValue.cs" />
+    <Compile Include="RemoveRequest.cs" />
     <Compile Include="Value.cs" />
     <Compile Include="PersistentHashTable.cs" />
     <Compile Include="PersistentHashTableActions.cs" />

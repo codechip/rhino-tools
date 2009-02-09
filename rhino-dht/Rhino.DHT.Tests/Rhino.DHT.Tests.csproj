@@ -56,13 +56,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultiEndpointDHT.cs" />
     <Compile Include="PersistentHashTableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoteAppDomainRunner.cs" />
-    <Compile Include="ReplicationFixture.cs" />
-    <Compile Include="ReplicationUnitTest.cs" />
-    <Compile Include="SingleEndpointDHT.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rhino.DHT\Rhino.DHT.csproj">

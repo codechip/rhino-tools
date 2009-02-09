@@ -2,7 +2,7 @@ using System;
 
 namespace Rhino.DHT
 {
-    public class GetValue
+    public class GetRequest
     {
         public string Key{ get; set;}
         public ValueVersion SpecifiedVersion { get; set; }
