@@ -174,7 +174,8 @@ namespace Rhino.DHT
             Api.JetAddColumn(session, tableid, "data", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.LongBinary,
-                grbit = ColumndefGrbit.ColumnNotNULL
+                // For Win2k3 support, it doesn't support long binary columsn that are not null
+                //grbit = ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
 
             Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF
