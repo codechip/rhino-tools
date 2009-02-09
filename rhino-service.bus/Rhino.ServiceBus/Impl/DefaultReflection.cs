@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using Castle.MicroKernel.Proxy;
 using log4net;
 using Rhino.ServiceBus.Internal;
 
@@ -163,7 +165,7 @@ namespace Rhino.ServiceBus.Impl
 
         public Type GetGenericTypeOf(Type type, object msg)
         {
-            return GetGenericTypeOf(type, msg.GetType());
+            return GetGenericTypeOf(type, ProxyUtil.GetUnproxiedType(msg));
         }
 
         public Type GetGenericTypeOf(Type type, Type paramType)
@@ -203,6 +205,7 @@ namespace Rhino.ServiceBus.Impl
         {
             try
             {
+				
                 Type type = persister.GetType();
                 MethodInfo method = type.GetMethod("Save");
                 method.Invoke(persister, new object[] {entity});
