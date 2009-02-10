@@ -75,6 +75,7 @@
     <Compile Include="NetworkNode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeUri.cs" />
+    <Compile Include="Replication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\ServiceUtil.cs" />
   </ItemGroup>

@@ -11,11 +11,11 @@ namespace Rhino.DistributedHashTable
 		public NodeUri Secondary { get; set; }
 		public NodeUri Tertiary { get; set; }
 
-		public void ExecuteSync(Action<Uri, Uri> action)
+		public void ExecuteSync(Action<Uri> action)
 		{
 			try
 			{
-				action(Primary.Sync, Primary.Sync);
+				action(Primary.Sync);
 			}
 			catch (Exception)
 			{
@@ -23,15 +23,24 @@ namespace Rhino.DistributedHashTable
 					throw;
 				try
 				{
-					action(Secondary.Sync, Primary.Sync);
+					action(Secondary.Sync);
 				}
 				catch (Exception)
 				{
 					if (Tertiary==null)
 						throw;
-					action(Tertiary.Sync, Primary.Sync);
+					action(Tertiary.Sync);
 				}
 			}
+		}
+
+		public NodeUri GetOtherReplicationNode(Uri syncUriOfReplicationNode)
+		{
+			if (Secondary != null && Secondary.Sync == syncUriOfReplicationNode)
+				return Tertiary;
+			if (Tertiary != null && Tertiary.Sync == syncUriOfReplicationNode)
+				return Secondary;
+			return null;
 		}
 	}
 }

@@ -4,6 +4,7 @@ namespace Rhino.DistributedHashTable
 	using System.Collections.Generic;
 	using System.ServiceModel;
 	using System.Transactions;
+	using Messages;
 	using PersistentHashTable;
 	using ServiceBus.Internal;
 	using ServiceBus;
@@ -16,8 +17,6 @@ namespace Rhino.DistributedHashTable
 		)]
 	public class DistributedHashTable : IDistributedHashTable
 	{
-		private readonly Uri url;
-
 		private readonly IEndpointRouter endpointRouter;
 
 		private readonly IServiceBus bus;
@@ -47,14 +46,14 @@ namespace Rhino.DistributedHashTable
 			IServiceBus bus,
 			Node metadata)
 		{
-			this.url = url;
+			Url = url;
 			this.endpointRouter = endpointRouter;
 			this.bus = bus;
 			Metadata = metadata;
 
 			if (Metadata != null) // sole node in the network, probably
 			{
-				Metadata.ExecuteSync((uri,original) =>
+				Metadata.ExecuteSync(uri =>
 				{
 					ServiceUtil.Execute<IDistributedHashTableMetaDataProvider>(uri, srv =>
 					{
@@ -76,7 +75,7 @@ namespace Rhino.DistributedHashTable
 
 		public Uri Url
 		{
-			get { return url; }
+			get; private set;
 		}
 
 		public void Dispose()
@@ -84,7 +83,7 @@ namespace Rhino.DistributedHashTable
 			hashTable.Dispose();
 		}
 
-		public PutResult[] Put(Uri originalDestination, params PutRequest[] valuesToAdd)
+		public PutResult[] Put(Node originalDestination, params PutRequest[] valuesToAdd)
 		{
 			var results = new List<PutResult>();
 			using (var tx = new TransactionScope())
@@ -98,12 +97,13 @@ namespace Rhino.DistributedHashTable
 						if (request.Key.StartsWith(rhinoDhtStartToken))
 							throw new ArgumentException(rhinoDhtStartToken + " is a reserved key prefix");
 						var put = actions.Put(request);
+						//prepare the value for replication
+						request.ReplicationVersion = put.Version;
 						results.Add(put);
-
-						SendToFailoverNodes(request);
 					}
-					if (originalDestination != url)
-						SendTo(originalDestination, valuesToAdd);
+
+					HandleReplication(originalDestination, new PutRequests {Requests = valuesToAdd});
+
 					actions.Commit();
 				});
 
@@ -122,12 +122,7 @@ namespace Rhino.DistributedHashTable
 				bus.Send(endpointRouter.GetRoutedEndpoint(failOver.Tertiary.Async), msg);
 		}
 
-		private void SendTo(Uri originalDestination, object[] msgs)
-		{
-			bus.Send(endpointRouter.GetRoutedEndpoint(originalDestination), msgs);
-		}
-
-		public bool[] Remove(Uri originalDestination, params RemoveRequest[] valuesToRemove)
+		public bool[] Remove(Node originalDestination, params RemoveRequest[] valuesToRemove)
 		{
 
 			var results = new List<bool>();
@@ -142,17 +137,40 @@ namespace Rhino.DistributedHashTable
 						
 						var remove = actions.Remove(request);
 						results.Add(remove);
-
-						SendToFailoverNodes(request);
 					}
-					if (originalDestination != url)
-						SendTo(originalDestination, valuesToRemove);
+
+					HandleReplication(originalDestination, new RemoveRequests {Requests = valuesToRemove});
 					actions.Commit();
 				});
 
 				tx.Complete();
 			}
 			return results.ToArray();
+		}
+
+		private void HandleReplication(
+			Node originalDestination,
+			object valueToSend)
+		{
+			//if this is the replication node, this is a replicated value,
+			// and we don't need to do anything with replication
+			if (originalDestination == Replication.Node) 
+				return;
+
+			// we replicate to our failover nodes
+			if (originalDestination.Primary.Sync == Url)
+				SendToFailoverNodes(valueToSend);
+			else// if this got to us because of fail over
+			{
+				var primaryEndpoint = endpointRouter.GetRoutedEndpoint(originalDestination.Primary.Async);
+				bus.Send(primaryEndpoint, valueToSend);
+				var otherNode = originalDestination.GetOtherReplicationNode(Url);
+				if(otherNode!=null)
+				{
+					var endpoint = endpointRouter.GetRoutedEndpoint(otherNode.Async);
+					bus.Send(endpoint, valueToSend);
+				}
+			}
 		}
 
 		public Value[][] Get(params GetRequest[] valuesToGet)

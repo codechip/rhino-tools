@@ -41,7 +41,7 @@ namespace Rhino.DistributedHashTable
 		private void StartMetadataProviderIfNeeded()
 		{
 			var handler = container.Kernel.GetHandler("dht.metadata");
-			if (handler.CurrentState != HandlerState.Valid) 
+			if (handler != null && handler.CurrentState != HandlerState.Valid) 
 				return;
 
 			var metaDataProvider = container.Resolve<IDistributedHashTableMetaDataProvider>("dht.metadata");
@@ -54,13 +54,19 @@ namespace Rhino.DistributedHashTable
 
 		public override void Dispose()
 		{
+			Stop();
+			base.Dispose();
+		}
+
+		public void Stop()
+		{
 			foreach (var host in hosts)
 			{
 				host.Close(TimeSpan.Zero);
 			}
+			hosts.Clear();
 			if (metaDataHost != null)
 				metaDataHost.Close(TimeSpan.Zero);
-			base.Dispose();
 		}
 	}
 }

@@ -12,10 +12,10 @@ namespace Rhino.DistributedHashTable.Tests
 	public class DhtTestBase : IDisposable
 	{
 		private readonly IWindsorContainer container;
-		private readonly DhtBootStrapper bootStrapper;
+		protected readonly DhtBootStrapper bootStrapper;
 		protected readonly DistributedHashTableClient client;
 		protected static Uri metaDataUrl;
-		private IStartableServiceBus bus;
+		protected readonly IStartableServiceBus bus;
 
 		public DhtTestBase(IConfigurationInterpreter interpreter)
 		{
@@ -68,7 +68,7 @@ namespace Rhino.DistributedHashTable.Tests
 				Directory.Delete(database, true);
 		}
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			bootStrapper.Dispose();
 			bus.Dispose();

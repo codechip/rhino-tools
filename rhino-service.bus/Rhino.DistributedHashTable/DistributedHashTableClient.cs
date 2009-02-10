@@ -1,6 +1,4 @@
 using System;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.Linq;
 
 namespace Rhino.DistributedHashTable
@@ -14,7 +12,7 @@ namespace Rhino.DistributedHashTable
 
 		public DistributedHashTableClient(Node metadata)
 		{
-			metadata.ExecuteSync((uri,original) =>
+			metadata.ExecuteSync(uri =>
 			{
 				ServiceUtil.Execute<IDistributedHashTableMetaDataProvider>(uri, provider =>
 				{
@@ -32,11 +30,11 @@ namespace Rhino.DistributedHashTable
 			{
 				var array = values.ToArray();
 				var versionForCurrentBatch = new PutResult[0];
-				values.Key.ExecuteSync((uri, original) =>
+				values.Key.ExecuteSync(uri =>
 				{
 					ServiceUtil.Execute<IDistributedHashTable>(uri, table =>
 					{
-						versionForCurrentBatch = table.Put(original, array);
+						versionForCurrentBatch = table.Put(values.Key, array);
 					});
 				});
 				for (int i = 0; i < array.Length; i++)
@@ -56,7 +54,7 @@ namespace Rhino.DistributedHashTable
 			{
 				var array = values.ToArray();
 				var valuesFromCurrentBatch = new Value[0][];
-				values.Key.ExecuteSync((uri, original) =>
+				values.Key.ExecuteSync(uri =>
 				{
 					ServiceUtil.Execute<IDistributedHashTable>(uri, table =>
 					{
@@ -81,11 +79,11 @@ namespace Rhino.DistributedHashTable
 				var array = values.ToArray();
 				var valuesFromCurrentBatch = new bool[0];
 
-				values.Key.ExecuteSync((uri, original) =>
+				values.Key.ExecuteSync(uri =>
 				{
 					ServiceUtil.Execute<IDistributedHashTable>(uri, table =>
 					{
-						valuesFromCurrentBatch = table.Remove(original, array);
+						valuesFromCurrentBatch = table.Remove(values.Key, array);
 					});
 				});
 

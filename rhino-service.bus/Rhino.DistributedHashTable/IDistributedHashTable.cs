@@ -11,12 +11,12 @@ namespace Rhino.DistributedHashTable
 		Uri Url { get; }
 
 		[OperationContract]
-		PutResult[] Put(Uri originalDestination, params PutRequest[] valuesToAdd);
+		PutResult[] Put(Node originalDestination, params PutRequest[] valuesToAdd);
 
 		[OperationContract]
 		Value[][] Get(params GetRequest[] valuesToGet);
 
 		[OperationContract]
-		bool[] Remove(Uri originalDestination, params RemoveRequest[] valuesToRemove);
+		bool[] Remove(Node originalDestination, params RemoveRequest[] valuesToRemove);
 	}
 }

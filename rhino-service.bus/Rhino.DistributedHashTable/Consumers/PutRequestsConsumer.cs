@@ -1,5 +1,7 @@
 namespace Rhino.DistributedHashTable.Consumers
 {
+	using System;
+	using System.Diagnostics;
 	using Messages;
 	using ServiceBus;
 
@@ -14,7 +16,7 @@ namespace Rhino.DistributedHashTable.Consumers
 
 		public void Consume(PutRequests message)
 		{
-			distributedHashTable.Put(distributedHashTable.Url, message.Requests);
+			distributedHashTable.Put(Replication.Node, message.Requests);
 		}
 	}
 }
