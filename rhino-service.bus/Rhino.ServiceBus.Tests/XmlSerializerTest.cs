@@ -47,6 +47,18 @@ namespace Rhino.ServiceBus.Tests
             Assert.Equal(ticks, actual);
         }
 
+		[Fact]
+		public void Can_serialize_and_deserialize_byte_array()
+		{
+			var serializer = new XmlMessageSerializer(new DefaultReflection(), new DefaultKernel());
+			var stream = new MemoryStream();
+			serializer.Serialize(new object[] { new byte[]{1,2,3,4} }, stream);
+			stream.Position = 0;
+			var actual = (byte[])serializer.Deserialize(stream)[0];
+			Assert.Equal(new byte[]{1,2,3,4}, actual);
+		}
+
+
         [Fact]
         public void Can_serialize_and_deserialize_array()
         {

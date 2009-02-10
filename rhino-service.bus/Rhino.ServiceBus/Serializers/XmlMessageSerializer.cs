@@ -89,7 +89,12 @@ namespace Rhino.ServiceBus.Serializers
                 var elementName = GetXmlNamespace(namespaces, value.GetType()) + name;
                 parent.Add(new XElement(elementName, FormatAsString(value)));
             }
-            else if (value is IEnumerable)
+			else if (value is byte[])
+			{
+				var elementName = GetXmlNamespace(namespaces, typeof(byte[])) + name;
+				parent.Add(new XElement(elementName, Convert.ToBase64String((byte[]) value)));
+			}
+			else if (value is IEnumerable)
             {
                 XElement list = GetContentWithNamespace(value, namespaces, name);
                 parent.Add(list);
@@ -274,6 +279,10 @@ namespace Rhino.ServiceBus.Serializers
                 var convertor = kernel.Resolve(convertorType);
                 return reflection.InvokeFromElement(convertor, element);
             }
+			if(type == typeof(byte[]))
+			{
+				return Convert.FromBase64String(element.Value);
+			}
             if (CanParseFromString(type))
             {
                 return FromString(type, element.Value);
