@@ -3,7 +3,9 @@ using System.Linq;
 
 namespace Rhino.ServiceBus.Tests.Dht
 {
-    public class BaristaStateMerger : ISagaStateMerger<BaristaState>
+	using DistributedHashTableIntegration;
+
+	public class BaristaStateMerger : ISagaStateMerger<BaristaState>
     {
         public BaristaState Merge(BaristaState[] states)
         {

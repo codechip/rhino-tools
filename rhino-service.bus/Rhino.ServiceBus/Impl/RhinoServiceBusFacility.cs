@@ -11,7 +11,6 @@ using Rhino.ServiceBus.Config;
 using Rhino.ServiceBus.Exceptions;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.MessageModules;
-using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Sagas;
@@ -19,7 +18,9 @@ using Rhino.ServiceBus.Serializers;
 
 namespace Rhino.ServiceBus.Impl
 {
-    public class RhinoServiceBusFacility : AbstractFacility
+	using Castle.MicroKernel;
+
+	public class RhinoServiceBusFacility : AbstractFacility
     {
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
@@ -30,7 +31,6 @@ namespace Rhino.ServiceBus.Impl
         private readonly Type subscriptionStorageImpl = typeof(MsmqSubscriptionStorage);
         private int threadCount = 1;
         private Type queueStrategyImpl = typeof(SubQueueStrategy);
-        private bool useDhtSagaPersister;
         private bool useCreationModule = true;
 
     	public RhinoServiceBusFacility()
@@ -188,7 +188,7 @@ namespace Rhino.ServiceBus.Impl
         }
 
 
-        private void Kernel_OnComponentModelCreated(ComponentModel model)
+        private static void Kernel_OnComponentModelCreated(ComponentModel model)
         {
             if (typeof(IMessageConsumer).IsAssignableFrom(model.Implementation) == false)
                 return;
@@ -213,57 +213,8 @@ namespace Rhino.ServiceBus.Impl
             }
 
             model.LifestyleType = LifestyleType.Transient;
-
-            if (useDhtSagaPersister)
-                RegisterDhtSagaPersister(model);
         }
 
-        private void RegisterDhtSagaPersister(ComponentModel model)
-        {
-            var list = model.Implementation.GetInterfaces()
-                .Where(x => x.IsGenericType &&
-                            x.IsGenericTypeDefinition == false &&
-                            x.GetGenericTypeDefinition() == typeof(ISaga<>))
-                .ToList();
-
-            if (list.Count == 0)
-                return;
-
-            if (list.Count > 1)
-            {
-                throw new InvalidUsageException(model.Implementation +
-                                                " implements more than one ISaga<T>, this is not permitted");
-            }
-
-            var sagaType = list[0];
-            var sagaStateType = sagaType.GetGenericArguments()[0];
-            
-            if (typeof(Orchestrates<MergeSagaState>).IsAssignableFrom(model.Implementation))
-            {
-                Kernel.AddComponent(
-                    "SagaPersister<" + model.Implementation + ">",
-                    typeof (ISagaPersister<>)
-                        .MakeGenericType(model.Implementation)//,
-					//typeof (DistributedHashTableSagaPersister<,>)
-					//    .MakeGenericType(model.Implementation, sagaStateType)
-                    );
-            }
-            else if (typeof(SupportsOptimisticConcurrency).IsAssignableFrom(model.Implementation))
-            {
-                Kernel.AddComponent(
-                     "SagaPersister<" + model.Implementation + ">",
-                     typeof(ISagaPersister<>)
-                         .MakeGenericType(model.Implementation)//,
-					 //typeof(OptimisticDistributedHashTableSagaPersister<,>)
-					 //    .MakeGenericType(model.Implementation, sagaStateType)
-                     ); 
-            }
-            else
-            {
-                throw new InvalidUsageException(
-                    "When using DHT for saga state, you must specify either SupportsOptimisticConcurrency or Orchestrates<MergeSagaState>");
-            }
-        }
 
         private void ReadMessageOwners()
         {
@@ -331,14 +282,6 @@ namespace Rhino.ServiceBus.Impl
                 throw new ConfigurationErrorsException(
                     "Attribute 'endpoint' on 'bus' has an invalid value '" + uriString + "'");
             }
-
-            
-        }
-
-        public RhinoServiceBusFacility UseDhtSagaPersister()
-        {
-            useDhtSagaPersister = true;
-            return this;
         }
 
     	public void UseMessageSerializer<TMessageSerializer>()

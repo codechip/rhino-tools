@@ -2,20 +2,23 @@ using Rhino.ServiceBus.Sagas;
 
 namespace Rhino.ServiceBus.Tests.Dht
 {
-    public class BaristaState : IVersionedSagaState
-    {
-        public bool DrinkIsReady { get; set; }
+	using DistributedHashTableIntegration;
+	using PersistentHashTable;
 
-        public bool GotPayment { get; set; }
+	public class BaristaState : IVersionedSagaState
+	{
+		public bool DrinkIsReady { get; set; }
 
-        public string Drink { get; set; }
+		public bool GotPayment { get; set; }
 
-        #region IVersionedSagaState Members
+		public string Drink { get; set; }
 
-        public int Version { get; set; }
+		#region IVersionedSagaState Members
 
-        public int[] ParentVersions { get; set; }
+		public ValueVersion Version { get; set; }
 
-        #endregion
-    }
+		public ValueVersion[] ParentVersions { get; set; }
+
+		#endregion
+	}
 }

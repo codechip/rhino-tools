@@ -12,12 +12,18 @@ using System.Linq;
 
 namespace Rhino.ServiceBus.Tests.Dht
 {
-    public class DistributedHashTableSagaPersisterTests : MsmqTestBase,
+	using DistributedHashTable;
+	using DistributedHashTableIntegration;
+	using PersistentHashTable;
+	using Rhino.ServiceBus.Hosting;
+
+	public class DistributedHashTableSagaPersisterTests : MsmqTestBase,
         OccasionalConsumerOf<DrinkReady>
     {
         private readonly IWindsorContainer container;
+		private readonly RemoteAppDomainHost host;
 
-        public DistributedHashTableSagaPersisterTests()
+		public DistributedHashTableSagaPersisterTests()
         {
             Delete("cache.esent");
             BaristaSaga.WaitToCreateConflicts = new ManualResetEvent(true);
@@ -25,11 +31,16 @@ namespace Rhino.ServiceBus.Tests.Dht
             container = new WindsorContainer(new XmlInterpreter());
             container.Kernel.AddFacility("rhino.esb", 
                 new RhinoServiceBusFacility()
-                    .UseDhtSagaPersister()
                 );
-			//container.AddComponent<IDistributedHashTable, DistributedHashTable>();
+			container.Kernel.AddFacility("dht.saga", new DhtClientSagaFacility());
             container.AddComponent<BaristaSaga>();
             container.AddComponent<ISagaStateMerger<BaristaState>, BaristaStateMerger>();
+
+			host = new RemoteAppDomainHost(
+				typeof (DhtBootStrapper).Assembly.Location,
+				Path.Combine(Path.GetDirectoryName(typeof (DhtBootStrapper).Assembly.Location), "DhtService.config")
+				);
+			host.Start();
         }
 
         private void Delete(string database)
@@ -56,7 +67,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
             }
 
-            var distributedHashTable = container.Resolve<IDistributedHashTable>();
+            var distributedHashTable = container.Resolve<DistributedHashTableClient>();
             Value[] values;
 
             do
@@ -64,7 +75,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 Thread.Sleep(100);
                 values = distributedHashTable.Get(new[]
                 {
-                    new GetValue
+                    new GetRequest
                     {
                         Key = typeof(BaristaSaga) + "-" + guid
                     },
@@ -108,7 +119,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 }
             }
 
-            var distributedHashTable = container.Resolve<IDistributedHashTable>();
+			var distributedHashTable = container.Resolve<DistributedHashTableClient>();
            
             Value[] values;
             do
@@ -116,7 +127,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 Thread.Sleep(100);
                 values = distributedHashTable.Get(new[]
                 {
-                    new GetValue
+                    new GetRequest
                     {
                         Key = typeof(BaristaSaga) +"-" +guid
                     },
@@ -183,6 +194,7 @@ namespace Rhino.ServiceBus.Tests.Dht
         {
             base.Dispose();
             container.Dispose();
+			host.Close();
         }
     }
 }

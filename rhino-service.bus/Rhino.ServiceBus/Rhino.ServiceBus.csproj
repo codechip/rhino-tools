@@ -108,8 +108,6 @@
     <Compile Include="Msmq\SubQueue.cs" />
     <Compile Include="Msmq\TransportActions\ShutDownAction.cs" />
     <Compile Include="Msmq\TransportState.cs" />
-    <Compile Include="Sagas\ISagaStateMerger.cs" />
-    <Compile Include="Sagas\IVersionedSagaState.cs" />
     <Compile Include="Sagas\Persisters\InMemorySagaPersister.cs" />
     <Compile Include="Impl\RhinoServiceBusFacility.cs" />
     <Compile Include="Internal\IMessageConsumer.cs" />
