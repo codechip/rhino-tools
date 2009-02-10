@@ -12,7 +12,12 @@
 		<!-- Files have to be in dependency order -->
 		<include name="Rhino.ServiceBus/default.build" />
 		<include name="Rhino.ServiceBus.Host/default.build" />
-		<!--<include name="Rhino.ServiceBus.NHibernate/default.build" />		-->
+		<include name="Rhino.DistributedHashTable/default.build" />
+		<include name="Rhino.ServiceBus.DistributedHashTableIntegration/default.build"/>
+		
+		<!-- <include name="Rhino.ServiceBus.NHibernate/default.build" /> -->
+		
+		<include name="Rhino.DistributedHashTable.Tests/default.build" if="${common.testrunner.enabled}" />
 		<include name="Rhino.ServiceBus.Tests/default.build" if="${common.testrunner.enabled}"/>
 	</fileset>
 
@@ -21,3 +26,4 @@
 	<target name="generate-assemblyinfo" depends="common.assemblyinfo" />
 
 </project>
+ 

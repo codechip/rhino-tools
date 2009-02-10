@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='iso-8859-1' ?>
 <project
-	name="Rhino.ServiceBus"
+	name="Rhino.ServiceBus.DistributedHashTableIntegration"
 	default="build"
 	xmlns="http://nant.sf.net/release/0.85/nant.xsd"
 >
@@ -19,6 +19,10 @@
 			<include name="Castle.Windsor.dll"/>
 			
 			<include name="log4net.dll"/>
+			
+			<include name="Rhino.PersistentHashTable.dll"/>					
+			<include name="Rhino.DistributedHashTable.dll"/>					
+			<include name="Rhino.ServiceBus.dll"/>					
 			
 			<include name="System"/>
 			<include name="System.Configuration"/>
