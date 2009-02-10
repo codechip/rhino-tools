@@ -3,12 +3,14 @@ using Microsoft.Isam.Esent.Interop;
 namespace Rhino.PersistentHashTable
 {
 	using System;
+	using System.Text;
 
 	public class SchemaCreator
     {
         private readonly Session session;
+		public const string SchemaVersion = "1.3";
 
-        public SchemaCreator(Session session)
+		public SchemaCreator(Session session)
         {
             this.session = session;
         }
@@ -21,6 +23,7 @@ namespace Rhino.PersistentHashTable
             using (var tx = new Transaction(session))
             {
 				CreateDetailsTable(dbid);
+            	CreateIdentityTable(dbid);
                 CreateKeysTable(dbid);
                 CreateDataTable(dbid);
 
@@ -28,22 +31,44 @@ namespace Rhino.PersistentHashTable
             }
         }
 
-	    private void CreateDetailsTable(JET_DBID dbid)
+		private void CreateIdentityTable(JET_DBID dbid)
+		{
+			JET_TABLEID tableid;
+			Api.JetCreateTable(session, dbid, "identity_generator", 16, 100, out tableid);
+			JET_COLUMNID id;
+			Api.JetAddColumn(session, tableid, "id", new JET_COLUMNDEF
+			{
+				coltyp = JET_coltyp.Long,
+				grbit = ColumndefGrbit.ColumnNotNULL | ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnAutoincrement
+			}, null, 0, out id);
+		}
+
+		private void CreateDetailsTable(JET_DBID dbid)
     	{
 			JET_TABLEID tableid;
 			Api.JetCreateTable(session, dbid, "details", 16, 100, out tableid);
-			JET_COLUMNID columnid;
+			JET_COLUMNID id;
 			Api.JetAddColumn(session, tableid, "id", new JET_COLUMNDEF
 			{
 				cbMax = 16,
 				coltyp = JET_coltyp.Binary,
 				grbit = ColumndefGrbit.ColumnNotNULL|ColumndefGrbit.ColumnFixed
-			}, null, 0, out columnid);
+			}, null, 0, out id);
+
+			JET_COLUMNID schemaVersion;
+			Api.JetAddColumn(session, tableid, "schema_version", new JET_COLUMNDEF
+			{
+				cbMax = Encoding.Unicode.GetByteCount(SchemaVersion),
+                cp = JET_CP.Unicode,
+				coltyp = JET_coltyp.Text,
+				grbit = ColumndefGrbit.ColumnNotNULL | ColumndefGrbit.ColumnFixed
+			}, null, 0, out schemaVersion);
 
 
 			using(var update = new Update(session, tableid, JET_prep.Insert))
 			{
-				Api.SetColumn(session, tableid, columnid, Guid.NewGuid().ToByteArray());
+				Api.SetColumn(session, tableid, id, Guid.NewGuid().ToByteArray());
+				Api.SetColumn(session, tableid, schemaVersion, SchemaVersion,Encoding.Unicode);
 				update.Save();
 			}
     	}
@@ -72,7 +97,7 @@ namespace Rhino.PersistentHashTable
             Api.JetAddColumn(session, tableid, "version_number", new JET_COLUMNDEF
             {
                 coltyp = JET_coltyp.Long,
-                grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL | ColumndefGrbit.ColumnAutoincrement
+                grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL
             }, null, 0, out columnid);
 
             Api.JetAddColumn(session, tableid, "expiresAt", new JET_COLUMNDEF

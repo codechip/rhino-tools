@@ -15,14 +15,16 @@ namespace Rhino.PersistentHashTable
         private readonly Transaction transaction;
         private readonly Table keys;
         private readonly Table data;
+		private readonly Table identity;
         private readonly Guid instanceId;
         private readonly JET_DBID dbid;
         private readonly Dictionary<string, JET_COLUMNID> keysColumns;
         private readonly Dictionary<string, JET_COLUMNID> dataColumns;
         private readonly Cache cache;
         private readonly List<Action> commitSyncronization = new List<Action>();
+    	private Dictionary<string, JET_COLUMNID> identityColumns;
 
-        public JET_DBID DatabaseId
+    	public JET_DBID DatabaseId
         {
             get { return dbid; }
         }
@@ -68,8 +70,10 @@ namespace Rhino.PersistentHashTable
             Api.JetOpenDatabase(session, database, null, out dbid, OpenDatabaseGrbit.None);
             keys = new Table(session, dbid, "keys", OpenTableGrbit.None);
             data = new Table(session, dbid, "data", OpenTableGrbit.None);
+			identity = new Table(session, dbid, "identity_generator", OpenTableGrbit.None);
             keysColumns = Api.GetColumnDictionary(session, keys);
             dataColumns = Api.GetColumnDictionary(session, data);
+			identityColumns = Api.GetColumnDictionary(session, identity);
         }
 
         public PutResult Put(PutRequest request)
@@ -99,27 +103,32 @@ namespace Rhino.PersistentHashTable
                 DeleteInactiveVersions(request.Key, request.ParentVersions);
             }
 
-            var bookmark = new byte[Api.BookmarkMost];
-            int bookmarkSize;
-            using (var update = new Update(session, keys, JET_prep.Insert))
+           	var instanceIdForRow = instanceId;
+			if (request.ReplicationVersion != null)
+				instanceIdForRow = request.ReplicationVersion.InstanceId;
+
+			int versionNumber = request.ReplicationVersion == null ?
+					GenerateVersionNumber() :
+					request.ReplicationVersion.Version;
+			using (var update = new Update(session, keys, JET_prep.Insert))
             {
 				Api.SetColumn(session, keys, keysColumns["key"], request.Key, Encoding.Unicode);
-                Api.SetColumn(session, keys, keysColumns["version_instance_id"], instanceId.ToByteArray());
+				Api.SetColumn(session, keys, keysColumns["version_instance_id"], instanceIdForRow.ToByteArray());
+
+            	
+				Api.SetColumn(session, keys, keysColumns["version_number"], versionNumber);
 
                 if (request.ExpiresAt.HasValue)
 					Api.SetColumn(session, keys, keysColumns["expiresAt"], request.ExpiresAt.Value.ToOADate());
 
-                update.Save(bookmark, bookmark.Length, out bookmarkSize);
+                update.Save();
             }
-
-            Api.JetGotoBookmark(session, keys, bookmark, bookmarkSize);
-            var version = Api.RetrieveColumnAsInt32(session, keys, keysColumns["version_number"]);
 
             using (var update = new Update(session, data, JET_prep.Insert))
             {
 				Api.SetColumn(session, data, dataColumns["key"], request.Key, Encoding.Unicode);
-                Api.SetColumn(session, data, dataColumns["version_number"], version.Value);
-                Api.SetColumn(session, data, dataColumns["version_instance_id"], instanceId.ToByteArray());
+                Api.SetColumn(session, data, dataColumns["version_number"], versionNumber);
+				Api.SetColumn(session, data, dataColumns["version_instance_id"], instanceIdForRow.ToByteArray());
 				Api.SetColumn(session, data, dataColumns["data"], request.Bytes);
                 using (var sha256 = SHA256.Create())
                 {
@@ -139,13 +148,29 @@ namespace Rhino.PersistentHashTable
                 ConflictExists = doesAllVersionsMatch == false,
                 Version = new ValueVersion
                 {
-                    InstanceId = instanceId,
-                    Version = version.Value
+					InstanceId = instanceIdForRow,
+                    Version = versionNumber
                 }
             };
         }
 
-        private void WriteAllParentVersions(IEnumerable<ValueVersion> parentVersions)
+    	private int GenerateVersionNumber()
+    	{
+			var bookmark = new byte[Api.BookmarkMost];
+			int bookmarkSize;
+			using (var update = new Update(session, identity, JET_prep.Insert))
+			{
+				// force identity generator
+				update.Save(bookmark, Api.BookmarkMost, out bookmarkSize);
+			}
+			Api.JetGotoBookmark(session, identity, bookmark, bookmarkSize);
+			var version = Api.RetrieveColumnAsInt32(session, identity, identityColumns["id"]);
+			Api.JetDelete(session, identity);
+    		return version.Value;
+
+    	}
+
+    	private void WriteAllParentVersions(IEnumerable<ValueVersion> parentVersions)
         {
             var index = 1;
             foreach (var parentVersion in parentVersions)

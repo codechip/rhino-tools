@@ -39,6 +39,34 @@ namespace Rhino.PersistentHashTable.Tests
 			}
 		}
 
+		[Fact]
+		public void Can_set_the_replication_version_and_get_it_back()
+		{
+			using (var table = new PersistentHashTable(testDatabase))
+			{
+				table.Initialize();
+				var guid = Guid.NewGuid();
+				table.Batch(actions =>
+				{
+					var result = actions.Put(new PutRequest
+					{
+						Key = "test",
+						ParentVersions = new ValueVersion[0],
+						Bytes = new byte[] { 1 },
+						ReplicationVersion = new ValueVersion
+						{
+							InstanceId = guid,
+							Version = 53
+						}
+					});
+
+					Assert.Equal(53, result.Version.Version);
+					Assert.Equal(guid, result.Version.InstanceId);
+
+					actions.Commit();
+				});
+			}
+		}
 
 		[Fact]
 		public void Can_save_and_load_item_from_cache()
