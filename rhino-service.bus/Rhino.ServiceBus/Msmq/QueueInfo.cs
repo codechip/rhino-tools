@@ -1,6 +1,7 @@
 namespace Rhino.ServiceBus.Msmq
 {
 	using System;
+	using System.ComponentModel;
 	using System.Messaging;
 
 	public class QueueInfo
@@ -83,7 +84,14 @@ namespace Rhino.ServiceBus.Msmq
 		{
 			if (IsLocal == false || Exists)
 				return;
-			MessageQueue.Create(QueuePath, true);
+			try
+			{
+				MessageQueue.Create(QueuePath, true);
+			}
+			catch (Exception e)
+			{
+				throw new InvalidAsynchronousStateException("Could not create queue: " + QueueUri, e);
+			}
 		}
 	}
 }
