@@ -3,6 +3,7 @@ namespace Rhino.ServiceBus.Msmq
 	using System;
 	using System.Messaging;
 	using System.Transactions;
+	using Exceptions;
 
 	public class OpenedQueue : IDisposable
 	{
@@ -12,9 +13,12 @@ namespace Rhino.ServiceBus.Msmq
 
 		public OpenedQueue(QueueInfo info, MessageQueue queue)
 		{
+			if (!info.Exists)
+				throw new TransportException("The queue " + info.QueueUri + " does not exists");
 			this.info = info;
 			this.queue = queue;
 			queue.MessageReadPropertyFilter.SetAll();
+			
 		}
 
 		public OpenedQueue(OpenedQueue parent, MessageQueue queue)
