@@ -8,7 +8,7 @@ namespace Rhino.DistributedHashTable
 
 	public class DhtBootStrapper : AbstractBootStrapper
 	{
-		private List<ServiceHost> hosts = new List<ServiceHost>();
+		private readonly List<ServiceHost> hosts = new List<ServiceHost>();
 		private ServiceHost metaDataHost;
 
 		protected override void ConfigureContainer()
@@ -32,7 +32,7 @@ namespace Rhino.DistributedHashTable
 			foreach (var distributedHashTable in distributedHashTables)
 			{
 				var host = new ServiceHost(distributedHashTable);
-				host.AddServiceEndpoint(typeof(IDistributedHashTable), new NetTcpBinding(), distributedHashTable.Url);
+				host.AddServiceEndpoint(typeof(IDistributedHashTable), Binding.DhtDefault, distributedHashTable.Url);
 				host.Open();
 				hosts.Add(host);
 			}
@@ -47,7 +47,7 @@ namespace Rhino.DistributedHashTable
 			var metaDataProvider = container.Resolve<IDistributedHashTableMetaDataProvider>("dht.metadata");
 
 			metaDataHost = new ServiceHost(metaDataProvider);
-			metaDataHost.AddServiceEndpoint(typeof(IDistributedHashTableMetaDataProvider), new NetTcpBinding(),
+			metaDataHost.AddServiceEndpoint(typeof(IDistributedHashTableMetaDataProvider), Binding.DhtDefault,
 			                                metaDataProvider.Url);
 			metaDataHost.Open();
 		}

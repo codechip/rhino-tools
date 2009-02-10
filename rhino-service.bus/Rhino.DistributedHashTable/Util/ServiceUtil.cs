@@ -8,10 +8,13 @@ namespace Rhino.DistributedHashTable.Util
 		public static void Execute<TSrv>(Uri uri, Action<TSrv> action)
 		{
 			bool success = false;
-			var channel = ChannelFactory<TSrv>.CreateChannel(new NetTcpBinding(), new EndpointAddress(uri));
-			var communicationObject = (ICommunicationObject) channel;
+		
+			var channel = ChannelFactory<TSrv>.CreateChannel(
+				Binding.DhtDefault, 
+				new EndpointAddress(uri));
 			try
 			{
+				var communicationObject = (ICommunicationObject)channel;
 				action(channel);
 				communicationObject.Close();
 				success = true;
@@ -19,7 +22,7 @@ namespace Rhino.DistributedHashTable.Util
 			finally
 			{
 				if (success == false)
-					communicationObject.Abort();
+					((ICommunicationObject)channel).Abort();
 			}
 		}
 	}

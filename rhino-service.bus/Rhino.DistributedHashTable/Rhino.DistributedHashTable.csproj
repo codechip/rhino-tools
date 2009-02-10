@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding.cs" />
     <Compile Include="DhtBootStrapper.cs" />
     <Compile Include="Consumers\PutRequestsConsumer.cs" />
     <Compile Include="Consumers\RemoveRequestsConsumer.cs" />
