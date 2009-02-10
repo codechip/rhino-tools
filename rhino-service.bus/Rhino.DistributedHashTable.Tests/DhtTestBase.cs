@@ -62,7 +62,7 @@ namespace Rhino.DistributedHashTable.Tests
 				q.Purge();
 		}
 
-		private static void Delete(string database)
+		public static void Delete(string database)
 		{
 			if (Directory.Exists(database))
 				Directory.Delete(database, true);

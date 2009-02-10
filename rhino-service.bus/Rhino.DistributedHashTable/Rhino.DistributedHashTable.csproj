@@ -60,7 +60,9 @@
     <Compile Include="DistributedHashTable.cs" />
     <Compile Include="DistributedHashTableMetaDataProvider.cs" />
     <Compile Include="IDistributedHashTable.cs" />
+    <Compile Include="IDistributedHashTableClient.cs" />
     <Compile Include="IDistributedHashTableMetaDataProvider.cs" />
+    <Compile Include="LocalDistributedHashTable.cs" />
     <Compile Include="Messages\PutRequests.cs" />
     <Compile Include="Messages\RemoveRequests.cs" />
     <Compile Include="DistributedHashTableClient.cs" />

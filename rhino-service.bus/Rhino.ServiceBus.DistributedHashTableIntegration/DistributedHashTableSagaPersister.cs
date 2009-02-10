@@ -15,14 +15,14 @@ namespace Rhino.ServiceBus.DistributedHashTableIntegration
 		where TSaga : class, ISaga<TState>
 		where TState : IVersionedSagaState
 	{
-		private readonly DistributedHashTableClient distributedHashTable;
+		private readonly IDistributedHashTableClient distributedHashTable;
 		private readonly ISagaStateMerger<TState> stateMerger;
 		private readonly IMessageSerializer messageSerializer;
 		private readonly IKernel kernel;
 		private readonly IServiceBus bus;
 		private readonly IReflection reflection;
 
-		public DistributedHashTableSagaPersister(DistributedHashTableClient distributedHashTable, ISagaStateMerger<TState> stateMerger, IMessageSerializer messageSerializer, IKernel kernel, IReflection reflection, IServiceBus bus)
+		public DistributedHashTableSagaPersister(IDistributedHashTableClient distributedHashTable, ISagaStateMerger<TState> stateMerger, IMessageSerializer messageSerializer, IKernel kernel, IReflection reflection, IServiceBus bus)
 		{
 			this.distributedHashTable = distributedHashTable;
 			this.bus = bus;

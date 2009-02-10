@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProductAttribute("Rhino.DistributedHashTable.Tests")]
 [assembly: AssemblyCopyrightAttribute("Rhino Tools Project, original author or authors")]
 [assembly: AssemblyVersionAttribute("1.1.0.0")]
-[assembly: AssemblyInformationalVersionAttribute("1.1.0.0")]
-[assembly: AssemblyFileVersionAttribute("1.1.0.0")]
+[assembly: AssemblyInformationalVersionAttribute("1.1.0.1980")]
+[assembly: AssemblyFileVersionAttribute("1.1.0.1980")]
 [assembly: AssemblyDelaySignAttribute(false)]
 

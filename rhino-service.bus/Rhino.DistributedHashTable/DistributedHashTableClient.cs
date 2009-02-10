@@ -6,7 +6,7 @@ namespace Rhino.DistributedHashTable
 	using PersistentHashTable;
 	using Util;
 
-	public class DistributedHashTableClient
+	public class DistributedHashTableClient : IDistributedHashTableClient
 	{
 		public Node[] Nodes { get; private set; }
 

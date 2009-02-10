@@ -67,7 +67,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 BaristaSaga.FinishedConsumingMessage.WaitOne(TimeSpan.FromSeconds(30));
             }
 
-            var distributedHashTable = container.Resolve<DistributedHashTableClient>();
+            var distributedHashTable = container.Resolve<IDistributedHashTableClient>();
             Value[] values;
 
             do
@@ -119,7 +119,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 }
             }
 
-			var distributedHashTable = container.Resolve<DistributedHashTableClient>();
+			var distributedHashTable = container.Resolve<IDistributedHashTableClient>();
            
             Value[] values;
             do

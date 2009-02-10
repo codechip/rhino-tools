@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DhtTestBase.cs" />
+    <Compile Include="LocalDistributedHashTableTests.cs" />
     <Compile Include="MultiEndpointDHT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationFixture.cs" />
