@@ -615,11 +615,45 @@
             <param name="key"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1(System.String,System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1">
             <summary>
             Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
             </summary>
             <typeparam name="T">The facility type.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1(System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.IWindsorContainer.AddFacility``1(System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.IWindsorContainer.AddComponent(System.String,System.Type)">
@@ -1123,11 +1157,45 @@
             <param name="key"></param>
             <returns></returns>
         </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1(System.String,System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
         <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1">
             <summary>
             Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
             </summary>
             <typeparam name="T">The facility type.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1(System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.Windsor.WindsorContainer.AddFacility``1(System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the container.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.Windsor.WindsorContainer.AddComponent(System.String,System.Type)">

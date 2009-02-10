@@ -4235,11 +4235,43 @@
             <typeparam name="T">The facility type.</typeparam>
             <param name="key"></param>
         </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddFacility``1(System.String,System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the kernel.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddFacility``1(System.String,System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the kernel.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="key"></param>
+            <param name="onCreate">The callback for creation.</param>
+        </member>
         <member name="M:Castle.MicroKernel.IKernel.AddFacility``1">
             <summary>
             Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the kernel.
             </summary>
             <typeparam name="T">The facility type.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddFacility``1(System.Action{``0})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the kernel.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.MicroKernel.IKernel.AddFacility``1(System.Func{``0,System.Object})">
+            <summary>
+            Creates and adds an <see cref="T:Castle.MicroKernel.IFacility"/> facility to the kernel.
+            </summary>
+            <typeparam name="T">The facility type.</typeparam>
+            <param name="onCreate">The callback for creation.</param>
             <returns></returns>
         </member>
         <member name="M:Castle.MicroKernel.IKernel.GetFacilities">
