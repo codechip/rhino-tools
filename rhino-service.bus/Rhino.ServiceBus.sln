@@ -15,9 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.ServiceBus.Host", "Rh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starbucks.Tests", "Samples\Starbucks.Tests\Starbucks.Tests.csproj", "{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependecies", "Dependecies", "{386B10BA-FE77-4808-A351-E3E305D0A0EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DistributedHashTable", "Rhino.DistributedHashTable\Rhino.DistributedHashTable.csproj", "{63530BA6-3424-49D9-B32C-A35A603817CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DHT", "..\rhino-dht\Rhino.DHT\Rhino.DHT.csproj", "{F30B2D63-CED5-4C8A-908F-0B5503D984A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.PersistentHashTable", "..\rhino-pht\Rhino.PersistentHashTable\Rhino.PersistentHashTable.csproj", "{F30B2D63-CED5-4C8A-908F-0B5503D984A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.PersistentHashTable.Tests", "..\rhino-pht\Rhino.PersistentHashTable.Tests\Rhino.PersistentHashTable.Tests.csproj", "{3BC9E44C-6E3B-4E3C-B7E1-4850C3DB5251}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DistributedHashTable.Tests", "Rhino.DistributedHashTable.Tests\Rhino.DistributedHashTable.Tests.csproj", "{A9B450CA-22D0-4234-BA46-62A39FC554F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +53,22 @@ Global
 		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63530BA6-3424-49D9-B32C-A35A603817CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63530BA6-3424-49D9-B32C-A35A603817CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63530BA6-3424-49D9-B32C-A35A603817CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63530BA6-3424-49D9-B32C-A35A603817CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F30B2D63-CED5-4C8A-908F-0B5503D984A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F30B2D63-CED5-4C8A-908F-0B5503D984A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F30B2D63-CED5-4C8A-908F-0B5503D984A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F30B2D63-CED5-4C8A-908F-0B5503D984A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BC9E44C-6E3B-4E3C-B7E1-4850C3DB5251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC9E44C-6E3B-4E3C-B7E1-4850C3DB5251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC9E44C-6E3B-4E3C-B7E1-4850C3DB5251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC9E44C-6E3B-4E3C-B7E1-4850C3DB5251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9B450CA-22D0-4234-BA46-62A39FC554F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B450CA-22D0-4234-BA46-62A39FC554F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B450CA-22D0-4234-BA46-62A39FC554F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B450CA-22D0-4234-BA46-62A39FC554F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +76,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0FC43226-8030-46FC-A2AB-D064207FF364} = {64DC50EF-F634-4E75-8375-ACC6D42E2DB4}
 		{EBCAD5F6-F6A4-47C8-B8B5-F92E26CBACDA} = {64DC50EF-F634-4E75-8375-ACC6D42E2DB4}
-		{F30B2D63-CED5-4C8A-908F-0B5503D984A9} = {386B10BA-FE77-4808-A351-E3E305D0A0EA}
 	EndGlobalSection
 EndGlobal

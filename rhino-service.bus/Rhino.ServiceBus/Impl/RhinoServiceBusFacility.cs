@@ -15,7 +15,6 @@ using Rhino.ServiceBus.Messages;
 using Rhino.ServiceBus.Msmq;
 using Rhino.ServiceBus.Msmq.TransportActions;
 using Rhino.ServiceBus.Sagas;
-using Rhino.ServiceBus.Sagas.Persisters;
 using Rhino.ServiceBus.Serializers;
 
 namespace Rhino.ServiceBus.Impl
@@ -24,7 +23,7 @@ namespace Rhino.ServiceBus.Impl
     {
         private readonly List<Type> messageModules = new List<Type>();
         private readonly List<MessageOwner> messageOwners = new List<MessageOwner>();
-        private readonly Type serializerImpl = typeof(XmlMessageSerializer);
+        private Type serializerImpl = typeof(XmlMessageSerializer);
         private readonly Type transportImpl = typeof(MsmqTransport);
         private Uri endpoint;
         private int numberOfRetries = 5;
@@ -34,7 +33,7 @@ namespace Rhino.ServiceBus.Impl
         private bool useDhtSagaPersister;
         private bool useCreationModule = true;
 
-        public RhinoServiceBusFacility()
+    	public RhinoServiceBusFacility()
         {
             DetectQueueStrategy();
         }
@@ -244,9 +243,9 @@ namespace Rhino.ServiceBus.Impl
                 Kernel.AddComponent(
                     "SagaPersister<" + model.Implementation + ">",
                     typeof (ISagaPersister<>)
-                        .MakeGenericType(model.Implementation),
-                    typeof (DistributedHashTableSagaPersister<,>)
-                        .MakeGenericType(model.Implementation, sagaStateType)
+                        .MakeGenericType(model.Implementation)//,
+					//typeof (DistributedHashTableSagaPersister<,>)
+					//    .MakeGenericType(model.Implementation, sagaStateType)
                     );
             }
             else if (typeof(SupportsOptimisticConcurrency).IsAssignableFrom(model.Implementation))
@@ -254,9 +253,9 @@ namespace Rhino.ServiceBus.Impl
                 Kernel.AddComponent(
                      "SagaPersister<" + model.Implementation + ">",
                      typeof(ISagaPersister<>)
-                         .MakeGenericType(model.Implementation),
-                     typeof(OptimisticDistributedHashTableSagaPersister<,>)
-                         .MakeGenericType(model.Implementation, sagaStateType)
+                         .MakeGenericType(model.Implementation)//,
+					 //typeof(OptimisticDistributedHashTableSagaPersister<,>)
+					 //    .MakeGenericType(model.Implementation, sagaStateType)
                      ); 
             }
             else
@@ -341,5 +340,10 @@ namespace Rhino.ServiceBus.Impl
             useDhtSagaPersister = true;
             return this;
         }
+
+    	public void UseMessageSerializer<TMessageSerializer>()
+    	{
+			serializerImpl = typeof(TMessageSerializer);
+    	}
     }
 }

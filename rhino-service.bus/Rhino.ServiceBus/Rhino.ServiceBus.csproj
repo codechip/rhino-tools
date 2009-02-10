@@ -147,7 +147,6 @@
     <Compile Include="Msmq\TypeAndUriKey.cs" />
     <Compile Include="OccasionalConsumerOf.cs" />
     <Compile Include="Internal\IAccessibleSaga.cs" />
-    <Compile Include="Sagas\Persisters\DistributedHashTableSagaPersister.cs" />
     <Compile Include="Sagas\InitiatedBy.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Internal\ITransport.cs" />
@@ -160,7 +159,6 @@
     <Compile Include="Sagas\ISaga.cs" />
     <Compile Include="Sagas\ISagaMessage.cs" />
     <Compile Include="Sagas\Orchestrates.cs" />
-    <Compile Include="Sagas\Persisters\OptimisticDistributedHashTableSagaPersister.cs" />
     <Compile Include="Sagas\SupportsOptimisticConcurrency.cs" />
     <Compile Include="Serializers\XmlMessageSerializer.cs" />
     <Compile Include="Util\GuidCombGenerator.cs" />
@@ -178,12 +176,6 @@
     <Compile Include="Msmq\OpenedQueue.cs" />
     <Compile Include="Msmq\QueueInfo.cs" />
     <None Include="PublicApi.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\rhino-dht\Rhino.DHT\Rhino.DHT.csproj">
-      <Project>{F30B2D63-CED5-4C8A-908F-0B5503D984A9}</Project>
-      <Name>Rhino.DHT</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
-using Rhino.DHT;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Internal;
 using Rhino.ServiceBus.Sagas;
@@ -28,7 +27,7 @@ namespace Rhino.ServiceBus.Tests.Dht
                 new RhinoServiceBusFacility()
                     .UseDhtSagaPersister()
                 );
-            container.AddComponent<IDistributedHashTable, DistributedHashTable>();
+			//container.AddComponent<IDistributedHashTable, DistributedHashTable>();
             container.AddComponent<BaristaSaga>();
             container.AddComponent<ISagaStateMerger<BaristaState>, BaristaStateMerger>();
         }

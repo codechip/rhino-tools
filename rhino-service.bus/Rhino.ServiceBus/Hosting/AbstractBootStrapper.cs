@@ -63,7 +63,7 @@ namespace Rhino.ServiceBus.Hosting
 
         public virtual void Dispose()
         {
-            
+            container.Dispose();
         }
     }
 }

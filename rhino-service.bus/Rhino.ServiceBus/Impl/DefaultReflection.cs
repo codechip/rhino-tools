@@ -41,7 +41,8 @@ namespace Rhino.ServiceBus.Impl
                 {typeof (Guid), "guid"},
                 {typeof (Uri), "uri"},
                 {typeof (short), "short"},
-                {typeof (long), "long"}
+                {typeof (long), "long"},
+				{typeof(byte[]), "binary"}
             };
             foreach (var pair in typeToWellKnownTypeName)
             {
@@ -233,6 +234,7 @@ namespace Rhino.ServiceBus.Impl
         public string GetNameForXml(Type type)
         {
             var typeName = type.Name;
+        	typeName = typeName.Replace('[', '_').Replace(']', '_');
             var indexOf = typeName.IndexOf('`');
             if (indexOf == -1)
                 return typeName;

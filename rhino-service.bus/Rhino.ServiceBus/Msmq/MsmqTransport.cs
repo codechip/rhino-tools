@@ -88,6 +88,9 @@ namespace Rhino.ServiceBus.Msmq
 
 	    public void Send(Endpoint endpoint, DateTime processAgainAt, object[] msgs)
 		{
+			if (HaveStarted == false)
+				throw new InvalidOperationException("Cannot send a message before transport is started");
+			
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 	        var bytes = new List<byte>(message.Extension);
 	        bytes.AddRange(BitConverter.GetBytes(processAgainAt.ToBinary()));
@@ -99,6 +102,9 @@ namespace Rhino.ServiceBus.Msmq
 
         public void Send(Endpoint endpoint, params object[] msgs)
 		{
+			if(HaveStarted==false)
+				throw new InvalidOperationException("Cannot send a message before transport is started");
+
 			var message = GenerateMsmqMessageFromMessageBatch(msgs);
 
             SendMessageToQueue(message, endpoint);
