@@ -19,9 +19,9 @@ namespace Rhino.DistributedHashTable.Tests
 
 		public DhtTestBase(IConfigurationInterpreter interpreter)
 		{
-			EnsureQueueExistsAndIsEmpty("msmq://localhost/test_queue");
-			EnsureQueueExistsAndIsEmpty("msmq://localhost/test_queue2");
-			EnsureQueueExistsAndIsEmpty("msmq://localhost/test_queue3");
+			EnsureQueueExistsAndIsEmpty("msmq://localhost/dht_test.replication");
+			EnsureQueueExistsAndIsEmpty("msmq://localhost/dht_test.replication2");
+			EnsureQueueExistsAndIsEmpty("msmq://localhost/dht_test.replication3");
 
 			Delete("cache.esent");
 			Delete("cache1.esent");

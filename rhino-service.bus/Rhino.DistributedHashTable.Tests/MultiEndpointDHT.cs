@@ -28,25 +28,25 @@ namespace Rhino.DistributedHashTable.Tests
 			Assert.Equal(new Uri("net.tcp://localhost:8121/dht"), nodes[1].Primary.Sync);
 			Assert.Equal(new Uri("net.tcp://localhost:8122/dht"), nodes[2].Primary.Sync);
 
-			Assert.Equal(new Uri("msmq://localhost/test_queue"), nodes[0].Primary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue2"), nodes[1].Primary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue3"), nodes[2].Primary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication"), nodes[0].Primary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication2"), nodes[1].Primary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication3"), nodes[2].Primary.Async);
 
 			Assert.Equal(new Uri("net.tcp://localhost:8121/dht"), nodes[0].Secondary.Sync);
 			Assert.Equal(new Uri("net.tcp://localhost:8122/dht"), nodes[1].Secondary.Sync);
 			Assert.Equal(new Uri("net.tcp://localhost:8129/dht"), nodes[2].Secondary.Sync);
 
-			Assert.Equal(new Uri("msmq://localhost/test_queue2"), nodes[0].Secondary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue3"), nodes[1].Secondary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue"), nodes[2].Secondary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication2"), nodes[0].Secondary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication3"), nodes[1].Secondary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication"), nodes[2].Secondary.Async);
 
 			Assert.Equal(new Uri("net.tcp://localhost:8122/dht"), nodes[0].Tertiary.Sync);
 			Assert.Equal(new Uri("net.tcp://localhost:8129/dht"), nodes[1].Tertiary.Sync);
 			Assert.Equal(new Uri("net.tcp://localhost:8121/dht"), nodes[2].Tertiary.Sync);
 
-			Assert.Equal(new Uri("msmq://localhost/test_queue3"), nodes[0].Tertiary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue"), nodes[1].Tertiary.Async);
-			Assert.Equal(new Uri("msmq://localhost/test_queue2"), nodes[2].Tertiary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication3"), nodes[0].Tertiary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication"), nodes[1].Tertiary.Async);
+			Assert.Equal(new Uri("msmq://localhost/dht_test.replication2"), nodes[2].Tertiary.Async);
 		}
 
 		[Fact]
