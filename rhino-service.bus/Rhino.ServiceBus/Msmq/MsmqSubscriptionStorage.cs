@@ -30,7 +30,7 @@ namespace Rhino.ServiceBus.Msmq
         public MsmqSubscriptionStorage(
                     IReflection reflection,
                     IMessageSerializer messageSerializer,
-                    Uri subscriptionQueue,
+                    Uri queueBusListensTo,
                     IEndpointRouter  endpointRouter,
                     IQueueStrategy queueStrategy
             )
@@ -39,7 +39,7 @@ namespace Rhino.ServiceBus.Msmq
             this.messageSerializer = messageSerializer;
             this.endpointRouter = endpointRouter;
             this.queueStrategy = queueStrategy;
-            this.subscriptionQueue = this.queueStrategy.CreateSubscriptionQueueUri(subscriptionQueue);
+            this.subscriptionQueue = this.queueStrategy.CreateSubscriptionQueueUri(queueBusListensTo);
         }
 
         public void Initialize()
