@@ -23,7 +23,9 @@ namespace Rhino.ServiceBus.Msmq
 
 			string hostName = uri.Host;
 		    string queuePathWithFlatSubQueue = 
-                uri.AbsolutePath.Substring(1) + uri.Fragment;
+                uri.AbsolutePath.Substring(1);
+            if (uri.Fragment.Length > 0)
+                queuePathWithFlatSubQueue += uri.Fragment;
 		    if (string.Compare(hostName, ".") == 0 ||
 				string.Compare(hostName, Environment.MachineName, true) == 0 ||
 				string.Compare(hostName, "localhost", true) == 0)
