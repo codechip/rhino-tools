@@ -23,7 +23,7 @@ namespace Rhino.ServiceBus.Tests
                                                       Type = typeof(TestMessage).FullName,
                                                   }}, msg.BodyStream);
 
-            queue.Send(msg);
+            queue.OpenSiblngQueue(SubQueue.Subscriptions, QueueAccessMode.Send).Send(msg);
 
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
@@ -52,7 +52,7 @@ namespace Rhino.ServiceBus.Tests
                                                   }}, msg.BodyStream);
 
 
-            queue.Send(msg);
+            queue.OpenSiblngQueue(SubQueue.Subscriptions, QueueAccessMode.Send).Send(msg);
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),
                                                                   serializer,
