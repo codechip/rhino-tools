@@ -38,7 +38,14 @@ namespace Rhino.PersistentHashTable
             if (Configure != null)
                 Configure(instance.Parameters);
 
-            instance.Init();
+            try
+            {
+                instance.Init();
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Could not open cache: " + database, e);
+            }
             needToDisposeInstance = true;
 
             EnsureDatabaseIsCreatedAndAttachToDatabase();

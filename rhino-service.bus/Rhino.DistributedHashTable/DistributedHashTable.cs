@@ -81,7 +81,20 @@ namespace Rhino.DistributedHashTable
 		public void Dispose()
 		{
 			hashTable.Dispose();
+		    GC.SuppressFinalize(this);
 		}
+
+        ~DistributedHashTable()
+        {
+            try
+            {
+                hashTable.Dispose();
+            }
+            catch (Exception)
+            {
+                //not much I can do
+            }
+        }
 
 		public PutResult[] Put(Node originalDestination, params PutRequest[] valuesToAdd)
 		{
