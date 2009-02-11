@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Bugs\Can_read_subscriptions_from_queue.cs" />
     <Compile Include="Bugs\Resolving_consumer_from_container.cs" />
+    <Compile Include="Bugs\Restarting_server_when_using_flat_queue_strategy.cs" />
     <Compile Include="Bugs\When_cannot_resolve_consumer_should_error.cs" />
     <Compile Include="Bugs\When_error_occured_on_transactional_queue.cs" />
     <Compile Include="Bugs\When_handler_consumes_two_messages.cs" />

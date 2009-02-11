@@ -22,14 +22,16 @@ namespace Rhino.ServiceBus.Msmq
 			}
 
 			string hostName = uri.Host;
-			if (string.Compare(hostName, ".") == 0 ||
+		    string queuePathWithFlatSubQueue = 
+                uri.AbsolutePath.Substring(1) + uri.Fragment;
+		    if (string.Compare(hostName, ".") == 0 ||
 				string.Compare(hostName, Environment.MachineName, true) == 0 ||
 				string.Compare(hostName, "localhost", true) == 0)
 			{
 				return  new QueueInfo
 				{
 					IsLocal = true,
-					QueuePath = Environment.MachineName +  @"\private$\" + uri.AbsolutePath.Substring(1),
+					QueuePath = Environment.MachineName +  @"\private$\" + queuePathWithFlatSubQueue,
                     QueueUri = uri
 				};
 			}
@@ -37,7 +39,7 @@ namespace Rhino.ServiceBus.Msmq
 			return new QueueInfo
 			{
 				IsLocal = false,
-				QueuePath = "FormatName:DIRECT=TCP:" + hostName + @"\private$\" + uri.AbsolutePath.Substring(1),
+				QueuePath = "FormatName:DIRECT=TCP:" + hostName + @"\private$\" + queuePathWithFlatSubQueue,
                 QueueUri = uri
 			};
 		}

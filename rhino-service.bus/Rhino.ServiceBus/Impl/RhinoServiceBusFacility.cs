@@ -157,7 +157,7 @@ namespace Rhino.ServiceBus.Impl
                     .ImplementedBy(subscriptionStorageImpl)
                     .DependsOn(new
                     {
-                        subscriptionQueue = endpoint
+                        queueBusListensTo = endpoint
                     }),
                 Component.For<ITransport>()
                     .LifeStyle.Is(LifestyleType.Singleton)
