@@ -344,7 +344,7 @@ namespace Rhino.PersistentHashTable
 
 		private string GetKey(string key)
 		{
-			return "rhino.dht [" + database + "]: " + key;
+			return "rhino.dht [" + instanceId + "]: " + key;
 		}
 
 		public void Commit()

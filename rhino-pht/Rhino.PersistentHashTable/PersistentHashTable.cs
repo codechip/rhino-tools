@@ -19,10 +19,10 @@ namespace Rhino.PersistentHashTable
         public PersistentHashTable(string database)
         {
             this.database = database;
+        	path = database;
             if (Path.IsPathRooted(database) == false)
-                this.database = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, database);
-            path = database;
-            this.database = Path.Combine(this.database, Path.GetFileName(database));
+                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, database);
+            this.database = Path.Combine(path, Path.GetFileName(database));
 
             instance = new Instance(database + "_" + Guid.NewGuid());
         }
