@@ -335,6 +335,33 @@ namespace Rhino.PersistentHashTable.Tests
 		}
 
 		[Fact]
+		public void Writing_identical_data_to_existing_vlaue_will_not_create_conflict()
+		{
+			using (var table = new PersistentHashTable(testDatabase))
+			{
+				table.Initialize();
+
+				table.Batch(actions =>
+				{
+					var version1 = actions.Put(new PutRequest
+					{
+						Key = "test",
+						ParentVersions = new ValueVersion[0],
+						Bytes = new byte[] { 1 }
+					});
+					var version2 = actions.Put(new PutRequest
+					{
+						Key = "test",
+						ParentVersions = new ValueVersion[0],
+						Bytes = new byte[] { 1 }
+					});
+					var values = actions.Get(new GetRequest { Key = "test" });
+					Assert.Equal(1, values.Length);
+				});
+			}
+		}
+
+		[Fact]
 		public void Can_resolve_conflict()
 		{
 			using (var table = new PersistentHashTable(testDatabase))
