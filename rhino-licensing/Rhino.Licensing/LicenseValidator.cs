@@ -121,12 +121,14 @@ namespace Rhino.Licensing
 				throw new InvalidOperationException("Floating license encountered, but licenseServerUrl was not set");
 
 			var success = false;
-			var licensingService = ChannelFactory<ILicensingService>.CreateChannel(new BasicHttpBinding(), new EndpointAddress(licenseServerUrl));
+			var licensingService = ChannelFactory<ILicensingService>.CreateChannel(new WSHttpBinding(), new EndpointAddress(licenseServerUrl));
 			try
 			{
 				var leasedLicense = licensingService.LeaseLicense(clientId);
 				((ICommunicationObject)licensingService).Close();
 				success = true;
+				if (leasedLicense == null)
+					return false;
 
 				var doc = new XmlDocument();
 				doc.LoadXml(leasedLicense);

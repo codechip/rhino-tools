@@ -41,11 +41,15 @@ namespace Rhino.Licensing
 			}
 			foreach (var license in Directory.GetFiles(licensesDirectory, "*.xml"))
 			{
+				var set = new HashSet<string>();
 				var validator = new LicenseValidator(SoftwarePublicKey, license);
 				try
 				{
 					validator.AssertValidLicense();
-					if (validator.LicenseType == LicenseType.Standard)
+					if (validator.LicenseType == LicenseType.Standard && 
+						// this prevent a simple cheating of simply copying the same
+						// license file several times
+						set.Add(validator.Name))
 						availableLicenses.Add(validator);
 				}
 				catch (Exception)
