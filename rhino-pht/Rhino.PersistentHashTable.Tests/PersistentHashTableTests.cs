@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Isam.Esent.Interop;
@@ -8,16 +7,8 @@ using System.Linq;
 
 namespace Rhino.PersistentHashTable.Tests
 {
-	public class PersistentHashTableTests
+	public class PersistentHashTableTests : PersistentTestBase
 	{
-		private const string testDatabase = "test.esent";
-
-		public PersistentHashTableTests()
-		{
-			if (Directory.Exists(testDatabase))
-				Directory.Delete(testDatabase, true);
-		}
-
 		[Fact]
 		public void Id_of_table_is_persistent()
 		{

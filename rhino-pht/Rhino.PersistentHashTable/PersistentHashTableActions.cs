@@ -15,14 +15,16 @@ namespace Rhino.PersistentHashTable
 		private readonly Transaction transaction;
 		private readonly Table keys;
 		private readonly Table data;
+		private readonly Table list;
 		private readonly Table identity;
 		private readonly Guid instanceId;
 		private readonly JET_DBID dbid;
 		private readonly Dictionary<string, JET_COLUMNID> keysColumns;
 		private readonly Dictionary<string, JET_COLUMNID> dataColumns;
+		private readonly Dictionary<string, JET_COLUMNID> identityColumns;
+		private readonly Dictionary<string, JET_COLUMNID> listColumns;
 		private readonly Cache cache;
 		private readonly List<Action> commitSyncronization = new List<Action>();
-		private Dictionary<string, JET_COLUMNID> identityColumns;
 
 		public JET_DBID DatabaseId
 		{
@@ -71,9 +73,11 @@ namespace Rhino.PersistentHashTable
 			keys = new Table(session, dbid, "keys", OpenTableGrbit.None);
 			data = new Table(session, dbid, "data", OpenTableGrbit.None);
 			identity = new Table(session, dbid, "identity_generator", OpenTableGrbit.None);
+			list = new Table(session, dbid, "lists", OpenTableGrbit.None);
 			keysColumns = Api.GetColumnDictionary(session, keys);
 			dataColumns = Api.GetColumnDictionary(session, data);
 			identityColumns = Api.GetColumnDictionary(session, identity);
+			listColumns = Api.GetColumnDictionary(session, list);
 		}
 
 		public PutResult Put(PutRequest request)
@@ -468,6 +472,53 @@ namespace Rhino.PersistentHashTable
 				commitSyncronization.Add(() => cache.Remove(GetKey(request.Key)));
 			}
 			return doesAllVersionsMatch;
+		}
+
+		public int AddItem(AddItemRequest request)
+		{
+			byte[] bookmark = new byte[Api.BookmarkMost];
+			int actualBookmarkSize;
+			using (var update = new Update(Session, list, JET_prep.Insert))
+			{
+				Api.SetColumn(session, list, listColumns["key"],request.Key,Encoding.Unicode);
+				Api.SetColumn(session, list, listColumns["data"], request.Data);
+
+				update.Save(bookmark, bookmark.Length,out actualBookmarkSize);
+			}
+
+			Api.JetGotoBookmark(session, list,bookmark, actualBookmarkSize);
+			return (int) Api.RetrieveColumnAsInt32(session, list, listColumns["id"]);
+		}
+
+		public KeyValuePair<int,byte[]>[] GetItems(GetItemsRequest request)
+		{
+			Api.JetSetCurrentIndex(session, list, "by_key");
+			Api.MakeKey(session, list, request.Key,Encoding.Unicode, MakeKeyGrbit.NewKey);
+			if (Api.TrySeek(session, list, SeekGrbit.SeekEQ) == false)
+				return new KeyValuePair<int, byte[]>[0];
+
+			Api.MakeKey(session, list, request.Key, Encoding.Unicode, MakeKeyGrbit.NewKey);
+			Api.JetSetIndexRange(session, list, 
+				SetIndexRangeGrbit.RangeUpperLimit | SetIndexRangeGrbit.RangeInclusive);
+
+			var results = new List<KeyValuePair<int, byte[]>>();
+			do
+			{
+				var id = Api.RetrieveColumnAsInt32(session, list, listColumns["id"]);
+				var bytes = Api.RetrieveColumn(session, list, listColumns["data"]);
+				results.Add(new KeyValuePair<int, byte[]>(id.Value, bytes));
+			} while (Api.TryMoveNext(Session, list));
+
+			return results.ToArray();
+		}
+
+		public void RemoveItem(RemoveItemRequest request)
+		{
+			Api.JetSetCurrentIndex(session, list, "pk");
+			Api.MakeKey(session, list, request.Key, Encoding.Unicode, MakeKeyGrbit.NewKey);
+			Api.MakeKey(session, list, request.Id, MakeKeyGrbit.None);
+			if(Api.TrySeek(session, list, SeekGrbit.SeekEQ))
+				Api.JetDelete(session, list);
 		}
 	}
 }

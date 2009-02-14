@@ -42,17 +42,20 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PutRequest.cs" />
+    <Compile Include="Parameters\AddItemRequest.cs" />
+    <Compile Include="Parameters\GetItemsRequest.cs" />
+    <Compile Include="Parameters\PutRequest.cs" />
     <Compile Include="EsentExtension.cs" />
-    <Compile Include="GetRequest.cs" />
-    <Compile Include="PutResult.cs" />
-    <Compile Include="RemoveRequest.cs" />
-    <Compile Include="Value.cs" />
+    <Compile Include="Parameters\GetRequest.cs" />
+    <Compile Include="Parameters\PutResult.cs" />
+    <Compile Include="Parameters\RemoveItemRequest.cs" />
+    <Compile Include="Parameters\RemoveRequest.cs" />
+    <Compile Include="Parameters\Value.cs" />
     <Compile Include="PersistentHashTable.cs" />
     <Compile Include="PersistentHashTableActions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaCreator.cs" />
-    <Compile Include="ValueVersion.cs" />
+    <Compile Include="Parameters\ValueVersion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

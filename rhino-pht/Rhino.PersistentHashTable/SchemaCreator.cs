@@ -8,7 +8,7 @@ namespace Rhino.PersistentHashTable
 	public class SchemaCreator
     {
         private readonly Session session;
-		public const string SchemaVersion = "1.3";
+		public const string SchemaVersion = "1.4";
 
 		public SchemaCreator(Session session)
         {
@@ -26,10 +26,47 @@ namespace Rhino.PersistentHashTable
             	CreateIdentityTable(dbid);
                 CreateKeysTable(dbid);
                 CreateDataTable(dbid);
+				CreateListTable(dbid);
 
                 tx.Commit(CommitTransactionGrbit.None);
             }
         }
+
+		private void CreateListTable(JET_DBID dbid)
+		{
+			JET_TABLEID tableid;
+			Api.JetCreateTable(session, dbid, "lists", 16, 100, out tableid);
+			JET_COLUMNID columnid;
+
+			Api.JetAddColumn(session, tableid, "key", new JET_COLUMNDEF
+			{
+				cbMax = 255,
+				coltyp = JET_coltyp.Text,
+				cp = JET_CP.Unicode,
+				grbit = ColumndefGrbit.ColumnNotNULL
+			}, null, 0, out columnid);
+
+			Api.JetAddColumn(session, tableid, "id", new JET_COLUMNDEF
+			{
+				coltyp = JET_coltyp.Long,
+				grbit = ColumndefGrbit.ColumnFixed | ColumndefGrbit.ColumnNotNULL|ColumndefGrbit.ColumnAutoincrement
+			}, null, 0, out columnid);
+
+			Api.JetAddColumn(session, tableid, "data", new JET_COLUMNDEF
+			{
+				coltyp = JET_coltyp.LongBinary,
+				// For Win2k3 support, it doesn't support long binary columsn that are not null
+				//grbit = ColumndefGrbit.ColumnNotNULL
+			}, null, 0, out columnid);
+
+			var indexDef = "+key\0+id\0\0";
+			Api.JetCreateIndex(session, tableid, "pk", CreateIndexGrbit.IndexPrimary, indexDef, indexDef.Length,
+							   100);
+
+			indexDef = "+key\0\0";
+			Api.JetCreateIndex(session, tableid, "by_key", CreateIndexGrbit.IndexDisallowNull, indexDef, indexDef.Length,
+							   100);
+		}
 
 		private void CreateIdentityTable(JET_DBID dbid)
 		{
