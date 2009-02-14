@@ -6,6 +6,8 @@ namespace Rhino.Licensing.Tests
     {
         public readonly string public_and_private;
         public readonly string public_only;
+		public readonly string floating_private;
+		public readonly string floating_public;
 
         public BaseLicenseTest()
         {
@@ -19,6 +21,17 @@ namespace Rhino.Licensing.Tests
                                                .Assembly
                                                .GetManifestResourceStream("Rhino.Licensing.Tests.public_only.xml"))
                 .ReadToEnd();
+
+
+			floating_private = new StreamReader(typeof(Can_generate_and_validate_key)
+											  .Assembly
+											  .GetManifestResourceStream("Rhino.Licensing.Tests.floating_private.xml"))
+			   .ReadToEnd();
+
+			floating_public = new StreamReader(typeof(Can_generate_and_validate_key)
+											  .Assembly
+											  .GetManifestResourceStream("Rhino.Licensing.Tests.floating_public.xml"))
+			   .ReadToEnd();
         }
 
     }

@@ -4,6 +4,7 @@ namespace Rhino.Licensing
     {
         None,
         Trial,
-        Standard
+        Standard,
+    	Floating
     }
 }

@@ -38,6 +38,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -48,11 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILicensingService.cs" />
     <Compile Include="LicenseFileNotFoundException.cs" />
     <Compile Include="LicenseGenerator.cs" />
     <Compile Include="LicenseType.cs" />
     <Compile Include="LicenseValidator.cs" />
     <Compile Include="LicenseNotFoundException.cs" />
+    <Compile Include="LicensingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
