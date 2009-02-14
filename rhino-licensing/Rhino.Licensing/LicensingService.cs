@@ -2,6 +2,7 @@ namespace Rhino.Licensing
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.IO;
 	using System.ServiceModel;
 
@@ -46,11 +47,15 @@ namespace Rhino.Licensing
 				try
 				{
 					validator.AssertValidLicense();
+					Debug.WriteLine("Found license for " + validator.Name + " of type: " + validator.LicenseType);
 					if (validator.LicenseType == LicenseType.Standard && 
 						// this prevent a simple cheating of simply copying the same
 						// license file several times
 						set.Add(validator.Name))
+					{
 						availableLicenses.Add(validator);
+						Debug.WriteLine("Accepting license for: " + validator.Name);
+					}
 				}
 				catch (Exception)
 				{
@@ -64,6 +69,7 @@ namespace Rhino.Licensing
 			KeyValuePair<DateTime, LicenseValidator> value;
 			if (leasedLicenses.TryGetValue(id, out value))
 			{
+				Debug.WriteLine(id+" is already leased, so extending lease");
 				var licenseValidator = value.Value;
 				return GenerateLicenseAndRenewLease(id, licenseValidator);
 			}
@@ -71,6 +77,7 @@ namespace Rhino.Licensing
 			{
 				var availableLicense = availableLicenses[availableLicenses.Count-1];
 				availableLicenses.RemoveAt(availableLicenses.Count-1);
+				Debug.WriteLine("Found available license to give, leasing it");
 				return GenerateLicenseAndRenewLease(id, availableLicense);
 			}
 			foreach (var kvp in leasedLicenses)
@@ -78,8 +85,10 @@ namespace Rhino.Licensing
 				if ((DateTime.Now - kvp.Value.Key).TotalMinutes < 45)
 					continue;
 				leasedLicenses.Remove(kvp.Key);
+				Debug.WriteLine("Found expired leased license, leasing it");
 				return GenerateLicenseAndRenewLease(id, kvp.Value.Value);
 			}
+			Debug.WriteLine("Could not find license to lease");
 			return null;
 		}
 
