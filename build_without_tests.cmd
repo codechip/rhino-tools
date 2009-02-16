@@ -1,1 +1,1 @@
-SharedLibs\Tools\Nant\nant -D:common.testrunner.enabled=false 
+SharedLibs\Tools\Nant\nant quick
