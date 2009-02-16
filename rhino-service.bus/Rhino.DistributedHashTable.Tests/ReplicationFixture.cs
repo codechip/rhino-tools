@@ -5,7 +5,7 @@ namespace Rhino.DistributedHashTable.Tests
 	using Castle.Windsor;
 	using Castle.Windsor.Configuration.Interpreters;
 	using PersistentHashTable;
-	using Rhino.ServiceBus.Impl;
+	using ServiceBus.Impl;
 	using ServiceBus;
 	using Util;
 	using Xunit;
@@ -18,6 +18,8 @@ namespace Rhino.DistributedHashTable.Tests
 		private readonly IStartableServiceBus tertiaryBus;
 		private readonly DhtBootStrapper tertiaryBootStrapper;
 		private readonly DhtBootStrapper secondaryBootStrapper;
+	    private readonly IStartableServiceBus[] buses;
+        private readonly DhtBootStrapper[] bootStrappers;
 
 		public ReplicationFixture()
 			: base(new XmlInterpreter("Primary.config"))
@@ -45,6 +47,20 @@ namespace Rhino.DistributedHashTable.Tests
 			tertiaryBus.Start();
 
 			tertiaryBootStrapper.AfterStart();
+
+		    buses = new[]
+		    {
+		        bus,
+		        secondaryBus,
+		        tertiaryBus,
+		    };
+
+		    bootStrappers = new[]
+		    {
+		        bootStrapper,
+		        secondaryBootStrapper,
+		        tertiaryBootStrapper,
+		    };
 		}
 
 
@@ -143,21 +159,25 @@ namespace Rhino.DistributedHashTable.Tests
 
 		private void BringUpSecondaryNodeForTestKey()
 		{
-			bootStrapper.AfterStart();
-			bus.Start();
+            var index = (Math.Abs("test".GetHashCode() % 3) + 1) % 3;
+            bootStrappers[index].AfterStart();
+            buses[index].Start();
 		}
 
 		private void ShutdownSecondaryNodeForTestKey()
 		{
-			bootStrapper.Stop();
-			bus.Dispose();
+            var index = (Math.Abs("test".GetHashCode() % 3) + 1) % 3;
+		    
+			bootStrappers[index].Stop();
+			buses[index].Dispose();
 		}
 
 
 		private void BringUpPreferredNodeForTestKey()
 		{
-			tertiaryBootStrapper.AfterStart();
-			tertiaryBus.Start();
+            var index = Math.Abs("test".GetHashCode() % 3);
+		    bootStrappers[index].AfterStart();
+			buses[index].Start();
 		}
 
 
@@ -185,11 +205,9 @@ namespace Rhino.DistributedHashTable.Tests
 
 		private void ShutdownPreferredNodeForTestKey()
 		{
-			//"test".GetHashCode() % runners.Length == 2, therefor,
-			Assert.Equal(2, Math.Abs("test".GetHashCode() % 3));
-			//the preferred node is the tertiary one, we will shut it down
-			tertiaryBootStrapper.Stop();
-			tertiaryBus.Dispose();
+		    var index = Math.Abs("test".GetHashCode() % 3);
+		    bootStrappers[index].Stop();
+			buses[index].Dispose();
 		}
 
 		[Fact]
@@ -238,7 +256,7 @@ namespace Rhino.DistributedHashTable.Tests
 		private static void WaitForValueRemoval(Node endpoint)
 		{
 			var index = 0;
-			while (index < 500)
+			while (index < 10)
 			{
 				Value[][] values = null;
 				ServiceUtil.Execute<IDistributedHashTable>(endpoint.Primary.Sync, table =>
@@ -260,7 +278,7 @@ namespace Rhino.DistributedHashTable.Tests
 		private static void WaitForValueInEndpoint(Node endpoint)
 		{
 			var index = 0;
-			while (index < 500)
+			while (index < 10)
 			{
 				index += 1;
 				Value[][] values = null;

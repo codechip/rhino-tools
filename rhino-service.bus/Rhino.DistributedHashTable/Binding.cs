@@ -9,11 +9,13 @@ namespace Rhino.DistributedHashTable
 		{
 			get
 			{
-				return new NetTcpBinding
-				{
-					OpenTimeout = TimeSpan.FromMilliseconds(500),
-					CloseTimeout = TimeSpan.FromMilliseconds(250),
-				};
+			    var binding = new NetTcpBinding
+			    {
+			        OpenTimeout = TimeSpan.FromMilliseconds(500),
+			        CloseTimeout = TimeSpan.FromMilliseconds(250),
+			    };
+			    binding.ReaderQuotas.MaxArrayLength = 1024*1024*3;//3MB or so
+			    return binding;
 			}
 		}
 	}
