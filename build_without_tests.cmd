@@ -1,1 +1,1 @@
-SharedLibs\Tools\Nant\nant quick
+SharedLibs\Tools\Nant\nant quick build
