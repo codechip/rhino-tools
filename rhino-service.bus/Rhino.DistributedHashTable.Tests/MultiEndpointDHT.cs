@@ -74,7 +74,7 @@ namespace Rhino.DistributedHashTable.Tests
 		        },
 		    });
 
-			Assert.Equal(new[] { 1, 1, 1 }, versions.Select(x => x.Version.Version).ToArray());
+			Assert.Equal(new[] { 1, 1, 1 }, versions.Select(x => x.Version.Number).ToArray());
 
 			var values = client.Get(new[]
 		    {
@@ -122,7 +122,7 @@ namespace Rhino.DistributedHashTable.Tests
 		        },
 		    });
 
-			Assert.Equal(new[] { 1, 1, 1 }, versions.Select(e => e.Version.Version).ToArray());
+			Assert.Equal(new[] { 1, 1, 1 }, versions.Select(e => e.Version.Number).ToArray());
 
 			var removed = client.Remove(new[]
 		    {
