@@ -79,29 +79,31 @@ namespace Rhino.Commons.Binsor
 			}
 			throw new InvalidOperationException("Could not find component named: " + name);
 		}
-        public static void Read(IWindsorContainer container, CustomUri uri,string name, params string[] namespaces)
+        public static AbstractConfigurationRunner Read(IWindsorContainer container, CustomUri uri,string name, params string[] namespaces)
         {
-            Read(container, uri, name, name, namespaces);
+            return Read(container, uri, name, name, namespaces);
         }
 
-		public static void Read(IWindsorContainer container, string fileName, params string[] namespaces)
+		public static AbstractConfigurationRunner Read(IWindsorContainer container, string fileName, params string[] namespaces)
 		{
-			Read(container, fileName, "", namespaces);
+			return Read(container, fileName, "", namespaces);
 		}
 
-		public static void Read(IWindsorContainer container, string fileName, string environment, params string[] namespaces)
+		public static AbstractConfigurationRunner Read(IWindsorContainer container, string fileName, string environment, params string[] namespaces)
 		{
-			Read(container, fileName, environment, GenerationOptions.Memory, namespaces);
+			return Read(container, fileName, environment, GenerationOptions.Memory, namespaces);
 		}
 
-		public static void Read(
+		public static AbstractConfigurationRunner Read(
 			IWindsorContainer container, string fileName, string environment,
 			GenerationOptions generationOptions, params string[] namespaces)
 		{
 			try
 			{
-				Execute(container, GetConfigurationInstanceFromFile(
-					fileName, environment, container, generationOptions, namespaces));
+				AbstractConfigurationRunner conf = GetConfigurationInstanceFromFile(
+					fileName, environment, container, generationOptions, namespaces);
+				Execute(container, conf);
+				return conf;
 			}
 			finally
 			{
@@ -109,7 +111,7 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-        public static void Read(
+		public static AbstractConfigurationRunner Read(
             IWindsorContainer container, CustomUri uri,
             GenerationOptions generationOptions, string name,
             string environment, params string[] namespaces)
@@ -125,6 +127,7 @@ namespace Rhino.Commons.Binsor
                     {
                         needSecondPassRegistration.RegisterSecondPass();
                     }
+					return conf;
                 }
             }
             finally
@@ -152,26 +155,26 @@ namespace Rhino.Commons.Binsor
 			}
 		}
 
-		public static void Read(IWindsorContainer container, Stream stream, string name, params string[] namespaces)
+		public static AbstractConfigurationRunner Read(IWindsorContainer container, Stream stream, string name, params string[] namespaces)
 		{
-			Read(container, stream, name, "", namespaces);
+			return Read(container, stream, name, "", namespaces);
 		}
 
-		public static void Read(
+		public static AbstractConfigurationRunner Read(
 			IWindsorContainer container, Stream stream,
 			string name, string environment, params string[] namespaces)
 		{
-			Read(container, stream, GenerationOptions.Memory, name, environment, namespaces);
+			return Read(container, stream, GenerationOptions.Memory, name, environment, namespaces);
 		}
 
-        public static void Read(
+		public static AbstractConfigurationRunner Read(
             IWindsorContainer container, CustomUri uri,
             string name, string environment, params string[] namespaces)
         {
-            Read(container, uri, GenerationOptions.Memory, name, environment, namespaces);
+            return Read(container, uri, GenerationOptions.Memory, name, environment, namespaces);
         }
 
-		public static void Read(
+		public static AbstractConfigurationRunner Read(
 			IWindsorContainer container, Stream stream,
 			GenerationOptions generationOptions, string name,
 			string environment, params string[] namespaces)
@@ -187,6 +190,7 @@ namespace Rhino.Commons.Binsor
 					{
 						needSecondPassRegistration.RegisterSecondPass();
 					}
+					return conf;
 				}
 			}
 			finally

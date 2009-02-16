@@ -41,9 +41,10 @@ namespace Rhino.Commons.Binsor
 			this.runner = runner;
 		}
 
-		protected override void InstallInto(IWindsorContainer container)
+		protected override AbstractConfigurationRunner InstallInto(IWindsorContainer container)
 		{
-			BooReader.Execute(container, runner);	
+			BooReader.Execute(container, runner);
+			return runner;
 		}
 	}
 }

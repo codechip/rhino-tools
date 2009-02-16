@@ -49,10 +49,10 @@ namespace Rhino.Commons.Binsor
 			this.name = name;
 			return this;
 		}
-		
-		protected override void InstallInto(IWindsorContainer container)
+
+		protected override AbstractConfigurationRunner InstallInto(IWindsorContainer container)
 		{
-			BooReader.Read(container, stream, GenerationOptions, GetName(), EnvironmentName);
+			return BooReader.Read(container, stream, GenerationOptions, GetName(), EnvironmentName);
 		}
 		
 		protected string GetName()

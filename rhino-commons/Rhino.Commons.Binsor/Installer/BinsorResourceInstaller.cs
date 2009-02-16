@@ -44,15 +44,14 @@ namespace Rhino.Commons.Binsor
             this.uri = uri;
         }
 
-        protected override void InstallInto(IWindsorContainer container)
+		protected override AbstractConfigurationRunner InstallInto(IWindsorContainer container)
         {
             IResourceSubSystem system = (IResourceSubSystem) container.Kernel.GetSubSystem(SubSystemConstants.ResourceKey);
             IResource resource = system.CreateResource(uri);
             CustomUri Uri = new CustomUri(uri);
-             BooReader.Read(container, Uri, GenerationOptions, GetName(),
-                           EnvironmentName);
-            
+            return BooReader.Read(container, Uri, GenerationOptions, GetName(), EnvironmentName);   
         }
+
         protected string GetName()
         {
             return "Binsor" + System.Guid.NewGuid();

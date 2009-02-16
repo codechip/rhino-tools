@@ -41,9 +41,9 @@ namespace Rhino.Commons.Binsor
 			this.fileName = fileName;
 		}
 
-		protected override void InstallInto(IWindsorContainer container)
+		protected override AbstractConfigurationRunner InstallInto(IWindsorContainer container)
 		{
-			BooReader.Read(container, fileName, EnvironmentName, GenerationOptions, ImportedNamespaces);
+			return BooReader.Read(container, fileName, EnvironmentName, GenerationOptions, ImportedNamespaces);
 		}
 	}
 }

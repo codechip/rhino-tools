@@ -133,6 +133,22 @@ namespace Rhino.Commons.Test.Binsor
 			IRepository<Fubar> fubar_repos = _container.Resolve<IRepository<Fubar>>();
 			Assert.IsNotNull(fubar_repos);
 		}
+
+		[Test]
+		public void CanInstallBinsorScriptFileAndReuseIt()
+		{
+			BinsorFileInstaller fromFile = BinsorScript
+				.FromFile(Path.GetFullPath(@"Binsor\Windsor2.boo"))
+				.Reusable();
+
+			_container.Install(fromFile);
+
+			IWindsorContainer container = new WindsorContainer()
+				.Install(fromFile);
+
+			bool has_repos = container.Kernel.HasComponent(typeof(IRepository<>));
+			Assert.IsTrue(has_repos, "should have generic repository!");
+		}
 	}
 }
 

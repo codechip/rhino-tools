@@ -41,6 +41,8 @@ namespace Rhino.Commons.Binsor
 		private EnvironmentDelegate environment;
 		private BooReader.GenerationOptions options;
 		private List<string> namespaces;
+		private AbstractConfigurationRunner runner;
+		private bool reusable;
 		
 		public BinsorScriptInstaller()
 		{
@@ -66,6 +68,12 @@ namespace Rhino.Commons.Binsor
 			return (T)this;
 		}
 
+		public T Reusable()
+		{
+			reusable = true;
+			return (T)this;
+		}
+
 		protected BooReader.GenerationOptions GenerationOptions
 		{
 			get { return options; }
@@ -88,11 +96,18 @@ namespace Rhino.Commons.Binsor
 
 		void IWindsorInstaller.Install(IWindsorContainer container, IConfigurationStore store)
 		{
-			InstallInto(container);
+			if (reusable && runner != null)
+			{
+				BinsorScript.FromRunner(runner).InstallInto(container);
+			}
+			else
+			{
+				runner = InstallInto(container);
+			}
 		}
 
 		#endregion
 
-		protected abstract void InstallInto(IWindsorContainer container);
+		protected abstract AbstractConfigurationRunner InstallInto(IWindsorContainer container);
 	}
 }
