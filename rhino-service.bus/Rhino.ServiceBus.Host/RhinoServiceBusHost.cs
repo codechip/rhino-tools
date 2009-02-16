@@ -1,9 +1,7 @@
-﻿using Rhino.ServiceBus.LoadBalancer;
-
+﻿
 namespace Rhino.ServiceBus.Host
 {
 	using System.ServiceProcess;
-	using System.Threading;
 	using Hosting;
 
 	internal partial class RhinoServiceBusHost : ServiceBase
@@ -11,25 +9,21 @@ namespace Rhino.ServiceBus.Host
 		private RemoteAppDomainHost host;
 		private string asm;
 	    private string cfg;
-	    private bool loadBalancer;
 
 	    public RhinoServiceBusHost()
 		{
 			InitializeComponent();
 		}
 
-		public void SetArguments(string assembly, string config, bool useLoadBalancer)
+		public void SetArguments(string assembly, string config)
 		{
 		    asm = assembly;
 		    cfg = config;
-		    loadBalancer = useLoadBalancer;
 		}
 
 		protected override void OnStart(string[] ignored)
 		{
-            host = loadBalancer ?
-                new RemoteAppDomainLoadBalancerHost(asm, cfg) :
-                new RemoteAppDomainHost(asm, cfg);
+            host = new RemoteAppDomainHost(asm, cfg);
 			host.Start();
 		}
 
@@ -43,5 +37,13 @@ namespace Rhino.ServiceBus.Host
 		{
 			OnStart(arguments);
 		}
+
+	    public void CreateQueues()
+	    {
+	        var tmpHost = new RemoteAppDomainHost(asm, cfg);
+	        tmpHost.CreateQueues();
+            tmpHost.Close();
+	        
+	    }
 	}
 }

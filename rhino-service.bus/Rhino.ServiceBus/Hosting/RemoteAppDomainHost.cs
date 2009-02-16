@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading;
 using log4net;
@@ -78,6 +79,7 @@ namespace Rhino.ServiceBus.Hosting
 
 	        return new HostedService
 	        {
+                CreateQueues = ()=>hoster.CreateQueues(assembly),
 	            Stop = ()=>
 	            {
 	                hoster.Dispose();
@@ -112,8 +114,15 @@ namespace Rhino.ServiceBus.Hosting
         {
             public Action Start;
             public Action Stop;
+	        public Action CreateQueues;
         }
 
         #endregion
+
+        public void CreateQueues()
+        {
+            HostedService service = CreateNewAppDomain();
+            service.CreateQueues();
+        }
     }
 }

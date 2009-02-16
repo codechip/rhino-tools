@@ -7,7 +7,7 @@ namespace Rhino.ServiceBus.Host.Actions
         public void Execute(ExecutingOptions options)
         {
             var host = new RhinoServiceBusHost();
-            host.SetArguments(options.Assembly, options.ConfigFile, options.UseLoadBalancer);
+            host.SetArguments(options.Assembly, options.ConfigFile);
             host.DebugStart(new string[0]);
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();

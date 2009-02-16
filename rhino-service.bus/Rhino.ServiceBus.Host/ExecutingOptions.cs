@@ -13,14 +13,11 @@ namespace Rhino.ServiceBus.Host
 
         [Argument(ArgumentType.Required, HelpText = "Service name", ShortName = "name")] public string Name;
 
-        [Argument(ArgumentType.AtMostOnce, HelpText = "Should use loader", ShortName = "load-balancer")] public bool UseLoadBalancer;
-
         public override string ToString()
         {
             var sb = new StringBuilder();
             sb.Append(" /Action:").Append(Action)
                 .Append(" /UseLoadBalancer:")
-                .Append(UseLoadBalancer ? "+" : "-")
                 .Append(" /Name:")
                 .Append(Name);
 

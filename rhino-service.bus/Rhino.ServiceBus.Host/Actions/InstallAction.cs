@@ -8,7 +8,6 @@ namespace Rhino.ServiceBus.Host.Actions
     {
         public void Execute(ExecutingOptions options)
         {
-
             var installer = new ProjectInstaller
             {
                 DisplayName = options.Name,
@@ -31,6 +30,10 @@ namespace Rhino.ServiceBus.Host.Actions
 
                 service.SetValue("ImagePath", path + options);
             }
+
+            var host = new RhinoServiceBusHost();
+            host.SetArguments(options.Assembly, options.ConfigFile);
+            host.CreateQueues();
         }
     }
 }

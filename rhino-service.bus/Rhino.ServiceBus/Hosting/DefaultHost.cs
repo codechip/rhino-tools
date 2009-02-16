@@ -7,6 +7,9 @@ using Castle.Windsor.Configuration.Interpreters;
 using log4net;
 using log4net.Config;
 using Rhino.ServiceBus.Impl;
+using Rhino.ServiceBus.Internal;
+using Rhino.ServiceBus.MessageModules;
+using Rhino.ServiceBus.Msmq;
 
 namespace Rhino.ServiceBus.Hosting
 {
@@ -33,6 +36,15 @@ namespace Rhino.ServiceBus.Hosting
 
         public void Start(string asmName)
         {
+            InitailizeBus(asmName);
+
+            serviceBus.Start();
+
+            bootStrapper.AfterStart();
+        }
+
+        private void InitailizeBus(string asmName)
+        {
             string logfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config");
 
             XmlConfigurator.ConfigureAndWatch(new FileInfo(logfile));
@@ -49,10 +61,6 @@ namespace Rhino.ServiceBus.Hosting
 
             logger.Debug("Starting bus");
             serviceBus = container.Resolve<IStartableServiceBus>();
-
-            serviceBus.Start();
-
-            bootStrapper.AfterStart();
         }
 
         private void InitializeContainer()
@@ -127,6 +135,22 @@ namespace Rhino.ServiceBus.Hosting
         public override object InitializeLifetimeService()
         {
             return null; //singleton
+        }
+
+        public void CreateQueues(string asmName)
+        {
+            InitailizeBus(asmName);
+
+            var queueStrategy = container.Resolve<IQueueStrategy>();
+            // will create the queues if they are not already there
+            queueStrategy.InitializeQueue(serviceBus.Endpoint);
+
+            if(container.Kernel.HasComponent(typeof(MessageLoggingModule))==false)
+                return;
+            var transport = container.Resolve<ITransport>();
+            var loggingModule = container.Resolve<MessageLoggingModule>();
+            // will create the queues if they are not already there
+            loggingModule.Init(transport);
         }
     }
 }
