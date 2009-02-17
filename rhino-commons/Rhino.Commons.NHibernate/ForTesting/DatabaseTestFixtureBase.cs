@@ -28,10 +28,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using Castle.Windsor;
-using Rhino.Commons;
 
 namespace Rhino.Commons.ForTesting
 {
@@ -56,80 +56,78 @@ namespace Rhino.Commons.ForTesting
 			}
 		}
 
-		/// <summary>
-		/// Initialize the persistence framework, build a session factory, and
-		/// initialize the container. If <paramref name="rhinoContainerConfig"/>
-		/// is <see langword="null" /> or <see
-		/// cref="string.Empty">string.Empty</see> a <see
-		/// cref="RhinoContainer">RhinoContainer</see> will not be initialized.
-		/// </summary>
-		/// <param name="framework">The persistence framework</param>
-		/// <param name="rhinoContainerConfig">The configuration file to
-		/// initialize a 
-		/// <see cref="RhinoContainer">RhinoContainer</see> or <see langword="null" />.</param>
-		/// <param name="databaseName">Name of the database or <see langword="null" />.</param>
-		/// <param name="databaseEngine">The database engine that tests should be performed against</param>
-		/// <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
-		/// <remarks>
-		/// If <paramref name="databaseName"/> is <see langword="null" /> or
-		/// <see cref="string.Empty"/> a database with a name
-		/// derived from the other parameters supplied will be created. See
-		/// <see cref="NHibernateInitializer.DeriveDatabaseNameFrom(Assembly)"/> and <see cref="NHibernateInitializer.DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
-		/// </remarks>
-		public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
-													 string rhinoContainerConfig,
-													 DatabaseEngine databaseEngine,
-													 string databaseName,
-													 MappingInfo mappingInfo)
-		{
-			NHibernateInitializer.Initialize(framework, mappingInfo).Using(databaseEngine, databaseName).AndIoC(rhinoContainerConfig);
-		}
+        /// <summary>
+        /// Initialize the persistence framework, build a session factory, and
+        /// initialize the container. If <paramref name="rhinoContainerConfig"/>
+        /// is <see langword="null" /> or <see cref="string.Empty">string.Empty</see>
+        ///  a <see cref="RhinoContainer">RhinoContainer</see> will not be initialized.
+        /// </summary>
+        /// <param name="framework">The persistence framework</param>
+        /// <param name="rhinoContainerConfig">The configuration file to initialize a 
+        /// <see cref="RhinoContainer">RhinoContainer</see> or <see langword="null" />.</param>
+        /// <param name="databaseName">Name of the database or <see langword="null" />.</param>
+        /// <param name="databaseEngine">The database engine that tests should be performed against</param>
+        /// <param name="mappingInfo">Information used to map classes to database tables and queries.</param>
+        /// <remarks>
+        /// If <paramref name="databaseName"/> is <see langword="null" /> or
+        /// <see cref="string.Empty"/> a database with a name
+        /// derived from the other parameters supplied will be created. See
+        /// <see cref="NHibernateInitializer.DeriveDatabaseNameFrom(Assembly)"/> and <see cref="NHibernateInitializer.DeriveDatabaseNameFrom(DatabaseEngine, Assembly)"/>
+        /// </remarks>
+        public static void InitializeNHibernateAndIoC(PersistenceFramework framework,
+                                                      string rhinoContainerConfig,
+                                                      DatabaseEngine databaseEngine,
+                                                      string databaseName,
+                                                      MappingInfo mappingInfo)
+        {
+            NHibernateInitializer.Initialize(framework, mappingInfo).Using(databaseEngine, databaseName).AndIoC(
+                rhinoContainerConfig);
+        }
 
-		public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
-													 string rhinoContainerConfig,
-													 DatabaseEngine databaseEngine,
-													 string databaseName,
-													 MappingInfo mappingInfo,
-													IDictionary<string, string> properties)
-		{
-			NHibernateInitializer.Initialize(framework, mappingInfo)
-				.Using(databaseEngine, databaseName)
-				.ConfiguredBy(properties)
-				.AndIoC(rhinoContainerConfig);
+        /// <summary>
+        /// See <see cref="InitializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)" />
+        /// </summary>
+	    public static void InitializeNHibernateAndIoC(PersistenceFramework framework,
+	                                                  string rhinoContainerConfig,
+	                                                  DatabaseEngine databaseEngine,
+	                                                  string databaseName,
+	                                                  MappingInfo mappingInfo,
+	                                                  IDictionary<string, string> properties)
+	    {
+	        NHibernateInitializer.Initialize(framework, mappingInfo)
+	            .Using(databaseEngine, databaseName)
+	            .ConfiguredBy(properties)
+	            .AndIoC(rhinoContainerConfig);
+	    }
 
-		}
+        /// <summary>
+        /// See <see cref="InitializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// </summary>
+        public static void InitializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
+        {
+            NHibernateInitializer.Initialize(framework, mappingInfo).AndIoC(rhinoContainerConfig);
+        }
 
+        /// <summary>
+        /// See <see cref="InitializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// </summary>
+        public static void InitializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
+        {
+            NHibernateInitializer.Initialize(framework, mappingInfo).Using(databaseEngine, null).AndIoC(rhinoContainerConfig);
+        }
 
-		/// <summary>
-		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-		/// </summary>
-		public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
-		{
-			NHibernateInitializer.Initialize(framework, mappingInfo).AndIoC(rhinoContainerConfig);
-		}
+	    /// <summary>
+        /// See <see cref="InitializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+        /// </summary>
+        public static void InitializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
+        {
+            NHibernateInitializer.Initialize(framework, mappingInfo);
+        }
 
-		/// <summary>
-		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-		/// </summary>
-		public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
-		{
-			NHibernateInitializer.Initialize(framework, mappingInfo).Using(databaseEngine, null).AndIoC(rhinoContainerConfig);
-		}
-
-
-		/// <summary>
-		/// See <see cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
-		/// </summary>
-		public static void IntializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
-		{
-			NHibernateInitializer.Initialize(framework, mappingInfo);
-		}
-		
-
-		/// <summary>
+	    /// <summary>
 		/// Throw away all <see cref="UnitOfWorkTestContext"/> objects within <see cref="Contexts"/>
 		/// and referenced by <see cref="CurrentContext"/>. WARNING: Subsequent calls to  <see
-		/// cref="IntializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
+		/// cref="InitializeNHibernateAndIoC(PersistenceFramework,string,DatabaseEngine,string,MappingInfo)"/>
 		/// and all its overloads will now take considerably longer as the persistent framework will
 		/// be initialised a fresh.
 		/// </summary>
@@ -152,9 +150,57 @@ namespace Rhino.Commons.ForTesting
 			CurrentContext = null;
 			IsRunningInTestMode = false;
 			Contexts.Clear();
-		}
+        }
 
-		/// <summary>
+	    #region Obsolete methods
+
+        [Obsolete("Use InitializeNHibernateAndIoC instead, this method has a typo in its name")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
+                                                     string rhinoContainerConfig,
+                                                     DatabaseEngine databaseEngine,
+                                                     string databaseName,
+                                                     MappingInfo mappingInfo)
+        {
+            InitializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, databaseName, mappingInfo);
+        }
+
+        [Obsolete("Use InitializeNHibernateAndIoC instead, this method has a typo in its name")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework,
+                                                     string rhinoContainerConfig,
+                                                     DatabaseEngine databaseEngine,
+                                                     string databaseName,
+                                                     MappingInfo mappingInfo,
+                                                     IDictionary<string, string> properties)
+        {
+            InitializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, databaseName, mappingInfo, properties);
+        }
+
+        [Obsolete("Use InitializeNHibernateAndIoC instead, this method has a typo in its name")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, MappingInfo mappingInfo)
+        {
+            InitializeNHibernateAndIoC(framework, rhinoContainerConfig, mappingInfo);
+        }
+
+        [Obsolete("Use InitializeNHibernateAndIoC instead, this method has a typo in its name")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static void IntializeNHibernateAndIoC(PersistenceFramework framework, string rhinoContainerConfig, DatabaseEngine databaseEngine, MappingInfo mappingInfo)
+        {
+            InitializeNHibernateAndIoC(framework, rhinoContainerConfig, databaseEngine, mappingInfo);
+        }
+
+        [Obsolete("Use InitializeNHibernateAndIoC instead, this method has a typo in its name")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static void IntializeNHibernate(PersistenceFramework framework, MappingInfo mappingInfo)
+        {
+            InitializeNHibernate(framework, mappingInfo);
+        }
+
+        #endregion
+
+	    /// <summary>
 		/// Initializes Nhibernate and/or IoC using Fluent Builder.
 		/// </summary>
 		/// <param name="framework">The framework.</param>
@@ -164,15 +210,15 @@ namespace Rhino.Commons.ForTesting
 		{
 			return new NHibernateInitializer(framework,mappingInfo);
 		}
-		public class NHibernateInitializer
+
+	    public class NHibernateInitializer
 		{
 			private readonly MappingInfo mappingInfo;
-			private PersistenceFramework framework;
+			private readonly PersistenceFramework framework;
 			private DatabaseEngine databaseEngine=DatabaseEngine.SQLite;
 			private string databaseName;
 			private IDictionary<string, string> nhibernateConfigurationProperties = new Dictionary<string, string>();
-			private IoCInitializer ioc;
-			
+			private readonly IoCInitializer ioc;
 
 			protected internal NHibernateInitializer(PersistenceFramework framework, MappingInfo mappingInfo)
 			{
@@ -184,7 +230,7 @@ namespace Rhino.Commons.ForTesting
 
 			public static NHibernateInitializer Initialize(PersistenceFramework framework, MappingInfo mappingInfo)
 			{
-				NHibernateInitializer initializer=new NHibernateInitializer(framework,mappingInfo);
+				NHibernateInitializer initializer = new NHibernateInitializer(framework,mappingInfo);
 				return initializer;
 			}
 
@@ -300,7 +346,7 @@ namespace Rhino.Commons.ForTesting
 		
 		}
 
-		protected class IoCInitializer
+	    protected class IoCInitializer
 		{
 			private readonly NHibernateInitializer root;
 			private string rhinoContainerConfigPath;
@@ -373,6 +419,5 @@ namespace Rhino.Commons.ForTesting
 
 
 		}
-		
 	}
 }

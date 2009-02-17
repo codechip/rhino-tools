@@ -41,14 +41,14 @@ namespace Rhino.Commons.Test.ForTesting
         {
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
 
-            IntializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
+            InitializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
                                       ActiveRecordWindsorFilePath,
                                       DatabaseEngine.SQLite,
                                       "",
                                       mappingInfo);
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
-            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+            InitializeNHibernateAndIoC(PersistenceFramework.NHibernate,
                   NHibernateWindsorFilePath,
                   DatabaseEngine.SQLite,
                   "",

@@ -2,7 +2,7 @@ namespace Rhino.Commons.Test.Repository
 {
     using System.IO;
     using MbUnit.Framework;
-    using Rhino.Commons.ForTesting;
+    using Commons.ForTesting;
 
     [TestFixture]
     public class NHibernateRepositoryTests : RepositoryTests
@@ -12,7 +12,7 @@ namespace Rhino.Commons.Test.Repository
         {
             base.OneTimeTestInitialize(); 
             string path = Path.GetFullPath(@"Repository\Windsor.config");
-            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
+            InitializeNHibernateAndIoC(PersistenceFramework.NHibernate, path, MappingInfoForRepositoryTests);
         }
     }
 }

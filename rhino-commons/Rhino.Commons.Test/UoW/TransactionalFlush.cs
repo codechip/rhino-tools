@@ -51,7 +51,7 @@ namespace Rhino.Commons.Test.UoW
             BasicConfigurator.Configure(new MemoryAppender());
 
             string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UoW\Windsor.config"));
-            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+            InitializeNHibernateAndIoC(PersistenceFramework.NHibernate,
                                       path,
                                       DatabaseEngine.MsSqlCe,
                                       MappingInfo.FromAssemblyContaining<SimpleObject>());

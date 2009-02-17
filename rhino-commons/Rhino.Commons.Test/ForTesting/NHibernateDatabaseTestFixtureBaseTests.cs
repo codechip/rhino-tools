@@ -43,14 +43,14 @@ namespace Rhino.Commons.Test.ForTesting
         {
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
 
-            IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+            InitializeNHibernateAndIoC(PersistenceFramework.NHibernate,
                                       NHibernateWindsorFilePath,
                                       DatabaseEngine.SQLite,
                                       "",
                                       mappingInfo);
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
-            IntializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
+            InitializeNHibernateAndIoC(PersistenceFramework.ActiveRecord,
                                       ActiveRecordWindsorFilePath,
                                       DatabaseEngine.SQLite,
                                       "",
@@ -95,7 +95,7 @@ namespace Rhino.Commons.Test.ForTesting
 			mock.ConfiguredWasCalled = 0;
 			mock.InitializedWasCalled = 0;
 
-			IntializeNHibernateAndIoC(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
+			InitializeNHibernateAndIoC(FrameworkToTest, WindsorFilePath, DatabaseEngine.SQLite, ":memory:",
 				MappingInfo.From().SetNHInitializationAware(mock));
 			Assert.AreEqual(1, mock.BeforeInitializationCalled);
 			Assert.AreEqual(1, mock.ConfiguredWasCalled);

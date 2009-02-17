@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using log4net;
 using log4net.Appender;
 using log4net.Config;
 using MbUnit.Framework;
@@ -18,7 +17,7 @@ namespace Rhino.Commons.Test.UoW
 			BasicConfigurator.Configure(new MemoryAppender());
 
 			string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"UoW\Windsor.config"));
-			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate,
+			InitializeNHibernateAndIoC(PersistenceFramework.NHibernate,
 									  path,
 									  DatabaseEngine.SQLite,
 									  MappingInfo.FromAssemblyContaining<SimpleObject>());

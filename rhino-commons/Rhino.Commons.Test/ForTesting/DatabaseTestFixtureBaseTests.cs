@@ -126,8 +126,8 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void EachUnitOfWorkContextConfigurationWillBeCreatedOnlyOnce()
         {
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             Assert.AreEqual(1, Contexts.Count);
         }
@@ -160,18 +160,18 @@ namespace Rhino.Commons.Test.ForTesting
         public virtual void SwitchingBetweenExistingContextsHasAcceptablePerformace()
         {
             //Creates SQLite context for the first time. Use context to touch all moving parts
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
             //Create another context and ensure all its component parts are used
             //We're doing this so that the SQLite context created above is no longer current
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.MsSqlCe, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.MsSqlCe, "");
             VerifyCanCreateUseAndDisposeUnitOfWork();
 
             //Reinstate and use existing SQLite context.
             double timing = With.PerformanceCounter(delegate
             {
-                IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+                InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
                 VerifyCanCreateUseAndDisposeUnitOfWork();
             });
 
@@ -182,7 +182,7 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void CanCreateNestedUnitOfWork()
         {
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             VerifyCanCreateUseAndDisposeNestedUnitOfWork();
         }
@@ -191,7 +191,7 @@ namespace Rhino.Commons.Test.ForTesting
         [Test]
         public virtual void CallingCreateUnitOfWorkMoreThanOnceIsNotAllowed()
         {
-            IntializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
+            InitializeNHibernateAndIoC(WindsorFilePath, DatabaseEngine.SQLite, "");
 
             CurrentContext.CreateUnitOfWork();
             try
@@ -225,11 +225,11 @@ namespace Rhino.Commons.Test.ForTesting
 			Assert.AreSame(container,CurrentContext.RhinoContainer);
 		}
 		
-    	protected void IntializeNHibernateAndIoC(string rhinoContainerPath,
+    	protected void InitializeNHibernateAndIoC(string rhinoContainerPath,
                                                  DatabaseEngine databaseEngine,
                                                  string databaseName)
         {
-            IntializeNHibernateAndIoC(FrameworkToTest,
+            InitializeNHibernateAndIoC(FrameworkToTest,
                                       rhinoContainerPath,
                                       databaseEngine,
                                       databaseName,
@@ -267,7 +267,7 @@ namespace Rhino.Commons.Test.ForTesting
 
             //creates the UnitOfWorkContext
             MappingInfo mappingInfo = MappingInfo.FromAssemblyContaining<AREntity>();
-            IntializeNHibernateAndIoC(framework,
+            InitializeNHibernateAndIoC(framework,
                                       rhinoContainerPath,
                                       databaseEngine,
                                       databaseName,

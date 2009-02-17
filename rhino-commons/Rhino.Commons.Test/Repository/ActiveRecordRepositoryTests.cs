@@ -13,7 +13,7 @@ namespace Rhino.Commons.Test.Repository
             base.OneTimeTestInitialize();
             string path =
                 Path.GetFullPath(@"Repository\Windsor-AR.config");
-            IntializeNHibernateAndIoC(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
+            InitializeNHibernateAndIoC(PersistenceFramework.ActiveRecord, path, MappingInfoForRepositoryTests);
         }
     }
 }

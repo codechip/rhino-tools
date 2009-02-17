@@ -26,10 +26,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endregion
 
-
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NHibernate;
 using MbUnit.Framework;
 using NHibernate.Criterion;
@@ -46,8 +43,7 @@ namespace Rhino.Commons.Test.NHibernate
 		[TestFixtureSetUp]
 		public void OneTimeTestInitialize()
 		{
-			//IntializeNHibernate(PersistenceFramework.NHibernate, MappingInfo.FromAssemblyContaining<SMS>());			
-			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, "", DatabaseEngine.SQLite, MappingInfo.FromAssemblyContaining<SMS>());
+			InitializeNHibernateAndIoC(PersistenceFramework.NHibernate, "", DatabaseEngine.SQLite, MappingInfo.FromAssemblyContaining<SMS>());
 		}
 
         [SetUp]

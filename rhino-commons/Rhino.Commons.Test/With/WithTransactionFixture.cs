@@ -14,7 +14,7 @@ namespace Rhino.Commons.Test
 		public void OneTimeTestInitialize()
 		{
 			string path = Path.GetFullPath(@"Repository\Windsor.config");
-			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, path, MappingInfo.FromAssemblyContaining<Parent>());
+			InitializeNHibernateAndIoC(PersistenceFramework.NHibernate, path, MappingInfo.FromAssemblyContaining<Parent>());
 		}
 
 		[SetUp]

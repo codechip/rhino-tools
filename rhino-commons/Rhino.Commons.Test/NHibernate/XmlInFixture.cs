@@ -32,7 +32,7 @@ namespace Rhino.Commons.Test.NHibernate
 		[TestFixtureSetUp]
 		public void OneTimeTestInitialize()
 		{
-			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, NHibernateWindsorFilePath, DatabaseEngine.MsSql2005,
+			InitializeNHibernateAndIoC(PersistenceFramework.NHibernate, NHibernateWindsorFilePath, DatabaseEngine.MsSql2005,
 									  "Test", MappingInfo.FromAssemblyContaining<Mail>());
 		}
 
