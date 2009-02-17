@@ -11,6 +11,7 @@
 		<property name="assembly.version" value="1.0.0.0" />
 		<property name="assembly.description" value="Rhino Service Bus Host" />
 
+    <property name="project.icon" value="${src.dir}/HourGlass.ico"/>
 		<assemblyfileset id="project.references" basedir="${build.dir}">			
 			<include name="Castle.Core.dll"/>
 			<include name="Castle.MicroKernel.dll"/>

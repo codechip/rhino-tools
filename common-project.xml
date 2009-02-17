@@ -177,23 +177,48 @@
 	<target name="common.compile-exe"
 		description="Compile sources into a console executable">
 
-		<csc
-			target="exe"
-			define="${current.build.defines}"
-			debug="${build.debug}"
-			optimize="${build.optimize}"
-			warnaserror="${build.warnaserrors}"
-			output="${build.dir}/${project::get-name()}.exe"
-		>
-			<nowarn>
-				<warning number="1591" unless="${build.warnmissingdocs}" /> <!-- No XML comment for publicly visible member -->
-			</nowarn>
-			<sources refid="project.sources" />
-			<references refid="project.references" />
-			<resources refid="project.resources" />
-			<arg line="${csc.keyfile}" if="${assembly.sign}" />
-			<arg line="${csc.args}" />
-		</csc>
+    <if test="${property::exists('project.icon')}">
+      <echo>Creating exe with icon: ${project.icon}</echo>
+      <csc
+        
+        target="exe"
+        define="${current.build.defines}"
+        win32icon="${project.icon}"
+        debug="${build.debug}"
+        optimize="${build.optimize}"
+        warnaserror="${build.warnaserrors}"
+        output="${build.dir}/${project::get-name()}.exe"
+      >
+        <nowarn>
+          <warning number="1591" unless="${build.warnmissingdocs}" /> <!-- No XML comment for publicly visible member -->
+        </nowarn>
+        <sources refid="project.sources" />
+        <references refid="project.references" />
+        <resources refid="project.resources" />
+        <arg line="${csc.keyfile}" if="${assembly.sign}" />
+        <arg line="${csc.args}" />
+      </csc>
+   </if>
+   <if test="${property::exists('project.icon') == false}">
+      <csc
+        
+        target="exe"
+        define="${current.build.defines}"
+        debug="${build.debug}"
+        optimize="${build.optimize}"
+        warnaserror="${build.warnaserrors}"
+        output="${build.dir}/${project::get-name()}.exe"
+      >
+        <nowarn>
+          <warning number="1591" unless="${build.warnmissingdocs}" /> <!-- No XML comment for publicly visible member -->
+        </nowarn>
+        <sources refid="project.sources" />
+        <references refid="project.references" />
+        <resources refid="project.resources" />
+        <arg line="${csc.keyfile}" if="${assembly.sign}" />
+        <arg line="${csc.args}" />
+      </csc>
+   </if>
 	</target>
 
 	<target name="common.set-assembly-attribute-values">
