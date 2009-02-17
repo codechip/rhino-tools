@@ -92,18 +92,19 @@ namespace Rhino.ServiceBus.MessageModules
 
         internal void Transport_OnMessageProcessingFailure(CurrentMessageInformation info, Exception e)
         {
+            string messageType = (info.Message ?? "no message").ToString();
             SendInSingleTransaction(new MessageProcessingFailedMessage
             {
                 ErrorText = e.ToString(),
                 Timestamp = DateTime.Now,
-                MessageType = info.Message.ToString(),
+                MessageType = messageType,
                 MessageId = info.MessageId,
                 Source = info.Source,
                 Message = info.Message
             });
         }
 
-    	private void SendInSingleTransaction(object msg)
+        private void SendInSingleTransaction(object msg)
     	{
     		var message = new Message
     		{

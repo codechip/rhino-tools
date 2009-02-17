@@ -75,6 +75,13 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
 
         public bool HandlePeekedMessage(OpenedQueue queue, Message message)
         {
+            bool doesNotHaveMessageId = message.Extension.Length < 16;
+            if(doesNotHaveMessageId)
+            {
+                MoveToErrorQueue(queue, message, "Message does not have Extension set to at least 16 bytes, which will be used as the message id. Probably not a bus message.");
+                return true;
+            }
+
             var id = message.GetMessageId();
             ErrorCounter errorCounter = null;
 
