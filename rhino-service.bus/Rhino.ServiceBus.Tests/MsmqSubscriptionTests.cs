@@ -24,6 +24,7 @@ namespace Rhino.ServiceBus.Tests
                 Type = typeof(TestMessage).FullName,
             }}, msg.BodyStream);
 
+            msg.Extension = Guid.NewGuid().ToByteArray();
             queue.Send(msg, MessageQueueTransactionType.None);
             msg = queue.Peek(TimeSpan.FromSeconds(30));
             queue.MoveToSubQueue("subscriptions", msg);
@@ -53,7 +54,7 @@ namespace Rhino.ServiceBus.Tests
                 Endpoint = TransactionalTestQueueUri.Uri.ToString(),
                 Type = typeof(TestMessage).FullName,
             }}, msg.BodyStream);
-
+            msg.Extension = Guid.NewGuid().ToByteArray();
 
             queue.Send(msg, MessageQueueTransactionType.None);
             msg = queue.Peek(TimeSpan.FromSeconds(30));

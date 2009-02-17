@@ -72,7 +72,7 @@ namespace Rhino.ServiceBus.DistributedHashTableIntegration
 						Bytes = message.ToArray(),
 						Key = CreateKey(saga.Id),
 						OptimisticConcurrency = true,
-						ParentVersions = (state.Version == null ? new[] { state.Version } : new ValueVersion[0])
+						ParentVersions = (state.Version != null ? new[] { state.Version } : new ValueVersion[0])
 					},
 				});
 				if (putResults[0].ConflictExists)

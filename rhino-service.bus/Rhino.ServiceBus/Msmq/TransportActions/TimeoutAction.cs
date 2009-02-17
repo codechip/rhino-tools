@@ -44,7 +44,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             get { return DateTime.Now; }
         }
 
-        public override bool HandlePeekedMessage(OpenedQueue queue, Message message)
+        public override bool HandlePeekedMessage(IMsmqTransport transport, OpenedQueue queue, Message message)
         {
           using(var tx = new TransactionScope())
           {

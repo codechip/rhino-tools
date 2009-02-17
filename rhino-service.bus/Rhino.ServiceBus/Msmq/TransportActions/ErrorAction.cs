@@ -73,12 +73,14 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             return message.AppSpecific == 0;
         }
 
-        public bool HandlePeekedMessage(OpenedQueue queue, Message message)
+        public bool HandlePeekedMessage(IMsmqTransport transport, OpenedQueue queue, Message message)
         {
             bool doesNotHaveMessageId = message.Extension.Length < 16;
             if(doesNotHaveMessageId)
             {
-                MoveToErrorQueue(queue, message, "Message does not have Extension set to at least 16 bytes, which will be used as the message id. Probably not a bus message.");
+                var errorMessage = "Message does not have Extension set to at least 16 bytes, which will be used as the message id. Probably not a bus message.";
+                transport.RaiseMessageSerializationException(message,errorMessage);
+                MoveToErrorQueue(queue, message, errorMessage);
                 return true;
             }
 

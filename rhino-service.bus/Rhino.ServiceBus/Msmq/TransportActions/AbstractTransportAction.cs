@@ -18,6 +18,6 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             return messagType == HandledType;
         }
 
-        public abstract bool HandlePeekedMessage(OpenedQueue queue, Message message);
+        public abstract bool HandlePeekedMessage(IMsmqTransport transport, OpenedQueue queue, Message message);
     }
 }

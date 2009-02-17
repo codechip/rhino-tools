@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Messaging;
 using Castle.MicroKernel;
@@ -22,7 +23,7 @@ namespace Rhino.ServiceBus.Tests
                                                       Endpoint = transactionalTestQueueEndpoint.Uri.ToString(),
                                                       Type = typeof(TestMessage).FullName,
                                                   }}, msg.BodyStream);
-
+            msg.Extension = Guid.NewGuid().ToByteArray();
             queue.OpenSiblngQueue(SubQueue.Subscriptions, QueueAccessMode.Send).Send(msg);
 
 
@@ -51,7 +52,7 @@ namespace Rhino.ServiceBus.Tests
                                                       Type = typeof(TestMessage).FullName,
                                                   }}, msg.BodyStream);
 
-
+            msg.Extension = Guid.NewGuid().ToByteArray();
             queue.OpenSiblngQueue(SubQueue.Subscriptions, QueueAccessMode.Send).Send(msg);
 
             var subscriptionStorage = new MsmqSubscriptionStorage(new DefaultReflection(),

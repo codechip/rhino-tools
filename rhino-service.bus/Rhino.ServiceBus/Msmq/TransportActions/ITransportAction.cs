@@ -8,6 +8,6 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
         void Init(IMsmqTransport transport);
 
         bool CanHandlePeekedMessage(Message message);
-        bool HandlePeekedMessage(OpenedQueue queue, Message message);
+        bool HandlePeekedMessage(IMsmqTransport transport, OpenedQueue queue, Message message);
     }
 }

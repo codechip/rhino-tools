@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Messaging;
+using System.Runtime.Serialization;
 using System.Transactions;
 using log4net;
 using Rhino.ServiceBus.Exceptions;
@@ -138,6 +139,22 @@ namespace Rhino.ServiceBus.Msmq
                 ProcessMessage(message, queue, tx, messageArrived, messageProcessingCompleted);
 			}
 		}
+
+        public void RaiseMessageSerializationException(Message msg, string errorMessage)
+        {
+            var copy = MessageSerializationException;
+            if (copy == null)
+                return;
+            var messageInformation = new MsmqCurrentMessageInformation
+            {
+                MsmqMessage = msg,
+                Queue = queue,
+                Message = null,
+                Source = queue.Uri,
+                MessageId = Guid.Empty
+            };
+            copy(messageInformation, new SerializationException(errorMessage));
+        }
 
         private void HandleMessageCompletion(
 			Message message,
@@ -284,7 +301,7 @@ namespace Rhino.ServiceBus.Msmq
                 if(action.CanHandlePeekedMessage(message)==false)
                     continue;
 
-                if (action.HandlePeekedMessage(queue, message))
+                if (action.HandlePeekedMessage(this, queue, message))
                     return;
             }
 

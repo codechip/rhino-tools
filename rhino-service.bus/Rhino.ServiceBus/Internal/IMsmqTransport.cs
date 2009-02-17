@@ -1,4 +1,5 @@
 using System;
+using System.Messaging;
 using Rhino.ServiceBus.Impl;
 using Rhino.ServiceBus.Msmq;
 
@@ -15,5 +16,7 @@ namespace Rhino.ServiceBus.Internal
         void ReceiveMessageInTransaction(string messageId, 
             Func<CurrentMessageInformation, bool> messageArrived,
             Action<CurrentMessageInformation, Exception> messageProcessingCompleted);
+
+        void RaiseMessageSerializationException(Message msg, string errorMessage);
     }
 }

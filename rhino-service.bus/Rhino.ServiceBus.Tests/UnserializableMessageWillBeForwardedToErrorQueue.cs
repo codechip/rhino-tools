@@ -27,11 +27,30 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
-        public void Should_raise_event()
+        public void Should_raise_event_with_no_id()
         {
             bool wasCalled = false;
             Transport.MessageSerializationException += (info,exception) => wasCalled = true;
             queue.Send("blah blah not valid");
+
+            using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
+            {
+                errorQueue.Receive(TimeSpan.FromSeconds(30));// wait for message to be processed.
+            }
+
+            Assert.True(wasCalled);
+        }
+
+        [Fact]
+        public void Should_raise_event()
+        {
+            bool wasCalled = false;
+            Transport.MessageSerializationException += (info, exception) => wasCalled = true;
+            queue.Send(new Message
+            {
+                Body = "blah blah not valid",
+                Extension = Guid.NewGuid().ToByteArray()
+            });
 
             using (var errorQueue = new MessageQueue(testQueuePath + ";errors"))
             {
@@ -64,11 +83,30 @@ namespace Rhino.ServiceBus.Tests
         }
 
         [Fact]
-        public void Should_raise_event()
+        public void Should_raise_event_with_no_id()
         {
             bool wasCalled = false;
             Transport.MessageSerializationException += (info, exception) => wasCalled = true;
 			queue.Send(new Message("blah blah not valid"));
+
+            using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
+            {
+                errorQueue.Receive(TimeSpan.FromSeconds(30));// wait for message to be processed.
+            }
+
+            Assert.True(wasCalled);
+        }
+
+        [Fact]
+        public void Should_raise_event()
+        {
+            bool wasCalled = false;
+            Transport.MessageSerializationException += (info, exception) => wasCalled = true;
+            queue.Send(new Message
+            {
+                Body = "blah blah not valid",
+                Extension = Guid.NewGuid().ToByteArray()
+            });
 
             using (var errorQueue = new MessageQueue(testQueuePath + "#errors"))
             {

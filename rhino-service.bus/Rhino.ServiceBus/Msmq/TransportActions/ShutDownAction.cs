@@ -1,4 +1,5 @@
 using System.Messaging;
+using Rhino.ServiceBus.Internal;
 
 namespace Rhino.ServiceBus.Msmq.TransportActions
 {
@@ -9,7 +10,7 @@ namespace Rhino.ServiceBus.Msmq.TransportActions
             get { return MessageType.ShutDownMessageMarker; }
         }
 
-        public override bool HandlePeekedMessage(OpenedQueue queue, Message message)
+        public override bool HandlePeekedMessage(IMsmqTransport transport, OpenedQueue queue, Message message)
         {
             queue.TryGetMessageFromQueue(message.Id);
             return true;
