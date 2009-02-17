@@ -17,7 +17,6 @@ namespace Rhino.ServiceBus.Host
         {
             var sb = new StringBuilder();
             sb.Append(" /Action:").Append(Action)
-                .Append(" /UseLoadBalancer:")
                 .Append(" /Name:")
                 .Append(Name);
 
