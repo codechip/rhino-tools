@@ -191,7 +191,7 @@ namespace Rhino.Commons.ForTesting
         ///		[TestFixtureSetup]
         ///		public void TestFixtureSetup()
         ///		{
-        ///			IntializeNHibernateAndIoC(PersistenceFramework.NHibernate, "RhinoContainer.boo", typeof(Foo).Assembly);
+        ///			InitializeNHibernateAndIoC(PersistenceFramework.NHibernate, "RhinoContainer.boo", typeof(Foo).Assembly);
         ///		}
         /// 
         ///		[Setup]
