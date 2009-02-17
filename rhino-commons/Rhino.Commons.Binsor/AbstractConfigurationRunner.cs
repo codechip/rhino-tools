@@ -27,6 +27,7 @@
 #endregion
 
 using System;
+using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;
 
@@ -52,6 +53,30 @@ namespace Rhino.Commons.Binsor
             localContainer = container;
             return new DisposableAction(delegate { localContainer = null; });
         }
+
+		public static IDisposable CaptureRegistrations()
+		{
+			localContainer.Kernel.ComponentRegistered +=new ComponentDataDelegate(AddSecondPassRegistration);
+
+			// we should get components already registered.
+			foreach ( GraphNode node in localContainer.Kernel.GraphNodes)
+			{
+				ComponentModel model = node as ComponentModel;
+				if (model == null)
+					continue;
+				AddSecondPassRegistration(model.Name, localContainer.Kernel.GetHandler(model.Name));
+			}
+			return new DisposableAction(delegate {
+			                                     	localContainer.Kernel.ComponentRegistered -=
+			                                     		new ComponentDataDelegate(AddSecondPassRegistration); });
+		}
+
+		static void AddSecondPassRegistration(string key, IHandler handler)
+		{
+			Component component;
+			if (false == BooReader.TryGetComponentByName(key, out component))
+				BooReader.NeedSecondPassRegistrations.Add(new Component(key, handler.Service, handler.ComponentModel.Implementation));
+		}
 
 		public abstract void Run();
 	}

@@ -67,19 +67,34 @@ namespace Rhino.Commons.Binsor
 			set { Local.Data[tokenThatIsNeededToKeepReferenceToTheBooParserAssembly] = value; }
 		}
 
-		public static Component GetComponentByName(string name)
+		public static bool TryGetComponentByName(string name, out Component component)
 		{
+			component = null;
 			foreach (INeedSecondPassRegistration secondPassRegistration in NeedSecondPassRegistrations)
 			{
-				Component component = secondPassRegistration as Component;
-				if (component == null)
+				Component c = secondPassRegistration as Component;
+				if (c == null)
 					continue;
-				if (component.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-					return component;
+				if (c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+				{
+					component = c;
+					return true;
+				}
 			}
-			throw new InvalidOperationException("Could not find component named: " + name);
+			return false;
+			
 		}
-        public static AbstractConfigurationRunner Read(IWindsorContainer container, CustomUri uri,string name, params string[] namespaces)
+
+		public static Component GetComponentByName(string name)
+		{
+			Component component;
+
+			if (!TryGetComponentByName(name, out component))
+				throw new InvalidOperationException("Could not find component named: " + name);
+			return component;
+		}
+
+		public static AbstractConfigurationRunner Read(IWindsorContainer container, CustomUri uri, string name, params string[] namespaces)
         {
             return Read(container, uri, name, name, namespaces);
         }
@@ -122,11 +137,17 @@ namespace Rhino.Commons.Binsor
                 {
                     AbstractConfigurationRunner conf = GetConfigurationInstanceFromResource(
                         name, environment, container, uri, generationOptions, namespaces);
-                    conf.Run();
-                    foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
+
+					using (AbstractConfigurationRunner.CaptureRegistrations())
+					{
+						conf.Run();
+					}
+
+                	foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
                     {
                         needSecondPassRegistration.RegisterSecondPass();
                     }
+
 					return conf;
                 }
             }
@@ -142,7 +163,11 @@ namespace Rhino.Commons.Binsor
 			{
 				using(AbstractConfigurationRunner.UseLocalContainer(container))
 				{
-					abstractConfiguration.Run();
+					using (AbstractConfigurationRunner.CaptureRegistrations())
+					{
+						abstractConfiguration.Run();
+					}
+
 					foreach(INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
 						needSecondPassRegistration.RegisterSecondPass();
@@ -185,7 +210,10 @@ namespace Rhino.Commons.Binsor
 				{
 					AbstractConfigurationRunner conf = GetConfigurationInstanceFromStream(
 						name, environment, container, stream, generationOptions, namespaces);
-					conf.Run();
+					using (AbstractConfigurationRunner.CaptureRegistrations())
+					{
+						conf.Run();
+					}
 					foreach (INeedSecondPassRegistration needSecondPassRegistration in NeedSecondPassRegistrations)
 					{
 						needSecondPassRegistration.RegisterSecondPass();

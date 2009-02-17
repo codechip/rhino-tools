@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EE98519D-104D-4A31-ADD8-82C5F836018C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -244,6 +244,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Binsor\PreRegistrationWithExtensions.boo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Binsor\Windsor.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -273,7 +276,9 @@
     <EmbeddedResource Include="Repository\Parent.hbm.xml" />
     <EmbeddedResource Include="UoW\SimpleObject.hbm.xml" />
     <EmbeddedResource Include="NHibernate\SMS.hbm.xml" />
+    <Compile Include="Binsor\CalculatorFacility.cs" />
     <Compile Include="Binsor\BinsorFacilities_TestCase.cs" />
+    <Compile Include="Binsor\BinsorPreRegistrationWithExtensions_TestCase.cs" />
     <Compile Include="Binsor\BinsorStreamTestCase.cs" />
     <Compile Include="Binsor\Calculator.cs" />
     <Compile Include="Binsor\CalculatorTestCase.cs" />
