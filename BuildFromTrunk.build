@@ -33,6 +33,7 @@
 			<include name="NHibernate.???"/>
 			<include name="Iesi.Collections.???"/>
 			<include name="NHibernate.Mapping.Attributes.???"/>
+			<include name="NHibernate.ByteCode.Castle.???"/>
 			<include name="NHibernate.Search.???"/>
 			<include name="NHibernate.Caches.Prevalence.???"/>
 			<include name="NHibernate.Caches.MemCache.???"/>
