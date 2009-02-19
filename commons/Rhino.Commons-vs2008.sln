@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.NHibernate-v2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{426DFB09-BF9C-4C42-A201-31607E1B36CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DSL", "..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj", "{B788F27C-E00A-434A-81AA-1D592E030934}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DSL-vs2008", "..\dsl\Rhino.DSL\Rhino.DSL-vs2008.csproj", "{B788F27C-E00A-434A-81AA-1D592E030934}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Binsor", "Rhino.Commons.Binsor\Rhino.Commons.Binsor.csproj", "{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}"
 EndProject

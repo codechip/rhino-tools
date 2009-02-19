@@ -165,7 +165,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\rhino-dsl\Rhino.DSL\Rhino.DSL.csproj">
+    <ProjectReference Include="..\..\dsl\Rhino.DSL\Rhino.DSL-vs2008.csproj">
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
       <Name>Rhino.DSL</Name>
     </ProjectReference>
