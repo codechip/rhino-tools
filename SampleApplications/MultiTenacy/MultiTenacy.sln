@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenancy.Web", "MultiTenancy.Web\MultiTenancy.Web.csproj", "{C9B10329-1A47-488F-984C-5323F180BC77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Web", "Northwind.Web\Northwind.Web.csproj", "{2802B49C-0058-4966-A4C7-151E20846B19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9B10329-1A47-488F-984C-5323F180BC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B10329-1A47-488F-984C-5323F180BC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9B10329-1A47-488F-984C-5323F180BC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9B10329-1A47-488F-984C-5323F180BC77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2802B49C-0058-4966-A4C7-151E20846B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2802B49C-0058-4966-A4C7-151E20846B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2802B49C-0058-4966-A4C7-151E20846B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2802B49C-0058-4966-A4C7-151E20846B19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

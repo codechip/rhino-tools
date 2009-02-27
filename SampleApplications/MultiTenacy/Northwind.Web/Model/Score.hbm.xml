@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+				   assembly="Northwind.Web"
+				   namespace="Northwind.Web.Model">
+  <class name="Score"
+		   table="Score">
+    <id name="Id">
+      <generator class="identity"/>
+    </id>
+    <many-to-one name="Game"/>
+    <many-to-one name="Player"/>
+    <property name="Value"/>
+    <property name="TimePlayed"/>
+  </class>
+</hibernate-mapping>
