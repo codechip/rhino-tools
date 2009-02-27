@@ -9,8 +9,9 @@ namespace MultiTenancy.Web.Infrastructure
     {
         public override IController CreateController(System.Web.Routing.RequestContext requestContext, string controllerName)
         {
+            controllerName = controllerName.ToLowerInvariant();
             var context = TenantContext.Current;
-            if (context.Container.Kernel.HasComponent(controllerName.ToLowerInvariant())==false)
+            if (context.Container.Kernel.HasComponent(controllerName)==false)
                 throw new HttpException(404, "Could not find appropriate controller");
 
             return (IController) context.Container.Resolve(controllerName);
