@@ -74,6 +74,7 @@ namespace Rhino.Commons.Binsor
 			_key = name;
 			_facilityInstance = facilityInstance;
 			_configuration = ConfigurationHelper.CreateConfiguration(null, "facility", null);
+			_extensions = extensions;
 		}
 
 		public Facility(string name, Type facilityInstance, IDictionary configuration)
