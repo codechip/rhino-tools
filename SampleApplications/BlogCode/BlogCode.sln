@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogCode", "BlogCode\BlogCode.csproj", "{F8DA012B-5FF1-45B4-9540-A89BE81E8BDB}"
 EndProject
 Global
