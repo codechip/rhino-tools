@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using MultiTenancy.Web.Model;
 using MultiTenancy.Web.Services;
 using MultiTenancy.Web.ViewModel;
@@ -23,6 +22,9 @@ namespace MultiTenancy.Web.Controllers
         {
             using (var session = sessionFactory.OpenSession())
             {
+                var scores = session.CreateCriteria(typeof(Score))
+                    .List<Score>();
+
                 var games = session.CreateCriteria(typeof (Game))
                     .SetMaxResults(5)
                     .List<Game>();

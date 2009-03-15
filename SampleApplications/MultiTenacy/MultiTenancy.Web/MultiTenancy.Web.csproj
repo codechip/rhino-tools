@@ -111,6 +111,13 @@
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Tenants\Southsand.Web\Home\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tenants\Southsand.Web\Home\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\IndexModel.cs" />
     <Compile Include="Views\Home\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -139,7 +146,6 @@
     <Content Include="Global.asax" />
     <EmbeddedResource Include="Model\Game.hbm.xml" />
     <EmbeddedResource Include="Model\Player.hbm.xml" />
-    <EmbeddedResource Include="Model\Score.hbm.xml" />
     <Content Include="Tenants\Northwind.Web\Home\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
@@ -155,6 +161,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tenants\Southsand.Web\Home\Index.aspx" />
     <Content Include="Tenants\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

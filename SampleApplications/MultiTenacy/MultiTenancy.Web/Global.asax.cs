@@ -22,9 +22,11 @@ namespace MultiTenancy.Web
 
         protected void Application_Start()
         {
-            TenantContext.CurrentTenantId = () => HttpContext.Current.Request["tenant"] ?? "MultiTenancy.Web";
+            TenantContext.CurrentTenantId = 
+                () => HttpContext.Current.Request["tenant"] ?? "MultiTenancy.Web";
 
-            ControllerBuilder.Current.SetControllerFactory(new MultiTenantControllerFactory());
+            ControllerBuilder.Current.SetControllerFactory(
+                new MultiTenantControllerFactory());
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new MultiTenantWebFormViewEngine());
             
