@@ -11,7 +11,7 @@ namespace Rhino.Commons.Facilities
         private ISet<Assembly> assemblies = new HashedSet<Assembly>();
         private ISet<Type> entities = new HashedSet<Type>();
         private string nhibernateConfigurationFile = "hibernate.cfg.xml";
-        private Predicate<Type> isCandidateForRepository = IsCandidateForRepositoryAttribute.IsCandidate;
+        private IsCandidateForRepositoryDelegate isCandidateForRepository = IsCandidateForRepositoryAttribute.IsCandidate;
     	private string repositoryKey;
 
     	public NHibernateUnitOfWorkFacilityConfig()
@@ -37,7 +37,7 @@ namespace Rhino.Commons.Facilities
             return this;
         }
 
-        public NHibernateUnitOfWorkFacilityConfig RegisterEntitiesWhere(Predicate<Type> typeIsSpecifiedBy)
+        public NHibernateUnitOfWorkFacilityConfig RegisterEntitiesWhere(IsCandidateForRepositoryDelegate typeIsSpecifiedBy)
         {
             Guard.Against<ArgumentNullException>(typeIsSpecifiedBy == null, "Predicate cannot be null.");
             isCandidateForRepository = typeIsSpecifiedBy;
@@ -64,7 +64,7 @@ namespace Rhino.Commons.Facilities
             return this;
         }
 
-        public Predicate<Type> IsCandidateForRepository
+        public IsCandidateForRepositoryDelegate IsCandidateForRepository
         {
             get { return isCandidateForRepository; }
         }

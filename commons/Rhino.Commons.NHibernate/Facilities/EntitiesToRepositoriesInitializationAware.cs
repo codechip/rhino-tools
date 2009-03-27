@@ -6,9 +6,9 @@ namespace Rhino.Commons.Facilities
 {
     internal class EntitiesToRepositoriesInitializationAware : INHibernateInitializationAware 
     {
-        private readonly Predicate<Type> isCandidateForRepository;
+        private readonly IsCandidateForRepositoryDelegate isCandidateForRepository;
 
-        public EntitiesToRepositoriesInitializationAware(Predicate<Type> isCandidateForRepository)
+        public EntitiesToRepositoriesInitializationAware(IsCandidateForRepositoryDelegate isCandidateForRepository)
         {
             this.isCandidateForRepository = isCandidateForRepository;
         }

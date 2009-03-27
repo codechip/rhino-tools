@@ -49,7 +49,7 @@ namespace Rhino.Commons.Test.Facilities
         [Test]
         public void Should_register_entities_to_the_repository()
         {
-            Predicate<Type> entityInThisAssembly = delegate(Type t) { return t.Assembly == GetType().Assembly; };
+            IsCandidateForRepositoryDelegate entityInThisAssembly = delegate(Type t, Type c) { return t.Assembly == GetType().Assembly; };
             NHibernateUnitOfWorkFacilityConfig config = BuildFacilityConfiguration().RegisterEntitiesWhere(entityInThisAssembly);
 
             IoC.Container.AddFacility(facilityKey, new NHibernateUnitOfWorkFacility(config));

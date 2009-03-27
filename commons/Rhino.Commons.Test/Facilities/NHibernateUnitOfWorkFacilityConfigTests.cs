@@ -43,7 +43,7 @@ namespace Rhino.Commons.Test.Facilities
         [Test]
         public void should_have_a_default_predicate_to_register_no_entities()
         {
-            Assert.IsFalse(new NHibernateUnitOfWorkFacilityConfig().IsCandidateForRepository.Invoke(typeof(object)));
+            Assert.IsFalse(new NHibernateUnitOfWorkFacilityConfig().IsCandidateForRepository.Invoke(typeof(object), typeof(object)));
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace Rhino.Commons.Test.Facilities
         [Test]
         public void should_override_the_default_predicate()
         {
-            Predicate<Type> typeIsAlwaysTrue = delegate(Type t) { return true; };
+            IsCandidateForRepositoryDelegate typeIsAlwaysTrue = delegate { return true; };
             NHibernateUnitOfWorkFacilityConfig config = CreateSUT().RegisterEntitiesWhere(typeIsAlwaysTrue);
             Assert.AreEqual(typeIsAlwaysTrue, config.IsCandidateForRepository);
         }

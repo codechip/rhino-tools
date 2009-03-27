@@ -78,7 +78,8 @@ namespace Rhino.Commons.Facilities
 			}
 			Kernel.Register(registerFactory);
 
-            Kernel.AddComponentInstance("entitiesToRepositories", typeof(INHibernateInitializationAware), new EntitiesToRepositoriesInitializationAware(config.IsCandidateForRepository));        
+            Kernel.AddComponentInstance("entitiesToRepositories", typeof(INHibernateInitializationAware), 
+				new EntitiesToRepositoriesInitializationAware(config.IsCandidateForRepository));        
         }
 
 		public Assembly[] Assemblies

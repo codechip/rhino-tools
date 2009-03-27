@@ -50,7 +50,7 @@ namespace Rhino.Commons.Test.NHibernate
                     new NHibernateUnitOfWorkFacilityConfig()
                         .AddEntity(typeof(DomainObjectFromDatabase1))
                         .NHibernateConfiguration(Path.Combine(directory, "Database1.cfg.xml"))
-                        .RegisterEntitiesWhere(delegate(Type t) { return true; });
+                        .RegisterEntitiesWhere(delegate { return true; });
             }
 
         private void DoWork()

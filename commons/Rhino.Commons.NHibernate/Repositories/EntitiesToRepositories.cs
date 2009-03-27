@@ -39,6 +39,14 @@ using Castle.MicroKernel.Registration;
 namespace Rhino.Commons
 {
 	/// <summary>
+	/// Determines if a candidate interface should be mapped to a repository.
+	/// </summary>
+	/// <param name="candidate">The interface.</param>
+	/// <param name="entity">The entity class.</param>
+	/// <returns></returns>
+	public delegate bool IsCandidateForRepositoryDelegate(Type candidate, Type entity);
+
+	/// <summary>
 	/// This class takes the responsability of inspecting NHibernate's entities
 	/// and extracting the relevant domain interfaces as separate <see cref="IRepository{T}"/> 
 	/// services.
@@ -60,7 +68,7 @@ namespace Rhino.Commons
 			IWindsorContainer windsorContainer,
 			ISessionFactory sessionFactory,
 			Type repository,
-			Predicate<Type> isCandidateForRepository
+			IsCandidateForRepositoryDelegate isCandidateForRepository
 			)
 		{
 			Register(windsorContainer.Kernel, sessionFactory, repository, isCandidateForRepository);
@@ -81,7 +89,7 @@ namespace Rhino.Commons
 			IKernel kernel,
 			ISessionFactory sessionFactory,
 			Type repository,
-			Predicate<Type> isCandidateForRepository
+			IsCandidateForRepositoryDelegate isCandidateForRepository
 			)
 		{
 			if (ImplementsOpenIRepository(repository) == false)
@@ -94,7 +102,7 @@ namespace Rhino.Commons
 					continue;
 				foreach (Type interfaceType in mappedClass.GetInterfaces())
 				{
-					if (isCandidateForRepository(interfaceType) == false)
+					if (isCandidateForRepository(interfaceType, mappedClass) == false)
 						continue;
 					kernel.Register(
 						Component.For(typeof(IRepository<>).MakeGenericType(interfaceType))
