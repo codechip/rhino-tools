@@ -3254,6 +3254,11 @@
             <param name="grbit">SetColumn options.</param>
             <param name="setinfo">Used to specify itag or long-value offset.</param>
         </member>
+        <member name="M:Microsoft.Isam.Esent.Interop.Api.JetEscrowUpdate(Microsoft.Isam.Esent.Interop.JET_SESID,Microsoft.Isam.Esent.Interop.JET_TABLEID,Microsoft.Isam.Esent.Interop.JET_COLUMNID,System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32@,Microsoft.Isam.Esent.Interop.EscrowUpdateGrbit)">
+            <summary>
+             The JetEscrowUpdate function performs an atomic addition operation on one column. This function allows multiple sessions to update the same record concurrently without conflicts.
+            </summary>
+        </member>
         <member name="M:Microsoft.Isam.Esent.Interop.Api.JetGetLock(Microsoft.Isam.Esent.Interop.JET_SESID,Microsoft.Isam.Esent.Interop.JET_TABLEID,Microsoft.Isam.Esent.Interop.GetLockGrbit)">
             <summary>
             Explicitly reserve the ability to update a row, write lock, or to explicitly prevent a row from
@@ -4005,6 +4010,31 @@
             about all object in the table.
             </summary>
         </member>
+        <member name="T:Microsoft.Isam.Esent.Interop.Vista.VistaColtyp">
+            <summary>
+            Column types that have been added to the Vista version of ESENT.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaColtyp.UnsignedLong">
+            <summary>
+            Unsigned 32-bit number.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaColtyp.LongLong">
+            <summary>
+            Signed 64-bit number.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaColtyp.GUID">
+            <summary>
+            16-byte GUID.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaColtyp.UnsignedShort">
+            <summary>
+            Unsigned 16-bit number.
+            </summary>
+        </member>
         <member name="T:Microsoft.Isam.Esent.Interop.Instance">
             <summary>
             A class that encapsulates a JET_INSTANCE in a disposable object.
@@ -4751,6 +4781,32 @@
             Object is a table.
             </summary>
         </member>
+        <member name="T:Microsoft.Isam.Esent.Interop.Vista.VistaParam">
+            <summary>
+            System parameters that have been added to the Vista version of ESENT.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaParam.Configuration">
+            <summary>
+            This parameter exposes multiple sets of default values for the
+            entire set of system parameters. When this parameter is set to
+            a specific configuration, all system parameter values are reset
+            to their default values for that configuration. If the
+            configuration is set for a specific instance then global system
+            parameters will not be reset to their default values.
+            Small Configuration (0): The database engine is optimized for memory use. 
+            Legacy Configuration (1): The database engine has its traditional defaults.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.Vista.VistaParam.EnabledAdvanced">
+            <summary>
+            This parameter is used to control when the database engine accepts
+            or rejects changes to a subset of the system parameters. This
+            parameter is used in conjunction with JET_paramConfiguration to
+            prevent some system parameters from being set away from the selected
+            configuration's defaults.
+            </summary>
+        </member>
         <member name="T:Microsoft.Isam.Esent.Interop.CreateDatabaseGrbit">
             <summary>
             Options for JetCreateDatabase
@@ -5292,6 +5348,22 @@
             Default options.
             </summary>
         </member>
+        <member name="T:Microsoft.Isam.Esent.Interop.EscrowUpdateGrbit">
+            <summary>
+            Options for JetEscrowUpdate.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.EscrowUpdateGrbit.None">
+            <summary>
+            Default options.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Isam.Esent.Interop.EscrowUpdateGrbit.EscrowNoRollback">
+            <summary>
+            Even if the session performing the escrow update has its transaction rollback this update will not be undone. 
+            Note that as the log records may not be flushed to disk, recent escrow updates done with this flag may be lost if there is a crash.
+            </summary>
+        </member>
         <member name="T:Microsoft.Isam.Esent.Interop.GetLockGrbit">
             <summary>
             Options for JetGetLock.
@@ -5521,8 +5593,11 @@
         </member>
         <member name="M:Microsoft.Isam.Esent.EsentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-            Deserialization ctor
+            Initializes a new instance of the EsentException class. This constructor
+            is used to deserialize a serialized exception.
             </summary>
+            <param name="info">The data needed to deserialize the object.</param>
+            <param name="context">The deserialization context.</param>
         </member>
         <member name="M:Microsoft.Isam.Esent.Interop.EsentErrorException.#ctor(Microsoft.Isam.Esent.Interop.JET_err)">
             <summary>
@@ -5532,8 +5607,11 @@
         </member>
         <member name="M:Microsoft.Isam.Esent.Interop.EsentErrorException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
-            Deserialization ctor
+            Initializes a new instance of the EsentErrorException class. This constructor
+            is used to deserialize a serialized exception.
             </summary>
+            <param name="info">The data needed to deserialize the object.</param>
+            <param name="context">The deserialization context.</param>
         </member>
         <member name="P:Microsoft.Isam.Esent.Interop.EsentErrorException.Message">
             <summary>
