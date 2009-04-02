@@ -19,6 +19,7 @@
 		<include name="igloo/default.build" />	
 		<include name="licensing/default.build" />		
 		<include name="pht/default.build" />
+		<include name="queues/default.build" />
 		<include name="esb/default.build" />
 	</fileset>
 
