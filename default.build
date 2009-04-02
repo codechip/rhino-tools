@@ -124,7 +124,7 @@
 		</copy>
 		
 		<foreach item="String" delim=" " property="dependency.dir" 
-			in="Boo Castle FileHelpers ICSharpCode Interop NHibernate SqlCE SqLite.Net System VisualStudio Esent xunit">
+			in="Boo Castle FileHelpers ICSharpCode Interop NHibernate SqlCE SqLite.Net System VisualStudio Esent xunit Wintellect">
 			
 			<!-- Copy framework-neutral libraries -->
 			<copy todir="${build.dir}" >
