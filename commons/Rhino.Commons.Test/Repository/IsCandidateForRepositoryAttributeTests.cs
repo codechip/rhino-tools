@@ -9,13 +9,13 @@ namespace Rhino.Commons.Test.Repository
         [Test]
         public void The_interface_should_be_a_candidate_for_a_repository()
         { 
-            Assert.IsTrue(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsARepository)));
+            Assert.IsTrue(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsARepository), null));
         }
 
         [Test]
         public void The_interface_should_not_be_a_candidate_for_a_repository()
         { 
-            Assert.IsFalse(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsNotARepository)));
+            Assert.IsFalse(IsCandidateForRepositoryAttribute.IsCandidate(typeof(AnInterfaceThatIsNotARepository), null));
         }
     }
 

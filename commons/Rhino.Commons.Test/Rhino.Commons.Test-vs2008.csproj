@@ -318,6 +318,7 @@
     <Compile Include="NHibernate\XmlInFixture.cs" />
     <Compile Include="Registry64Tests.cs" />
     <Compile Include="Repository\ActiveRecordRepositoryTests.cs" />
+    <Compile Include="Repository\IsCandidateForRepositoryAttributeTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryProjectionTests.cs" />
     <Compile Include="Repository\NHibernateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryProjectionTests.cs" />
