@@ -1,0 +1,1496 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Caliburn.RoutedUIMessaging</name>
+    </assembly>
+    <members>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.DependenciesAttribute">
+            <summary>
+            A filter capable of specifying the dependencies raised by an implementor of <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> which can cause a trigger's availability to be re-evaluated.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IInstanceAwareFilter">
+            <summary>
+            A filter that is aware individual <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessageHandler"/> and <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/> instances.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IFilter">
+            <summary>
+            A filter.
+            </summary>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilter.Priority">
+            <summary>
+            Gets the priority used to order filters.
+            </summary>
+            <remarks>Higher numbers are evaluated first.</remarks>
+            <value>The order.</value>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IInstanceAwareFilter.MakeAwareOf(Caliburn.RoutedUIMessaging.IRoutedMessageHandler)">
+            <summary>
+            Makes the filter aware of the <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessageHandler"/>.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IInstanceAwareFilter.MakeAwareOf(Caliburn.RoutedUIMessaging.IRoutedMessageHandler,Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Makes the filter aware of the <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/>.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.DependenciesAttribute.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Filters.DependenciesAttribute"/> class.
+            </summary>
+            <param name="dependencies">The dependencies.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.DependenciesAttribute.MakeAwareOf(Caliburn.RoutedUIMessaging.IRoutedMessageHandler)">
+            <summary>
+            Makes the filter aware of the <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessageHandler"/>.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.DependenciesAttribute.MakeAwareOf(Caliburn.RoutedUIMessaging.IRoutedMessageHandler,Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Makes the filter aware of the <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/>.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.FilterManager">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Filters.IFilterManager"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IFilterManager">
+            <summary>
+            Manages filters for an object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IFilterManager.Combine(Caliburn.RoutedUIMessaging.Filters.IFilterManager)">
+            <summary>
+            Combines the filters from the specified manager with the current instance.
+            </summary>
+            <param name="filterManager">The filter manager.</param>
+            <returns>A new filter manager representing the filter combinations.</returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.HasTriggerEffects">
+            <summary>
+            Gets a value indicating whether the target object has trigger affecting filters.
+            </summary>
+            <value>
+            	<c>true</c> if this instance has trigger effects; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.TriggerEffects">
+            <summary>
+            Gets the trigger affecting filters.
+            </summary>
+            <value>The trigger effects.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.PreExecute">
+            <summary>
+            
+            Gets the filters that execute before something else.
+            </summary>
+            <value>The pre execute.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.PostExecute">
+            <summary>
+            Gets the filters that execute after something else.
+            </summary>
+            <value>The post execute.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.InstanceAwareFilters">
+            <summary>
+            Gets the instance aware filters.
+            </summary>
+            <value>The instance aware filters.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IFilterManager.Rescue">
+            <summary>
+            Gets a filter that performs a resuce.
+            </summary>
+            <value>The rescue.</value>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.FilterManager.#ctor(System.Type,Caliburn.Core.Metadata.IMetadataContainer,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Filters.FilterManager"/> class.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="metadataContainer">The metadata container.</param>
+            <param name="serviceLocator">The serviceLocator.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.FilterManager.#ctor(System.Collections.Generic.IEnumerable{Caliburn.RoutedUIMessaging.Filters.IPreExecuteFilter},System.Collections.Generic.IEnumerable{Caliburn.RoutedUIMessaging.Filters.IPreExecuteFilter},System.Collections.Generic.IEnumerable{Caliburn.RoutedUIMessaging.Filters.IPostExecuteFilter},System.Collections.Generic.IEnumerable{Caliburn.RoutedUIMessaging.Filters.IInstanceAwareFilter},Caliburn.RoutedUIMessaging.Filters.IRescueFilter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Filters.FilterManager"/> class.
+            </summary>
+            <param name="preExecute">The pre execute.</param>
+            <param name="triggerEffects">The trigger effects.</param>
+            <param name="postExecute">The post execute.</param>
+            <param name="instanceAwareFilters">The instance aware.</param>
+            <param name="rescue">The rescue.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.FilterManager.Combine(Caliburn.RoutedUIMessaging.Filters.IFilterManager)">
+            <summary>
+            Combines the filters from the specified manager with the current instance.
+            </summary>
+            <param name="filterManager">The filter manager.</param>
+            <returns>A new filter manager representing the filter combinations.</returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.PreExecute">
+            <summary>
+            Gets the filters that execute before something else.
+            </summary>
+            <value>The pre execute.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.HasTriggerEffects">
+            <summary>
+            Gets a value indicating whether the target object has trigger affecting filters.
+            </summary>
+            <value>
+            	<c>true</c> if this instance has trigger effects; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.TriggerEffects">
+            <summary>
+            Gets the trigger affecting filters.
+            </summary>
+            <value>The trigger effects.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.PostExecute">
+            <summary>
+            Gets the filters that execute after something else.
+            </summary>
+            <value>The post execute.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.InstanceAwareFilters">
+            <summary>
+            Gets the instance aware filters.
+            </summary>
+            <value>The instance aware filters.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.FilterManager.Rescue">
+            <summary>
+            Gets a filter that performs a resuce.
+            </summary>
+            <value>The rescue.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IInitializableFilter">
+            <summary>
+            An <see cref="T:Caliburn.RoutedUIMessaging.Filters.IFilter"/> that requires initialization.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IInitializableFilter.Initialize(System.Type,Caliburn.Core.Metadata.IMetadataContainer,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes the filter.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="metadataContainer">The metadata container.</param>
+            <param name="serviceLocator">The serviceLocator.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IPostExecuteFilter">
+            <summary>
+            A filter that is executed after something.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IPostExecuteFilter.Execute(System.Object,Caliburn.Core.Invocation.IMethod,Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object@)">
+            <summary>
+            Executes the filter.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="method">The method.</param>
+            <param name="result">The result.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <returns>The new result type.</returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IPreExecuteFilter">
+            <summary>
+            A <see cref="T:Caliburn.RoutedUIMessaging.Filters.IFilter"/> that is executing before something.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IPreExecuteFilter.Execute(System.Object,Caliburn.Core.Invocation.IMethod,System.Object[],Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Executes the filter.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="method">The method.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Filters.IPreExecuteFilter.AffectsTriggers">
+            <summary>
+            Gets a value indicating whether this filter affects triggers.
+            </summary>
+            <value><c>true</c> if affects triggers; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Filters.IRescueFilter">
+            <summary>
+            A <see cref="T:Caliburn.RoutedUIMessaging.Filters.IFilter"/> that performs a rescue.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Filters.IRescueFilter.Handle(System.Object,System.Exception,Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Handles an <see cref="T:System.Exception"/>.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="exception">The exception.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.EventTriggerParser">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.ITriggerParser"/> that parses standard events.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.ITriggerParser">
+            <summary>
+            Parses the trigger specific aspects of an <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.ITriggerParser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified trigger text.
+            </summary>
+            <param name="target">The targeted ui element.</param>
+            <param name="triggerText">The trigger text.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.EventTriggerParser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified trigger text.
+            </summary>
+            <param name="target">The targeted ui element.</param>
+            <param name="triggerText">The trigger text.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.GestureTriggerParser">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.ITriggerParser"/> that parses gestures.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.GestureTriggerParser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified trigger text.
+            </summary>
+            <param name="target">The targeted ui element.</param>
+            <param name="triggerText">The trigger text.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.IMessageParser">
+            <summary>
+            Parses an <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessage"/> from text.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.IMessageParser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified message text.
+            </summary>
+            <param name="target">The targeted UI element.</param>
+            <param name="messageText">The message text.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.IParser">
+            <summary>
+            Parses text into a fully functional <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.IParser.SetDefaultMessageParser(System.String)">
+            <summary>
+            Sets the default message parser.
+            </summary>
+            <param name="key">The key.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.IParser.RegisterTriggerParser(System.String,Caliburn.RoutedUIMessaging.Parsers.ITriggerParser)">
+            <summary>
+            Registers a trigger parser.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.IParser.RegisterMessageParser(System.String,Caliburn.RoutedUIMessaging.Parsers.IMessageParser)">
+            <summary>
+            Registers a message parser.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.IParser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified message text.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="messageText">The message text.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1">
+            <summary>
+            An base implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.IMessageParser"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1.#ctor(System.Windows.Data.UpdateSourceTrigger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1"/> class.
+            </summary>
+            <param name="defaultTrigger">The default trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified message text.
+            </summary>
+            <param name="target">The targeted UI element.</param>
+            <param name="messageText">The message text.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1.SetCore(`0,System.Windows.DependencyObject,System.String)">
+            <summary>
+            Sets the core value of the message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="target">The target.</param>
+            <param name="coreOfMessage">The core representation of the message.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.MessageParserBase`1.ParseHeadAndTail(System.String,`0)">
+            <summary>
+            Parses the root portion of the message.
+            </summary>
+            <param name="messageText">The message text.</param>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Parsers.Parser">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.IParser"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.Parser.#ctor(Caliburn.RoutedUIMessaging.IRoutedMessageController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Parsers.Parser"/> class.
+            </summary>
+            <param name="controller">The controller.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.Parser.SetDefaultMessageParser(System.String)">
+            <summary>
+            Sets the default message parser.
+            </summary>
+            <param name="key">The key.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.Parser.RegisterTriggerParser(System.String,Caliburn.RoutedUIMessaging.Parsers.ITriggerParser)">
+            <summary>
+            Registers a trigger parser.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.Parser.RegisterMessageParser(System.String,Caliburn.RoutedUIMessaging.Parsers.IMessageParser)">
+            <summary>
+            Registers a message parser.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parsers.Parser.Parse(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Parses the specified message text.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="messageText">The message text.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.AttachedEventMessageTrigger">
+            <summary>
+            A message trigger that triggers by routed/attached events.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger">
+            <summary>
+            A base class to ease the implementation of <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger">
+            <summary>
+            Implementors enable various methods of triggering the sending of messages.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger.Attach(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Attaches the trigger to the interaction hierarchy.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger.UpdateAvailabilty(System.Boolean)">
+            <summary>
+            Updates the UI to reflect the availabilty of the trigger.
+            </summary>
+            <param name="isAvailable">if set to <c>true</c> [is available].</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger.Node">
+            <summary>
+            Gets the node within the interaction hierarchy that this trigger is a part of.
+            </summary>
+            <value>The node.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger.Message">
+            <summary>
+            Gets the message that this trigger will send.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger.MessageProperty">
+            <summary>
+            A dependency property used to store the message sent by the trigger.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger.Attach(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Wires the trigger into the interaction hierarchy.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger.UpdateAvailabilty(System.Boolean)">
+            <summary>
+            Updates the UI to reflect the availabilty of the trigger.
+            </summary>
+            <param name="isAvailable">if set to <c>true</c> [is available].</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger.Node">
+            <summary>
+            Gets the node within the interaction hierarchy that this trigger is a part of.
+            </summary>
+            <value>The node.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.BaseMessageTrigger.Message">
+            <summary>
+            Gets the action details that this trigger will send.
+            </summary>
+            <value>The action details.</value>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.AttachedEventMessageTrigger.RoutedEventProperty">
+            <summary>
+            A dependency property representing the routed event's value.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.AttachedEventMessageTrigger.Attach(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Wires the trigger into the interaction hierarchy.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.AttachedEventMessageTrigger.CreateInstanceCore">
+            <summary>
+            When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.AttachedEventMessageTrigger.RoutedEvent">
+            <summary>
+            Gets or sets the routed event.
+            </summary>
+            <value>The routed event.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger">
+            <summary>
+            A message trigger that triggers by standard CLR events.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.EventNameProperty">
+            <summary>
+            A dependency property representing the event name's value.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.#ctor(Caliburn.Core.Invocation.IEventHandlerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger"/> class.
+            </summary>
+            <param name="eventHandlerFactory">The event handler factory.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.Attach(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Wires the trigger into the interaction hierarchy.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.CreateInstanceCore">
+            <summary>
+            When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.EventMessageTrigger.EventName">
+            <summary>
+            Gets or sets the name of the event.
+            </summary>
+            <value>The name of the event.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger">
+            <summary>
+            An implentation of <see cref="T:Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger"/> that enables triggers based on an <see cref="T:System.Windows.Input.InputGesture"/>.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.KeyProperty">
+            <summary>
+            A dependency property representing the key's value.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.ModifiersProperty">
+            <summary>
+            A dependency property representing the modifier's value.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.MouseActionProperty">
+            <summary>
+            A dependency property representing the mouse action's value.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.Attach(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Wires the trigger into the interactin hierarchy.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.UpdateAvailabilty(System.Boolean)">
+            <summary>
+            Updates the UI to reflect the availabilty of the trigger.
+            </summary>
+            <param name="isAvailable">if set to <c>true</c> [is available].</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.System#Windows#Input#ICommand#Execute(System.Object)">
+            <summary>
+            Defines the method to be called when the command is invoked.
+            </summary>
+            <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.System#Windows#Input#ICommand#CanExecute(System.Object)">
+            <summary>
+            Defines the method that determines whether the command can execute in its current state.
+            </summary>
+            <returns>
+            true if this command can be executed; otherwise, false.
+            </returns>
+            <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.CreateInstanceCore">
+            <summary>
+            When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.Key">
+            <summary>
+            Gets or sets the key.
+            </summary>
+            <value>The key.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.Modifiers">
+            <summary>
+            Gets or sets the modifiers.
+            </summary>
+            <value>The modifiers.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.MouseAction">
+            <summary>
+            Gets or sets the mouse action.
+            </summary>
+            <value>The mouse action.</value>
+        </member>
+        <member name="E:Caliburn.RoutedUIMessaging.Triggers.GestureMessageTrigger.System#Windows#Input#ICommand#CanExecuteChanged">
+            <summary>
+            Occurs when changes occur that affect whether or not the command should execute.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Triggers.RoutedMessageTriggerCollection">
+            <summary>
+            A collection of triggers for routing messages through the UI.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Triggers.RoutedMessageTriggerCollection.CreateInstanceCore">
+            <summary>
+            Creates a new instance of the <see cref="T:System.Windows.FreezableCollection`1"/>.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffect">
+            <summary>
+            Common implementations of <see cref="T:Caliburn.RoutedUIMessaging.IAvailabilityEffect"/>.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.AvailabilityEffect.None">
+            <summary>
+            The element is not affected by changes in availability.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.AvailabilityEffect.Disable">
+            <summary>
+            This effect can disable the UI.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.AvailabilityEffect.Hide">
+            <summary>
+            This effect can hide the UI.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.AvailabilityEffect.Collapse">
+            <summary>
+            This effect can collapse the UI.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffect.NoneEffect">
+            <summary>
+            The element is not affected by changes in availability.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IAvailabilityEffect">
+            <summary>
+            Describes how a UI is affected by the availability of a message.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IAvailabilityEffect.ApplyTo(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Applies the effect to the target.
+            </summary>
+            <param name="target">The element.</param>
+            <param name="isAvailable">Determines how the effect will be applied to the target.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffect.NoneEffect.ApplyTo(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Applies the effect to the target.
+            </summary>
+            <param name="target">The element.</param>
+            <param name="isAvailable">Determines how the effect will be applied to the target.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffect.DisableEffect">
+            <summary>
+            This effect can disable the UI.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffect.DisableEffect.ApplyTo(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Applies the effect to the target.
+            </summary>
+            <param name="target">The element.</param>
+            <param name="isAvailable">Determines how the effect will be applied to the target.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffect.HideEffect">
+            <summary>
+            This effect can hide the UI.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffect.HideEffect.ApplyTo(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Applies the effect to the target.
+            </summary>
+            <param name="target">The element.</param>
+            <param name="isAvailable">Determines how the effect will be applied to the target.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffect.CollapseEffect">
+            <summary>
+            This effect can collapse the UI.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffect.CollapseEffect.ApplyTo(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Applies the effect to the target.
+            </summary>
+            <param name="target">The element.</param>
+            <param name="isAvailable">Determines how the effect will be applied to the target.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.AvailabilityEffectConverter">
+            <summary>
+            A <see cref="T:System.ComponentModel.TypeConverter"/> capable of converting strings to <see cref="T:Caliburn.RoutedUIMessaging.IAvailabilityEffect"/> instances.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffectConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <summary>
+            Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="sourceType">A <see cref="T:System.Type"/> that represents the type you want to convert from.</param>
+            <returns>
+            true if this converter can perform the conversion; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.AvailabilityEffectConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <summary>
+            Converts the given object to the type of this converter, using the specified context and culture information.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to use as the current culture.</param>
+            <param name="value">The <see cref="T:System.Object"/> to convert.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that represents the converted value.
+            </returns>
+            <exception cref="T:System.NotSupportedException">
+            The conversion cannot be performed.
+            </exception>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.CompositeResult">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.IExecutableResult"/> that enables execution of multiple results.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IExecutableResult">
+            <summary>
+            Allows custom code to execute after the return of a method.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IExecutableResult.Execute(Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Executes the custom code.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="handlingNode">The handling node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.CompositeResult.#ctor(Caliburn.RoutedUIMessaging.IExecutableResult[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.CompositeResult"/> class.
+            </summary>
+            <param name="children">The children.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.CompositeResult.Execute(Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Executes the custom code.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="handlingNode">The handling node.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.CompositeResult.Children">
+            <summary>
+            Gets the children.
+            </summary>
+            <value>The children.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.DefaultResultBehavior">
+            <summary>
+            The default behavior for handling return values of bound methods.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.DefaultResultBehavior.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.DefaultResultBehavior"/> class.
+            </summary>
+            <param name="result">The result.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.DefaultResultBehavior.#ctor(Caliburn.RoutedUIMessaging.IRoutedMessageController,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.DefaultResultBehavior"/> class.
+            </summary>
+            <param name="routedMessageController">The routed message controller.</param>
+            <param name="result">The result.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.DefaultResultBehavior.Execute(Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Executes the custom code.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="handlingNode">The handling node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.DefaultResultBehavior.FindPropertySetter(System.Object,System.String[])">
+            <summary>
+            Finds the property setter.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="propertyPath">The property path.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.ExtensionMethods">
+            <summary>
+            Extension methods used by the framework.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.ExtensionMethods.WithRoutedUIMessaging(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Adds the routed UI messaging module's configuration to the system.
+            </summary>
+            <param name="hook">The hook.</param>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.ExtensionMethods.FindDefaultsOrFail(Caliburn.RoutedUIMessaging.IRoutedMessageController,System.Object)">
+            <summary>
+            Finds the interaction defaults or fail.
+            </summary>
+            <param name="controller">The controller.</param>
+            <param name="element">The element.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.ExtensionMethods.FindNameOrFail``1(System.Windows.FrameworkElement,System.String)">
+            <summary>
+            Finds an element by name or fails.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="element">The element.</param>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.ExtensionMethods.FindNameOrFail``1(System.Windows.FrameworkContentElement,System.String)">
+            <summary>
+            Finds an element by name or fails.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="element">The element.</param>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1">
+            <summary>
+            An implamentation of <see cref="T:Caliburn.RoutedUIMessaging.InteractionDefaults"/>.
+            </summary>
+            <typeparam name="T">The type of element these defaults apply to.</typeparam>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.InteractionDefaults">
+            <summary>
+            Enables default functionality for UI-related elements.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionDefaults.#ctor(System.Type,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.InteractionDefaults"/> class.
+            </summary>
+            <param name="elementType">Type of the element.</param>
+            <param name="defaultEventName">Name of the default event.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionDefaults.GetDefaultTrigger">
+            <summary>
+            Gets the default trigger.
+            </summary>
+            <value>The default trigger.</value>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionDefaults.GetDefaultValue(System.Object)">
+            <summary>
+            Gets the default value from the target.
+            </summary>
+            <param name="target">The target object.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionDefaults.SetDefaultValue(System.Object,System.Object)">
+            <summary>
+            Sets the default value on the target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.InteractionDefaults.ElementType">
+            <summary>
+            Gets the type of the element to which the defaults apply.
+            </summary>
+            <value>The type of the element.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.InteractionDefaults.DefaultEventName">
+            <summary>
+            Gets the name of the default event used for UI wireup.
+            </summary>
+            <value>The event name.</value>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1.#ctor(Caliburn.Core.Invocation.IEventHandlerFactory,System.String,System.Action{`0,System.Object},System.Func{`0,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1"/> class.
+            </summary>
+            <param name="eventHandlerFactory">The event handler factory.</param>
+            <param name="defaultEventName">Default name of the event.</param>
+            <param name="setter">The setter.</param>
+            <param name="getter">The getter.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1.#ctor(System.String,System.Action{`0,System.Object},System.Func{`0,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1"/> class.
+            </summary>
+            <param name="defaultEventName">Default name of the event.</param>
+            <param name="setter">The setter.</param>
+            <param name="getter">The getter.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1.GetDefaultTrigger">
+            <summary>
+            Gets the default trigger.
+            </summary>
+            <returns></returns>
+            <value>The default trigger.</value>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1.GetDefaultValue(System.Object)">
+            <summary>
+            Gets the default value from the target.
+            </summary>
+            <param name="target">The target object.</param>
+            <returns>The value.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.GenericInteractionDefaults`1.SetDefaultValue(System.Object,System.Object)">
+            <summary>
+            Sets the default value on the target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IInteractionNode">
+            <summary>
+            Represents a node within the interaction hierarchy.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.FindParent">
+            <summary>
+            Finds the parent of this node.
+            </summary>
+            <returns>The parent or null if not found.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.Handles(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Determines whether this node can handle the specified message.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.ProcessMessage(Caliburn.RoutedUIMessaging.IRoutedMessage,System.Object)">
+            <summary>
+            Processes the message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="context">An object that provides additional context for message processing.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.UpdateAvailability(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Updates the availability of the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.RegisterHandler(Caliburn.RoutedUIMessaging.IRoutedMessageHandler)">
+            <summary>
+            Sets the message handler for this node.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IInteractionNode.AddTrigger(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Adds the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IInteractionNode.MessageHandler">
+            <summary>
+            Gets the action target.
+            </summary>
+            <value>The action target.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IInteractionNode.Triggers">
+            <summary>
+            Gets the triggers.
+            </summary>
+            <value>The triggers.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IInteractionNode.UIElement">
+            <summary>
+            Gets the UI element.
+            </summary>
+            <value>The UI element.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding">
+            <summary>
+            Allows am <see cref="T:Caliburn.RoutedUIMessaging.IMethodBinder"/> to bind return values.
+            </summary>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IRoutedMessage">
+            <summary>
+            Instances of this interface can be routed through the interacion hierarchy.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessage.Initialize(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Initializes the message for interaction with the specified node.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IRoutedMessage.AvailabilityEffect">
+            <summary>
+            Gets or sets the availability effect.
+            </summary>
+            <value>The availability effect.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IRoutedMessage.Source">
+            <summary>
+            Gets the source of the message.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IRoutedMessage.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="E:Caliburn.RoutedUIMessaging.IRoutedMessage.Invalidated">
+            <summary>
+            Occurs when the message is invalidated.
+            </summary>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding.ReturnPath">
+            <summary>
+            Gets or sets the path to use in binding the return value.
+            </summary>
+            <value>The return path.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding.DefaultElementReturn">
+            <summary>
+            Gets the default element to bind to if no return path is specified.
+            </summary>
+            <value>The default element.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IMethodBinder">
+            <summary>
+            A service that is capable of properly binding values to a methods parameters and return.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IMethodBinder.DetermineParameters(Caliburn.Core.Invocation.IMethod,System.Collections.Generic.IList{Caliburn.RoutedUIMessaging.Parameter},Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Determines the parameters that a method should be invoked with.
+            </summary>
+            <param name="targetMethod">The target method.</param>
+            <param name="providedParameters">The provided parameters.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <param name="context">The context.</param>
+            <returns>The actual parameters</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IMethodBinder.BindReturnValue(Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding,Caliburn.RoutedUIMessaging.IInteractionNode,System.Type,System.Object)">
+            <summary>
+            Binds the return value to the UI.
+            </summary>
+            <param name="message">The originiating message.</param>
+            <param name="handlingNode">The handling node.</param>
+            <param name="finalReturnType">The actual return type.</param>
+            <param name="result">The result.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.InteractionNode">
+            <summary>
+            Represents a node within the interaction hierarchy.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.#ctor(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.IRoutedMessageController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.InteractionNode"/> class.
+            </summary>
+            <param name="uiElement">The UI element.</param>
+            <param name="controller">The routed message controller.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.FindParent">
+            <summary>
+            Finds the parent of this node.
+            </summary>
+            <returns>The parent or null if not found.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.Handles(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Determines whether this node can handle the specified message.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.ProcessMessage(Caliburn.RoutedUIMessaging.IRoutedMessage,System.Object)">
+            <summary>
+            Processes the message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="context">An object that provides additional context for message processing.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.UpdateAvailability(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Updates the availability of the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.RegisterHandler(Caliburn.RoutedUIMessaging.IRoutedMessageHandler)">
+            <summary>
+            Sets the message handler for this node.
+            </summary>
+            <param name="messageHandler">The message handler.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.InteractionNode.AddTrigger(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Adds the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.InteractionNode.MessageHandler">
+            <summary>
+            Gets the action target.
+            </summary>
+            <value>The action target.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.InteractionNode.Triggers">
+            <summary>
+            Gets the triggers.
+            </summary>
+            <value>The triggers.</value>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.InteractionNode.UIElement">
+            <summary>
+            Gets the UI element.
+            </summary>
+            <value>The UI element.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IRoutedMessageController">
+            <summary>
+            A service that manages all aspects of Caliburn's routed message mechanism.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageController.AddHandler(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.IRoutedMessageHandler,System.Boolean)">
+            <summary>
+            Adds a message handler at the specified location in the UI hierarchy.
+            </summary>
+            <param name="uiElement">The UI element.</param>
+            <param name="handler">The message handler.</param>
+            <param name="setContext">if set to <c>true</c> the handler will also be stored in the element's DataContext and ViewMetadata will be set.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageController.AttachTrigger(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Attaches the trigger to the UI and prepares it to send messages.
+            </summary>
+            <param name="uiElement">The UI element.</param>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageController.GetParent(System.Windows.DependencyObject)">
+            <summary>
+            Gets the parent.
+            </summary>
+            <param name="uiElement">The UI element to retrieve the parent for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageController.SetupDefaults(Caliburn.RoutedUIMessaging.InteractionDefaults[])">
+            <summary>
+            Sets up the defaults for interaction with an element.
+            </summary>
+            <param name="interactionDefaults">The defaults.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageController.GetInteractionDefaults(System.Type)">
+            <summary>
+            Gets the interaction defaults.
+            </summary>
+            <param name="elementType">The type.</param>
+            <returns>The defaults.</returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.IRoutedMessageHandler">
+            <summary>
+            Implemented by classes that handler routed messages.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.Initialize(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Initializes this handler on the specified node.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.Unwrap">
+            <summary>
+            Gets the underlying object instance to which this handler routes requests.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.Handles(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Indicates whether this instance can handle the speicified message.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.Process(Caliburn.RoutedUIMessaging.IRoutedMessage,System.Object)">
+            <summary>
+            Processes the specified message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="context">An object that provides additional context for message processing.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.UpdateAvailability(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Updates the availability of the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.IRoutedMessageHandler.MakeAwareOf(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Makes the handler aware of a specific trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.Message">
+            <summary>
+            Hosts attached properties related to routed UI messaging.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Message.TriggersProperty">
+            <summary>
+            A property definition representing a collection of triggers.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Message.AttachProperty">
+            <summary>
+            A property definition representing a single trigger/message attachment.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Message.AvailabilityEffectProperty">
+            <summary>
+            A property representing the availability effect of a given message.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.Initialize(Caliburn.RoutedUIMessaging.IRoutedMessageController,Caliburn.RoutedUIMessaging.Parsers.IParser)">
+            <summary>
+            Initializes the message property host.
+            </summary>
+            <param name="controller">The controller.</param>
+            <param name="parser">The parser.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.SetTriggers(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.Triggers.RoutedMessageTriggerCollection)">
+            <summary>
+            Sets the triggers.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="triggers">The triggers.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.GetTriggers(System.Windows.DependencyObject)">
+            <summary>
+            Gets the triggers.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.SetAttach(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Sets the attached trigger/message.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="attachText">The attach text.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.GetAttach(System.Windows.DependencyObject)">
+            <summary>
+            Gets the attached trigger/message.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.SetAvailabilityEffect(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.IAvailabilityEffect)">
+            <summary>
+            Sets the availability effect.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="effect">The effect.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Message.GetAvailabilityEffect(System.Windows.DependencyObject)">
+            <summary>
+            Gets the availability effect.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.MethodBinder">
+            <summary>
+            The default implementation of <see cref="T:Caliburn.RoutedUIMessaging.IMethodBinder"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.#ctor(Caliburn.RoutedUIMessaging.IRoutedMessageController)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.MethodBinder"/> class.
+            </summary>
+            <param name="routedMessageController">The routed message controller.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.DetermineParameters(Caliburn.Core.Invocation.IMethod,System.Collections.Generic.IList{Caliburn.RoutedUIMessaging.Parameter},Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Determines the parameters that a method should be invoked with.
+            </summary>
+            <param name="targetMethod">The target method.</param>
+            <param name="providedParameters">The provided parameters.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <param name="context">The context.</param>
+            <returns>The actual parameters</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.BindReturnValue(Caliburn.RoutedUIMessaging.IMessageSuppportingMethodBinding,Caliburn.RoutedUIMessaging.IInteractionNode,System.Type,System.Object)">
+            <summary>
+            Binds the return value to the UI.
+            </summary>
+            <param name="message">The originiating message.</param>
+            <param name="handlingNode">The handling node.</param>
+            <param name="finalReturnType">The actual return type.</param>
+            <param name="result">The result.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.LocateAndCoerceValues(System.Reflection.ParameterInfo[],Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Locates and perofrms type coercion for the required parameters.
+            </summary>
+            <param name="requiredParameters">The required parameters.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.CoerceValues(System.Reflection.ParameterInfo[],System.Object[],Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Coerces the values.
+            </summary>
+            <param name="requiredParameters">The required parameters.</param>
+            <param name="providedValues">The provided values.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.DetermineSpecialValue(System.String,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object,System.Object@)">
+            <summary>
+            Determines if the key is a special value.
+            </summary>
+            <param name="possibleKey">The possible key.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="context">The context.</param>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.ResolveSpecialValue(System.String,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Resolves the special value.
+            </summary>
+            <param name="possibleSpecialValue">The possible special value.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.CoerceParameter(System.Reflection.ParameterInfo,System.Object)">
+            <summary>
+            Coerces the parameter.
+            </summary>
+            <param name="info">The info.</param>
+            <param name="providedValue">The provided value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.CoerceValueCore(System.Type,System.Object)">
+            <summary>
+            Coerces the provided value to the destination type.
+            </summary>
+            <param name="destinationType">The destination type.</param>
+            <param name="providedValue">The provided value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.MethodBinder.GetDefaultValue(System.Type)">
+            <summary>
+            Gets the default value for a type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.Parameter.ValueProperty">
+            <summary>
+            A dependency property representing the parameter's value.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parameter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Parameter"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.Parameter.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.Parameter"/> class.
+            </summary>
+            <param name="value">The value of the parameter.</param>
+        </member>
+        <member name="P:Caliburn.RoutedUIMessaging.Parameter.Value">
+            <summary>
+            Gets or sets the value of the parameter.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.RoutedMessageController">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessageController"/>.
+            </summary>
+        </member>
+        <member name="F:Caliburn.RoutedUIMessaging.RoutedMessageController.NodeProperty">
+            <summary>
+            Used to maintain the state of the interaction hierarchy.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedMessageController.AddHandler(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.IRoutedMessageHandler,System.Boolean)">
+            <summary>
+            Adds a message handler at the specified location in the UI hierarchy.
+            </summary>
+            <param name="uiElement">The UI element.</param>
+            <param name="handler">The message handler.</param>
+            <param name="setContext">if set to <c>true</c> the handler will also be stored in the element's DataContext and ViewMetadata will be set.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedMessageController.AttachTrigger(System.Windows.DependencyObject,Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Attaches the trigger and prepares it to send actions.
+            </summary>
+            <param name="uiElement">The UI element.</param>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedMessageController.GetParent(System.Windows.DependencyObject)">
+            <summary>
+            Gets the parent.
+            </summary>
+            <param name="uiElement">The UI element to retrieve the parent for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedMessageController.SetupDefaults(Caliburn.RoutedUIMessaging.InteractionDefaults[])">
+            <summary>
+            Sets up the defaults for interaction with an element.
+            </summary>
+            <param name="interactionDefaults">The defaults.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedMessageController.GetInteractionDefaults(System.Type)">
+            <summary>
+            Gets the interaction defaults.
+            </summary>
+            <param name="elementType">The type.</param>
+            <returns>The defaults.</returns>
+        </member>
+        <member name="T:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration">
+            <summary>
+            The configuration for the routed UI messaging mechanism.
+            </summary>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.#ctor(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.UsingRoutedMessageController``1">
+            <summary>
+            Customizes the routed message controller used by Caliburn.
+            </summary>
+            <typeparam name="T">The routed message controller type.</typeparam>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.UsingMethodBinder``1">
+            <summary>
+            Customizes the method binder used by Caliburn.
+            </summary>
+            <typeparam name="T">The method binder type.</typeparam>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.UsingParser``1">
+            <summary>
+            Customizes the message parser used by Caliburn.
+            </summary>
+            <typeparam name="T">The message parser type.</typeparam>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.GetComponents">
+            <summary>
+            Gets the component information for this module.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.RoutedUIMessaging.RoutedUIMessagingConfiguration.Configure">
+            <summary>
+            Configures this module.
+            </summary>
+        </member>
+    </members>
+</doc>

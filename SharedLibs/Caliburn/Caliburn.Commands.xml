@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Caliburn.Commands</name>
+    </assembly>
+    <members>
+        <member name="T:Caliburn.Commands.AllCommand">
+            <summary>
+            An <see cref="T:Caliburn.Commands.ICompositeCommand"/> whose children must all be available in order to execute.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Commands.ICompositeCommand">
+            <summary>
+            A command that executes multiple child commands.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.ICompositeCommand.AddOrUpdateChild(Caliburn.Commands.CommandMessage,System.Boolean)">
+            <summary>
+            Adds or updates the child command.
+            </summary>
+            <param name="child">The child.</param>
+            <param name="availability">if set to <c>true</c> the child can execute.</param>
+        </member>
+        <member name="M:Caliburn.Commands.ICompositeCommand.RemoveChild(Caliburn.Commands.CommandMessage)">
+            <summary>
+            Removes the child.
+            </summary>
+            <param name="child">The child.</param>
+        </member>
+        <member name="M:Caliburn.Commands.AllCommand.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.AllCommand.CanExecute">
+            <summary>
+            Determines whether this instance can execute.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can execute; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Commands.AllCommand.AddOrUpdateChild(Caliburn.Commands.CommandMessage,System.Boolean)">
+            <summary>
+            Adds or updates the child command.
+            </summary>
+            <param name="child">The child.</param>
+            <param name="availability">if set to <c>true</c> the child can execute.</param>
+        </member>
+        <member name="M:Caliburn.Commands.AllCommand.RemoveChild(Caliburn.Commands.CommandMessage)">
+            <summary>
+            Removes the child.
+            </summary>
+            <param name="child">The child.</param>
+        </member>
+        <member name="P:Caliburn.Commands.AllCommand.IsAvailable">
+            <summary>
+            Gets a value indicating whether this instance is available.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is available; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Caliburn.Commands.AnyCommand">
+            <summary>
+            An <see cref="T:Caliburn.Commands.ICompositeCommand"/> that can execute when any of its children are available.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.AnyCommand.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.AnyCommand.CanExecute">
+            <summary>
+            Determines whether this instance can execute.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can execute; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Commands.AnyCommand.AddOrUpdateChild(Caliburn.Commands.CommandMessage,System.Boolean)">
+            <summary>
+            Adds or updates the child command.
+            </summary>
+            <param name="child">The child.</param>
+            <param name="availability">if set to <c>true</c> the child can execute.</param>
+        </member>
+        <member name="M:Caliburn.Commands.AnyCommand.RemoveChild(Caliburn.Commands.CommandMessage)">
+            <summary>
+            Removes the child.
+            </summary>
+            <param name="child">The child.</param>
+        </member>
+        <member name="P:Caliburn.Commands.AnyCommand.IsAvailable">
+            <summary>
+            Gets a value indicating whether this instance is available.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is available; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Caliburn.Commands.Command">
+            <summary>
+            Hosts attached properties related to commands.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.Command.ParentProperty">
+            <summary>
+            A property representing the availability effect of a given message.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.Command.SetParent(System.Windows.DependencyObject,Caliburn.Commands.ICompositeCommand)">
+            <summary>
+            Sets the parent.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="parent">The parent.</param>
+        </member>
+        <member name="M:Caliburn.Commands.Command.GetParent(System.Windows.DependencyObject)">
+            <summary>
+            Gets the triggers.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.Commands.CommandConfiguration">
+            <summary>
+            The configuration for the command mechanism.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.CommandConfiguration.#ctor(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Commands.CommandConfiguration"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandConfiguration.GetComponents">
+            <summary>
+            Builds up the configuration for the module.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Commands.CommandMessage">
+            <summary>
+            An <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessage"/> for actions.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandMessage.ParametersProperty">
+            <summary>
+            Represents the parameters of a command message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandMessage.CommandProperty">
+            <summary>
+            Represents the command tied to the message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandMessage.ParentCommandProperty">
+            <summary>
+            Represents the parent of the command.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandMessage.ReturnPathProperty">
+            <summary>
+            Represents the return path of an command message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandMessage.AvailabilityEffectProperty">
+            <summary>
+            Represents the availability effect of an command message.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Commands.CommandMessage"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.#ctor(Caliburn.Actions.IActionFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Commands.CommandMessage"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.Initialize(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Initializes the message for interaction with the specified node.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.CreateInstanceCore">
+            <summary>
+            When implemented in a derived class, creates a new instance of the <see cref="T:System.Windows.Freezable"/> derived class.
+            </summary>
+            <returns>The new instance.</returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.Unwrap">
+            <summary>
+            Gets the underlying object instance to which this handler routes requests.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.Handles(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Indicates whether this instance can handle the speicified message.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.Process(Caliburn.RoutedUIMessaging.IRoutedMessage,System.Object)">
+            <summary>
+            Processes the specified message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="context">An object that provides additional context for message processing.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.UpdateAvailability(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Updates the availability of the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.MakeAwareOf(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Makes the handler aware of a specific trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.Equals(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.AddMetadata(Caliburn.Core.Metadata.IMetadata)">
+            <summary>
+            Adds metadata to the store.
+            </summary>
+            <param name="metadata">The metadata.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.GetMetadata``1">
+            <summary>
+            Gets the metadata.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessage.GetMatchingMetadata``1">
+            <summary>
+            Gets the matching metadata.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.Command">
+            <summary>
+            Gets or sets the command.
+            </summary>
+            <value>The command.</value>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.ParentCommand">
+            <summary>
+            Gets or sets the parent.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="E:Caliburn.Commands.CommandMessage.Completed">
+            <summary>
+            Occurs when the command has completed executing.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.ReturnPath">
+            <summary>
+            Gets or sets the path to use in binding the return value.
+            </summary>
+            <value>The return path.</value>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.DefaultElementReturn">
+            <summary>
+            Gets the default element to bind to if no return path is specified.
+            </summary>
+            <value>The default element.</value>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.AvailabilityEffect">
+            <summary>
+            Gets or sets the availability effect.
+            </summary>
+            <value>The availability effect.</value>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:Caliburn.Commands.CommandMessage.Source">
+            <summary>
+            Gets the source of the message.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="E:Caliburn.Commands.CommandMessage.Invalidated">
+            <summary>
+            Occurs when the message is invalidated.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Commands.CommandMessageParser">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.IMessageParser"/> for commands.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessageParser.#ctor(Caliburn.Commands.CommandSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Commands.CommandMessageParser"/> class.
+            </summary>
+            <param name="commandSource">The location that the parser will use to get the command.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessageParser.#ctor(System.Windows.Data.UpdateSourceTrigger,Caliburn.Commands.CommandSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Commands.CommandMessageParser"/> class.
+            </summary>
+            <param name="defaultTrigger">The default trigger.</param>
+            <param name="commandSource">The location that the parser will use to get the command.</param>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessageParser.ParseHeadAndTail(System.String,Caliburn.Commands.CommandMessage)">
+            <summary>
+            Parses the root portion of the message.
+            </summary>
+            <param name="messageText">The message text.</param>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Commands.CommandMessageParser.SetCore(Caliburn.Commands.CommandMessage,System.Windows.DependencyObject,System.String)">
+            <summary>
+            Sets the core value of the message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="target">The target.</param>
+            <param name="coreOfMessage">The core representation of the message.</param>
+        </member>
+        <member name="T:Caliburn.Commands.CommandSource">
+            <summary>
+            Indicates locations where a command can be found.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandSource.Resource">
+            <summary>
+            Looks for the command in the resources collection.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandSource.Container">
+            <summary>
+            Looks for the command in the DI container.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Commands.CommandSource.Bound">
+            <summary>
+            Databinds to a command using a property path.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Commands.ExtensionMethods">
+            <summary>
+            Various extension methods used by the framework.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Commands.ExtensionMethods.WithCommands(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Adds the command messaging module's configuration to the system.
+            </summary>
+            <param name="hook">The hook.</param>
+            <returns>The configuration.</returns>
+        </member>
+    </members>
+</doc>

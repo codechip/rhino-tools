@@ -1,0 +1,822 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Caliburn.Actions</name>
+    </assembly>
+    <members>
+        <member name="T:Caliburn.Actions.Filters.MethodCallFilterBase">
+            <summary>
+            A base class for filters that make method calls.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.MethodCallFilterBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.Filters.MethodCallFilterBase"/> class.
+            </summary>
+            <param name="methodName">Name of the method.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.MethodCallFilterBase.Initialize(System.Type,Caliburn.Core.Metadata.IMetadataContainer,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes the filter.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="metadataContainer">The metadata container.</param>
+            <param name="serviceLocator">The serviceLocator.</param>
+        </member>
+        <member name="P:Caliburn.Actions.Filters.MethodCallFilterBase.Priority">
+            <summary>
+            Gets the order the filter will be evaluated in.
+            </summary>
+            <value>The order.</value>
+        </member>
+        <member name="T:Caliburn.Actions.Filters.PreviewAttribute">
+            <summary>
+            A basic pre execution filter.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.PreviewAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.Filters.PreviewAttribute"/> class.
+            </summary>
+            <param name="methodName">Name of the method.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.PreviewAttribute.Execute(System.Object,Caliburn.Core.Invocation.IMethod,System.Object[],Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Executes the filter.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="method">The method.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.Actions.Filters.PreviewAttribute.AffectsTriggers">
+            <summary>
+            Gets a value indicating whether this filter affects triggers.
+            </summary>
+            <value><c>true</c> if affects triggers; otherwise, <c>false</c>.</value>
+            <remarks>True by default.</remarks>
+        </member>
+        <member name="T:Caliburn.Actions.Filters.RescueAttribute">
+            <summary>
+            A basic resuce filter.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.RescueAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.Filters.RescueAttribute"/> class.
+            </summary>
+            <param name="methodName">Name of the method.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Filters.RescueAttribute.Handle(System.Object,System.Exception,Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Handles an <see cref="T:System.Exception"/>.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="exception">The exception.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+        </member>
+        <member name="T:Caliburn.Actions.Action">
+            <summary>
+            A host for action related attached properties.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.Action.TargetProperty">
+            <summary>
+            A property definition representing the target of an action message.  The DataContext of the element will be set to this instance.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.Action.TargetWithoutContextProperty">
+            <summary>
+            A property definition representing the target of an action message.  The DataContext of the element is not set to this instance and the instances view metadata is not set.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.Action.Initialize(Caliburn.RoutedUIMessaging.IRoutedMessageController,Caliburn.Actions.IActionFactory,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes property host.
+            </summary>
+            <param name="controller">The controller.</param>
+            <param name="actionFactory">The action factory.</param>
+            <param name="serviceLocator">The service locator.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Action.SetTarget(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the target.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="target">The target.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Action.GetTarget(System.Windows.DependencyObject)">
+            <summary>
+            Gets the target.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.Action.SetTargetWithoutDataContext(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the target.
+            </summary>
+            <param name="d">The d.</param>
+            <param name="target">The target.</param>
+        </member>
+        <member name="M:Caliburn.Actions.Action.GetTargetWithoutDataContext(System.Windows.DependencyObject)">
+            <summary>
+            Gets the target.
+            </summary>
+            <param name="d">The d.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.Actions.ActionBase">
+            <summary>
+            A base implementation of <see cref="T:Caliburn.Actions.IAction"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Actions.IAction">
+            <summary>
+            Represents a single action.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.IAction.HasTriggerEffects(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines whether this action can affect triggers
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if can affect triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.IAction.ShouldTriggerBeAvailable(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines how this instance affects trigger availability.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if this instance enables triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.IAction.Execute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Executes the specified this action on the specified target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:Caliburn.Actions.IAction.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:Caliburn.Actions.IAction.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="E:Caliburn.Actions.IAction.Completed">
+            <summary>
+            Occurs when action has completed.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Actions.IAction.Filters">
+            <summary>
+            Gets the filters.
+            </summary>
+            <value>The filters.</value>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.#ctor(Caliburn.Core.Invocation.IMethod,Caliburn.RoutedUIMessaging.IMethodBinder,Caliburn.RoutedUIMessaging.Filters.IFilterManager)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionBase"/> class.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="methodBinder">The method binder.</param>
+            <param name="filters">The filters.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.HasTriggerEffects(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines whether this action can affect triggers
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if can affect triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.ShouldTriggerBeAvailable(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines how this instance affects trigger availability.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if this instance enables triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.Execute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Executes the specified this action on the specified target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.DoExecute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object[])">
+            <summary>
+            Executes the core logic, specific to the action type.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionBase.OnCompleted">
+            <summary>
+            Called when completed event needs to fire.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Actions.ActionBase.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="E:Caliburn.Actions.ActionBase.Completed">
+            <summary>
+            Occurs when action has completed.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Actions.ActionBase.Filters">
+            <summary>
+            Gets the filters.
+            </summary>
+            <value>The filters.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionBase.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="T:Caliburn.Actions.ActionConfiguration">
+            <summary>
+            The configuration for the action messaging mechanism.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ActionConfiguration.#ctor(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionConfiguration"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionConfiguration.UsingActionFactory``1">
+            <summary>
+            Customizes the action factory used by Caliburn.
+            </summary>
+            <typeparam name="T">The method binder type.</typeparam>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionConfiguration.GetComponents">
+            <summary>
+            Gets the component information for this module.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionConfiguration.Configure">
+            <summary>
+            Configures this module.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Actions.ActionFactory">
+            <summary>
+            An implementation of <see cref="T:Caliburn.Actions.IActionFactory"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Actions.IActionFactory">
+            <summary>
+            A service capable of creating actions.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.IActionFactory.CreateFor(Caliburn.Actions.IActionHost)">
+            <summary>
+            Creates actions for the provided host.
+            </summary>
+            <param name="host">The host.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionFactory.#ctor(Caliburn.Core.Invocation.IMethodFactory,Caliburn.RoutedUIMessaging.IMethodBinder)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionFactory"/> class.
+            </summary>
+            <param name="methodFactory">The method factory.</param>
+            <param name="methodBinder">The parameter binder used by actions.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionFactory.CreateFor(Caliburn.Actions.IActionHost)">
+            <summary>
+            Creates actions for the provided host.
+            </summary>
+            <param name="host">The host.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.Actions.ActionHost">
+            <summary>
+            An implementation of <see cref="T:Caliburn.Actions.IActionHost"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Actions.IActionHost">
+            <summary>
+            Hosts instances of <see cref="T:Caliburn.Actions.IAction"/> and related metadata.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.IActionHost.HasAction(System.String)">
+            <summary>
+            Determines whether the host supports the specified action.
+            </summary>
+            <param name="actionName">Name of the action.</param>
+            <returns>
+            	<c>true</c> if supported; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.IActionHost.GetAction(System.String)">
+            <summary>
+            Gets the action.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.IActionHost.GetFilterManager(Caliburn.Core.Invocation.IMethod)">
+            <summary>
+            Gets the filter manager for a given method.
+            </summary>
+            <param name="method">The method.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.Actions.IActionHost.TargetType">
+            <summary>
+            Gets the type of the target.
+            </summary>
+            <value>The type of the target.</value>
+        </member>
+        <member name="P:Caliburn.Actions.IActionHost.Filters">
+            <summary>
+            Gets the filters.
+            </summary>
+            <value>The filters.</value>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.#ctor(System.Type,Caliburn.Actions.IActionFactory,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionHost"/> class.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="factory">The factory.</param>
+            <param name="serviceLocator">The container</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.HasAction(System.String)">
+            <summary>
+            Determines whether the host supports the specified action.
+            </summary>
+            <param name="actionName">Name of the action.</param>
+            <returns>
+            	<c>true</c> if supported; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.GetAction(System.String)">
+            <summary>
+            Gets the action.
+            </summary>
+            <param name="name">The name.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.GetFilterManager(Caliburn.Core.Invocation.IMethod)">
+            <summary>
+            Gets the filter manager for a given method.
+            </summary>
+            <param name="method">The method.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionHost.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="P:Caliburn.Actions.ActionHost.TargetType">
+            <summary>
+            Gets the type of the target.
+            </summary>
+            <value>The type of the target.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionHost.Filters">
+            <summary>
+            Gets the filters.
+            </summary>
+            <value>The filters.</value>
+        </member>
+        <member name="T:Caliburn.Actions.ActionMessage">
+            <summary>
+            An <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessage"/> for actions.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.ActionMessage.ParametersProperty">
+            <summary>
+            Represents the parameters of an action message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.ActionMessage.MethodNameProperty">
+            <summary>
+            Represents the method name of an action message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.ActionMessage.ReturnPathProperty">
+            <summary>
+            Represents the return path of an action message.
+            </summary>
+        </member>
+        <member name="F:Caliburn.Actions.ActionMessage.AvailabilityEffectProperty">
+            <summary>
+            Represents the availability effect of an action message.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionMessage"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessage.Initialize(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Initializes the message for interaction with the specified node.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessage.Equals(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.MethodName">
+            <summary>
+            Gets or sets the name of the method.
+            </summary>
+            <value>The name of the method.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.ReturnPath">
+            <summary>
+            Gets or sets the path to use in binding the return value.
+            </summary>
+            <value>The return path.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.DefaultElementReturn">
+            <summary>
+            Gets the default element to bind to if no return path is specified.
+            </summary>
+            <value>The default element.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.AvailabilityEffect">
+            <summary>
+            Gets or sets the availability effect.
+            </summary>
+            <value>The availability effect.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:Caliburn.Actions.ActionMessage.Source">
+            <summary>
+            Gets the source of the message.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="E:Caliburn.Actions.ActionMessage.Invalidated">
+            <summary>
+            Occurs when the message is invalidated.
+            </summary>
+        </member>
+        <member name="T:Caliburn.Actions.ActionMessageHandler">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.IRoutedMessageController"/> for action messages.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.#ctor(Caliburn.Actions.IActionHost,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.ActionMessageHandler"/> class.
+            </summary>
+            <param name="host">The host.</param>
+            <param name="target">The target.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.Initialize(Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Initializes this handler on the specified node.
+            </summary>
+            <param name="node">The node.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.HasAction(System.String)">
+            <summary>
+            Determines whether the specified action is handled by this instance.
+            </summary>
+            <param name="actionName">Name of the action.</param>
+            <returns>
+            	<c>true</c> if the specified action name has action; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.Unwrap">
+            <summary>
+            Gets the data context value.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.Handles(Caliburn.RoutedUIMessaging.IRoutedMessage)">
+            <summary>
+            Determines whethyer the target can handle the specified action.
+            </summary>
+            <param name="message">The action details.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.Process(Caliburn.RoutedUIMessaging.IRoutedMessage,System.Object)">
+            <summary>
+            Processes the specified message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="context">An object that provides additional context for message processing.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.UpdateAvailability(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Updates the availability of the trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageHandler.MakeAwareOf(Caliburn.RoutedUIMessaging.Triggers.IMessageTrigger)">
+            <summary>
+            Makes the handler aware of a specific trigger.
+            </summary>
+            <param name="trigger">The trigger.</param>
+        </member>
+        <member name="T:Caliburn.Actions.ActionMessageParser">
+            <summary>
+            An implementation of <see cref="T:Caliburn.RoutedUIMessaging.Parsers.IMessageParser"/> for <see cref="T:Caliburn.Actions.ActionMessage"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageParser.ParseHeadAndTail(System.String,Caliburn.Actions.ActionMessage)">
+            <summary>
+            Parses the root portion of the message.
+            </summary>
+            <param name="messageText">The message text.</param>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.ActionMessageParser.SetCore(Caliburn.Actions.ActionMessage,System.Windows.DependencyObject,System.String)">
+            <summary>
+            Sets the core value of the message.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="target">The target.</param>
+            <param name="coreOfMessage">The core representation of the message.</param>
+        </member>
+        <member name="T:Caliburn.Actions.AsyncActionAttribute">
+            <summary>
+            Designates an action as asynchronous.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.AsyncActionAttribute.Initialize(System.Type,Caliburn.Core.Metadata.IMetadataContainer,Microsoft.Practices.ServiceLocation.IServiceLocator)">
+            <summary>
+            Initializes the filter.
+            </summary>
+            <param name="targetType">Type of the target.</param>
+            <param name="metadataContainer">The metadata container.</param>
+            <param name="serviceLocator">The service locator.</param>
+        </member>
+        <member name="M:Caliburn.Actions.AsyncActionAttribute.Execute(System.Object,Caliburn.Core.Invocation.IMethod,Caliburn.RoutedUIMessaging.IInteractionNode,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object@)">
+            <summary>
+            Executes the filter.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="method">The method.</param>
+            <param name="result">The result.</param>
+            <param name="sourceNode">The source node.</param>
+            <param name="handlingNode">The handling node.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.Actions.AsyncActionAttribute.BlockInteraction">
+            <summary>
+            Gets or sets a value indicating whether to block interaction with the trigger during asynchronous execution.
+            </summary>
+            <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.Actions.AsyncActionAttribute.Callback">
+            <summary>
+            Gets or sets the callback method.
+            </summary>
+            <value>The callback.</value>
+        </member>
+        <member name="P:Caliburn.Actions.AsyncActionAttribute.Priority">
+            <summary>
+            Gets the order the filter will be evaluated in.
+            </summary>
+            <value>The order.</value>
+        </member>
+        <member name="T:Caliburn.Actions.AsynchronousAction">
+            <summary>
+            An asynchronous <see cref="T:Caliburn.Actions.IAction"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.AsynchronousAction.#ctor(Caliburn.Core.Invocation.IMethod,Caliburn.RoutedUIMessaging.IMethodBinder,Caliburn.RoutedUIMessaging.Filters.IFilterManager,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.AsynchronousAction"/> class.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="methodBinder">The method binder.</param>
+            <param name="filters">The filters.</param>
+            <param name="blockInteraction">if set to <c>true</c> [block interaction].</param>
+        </member>
+        <member name="M:Caliburn.Actions.AsynchronousAction.Execute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Executes the specified this action on the specified target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Caliburn.Actions.AsynchronousAction.DoExecute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object[])">
+            <summary>
+            Executes the core logic, specific to the action type.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+        <member name="P:Caliburn.Actions.AsynchronousAction.CurrentTask">
+            <summary>
+            Gets or sets the current background task.
+            </summary>
+            <value>The current task.</value>
+        </member>
+        <member name="P:Caliburn.Actions.AsynchronousAction.BlockInteraction">
+            <summary>
+            Gets a value indicating whether to block intaction with the trigger during async execution.
+            </summary>
+            <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Caliburn.Actions.ExtensionMethods">
+            <summary>
+            Various extension methods used by the framework.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.ExtensionMethods.WithActions(Caliburn.Core.IConfigurationHook)">
+            <summary>
+            Adds the action messaging module's configuration to the system.
+            </summary>
+            <param name="hook">The hook.</param>
+            <returns>The configuration.</returns>
+        </member>
+        <member name="T:Caliburn.Actions.OverloadedAction">
+            <summary>
+            An overloaded <see cref="T:Caliburn.Actions.IAction"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.OverloadedAction"/> class.
+            </summary>
+            <param name="name">The name.</param>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.AddOverload(Caliburn.Actions.IAction)">
+            <summary>
+            Adds the overload.
+            </summary>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.DetermineOverloadOrFail(Caliburn.Actions.ActionMessage)">
+            <summary>
+            Determines the overload or fail.
+            </summary>
+            <param name="message">The message.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.HasTriggerEffects(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines whether this action can affect triggers
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if can affect triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.ShouldTriggerBeAvailable(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode)">
+            <summary>
+            Determines how this instance affects trigger availability.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <returns>
+            	<c>true</c> if this instance enables triggers; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.Execute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object)">
+            <summary>
+            Executes the specified this action on the specified target.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.Actions.OverloadedAction.OnCompleted">
+            <summary>
+            Called when completed event needs to fire.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Actions.OverloadedAction.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="E:Caliburn.Actions.OverloadedAction.Completed">
+            <summary>
+            Occurs when action has completed.
+            </summary>
+        </member>
+        <member name="P:Caliburn.Actions.OverloadedAction.Filters">
+            <summary>
+            Gets the filters.
+            </summary>
+            <value>The filters.</value>
+        </member>
+        <member name="P:Caliburn.Actions.OverloadedAction.Parameters">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="T:Caliburn.Actions.SynchronousAction">
+            <summary>
+            A synchronous <see cref="T:Caliburn.Actions.IAction"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.Actions.SynchronousAction.#ctor(Caliburn.Core.Invocation.IMethod,Caliburn.RoutedUIMessaging.IMethodBinder,Caliburn.RoutedUIMessaging.Filters.IFilterManager)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.Actions.SynchronousAction"/> class.
+            </summary>
+            <param name="method">The method.</param>
+            <param name="methodBinder">The method binder.</param>
+            <param name="filters">The filters.</param>
+        </member>
+        <member name="M:Caliburn.Actions.SynchronousAction.DoExecute(System.Object,Caliburn.Actions.ActionMessage,Caliburn.RoutedUIMessaging.IInteractionNode,System.Object[])">
+            <summary>
+            Executes the core logic, specific to the action type.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="actionMessage">The action message.</param>
+            <param name="handlingNode">The node.</param>
+            <param name="parameters">The parameters.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1796 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Caliburn.MVP</name>
+    </assembly>
+    <members>
+        <member name="T:Caliburn.MVP.Models.CollectionNode`1">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.ICollectionNode`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ICollectionNode`1">
+            <summary>
+            A collection that supports <see cref="T:Caliburn.MVP.Models.IModelNode"/> semantics.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModelNode">
+            <summary>
+            Implemented by different types of models.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelNode.Accept(Caliburn.MVP.Models.IModelVisitor)">
+            <summary>
+            Accepts the specified visitor.
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelNode.NotifyOfPropertyChange(System.String)">
+            <summary>
+            Fires a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelNode.BubblePropertyChange(System.String)">
+            <summary>
+            Bubbles a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelNode.BubbleModelChange(Caliburn.MVP.Models.IModelNode,Caliburn.MVP.Models.IUndoRedoHandle)">
+            <summary>
+            Bubbles a model change notification.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="handle">The handle.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModelNode.IsDirty">
+            <summary>
+            Gets a value indicating whether this instance is dirty.
+            </summary>
+            <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModelNode.IsValid">
+            <summary>
+            Gets a value indicating whether this instance is valid.
+            </summary>
+            <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModelNode.IsEditing">
+            <summary>
+            Gets a value indicating whether this instance is in edit mode.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is in edit mode; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModelNode.Parent">
+            <summary>
+            Gets or sets the parent model.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="E:Caliburn.MVP.Models.IModelNode.ModelChanged">
+            <summary>
+            Occurs when the model has changed.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.BubbleModelChange(Caliburn.MVP.Models.IModelNode,Caliburn.MVP.Models.IUndoRedoHandle)">
+            <summary>
+            Bubbles a model change notification.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="handle">The handle.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.Accept(Caliburn.MVP.Models.IModelVisitor)">
+            <summary>
+            Accepts the specified visitor.
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.InsertItem(System.Int32,`0)">
+            <summary>
+            Inserts an item into the collection at the specified index.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The object to insert.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Collections.ObjectModel.ObservableCollection`1.CollectionChanged"/> event with the provided arguments.
+            </summary>
+            <param name="e">Arguments of the event being raised.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.HandleUndoRedo(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            Handles the undo redo.
+            </summary>
+            <param name="e">The <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.BeginEdit">
+            <summary>
+            Begins an edit on an object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.EndEdit">
+            <summary>
+            Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> or <see cref="M:System.ComponentModel.IBindingList.AddNew"/> call into the underlying object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.CancelEdit">
+            <summary>
+            Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> call.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.NotifyOfPropertyChange(System.String)">
+            <summary>
+            Fires a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.BubblePropertyChange(System.String)">
+            <summary>
+            Bubbles a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.AddMetadata(Caliburn.Core.Metadata.IMetadata)">
+            <summary>
+            Adds metadata to the store.
+            </summary>
+            <param name="metadata">The metadata.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.GetMetadata``1">
+            <summary>
+            Gets the metadata.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.CollectionNode`1.GetMatchingMetadata``1">
+            <summary>
+            Gets the matching metadata.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Models.CollectionNode`1.Parent">
+            <summary>
+            Gets or sets the parent model.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.CollectionNode`1.IsDirty">
+            <summary>
+            Gets a value indicating whether this instance is dirty.
+            </summary>
+            <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.CollectionNode`1.IsEditing">
+            <summary>
+            Gets a value indicating whether this instance is in edit mode.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is in edit mode; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.CollectionNode`1.IsValid">
+            <summary>
+            Gets a value indicating whether this instance is valid.
+            </summary>
+            <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="E:Caliburn.MVP.Models.CollectionNode`1.ModelChanged">
+            <summary>
+            Occurs when the model has changed.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ExtensionMethods">
+            <summary>
+            Hosts extension methods related to presentation models.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ExtensionMethods.Validate(Caliburn.MVP.Models.IModelNode)">
+            <summary>
+            Validates the specified modelNode.
+            </summary>
+            <param name="modelNode">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ExtensionMethods.AddProperty``1(Caliburn.MVP.Models.IModelDefinition,System.String)">
+            <summary>
+            Adds a property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="definition">The definition.</param>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ExtensionMethods.AddAssociation``1(Caliburn.MVP.Models.IModelDefinition,System.String)">
+            <summary>
+            Adds an association property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="definition">The definition.</param>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ExtensionMethods.AddCollection``1(Caliburn.MVP.Models.IModelDefinition,System.String)">
+            <summary>
+            Adds a collection property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="definition">The definition.</param>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModel">
+            <summary>
+            Implemented by presentation model instances.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ISupportInterrogation">
+            <summary>
+            Implemented by models that support interrogation.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ISupportInterrogation.UseInterrogators``1(System.Action{System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Uses the interrogators.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="borrower">The borrower.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ISupportInterrogation.ValidationResults">
+            <summary>
+            Gets the validation results.
+            </summary>
+            <value>The validation results.</value>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModel.GetValue``1(Caliburn.MVP.Models.IPropertyDefinition{``0})">
+            <summary>
+            Gets the value.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="definition">The definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModel.SetValue``1(Caliburn.MVP.Models.IPropertyDefinition{``0},``0)">
+            <summary>
+            Sets the value.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="definition">The definition.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModel.Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IModel.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:Caliburn.MVP.Models.IProperty"/> with the specified property name.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModelDefinition">
+            <summary>
+            Implemented by presentation model definitions.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelDefinition.CreateInstance">
+            <summary>
+            Creates an instance of <see cref="T:Caliburn.MVP.Models.IModel"/> that matches this definition.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelDefinition.AddProperty(Caliburn.MVP.Models.IPropertyDefinition)">
+            <summary>
+            Adds the property to the definition.
+            </summary>
+            <param name="propertyDefinition">The property definition.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelDefinition.AddProperty``1(System.String,System.Func{``0})">
+            <summary>
+            Adds the property to the definition.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModelRepository">
+            <summary>
+            A repository for instances of <see cref="T:Caliburn.MVP.Models.IModelDefinition"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelRepository.Clear">
+            <summary>
+            Clears the repository.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelRepository.AddModel(System.Type,Caliburn.MVP.Models.IModelDefinition)">
+            <summary>
+            Adds the model to the repository.
+            </summary>
+            <param name="type">The instance type to which the definition applies.</param>
+            <param name="modelDefinition">The model definition.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelRepository.GetModelFor(System.Type)">
+            <summary>
+            Gets the model for the specified type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModelValidator`1">
+            <summary>
+            Implemented by types capable of validating a presentation model.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelValidator`1.Interrogate(`0)">
+            <summary>
+            Interrogates the specified model.
+            </summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IModelVisitor">
+            <summary>
+            Implemented by types capable of visiting a models.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelVisitor.VisitModel``1(``0)">
+            <summary>
+            Visits an <see cref="T:Caliburn.MVP.Models.IModel"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelVisitor.VisitProperty``1(Caliburn.MVP.Models.IProperty{``0})">
+            <summary>
+            Visits an <see cref="T:Caliburn.MVP.Models.IProperty`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IModelVisitor.VisitCollection``1(Caliburn.MVP.Models.ICollectionNode{``0})">
+            <summary>
+            Visits a <see cref="T:Caliburn.MVP.Models.ICollectionNode`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collectionNode">The presentation collection.</param>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IProperty">
+            <summary>
+            A type of <see cref="T:Caliburn.MVP.Models.IModelNode"/> that represents a property.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IProperty.Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IProperty.UntypedValue">
+            <summary>
+            Gets or sets the untyped value.
+            </summary>
+            <value>The untyped value.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IProperty`1">
+            <summary>
+            A strongly typed version of <see cref="T:Caliburn.MVP.Models.IProperty"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IProperty`1.Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IProperty`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IPropertyChangeAware`1">
+            <summary>
+            Implemented by classes that want to be aware of property value changes.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IPropertyChangeAware`1.Interrogate(Caliburn.MVP.Models.IProperty{`0})">
+            <summary>
+            Interrogates the specified instance.
+            </summary>
+            <param name="instance">The instance.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IPropertyDefinition">
+            <summary>
+            A definition of a property.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IPropertyDefinition.CreateInstance(Caliburn.MVP.Models.IModel)">
+            <summary>
+            Creates a property instance based on this defintion.
+            </summary>
+            <param name="parent">The parent.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IPropertyDefinition.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IPropertyDefinition`1">
+            <summary>
+            A strongly type version of <see cref="T:Caliburn.MVP.Models.IModel"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IPropertyValidator`1">
+            <summary>
+            A special type of <see cref="T:Caliburn.MVP.Models.IPropertyChangeAware`1"/> designed for property validation.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IPropertyValueConverter`1">
+            <summary>
+            Implemented by types capable of converting property values.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IPropertyValueConverter`1.Convert(Caliburn.MVP.Models.IProperty{`0},System.Object)">
+            <summary>
+            Converts the proposed value to the property type.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="proposedValue">The proposed value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IPropertyValueConverter`1.ConvertBack(Caliburn.MVP.Models.IProperty{`0},`0)">
+            <summary>
+            Converts the property value to a generic type.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="currentValue">The current value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IUndoRedoHandle">
+            <summary>
+            A handle for undoing or redoing a change made to a model.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IUndoRedoHandle.Undo">
+            <summary>
+            Undoes a change.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.IUndoRedoHandle.Redo">
+            <summary>
+            Redoes a change.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.IValidationResult">
+            <summary>
+            The result of validation a model.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Models.IValidationResult.Message">
+            <summary>
+            Gets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ModelBase">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IModel"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.Presenter">
+            <summary>
+            A base implementation of <see cref="T:Caliburn.MVP.Presenters.IPresenter"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.PresenterBase">
+            <summary>
+            Implements common functionality used by all implementors of <see cref="T:Caliburn.MVP.Presenters.IPresenter"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.IPresenter">
+            <summary>
+            The 'P' in MVP.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenter.CanShutdown">
+            <summary>
+            Determines whether this instance can shutdown.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenter.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenter.Shutdown">
+            <summary>
+            Shuts down this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenter.Activate">
+            <summary>
+            Activates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenter.Deactivate">
+            <summary>
+            Deactivates this instance.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.IPresenter.DisplayName">
+            <summary>
+            Gets the display name.
+            </summary>
+            <value>The display name.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.ILifecycleNotifier">
+            <summary>
+            A class capable of notifying subscribers of events related to the lifecycle of an <see cref="T:Caliburn.MVP.Presenters.IPresenter"/>.
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.ILifecycleNotifier.Initialized">
+            <summary>
+            Occurs when [initialized].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.ILifecycleNotifier.WasShutdown">
+            <summary>
+            Occurs when [was shutdown].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.ILifecycleNotifier.Activated">
+            <summary>
+            Occurs when [activated].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.ILifecycleNotifier.Deactivated">
+            <summary>
+            Occurs when [deactivated].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Presenters.PresenterBase"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.CanShutdown">
+            <summary>
+            Determines whether this instance can shutdown.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.Shutdown">
+            <summary>
+            Shuts down this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.Activate">
+            <summary>
+            Activates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.Deactivate">
+            <summary>
+            Deactivates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.OnInitialize">
+            <summary>
+            Called when [initialize].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.OnShutdown">
+            <summary>
+            Called when [shutdown].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.OnActivate">
+            <summary>
+            Called when [activate].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.OnDeactivate">
+            <summary>
+            Called when [deactivate].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.CanShutdownPresenter(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Determines if the specified presenter can be shut down.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the shutdown action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterBase.ExecuteShutdownModel(Caliburn.MVP.Presenters.ISubordinate,System.Action)">
+            <summary>
+            Inheritors should override this method if they intend to handle advanced shutdown scenarios.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="completed">Called when the shutdown model is finished executing.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.PresenterBase.IsInitialized">
+            <summary>
+            Gets or sets a value indicating whether this instance is initialized.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.PresenterBase.IsActive">
+            <summary>
+            Gets or sets a value indicating whether this instance is active.
+            </summary>
+            <value><c>true</c> if this instance is active; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.PresenterBase.DisplayName">
+            <summary>
+            Gets the display name.
+            </summary>
+            <value>The display name.</value>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.PresenterBase.Initialized">
+            <summary>
+            Occurs when [initialized].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.PresenterBase.WasShutdown">
+            <summary>
+            Occurs when [was shutdown].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.PresenterBase.Activated">
+            <summary>
+            Occurs when [activated].
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.Presenters.PresenterBase.Deactivated">
+            <summary>
+            Occurs when [deactivated].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Presenter.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Presenter.Shutdown">
+            <summary>
+            Shutdowns this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Presenter.Activate">
+            <summary>
+            Activates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Presenter.Deactivate">
+            <summary>
+            Deactivates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.ModelBase"/> class.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.#ctor(Caliburn.MVP.Models.IModelDefinition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.ModelBase"/> class.
+            </summary>
+            <param name="definition">The definition.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.BubbleModelChange(Caliburn.MVP.Models.IModelNode,Caliburn.MVP.Models.IUndoRedoHandle)">
+            <summary>
+            Bubbles a model change notification.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="handle">The handle.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.UseInterrogators``1(System.Action{System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Uses the interrogators.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="borrower">The borrower.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.OnInitialize">
+            <summary>
+            Called when [initialize].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.CanShutdown">
+            <summary>
+            Determines whether this instance can shutdown.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.OnShutdown">
+            <summary>
+            Called when [shutdown].
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Accept(Caliburn.MVP.Models.IModelVisitor)">
+            <summary>
+            Accepts the specified visitor.
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.BeginEdit">
+            <summary>
+            Begins an edit on an object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.EndEdit">
+            <summary>
+            Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> or <see cref="M:System.ComponentModel.IBindingList.AddNew"/> call into the underlying object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.CancelEdit">
+            <summary>
+            Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> call.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.BubblePropertyChange(System.String)">
+            <summary>
+            Bubbles a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.GetValue``1(Caliburn.MVP.Models.IPropertyDefinition{``0})">
+            <summary>
+            Gets the value.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="definition">The definition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.SetValue``1(Caliburn.MVP.Models.IPropertyDefinition{``0},``0)">
+            <summary>
+            Sets the value.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="definition">The definition.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Property``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Creates a property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="property">The property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Property``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Func{``1})">
+            <summary>
+            Creates a property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="property">The property.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Property``2(System.String)">
+            <summary>
+            Creates a property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Property``2(System.String,System.Func{``1})">
+            <summary>
+            Creates a property.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Association``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Creates an association.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="property">The property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Association``2(System.String)">
+            <summary>
+            Creates an association.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Collection``2(System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IList{``1}}})">
+            <summary>
+            Creates a collection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="property">The property.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelBase.Collection``2(System.String)">
+            <summary>
+            Creates a collection.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="K"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.IsDirty">
+            <summary>
+            Gets a value indicating whether this instance is dirty.
+            </summary>
+            <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.ValidationResults">
+            <summary>
+            Gets the validation results.
+            </summary>
+            <value>The validation results.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.IsValid">
+            <summary>
+            Gets a value indicating whether this instance is valid.
+            </summary>
+            <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.IsEditing">
+            <summary>
+            Gets a value indicating whether this instance is in edit mode.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is in edit mode; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.Parent">
+            <summary>
+            Gets or sets the parent model.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelBase.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:Caliburn.MVP.Models.IProperty"/> with the specified property name.
+            </summary>
+            <value></value>
+        </member>
+        <member name="E:Caliburn.MVP.Models.ModelBase.ModelChanged">
+            <summary>
+            Occurs when the model has changed.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ModelDefinition">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IModelDefinition"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelDefinition.CreateInstance">
+            <summary>
+            Creates an instance of <see cref="T:Caliburn.MVP.Models.IModel"/> that matches this definition.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelDefinition.AddProperty(Caliburn.MVP.Models.IPropertyDefinition)">
+            <summary>
+            Adds the property to the definition.
+            </summary>
+            <param name="propertyDefinition">The property definition.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelDefinition.AddProperty``1(System.String,System.Func{``0})">
+            <summary>
+            Adds the property to the definition.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="propertyName">Name of the property.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelDefinition.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelDefinition.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ModelRepository">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IModelRepository"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelRepository.Initialize(Caliburn.MVP.Models.IModelRepository)">
+            <summary>
+            Initializes the specified model repository.
+            </summary>
+            <param name="modelRepository">The model repository.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelRepository.Clear">
+            <summary>
+            Clears the repository.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelRepository.AddModel(System.Type,Caliburn.MVP.Models.IModelDefinition)">
+            <summary>
+            Adds the model to the repository.
+            </summary>
+            <param name="type">The instance type to which the definition applies.</param>
+            <param name="modelDefinition">The model definition.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ModelRepository.GetModelFor(System.Type)">
+            <summary>
+            Gets the model for the specified type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ModelRepository.Current">
+            <summary>
+            Gets the current model repository.
+            </summary>
+            <value>The current.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.Property`1">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IProperty`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.#ctor(Caliburn.MVP.Models.IPropertyDefinition{`0},Caliburn.MVP.Models.IModelNode,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.Property`1"/> class.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="parent">The parent.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.BubbleModelChange(Caliburn.MVP.Models.IModelNode,Caliburn.MVP.Models.IUndoRedoHandle)">
+            <summary>
+            Bubbles a model change notification.
+            </summary>
+            <param name="source">The source.</param>
+            <param name="handle">The handle.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.UseInterrogators``1(System.Action{System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Uses the interrogators.
+            </summary>
+            <typeparam name="K"></typeparam>
+            <param name="borrower">The borrower.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.Accept(Caliburn.MVP.Models.IModelVisitor)">
+            <summary>
+            Accepts the specified visitor.
+            </summary>
+            <param name="visitor">The visitor.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.BeginEdit">
+            <summary>
+            Begins an edit on an object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.EndEdit">
+            <summary>
+            Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> or <see cref="M:System.ComponentModel.IBindingList.AddNew"/> call into the underlying object.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.CancelEdit">
+            <summary>
+            Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit"/> call.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.Property`1.BubblePropertyChange(System.String)">
+            <summary>
+            Bubbles a property change notification.
+            </summary>
+            <param name="propertyName">Name of the property.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.ValidationResults">
+            <summary>
+            Gets the validation results.
+            </summary>
+            <value>The validation results.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.IsValid">
+            <summary>
+            Gets a value indicating whether this instance is valid.
+            </summary>
+            <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.Caliburn#MVP#Models#IProperty#Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.Definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>The definition.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.IsEditing">
+            <summary>
+            Gets a value indicating whether this instance is in edit mode.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is in edit mode; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.Parent">
+            <summary>
+            Gets or sets the parent model.
+            </summary>
+            <value>The parent.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.IsDirty">
+            <summary>
+            Gets a value indicating whether this instance is dirty.
+            </summary>
+            <value><c>true</c> if this instance is dirty; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.UntypedValue">
+            <summary>
+            Gets or sets the untyped value.
+            </summary>
+            <value>The untyped value.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.Property`1.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="E:Caliburn.MVP.Models.Property`1.ModelChanged">
+            <summary>
+            Occurs when the model has changed.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.PropertyDefinition`1">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IPropertyDefinition`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Caliburn.MVP.Models.PropertyDefinition`1.#ctor(System.String,System.Func{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.PropertyDefinition`1"/> class.
+            </summary>
+            <param name="name">The name.</param>
+            <param name="defaultValue">The default value.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.PropertyDefinition`1.CreateInstance(Caliburn.MVP.Models.IModel)">
+            <summary>
+            Creates a property instance based on this defintion.
+            </summary>
+            <param name="parent">The parent.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Models.PropertyDefinition`1.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.SimpleValidationResult">
+            <summary>
+            A base implementation of <see cref="T:Caliburn.MVP.Models.IValidationResult"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.SimpleValidationResult.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.SimpleValidationResult"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.SimpleValidationResult.Message">
+            <summary>
+            Gets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.UndoRedoHandle">
+            <summary>
+            An action based implementation of <see cref="T:Caliburn.MVP.Models.IUndoRedoHandle"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoHandle.#ctor(System.Action,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Models.UndoRedoHandle"/> class.
+            </summary>
+            <param name="undo">The undo.</param>
+            <param name="redo">The redo.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoHandle.Undo">
+            <summary>
+            Undoes a change.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoHandle.Redo">
+            <summary>
+            Redoes a change.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Models.UndoRedoManager">
+            <summary>
+            Catches and manages all undo/redo events for an instance of <see cref="T:Caliburn.MVP.Models.IModelNode"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Register(Caliburn.MVP.Models.IModelNode)">
+            <summary>
+            Registers the specified model for change tracking.
+            </summary>
+            <param name="trackable">The model to track changes on.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Unregister(Caliburn.MVP.Models.IModelNode)">
+            <summary>
+            Unregisters change tracking on the specified model.
+            </summary>
+            <param name="trackable">The model to end change tracking on.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Clear">
+            <summary>
+            Clears the tracked changes.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Undo">
+            <summary>
+            Undoes the last change.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Redo">
+            <summary>
+            Redoes the last change.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Push(Caliburn.MVP.Models.IUndoRedoHandle)">
+            <summary>
+            Pushes the specified <see cref="T:Caliburn.MVP.Models.IUndoRedoHandle"/> onto the undo stack.
+            </summary>
+            <param name="handle">The handle.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.UndoRedoManager.Push(System.Action,System.Action)">
+            <summary>
+            Pushes the specified undo and redo actions onto the stack.
+            </summary>
+            <param name="undoAction">The undo action.</param>
+            <param name="redoAction">The redo action.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.UndoRedoManager.CanUndo">
+            <summary>
+            Gets a value indicating whether this instance can undo changes on a tracked instance.
+            </summary>
+            <value><c>true</c> if this instance can undo; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Models.UndoRedoManager.CanRedo">
+            <summary>
+            Gets a value indicating whether this instance can redo changes on a tracked instance.
+            </summary>
+            <value><c>true</c> if this instance can redo; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Models.ValidationVisitor">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Models.IModelVisitor"/> that validates a model.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ValidationVisitor.VisitModel``1(``0)">
+            <summary>
+            Visits an <see cref="T:Caliburn.MVP.Models.IModel"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="model">The model.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ValidationVisitor.VisitProperty``1(Caliburn.MVP.Models.IProperty{``0})">
+            <summary>
+            Visits an <see cref="T:Caliburn.MVP.Models.IProperty`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Models.ValidationVisitor.VisitCollection``1(Caliburn.MVP.Models.ICollectionNode{``0})">
+            <summary>
+            Visits a <see cref="T:Caliburn.MVP.Models.ICollectionNode`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="collectionNode">The presentation collection.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Models.ValidationVisitor.Result">
+            <summary>
+            Gets the result of the validation process.
+            </summary>
+            <value>The result.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.ExtensionMethods">
+            <summary>
+            Hosts extension methods for presenter related classes.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.Open(Caliburn.MVP.Presenters.IPresenterManager,Caliburn.MVP.Presenters.IPresenter)">
+            <summary>
+            Opens the specified presenter.
+            </summary>
+            <param name="presenterManager">The manager.</param>
+            <param name="presenter">The presenter.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.ShutdownCurrent(Caliburn.MVP.Presenters.IPresenterManager)">
+            <summary>
+            Shuts down the current presenter.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.Shutdown(Caliburn.MVP.Presenters.IMultiPresenterManager,Caliburn.MVP.Presenters.IPresenter)">
+            <summary>
+            Shuts down the specified presenter.
+            </summary>
+            <param name="presenterManager">The manager.</param>
+            <param name="presenter">The presenter.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.Back(Caliburn.MVP.Presenters.INavigator)">
+            <summary>
+            Navigates back.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.Forward(Caliburn.MVP.Presenters.INavigator)">
+            <summary>
+            Navigates forward.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ExtensionMethods.Navigate(Caliburn.MVP.Presenters.INavigator,System.Action{System.Action{System.Boolean}})">
+            <summary>
+            Navigates using the specified action.
+            </summary>
+            <param name="navigator">The navigator.</param>
+            <param name="function">The function.</param>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.IMultiPresenterManager">
+            <summary>
+            An <see cref="T:Caliburn.MVP.Presenters.IPresenter"/> capable of managing multiple presenter instances.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.IPresenterManager">
+            <summary>
+            An <see cref="T:Caliburn.MVP.Presenters.IPresenter"/> capable of managing other presenters.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenterManager.Open(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Opens the specified presenter.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the open action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IPresenterManager.ShutdownCurrent(System.Action{System.Boolean})">
+            <summary>
+            Shuts down the current presenter.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.IPresenterManager.CurrentPresenter">
+            <summary>
+            Gets or sets the current presenter.
+            </summary>
+            <value>The current presenter.</value>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.IMultiPresenterManager.Shutdown(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Shuts down the specified presenter.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the open action is finished.</param>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.IMultiPresenterManager.Presenters">
+            <summary>
+            Gets the presenters that are currently managed.
+            </summary>
+            <value>The presenters.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.INavigator">
+            <summary>
+            A <see cref="T:Caliburn.MVP.Presenters.IPresenterManager"/> that also has basic navigation abilities.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.INavigator.Forward(System.Action{System.Boolean})">
+            <summary>
+            Navigates forward.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.INavigator.Back(System.Action{System.Boolean})">
+            <summary>
+            Navigates back.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.INavigator.Navigate(System.Action{System.Action{System.Boolean}},System.Action{System.Boolean})">
+            <summary>
+            Navigates using the specified action.
+            </summary>
+            <param name="function">The function.</param>
+            <param name="completed">Called when navigation is completed.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.INavigator.ClearHistory">
+            <summary>
+            Clears the navigation history.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.INavigator.CanGoBack">
+            <summary>
+            Gets a value indicating whether this instance can navigate back.
+            </summary>
+            <value>
+            	<c>true</c> if this instance can go back; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.INavigator.CanGoForward">
+            <summary>
+            Gets a value indicating whether this instance can navigate forward.
+            </summary>
+            <value>
+            	<c>true</c> if this instance can go forward; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.ISubordinate">
+            <summary>
+            A model that is owned by an <see cref="T:Caliburn.MVP.Presenters.IPresenter"/>.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.ISubordinate.Master">
+            <summary>
+            Gets the <see cref="T:Caliburn.MVP.Presenters.IPresenter"/> that owns this instance.
+            </summary>
+            <value>The master.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.ISubordinateComposite">
+            <summary>
+            An <see cref="T:Caliburn.MVP.Presenters.ISubordinate"/> with one or more children.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ISubordinateComposite.GetChildren">
+            <summary>
+            Gets the children.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.ISupportCustomShutdown">
+            <summary>
+            Instances that implement this interface support custom shutdown logic through a developer defined model.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ISupportCustomShutdown.CreateShutdownModel">
+            <summary>
+            Creates the shutdown model.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.ISupportCustomShutdown.CanShutdown(Caliburn.MVP.Presenters.ISubordinate)">
+            <summary>
+            Determines whether this instance can shutdown based on the evaluated shutdown model.
+            </summary>
+            <param name="shutdownModel">The shutdown model.</param>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.MultiPresenterManager">
+            <summary>
+            A base implementation of <see cref="T:Caliburn.MVP.Presenters.IMultiPresenterManager"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.CanShutdown">
+            <summary>
+            Determines whether this instance can shutdown.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Shutdown">
+            <summary>
+            Shutdowns this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Activate">
+            <summary>
+            Activates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Deactivate">
+            <summary>
+            Deactivates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Open(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Opens the specified presenter.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the open action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.ShutdownCurrent(System.Action{System.Boolean})">
+            <summary>
+            Shuts down the current presenter.
+            </summary>
+            <param name="completed">Called when the shutdown action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Shutdown(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Shuts down the specified presenter.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the shutdown action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Caliburn#MVP#Presenters#ISupportCustomShutdown#CreateShutdownModel">
+            <summary>
+            Creates the shutdown model.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.MultiPresenterManager.Caliburn#MVP#Presenters#ISupportCustomShutdown#CanShutdown(Caliburn.MVP.Presenters.ISubordinate)">
+            <summary>
+            Determines whether this instance can shutdown based on the evaluated shutdown model.
+            </summary>
+            <param name="shutdownModel">The shutdown model.</param>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.MultiPresenterManager.CurrentPresenter">
+            <summary>
+            Gets or sets the current presenter.
+            </summary>
+            <value>The current presenter.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.MultiPresenterManager.Presenters">
+            <summary>
+            Gets the presenters that are currently managed.
+            </summary>
+            <value>The presenters.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.Navigator">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Presenters.INavigator"/>.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.PresenterManager">
+            <summary>
+            A base implementation of <see cref="T:Caliburn.MVP.Presenters.IPresenterManager"/>.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.CanShutdown">
+            <summary>
+            Determines whether this instance can shutdown.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Shutdown">
+            <summary>
+            Shuts down this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Activate">
+            <summary>
+            Activates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Deactivate">
+            <summary>
+            Deactivates this instance.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Open(Caliburn.MVP.Presenters.IPresenter,System.Action{System.Boolean})">
+            <summary>
+            Opens the specified presenter.
+            </summary>
+            <param name="presenter">The presenter.</param>
+            <param name="completed">Called when the open action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.ShutdownCurrent(System.Action{System.Boolean})">
+            <summary>
+            Shuts down the current presenter.
+            </summary>
+            <param name="completed">Called when the shutdown action is finished.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Caliburn#MVP#Presenters#ISupportCustomShutdown#CreateShutdownModel">
+            <summary>
+            Creates the shutdown model.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.PresenterManager.Caliburn#MVP#Presenters#ISupportCustomShutdown#CanShutdown(Caliburn.MVP.Presenters.ISubordinate)">
+            <summary>
+            Determines whether this instance can shutdown based on the evaluated shutdown model.
+            </summary>
+            <param name="shutdownModel">The shutdown model.</param>
+            <returns>
+            	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.PresenterManager.CurrentPresenter">
+            <summary>
+            Gets or sets the current presenter.
+            </summary>
+            <value>The current presenter.</value>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Navigator.Forward(System.Action{System.Boolean})">
+            <summary>
+            Navigates forward.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Navigator.Back(System.Action{System.Boolean})">
+            <summary>
+            Navigates back.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Navigator.Navigate(System.Action{System.Action{System.Boolean}},System.Action{System.Boolean})">
+            <summary>
+            Navigates using the specified action.
+            </summary>
+            <param name="function">The function.</param>
+            <param name="completed">Called when navigation is completed.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.Navigator.ClearHistory">
+            <summary>
+            Clears the navigation history.
+            </summary>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.Navigator.CanGoBack">
+            <summary>
+            Gets a value indicating whether this instance can navigate back.
+            </summary>
+            <value>
+            	<c>true</c> if this instance can go back; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.Navigator.CanGoForward">
+            <summary>
+            Gets a value indicating whether this instance can navigate forward.
+            </summary>
+            <value>
+            	<c>true</c> if this instance can go forward; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.SubordinateContainer">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Presenters.ISubordinateComposite"/> that supports exactly one child.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.SubordinateContainer.#ctor(Caliburn.MVP.Presenters.IPresenter,Caliburn.MVP.Presenters.ISubordinate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Presenters.SubordinateContainer"/> class.
+            </summary>
+            <param name="master">The master.</param>
+            <param name="child">The child.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.SubordinateContainer.GetChildren">
+            <summary>
+            Gets the children.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.SubordinateContainer.Master">
+            <summary>
+            Gets the <see cref="T:Caliburn.MVP.Presenters.IPresenter"/> that owns this instance.
+            </summary>
+            <value>The master.</value>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.SubordinateContainer.Child">
+            <summary>
+            Gets or sets the child.
+            </summary>
+            <value>The child.</value>
+        </member>
+        <member name="T:Caliburn.MVP.Presenters.SubordinateGroup">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.Presenters.ISubordinateComposite"/> that has multiple children.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.SubordinateGroup.#ctor(Caliburn.MVP.Presenters.IPresenter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Caliburn.MVP.Presenters.SubordinateGroup"/> class.
+            </summary>
+            <param name="master">The master.</param>
+        </member>
+        <member name="M:Caliburn.MVP.Presenters.SubordinateGroup.GetChildren">
+            <summary>
+            Gets the children.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Caliburn.MVP.Presenters.SubordinateGroup.Master">
+            <summary>
+            Gets the <see cref="T:Caliburn.MVP.Presenters.IPresenter"/> that owns this instance.
+            </summary>
+            <value>The master.</value>
+        </member>
+        <member name="T:Caliburn.MVP.IsolatedStorageStateManager">
+            <summary>
+            An implementation of <see cref="T:Caliburn.MVP.IStateManager"/> that uses isolated storage as its backing store.
+            </summary>
+        </member>
+        <member name="T:Caliburn.MVP.IStateManager">
+            <summary>
+            Describes a service capable of managing basic state values.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.IStateManager.Initialize(System.String)">
+            <summary>
+            Initializes the backing store.
+            </summary>
+            <param name="stateName">Name of the state.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IStateManager.CommitChanges(System.String)">
+            <summary>
+            Commits the changes to the backing store.
+            </summary>
+            <param name="stateName">Name of the state.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IStateManager.InsertOrUpdate(System.String,System.String)">
+            <summary>
+            Inserts or updates a value in the state.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Caliburn.MVP.IStateManager.Get(System.String)">
+            <summary>
+            Gets the value with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IStateManager.Remove(System.String)">
+            <summary>
+            Removes the value with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="E:Caliburn.MVP.IStateManager.AfterStateLoad">
+            <summary>
+            Occurs after the state was loaded from the backing store.
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.IStateManager.BeforeStateCommit">
+            <summary>
+            Occurs before the state is committed to the backing store.
+            </summary>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.Initialize(System.String)">
+            <summary>
+            Initializes the backing store.
+            </summary>
+            <param name="stateName">Name of the state.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.CommitChanges(System.String)">
+            <summary>
+            Commits the cha dnges.
+            </summary>
+            <param name="stateName">Name of the state.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.InsertOrUpdate(System.String,System.String)">
+            <summary>
+            Inserts or updates a value in the state.
+            </summary>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.Get(System.String)">
+            <summary>
+            Gets the value with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.Get``1(System.String,``0)">
+            <summary>
+            Gets the value with the specified key.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key">The key.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Caliburn.MVP.IsolatedStorageStateManager.Remove(System.String)">
+            <summary>
+            Removes the value with the specified key.
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="E:Caliburn.MVP.IsolatedStorageStateManager.AfterStateLoad">
+            <summary>
+            Occurs after the state was loaded from the backing store.
+            </summary>
+        </member>
+        <member name="E:Caliburn.MVP.IsolatedStorageStateManager.BeforeStateCommit">
+            <summary>
+            Occurs before the state is committed to the backing store.
+            </summary>
+        </member>
+    </members>
+</doc>
