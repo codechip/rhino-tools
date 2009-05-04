@@ -108,7 +108,7 @@ namespace Rhino.Commons.Tasks
 				ActiveRecordStarter.ResetInitializationFlag();
 				ActiveRecordStarter.Initialize(loadedAssemblies.ToArray(), src);
 				Configuration configuration = ActiveRecordMediator.GetSessionFactoryHolder().GetConfiguration(typeof(ActiveRecordBase));
-				new SchemaExport(configuration).Execute(true,true,false,true);
+				new SchemaExport(configuration).Execute(true,true,false);
 			}
 			finally
 			{

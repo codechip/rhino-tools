@@ -167,7 +167,7 @@ namespace Rhino.Commons.ForTesting
 
         protected virtual void CreateDatabaseSchema(ISession currentSession)
         {
-            new SchemaExport(TestContext.Configuration).Execute(false, true, false, true);
+            new SchemaExport(TestContext.Configuration).Execute(false, true, false);
         }
 
 
@@ -338,7 +338,7 @@ namespace Rhino.Commons.ForTesting
 
             protected override void CreateDatabaseSchema(ISession currentSession)
             {
-                new SchemaExport(TestContext.Configuration).Execute(false, true, false, true, currentSession.Connection, null);
+                new SchemaExport(TestContext.Configuration).Execute(false, true, false, currentSession.Connection, null);
             }
 
 

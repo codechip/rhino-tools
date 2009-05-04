@@ -143,7 +143,7 @@ namespace Rhino.Commons.ForTesting
 			ISession session = sessionFactoryHolder.CreateSession(typeof(ActiveRecordBase));
 			try
 			{
-				new SchemaExport(configuration).Execute(false, true, false, true, session.Connection, null);
+				new SchemaExport(configuration).Execute(false, true, false, session.Connection, null);
 			}
 			finally
 			{
