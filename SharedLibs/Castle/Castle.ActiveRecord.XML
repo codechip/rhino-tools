@@ -240,6 +240,79 @@
             should not be processed by the framework
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.Attributes.AddEventListenerAttribute">
+            <summary>
+            Instructs <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> to add the specified type
+            or assembly to the event listeners
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute">
+            <summary>
+            Base class for <see cref="T:Castle.ActiveRecord.Attributes.AddEventListenerAttribute"/> and <see cref="T:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute"/>
+            to hold common attributes and helpers.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.ParseStringExpression(System.String)">
+            <summary>
+            Parses the constructor argument and sets the specified object
+            </summary>
+            <param name="expression">the constructor arg</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.Assembly">
+            <summary>
+            The assembly to scan for event listeners or to ignore listeners from.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.EventListenerAssemblyAttribute.Type">
+            <summary>
+            The event listener type to add or ignore
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.#ctor(System.String)">
+            <summary>
+            Adds an assembly to the event listener list. All types that implement
+            at least one IXxxEventListener interface (<see cref="N:NHibernate.Event"/>)
+            are used as event listeners.
+            </summary>
+            <param name="assemblyName">The name of the assembly. A partial name is sufficient.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.#ctor(System.Type)">
+            <summary>
+            Adds the specified type as an event listener.
+            </summary>
+            <param name="type">A type that implements at least one event listener inzterface.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Exclude">
+            <summary>
+            Holds connections to exclude the listener from
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Include">
+            <summary>
+            Holds connections that the listener will be exclusively added to.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.ExcludeEvent">
+            <summary>
+            Holds events to exclude the listener from
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.IncludeEvent">
+            <summary>
+            Holds events that the listener will be exclusively added to.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Attributes.AddEventListenerAttribute.ReplaceExisting">
+            <summary>
+            If <c>true</c>, any existing listeners for that Event will be replaced.
+            Otherwise the listener will be added without removing the existing listeners.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.AnyAttribute">
             <summary>
             This attribute is used to create &lt;any/&gt; assoication, a polymorphic assoication to classes that
@@ -913,6 +986,44 @@
             In additional to that, when an object is removed from the association and not associated with another object (orphaned), it will also be deleted.
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.EventListenerAttribute">
+            <summary>
+            Marks an NHibernate 2.0 event listener. The decorated class must implement
+            at least one of the I...EventListener-interfaces at NHibernate.Event
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.ReplaceExisting">
+            <summary>
+            If <c>true</c>, any existing listeners for that Event will be replaced.
+            Otherwise the listener will be added without removing the existing listeners.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Ignore">
+            <summary>
+            If <c>true</c>, the listener won't be registered at all.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.SkipEvent">
+            <summary>
+            Defines that a single event should be skipped although it is defined in the
+            listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Include">
+            <summary>
+            Defines the base types for which the listener will be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.EventListenerAttribute.Exclude">
+            <summary>
+            Defines the base types for which the listener will not be added.
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.FieldAttribute">
             <summary>
             Maps a standard column of the table.
@@ -1437,6 +1548,24 @@
             <summary>
             The query itself
             </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute">
+            <summary>
+             Instructs <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> to ignore the event listeners 
+             of the specified type or assembly. 
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute.#ctor(System.String)">
+            <summary>
+            Adds an assembly which event listeners should be ignored when added per <see cref="T:Castle.ActiveRecord.EventListenerAttribute"/>.
+            </summary>
+            <param name="assemblyName">The name of the assembly. A partial name is sufficient.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Attributes.IgnoreEventListenerAttribute.#ctor(System.Type)">
+            <summary>
+            Ignores the specified event listener.
+            </summary>
+            <param name="type">A type that implements at least one event listener interface.</param>
         </member>
         <member name="T:Castle.ActiveRecord.ImportAttribute">
             <summary>
@@ -2891,6 +3020,187 @@
             Microsoft SQL Server 2000
             </summary>
         </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig">
+            <summary>
+            A configuration class for event listeners
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.#ctor(System.Type)">
+            <summary>
+            Creates an instance for the given type
+            </summary>
+            <param name="listenerType">The listener type to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.#ctor(System.Object)">
+            <summary>
+            Creates an instance for the given instance
+            </summary>
+            <param name="listenerInstance">The listener object to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.CreateSingletonInstance">
+            <summary>
+            Creates the singleton instance. If the instance is already set, the method does not replace it.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.SetSingletonInstance(System.Object)">
+            <summary>
+            Sets the singleton instance. If the instance is already set, the method does not replace it.
+            </summary>
+            <param name="instance">the instance to set</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Equals(System.Object)">
+            <summary>
+            Compares the instance with another one for equality.
+            </summary>
+            <param name="obj">The config to compare with</param>
+            <returns>true if the obj is for the same <see cref="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType"/></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.GetHashCode">
+            <summary>
+            Object infrastructure
+            </summary>
+            <returns>The hashcode</returns>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ReplaceExisting">
+            <summary>
+            Whether to replace existing listeners 
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Ignore">
+            <summary>
+            Whether to ignore the listener completely
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.SkipEvent">
+            <summary>
+            Defines that a single event should be skipped although it is defined in the
+            listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Singleton">
+            <summary>
+            Specifies that all events for all configurations should be served by a single instance
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Include">
+            <summary>
+            Defines the base types for which the listener will be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.Exclude">
+            <summary>
+            Defines the base types for which the listener will not be added.
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType">
+            <summary>
+            The type of the listener
+            </summary>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerInstance">
+            <summary>
+            The specific instance to use. If <code>null</code> then a new instance of the
+            configured <see cref="P:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig.ListenerType"/> will be created.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor">
+            <summary>
+            This contributor supports the complex configuration of event listeners.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.AbstractNHContributor">
+            <summary>
+            Defines an abstract base class for <see cref="T:Castle.ActiveRecord.Framework.INHContributor"/> which applies
+            to all root types by default.
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.INHContributor">
+            <summary>
+            <para>
+            Contributors are an extension point of ActiveRecord. Instances of INHContributor
+            are registered at <see cref="T:Castle.ActiveRecord.ActiveRecordStarter"/> before the framework is
+            initialized. They are called before the session factory is created and can therefore
+            contribute to NHibernate's configuration of the session factory.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.INHContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Called to modify the configuration before the session factory is called.
+            </summary>
+            <remarks>
+            The order in which multiple contributors are called is not determined. The method
+            must not assume any fixed order and must therefore not be used to counter 
+            modifications by other contributors. 
+            </remarks>
+            <param name="configuration">The NH configuration to modify.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType">
+            <summary>
+            This predicate can be set per instance and will be called by the framework to
+            determine whether the contributor should add to the actual root type.
+            </summary>
+            <example><![CDATA[
+            public class SampleContributor : INHContributor
+            {
+            	public Predicate<Type> AppliesToRootType
+            	{
+            		get { return _appliesToRootType; }
+            		set { _appliesToRootType = value; }
+            	}
+            	
+            	// Applies to default root type only by default
+            	private Predicate<Type>_appliesToRootType = ( (type) => type.Equals(typeof(ActiveRecordBase)));
+            	
+            	public void Contribute(Configuration c) {}
+            }
+            ]]></example>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.AbstractNHContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            The actual contribution method.
+            </summary>
+            <param name="configuration">The configuration to be modified.</param>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.AbstractNHContributor.AppliesToRootType">
+            <summary>
+            Implements <see cref="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType"/>
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Add(Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerConfig)">
+            <summary>
+            Adds an event listener configuration
+            </summary>
+            <param name="config">the configuration to add</param>
+            <returns>the added configuration</returns>
+            <exception cref="T:System.ArgumentNullException">When the configuration is null</exception>
+            <exception cref="T:System.ArgumentException">When the configuration is already present.</exception>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Get(System.Type)">
+            <summary>
+            Returns the listener config for a specified listener type.
+            </summary>
+            <param name="listenerType">the type to look for</param>
+            <returns>the listener config or null if it does not exist</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Remove(System.Type)">
+            <summary>
+            Gets and removes the configuration for the type.
+            </summary>
+            <param name="listenerType">the type to look for</param>
+            <returns>the configuration for the type</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Configures the configuration with the registered listeners according the config
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.Internal.EventListener.EventListenerContributor.#ctor">
+            <summary>
+            Creates a listener
+            </summary>
+        </member>
         <member name="T:Castle.ActiveRecord.Framework.Internal.ActiveRecordModel">
             <summary>
             This model of a full Active Record persistent class.
@@ -3494,12 +3804,13 @@
             Model to represent a HasMany ( one to many ) association
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.HasManyAttribute)">
+        <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.#ctor(System.Reflection.PropertyInfo,Castle.ActiveRecord.HasManyAttribute,Castle.ActiveRecord.Framework.Internal.ActiveRecordModel)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.ActiveRecord.Framework.Internal.HasManyModel"/> class.
             </summary>
             <param name="propInfo">The prop info.</param>
             <param name="hasManyAtt">The has many att.</param>
+            <param name="containingTypeModel">The model for the type that contains the HasMany reference.</param>
         </member>
         <member name="M:Castle.ActiveRecord.Framework.Internal.HasManyModel.Accept(Castle.ActiveRecord.Framework.Internal.IVisitor)">
             <summary>
@@ -3518,6 +3829,11 @@
             Gets the has many attribute
             </summary>
             <value>The has many att.</value>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.Internal.HasManyModel.ContainingTypeModel">
+            <summary>
+            This is a reference to the model (the ActiveRecord type) that defined the HasMany relationship.
+            </summary>
         </member>
         <member name="P:Castle.ActiveRecord.Framework.Internal.HasManyModel.DependentObjectModel">
             <summary>
@@ -8929,7 +9245,7 @@
             checking all the types on the specified <c>Assembly</c>
             </summary>
         </member>
-        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.Initialize(System.Reflection.Assembly[],Castle.ActiveRecord.Framework.IConfigurationSource)">
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.Initialize(System.Reflection.Assembly[],Castle.ActiveRecord.Framework.IConfigurationSource,System.Type[])">
             <summary>
             Initialize the mappings using the configuration and 
             checking all the types on the specified Assemblies
@@ -9078,6 +9394,18 @@
             <param name="originalFileName"></param>
             <param name="fileCount"></param>
             <returns></returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.AddContributor(Castle.ActiveRecord.Framework.INHContributor)">
+            <summary>
+            Adds a contributor instance that will be called when a configuration is
+            prepared for creating a session factory 
+            </summary>
+            <param name="contributor">The contributor to add.</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.ActiveRecordStarter.ClearContributors">
+            <summary>
+            Clears the contributor registry. Mainly used for tests.
+            </summary>
         </member>
         <member name="E:Castle.ActiveRecord.ActiveRecordStarter.SessionFactoryHolderCreated">
             <summary>
@@ -9900,6 +10228,75 @@
         <member name="P:Castle.ActiveRecord.Framework.ISessionFactoryHolder.ThreadScopeInfo">
             <summary>
             Gets or sets the implementation of <see cref="T:Castle.ActiveRecord.Framework.IThreadScopeInfo"/>
+            </summary>
+        </member>
+        <member name="T:Castle.ActiveRecord.Framework.NHEventListeners">
+            <summary>
+            This contributor allows easy adding of NHibernate event listeners to
+            configurations. It implements a kind of multiple-strongly-typed collection
+            for all event listener types. Those types will be added to all
+            <see cref="T:NHibernate.Cfg.Configuration"/>-objects that are not filtered
+            by the <see cref="P:Castle.ActiveRecord.Framework.INHContributor.AppliesToRootType"/> double dispatch filter.
+            </summary>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Add``1(``0)">
+            <summary>
+            Adds an event listener that will be added to all configurations served.
+            </summary>
+            <typeparam name="TListener">the event listener type to add</typeparam>
+            <param name="listenerInstance">the listener instance to add</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Remove``1(``0)">
+            <summary>
+            Removes a previously added listener instance
+            </summary>
+            <typeparam name="TListener">the type of the instance</typeparam>
+            <param name="listenerInstance">the instance to remove</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Contains``1(``0)">
+            <summary>
+            Tests if a listener instance has been added
+            </summary>
+            <typeparam name="TListener">the instance's type</typeparam>
+            <param name="listenerInstance">the instance to test for</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Enumerate``1">
+            <summary>
+            Enumerates all listener instances of the given type
+            </summary>
+            <typeparam name="TEventType">the requested event type</typeparam>
+            <returns>all listeners of the requested type</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.Contribute(NHibernate.Cfg.Configuration)">
+            <summary>
+            Configures the configuration with all registered listeners
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.ConfigureListenerType(NHibernate.Cfg.Configuration,System.Type)">
+            <summary>
+            Configures the configures with the registered listeners of the given type
+            </summary>
+            <param name="configuration">the configuration object to add the listeners to</param>
+            <param name="listenerType">the listener type to use</param>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.GetEventListenerTypes">
+            <summary>
+            Returns all event listener interfaces defined by NHibernate
+            </summary>
+            <returns>event listener interface types</returns>
+        </member>
+        <member name="M:Castle.ActiveRecord.Framework.NHEventListeners.GetProperty(System.Type)">
+            <summary>
+            Returns the PropertyInfo of the <see cref="T:NHibernate.Event.EventListeners"/>-class for
+            a given EventListener-interface.
+            </summary>
+            <param name="listenerType">The listener interface</param>
+            <returns>the property info object</returns>
+        </member>
+        <member name="P:Castle.ActiveRecord.Framework.NHEventListeners.ReplaceExistingListeners">
+            <summary>
+            Replaces existing listeners instead of adding them if set to <code>true</code>.
             </summary>
         </member>
         <member name="T:Castle.ActiveRecord.NotFoundException">

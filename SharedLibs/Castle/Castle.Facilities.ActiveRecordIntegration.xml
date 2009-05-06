@@ -765,6 +765,21 @@
             A transaction instance having the specified isolation level
             </returns>
         </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateCriteria``1">
+            <summary>
+            Creates a new <c>Criteria</c> for the entity class.
+            </summary>
+            <typeparam name="T">The class to Query</typeparam>
+            <returns>An ICriteria object</returns>
+        </member>
+        <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateCriteria``1(System.String)">
+            <summary>
+            Creates a new <c>Criteria</c> for the entity class with a specific alias
+            </summary>
+            <typeparam name="T">The class to Query</typeparam>
+            <param name="alias">The alias of the entity</param>
+            <returns>An ICriteria object</returns>
+        </member>
         <member name="M:Castle.Facilities.ActiveRecordIntegration.SafeSessionProxy.CreateCriteria(System.Type)">
             <summary>
             Creates a new <c>Criteria</c> for the entity class.
