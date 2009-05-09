@@ -291,7 +291,7 @@
 					<xunit assembly="${build.dir}/${project::get-name()}.dll"
 					   html="${testresults.dir}\${project::get-name()}.dll-results.html"
 					   xml="${testresults.dir}\${project::get-name()}.dll-results.xml"
-					   workingDir="${build.dir}" />
+					   workingDir="${build.dir}" shadowCopy="false" />
 				
 			</if>
 			<if test="${not use.xunit}">					
