@@ -27,8 +27,8 @@ namespace Rhino.Commons.Test.Facilities
 				UnitOfWork.GetCurrentSessionFor(typeof(DomainObjectFromDatabase1)), 
 				UnitOfWork.GetCurrentSessionFor(typeof(DomainObjectFromDatabase2)) 
 			};
-			schemas[0].Execute(false, true, false, true, sessions[0].Connection, null);
-			schemas[1].Execute(false, true, false, true, sessions[1].Connection, null);
+			schemas[0].Execute(false, true, false, sessions[0].Connection, null);
+			schemas[1].Execute(false, true, false, sessions[1].Connection, null);
 
 			//insert test data and evict from session
 			With.Transaction(delegate
