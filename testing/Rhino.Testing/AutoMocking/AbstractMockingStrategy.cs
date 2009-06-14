@@ -18,7 +18,7 @@ namespace Rhino.Testing.AutoMocking
             get { return _autoMock; }
         }
 
-        public MockRepository Mocks
+        public IMockRepository Mocks
         {
             get { return _autoMock.MockRepository; }
         }

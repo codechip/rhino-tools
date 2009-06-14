@@ -7,26 +7,42 @@ using Rhino.Mocks;
 
 namespace Rhino.Testing.AutoMocking
 {
-	public class AutoMockingContainer : WindsorContainer, IAutoMockingRepository, IGenericMockingRepository
+  public class AutoMockingContainer : WindsorContainer, IAutoMockingRepository, IGenericMockingRepository
 	{
 		private readonly IList<Type> _markMissing = new List<Type>();
-		private readonly MockRepository _mocks;
+		private readonly IMockRepository _mocks;
 		private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 		private readonly Dictionary<Type, IMockingStrategy> _strategies = new Dictionary<Type, IMockingStrategy>();
-	    private bool _resolveProperties;
+    private bool _resolveProperties;
+
+    /// <summary>Creates an AutoMocking Container that defaults to using the AAA mocking syntax.
+    /// Many features are unavailable in the mode so use with cauting.</summary>
+    public AutoMockingContainer() : this(new StaticMockRepositoryAdapter(), false)
+    {
+    }
 
 		public AutoMockingContainer(MockRepository mocks) : this(mocks, false)
 		{
 		}
 
-        public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
-        {
-            _mocks = mocks;
-            _resolveProperties = resolveProperties;
-        }
+    public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
+      : this(new MockRepositoryAdapter(mocks), resolveProperties)
+    {
+    }
 
+    /// <summary>Creates an AutoMocking Container with the given <paramref name="mocks"/> repository.</summary>
+    /// <param name="mocks">The mocks repository to use</param>
+    /// <param name="resolveProperties"><c>true</c> if properties should be resolved, otherwise <c>false</c>; the defualt is <c>false</c></param>
+    /// <seealso cref="IMockRepository"/>
+    /// <seealso cref="MockRepositoryAdapter"/>
+    /// <seealso cref="StaticMockRepositoryAdapter"/>
+    public AutoMockingContainer(IMockRepository mocks, bool resolveProperties)
+    {
+      _mocks = mocks;
+      _resolveProperties = resolveProperties;
+    }
         #region IAutoMockingRepository Members
-		public virtual MockRepository MockRepository
+		public virtual IMockRepository MockRepository
 		{
 			get { return _mocks; }
 		}

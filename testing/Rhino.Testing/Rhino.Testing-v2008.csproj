@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5B6AA90A-6266-48C3-B4E7-F248C9403797}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -31,6 +31,9 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +70,9 @@
       <HintPath>..\..\build\net-3.5\debug\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -80,9 +86,13 @@
     <Compile Include="AutoMocking\DynamicMockingStrategy.cs" />
     <Compile Include="AutoMocking\IAutoMockingRepository.cs" />
     <Compile Include="AutoMocking\IMockingStrategy.cs" />
+    <Compile Include="AutoMocking\IMockRepository.cs" />
+    <Compile Include="AutoMocking\MockRepositoryAdapter.cs" />
     <Compile Include="AutoMocking\NonMockedStrategy.cs" />
     <Compile Include="AutoMocking\NonPropertyResolvingComponentActivator.cs" />
     <Compile Include="AutoMocking\NonPublicConstructorDependenciesModelInspector.cs" />
+    <Compile Include="AutoMocking\NotAvailableInAaaModeException.cs" />
+    <Compile Include="AutoMocking\StaticMockRepositoryAdapter.cs" />
     <Compile Include="AutoMocking\TypeMarker.cs" />
     <Compile Include="CommentReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\ayende-open-source.snk" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
