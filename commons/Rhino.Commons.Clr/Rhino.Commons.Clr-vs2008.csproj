@@ -54,6 +54,7 @@
     <Compile Include="DelegateDefinations.cs" />
     <Compile Include="DisposableAction.cs" />
     <Compile Include="Exceptions\ElementNotFoundException.cs" />
+    <Compile Include="Exceptions\GuardSpotException.cs" />
     <Compile Include="Exceptions\HackExpiredException.cs" />
     <Compile Include="Exceptions\PerformancePolicyViolationException.cs" />
     <Compile Include="Guard.cs" />

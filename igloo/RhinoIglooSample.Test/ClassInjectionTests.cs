@@ -1,6 +1,4 @@
-using System;
 using MbUnit.Framework;
-using Rhino.Commons.ForTesting;
 using Rhino.Commons;
 using Rhino.Igloo.Tests;
 using Castle.Windsor;

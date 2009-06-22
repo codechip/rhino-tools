@@ -165,10 +165,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\dsl\Rhino.DSL\Rhino.DSL-vs2008.csproj">
-      <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
-      <Name>Rhino.DSL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Binsor\Rhino.Commons.Binsor.csproj">
       <Project>{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}</Project>
       <Name>Rhino.Commons.Binsor</Name>

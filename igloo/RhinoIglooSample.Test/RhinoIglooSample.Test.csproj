@@ -1,14 +1,34 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{926775F4-55E9-4910-BCBC-39ECF407E164}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RhinoIglooSample.Test</RootNamespace>
     <AssemblyName>RhinoIglooSample.Test</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,10 +80,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\SharedLibs\NHibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.ProxyGenerators.CastleDynamicProxy, Version=2.1.0.1001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SharedLibs\NHibernate\NHibernate.ProxyGenerators.CastleDynamicProxy.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.35.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
@@ -83,17 +99,13 @@
     <Compile Include="Model\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj">
-      <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>
-      <Name>Rhino.Commons.Clr</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj">
+    <ProjectReference Include="..\..\commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate-v2008.csproj">
       <Project>{BF4E220E-5AF8-4448-ABA9-981D69AB8775}</Project>
-      <Name>Rhino.Commons.NHibernate</Name>
+      <Name>Rhino.Commons.NHibernate-v2008</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\rhino-commons\Rhino.Commons\Rhino.Commons.csproj">
+    <ProjectReference Include="..\..\commons\Rhino.Commons\Rhino.Commons-vs2008.csproj">
       <Project>{F6321543-E1EC-4999-A562-D9F060C8E3DF}</Project>
-      <Name>Rhino.Commons</Name>
+      <Name>Rhino.Commons-vs2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Igloo\Rhino.Igloo.csproj">
       <Project>{D8B481B1-229C-49BF-BCAA-E61EA23EEDBC}</Project>
@@ -107,6 +119,33 @@
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

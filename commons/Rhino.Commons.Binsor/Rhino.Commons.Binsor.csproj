@@ -135,7 +135,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\dsl\Rhino.DSL\Rhino.DSL-vs2008.csproj">
       <Project>{B788F27C-E00A-434A-81AA-1D592E030934}</Project>
-      <Name>Rhino.DSL</Name>
+      <Name>Rhino.DSL-vs2008</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj">
       <Project>{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}</Project>

@@ -1,59 +1,29 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Igloo", "Rhino.Igloo\Rhino.Igloo.csproj", "{D8B481B1-229C-49BF-BCAA-E61EA23EEDBC}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Controllers", "RhinoIglooSample.Controllers\RhinoIglooSample.Controllers.csproj", "{3FB264DC-25D4-47C1-A112-F543A920845E}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Model", "RhinoIglooSample.Model\RhinoIglooSample.Model.csproj", "{7C333A74-6C23-4C85-B05E-C5A837F27C03}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{0FBC4D2B-6572-4ECB-A65B-441C564C521A}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Test", "RhinoIglooSample.Test\RhinoIglooSample.Test.csproj", "{926775F4-55E9-4910-BCBC-39ECF407E164}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test.Dependencies", "Test.Dependencies", "{35D79B51-6AFC-4E7F-BC36-2777B863B9A7}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Clr", "..\rhino-commons\Rhino.Commons.Clr\Rhino.Commons.Clr.csproj", "{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Igloo", "Rhino.Igloo\Rhino.Igloo.csproj", "{D8B481B1-229C-49BF-BCAA-E61EA23EEDBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons", "..\rhino-commons\Rhino.Commons\Rhino.Commons.csproj", "{F6321543-E1EC-4999-A562-D9F060C8E3DF}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Controllers", "RhinoIglooSample.Controllers\RhinoIglooSample.Controllers.csproj", "{3FB264DC-25D4-47C1-A112-F543A920845E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.NHibernate", "..\rhino-commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate.csproj", "{BF4E220E-5AF8-4448-ABA9-981D69AB8775}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Model", "RhinoIglooSample.Model\RhinoIglooSample.Model.csproj", "{7C333A74-6C23-4C85-B05E-C5A837F27C03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Test", "RhinoIglooSample.Test\RhinoIglooSample.Test.csproj", "{926775F4-55E9-4910-BCBC-39ECF407E164}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RhinoIglooSample.Web", "RhinoIglooSample.Web\RhinoIglooSample.Web.csproj", "{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons-vs2008", "..\commons\Rhino.Commons\Rhino.Commons-vs2008.csproj", "{F6321543-E1EC-4999-A562-D9F060C8E3DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Clr-vs2008", "..\commons\Rhino.Commons.Clr\Rhino.Commons.Clr-vs2008.csproj", "{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.NHibernate-v2008", "..\commons\Rhino.Commons.NHibernate\Rhino.Commons.NHibernate-v2008.csproj", "{BF4E220E-5AF8-4448-ABA9-981D69AB8775}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.Commons.Binsor", "..\commons\Rhino.Commons.Binsor\Rhino.Commons.Binsor.csproj", "{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhino.DSL-vs2008", "..\dsl\Rhino.DSL\Rhino.DSL-vs2008.csproj", "{B788F27C-E00A-434A-81AA-1D592E030934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,35 +56,56 @@ Global
 		{926775F4-55E9-4910-BCBC-39ECF407E164}.Release|Any CPU.Build.0 = Release|Any CPU
 		{926775F4-55E9-4910-BCBC-39ECF407E164}.Start|Any CPU.ActiveCfg = Release|Any CPU
 		{926775F4-55E9-4910-BCBC-39ECF407E164}.Start|Any CPU.Build.0 = Release|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.ActiveCfg = Release|Any CPU
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.Build.0 = Release|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF}.Start|Any CPU.Build.0 = Release|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.ActiveCfg = Release|Any CPU
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF}.Start|Any CPU.Build.0 = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7}.Start|Any CPU.Build.0 = Release|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.ActiveCfg = Release|Any CPU
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775}.Start|Any CPU.Build.0 = Release|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B}.Start|Any CPU.Build.0 = Release|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Start|Any CPU.ActiveCfg = Release|Any CPU
+		{B788F27C-E00A-434A-81AA-1D592E030934}.Start|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7C333A74-6C23-4C85-B05E-C5A837F27C03} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
-		{3FB264DC-25D4-47C1-A112-F543A920845E} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
-		{926775F4-55E9-4910-BCBC-39ECF407E164} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
 		{35D79B51-6AFC-4E7F-BC36-2777B863B9A7} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
-		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
+		{3FB264DC-25D4-47C1-A112-F543A920845E} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
+		{7C333A74-6C23-4C85-B05E-C5A837F27C03} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
+		{926775F4-55E9-4910-BCBC-39ECF407E164} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
+		{A359A84E-3F9A-4844-B310-39B2AD2E4EEF} = {0FBC4D2B-6572-4ECB-A65B-441C564C521A}
 		{F6321543-E1EC-4999-A562-D9F060C8E3DF} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
+		{77693BCD-4C8A-4523-AEE7-8AB46C1034E7} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
 		{BF4E220E-5AF8-4448-ABA9-981D69AB8775} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
+		{CCB0BEBF-146A-4C42-B22A-1EB338E4EA8B} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
+		{B788F27C-E00A-434A-81AA-1D592E030934} = {35D79B51-6AFC-4E7F-BC36-2777B863B9A7}
 	EndGlobalSection
 EndGlobal
