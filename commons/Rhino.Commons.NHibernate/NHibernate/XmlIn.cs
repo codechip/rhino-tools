@@ -178,7 +178,7 @@ namespace Rhino.Commons
 
 			return new TypedValue[] { 
 				new TypedValue(new CustomType(typeof(XmlType), 
-				new Hashtable()), xmlString, EntityMode.Poco), };
+				new Dictionary<string, string>()), xmlString, EntityMode.Poco), };
 		}
 
 		private class XmlType : IUserType
