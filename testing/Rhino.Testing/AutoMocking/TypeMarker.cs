@@ -44,5 +44,10 @@ namespace Rhino.Testing.AutoMocking
         {
             _repository.SetMockingStrategy(_type, new StandardMockingStrategy(_repository));
         }
+
+        public void MultiMock(params Type[] extraInterfaces)
+        {
+          _repository.SetMockingStrategy(_type, new MultiMockingStrategy(_repository, extraInterfaces));
+        }
     }
 }

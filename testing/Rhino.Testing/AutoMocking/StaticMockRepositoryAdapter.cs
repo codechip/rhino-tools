@@ -32,7 +32,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="type">Type.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public object CreateMock(Type type, params object[] argumentsForConstructor)
     {
-      return typeof (MockRepository).GetMethod("GenerateMock", StaticBindingFlags).MakeGenericMethod(type).Invoke(null, argumentsForConstructor);
+      return MockRepository.GenerateMock(type, new Type[0], argumentsForConstructor);
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="type">Type.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public object StrictMock(Type type, params object[] argumentsForConstructor)
     {
-      return StrictMockWithRemoting(type, argumentsForConstructor);
+      return MockRepository.GenerateStrictMock(type, new Type[0], argumentsForConstructor);
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public object CreateMultiMock(Type mainType, params Type[] extraTypes)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateMock(mainType, extraTypes);
     }
 
     /// <summary>
@@ -97,7 +97,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public object StrictMultiMock(Type mainType, params Type[] extraTypes)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateStrictMock(mainType, extraTypes);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="mainType">The main type to mock.</param><param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class.</param>
     public object CreateMultiMock(Type mainType, Type[] extraTypes, params object[] argumentsForConstructor)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateMock(mainType, extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="mainType">The main type to mock.</param><param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class.</param>
     public object StrictMultiMock(Type mainType, Type[] extraTypes, params object[] argumentsForConstructor)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateStrictMock(mainType, extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="mainType">The main type to mock.</param><param name="extraTypes">Extra interface types to mock.</param>
     public object DynamicMultiMock(Type mainType, params Type[] extraTypes)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateMock(mainType, extraTypes);
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="mainType">The main type to mock.</param><param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class.</param>
     public object DynamicMultiMock(Type mainType, Type[] extraTypes, params object[] argumentsForConstructor)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateMock(mainType, extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="type">Type.</param><param name="argumentsForConstructor">Arguments for the class' constructor.</param>
     public object PartialMock(Type type, params object[] argumentsForConstructor)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GeneratePartialMock(type, new Type[0], new object[0]);
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="type">Type.</param><param name="extraTypes">Extra interface types to mock.</param>
     public object PartialMultiMock(Type type, params Type[] extraTypes)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GeneratePartialMock(type, extraTypes);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="type">Type.</param><param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor.</param>
     public object PartialMultiMock(Type type, Type[] extraTypes, params object[] argumentsForConstructor)
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GeneratePartialMock(type, extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -282,7 +282,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T StrictMock<T>(params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GenerateStrictMock<T>(argumentsForConstructor);
     }
 
     /// <summary>
@@ -299,7 +299,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public T CreateMultiMock<T>(params Type[] extraTypes) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateMock(typeof (T), extraTypes, new object[0]);
     }
 
     /// <summary>
@@ -307,7 +307,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public T StrictMultiMock<T>(params Type[] extraTypes) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateStrictMock(typeof (T), extraTypes, new object[0]);
     }
 
     /// <summary>
@@ -315,7 +315,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public T DynamicMultiMock<T>(params Type[] extraTypes) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateMock(typeof (T), extraTypes, new object[0]);
     }
 
     /// <summary>
@@ -323,7 +323,7 @@ namespace Rhino.Testing.AutoMocking
     /// </summary>
     public T PartialMultiMock<T>(params Type[] extraTypes) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GeneratePartialMock(typeof (T), extraTypes, new object[0]);
     }
 
     /// <summary>
@@ -332,7 +332,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T CreateMultiMock<T>(Type[] extraTypes, params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateMock(typeof (T), extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -341,7 +341,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T StrictMultiMock<T>(Type[] extraTypes, params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateStrictMock(typeof (T), extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -350,7 +350,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T DynamicMultiMock<T>(Type[] extraTypes, params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GenerateMock(typeof (T), extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -359,7 +359,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="extraTypes">Extra interface types to mock.</param><param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T PartialMultiMock<T>(Type[] extraTypes, params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return (T) MockRepository.GeneratePartialMock(typeof (T), extraTypes, argumentsForConstructor);
     }
 
     /// <summary>
@@ -368,7 +368,7 @@ namespace Rhino.Testing.AutoMocking
     /// <param name="argumentsForConstructor">Arguments for the class' constructor, if mocking a concrete class</param>
     public T PartialMock<T>(params object[] argumentsForConstructor) where T : class
     {
-      throw new NotAvailableInAaaModeException();
+      return MockRepository.GeneratePartialMock<T>(argumentsForConstructor);
     }
 
     /// <summary>

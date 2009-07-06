@@ -1,3 +1,5 @@
+using System;
+
 namespace Rhino.Testing.Tests.AutoMocking
 {
     internal class InternalComponentBeingConfigured

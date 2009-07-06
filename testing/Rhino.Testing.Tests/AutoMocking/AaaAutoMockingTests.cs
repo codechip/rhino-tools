@@ -1,3 +1,4 @@
+using System;
 using MbUnit.Framework;
 using Rhino.Mocks;
 using Rhino.Testing.AutoMocking;
@@ -55,6 +56,18 @@ namespace Rhino.Testing.Tests.AutoMocking
       reallyCoolService.GetName();
 
       reallyCoolService.VerifyAllExpectations();
+    }
+
+    [Test]
+    public void Can_Create_A_MultiMock()
+    {
+      _container.Mark<IWcfService>().MultiMock(typeof (IDisposable));
+      var component = _container.Create<MultiMockComponent>();
+      var disposableWcfService = _container.Get<IWcfService>() as IDisposable;
+
+      component.Dispose();
+
+      disposableWcfService.AssertWasCalled(x => x.Dispose());
     }
   }
 }
