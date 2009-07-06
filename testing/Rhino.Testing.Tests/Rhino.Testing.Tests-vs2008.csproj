@@ -93,6 +93,7 @@
     <Compile Include="AutoMocking\IReallyCoolService.cs" />
     <Compile Include="AutoMocking\MultiMockComponent.cs" />
     <Compile Include="AutoMocking\NeedIKernel.cs" />
+    <Compile Include="AutoMocking\PartialMockComponent.cs" />
     <Compile Include="CommentReaderFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

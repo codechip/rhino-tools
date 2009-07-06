@@ -49,5 +49,10 @@ namespace Rhino.Testing.AutoMocking
         {
           _repository.SetMockingStrategy(_type, new MultiMockingStrategy(_repository, extraInterfaces));
         }
+
+        public void Partial()
+        {
+          _repository.SetMockingStrategy(_type, new PartialMockingStrategy(_repository));
+        }
     }
 }

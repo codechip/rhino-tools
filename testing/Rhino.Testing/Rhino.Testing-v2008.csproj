@@ -93,6 +93,7 @@
     <Compile Include="AutoMocking\NonPropertyResolvingComponentActivator.cs" />
     <Compile Include="AutoMocking\NonPublicConstructorDependenciesModelInspector.cs" />
     <Compile Include="AutoMocking\NotAvailableInAaaModeException.cs" />
+    <Compile Include="AutoMocking\PartialMockingStrategy.cs" />
     <Compile Include="AutoMocking\StaticMockRepositoryAdapter.cs" />
     <Compile Include="AutoMocking\TypeMarker.cs" />
     <Compile Include="CommentReader.cs" />

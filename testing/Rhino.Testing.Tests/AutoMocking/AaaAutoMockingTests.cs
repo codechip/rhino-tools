@@ -69,5 +69,20 @@ namespace Rhino.Testing.Tests.AutoMocking
 
       disposableWcfService.AssertWasCalled(x => x.Dispose());
     }
+
+    [Test]
+    public void Can_Create_A_PartialMock()
+    {
+      _container.Mark<NotImplementService>().Partial();
+      var component = _container.Create<PartialMockComponent>();
+      var service = _container.Get<NotImplementService>();
+
+      service.Expect(x => x.DoNothing());
+      service.Expect(x => x.DoSomething());
+
+      component.DoSomething();
+
+      service.VerifyAllExpectations();
+    }
   }
 }
