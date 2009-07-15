@@ -11,7 +11,7 @@ namespace Rhino.Testing.AutoMocking
 
     public override object Create(CreationContext context, Type type)
     {
-      return Mocks.PartialMock(type);
+      return MockFactory.GeneratePartialMock(new []{type});
     }
   }
 }

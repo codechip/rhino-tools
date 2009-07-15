@@ -80,7 +80,7 @@ namespace Rhino.Testing.Tests.AutoMocking
       service.Expect(x => x.DoNothing());
       service.Expect(x => x.DoSomething());
 
-      component.DoSomething();
+      component.DoEverything();
 
       service.VerifyAllExpectations();
     }

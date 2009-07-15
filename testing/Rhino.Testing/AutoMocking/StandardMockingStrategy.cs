@@ -15,7 +15,7 @@ namespace Rhino.Testing.AutoMocking
 
         public override object Create(CreationContext context, Type type)
         {
-            return Mocks.StrictMock(type);
+            return MockFactory.GenerateStrictMock(new []{type});
         }
     }
 }

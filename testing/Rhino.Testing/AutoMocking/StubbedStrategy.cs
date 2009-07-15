@@ -25,7 +25,7 @@ namespace Rhino.Testing.AutoMocking
 
         public override object Create(CreationContext context, Type type)
         {
-            object target = Mocks.Stub(type);
+            object target = MockFactory.GenerateStub(new []{type});
             AutoMock.AddService(type, target);
             return target;
         }

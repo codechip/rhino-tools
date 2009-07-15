@@ -6,7 +6,8 @@ namespace Rhino.Testing.AutoMocking
 {
     public interface IAutoMockingRepository
     {
-        IMockRepository MockRepository { get; }
+        IMockFactory MockFactory { get; }
+        MockRepository MockRepository { get; }
         IKernel Kernel { get; }
         bool CanResolve(Type type);
         object Get(Type type);

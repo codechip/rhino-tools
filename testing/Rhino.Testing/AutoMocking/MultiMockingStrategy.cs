@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Castle.MicroKernel;
 
 namespace Rhino.Testing.AutoMocking
@@ -14,7 +15,11 @@ namespace Rhino.Testing.AutoMocking
 
     public override object Create(CreationContext context, Type type)
     {
-      return Mocks.DynamicMultiMock(type, _extraInterfaces);
+      var types = new List<Type>(_extraInterfaces.Length + 1);
+      types.Add(type);
+      types.AddRange(_extraInterfaces);
+
+      return MockFactory.GenerateDynamicMock(types.ToArray());
     }
   }
 }

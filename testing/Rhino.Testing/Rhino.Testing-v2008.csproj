@@ -77,24 +77,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoMocking\AAAMockFactory.cs" />
     <Compile Include="AutoMocking\AbstractMockingStrategy.cs" />
     <Compile Include="AutoMocking\AutoMockingComponentActivator.cs" />
     <Compile Include="AutoMocking\AutoMockingContainer.cs" />
     <Compile Include="AutoMocking\AutoMockingDependencyResolver.cs" />
     <Compile Include="AutoMocking\AutoMockingFacility.cs" />
     <Compile Include="AutoMocking\AutoMockingNamingSubSystem.cs" />
+    <Compile Include="AutoMocking\DefaultMockFactory.cs" />
     <Compile Include="AutoMocking\DynamicMockingStrategy.cs" />
     <Compile Include="AutoMocking\IAutoMockingRepository.cs" />
     <Compile Include="AutoMocking\IMockingStrategy.cs" />
-    <Compile Include="AutoMocking\IMockRepository.cs" />
-    <Compile Include="AutoMocking\MockRepositoryAdapter.cs" />
+    <Compile Include="AutoMocking\IMockFactory.cs" />
     <Compile Include="AutoMocking\MultiMockingStrategy.cs" />
     <Compile Include="AutoMocking\NonMockedStrategy.cs" />
     <Compile Include="AutoMocking\NonPropertyResolvingComponentActivator.cs" />
     <Compile Include="AutoMocking\NonPublicConstructorDependenciesModelInspector.cs" />
-    <Compile Include="AutoMocking\NotAvailableInAaaModeException.cs" />
     <Compile Include="AutoMocking\PartialMockingStrategy.cs" />
-    <Compile Include="AutoMocking\StaticMockRepositoryAdapter.cs" />
     <Compile Include="AutoMocking\TypeMarker.cs" />
     <Compile Include="CommentReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,7 +18,12 @@ namespace Rhino.Testing.AutoMocking
             get { return _autoMock; }
         }
 
-        public IMockRepository Mocks
+        public IMockFactory MockFactory
+        {
+          get { return _autoMock.MockFactory; }
+        }
+
+        public MockRepository Mocks
         {
             get { return _autoMock.MockRepository; }
         }

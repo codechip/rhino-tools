@@ -9,7 +9,7 @@ namespace Rhino.Testing.Tests.AutoMocking
       _service = service;
     }
 
-    public void DoSomething()
+    public void DoEverything()
     {
       _service.DoNothing();
       _service.DoSomething();

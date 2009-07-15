@@ -10,14 +10,15 @@ namespace Rhino.Testing.AutoMocking
   public class AutoMockingContainer : WindsorContainer, IAutoMockingRepository, IGenericMockingRepository
 	{
 		private readonly IList<Type> _markMissing = new List<Type>();
-		private readonly IMockRepository _mocks;
+		private readonly MockRepository _mocks;
 		private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 		private readonly Dictionary<Type, IMockingStrategy> _strategies = new Dictionary<Type, IMockingStrategy>();
     private bool _resolveProperties;
+    private readonly IMockFactory _mockFactory;
 
     /// <summary>Creates an AutoMocking Container that defaults to using the AAA mocking syntax.
     /// Many features are unavailable in the mode so use with cauting.</summary>
-    public AutoMockingContainer() : this(new StaticMockRepositoryAdapter(), false)
+    public AutoMockingContainer() : this(null, false)
     {
     }
 
@@ -25,26 +26,37 @@ namespace Rhino.Testing.AutoMocking
 		{
 		}
 
-    public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
-      : this(new MockRepositoryAdapter(mocks), resolveProperties)
-    {
-    }
+    //public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
+    //  : this(new MockRepositoryAdapter(mocks), resolveProperties)
+    //{
+    //}
 
     /// <summary>Creates an AutoMocking Container with the given <paramref name="mocks"/> repository.</summary>
     /// <param name="mocks">The mocks repository to use</param>
     /// <param name="resolveProperties"><c>true</c> if properties should be resolved, otherwise <c>false</c>; the defualt is <c>false</c></param>
-    /// <seealso cref="IMockRepository"/>
-    /// <seealso cref="MockRepositoryAdapter"/>
-    /// <seealso cref="StaticMockRepositoryAdapter"/>
-    public AutoMockingContainer(IMockRepository mocks, bool resolveProperties)
+    public AutoMockingContainer(MockRepository mocks, bool resolveProperties)
     {
+      if (mocks == null)
+      {
+        _mockFactory = new AAAMockFactory();
+      }
+      else
+      {
+        _mockFactory = new DefaultMockFactory(mocks);
+      }
       _mocks = mocks;
       _resolveProperties = resolveProperties;
     }
         #region IAutoMockingRepository Members
-		public virtual IMockRepository MockRepository
+
+    public IMockFactory MockFactory
+    {
+      get { return _mockFactory; }
+    }
+
+    public virtual MockRepository MockRepository
 		{
-			get { return _mocks; }
+			get { return _mocks ?? new MockRepository(); }
 		}
 
 		private new object GetService(Type type) 
@@ -56,7 +68,8 @@ namespace Rhino.Testing.AutoMocking
 
 		#region DefaultMockingStrategy
 		private IMockingStrategy m_DefaultMockingStrategy;
-		/// <summary>
+
+    /// <summary>
 		/// Gets or sets the default mocking strategy., which will be returned, if a <see cref="Type"/> was not explicitly marked via a <see cref="TypeMarker"/>.
 		/// The default is the <see cref="DynamicMockingStrategy"/>,
 		/// which will always be returned, if no other was defined.
