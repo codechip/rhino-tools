@@ -33,53 +33,54 @@ using System.Reflection;
 using Boo.Lang.Compiler.Ast;
 using Boo.Lang.Compiler.Steps;
 using Boo.Lang.Compiler.TypeSystem;
+using Boo.Lang.Compiler.TypeSystem.Reflection;
 
 namespace Rhino.Commons.Binsor
 {
 
 	internal class TransformUnknownReferences : ProcessMethodBodiesWithDuckTyping
-    {
-        private readonly ConstructorInfo _componentReferenceConstructor =
-            typeof (ComponentReference).GetConstructor(new Type[] {typeof (string)});
+	{
+		private readonly ConstructorInfo _componentReferenceConstructor =
+			typeof(ComponentReference).GetConstructor(new Type[] { typeof(string) });
 
 		private readonly ConstructorInfo _componentReferenceTypeConstructor =
 		  typeof(ComponentReference).GetConstructor(new Type[] { typeof(Type) });
 
-        public override void OnReferenceExpression(ReferenceExpression node)
-        {
-            IEntity entity = NameResolutionService.Resolve(node.Name);
-            if (entity != null)
-            {
-                base.OnReferenceExpression(node);
-                return;
-            }
-            if (node.Name.StartsWith("@"))
-            {
+		public override void OnReferenceExpression(ReferenceExpression node)
+		{
+			IEntity entity = NameResolutionService.Resolve(node.Name);
+			if (entity != null)
+			{
+				base.OnReferenceExpression(node);
+				return;
+			}
+			if (node.Name.StartsWith("@"))
+			{
 				ReplaceWithComponentReference(node, node.Name);
-                return;
-            }
+				return;
+			}
 			else if (node.ParentNode is ExpressionPair)
 			{
-				ExpressionPair pair = (ExpressionPair) node.ParentNode;
+				ExpressionPair pair = (ExpressionPair)node.ParentNode;
 				StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
 				pair.Replace(node, literal);
 				return;
 			}
-            else if (
-                //search for the left side of a key in a hash literal expression
-                node.ParentNode is ExpressionPair 
-                && ((ExpressionPair) node.ParentNode).First == node
-                && node.ParentNode.ParentNode is HashLiteralExpression)
-            {
-                ExpressionPair parent = (ExpressionPair) node.ParentNode;
-                StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
-                parent.First = literal;
-                parent.Replace(node, literal);
-                return;
-            }
+			else if (
+				//search for the left side of a key in a hash literal expression
+				node.ParentNode is ExpressionPair
+				&& ((ExpressionPair)node.ParentNode).First == node
+				&& node.ParentNode.ParentNode is HashLiteralExpression)
+			{
+				ExpressionPair parent = (ExpressionPair)node.ParentNode;
+				StringLiteralExpression literal = CodeBuilder.CreateStringLiteral(node.Name);
+				parent.First = literal;
+				parent.Replace(node, literal);
+				return;
+			}
 
-            base.OnReferenceExpression(node);
-        }
+			base.OnReferenceExpression(node);
+		}
 
 		public override void OnMemberReferenceExpression(MemberReferenceExpression node)
 		{
@@ -112,9 +113,9 @@ namespace Rhino.Commons.Binsor
 				constructorInfo = _componentReferenceTypeConstructor;
 				argument = CodeBuilder.CreateReference(entity);
 			}
-			ExternalConstructor constructor = new ExternalConstructor(TypeSystemServices, constructorInfo);
+			ExternalConstructor constructor = new ExternalConstructor(new ReflectionTypeSystemProvider(), constructorInfo);
 			MethodInvocationExpression invocation = CodeBuilder.CreateConstructorInvocation(constructor, argument);
-			node.ParentNode.Replace(node, invocation);			
+			node.ParentNode.Replace(node, invocation);
 		}
-    }
+	}
 }
