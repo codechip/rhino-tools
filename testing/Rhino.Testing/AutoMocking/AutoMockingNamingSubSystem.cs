@@ -61,8 +61,9 @@ namespace Rhino.Testing.AutoMocking
 				return o;
 			}
 
-			public void Release(object instance)
+			public bool Release(object instance)
 			{
+				return false;
 			}
 
 			public void AddCustomDependencyValue(string key, object value)
