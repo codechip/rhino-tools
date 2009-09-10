@@ -1,7 +1,7 @@
 Rhino DSL has moved to github!
 You can get the latest source here: 
-http://github.com/ayende/rhino-etl/tree/master
+http://github.com/ayende/rhino-queues/tree/master
 
 Or just:
 
-git clone git://github.com/ayende/rhino-etl.git
+git clone git://github.com/ayende/rhino-queues.git
