@@ -1,0 +1,7 @@
+Rhino DSL has moved to github!
+You can get the latest source here: 
+http://github.com/ayende/rhino-security/tree/master
+
+Or just:
+
+git clone git://github.com/ayende/rhino-security.git
