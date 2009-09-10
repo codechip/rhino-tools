@@ -1,1 +1,0 @@
-print "Hello from anonymous base class"
