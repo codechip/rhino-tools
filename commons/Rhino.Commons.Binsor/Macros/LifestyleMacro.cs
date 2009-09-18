@@ -40,13 +40,14 @@ namespace Rhino.Commons.Binsor.Macros
 	[CLSCompliant(false)]
 	public class LifestyleMacro : BaseBinsorExtensionMacro<LifestyleExtension>
 	{
-		public LifestyleMacro() : base("lifestyle", true, "component", "extend")
+		public LifestyleMacro()
+			: base("lifestyle", true, "component", "extend")
 		{
 		}
 
 		protected override bool ExpandExtension(ref MethodInvocationExpression extension,
-		                                        MacroStatement macro, MacroStatement parent,
-		                                        ref Statement expansion)
+												MacroStatement macro, MacroStatement parent,
+												ref Statement expansion)
 		{
 			if (macro.Arguments.Count < 1)
 			{
@@ -69,10 +70,10 @@ namespace Rhino.Commons.Binsor.Macros
 				return false;
 			}
 
-			Type lifestyleType = ((ExternalType) entity).ActualType;
+			Type lifestyleType = ((ExternalType)entity).ActualType;
 
 			return (InitializeLifestyleExtension(ref extension, lifestyle, lifestyleType) &&
-			        ArgumentsToCreateNamedArguments(macro.Arguments, extension));
+					ArgumentsToCreateNamedArguments(macro.Arguments, extension));
 		}
 
 		protected override MethodInvocationExpression CreateExtension()
@@ -81,7 +82,7 @@ namespace Rhino.Commons.Binsor.Macros
 		}
 
 		private bool InitializeLifestyleExtension(ref MethodInvocationExpression extension,
-		                                          ReferenceExpression lifestyle, Type lifestyleType)
+												  ReferenceExpression lifestyle, Type lifestyleType)
 		{
 			if (typeof(LifestyleExtension).IsAssignableFrom(lifestyleType))
 			{
@@ -92,8 +93,8 @@ namespace Rhino.Commons.Binsor.Macros
 				if (!typeof(ILifestyleManager).IsAssignableFrom(lifestyleType))
 				{
 					AddCompilerError(lifestyle.LexicalInfo,
-					                 "A custom lifestyle statement must specify a type that implements " +
-					                 typeof(ILifestyleManager).FullName);
+									 "A custom lifestyle statement must specify a type that implements " +
+									 typeof(ILifestyleManager).FullName);
 					return false;
 				}
 
