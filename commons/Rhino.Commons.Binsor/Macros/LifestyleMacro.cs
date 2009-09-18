@@ -30,6 +30,7 @@
 
 
 using System;
+using Boo.Lang.Compiler.TypeSystem.Reflection;
 using Castle.MicroKernel;
 using Boo.Lang.Compiler.Ast;
 using Boo.Lang.Compiler.TypeSystem;
