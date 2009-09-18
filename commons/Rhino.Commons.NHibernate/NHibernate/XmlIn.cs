@@ -177,8 +177,8 @@ namespace Rhino.Commons
 			string xmlString = sw.GetStringBuilder().ToString();
 
 			return new TypedValue[] { 
-				new TypedValue(new CustomType(typeof(XmlType), 
-				new Hashtable()), xmlString, EntityMode.Poco), };
+				new TypedValue(new CustomType(typeof(XmlType),
+				new Dictionary<string, string>()), xmlString, EntityMode.Poco), };
 		}
 
 		private class XmlType : IUserType

@@ -132,11 +132,12 @@ namespace Rhino.Commons
 		private IQueryable ObtainQueryable(ICriteriaQuery criteriaQuery)
 		{
 			IQueryable queryable = criteriaQuery.Factory.GetEntityPersister(_entityClass.FullName) as IQueryable;
-
+			
 			if (queryable == null)
 			{
-				queryable = SessionFactoryHelper.FindQueryableUsingImports(
-				   criteriaQuery.Factory, _entityClass.FullName);
+				throw new NotImplementedException("You will have to rewrite your query using Hql or NH.Linq.");
+//				queryable = SessionFactoryHelper.FindQueryableUsingImports(
+//				   criteriaQuery.Factory, _entityClass.FullName);
 			}
 
 			return queryable;
