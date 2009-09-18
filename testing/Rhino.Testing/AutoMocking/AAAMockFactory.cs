@@ -28,7 +28,8 @@ namespace Rhino.Testing.AutoMocking
     /// <returns></returns>
     public object GenerateDynamicMock(Type[] types, params object[] constructorArgs)
     {
-      return MockRepository.GenerateMock(types[0], types.Skip(1).ToArray(), constructorArgs);
+		throw new NotImplementedException();
+//      return MockRepository.GenerateMock(types[0], types.Skip(1).ToArray(), constructorArgs);
     }
 
     /// <summary>Generates a strict mock</summary>
@@ -37,7 +38,8 @@ namespace Rhino.Testing.AutoMocking
     /// <returns></returns>
     public object GenerateStrictMock(Type[] types, params object[] constructorArgs)
     {
-      return MockRepository.GenerateStrictMock(types[0], types.Skip(1).ToArray(), constructorArgs);
+		throw new NotImplementedException();
+//      return MockRepository.GenerateStrictMock(types[0], types.Skip(1).ToArray(), constructorArgs);
     }
 
     /// <summary>Generates a partial mock useful for testing abstract classes</summary>
@@ -46,7 +48,8 @@ namespace Rhino.Testing.AutoMocking
     /// <returns></returns>
     public object GeneratePartialMock(Type[] types, params object[] constructorArgs)
     {
-      return MockRepository.GeneratePartialMock(types[0], types.Skip(1).ToArray(), constructorArgs);
+		throw new NotImplementedException();
+//      return MockRepository.GeneratePartialMock(types[0], types.Skip(1).ToArray(), constructorArgs);
     }
 
     /// <summary>Generates a strict mock with remoting</summary>

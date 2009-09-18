@@ -10,17 +10,17 @@
 	<fileset id="buildfiles.all">
 		<!-- Files have to be in dependency order -->
 		
-		<include name="mocks/default.build" />		
-		<include name="testing/default.build" />		
+		<!--<include name="mocks/default.build" />		-->
+		<!--<include name="testing/default.build" />		-->
 		<include name="dsl/default.build" />
 		<include name="commons/default.build" />
-		<include name="security/default.build" />
-		<include name="etl/default.build" />
-		<include name="igloo/default.build" />	
-		<include name="licensing/default.build" />		
-		<include name="pht/default.build" />
-		<include name="queues/default.build" />
-		<include name="esb/default.build" />
+		<!--<include name="security/default.build" />-->
+		<!--<include name="etl/default.build" />-->
+		<!--<include name="igloo/default.build" />	-->
+		<!--<include name="licensing/default.build" />		-->
+		<!--<include name="pht/default.build" />-->
+		<!--<include name="queues/default.build" />-->
+		<!--<include name="esb/default.build" />-->
 	</fileset>
 
 	<target name="debug" description="Selects the debug build configuration">
